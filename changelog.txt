@@ -1,0 +1,6 @@
+Plugin Name: CoursePress
+Author: Marko Miljus (Incsub)
+
+1.0.0 - XX/XX/2013
+----------------------------------------------------------------------
+- Initial Release.
