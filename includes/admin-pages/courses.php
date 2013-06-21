@@ -12,9 +12,9 @@
     </form>
 
     <br class="clear" />
-
+   
     <form method="get" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
-        
+
     </form>
 
 </div>

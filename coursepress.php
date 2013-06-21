@@ -47,7 +47,8 @@ if (!class_exists('CoursePress')) {
         }
 
         function __construct() {
-
+            
+            print_r($pagenow);
             //setup our variables
             $this->init_vars();
 
@@ -68,9 +69,18 @@ if (!class_exists('CoursePress')) {
 
                 // Contextual help
                 require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
-                
+
+                // Student class
+                require_once( $this->plugin_dir . 'includes/classes/class.student.php' );
+
+                // Search Students class
+                require_once( $this->plugin_dir . 'includes/classes/class.studentsearch.php' );
+
                 // Instructor class
                 require_once( $this->plugin_dir . 'includes/classes/class.instructor.php' );
+
+                // Search Instructor class
+                require_once( $this->plugin_dir . 'includes/classes/class.instructorsearch.php' );
             }
 
             //Localize the plugin
@@ -78,12 +88,15 @@ if (!class_exists('CoursePress')) {
 
             //Register custom post types
             add_action('init', array(&$this, 'register_custom_posts'), 0);
-                        
+
             //Add plugin admin menu - Network
             add_action('network_admin_menu', array(&$this, 'add_admin_menu_network'));
 
             //Add plugin admin menu
             add_action('admin_menu', array(&$this, 'add_admin_menu'));
+
+            //Custom header actions
+            add_action('load-coursepress_page_course_details', array(&$this, 'add_admin_header_course_details'));
 
             // Load payment gateways
             $this->load_payment_gateways();
@@ -223,8 +236,8 @@ if (!class_exists('CoursePress')) {
                     'not_found_in_trash' => __('No Courses found in Trash', 'cp'),
                     'view' => __('View Course', 'cp')
                 ),
-                'public' => true,
-                'show_ui' => false,
+                'public' => false,
+                'show_ui' => true,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 //Add later rewrite for customizable slugs!!!
@@ -257,16 +270,15 @@ if (!class_exists('CoursePress')) {
             );
 
             register_post_type('unit', $args);
-       
         }
-        
+
         //Add new roles and user capabilities
-        function add_user_roles_and_caps(){
+        function add_user_roles_and_caps() {
             global $user;
-            
-            add_role('instructor', 'Instructor' );
-            
-            $role = get_role('instructor'); 
+
+            add_role('instructor', 'Instructor');
+
+            $role = get_role('instructor');
             $role->add_cap('read');
             $role->add_cap('coursepress_dashboard_cap');
             $role->add_cap('coursepress_courses_cap');
@@ -274,14 +286,13 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_students_cap');
             $role->add_cap('coursepress_reports_cap');
             $role->add_cap('coursepress_settings_cap');
-            
+
             add_role('student', 'Student');
-            
-            $role = get_role('student'); 
+
+            $role = get_role('student');
             $role->add_cap('read');
         }
-        
-        
+
         //Functions for handling admin menu pages
 
         function coursepress_courses_admin() {
@@ -307,19 +318,25 @@ if (!class_exists('CoursePress')) {
         function coursepress_settings_admin() {
             include_once($this->plugin_dir . 'includes/admin-pages/settings.php');
         }
-        
+
         /* Functions for handling tab pages */
-        
-        function show_courses_details_overview(){
+
+        function show_courses_details_overview() {
             include_once($this->plugin_dir . 'includes/admin-pages/courses-details-overview.php');
         }
-        
-        function show_courses_details_units(){
+
+        function show_courses_details_units() {
             include_once($this->plugin_dir . 'includes/admin-pages/courses-details-units.php');
         }
-        
-        function show_courses_details_students(){
+
+        function show_courses_details_students() {
             include_once($this->plugin_dir . 'includes/admin-pages/courses-details-students.php');
+        }
+
+        /* Custom header actions */
+
+        function add_admin_header_course_details() {
+            wp_enqueue_style('courses', $this->plugin_url . 'css/courses.css');
         }
 
     }
@@ -328,5 +345,4 @@ if (!class_exists('CoursePress')) {
 
 global $coursepress;
 $coursepress = new CoursePress();
-
 ?>

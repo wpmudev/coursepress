@@ -1,36 +1,30 @@
 <?php
 
-if (!defined('ABSPATH'))
-    exit; // Exit if accessed directly
-
 if (!class_exists('Instructor')) {
 
     class Instructor extends WP_User {
 
-        function __construct() {
+        var $first_name = '';
+        var $last_name = '';
+
+        function __construct($id, $name = '') {
+            global $wpdb;
             
-        }
-
-        function Instructor() {
-            $this->__construct();
-        }
-
-        function add_new() {
+            if ($id != 0) {
+                parent::__construct($id, $name);
+            }
             
-        }
-
-        function publish() {
+            /*Set meta vars*/
             
+            $this->first_name = get_user_meta($id, 'first_name', true);
+            $this->last_name = get_user_meta($id, 'last_name', true);
         }
 
-        function unpublish() {
-            
+        function Instructor($id, $name = '') {
+
+            $this->__construct($id, $name);
         }
 
-        function assign_to_course($instructor_id, $course_id) {
-            return $instructor_id.','.$course_id;
-        }
-    
 
     }
 
