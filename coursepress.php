@@ -6,7 +6,7 @@
   Description: Create courses, write lessons, and add quizzes...
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.2
+  Version: 0.3
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -47,8 +47,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function __construct() {
-            
-            print_r($pagenow);
+
             //setup our variables
             $this->init_vars();
 
@@ -66,6 +65,12 @@ if (!class_exists('CoursePress')) {
 
                 // Support for WPMU DEV Dashboard plugin
                 include_once( $this->plugin_dir . 'includes/external/wpmudev-dash-notification.php' );
+
+                // Course class
+                require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
+
+                // Course search
+                require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
                 // Contextual help
                 require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
@@ -96,7 +101,9 @@ if (!class_exists('CoursePress')) {
             add_action('admin_menu', array(&$this, 'add_admin_menu'));
 
             //Custom header actions
-            add_action('load-coursepress_page_course_details', array(&$this, 'add_admin_header_course_details'));
+
+            add_action('load-coursepress_page_course_details', array(&$this, 'admin_coursepress_page_course_details'));
+            add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
 
             // Load payment gateways
             $this->load_payment_gateways();
@@ -108,6 +115,17 @@ if (!class_exists('CoursePress')) {
             if (get_option('coursepress_version') != $this->version) {
                 $this->install();
             }
+
+            //add_action('admin_notices', array(&$this, 'dev_check_current_screen'));
+        }
+
+        function dev_check_current_screen() {
+            if (!is_admin())
+                return;
+
+            global $current_screen;
+
+            print_r($current_screen);
         }
 
         function install() {
@@ -117,8 +135,8 @@ if (!class_exists('CoursePress')) {
         }
 
         function localization() {
-            // Load up the localization file if we're using WordPress in a different language
-            // Place it in this plugin's "languages" folder and name it "mp-[value in wp-config].mo"
+        // Load up the localization file if we're using WordPress in a different language
+
             if ($this->location == 'mu-plugins') {
                 load_muplugin_textdomain('cp', '/languages/');
             } else if ($this->location == 'subfolder-plugins') {
@@ -335,8 +353,20 @@ if (!class_exists('CoursePress')) {
 
         /* Custom header actions */
 
-        function add_admin_header_course_details() {
-            wp_enqueue_style('courses', $this->plugin_url . 'css/courses.css');
+        function admin_coursepress_page_course_details() {
+
+            wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css');
+            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+            wp_enqueue_script('jquery-ui-datepicker');
+            wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
+            wp_enqueue_script('courses', $this->plugin_url . 'js/admin.js', array('jquery', 'jquery-ui'), false, false);
+            wp_localize_script('courses', 'courses', array(
+                'delete_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp')
+            ));
+        }
+
+        function admin_coursepress_page_courses() {
+            wp_enqueue_style('courses', $this->plugin_url . 'css/admin_coursepress_page_courses.css');
         }
 
     }
