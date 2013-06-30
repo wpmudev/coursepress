@@ -26,7 +26,7 @@ if (!class_exists('Course')) {
                 $course->post_title = __('Untitled', 'cp');
             }
             if($course->post_status == 'private'){
-                $course->post_status = __('Unpublished', 'cp');
+                $course->post_status = __('unpublished', 'cp');
             }
 
             return $course;
@@ -78,6 +78,21 @@ if (!class_exists('Course')) {
             }
 
             return $post_id;
+        }
+        
+        function delete_course($force_delete){
+            $wpdb;
+            wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+            delete_user_meta_by_key('course_' . $this->id);
+        }
+        
+        function can_show_permalink(){
+            $course = $this->get_course();
+            if($course->post_status !== 'draft'){
+                return true;
+            }else{
+                return false;
+            }
         }
 
     }

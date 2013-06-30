@@ -140,7 +140,7 @@ function get_the_course_excerpt($id=false) {
         $excerpt = apply_filters('the_content', $excerpt);
         $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
         $excerpt = strip_tags($excerpt);
-        $excerpt_length = apply_filters('excerpt_length', 20);
+        $excerpt_length = apply_filters('excerpt_length', 55);
         $excerpt_more = apply_filters('excerpt_more', ' ' . '[...]');
 
         $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);

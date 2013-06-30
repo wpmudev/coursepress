@@ -102,6 +102,7 @@ if (!class_exists('CoursePress')) {
 
             //Custom header actions
 
+            add_action('admin_enqueue_scripts', array(&$this, 'admin_header_actions'));
             add_action('load-coursepress_page_course_details', array(&$this, 'admin_coursepress_page_course_details'));
             add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
 
@@ -135,7 +136,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function localization() {
-        // Load up the localization file if we're using WordPress in a different language
+            // Load up the localization file if we're using WordPress in a different language
 
             if ($this->location == 'mu-plugins') {
                 load_muplugin_textdomain('cp', '/languages/');
@@ -353,16 +354,25 @@ if (!class_exists('CoursePress')) {
 
         /* Custom header actions */
 
-        function admin_coursepress_page_course_details() {
-
-            wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css');
-            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+        function admin_header_actions() {
+            wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css');
+            
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
-            wp_enqueue_script('courses', $this->plugin_url . 'js/admin.js', array('jquery', 'jquery-ui'), false, false);
-            wp_localize_script('courses', 'courses', array(
-                'delete_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp')
+            
+            wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array('jquery', 'jquery-ui'), false, false);
+            wp_localize_script('courses_bulk', 'coursepress', array(
+                'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
+                'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp')
             ));
+        }
+
+        function admin_coursepress_page_course_details() {
+            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+            wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css');
+            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+            
+          
         }
 
         function admin_coursepress_page_courses() {
