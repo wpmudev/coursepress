@@ -2,9 +2,16 @@
 // Query the courses
 $wp_course_search = new Course_Search($coursesearch, $coursepage);
 
-if(isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
+if(isset($_GET['course_id'])){
     $course =  new Course($_GET['course_id']);
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
     $course->delete_course($force_delete = true);
+}
+
+if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
+    $course->change_status($_GET['new_status']);
 }
 ?>
 <div class="wrap nosubsub">
@@ -93,8 +100,8 @@ if(isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['course_
                         <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
                             <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
                         </td>
-                        <td <?php echo $style; ?>><?php echo ucfirst($course_object->post_status); ?></td>
-                        <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" class="button button-settings"><?php _e('Settings', 'cp'); ?></a><a href="" class="button button-units"><?php _e('Units', 'cp'); ?></a><a href="" class="button button-publish"><?php _e('Publish', 'cp'); ?></a></td>
+                        <td <?php echo $style; ?>><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status).'ed' : ucfirst($course_object->post_status); ?></td>
+                        <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" class="button button-settings"><?php _e('Settings', 'cp'); ?></a><a href="?page=course_details&tab=units&course_id=<?php echo $course_object->ID; ?>" class="button button-units"><?php _e('Units', 'cp'); ?></a><a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>
                         <td <?php echo $style; ?>><a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();" class="remove-button"></a></td>
                     </tr>
                     <?php

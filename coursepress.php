@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.2';
+        var $version = '0.3';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -72,6 +72,9 @@ if (!class_exists('CoursePress')) {
                 // Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
+                // Unit class
+                require_once( $this->plugin_dir . 'includes/classes/class.course.unit.php' );
+                
                 // Contextual help
                 require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
 
@@ -86,6 +89,7 @@ if (!class_exists('CoursePress')) {
 
                 // Search Instructor class
                 require_once( $this->plugin_dir . 'includes/classes/class.instructorsearch.php' );
+
             }
 
             //Localize the plugin
@@ -117,7 +121,16 @@ if (!class_exists('CoursePress')) {
                 $this->install();
             }
 
+            //!!!flush_rewrite_rules is an expensive function so we need to use it wisely!!! Note: move it somewhere else
+            if (is_admin()) {
+                add_action('after_custom_post_types', array($this, 'flush_rewrite_rules'));
+            }
+
             //add_action('admin_notices', array(&$this, 'dev_check_current_screen'));
+        }
+
+        function flush_rewrite_rules() {
+            flush_rewrite_rules();
         }
 
         function dev_check_current_screen() {
@@ -133,6 +146,20 @@ if (!class_exists('CoursePress')) {
             include_once( 'includes/install.php' );
             update_option('coursepress_version', $this->version);
             $this->add_user_roles_and_caps(); //This setting is saved to the database (in table wp_options, field wp_user_roles), so it might be better to run this on theme/plugin activation
+            set_course_slug();
+        }
+
+        function set_course_slug($slug = '') {
+            if ($slug == '') {
+                update_option('coursepress_course_slug', get_course_slug());
+            } else {
+                update_option('coursepress_course_slug', $slug);
+            }
+        }
+
+        function get_course_slug() {
+            $default_slug_value = 'course';
+            return get_option('coursepress_course_slug', $default_slug_value);
         }
 
         function localization() {
@@ -256,11 +283,11 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Course', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
-                //Add later rewrite for customizable slugs!!!
-                'query_var' => true
+                'query_var' => true,
+                'rewrite' => array('slug' => $this->get_course_slug(), 'hierarchical' => true)
             );
 
             register_post_type('course', $args);
@@ -289,8 +316,11 @@ if (!class_exists('CoursePress')) {
             );
 
             register_post_type('unit', $args);
+
+            do_action('after_custom_post_types');
         }
 
+        //flush_rewrite_rules();
         //Add new roles and user capabilities
         function add_user_roles_and_caps() {
             global $user;
@@ -352,14 +382,30 @@ if (!class_exists('CoursePress')) {
             include_once($this->plugin_dir . 'includes/admin-pages/courses-details-students.php');
         }
 
+        function show_settings_general() {
+            include_once($this->plugin_dir . 'includes/admin-pages/settings-general.php');
+        }
+
+        function show_settings_payment() {
+            include_once($this->plugin_dir . 'includes/admin-pages/settings-payment.php');
+        }
+
+        function show_settings_shortcodes() {
+            include_once($this->plugin_dir . 'includes/admin-pages/settings-shortcodes.php');
+        }
+        
+        function show_unit_details() {
+            include_once($this->plugin_dir . 'includes/admin-pages/unit-details.php');
+        }
+
         /* Custom header actions */
 
         function admin_header_actions() {
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css');
-            
+
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
-            
+
             wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array('jquery', 'jquery-ui'), false, false);
             wp_localize_script('courses_bulk', 'coursepress', array(
                 'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
@@ -368,11 +414,10 @@ if (!class_exists('CoursePress')) {
         }
 
         function admin_coursepress_page_course_details() {
+            wp_enqueue_script('courses-units', $this->plugin_url . 'js/coursepress-courses.js', array('jquery', 'jquery-ui'), false, false);
             wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
             wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css');
             wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
-            
-          
         }
 
         function admin_coursepress_page_courses() {

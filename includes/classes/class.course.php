@@ -22,10 +22,10 @@ if (!class_exists('Course')) {
 
         function get_course() {
             $course = get_post($this->id, $this->output);
-            if($course->post_title == ''){
+            if ($course->post_title == '') {
                 $course->post_title = __('Untitled', 'cp');
             }
-            if($course->post_status == 'private'){
+            if ($course->post_status == 'private') {
                 $course->post_status = __('unpublished', 'cp');
             }
 
@@ -34,13 +34,16 @@ if (!class_exists('Course')) {
 
         function update_course() {
             global $user_id, $wpdb;
+            $course = get_post($this->id, $this->output);
 
-            if($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') && $_POST['course_description'] != ''){
-                $post_status = 'private';
-            }else{
+            if ($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') && $_POST['course_description'] != '') {
+                if ($course->post_status != 'publish') {
+                    $post_status = 'private';
+                }
+            } else {
                 $post_status = 'draft';
             }
-            
+
             $post = array(
                 'post_author' => $user_id,
                 'post_content' => $_POST['course_description'],
@@ -79,20 +82,30 @@ if (!class_exists('Course')) {
 
             return $post_id;
         }
-        
-        function delete_course($force_delete){
+
+        function delete_course($force_delete) {
             $wpdb;
-            wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+            wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
             delete_user_meta_by_key('course_' . $this->id);
         }
-        
-        function can_show_permalink(){
+
+        function can_show_permalink() {
             $course = $this->get_course();
-            if($course->post_status !== 'draft'){
+            if ($course->post_status !== 'draft') {
                 return true;
-            }else{
+            } else {
                 return false;
             }
+        }
+
+        function change_status($post_status) {
+            $post = array(
+                'ID' => $this->id,
+                'post_status' => $post_status,
+            );
+
+            // Update the post status
+            wp_update_post($post);
         }
 
     }

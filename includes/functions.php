@@ -126,7 +126,7 @@ if (!function_exists('delete_user_meta_by_key')) {
 
 }
 
-function get_the_course_excerpt($id=false) {
+function get_the_course_excerpt($id=false, $length = 55) {
     global $post;
 
     $old_post = $post;
@@ -140,7 +140,7 @@ function get_the_course_excerpt($id=false) {
         $excerpt = apply_filters('the_content', $excerpt);
         $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
         $excerpt = strip_tags($excerpt);
-        $excerpt_length = apply_filters('excerpt_length', 55);
+        $excerpt_length = apply_filters('excerpt_length', $length);
         $excerpt_more = apply_filters('excerpt_more', ' ' . '[...]');
 
         $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
@@ -157,5 +157,4 @@ function get_the_course_excerpt($id=false) {
 
     return $excerpt;
 }
-
 ?>

@@ -56,7 +56,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                 <div id='edit-sub' class='course-holder-wrap'>
 
                     <div class='sidebar-name no-movecursor'>
-                        <h3><?php _e('New Course Details', 'cp'); ?></h3>
+                        <h3><?php _e('Course Details', 'cp'); ?></h3>
                     </div>
 
                     <div class='course-holder'>
@@ -69,6 +69,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                             $args = array("textarea_name" => "course_description", "textarea_rows" => 5);
 
                             if (!isset($course_details->post_content)) {
+                                $course_details = new StdClass;
                                 $course_details->post_content = '';
                             }
 
