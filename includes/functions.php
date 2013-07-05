@@ -126,7 +126,7 @@ if (!function_exists('delete_user_meta_by_key')) {
 
 }
 
-function get_the_course_excerpt($id=false, $length = 55) {
+function get_the_course_excerpt($id = false, $length = 55) {
     global $post;
 
     $old_post = $post;
@@ -157,4 +157,19 @@ function get_the_course_excerpt($id=false, $length = 55) {
 
     return $excerpt;
 }
+
+function get_number_of_days_between_dates($start_date, $end_date) {
+    
+    $startTimeStamp = strtotime($start_date);
+    $endTimeStamp = strtotime($end_date);
+
+    $timeDiff = abs($endTimeStamp - $startTimeStamp);
+
+    $numberDays = $timeDiff / 86400;  // 86400 seconds in one day
+    $numberDays = intval($numberDays);
+    
+    return $numberDays;
+}
+
+
 ?>
