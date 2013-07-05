@@ -24,6 +24,7 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     $menus = array();
     $menus['general'] = __('General', 'cp');
     $menus['payment'] = __('Payment Settings', 'cp');
+    $menus['email'] = __('E-mail Settings', 'cp');
     $menus['shortcodes'] = __('Shortcodes', 'cp');
     $menus = apply_filters('coursepress_settings_new_menus', $menus);
     ?>
@@ -51,6 +52,9 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
         case 'shortcodes': $this->show_settings_shortcodes();
             break;
 
+        case 'email': $this->show_settings_email();
+            break;
+        
         default: do_action('coursepress_settings_menu_' . $tab);
             break;
     }

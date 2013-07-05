@@ -33,6 +33,7 @@ $wp_user_search = new Instructor_Search($usersearch, $userspage);
             "user_firstname" => __('First Name', 'cp'),
             "user_lastname" => __('Surname', 'cp'),
             "registration_date" => __('Registered', 'cp'),
+            "courses" => __('Courses', 'cp'),
             "edit" => __('Edit', 'cp'),
             "delete" => __('Delete', 'cp'),
             
@@ -88,6 +89,7 @@ $wp_user_search = new Instructor_Search($usersearch, $userspage);
                         <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
+                        <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
                         <td <?php echo $style; ?>><a href="">Edit</a></td>
                         <td <?php echo $style; ?>><a href="">Remove</a></td>
                                                 

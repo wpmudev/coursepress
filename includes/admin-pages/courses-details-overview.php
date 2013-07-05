@@ -63,10 +63,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                         <div class='course-details'>
                             <label for='course_name'><?php _e('Course Name', 'cp'); ?></label>
                             <input class='wide' type='text' name='course_name' id='course_name' value='<?php echo esc_attr(stripslashes($course_details->post_title)); ?>' />
+                            
+                            <br/><br/>
+                            <label for='course_excerpt'><?php _e('Course Excerpt', 'cp'); ?></label>
+                            <?php
+                            $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
+
+                            if (!isset($course_excerpt->post_excerpt)) {
+                                $course_excerpt = new StdClass;
+                                $course_excerpt->post_excerpt = '';
+                            }
+
+                            $desc = '';
+                            wp_editor(stripslashes($course_details->post_excerpt), "course_excerpt", $args);
+                            ?>
+                            
                             <br/><br/>
                             <label for='course_name'><?php _e('Course Description', 'cp'); ?></label>
                             <?php
-                            $args = array("textarea_name" => "course_description", "textarea_rows" => 5);
+                            $args = array("textarea_name" => "course_description", "textarea_rows" => 10);
 
                             if (!isset($course_details->post_content)) {
                                 $course_details = new StdClass;
