@@ -46,6 +46,7 @@ if (!class_exists('Course')) {
 
             $post = array(
                 'post_author' => $user_id,
+                'post_excerpt' => $_POST['course_excerpt'],
                 'post_content' => $_POST['course_description'],
                 'post_status' => $post_status,
                 'post_title' => $_POST['course_name'],
@@ -96,6 +97,27 @@ if (!class_exists('Course')) {
             } else {
                 return false;
             }
+        }
+
+        function get_course_instructors() {
+            $args = array(
+                'blog_id' => $GLOBALS['blog_id'],
+                'role' => 'instructor',
+                'meta_key' => 'course_' . $this->id,
+                'meta_value' => $this->id,
+                'meta_compare' => '',
+                'meta_query' => array(),
+                'include' => array(),
+                'exclude' => array(),
+                'orderby' => 'display_name',
+                'order' => 'ASC',
+                'offset' => '',
+                'search' => '',
+                'number' => '',
+                'count_total' => false,
+            );
+
+            return get_users($args);
         }
 
         function change_status($post_status) {
