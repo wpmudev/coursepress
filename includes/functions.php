@@ -170,6 +170,32 @@ function get_number_of_days_between_dates($start_date, $end_date) {
     
     return $numberDays;
 }
+/*
+if (!function_exists('M_register_rule')) {
 
+    function M_register_rule($rule_name, $class_name, $section) {
 
+        global $M_Rules, $M_SectionRules;
+
+        if (!is_array($M_Rules)) {
+            $M_Rules = array();
+        }
+
+        if (!is_array($M_SectionRules)) {
+            $M_SectionRules = array();
+        }
+
+        if (class_exists($class_name)) {
+            $M_SectionRules[$section][$rule_name] = $class_name;
+            $M_Rules[$rule_name] = $class_name;
+        } else {
+            return false;
+        }
+    }
+
+}
+*/
+function sp2nbsp($string){
+    return str_replace(' ', '&nbsp;', $string);
+}
 ?>

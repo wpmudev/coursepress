@@ -23,6 +23,7 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     <?php
     $menus = array();
     $menus['general'] = __('General', 'cp');
+    $menus['groups'] = __('Class Groups', 'cp');
     $menus['payment'] = __('Payment Settings', 'cp');
     $menus['email'] = __('E-mail Settings', 'cp');
     $menus['shortcodes'] = __('Shortcodes', 'cp');
@@ -44,6 +45,9 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     switch ($tab) {
 
         case 'general': $this->show_settings_general();
+            break;
+        
+        case 'groups': $this->show_settings_groups();
             break;
 
         case 'payment': $this->show_settings_payment();

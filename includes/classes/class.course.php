@@ -21,13 +21,17 @@ if (!class_exists('Course')) {
         }
 
         function get_course() {
+            
             $course = get_post($this->id, $this->output);
+            
             if ($course->post_title == '') {
                 $course->post_title = __('Untitled', 'cp');
             }
             if ($course->post_status == 'private') {
                 $course->post_status = __('unpublished', 'cp');
             }
+            
+            $course->class_size = get_post_meta($this->id, 'class_size', true);
 
             return $course;
         }

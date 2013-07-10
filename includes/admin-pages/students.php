@@ -32,14 +32,15 @@ $wp_user_search = new Student_Search($usersearch, $userspage);
             "ID" => __('Student ID', 'cp'),
             "user_firstname" => __('First Name', 'cp'),
             "user_lastname" => __('Surname', 'cp'),
-            "course" => __('Course', 'cp'),
-            "class" => __('Class', 'cp'),
-            "group" => __('Group', 'cp'),
-            "enrollment_date" => __('Enrolled', 'cp'),
+           
             "edit" => __('Edit', 'cp'),
             "delete" => __('Delete', 'cp'),
             
         );
+        /* "course" => __('Course', 'cp'),
+            "class" => __('Class', 'cp'),
+            "group" => __('Group', 'cp'),
+            "enrollment_date" => __('Enrolled', 'cp'),*/
         ?>
 
         <table cellspacing="0" class="widefat fixed">
@@ -90,10 +91,10 @@ $wp_user_search = new Student_Search($usersearch, $userspage);
                         <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
-                        <td <?php echo $style; ?>>--Course--</td>
+                        <!--<td <?php echo $style; ?>>--Course--</td>
                         <td <?php echo $style; ?>>--Class--</td>
                         <td <?php echo $style; ?>>--Group--</td>
-                        <td <?php echo $style; ?>>--Enrolled Date--</td>
+                        <td <?php echo $style; ?>>--Enrolled Date--</td>-->
                         <td <?php echo $style; ?>><a href="">Edit</a></td>
                         <td <?php echo $style; ?>><a href="">Remove</a></td>
                                                 

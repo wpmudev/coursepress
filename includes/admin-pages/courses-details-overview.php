@@ -11,7 +11,7 @@ if (isset($_GET['course_id'])) {
 }
 
 $course_marking_type = get_post_meta($course_id, 'course_marking_type', true);
-$class_size = get_post_meta($course_id, 'class-size', true);
+$class_size = get_post_meta($course_id, 'class_size', true);
 $enroll_type = get_post_meta($course_id, 'enroll_type', true);
 $passcode = get_post_meta($course_id, 'passcode', true);
 $course_start_date = get_post_meta($course_id, 'course_start_date', true);
@@ -107,7 +107,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
                             <div class="fullwidth">
                                 <label for='meta_class-size'><?php _e('Class size', 'cp'); ?></label>
-                                <input class='spinners' name='meta_class-size' id='class-size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
+                                <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
                                 <p class="description"><?php _e('select 0 for infinite', 'cp'); ?></p>
                             </div>
 

@@ -20,12 +20,48 @@
                                 esc_html_e(trailingslashit(get_option('home')));
                                 ?>&nbsp;<input type='text' name='course_slug' id='course_slug' value='<?php esc_attr_e($this->get_course_slug());
                                 ?>' />&nbsp;/
+                                
+                                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(get_option('home')));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
+                                
                             </td>
                         </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Enrollment Process page', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(get_option('home')));
+                                ?>&nbsp;<input type='text' name='enrollment_process_slug' id='enrollment_process_slug' value='<?php esc_attr_e($this->get_enrollment_process_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Signup / Login page', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(get_option('home')));
+                                ?>&nbsp;<input type='text' name='signup_slug' id='signup_slug' value='<?php esc_attr_e($this->get_signup_page_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Student Dashboard page', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(get_option('home')));
+                                ?>&nbsp;<input type='text' name='student_dashboard_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        
+                        
                     </tbody>
                 </table>
                 
-                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(get_option('home')));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
+                
 
             </div>
         </div>
