@@ -26,11 +26,28 @@ if (!class_exists('Instructor')) {
             $this->__construct($id, $name);
         }
         
+        function get_assigned_courses_ids() {
+            global $wpdb;
+            
+            $assigned_courses = array();
+            $courses = $wpdb->get_results("SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'course_%' AND user_id = " . $this->id, OBJECT);
+
+            foreach ($courses as $course) {
+                $assigned_courses[] = str_replace('course_', '', $course->meta_key);
+            }
+
+            return $assigned_courses;
+        }
+        
         //Get number of instructor's assigned courses
         function get_courses_number(){
             global $wpdb;
             $courses_count = $wpdb->get_var("SELECT COUNT(*) as cnt FROM $wpdb->usermeta um, $wpdb->posts p WHERE (um.user_id = ".$this->id." AND um.meta_key LIKE 'course_%') AND (p.ID = um.meta_value)");
             return $courses_count;
+        }
+        
+        function delete_instructor(){
+            wp_delete_user($this->id); //without reassign
         }
 
 

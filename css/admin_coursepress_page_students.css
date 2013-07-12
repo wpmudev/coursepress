@@ -1,0 +1,21 @@
+.remove-button{
+    background-image: url("../images/delete.png");
+    background-repeat: no-repeat;
+    height: 20px;
+    display: block;
+    margin-left: 12px;
+}
+
+.widefat td{
+    font-size: 12px;
+    padding: 15px 6px 2px;
+    vertical-align: top;
+}
+
+.widefat tbody th.check-column{
+    padding: 15px 0 14px;
+}
+
+.button-settings{
+    margin-bottom: 10px;
+}

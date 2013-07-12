@@ -21,19 +21,28 @@ if (!class_exists('Course')) {
         }
 
         function get_course() {
-            
-            $course = get_post($this->id, $this->output);
-            
-            if ($course->post_title == '') {
-                $course->post_title = __('Untitled', 'cp');
-            }
-            if ($course->post_status == 'private') {
-                $course->post_status = __('unpublished', 'cp');
-            }
-            
-            $course->class_size = get_post_meta($this->id, 'class_size', true);
 
-            return $course;
+            $course = get_post($this->id, $this->output);
+
+            if (!empty($course)) {
+
+                /* if (empty($course)) {
+                  $course = new stdClass();
+                  } */
+
+                if (!isset($course->post_title) || $course->post_title == '') {
+                    $course->post_title = __('Untitled', 'cp');
+                }
+                if ($course->post_status == 'private') {
+                    $course->post_status = __('unpublished', 'cp');
+                }
+
+                $course->class_size = get_post_meta($this->id, 'class_size', true);
+
+                return $course;
+            } else {
+                return false;
+            }
         }
 
         function update_course() {
@@ -91,7 +100,12 @@ if (!class_exists('Course')) {
         function delete_course($force_delete) {
             $wpdb;
             wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
+
+            /* Delete all usermeta associated to the course */
             delete_user_meta_by_key('course_' . $this->id);
+            delete_user_meta($this->id, 'enrolled_course_date_' . $course_id);
+            delete_user_meta($this->id, 'enrolled_course_class_' . $course_id);
+            delete_user_meta($this->id, 'enrolled_course_group_' . $course_id);
         }
 
         function can_show_permalink() {

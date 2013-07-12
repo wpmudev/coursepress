@@ -67,7 +67,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
                 </tr>
             </thead>
 
-            <tfoot>
+            <!--<tfoot>
                 <tr>
                     <th style="" class="manage-column column-cb check-column" scope="col"><input type="checkbox"></th>
                     <?php
@@ -80,7 +80,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
                     }
                     ?>
                 </tr>
-            </tfoot>
+            </tfoot>-->
 
             <tbody>
                 <?php

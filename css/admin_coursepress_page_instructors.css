@@ -1,5 +1,23 @@
-/* UNIT MODULES */
-/* @override http://dev.site/wp-content/plugins/membership/membershipincludes/css/levels.css?ver=12 */
+.instructor-profile .avatar{
+    margin: 0px 0px 8px 8px;
+}
+.instructor-profile td:first-child{
+    width: 88px;
+}
+
+.instructors-info label.ins-box {
+    display: block;
+    width: 100%;
+}
+
+.instructors-info .ins-box input{
+    display: block;
+    width: 97%;
+    font-weight: normal;
+}
+
+
+
 
 div.level-liquid-left {
 	float: left;
@@ -495,170 +513,6 @@ div.buttons a.cancellink {
 	padding: 10px 20px;
 }
 
-#edit-level div.level-holder ul.leveltabs li.activetab a {
-	color: #ffffff;
-	font-weight: bold;
-	text-decoration: none;
-	text-shadow: 0 -1px 0 #333333;
-	background: transparent;
-	display: block;
-}
-
-#edit-level div.level-holder div.inactivecontent {
-	display: none;
-}
-
-#wp-level_protectedcontent-wrap {
-	margin-left: 10px;
-	margin-right: 10px;	
-}
-
-/* END UNIT MODULES*/
-
-/* UNITS */
-
-#students_accordion .ui-widget-content{
-    border: 1px solid #ddd;
-}
-
-#students_accordion.ui-accordion .ui-accordion-header{
-    padding: 0px;
-    padding-left: 16px;
-}
-
-#students_accordion.ui-accordion .ui-accordion-content{
-    padding:0px;
-}
-
-#students_accordion .widefat{
-    border-width: 0px;
-    border-radius: 0px;
-}
-
-#students_accordion .widefat td, .widefat th{
-    border:none;
-}
-
-#sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
-#sortable-units li.postbox { width: 46%; float: left; margin: 0 1% 1% 0%; padding: 1%; font-size: 1.2em; min-height: 100px; }
-html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
-#sortable-units .ui-state-highlight { 
-    height: 1.5em; 
-    line-height: 1.2em; 
-    float: left; 
-    width: 46%;
-    padding: 1%; 
-    margin: 0 1% 1% 0%; 
-    min-height: 140px; 
-    border: 1px dashed #cccccc; 
-}
-
-.add-new-unit-box{
-    float: left; 
-    width: 46%;
-    padding: 1%; 
-    margin: 0 1% 1% 0%; 
-    min-height: 140px; 
-    border: 1px dashed #cccccc; 
-}
-
-
-.unit-order-number{
-    float: left;
-    width: 7%;
-    min-width: 35px;
-    min-height: 100px;
-}
-
-.unit-title{
-    float: left;
-    width: 76%;
-    min-width: 20px;
-    text-decoration:underline;
-    margin-bottom: 5px;
-    height: 15px;
-    overflow: hidden;
-}
-
-.unit-title a{
-    font-weight: bold;
-    text-decoration:underline;
-}
-
-.unit-description{
-    float: left;
-    width: 74%;
-    min-width: 20px;
-    padding-right: 1%;
-    height: 85px;
-    overflow: hidden;
-}
-
-.unit-remove{
-    float: right;
-    width: 11%;
-}
-
-.remove-button{
-    background-image: url("../images/delete.png");
-    background-repeat: no-repeat;
-    height: 80px;
-    min-width: 80px;
-    display: block;
-}
-
-.unit-buttons{
-    float: left;
-    width: 100%;
-    text-align: right;
-    margin-top: 5px;
-}
-
-.wp-core-ui .unit-buttons a.button-settings, .wp-core-ui .unit-buttons a.button-publish, .wp-core-ui .unit-buttons a.button-unpublish{
-    display: block;
-    width: 20%;
-    float: right;
-    margin-left: 1%;
-    min-width: 80px;
-}
-
-.add-new-unit-title{
-    padding-top: 43px;
-}
-
-.plusTitle a{
-    font: 44px/100% Arial, sans-serif;
-    color:#ddd;
-    text-decoration: none;
-}
-
-.plusTitle a:hover{
-    color:#ccc;
-    text-decoration: none;
-}
-
-.add-new-unit-title{
-    text-align: center;
-}
-
-.numberCircle {
-    -webkit-border-radius: 999px;
-    -moz-border-radius: 999px;
-    border-radius: 999px;
-    behavior: url(PIE.htc);
-
-    width: 14px;
-    height: 14px;
-    padding: 3px;
-
-    background: #fff;
-    border: 2px solid #666;
-    color: #666;
-    text-align: center;
-
-    font: 12px Arial, sans-serif
-}
-/*END UNITS*/
 
 #ui-datepicker-div{/*fix for the date picker issue*/
     display: none;
@@ -868,35 +722,9 @@ input.wide, textarea.wide {
     padding-bottom: 2px;
 }
 
-.droppable-levels {
-    width: 95%;
-    margin-left: 15px;
-    margin-bottom: 20px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    border: 3px dashed #ddd;
-    color: #a9a9a9;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    clear: both;
-    margin-top: 20px;
-}
-
 .droppable-levels.hoveringover {
     border: 3px dashed #78aad3;
     color: #78aad3;
-}
-
-#positive-rules {
-    background: #fcfcfc;
-}
-#negative-rules {
-    background: #fcfcfc;
 }
 
 .action-top.open {
@@ -1147,3 +975,56 @@ div.levelinformation {
 .inner-link{
     padding: 10px 0px 10px 0px;
 }
+
+/* Instructor profile */
+.course_excerpt{
+    padding: 5px;
+}
+
+.course_title{
+    font-weight: bold;
+    padding: 0px 5px 5px 5px;
+}
+
+.zero-row{
+    padding: 10px 10px 20px 10px;
+}
+
+.course_additional_info{
+    margin-bottom: 10px;
+}
+
+.course_additional_info div{
+    padding-bottom: 5px;
+}
+
+.course_additional_info .info_caption{
+    font-weight: bold;
+    padding: 0px 5px 0px 5px;
+
+}
+
+
+.remove-button{
+    background-image: url("../images/delete.png");
+    background-repeat: no-repeat;
+    height: 20px;
+    display: block;
+    margin-left: 12px;
+}
+
+.widefat td{
+    font-size: 12px;
+    padding: 15px 6px 2px;
+    vertical-align: top;
+}
+
+.widefat tbody th.check-column{
+    padding: 15px 0 14px;
+}
+
+.button-settings{
+    margin-bottom: 10px;
+}
+
+/* Instructor profile */

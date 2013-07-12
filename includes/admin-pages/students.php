@@ -1,7 +1,11 @@
 <?php
+if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
+    $student = new Student($_GET['student_id']);
+    $student->delete_student();
+}
+
 // Query the users
 $wp_user_search = new Student_Search($usersearch, $userspage);
-
 ?>
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-users"><br></div>
@@ -32,76 +36,76 @@ $wp_user_search = new Student_Search($usersearch, $userspage);
             "ID" => __('Student ID', 'cp'),
             "user_firstname" => __('First Name', 'cp'),
             "user_lastname" => __('Surname', 'cp'),
-           
-            "edit" => __('Edit', 'cp'),
+            "registration_date" => __('Registered', 'cp'),
+            "courses" => __('Courses', 'cp'),
+            "edit" => __('Profile', 'cp'),
             "delete" => __('Delete', 'cp'),
-            
         );
-        /* "course" => __('Course', 'cp'),
-            "class" => __('Class', 'cp'),
-            "group" => __('Group', 'cp'),
-            "enrollment_date" => __('Enrolled', 'cp'),*/
+
+        $col_sizes = array(
+            '8', '15', '15', '20', '10', '7', '5'
+        );
         ?>
 
         <table cellspacing="0" class="widefat fixed">
             <thead>
                 <tr>
-                    <th style="" class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"></th>
-                    <?php
-                    foreach ($columns as $key => $col) {
-                        ?>
-                        <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                    <th style="" class="manage-column column-cb check-column" width="1%" id="cb" scope="col"><input type="checkbox"></th>
+<?php
+$n = 0;
+foreach ($columns as $key => $col) {
+    ?>
+                        <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                         <?php
+                        $n++;
                     }
                     ?>
                 </tr>
             </thead>
 
-            <tfoot>
+            <!--<tfoot>
                 <tr>
                     <th style="" class="manage-column column-cb check-column" scope="col"><input type="checkbox"></th>
-                    <?php
-                    reset($columns);
+<?php
+reset($columns);
 
-                    foreach ($columns as $key => $col) {
-                        ?>
-                        <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
-                        <?php
-                    }
-                    ?>
+foreach ($columns as $key => $col) {
+    ?>
+                            <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                <?php
+            }
+            ?>
                 </tr>
-            </tfoot>
+            </tfoot>-->
 
             <tbody>
-                <?php
-                $style = '';
+<?php
+$style = '';
 
-                foreach ($wp_user_search->get_results() as $user) {
+foreach ($wp_user_search->get_results() as $user) {
 
-                    $user_object = new Student($user->ID);
-                    $roles = $user_object->roles;
-                    $role = array_shift($roles);
+    $user_object = new Student($user->ID);
+    $roles = $user_object->roles;
+    $role = array_shift($roles);
 
-                    $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-                    ?>
+    $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+    ?>
                     <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
                         <th scope='row' class='check-column'>
-                            <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' class='$role' value='<?php echo $user_object->ID; ?>' />
+                            <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                         </th>
                         <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
-                        <!--<td <?php echo $style; ?>>--Course--</td>
-                        <td <?php echo $style; ?>>--Class--</td>
-                        <td <?php echo $style; ?>>--Group--</td>
-                        <td <?php echo $style; ?>>--Enrolled Date--</td>-->
-                        <td <?php echo $style; ?>><a href="">Edit</a></td>
-                        <td <?php echo $style; ?>><a href="">Remove</a></td>
-                                                
+                        <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
+                        <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
+                        <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
+                        <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();" class="remove-button">&nbsp;</a></td>
+
                     </tr>
-                    <?php
-                }
-                ?>
+    <?php
+}
+?>
             </tbody>
         </table>
 
