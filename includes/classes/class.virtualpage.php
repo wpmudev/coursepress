@@ -23,7 +23,6 @@ if (!class_exists('CoursePress_Virtual_Page')) {
             $this->date = isset($args['date']) ? $args['date'] : current_time('mysql');
             $this->dategmt = isset($args['date']) ? $args['date'] : current_time('mysql', 1);
             $this->type = isset($args['type']) ? $args['type'] : 'page';
-            //remove_action('template_redirect', 'redirect_canonical');
             add_filter('the_posts', array(&$this, 'virtualPage'));
             add_filter('the_title', array(&$this, 'hide_title'), 10, 2);
         }

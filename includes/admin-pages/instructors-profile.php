@@ -8,7 +8,7 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 
         <div class='course-liquid-left'>
 
-            <div id='course-left'>
+            <div id='instructor-left'>
 
                 <?php wp_nonce_field('instructor_profile_' . $instructor->id); ?>
 
@@ -29,15 +29,34 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                     <table cellspacing="0" class="widefat instructor-profile">
                         <tbody>
                             <tr>
-                                <td><?php echo get_avatar($instructor->ID, '80'); ?></td>
-                                <td>
-                                    <div class="course_additional_info">
-                                        <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span><span class="info"><?php echo $instructor->user_firstname; ?></span></div>
-                                        <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span><?php echo $instructor->user_lastname; ?></div>
-                                        <div><span class="info_caption"><?php _e('E-mail', 'cp'); ?>:</span><span class="info"><a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a></span></div>
-                                        <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span><span class="info"><?php echo $instructor->get_courses_number(); ?></span></div>
-                                    </div>
-                                </td>
+                                <?php if (isset($_GET['action']) && $_GET['action'] == 'view') { ?>
+                                    <td><?php echo get_avatar($instructor->ID, '80'); ?></td>
+                                    <td>
+                                        <div class="instructor_additional_info">
+                                            <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span><span class="info"><?php echo $instructor->user_firstname; ?></span></div>
+                                            <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span><?php echo $instructor->user_lastname; ?></div>
+                                            <div><span class="info_caption"><?php _e('E-mail', 'cp'); ?>:</span><span class="info"><a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a></span></div>
+                                            <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span><span class="info"><?php echo $instructor->get_courses_number(); ?></span></div>
+                                        </div>
+                                    </td>
+                                <?php } else { ?>
+                                    <td>
+                                        <label class="ins-box"><?php _e('First Name', 'cp'); ?>
+                                            <input type="user_firstname" value="<?php echo esc_attr($instructor->user_firstname); ?>" />
+                                        </label>
+
+                                        <label class="ins-box"><?php _e('Last Name', 'cp'); ?>
+                                            <input type="user_lastname" value="<?php echo esc_attr($instructor->user_lastname); ?>" />
+                                        </label>
+
+                                        <label class="ins-box"><?php _e('E-mail', 'cp'); ?>
+                                            <input type="user_email" value="<?php echo esc_attr($instructor->user_email); ?>" />
+                                        </label>
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                <?php } ?>
 
                             </tr>
 
@@ -85,7 +104,6 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                                 if ($course_object) {
 
                                     $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-                                    
                                     ?>
                                     <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
                                         <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" width="75%">
@@ -113,71 +131,72 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
             </div>
         </div> <!-- course-liquid-left -->
 
+        <?php if (1 == 0) { ?>
+            <div class='course-liquid-right'>
 
-        <div class='course-liquid-right'>
+                <div class="course-holder-wrap">
 
-            <div class="course-holder-wrap">
-
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php _e('Edit Profile', 'cp'); ?></h3>
-                </div>
-
-                <div class="level-holder" id="sidebar-levels">
-                    <div class='sidebar-inner'>
-                        
-                        <div class="instructors-info" id="instructors-info">
-                            <label class="ins-box"><?php _e('First Name', 'cp'); ?>
-                                <input type="user_firstname" value="<?php echo esc_attr($instructor->user_firstname); ?>" />
-                            </label>
-
-                            <label class="ins-box"><?php _e('Last Name', 'cp'); ?>
-                                <input type="user_lastname" value="<?php echo esc_attr($instructor->user_lastname); ?>" />
-                            </label>
-
-                            <label class="ins-box"><?php _e('E-mail', 'cp'); ?>
-                                <input type="user_email" value="<?php echo esc_attr($instructor->user_email); ?>" />
-                            </label>
-
-                            <label><?php _e('Bio', 'cp'); ?>
-                                <?php
-                                /*$args = array(
-                                    "textarea_name" => "bio",
-                                    "textarea_rows" => 3,
-                                   
-                                    "tinymce" => array(
-                                        "theme_advanced_buttons1" => "bold,italic,underline,bullist,numlist",
-                                        "theme_advanced_buttons2" => '',
-                                        "theme_advanced_buttons3" => ''
-                                    )
-                                );*/
-
-                                if (!isset($instructor->bio)) {
-                                    $bio = new StdClass;
-                                    $instructor->bio = '';
-                                }
-
-                                $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
-
-                            if (!isset($course_excerpt->post_excerpt)) {
-                                $course_excerpt = new StdClass;
-                                $course_excerpt->post_excerpt = '';
-                            }
-
-                            $desc = '';
-                            wp_editor(stripslashes($course_details->post_excerpt), "course_excerpt", $args);
-                            
-                                //wp_editor(esc_attr($instructor->bio), "bio", $args);
-                                ?>
-                            </label>
-                        </div>
-
-                        <div class="clearfix"></div>
-
+                    <div class="sidebar-name no-movecursor">
+                        <h3><?php _e('Edit Profile', 'cp'); ?></h3>
                     </div>
-                </div>
-            </div> <!-- course-holder-wrap -->
 
-        </div> <!-- course-liquid-right -->
+                    <div class="level-holder" id="sidebar-levels">
+                        <div class='sidebar-inner'>
+
+                            <div class="instructors-info" id="instructors-info">
+                                <label class="ins-box"><?php _e('First Name', 'cp'); ?>
+                                    <input type="user_firstname" value="<?php echo esc_attr($instructor->user_firstname); ?>" />
+                                </label>
+
+                                <label class="ins-box"><?php _e('Last Name', 'cp'); ?>
+                                    <input type="user_lastname" value="<?php echo esc_attr($instructor->user_lastname); ?>" />
+                                </label>
+
+                                <label class="ins-box"><?php _e('E-mail', 'cp'); ?>
+                                    <input type="user_email" value="<?php echo esc_attr($instructor->user_email); ?>" />
+                                </label>
+
+                                <label><?php _e('Bio', 'cp'); ?>
+                                    <?php
+                                    /* $args = array(
+                                      "textarea_name" => "bio",
+                                      "textarea_rows" => 3,
+
+                                      "tinymce" => array(
+                                      "theme_advanced_buttons1" => "bold,italic,underline,bullist,numlist",
+                                      "theme_advanced_buttons2" => '',
+                                      "theme_advanced_buttons3" => ''
+                                      )
+                                      ); */
+
+                                    if (!isset($instructor->bio)) {
+                                        $bio = new StdClass;
+                                        $instructor->bio = '';
+                                    }
+
+                                    $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
+
+                                    if (!isset($course_excerpt->post_excerpt)) {
+                                        $course_excerpt = new StdClass;
+                                        $course_excerpt->post_excerpt = '';
+                                    }
+
+                                    $desc = '';
+                                    wp_editor(stripslashes($course_details->post_excerpt), "course_excerpt", $args);
+
+                                    //wp_editor(esc_attr($instructor->bio), "bio", $args);
+                                    ?>
+                                </label>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                </div> <!-- course-holder-wrap -->
+
+            </div> <!-- course-liquid-right -->
+        <?php } ?>
 
     </form>
 

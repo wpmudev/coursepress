@@ -10,10 +10,12 @@ if (!class_exists('Course')) {
         var $id = '';
         var $output = 'OBJECT';
         var $course = array();
+        var $details;
 
         function __construct($id = '', $output = 'OBJECT') {
             $this->id = $id;
             $this->output = $output;
+            $this->details = get_post($this->id, $this->output);
         }
 
         function Course($id = '', $output = 'OBJECT') {
@@ -43,6 +45,12 @@ if (!class_exists('Course')) {
             } else {
                 return false;
             }
+        }
+
+        function get_course_id_by_name($slug) {
+            global $wpdb;
+            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $slug));
+            return $id;
         }
 
         function update_course() {
@@ -146,6 +154,34 @@ if (!class_exists('Course')) {
 
             // Update the post status
             wp_update_post($post);
+        }
+
+        function get_units($course_id = '') {
+
+            if ($course_id == '') {
+                $course_id = $this->id;
+            }
+
+            $args = array(
+                'category' => '',
+                'order' => 'ASC',
+                'post_type' => 'unit',
+                'post_mime_type' => '',
+                'post_parent' => '',
+                'post_status' => 'any',
+                'meta_key' => 'unit_order',
+                'orderby' => 'meta_value_num',
+                'meta_query' => array(
+                    array(
+                        'key' => 'course_id',
+                        'value' => $course_id
+                    ),
+                )
+            );
+
+            $units = get_posts($args);
+        
+            return $units;
         }
 
     }

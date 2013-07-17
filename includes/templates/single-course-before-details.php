@@ -7,8 +7,8 @@ the_excerpt();
     //Get instructors count for this course
     $instructors = do_shortcode('[course_instructors count="true"]');
 
-    if (count($instructors >= 0)) {
-        if (count($instructors) >= 2) {
+    if ($instructors > 0) {
+        if ($instructors >= 2) {
             ?>
             <h2><?php _e('About Instructors', 'cp'); ?></h2>
             <?php

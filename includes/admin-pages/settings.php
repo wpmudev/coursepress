@@ -3,8 +3,12 @@ global $action, $page;
 wp_reset_vars(array('action', 'page'));
 
 if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
-    if(isset($_POST['course_slug']) && !empty($_POST['course_slug'])){
-        $this->set_course_slug($_POST['course_slug']);
+    foreach ($_POST as $key => $value) {
+        if (preg_match("/option_/i", $key)) {//every field name with prefix "option_" will be saved as an option
+            if($_POST[$key] != ''){
+            update_option(str_replace('option_', '', $key), $value);
+            }
+        }
     }
 }
 ?>
@@ -35,7 +39,8 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
         foreach ($menus as $key => $menu) {
             ?>
             <a class="nav-tab<?php if ($tab == $key)
-            echo ' nav-tab-active'; ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
+            echo ' nav-tab-active';
+            ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
                <?php
            }
            ?>
@@ -46,7 +51,7 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
 
         case 'general': $this->show_settings_general();
             break;
-        
+
         case 'groups': $this->show_settings_groups();
             break;
 
@@ -58,7 +63,7 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
 
         case 'email': $this->show_settings_email();
             break;
-        
+
         default: do_action('coursepress_settings_menu_' . $tab);
             break;
     }

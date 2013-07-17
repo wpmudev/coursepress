@@ -65,18 +65,52 @@
     margin-top: 20px;
     text-align: right;
 }
+.apply-button-finished{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background:#CCC;
+
+    display: block;
+    color: #FFF;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #CCC;
+    text-align: center;
+    text-decoration: none;
+}
+
+.apply-button-pending{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background:#60c160;
+
+    display: block;
+    color: #FFF;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #CCC;
+    text-align: center;
+    text-decoration: none;
+}
 
 a.apply-button-enrolled{
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
     border-radius:3px;
 
-    -moz-box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-    box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-
-    background: -moz-linear-gradient(19% 65% 90deg,#60c160, #51a351, #51a351 51%);
-    background: -webkit-gradient(linear, 0% 10%, 0% 60%, from(#60c160), to(#51a351));
+    background: #60c160;
 
     color: #f0f0f0;
     float:right;
@@ -91,8 +125,7 @@ a.apply-button-enrolled{
 }
 
 a.apply-button-enrolled:hover{
-    background: -moz-linear-gradient(19% 65% 90deg,#60c160, #51a351, #51a351 51%);
-    background: -webkit-gradient(linear, 0% 18%, 0% 60%, from(#60c160), to(#51a351));
+    background: #60b160;
     color: #f1f1f1;
 }
 
@@ -101,12 +134,7 @@ a.apply-button, input.apply-button{
     -webkit-border-radius:3px;
     border-radius:3px;
 
-    -moz-box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-    box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);
-
-    background: -moz-linear-gradient(19% 65% 90deg,#0087B4, #0099CC, #0099CC 51%);
-    background: -webkit-gradient(linear, 0% 11%, 0% 60%, from(#0099CC), to(#0087B4));
+    background: #0099CC;
 
     color: #f0f0f0;
     float:right;
@@ -115,13 +143,12 @@ a.apply-button, input.apply-button{
     font-weight:bold;
     padding:10px 50px;
     text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
-    border: 1px solid #267ed4;
+    border: 1px solid #0099CC;
     text-align: center;
     text-decoration: none;
 }
 
 a.apply-button:hover, input.apply-button:hover{
-    background: -moz-linear-gradient(19% 65% 90deg,#0082AD, #0099CC, #0099CC 51%);
-    background: -webkit-gradient(linear, 0% 15%, 0% 60%, from(#0099CC), to(#0082AD));
+    background: #0088CC;
     color: #f1f1f1;
 }

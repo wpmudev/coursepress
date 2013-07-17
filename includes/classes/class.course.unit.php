@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
@@ -10,10 +9,14 @@ if (!class_exists('Unit')) {
         var $id = '';
         var $output = 'OBJECT';
         var $unit = array();
+        var $details;
+        var $course_id = '';
 
         function __construct($id = '', $output = 'OBJECT') {
             $this->id = $id;
             $this->output = $output;
+            $this->details = get_post($this->id, $this->output);
+            $this->course_id = $this->get_parent_course_id();
         }
 
         function Unit($id = '', $output = 'OBJECT') {
@@ -21,7 +24,9 @@ if (!class_exists('Unit')) {
         }
 
         function get_unit() {
+            
             $unit = get_post($this->id, $this->output);
+            
             if ($unit->post_title == '') {
                 $unit->post_title = __('Untitled', 'cp');
             }
@@ -84,6 +89,38 @@ if (!class_exists('Unit')) {
             // Update the post status
             wp_update_post($post);
         }
+        
+        function get_permalink($course_id = ''){
+            global $course_slug;
+            global $units_slug;
+            
+            if($course_id == ''){
+                $course_id = get_post_meta($post_id, 'course_id', true);
+            }
+            
+            $course = new Course($course_id);
+            $course = $course->get_course();
+
+            $unit_permalink = get_option('home').'/'.$course_slug.'/'.$course->post_name.'/'.$units_slug.'/'.$this->details->post_name.'/';
+            return $unit_permalink;
+        }
+        
+        function get_unit_id_by_name($slug) {
+            global $wpdb;
+            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $slug));
+            return $id;
+        }
+        
+        function get_parent_course_id($unit_id = ''){
+            if($unit_id == ''){
+                $unit_id = $this->id;
+            }
+            
+            $course_id = get_post_meta($unit_id, 'course_id', true);
+            return $course_id;
+        }
+        
+        
 
     }
 

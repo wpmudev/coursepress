@@ -1,0 +1,189 @@
+.form-info-red{
+    color:red;
+}
+
+.student-settings label{
+    display: block;
+    width: 48%;
+    float: left;
+    margin-left: 1%;
+}
+
+.student-settings label.right{
+    display: block;
+    width: 48%;
+    float: right;
+    margin-right: 2%;
+}
+
+.student-settings input[type="text"], .student-settings input[type="password"]{
+    width: 95%;
+}
+
+.student-settings label.full{
+    display: block;
+    width: 95%;
+    float: right;
+    margin-right: 2%;
+}
+
+.apply-links{
+    float: right;
+    margin-top: 10px;
+}
+
+.strong{
+    font-weight: bold;
+}
+
+.devider{
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    float: left;
+    margin: 15px 0px 15px 0px;
+}
+
+.small-circle-profile-image {
+    width: 76px;
+    height: 76px;
+    border-radius: 38px;
+    -webkit-border-radius: 38px;
+    -moz-border-radius: 38px;
+    background-repeat: no-repeat;
+    border: 1px solid #ccc;
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.instructors-box{
+    float: right;
+    width: 100%;
+}
+
+.instructor{
+    float: left;
+    text-align: center;
+    width: 49%;
+    margin-right: 1%;
+}
+
+.instructor-name{
+    float: left;
+    margin-top: 25px;
+}
+
+.enroll-box{
+    float: left;
+    width: 100%;
+}
+
+.enroll-box-left{
+    width: 49%;
+    float: left;
+}
+.enroll-box-right{
+    width: 49%;
+    float: right;
+}
+
+.apply-box{
+    width: 100%;
+    float: right;
+}
+
+.passcode-box{
+    float: right;
+    width: 100%;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.apply-button-finished{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background:#CCC;
+
+    display: block;
+    color: #FFF;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #CCC;
+    text-align: center;
+    text-decoration: none;
+}
+
+.apply-button-pending{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background:#60c160;
+
+    display: block;
+    color: #FFF;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #CCC;
+    text-align: center;
+    text-decoration: none;
+}
+
+a.apply-button-enrolled, input[type="submit"].apply-button-enrolled{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background: #60c160;
+
+    color: #f0f0f0;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #458b45;
+    text-align: center;
+    text-decoration: none;
+}
+
+a.apply-button-enrolled:hover, input[type="submit"].apply-button-enrolled:hover{
+    background: #60b160;
+    color: #f1f1f1;
+}
+
+a.apply-button, input.apply-button{
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    background: #0099CC;
+
+    color: #f0f0f0;
+    float:right;
+    font-family:arial,helvetica,sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    padding:10px 50px;
+    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #0099CC;
+    text-align: center;
+    text-decoration: none;
+}
+
+a.apply-button:hover, input.apply-button:hover{
+    background: #0099CC;
+    color: #f1f1f1;
+}

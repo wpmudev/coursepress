@@ -992,13 +992,14 @@ div.levelinformation {
 
 .course_additional_info{
     margin-bottom: 10px;
+    text-align: right;
 }
 
-.course_additional_info div{
+.course_additional_info div, .instructor_additional_info div{
     padding-bottom: 5px;
 }
 
-.course_additional_info .info_caption{
+.course_additional_info .info_caption, .instructor_additional_info .info_caption{
     font-weight: bold;
     padding: 0px 5px 0px 5px;
 

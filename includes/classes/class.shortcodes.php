@@ -13,13 +13,14 @@ if (!class_exists('CoursePress_Shortcodes')) {
         }
 
         function __construct() {
-
             //register plugin shortcodes
             add_shortcode('course_instructors', array(&$this, 'course_instructors'));
             add_shortcode('course_details', array(&$this, 'course_details'));
             add_shortcode('courses_student_dashboard', array(&$this, 'courses_student_dashboard'));
             add_shortcode('courses_student_settings', array(&$this, 'courses_student_settings'));
             add_shortcode('courses_urls', array(&$this, 'courses_urls'));
+            add_shortcode('course_units', array(&$this, 'course_units'));
+            add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
         }
 
         function courses_urls($atts) {
@@ -49,7 +50,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $course = $course->get_course();
 
             if ($field == 'class_size') {
-                if ($course->class_size == '0') {
+                if ($course->class_size == '0' || $course->class_size == '') {
                     $course->class_size = __('Infinite', 'cp');
                 }
             }
@@ -74,7 +75,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if ($field == 'course_start_date' or $field == 'course_end_date' or $field == 'enrollment_start_date' or $field == 'enrollment_end_date') {
                 $date_format = get_option('date_format');
-                $course->$field = sp2nbsp(date($date_format, strtotime($course->$field)));
+                if ($course->$field == '') {
+                    $course->$field = __('N/A', 'cp');
+                } else {
+                    $course->$field = sp2nbsp(date($date_format, strtotime($course->$field)));
+                }
             }
 
             if ($field == 'price') {
@@ -86,10 +91,29 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $student = new Student(get_current_user_id());
 
                 if (current_user_can('student')) {
+
                     if (!$student->user_enrolled_in_course($course_id)) {
-                        $course->button = '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
+                        if ($course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime($course->enrollment_start_date) <= time() && strtotime($course->enrollment_end_date) >= time()) {
+                            $course->button = '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
+                        } else {
+                            $course->button = '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                        }
                     } else {
-                        $course->button = '<a href="" class="apply-button-enrolled">' . __('Go to Class', 'cp') . '</a>';
+                        if ($course->course_start_date !== '' && $course->course_end_date !== '') {//Course is currently active
+                            if (strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) {//Course is currently active
+                                $course->button = '<a href="' . get_permalink($course->ID) . 'units/" class="apply-button-enrolled">' . __('Go to Class', 'cp') . '</a>';
+                            } else {
+
+                                if (strtotime($course->course_start_date) >= time()) {//Waiting for a course to start
+                                    $course->button = '<span class="apply-button-pending">' . __('You are enrolled', 'cp') . '</span>';
+                                }
+                                if (strtotime($course->course_end_date) <= time()) {//Course is no longer active
+                                    $course->button = '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
+                                }
+                            }
+                        }else{//Course is inactive or pending
+                            $course->button = '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                        }
                     }
                 } else {
                     $cp = new CoursePress();
@@ -130,6 +154,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $content .= '</div>';
                 $instructors_count++;
             }
+   
             if ($count) {
                 return $instructors_count;
             } else {
@@ -147,6 +172,55 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $coursepress = new CoursePress();
             extract(shortcode_atts(array(), $atts));
             load_template($coursepress->plugin_dir . 'includes/templates/courses-student-settings.php', false);
+        }
+
+        function course_units($atts) {
+            $course = new Course();
+
+            if (empty($course_id)) {
+                $course_id = 0;
+            }
+
+            $content = '';
+
+            extract(shortcode_atts(array('course_id' => $course_id), $atts));
+
+            $units = $course->get_units($course_id);
+            
+            $student = new Student(get_current_user_id());
+            //redirect to the parent course page if not enrolled
+            if (!$student->has_access_to_course($course_id)) {
+                wp_redirect(get_permalink($course_id));
+                exit;
+            }
+
+            $content .= '<ol>';
+            foreach ($units as $unit) {
+                $unit_details = new Unit($unit->ID);
+                $content .= '<li><a href="' . $unit_details->get_permalink($course_id) . '">' . $unit->post_title . '</a></li>';
+            }
+            $content .= '</ol>';
+
+            return $content;
+        }
+
+        function course_unit_details($atts) {
+
+            extract(shortcode_atts(array(
+                'unit_id' => 0,
+                'field' => 'title'
+                            ), $atts));
+
+            $unit = new Unit($unit_id);            
+            $student = new Student(get_current_user_id());
+            
+            //redirect to the parent course page if not enrolled
+            if (!$student->has_access_to_course($unit->course_id)) {
+                wp_redirect(get_permalink($unit->course_id));
+                exit;
+            }
+
+            return $unit->details->$field;
         }
 
     }

@@ -18,7 +18,7 @@
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='course_slug' id='course_slug' value='<?php esc_attr_e($this->get_course_slug());
+                                ?>&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php esc_attr_e($this->get_course_slug());
                                 ?>' />&nbsp;/
                                 
                                 <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(get_option('home')));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
@@ -27,11 +27,22 @@
                         </tr>
                         
                         <tr valign="top">
+                            <th scope="row"><?php _e('Units Slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(get_option('home')));
+                                ?>&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php esc_attr_e($this->get_units_slug());
+                                ?>' />&nbsp;/
+                               
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
                             <th scope="row"><?php _e('Enrollment Process page', 'cp'); ?></th>
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='enrollment_process_slug' id='enrollment_process_slug' value='<?php esc_attr_e($this->get_enrollment_process_slug());
+                                ?>&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php esc_attr_e($this->get_enrollment_process_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
@@ -41,7 +52,7 @@
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='signup_slug' id='signup_slug' value='<?php esc_attr_e($this->get_signup_page_slug());
+                                ?>&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php esc_attr_e($this->get_signup_page_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
@@ -51,7 +62,17 @@
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='student_dashboard_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
+                                ?>&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Student Settings page', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(get_option('home')));
+                                ?>&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
