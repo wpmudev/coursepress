@@ -25,12 +25,11 @@ if (!class_exists('Course')) {
         function get_course() {
 
             $course = get_post($this->id, $this->output);
-
+            
+            
             if (!empty($course)) {
 
-                /* if (empty($course)) {
-                  $course = new stdClass();
-                  } */
+
 
                 if (!isset($course->post_title) || $course->post_title == '') {
                     $course->post_title = __('Untitled', 'cp');
@@ -55,7 +54,10 @@ if (!class_exists('Course')) {
 
         function update_course() {
             global $user_id, $wpdb;
+
             $course = get_post($this->id, $this->output);
+
+            $post_status = 'publish';
 
             if ($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') && $_POST['course_description'] != '') {
                 if ($course->post_status != 'publish') {
@@ -180,8 +182,15 @@ if (!class_exists('Course')) {
             );
 
             $units = get_posts($args);
-        
+
             return $units;
+        }
+
+        function get_permalink($course_id = '') {
+            if ($course_id == '') {
+                $course_id = $this->id;
+            }
+            return get_permalink($course_id);
         }
 
     }

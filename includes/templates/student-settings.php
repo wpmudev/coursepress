@@ -1,5 +1,7 @@
+<?php if (current_user_can('student')) { ?>
 <?php
-$student = new Student(get_current_user_id());
+
+
 
 if (isset($_POST['student-settings-submit'])) {
     $student_data = array();
@@ -15,9 +17,9 @@ if (isset($_POST['student-settings-submit'])) {
         }
     }
 
-    $student_date['user_email'] = $_POST['email'];
-    $student_date['first_name'] = $_POST['first_name'];
-    $student_date['last_name'] = $_POST['last_name'];
+    $student_data['user_email'] = $_POST['email'];
+    $student_data['first_name'] = $_POST['first_name'];
+    $student_data['last_name'] = $_POST['last_name'];
 
     if (!is_email($_POST['email'])) {
         $form_message = __('E-mail address is not valid.', 'cp');
@@ -26,6 +28,7 @@ if (isset($_POST['student-settings-submit'])) {
     }
 
     if ($form_errors == 0) {
+        $student = new Student(get_current_user_id());
         if ($student->update_student_data($student_data)) {
             $form_message = __('Settings have been updated successfully.', 'cp');
             $form_message_class = 'regular';
@@ -35,6 +38,7 @@ if (isset($_POST['student-settings-submit'])) {
         }
     }
 }
+$student = new Student(get_current_user_id());
 ?>
 <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message;?></p>
 
@@ -68,3 +72,7 @@ if (isset($_POST['student-settings-submit'])) {
         <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Save Changes', 'cp'); ?>" />
     </label>
 </form>
+<?php }else{
+    wp_redirect(wp_login_url());
+    exit;
+} ?>

@@ -1,6 +1,9 @@
 <?php
 the_excerpt();
+
+echo the_author_posts_link();
 ?>
+
 
 <div class="instructors-box">
     <?php
@@ -38,9 +41,7 @@ the_excerpt();
         <div class="apply-box">
             <?php echo do_shortcode('[course_details field="button"]'); ?>
         </div>
-        <div class="passcode-box">
-            <?php echo do_shortcode('[course_details field="passcode"]'); ?>
-        </div>
+        
         <input type="hidden" name="course_id" value="<?php echo do_shortcode('[course_details field="ID"]'); ?>" />
         </form>
     </div>

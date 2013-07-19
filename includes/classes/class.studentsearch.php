@@ -7,8 +7,12 @@ if (!class_exists('Student_Search')) {
         var $users_per_page = 25;
         var $search_errors = false;
 
-        function __construct($search_term = '', $page = '') {
+        function __construct($search_term = '', $page = '', $search_args = array()) {
 
+            if(!empty($search_args['users_per_page']) && is_numeric($search_args['users_per_page'])){
+                $this->users_per_page = $search_args['users_per_page'];
+            }
+            
             $this->search_term = $search_term;
             $this->raw_page = ( '' == $page ) ? false : (int) $page;
             $this->page = (int) ( '' == $page ) ? 1 : $page;
@@ -18,12 +22,14 @@ if (!class_exists('Student_Search')) {
                 'offset' => ( $this->page - 1 ) * $this->users_per_page,
                 'fields' => 'all'
             );
+            
+            
 
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
                 'role' => 'student',
-                'meta_key' => '',
-                'meta_value' => '',
+                'meta_key' => $search_args['meta_key'],
+                'meta_value' => $search_args['meta_value'],
                 'meta_compare' => '',
                 'include' => array(),
                 'exclude' => array(),
@@ -41,6 +47,7 @@ if (!class_exists('Student_Search')) {
             $this->prepare_query();
             $this->query();
             $this->do_paging();
+            
         }
 
         function Student_Search($search_term = '', $page = '') {

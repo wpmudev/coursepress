@@ -1,3 +1,11 @@
+.apply-button-archive{
+    margin-top:10px;
+}
+
+.units-breadcrumbs{
+    font-size: 12px;
+    margin-bottom: 20px;
+}
 .form-info-red{
     color:red;
 }
@@ -66,6 +74,13 @@
     float: left;
     text-align: center;
     width: 49%;
+    margin-right: 1%;
+}
+
+.instructor-avatar{
+    float: left;
+    text-align: center;
+    width: 100px;
     margin-right: 1%;
 }
 
@@ -164,7 +179,7 @@ a.apply-button-enrolled:hover, input[type="submit"].apply-button-enrolled:hover{
     color: #f1f1f1;
 }
 
-a.apply-button, input.apply-button{
+a.apply-button, input.apply-button, .apply-box input.apply-button{
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
     border-radius:3px;
@@ -183,7 +198,7 @@ a.apply-button, input.apply-button{
     text-decoration: none;
 }
 
-a.apply-button:hover, input.apply-button:hover{
-    background: #0099CC;
+a.apply-button:hover, input.apply-button:hover, .apply-box input.apply-button:hover{
+    background: #0088CC;
     color: #f1f1f1;
 }

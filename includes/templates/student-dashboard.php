@@ -20,10 +20,11 @@
                         <span class="strong"><?php _e('Price: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="price" course_id="' . $course_details->ID . '"]'); ?>
                     </div></div>
 
-                <div class="enroll-box-right"><form name="enrollment-process" method="post" action="<?php echo do_shortcode('[courses_urls url="enrollment-process" course_id="' . $course_details->ID . '"]'); ?>">
+                <div class="enroll-box-right">
+                    <form name="enrollment-process" method="post" action="<?php echo trailingslashit(site_url() . '/' . get_option('enrollment_process_slug', 'enrollment-process')); ?>">
                         <div class="apply-box">
                             <?php echo do_shortcode('[course_details field="button" course_id="' . $course_details->ID . '"]'); ?>
-                            <div class="apply-links"><a href="?unenroll=<?php echo $course_details->ID; ?>" onClick="return unenroll();">Un-enroll</a> | <a href="<?php echo get_permalink($course_details->ID);?>">Course Details</a></div>
+                            <?php echo do_shortcode('[course_details field="action_links" course_id="' . $course_details->ID . '"]'); ?>
                         </div>
                     </form>
                 </div>
@@ -34,12 +35,14 @@
 
         <?php
     }
-    if(count($student_courses) == 0){
+    if (count($student_courses) == 0) {
         _e('You have not yet enrolled in a course.', 'cp');
     }
     ?>
-<?php
+    <?php
 } else {
     //_e('You don\'t have required permissions to access this page', 'cp');
+    wp_redirect(wp_login_url());
+    exit;
 }
 ?>

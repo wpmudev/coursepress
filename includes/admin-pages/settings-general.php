@@ -17,11 +17,11 @@
                             <th scope="row"><?php _e('Course Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
+                                esc_html_e(trailingslashit(site_url()));
                                 ?>&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php esc_attr_e($this->get_course_slug());
                                 ?>' />&nbsp;/
                                 
-                                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(get_option('home')));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
+                                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(site_url()));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
                                 
                             </td>
                         </tr>
@@ -30,7 +30,7 @@
                             <th scope="row"><?php _e('Units Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
+                                esc_html_e(trailingslashit(site_url()));
                                 ?>&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php esc_attr_e($this->get_units_slug());
                                 ?>' />&nbsp;/
                                
@@ -41,18 +41,18 @@
                             <th scope="row"><?php _e('Enrollment Process page', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
+                                esc_html_e(trailingslashit(site_url()));
                                 ?>&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php esc_attr_e($this->get_enrollment_process_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
                         
                         <tr valign="top">
-                            <th scope="row"><?php _e('Signup / Login page', 'cp'); ?></th>
+                            <th scope="row"><?php _e('Sign Up page', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php esc_attr_e($this->get_signup_page_slug());
+                                esc_html_e(trailingslashit(site_url()));
+                                ?>&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php esc_attr_e($this->get_signup_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
@@ -61,7 +61,7 @@
                             <th scope="row"><?php _e('Student Dashboard page', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
+                                esc_html_e(trailingslashit(site_url()));
                                 ?>&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
                                 ?>' />&nbsp;/
                             </td>
@@ -71,11 +71,23 @@
                             <th scope="row"><?php _e('Student Settings page', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(get_option('home')));
-                                ?>&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_dashboard_slug());
+                                esc_html_e(trailingslashit(site_url()));
+                                ?>&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php esc_attr_e($this->get_student_settings_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Instructor profile slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url()));
+                                ?>&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php esc_attr_e($this->get_instructor_profile_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        
                         
                         
                         

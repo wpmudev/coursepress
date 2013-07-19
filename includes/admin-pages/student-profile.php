@@ -1,6 +1,6 @@
 <?php
-if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
-    $instructor = new Instructor($_GET['instructor_id']);
+if (isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
+    $student = new Student($_GET['student_id']);
 }
 ?>
 <div class='wrap nocoursesub'>
@@ -10,7 +10,7 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 
             <div id='course-left'>
 
-                <?php wp_nonce_field('instructor_profile_' . $instructor->id); ?>
+                <?php wp_nonce_field('student_profile_' . $student->id); ?>
 
                 <div id='edit-sub' class='course-holder-wrap'>
 
@@ -42,18 +42,18 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                             <?php
                             $style = '';
 
-                            $assigned_courses = $instructor->get_assigned_courses_ids();
+                            $enrolled_courses = $student->get_enrolled_courses_ids();
 
-                            if (count($assigned_courses) == 0) {
+                            if (count($enrolled_courses) == 0) {
                                 ?>
                                 <tr>
-                                    <td><div class="zero-row"><?php _e('0 courses assigned to the instructor', 'cp'); ?></div></td>
+                                    <td><div class="zero-row"><?php _e('Student did not enroll in any course yet.', 'cp'); ?></div></td>
                                     <td></td>
                                 </tr>
                                 <?php
                             }
 
-                            foreach ($assigned_courses as $course_id) {
+                            foreach ($enrolled_courses as $course_id) {
 
                                 $course_object = new Course($course_id);
                                 $course_object = $course_object->get_course();
@@ -107,27 +107,27 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                                     <tbody>
                                         <tr>
                                             <?php if (isset($_GET['action']) && $_GET['action'] == 'view') { ?>
-                                                <td><?php echo get_avatar($instructor->ID, '80'); ?></td>
+                                                <td><?php echo get_avatar($student->ID, '80'); ?></td>
                                                 <td>
                                                     <div class="instructor_additional_info">
-                                                        <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span><span class="info"><?php echo $instructor->user_firstname; ?></span></div>
-                                                        <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span><?php echo $instructor->user_lastname; ?></div>
-                                                        <div><span class="info_caption"><?php _e('E-mail', 'cp'); ?>:</span><span class="info"><a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a></span></div>
-                                                        <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span><span class="info"><?php echo $instructor->get_courses_number(); ?></span></div>
+                                                        <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span><span class="info"><?php echo $student->user_firstname; ?></span></div>
+                                                        <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span><?php echo $student->user_lastname; ?></div>
+                                                        <div><span class="info_caption"><?php _e('E-mail', 'cp'); ?>:</span><span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span></div>
+                                                        <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span><span class="info"><?php echo $student->get_courses_number(); ?></span></div>
                                                     </div>
                                                 </td>
                                             <?php } else { ?>
                                                 <td>
                                                     <label class="ins-box"><?php _e('First Name', 'cp'); ?>
-                                                        <input type="user_firstname" value="<?php echo esc_attr($instructor->user_firstname); ?>" />
+                                                        <input type="user_firstname" value="<?php echo esc_attr($student->user_firstname); ?>" />
                                                     </label>
 
                                                     <label class="ins-box"><?php _e('Last Name', 'cp'); ?>
-                                                        <input type="user_lastname" value="<?php echo esc_attr($instructor->user_lastname); ?>" />
+                                                        <input type="user_lastname" value="<?php echo esc_attr($student->user_lastname); ?>" />
                                                     </label>
 
                                                     <label class="ins-box"><?php _e('E-mail', 'cp'); ?>
-                                                        <input type="user_email" value="<?php echo esc_attr($instructor->user_email); ?>" />
+                                                        <input type="user_email" value="<?php echo esc_attr($student->user_email); ?>" />
                                                     </label>
                                                 </td>
                                                 <td>

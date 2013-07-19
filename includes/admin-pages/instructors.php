@@ -7,7 +7,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['instru
     $instructor->delete_instructor();
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
+if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == 'view') && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
     include('instructors-profile.php');
 } else {
 
@@ -16,7 +16,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['instruct
     ?>
 
     <div class="wrap nosubsub">
-        <div class="icon32" id="icon-users"><br></div>
+        
+        
+        <div class="icon32 " id="icon-users"><br></div>
         <h2><?php _e('Instructors', 'cp'); ?><a class="add-new-h2" href="admin.php?page=instructor&action=add"><?php _e('Add New', 'cp'); ?></a></h2>
 
         
@@ -110,7 +112,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['instruct
                             <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
                             <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
                             <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
-                            <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="?page=instructors&action=edit&instructor_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('Edit', 'cp'); ?></a></td>
+                            <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="?page=instructors&action=view&instructor_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
                             <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=instructors&action=delete&instructor_id=<?php echo $user_object->ID; ?>" onclick="return removeInstructor();" class="remove-button">&nbsp;</a></td>
 
                         </tr>

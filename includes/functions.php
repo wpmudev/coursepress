@@ -132,7 +132,7 @@ function get_the_post_excerpt($id = false, $length = 55) {
     if ($id != $post->ID) {
         $post = get_page($id);
     }
-    
+
     if (!$excerpt = trim($post->post_excerpt)) {
         $excerpt = $post->post_content;
         $excerpt = strip_shortcodes($excerpt);
@@ -188,7 +188,7 @@ function get_the_course_excerpt($id = false, $length = 55) {
 }
 
 function get_number_of_days_between_dates($start_date, $end_date) {
-    
+
     $startTimeStamp = strtotime($start_date);
     $endTimeStamp = strtotime($end_date);
 
@@ -196,35 +196,77 @@ function get_number_of_days_between_dates($start_date, $end_date) {
 
     $numberDays = $timeDiff / 86400;  // 86400 seconds in one day
     $numberDays = intval($numberDays);
-    
+
     return $numberDays;
 }
+
 /*
-if (!function_exists('M_register_rule')) {
+  if (!function_exists('M_register_rule')) {
 
-    function M_register_rule($rule_name, $class_name, $section) {
+  function M_register_rule($rule_name, $class_name, $section) {
 
-        global $M_Rules, $M_SectionRules;
+  global $M_Rules, $M_SectionRules;
 
-        if (!is_array($M_Rules)) {
-            $M_Rules = array();
-        }
+  if (!is_array($M_Rules)) {
+  $M_Rules = array();
+  }
 
-        if (!is_array($M_SectionRules)) {
-            $M_SectionRules = array();
-        }
+  if (!is_array($M_SectionRules)) {
+  $M_SectionRules = array();
+  }
 
-        if (class_exists($class_name)) {
-            $M_SectionRules[$section][$rule_name] = $class_name;
-            $M_Rules[$rule_name] = $class_name;
-        } else {
-            return false;
-        }
-    }
+  if (class_exists($class_name)) {
+  $M_SectionRules[$section][$rule_name] = $class_name;
+  $M_Rules[$rule_name] = $class_name;
+  } else {
+  return false;
+  }
+  }
 
-}
-*/
-function sp2nbsp($string){
+  }
+ */
+
+function sp2nbsp($string) {
     return str_replace(' ', '&nbsp;', $string);
 }
+
+if (!function_exists('get_userdatabynicename')) :
+
+    function get_userdatabynicename($user_nicename) {
+        global $wpdb;
+        $user_nicename = sanitize_title($user_nicename);
+
+        if (empty($user_nicename))
+            return false;
+        
+        if (!$user = $wpdb->get_row("SELECT * FROM $wpdb->users WHERE user_nicename = '$user_nicename' LIMIT 1"))
+            return false;
+
+        $wpdb->hide_errors();
+        $metavalues = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = '$user->ID'");
+        $wpdb->show_errors();
+
+        if ($metavalues) {
+            foreach ($metavalues as $meta) {
+                $value = maybe_unserialize($meta->meta_value);
+                $user->{$meta->meta_key} = $value;
+
+                // We need to set user_level from meta, not row 
+                if ($wpdb->prefix . 'user_level' == $meta->meta_key)
+                    $user->user_level = $meta->meta_value;
+            }
+        }
+
+        // For backwards compat. 
+        if (isset($user->first_name))
+            $user->user_firstname = $user->first_name;
+        if (isset($user->last_name))
+            $user->user_lastname = $user->last_name;
+        if (isset($user->description))
+            $user->user_description = $user->description;
+
+        return $user;
+    }
+
+endif;
 ?>

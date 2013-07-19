@@ -37,7 +37,7 @@ if (!class_exists('CoursePress_Virtual_Page')) {
 
                 $post = new stdClass;
 
-                $post->ID = -1;
+                $post->ID = 99999999999;/* non-existed post ID */
                 $post->post_author = $this->author;
                 $post->post_date = $this->date;
                 $post->post_date_gmt = $this->dategmt;

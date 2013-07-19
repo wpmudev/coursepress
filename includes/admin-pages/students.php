@@ -4,6 +4,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['studen
     $student->delete_student();
 }
 
+if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == 'view') && isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
+    include('student-profile.php');
+}else{
 // Query the users
 $wp_user_search = new Student_Search($usersearch, $userspage);
 ?>
@@ -99,7 +102,7 @@ foreach ($wp_user_search->get_results() as $user) {
                         <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
                         <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
-                        <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
+                        <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
                         <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();" class="remove-button">&nbsp;</a></td>
 
                     </tr>
@@ -112,3 +115,5 @@ foreach ($wp_user_search->get_results() as $user) {
     </form>
 
 </div>
+
+<?php } ?>

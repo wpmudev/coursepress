@@ -101,7 +101,7 @@ if (!class_exists('Unit')) {
             $course = new Course($course_id);
             $course = $course->get_course();
 
-            $unit_permalink = get_option('home').'/'.$course_slug.'/'.$course->post_name.'/'.$units_slug.'/'.$this->details->post_name.'/';
+            $unit_permalink = site_url().'/'.$course_slug.'/'.$course->post_name.'/'.$units_slug.'/'.$this->details->post_name.'/';
             return $unit_permalink;
         }
         
