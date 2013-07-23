@@ -25,8 +25,8 @@ if (!class_exists('Course')) {
         function get_course() {
 
             $course = get_post($this->id, $this->output);
-            
-            
+
+
             if (!empty($course)) {
 
 
@@ -158,7 +158,7 @@ if (!class_exists('Course')) {
             wp_update_post($post);
         }
 
-        function get_units($course_id = '') {
+        function get_units($course_id = '', $status = 'any') {
 
             if ($course_id == '') {
                 $course_id = $this->id;
@@ -170,9 +170,10 @@ if (!class_exists('Course')) {
                 'post_type' => 'unit',
                 'post_mime_type' => '',
                 'post_parent' => '',
-                'post_status' => 'any',
+                'post_status' => $status,
                 'meta_key' => 'unit_order',
                 'orderby' => 'meta_value_num',
+                'posts_per_page' => '-1',
                 'meta_query' => array(
                     array(
                         'key' => 'course_id',
@@ -191,6 +192,20 @@ if (!class_exists('Course')) {
                 $course_id = $this->id;
             }
             return get_permalink($course_id);
+        }
+
+        function get_number_of_students($course_id = '') {
+            if ($course_id == '') {
+                $course_id = $this->id;
+            }
+
+            $args = array(
+                /*'role' => 'student',*/
+                'meta_key' => 'enrolled_course_class_' . $course_id,
+            );
+            
+            $wp_user_search = new WP_User_Query($args);
+            return count($wp_user_search->get_results());
         }
 
     }

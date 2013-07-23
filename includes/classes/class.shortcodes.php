@@ -125,7 +125,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                                     $course->button = '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
                                     $course->button .= '<div class="passcode-box">' . do_shortcode('[course_details field="passcode_input"]') . '</div>';
                                 } else {
-                                    $course->button = '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                                    if (strtotime($course->enrollment_end_date) <= time()) {
+                                        $course->button = '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                                    } else {
+                                        $course->button = '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                                    }
                                 }
                             }
                         } else {
@@ -156,7 +160,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                             $course->button = '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
                         } else {
                             $cp = new CoursePress();
-                            $course->button = '<a href="' . $cp->get_signup_slug(true) . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
+                            if (strtotime($course->enrollment_end_date) <= time()) {
+                                $course->button = '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                            } else {
+                                $course->button = '<a href="' . $cp->get_signup_slug(true) . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
+                            }
                         }
                     }
                 }
@@ -245,7 +253,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             extract(shortcode_atts(array('course_id' => $course_id), $atts));
 
-            $units = $course->get_units($course_id);
+            $units = $course->get_units($course_id, 'publish');
 
             $student = new Student(get_current_user_id());
             //redirect to the parent course page if not enrolled

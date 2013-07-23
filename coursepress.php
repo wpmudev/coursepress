@@ -131,6 +131,7 @@ if (!class_exists('CoursePress')) {
             add_action('load-coursepress_page_course_details', array(&$this, 'admin_coursepress_page_course_details'));
             add_action('load-coursepress_page_settings', array(&$this, 'admin_coursepress_page_settings'));
             add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
+            add_action('load-coursepress_page_reports', array(&$this, 'admin_coursepress_page_reports'));
             add_action('load-coursepress_page_students', array(&$this, 'admin_coursepress_page_students'));
             add_action('load-coursepress_page_instructors', array(&$this, 'admin_coursepress_page_instructors'));
 
@@ -511,8 +512,10 @@ if (!class_exists('CoursePress')) {
             do_action('coursepress_addons_loaded');
         }
 
-//Load unit modules
+        //Load unit modules
         function load_modules() {
+            global $mem_modules;
+
             if (is_dir($this->plugin_dir . 'includes/unit-modules')) {
                 if ($dh = opendir($this->plugin_dir . 'includes/unit-modules')) {
                     $mem_modules = array();
@@ -554,6 +557,9 @@ if (!class_exists('CoursePress')) {
 
             add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array(&$this, 'coursepress_students_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
+
+            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
+            do_action('coursepress_add_menu_items_after_assessment');
 
             add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
@@ -617,6 +623,30 @@ if (!class_exists('CoursePress')) {
 
             register_post_type('unit', $args);
 
+            //Register Modules (Unit Module) post type
+            $args = array(
+                'labels' => array('name' => __('Modules', 'cp'),
+                    'singular_name' => __('Module', 'cp'),
+                    'add_new' => __('Create New', 'cp'),
+                    'add_new_item' => __('Create New Module', 'cp'),
+                    'edit_item' => __('Edit Module', 'cp'),
+                    'edit' => __('Edit', 'cp'),
+                    'new_item' => __('New Module', 'cp'),
+                    'view_item' => __('View Module', 'cp'),
+                    'search_items' => __('Search Modules', 'cp'),
+                    'not_found' => __('No Modules Found', 'cp'),
+                    'not_found_in_trash' => __('No Modules found in Trash', 'cp'),
+                    'view' => __('View Module', 'cp')
+                ),
+                'public' => false,
+                'show_ui' => false,
+                'publicly_queryable' => false,
+                'capability_type' => 'post',
+                'query_var' => true
+            );
+
+            register_post_type('unit', $args);
+
             do_action('after_custom_post_types');
         }
 
@@ -658,6 +688,10 @@ if (!class_exists('CoursePress')) {
 
         function coursepress_students_admin() {
             include_once($this->plugin_dir . 'includes/admin-pages/students.php');
+        }
+
+        function coursepress_assessment_admin() {
+            include_once($this->plugin_dir . 'includes/admin-pages/assessment.php');
         }
 
         function coursepress_reports_admin() {
@@ -725,15 +759,19 @@ if (!class_exists('CoursePress')) {
             wp_localize_script('courses_bulk', 'coursepress', array(
                 'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
                 'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
+                'unenroll_student_alert' => __('Please confirm that you want to un-enroll student from this course. If you un-enroll, you will no longer be able to see student\'s records for this course.', 'cp'),
                 'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp')
             ));
         }
 
         function admin_coursepress_page_course_details() {
             wp_enqueue_script('courses-units', $this->plugin_url . 'js/coursepress-courses.js', array('jquery', 'jquery-ui'), false, false);
+            wp_localize_script('courses-units', 'coursepress_units', array(
+                'unenroll_class_alert' => __('Please confirm that you want to un-enroll all students from this class?', 'cp'),
+                'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
+            ));
             wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
             wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css');
-            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
         }
 
         function admin_coursepress_page_settings() {
@@ -746,6 +784,18 @@ if (!class_exists('CoursePress')) {
 
         function admin_coursepress_page_courses() {
             wp_enqueue_style('courses', $this->plugin_url . 'css/admin_coursepress_page_courses.css');
+        }
+
+        function admin_coursepress_page_reports() {
+            /* wp_enqueue_script('jquery-ui-tabs');
+              wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in
+              wp_enqueue_style('reports', $this->plugin_url . 'css/admin_coursepress_page_reports.css'); */
+            wp_enqueue_script('reports-admin', $this->plugin_url . 'js/reports-admin.js');
+            // tell WordPress to load jQuery UI tabs
+            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+            wp_enqueue_script('jquery-ui-core');
+            wp_enqueue_script('jquery-ui-tabs');
+
         }
 
         function admin_coursepress_page_students() {

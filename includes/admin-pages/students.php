@@ -12,7 +12,7 @@ $wp_user_search = new Student_Search($usersearch, $userspage);
 ?>
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-users"><br></div>
-    <h2><?php _e('Students', 'cp'); ?><a class="add-new-h2" href="admin.php?page=students&action=add"><?php _e('Add New', 'cp'); ?></a></h2>
+    <h2><?php _e('Students', 'cp'); ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a></h2>
 
     <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
         <p class="search-box">
@@ -106,6 +106,7 @@ foreach ($wp_user_search->get_results() as $user) {
                         <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();" class="remove-button">&nbsp;</a></td>
 
                     </tr>
+                    
     <?php
 }
 ?>

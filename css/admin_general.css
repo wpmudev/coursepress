@@ -1,8 +1,60 @@
+.js .tmce-active .wp-editor-area{
+    color:#000 !important;
+}
+
+.invite_student_area{
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+.additional_class_actions_add_student{
+    padding: 10px 1% 10px 1%;
+    text-align: left;
+    border-top:1px solid #ddd;
+    float: left;
+    width: 48%
+}
+
+.additional_class_actions{
+    padding: 15px 1% 10px 1%;
+    text-align: right;
+    border-top:1px solid #ddd;
+    float: right;
+    width: 48%
+}
+
+.additional_class_actions a{
+    color:#21759b;
+}
+
+.additional_class_actions a:hover{
+    color:#d54e21;
+}
 
 .view-course-link{
     text-align:right; 
     float: right;
     margin-left: 5px;
+}
+.wp-core-ui a.button-delete{
+    background: none repeat scroll 0 0 #db2020;
+    text-shadow: none;
+    color: #fff;
+    width: 100px;
+    text-align: center;
+    margin: 2px 0px 3px 0px;
+}
+
+.wp-core-ui a.button-delete:hover{
+    background: none repeat scroll 0 0 #db2020;
+    text-shadow: none;
+    color: #fff;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    filter: alpha(opacity=70);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    opacity: 0.7;
 }
 
 .wp-core-ui a.button-settings{

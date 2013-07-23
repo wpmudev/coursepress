@@ -73,6 +73,45 @@ function coursepress_instructors_avatars_array($args = array()) {
     echo $content;
 }
 
+function coursepress_students_drop_down() {
+    $content = '';
+    $content .= '<select name="students">';
+
+    $args = array(
+        'blog_id' => $GLOBALS['blog_id'],
+        'role' => 'student',
+        'meta_key' => '',
+        'meta_value' => '',
+        'meta_compare' => '',
+        'meta_query' => array(),
+        'include' => array(),
+        'exclude' => array(),
+        'orderby' => 'display_name',
+        'order' => 'ASC',
+        'offset' => '',
+        'search' => '',
+        'number' => '',
+        'count_total' => false,
+        'fields' => array('display_name', 'ID'),
+        'who' => ''
+    );
+
+    $students = get_users($args);
+
+    $number = 0;
+    foreach ($students as $student) {
+        $number++;
+        $content .= '<option value="' . $student->ID . '">' . $student->display_name . '</option>';
+    }
+    $content .= '</select>';
+
+    if ($number == 0) {
+        $content = '';
+    }
+
+    echo $content;
+}
+
 function coursepress_instructors_drop_down() {
     $content = '';
     $content .= '<select name="instructors" id="instructors">';
@@ -200,10 +239,10 @@ function get_number_of_days_between_dates($start_date, $end_date) {
     return $numberDays;
 }
 
-/*
-  if (!function_exists('M_register_rule')) {
 
-  function M_register_rule($rule_name, $class_name, $section) {
+  if (!function_exists('coursepress_register_module')) {
+
+  function coursepress_register_module($rule_name, $class_name, $section) {
 
   global $M_Rules, $M_SectionRules;
 
@@ -224,7 +263,7 @@ function get_number_of_days_between_dates($start_date, $end_date) {
   }
 
   }
- */
+ 
 
 function sp2nbsp($string) {
     return str_replace(' ', '&nbsp;', $string);

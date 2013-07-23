@@ -1,5 +1,31 @@
+/* Students */
+.zero-students{
+    padding: 0px 0px 14px;
+}
+.widefat td{
+    padding: 14px 7px 0px;
+}
+
+.add-student-class-area{
+    margin-top: 20px;
+}
+
 /* UNIT MODULES */
-/* @override http://dev.site/wp-content/plugins/membership/membershipincludes/css/levels.css?ver=12 */
+ #modules_accordion.ui-accordion .ui-accordion-content{
+    padding: 10px;
+
+}
+
+div.modules_accordion{
+    width: 98%;
+    margin-left:1%;
+    margin-right:1%;
+}
+
+div.modules_accordion .sidebar-name{
+    border-color:#ddd;
+}
+
 
 div.level-liquid-left {
 	float: left;
@@ -517,11 +543,11 @@ div.buttons a.cancellink {
 
 /* UNITS */
 
-#students_accordion .ui-widget-content{
+#students_accordion .ui-widget-content, #modules_accordion .ui-widget-content{
     border: 1px solid #ddd;
 }
 
-#students_accordion.ui-accordion .ui-accordion-header{
+#students_accordion.ui-accordion .ui-accordion-header, #modules_accordion.ui-accordion .ui-accordion-header{
     padding: 0px;
     padding-left: 16px;
 }
@@ -530,12 +556,12 @@ div.buttons a.cancellink {
     padding:0px;
 }
 
-#students_accordion .widefat{
+#students_accordion .widefat, #modules_accordion .widefat{
     border-width: 0px;
     border-radius: 0px;
 }
 
-#students_accordion .widefat td, .widefat th{
+#students_accordion .widefat td, .widefat th, #modules_accordion .widefat td, .widefat th{
     border:none;
 }
 
@@ -605,6 +631,23 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     height: 80px;
     min-width: 80px;
     display: block;
+}
+
+.remove-button-student{
+    background-image: url("../images/delete.png");
+    background-repeat: no-repeat;
+    height: 20px;
+    min-width: 20px;
+    display: block;
+    margin-left: 25px;
+}
+
+.edit-button-student-td{
+    padding: 7px 0px 7px 0px !important;
+}
+
+.delete-button-student-td{
+    padding: 12px 7px 0px !important;
 }
 
 .unit-buttons{
@@ -856,6 +899,7 @@ input.wide, textarea.wide {
     float: left;
 }
 
+/*
 .course-holder h3 {
     background-color: #edf3fe;
     text-shadow: 0 1px 0 #FFFFFF;
@@ -867,6 +911,7 @@ input.wide, textarea.wide {
     padding-top: 2px;
     padding-bottom: 2px;
 }
+*/
 
 .droppable-levels {
     width: 95%;

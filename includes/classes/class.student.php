@@ -39,13 +39,13 @@ if (!class_exists('Student')) {
         }
 
         //Enroll student in the course
-        function enroll_in_course($course_id) {
+        function enroll_in_course($course_id, $class = '', $group = '') {
 
             $current_time = current_time('mysql');
 
             update_user_meta($this->id, 'enrolled_course_date_' . $course_id, $current_time); //Link courses and student (in order to avoid custom tables) for easy MySql queries (get courses stats, student courses, etc.)
-            update_user_meta($this->id, 'enrolled_course_class_' . $course_id, '');
-            update_user_meta($this->id, 'enrolled_course_group_' . $course_id, '');
+            update_user_meta($this->id, 'enrolled_course_class_' . $course_id, $class);
+            update_user_meta($this->id, 'enrolled_course_group_' . $course_id, $group);
             
             return true;
             //TO DO: add new payment status if it's paid
@@ -110,6 +110,22 @@ if (!class_exists('Student')) {
         
         function update_student_data($student_data){
             if(wp_update_user($student_data)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        function update_student_group($course_id, $group){
+            if(update_user_meta($this->id, 'enrolled_course_group_'.$course_id, $group)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        function update_student_class($course_id, $class){
+            if(update_user_meta($this->id, 'enrolled_course_class_'.$course_id, $class)){
                 return true;
             }else{
                 return false;

@@ -44,10 +44,13 @@ if (!class_exists('Unit')) {
 
             if ($_POST['unit_name'] != '' && $_POST['unit_name'] != __('Untitled', 'cp') && $_POST['unit_description'] != '') {
                 if ($unit->post_status != 'publish') {
+                    $post_status = 'publish';
+                }
+                if ($unit->post_status != 'private') {
                     $post_status = 'private';
                 }
             } else {
-                $post_status = 'private';//draft
+                $post_status = 'draft';
             }
             
             $post = array(

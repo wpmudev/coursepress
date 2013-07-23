@@ -1,3 +1,27 @@
+function delete_class_confirmed() {
+    return confirm(coursepress_units.delete_class);
+}
+
+function deleteClass() {
+    if (delete_class_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function unenroll_all_from_class_confirmed() {
+    return confirm(coursepress_units.unenroll_class_alert);
+}
+
+function unenrollAllFromClass() {
+    if (unenroll_all_from_class_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 jQuery(function() {
     jQuery("#sortable-units").sortable({
         placeholder: "ui-state-highlight",

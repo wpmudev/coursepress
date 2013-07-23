@@ -19,7 +19,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
         
         
         <div class="icon32 " id="icon-users"><br></div>
-        <h2><?php _e('Instructors', 'cp'); ?><a class="add-new-h2" href="admin.php?page=instructor&action=add"><?php _e('Add New', 'cp'); ?></a></h2>
+        <h2><?php _e('Instructors', 'cp'); ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a></h2>
 
         
         <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">

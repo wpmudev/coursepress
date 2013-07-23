@@ -1,3 +1,11 @@
+.widefat .first-tr td{
+    border-width: 0px;
+}
+.changable{
+    margin:0px 0px 12px 0px;
+    padding-left: 5px;
+    text-align: right;
+}
 .remove-button{
     background-image: url("../images/delete.png");
     background-repeat: no-repeat;

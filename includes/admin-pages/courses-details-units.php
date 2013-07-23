@@ -31,6 +31,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET[
         'post_status' => 'any',
         'meta_key' => 'unit_order',
         'orderby' => 'meta_value_num',
+        'posts_per_page' => '-1',
         'meta_query' => array(
             array(
                 'key' => 'course_id',

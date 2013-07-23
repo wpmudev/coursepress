@@ -1,3 +1,7 @@
+.center{
+    text-align: center;
+}
+
 .remove-button{
     background-image: url("../images/delete.png");
     background-position: 30px 31px;

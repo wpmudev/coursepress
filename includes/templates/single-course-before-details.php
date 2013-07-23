@@ -1,7 +1,5 @@
 <?php
 the_excerpt();
-
-echo the_author_posts_link();
 ?>
 
 
