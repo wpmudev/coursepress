@@ -32,9 +32,15 @@
                 }
 
                 if ($form_errors == 0) {
-                    if ($student->add_student($student_data)) {
+                    if ($student_id = $student->add_student($student_data) !== 0) {
                         $form_message = __('Account created successfully! You may now <a href="' . wp_login_url() . '">log into your account</a>.', 'cp');
                         $form_message_class = 'regular';
+                        $email_args['email_type'] = 'student_registration';
+                        $email_args['student_id'] = $student_id;
+                        $email_args['student_email'] = $student_data['user_email'];
+                        $email_args['student_first_name'] = $student_data['first_name'];
+                        $email_args['student_last_name'] = $student_data['last_name'];
+                        coursepress_send_email($email_args);
                     } else {
                         $form_message = __('An error occured while creating the account. Please check the form and try again.', 'cp');
                         $form_message_class = 'red';

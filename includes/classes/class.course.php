@@ -26,10 +26,7 @@ if (!class_exists('Course')) {
 
             $course = get_post($this->id, $this->output);
 
-
             if (!empty($course)) {
-
-
 
                 if (!isset($course->post_title) || $course->post_title == '') {
                     $course->post_title = __('Untitled', 'cp');
@@ -47,9 +44,21 @@ if (!class_exists('Course')) {
         }
 
         function get_course_id_by_name($slug) {
-            global $wpdb;
-            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $slug));
-            return $id;
+
+            $args = array(
+                'name' => $slug,
+                'post_type' => 'course',
+                'post_status' => 'any',
+                'posts_per_page' => 1
+            );
+
+            $post = get_posts($args);
+
+            if ($post) {
+                return $post[0]->ID;
+            }else{
+                return false;
+            }
         }
 
         function update_course() {
@@ -107,15 +116,16 @@ if (!class_exists('Course')) {
             return $post_id;
         }
 
-        function delete_course($force_delete) {
+        function delete_course($force_delete = true) {
             $wpdb;
+            
             wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
 
             /* Delete all usermeta associated to the course */
             delete_user_meta_by_key('course_' . $this->id);
-            delete_user_meta($this->id, 'enrolled_course_date_' . $course_id);
-            delete_user_meta($this->id, 'enrolled_course_class_' . $course_id);
-            delete_user_meta($this->id, 'enrolled_course_group_' . $course_id);
+            delete_user_meta_by_key('enrolled_course_date_' . $this->id);
+            delete_user_meta_by_key('enrolled_course_class_' . $this->id);
+            delete_user_meta_by_key('enrolled_course_group_' . $this->id);
         }
 
         function can_show_permalink() {
@@ -200,10 +210,10 @@ if (!class_exists('Course')) {
             }
 
             $args = array(
-                /*'role' => 'student',*/
+                /* 'role' => 'student', */
                 'meta_key' => 'enrolled_course_class_' . $course_id,
             );
-            
+
             $wp_user_search = new WP_User_Query($args);
             return count($wp_user_search->get_results());
         }

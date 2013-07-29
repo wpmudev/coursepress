@@ -1,4 +1,5 @@
 <?php
+
 global $action, $page;
 wp_reset_vars(array('action', 'page'));
 
@@ -6,6 +7,8 @@ $course_id = '';
 if(isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
     $course_id = $_GET['course_id'];
 }
+
+$course = new Course($course_id);
 ?>
 
 <div class="wrap nosubsub">
@@ -21,7 +24,9 @@ if(isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
     if($course_id == ''){ _e('New Course', 'cp');}
     if($course_id != ''){ _e('Course', 'cp');}
     if($tab != 'overview'){
-        echo ' » '.ucfirst($tab);
+        echo ' » '.$course->details->post_title.' » '.ucfirst($tab);
+    }else{
+        echo ' » '.$course->details->post_title;
     }
     ?>
     </h2>
@@ -31,7 +36,6 @@ if(isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
     $menus['overview'] = __('Course Overview', 'cp');
     $menus['units'] = __('Units', 'cp');
     $menus['students'] = __('Students', 'cp');
-    
     $menus = apply_filters('coursepress_course_new_menus', $menus);
     ?>
 

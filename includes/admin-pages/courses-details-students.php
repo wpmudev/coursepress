@@ -1,9 +1,18 @@
 <?php
 $course_id = $_GET['course_id'];
+$course = new Course($course_id);
+
+/* Invite a Student */
+if (isset($_POST['invite_student'])) {
+    $email_args['email_type'] = 'student_invitation';
+    $email_args['student_first_name'] = $_POST['first_name'];
+    $email_args['student_last_name'] = $_POST['last_name'];
+    $email_args['student_email'] = $_POST['email'];
+    coursepress_send_email($email_args);
+}
 
 /* Enroll student or move to a different class */
-
-if(isset($_POST['students']) && is_numeric($_POST['students'])){
+if (isset($_POST['students']) && is_numeric($_POST['students'])) {
     $student = new Student($_POST['students']);
     $student->enroll_in_course($course_id, $_POST['class_name']);
 }
@@ -174,9 +183,11 @@ $col_sizes = array(
                     <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
                 </form>
             </div>
+            
         </div>
     <?php } else { ?>
         <div>
+            
             <table cellspacing="0" class="widefat">
                 <tr>
                     <td>
@@ -184,6 +195,7 @@ $col_sizes = array(
                     </td>
                 </tr>
             </table>
+            
             <div class="additional_class_actions">
                 <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=default" onClick="return deleteClass();" title="<?php _e('Delete Class and move students to Default class', 'cp'); ?>"><?php _e('Delete Class', 'cp'); ?></a>
             </div>
@@ -194,6 +206,7 @@ $col_sizes = array(
                     <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
                 </form>
             </div>
+            
         </div>
     <?php } ?>
     <?php
@@ -325,20 +338,27 @@ $col_sizes = array(
         <?php submit_button(__('Add New Class', 'cp'), 'primary', 'add_student_class', ''); ?>
     </div>
 
-    <div class="invite_student_area">
-        <h2><?php _e('Invite Student', 'cp'); ?></h2>
-        <label><?php _e('First Name', 'cp'); ?>
-            <input type="text" name="first_name" value="" />
-        </label>
+    <?php
+    
+    if ($course->details->enroll_type != 'manually') {//There shouldn't be invitations functionality if enrollment type is only Manually
+        ?>
+        <div class="invite_student_area">
+            <form name="student_invitation" method="post">
+                <h2><?php _e('Invite a Student', 'cp'); ?></h2>
+                <label><?php _e('First Name', 'cp'); ?>
+                    <input type="text" name="first_name" value="" />
+                </label>
 
-        <label><?php _e('Last Name', 'cp'); ?>
-            <input type="text" name="last_name" value="" />
-        </label>
+                <label><?php _e('Last Name', 'cp'); ?>
+                    <input type="text" name="last_name" value="" />
+                </label>
 
-        <label><?php _e('E-Mail', 'cp'); ?>
-            <input type="text" name="email" value="" />
-        </label>
-        <?php submit_button(__('Invite', 'cp'), 'primary', 'invite_student', ''); ?>
-    </div>
+                <label><?php _e('E-Mail', 'cp'); ?>
+                    <input type="text" name="email" value="" />
+                </label>
+                <?php submit_button(__('Invite', 'cp'), 'primary', 'invite_student', ''); ?>
+            </form>
+        </div>
+    <?php } ?>
 
 </form>

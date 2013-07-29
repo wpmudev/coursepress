@@ -1,3 +1,15 @@
+.zero{
+    padding: 0px 10px 14px;
+}
+
+.email-settings input[type="text"]{
+    width: 100%;
+}
+
+.email-settings .description{
+    padding:8px 0px 0px 7px;
+}
+
 .js .tmce-active .wp-editor-area{
     color:#000 !important;
 }

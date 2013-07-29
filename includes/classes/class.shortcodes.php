@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
+
 /*
   CoursePress Shortcodes
  */
@@ -257,9 +260,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             $student = new Student(get_current_user_id());
             //redirect to the parent course page if not enrolled
-            if (!$student->has_access_to_course($course_id)) {
-                wp_redirect(get_permalink($course_id));
-                exit;
+            if (!current_user_can('administrator')) {
+                if (!$student->has_access_to_course($course_id)) {
+                    wp_redirect(get_permalink($course_id));
+                    exit;
+                }
             }
 
             $content .= '<ol>';
@@ -283,9 +288,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $student = new Student(get_current_user_id());
 
             //redirect to the parent course page if not enrolled
-            if (!$student->has_access_to_course($unit->course_id)) {
-                wp_redirect(get_permalink($unit->course_id));
-                exit;
+            if (!current_user_can('administrator')) {
+                if (!$student->has_access_to_course($unit->course_id)) {
+                    wp_redirect(get_permalink($unit->course_id));
+                    exit;
+                }
             }
 
             return $unit->details->$field;

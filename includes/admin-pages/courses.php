@@ -1,16 +1,30 @@
 <?php
-// Query the courses
-$wp_course_search = new Course_Search($coursesearch, $coursepage);
+$page = $_GET['page'];
 
-if(isset($_GET['course_id'])){
-    $course =  new Course($_GET['course_id']);
+// Query the courses
+if (isset($_GET['page_num'])) {
+    $page_num = $_GET['page_num'];
+} else {
+    $page_num = 1;
 }
 
-if(isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
+if (isset($_GET['s'])) {
+    $coursesearch = $_GET['s'];
+} else {
+    $coursesearch = '';
+}
+
+$wp_course_search = new Course_Search($coursesearch, $page_num);
+
+if (isset($_GET['course_id'])) {
+    $course = new Course($_GET['course_id']);
+}
+
+if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
     $course->delete_course($force_delete = true);
 }
 
-if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])){
+if (isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
     $course->change_status($_GET['new_status']);
 }
 ?>
@@ -27,14 +41,10 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
         </p>
     </form>
 
-    <br class="clear" />
+    <br class="clear" /><br class="clear" />
 
     <form method="get" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
-
-        <div class="tablenav">
-            <div class="tablenav-pages"><?php $wp_course_search->page_links(); ?></div>
-        </div><!--/tablenav-->
 
         <?php
         wp_nonce_field('bulk-courses');
@@ -46,21 +56,21 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
             "actions" => __('Actions', 'cp'),
             "remove" => __('Remove', 'cp')
         );
-        
+
         $col_sizes = array(
             '3', '65', '5', '10', '10', '7'
         );
         ?>
 
-        <table cellspacing="0" class="widefat">
+        <table cellspacing="0" class="widefat shadow-table">
             <thead>
                 <tr>
-                    <th style="" class="manage-column column-cb check-column" id="cb" scope="col" width="<?php echo $col_sizes[0].'%'; ?>"><input type="checkbox"></th>
+                    <th style="" class="manage-column column-cb check-column" id="cb" scope="col" width="<?php echo $col_sizes[0] . '%'; ?>"><input type="checkbox"></th>
                     <?php
                     $n = 1;
                     foreach ($columns as $key => $col) {
                         ?>
-                        <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n].'%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                        <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                         <?php
                         $n++;
                     }
@@ -71,15 +81,15 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
             <!--<tfoot>
                 <tr>
                     <th style="" class="manage-column column-cb check-column" scope="col"><input type="checkbox"></th>
-                    <?php
-                    reset($columns);
+            <?php
+            reset($columns);
 
-                    foreach ($columns as $key => $col) {
-                        ?>
-                        <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
-                        <?php
-                    }
-                    ?>
+            foreach ($columns as $key => $col) {
+                ?>
+                                <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                <?php
+            }
+            ?>
                 </tr>
             </tfoot>-->
 
@@ -100,17 +110,32 @@ if(isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET['
                         </th>
                         <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
                             <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
+                            <div class="row-actions"><span class="edit_course"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span><span class="course_units"><a href="?page=course_details&tab=units&course_id=<?php echo $course_object->ID; ?>"><?php _e('Units', 'cp'); ?></a> | </span><span class="course_students"><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php _e('Students', 'cp'); ?></a> | </span><span class="course_publish_unpublish"><a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a> | </span><span class="course_remove"><a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();"><?php _e('Delete', 'cp'); ?></a> | </span><span class="view_course"><a href="<?php echo get_permalink($course->ID); ?>" rel="permalink"><?php _e('View Course', 'cp') ?></a> | </span><a href="<?php echo get_permalink($course->ID); ?>/units/" rel="permalink"><?php _e('View Units', 'cp') ?></a></span></div>
                         </td>
-                        <td class="center" <?php echo $style; ?>><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students();?></a></td>
-                        <td <?php echo $style; ?>><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status).'ed' : ucfirst($course_object->post_status); ?></td>
+                        <td class="center" <?php echo $style; ?>><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a></td>
+                        <td <?php echo $style; ?>><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?></td>
                         <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" class="button button-settings"><?php _e('Settings', 'cp'); ?></a><a href="?page=course_details&tab=units&course_id=<?php echo $course_object->ID; ?>" class="button button-units"><?php _e('Units', 'cp'); ?></a><a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>
                         <td <?php echo $style; ?>><a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();" class="remove-button"></a></td>
                     </tr>
                     <?php
                 }
                 ?>
+
+                <?php
+                if (count($wp_course_search->get_results()) == 0) {
+                    ?>
+                        <tr>
+                            <td colspan="6"><div class="zero"><?php _e('0 courses found', 'cp')?></div></td>
+                        </tr>
+                        <?php
+                }
+                ?>
             </tbody>
         </table>
+
+        <div class="tablenav">
+            <div class="tablenav-pages"><?php $wp_course_search->page_links(); ?></div>
+        </div><!--/tablenav-->
 
     </form>
 

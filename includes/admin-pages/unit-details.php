@@ -1,6 +1,5 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice;
-global $M_SectionRules;
 
 $course_id = '';
 
@@ -97,43 +96,5 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
             </div>
         </div> <!-- course-liquid-left -->
     </form>
-
-    <div class='level-liquid-right'>
-        <div class="level-holder-wrap">
-            <?php
-            $sections['modules'] = array("title" => __('Modules', 'cp'));
-
-            foreach ($sections as $key => $section) {
-                ?>
-
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php echo $section['title']; ?></h3>
-                </div>
-
-                <div class="section-holder" id="sidebar-<?php echo $key; ?>" style="min-height: 98px;">
-                    <ul class='levels level-levels-draggable'>
-                        <?php
-                        if (isset($M_SectionRules[$key])) {
-                            foreach ($M_SectionRules[$key] as $mrule => $mclass) {
-                                $rule = new $mclass();
-                                if (!array_key_exists($mrule, $rule)) {
-                                    $rule->admin_sidebar(false);
-                                } else {
-                                    $rule->admin_sidebar(true);
-                                }
-                                $rule->admin_main(array());
-                            }
-                        }
-                        ?>
-                    </ul>
-                </div>
-                <?php
-            }
-            ?>
-        </div> <!-- level-holder-wrap -->
-
-    </div> <!-- level-liquid-left -->
-
-
 
 </div> <!-- wrap -->

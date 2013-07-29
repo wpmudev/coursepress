@@ -1,6 +1,6 @@
 Plugin Name: CoursePress
 Author: Marko Miljus (Incsub)
 
-1.0.0 - XX/XX/2013
+1.0b - 26/AUG/2013
 ----------------------------------------------------------------------
-- Initial Release.
+- First Internal Beta Release.

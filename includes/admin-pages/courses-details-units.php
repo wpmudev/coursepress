@@ -1,4 +1,5 @@
 <?php
+
 $course_id = '';
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
     $course_id = $_GET['course_id'];

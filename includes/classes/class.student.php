@@ -1,4 +1,6 @@
 <?php
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
 
 if (!class_exists('Student')) {
 
@@ -133,14 +135,8 @@ if (!class_exists('Student')) {
         }
         
         function add_student($student_data){
-            
             $student_data['role'] = 'student';
-            
-            if(wp_insert_user($student_data)){
-                return true;
-            }else{
-                return false;
-            }
+            return wp_insert_user($student_data);
         }
 
     }

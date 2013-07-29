@@ -41,7 +41,7 @@ if (isset($_POST['course_id'])) {
                 );
                 ?>
                 <!--COURSES START-->
-                <table cellspacing="0" class="widefat">
+                <table cellspacing="0" class="widefat shadow-table">
                     <tbody>
                         <?php
                         $style = '';
@@ -142,7 +142,6 @@ if (isset($_POST['course_id'])) {
         </div>
     </div> <!-- course-liquid-left -->
 
-    <?php if (1 == 1) { ?>
         <div class='course-liquid-right'>
 
             <div class="course-holder-wrap">
@@ -163,10 +162,10 @@ if (isset($_POST['course_id'])) {
                                             <td><?php echo get_avatar($student->ID, '80'); ?></td>
                                             <td>
                                                 <div class="instructor_additional_info">
-                                                    <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span><span class="info"><?php echo $student->user_firstname; ?></span></div>
-                                                    <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span><?php echo $student->user_lastname; ?></div>
-                                                    <div><span class="info_caption"><?php _e('E-mail', 'cp'); ?>:</span><span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span></div>
-                                                    <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span><span class="info"><?php echo $student->get_courses_number(); ?></span></div>
+                                                    <div><span class="info_caption"><?php _e('First Name', 'cp'); ?>:</span> <span class="info"><?php echo $student->user_firstname; ?></span></div>
+                                                    <div><span class="info_caption"><?php _e('Last Name', 'cp'); ?>:</span> <span class="info"><?php echo $student->user_lastname; ?></span></div>
+                                                    <div><span class="info_caption"><?php _e('Email', 'cp'); ?>:</span> <span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span></div>
+                                                    <div><span class="info_caption"><?php _e('Courses', 'cp'); ?>:</span> <span class="info"><?php echo $student->get_courses_number(); ?></span></div>
                                                 </div>
                                             </td>
                                         <?php } else { ?>
@@ -204,7 +203,7 @@ if (isset($_POST['course_id'])) {
             </div> <!-- course-holder-wrap -->
 
         </div> <!-- course-liquid-right -->
-    <?php } ?>
+ 
 
 
 

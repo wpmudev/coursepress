@@ -10,14 +10,14 @@ if (isset($_GET['course_id'])) {
     $course_id = 0;
 }
 
-$course_marking_type = get_post_meta($course_id, 'course_marking_type', true);
-$class_size = get_post_meta($course_id, 'class_size', true);
-$enroll_type = get_post_meta($course_id, 'enroll_type', true);
-$passcode = get_post_meta($course_id, 'passcode', true);
-$course_start_date = get_post_meta($course_id, 'course_start_date', true);
-$course_end_date = get_post_meta($course_id, 'course_end_date', true);
-$enrollment_start_date = get_post_meta($course_id, 'enrollment_start_date', true);
-$enrollment_end_date = get_post_meta($course_id, 'enrollment_end_date', true);
+$course_marking_type = $course->details->course_marking_type;//get_post_meta($course_id, 'course_marking_type', true);
+$class_size = $course->details->class_size;
+$enroll_type = $course->details->enroll_type;
+$passcode = $course->details->passcode;
+$course_start_date = $course->details->course_start_date;
+$course_end_date = $course->details->course_end_date;
+$enrollment_start_date = $course->details->enrollment_start_date;
+$enrollment_end_date = $course->details->enrollment_end_date;
 
 if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] == 'update')) {
 

@@ -1,9 +1,10 @@
 var ct = 1;
+
 function new_link()
 {
     addRow();
-    jQuery('#r'+ct+'td1').html('<input type="text" style="width:100%;" value="" name="item_title[]">');
-    jQuery('#r'+ct+'td4').html('<a href="javascript:removeElement(\'items\',\'r' + ct + '\');">'+group_settings.remove_string+'</a>');
+    jQuery('#r' + ct + 'td1').html('<input type="text" style="width:100%;" value="" name="item_title[]">');
+    jQuery('#r' + ct + 'td4').html('<a href="javascript:removeElement(\'items\',\'r' + ct + '\');">' + group_settings.remove_string + '</a>');
 }
 
 function removeElement(parentDiv, childDiv) {

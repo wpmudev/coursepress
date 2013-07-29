@@ -11,6 +11,7 @@
 }
 
 /* UNIT MODULES */
+
  #modules_accordion.ui-accordion .ui-accordion-content{
     padding: 10px;
 
@@ -537,6 +538,11 @@ div.buttons a.cancellink {
 #wp-level_protectedcontent-wrap {
 	margin-left: 10px;
 	margin-right: 10px;	
+}
+
+.module-content input[type="text"]{
+    width: 100%;
+    margin: 5px 0px 10px 0px;
 }
 
 /* END UNIT MODULES*/
@@ -1191,4 +1197,8 @@ div.levelinformation {
 
 .inner-link{
     padding: 10px 0px 10px 0px;
+}
+
+.module-content label{
+    font-weight: normal;
 }

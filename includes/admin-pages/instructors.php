@@ -1,4 +1,18 @@
 <?php
+$page = $_GET['page'];
+
+if (isset($_GET['page_num'])) {
+    $page_num = $_GET['page_num'];
+} else {
+    $page_num = 1;
+}
+
+if (isset($_GET['s'])) {
+    $usersearch = $_GET['s'];
+} else {
+    $usersearch = '';
+}
+
 if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
     $instructor = new Instructor($_GET['instructor_id']);
 }
@@ -12,16 +26,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
 } else {
 
     // Query the users
-    $wp_user_search = new Instructor_Search($usersearch, $userspage);
+    $wp_user_search = new Instructor_Search($usersearch, $page_num);
     ?>
 
     <div class="wrap nosubsub">
-        
-        
+
+
         <div class="icon32 " id="icon-users"><br></div>
         <h2><?php _e('Instructors', 'cp'); ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a></h2>
 
-        
+
         <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
             <p class="search-box">
                 <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
@@ -31,16 +45,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
             </p>
         </form>
 
-        
-        <br class="clear" />
 
-        
+        <br class="clear" /><br class="clear" />
+
+
         <form method="get" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
             <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
-
-            <div class="tablenav">
-                <div class="tablenav-pages"><?php $wp_user_search->page_links(); ?></div>
-            </div><!--/tablenav-->
 
             <?php
             wp_nonce_field('bulk-instructors');
@@ -60,7 +70,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
             );
             ?>
 
-            <table cellspacing="0" class="widefat fixed">
+            <table cellspacing="0" class="widefat fixed shadow-table">
                 <thead>
                     <tr>
                         <th style="" class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"></th>
@@ -76,20 +86,20 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     </tr>
                 </thead>
 
-                            <!--<tfoot>
-                                <tr>
-                                    <th style="" class="manage-column column-cb check-column" scope="col"><input type="checkbox"></th>
+                                <!--<tfoot>
+                                    <tr>
+                                        <th style="" class="manage-column column-cb check-column" scope="col"><input type="checkbox"></th>
                 <?php
                 reset($columns);
 
                 foreach ($columns as $key => $col) {
                     ?>
-                                                            <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                                                    <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                     <?php
                 }
                 ?>
-                                </tr>
-                            </tfoot>-->
+                                    </tr>
+                                </tfoot>-->
 
                 <tbody>
                     <?php
@@ -119,8 +129,20 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                         <?php
                     }
                     ?>
+
+                    <?php
+                    if (count($wp_user_search->get_results()) == 0) {
+                        ?>
+                        <tr><td colspan="8"><div class="zero"><?php _e('0 instructors found', 'cp'); ?></div></td></tr>
+                        <?php
+                    }
+                    ?>
                 </tbody>
             </table>
+
+            <div class="tablenav">
+                <div class="tablenav-pages"><?php $wp_user_search->page_links(); ?></div>
+            </div><!--/tablenav-->
 
         </form>
 

@@ -1,87 +1,3 @@
-/* UNIT MODULES */
-
-function coursepress_module_click_action_toggle() {
-    if (jQuery(this).parent().hasClass('open')) {
-        jQuery(this).parent().removeClass('open').addClass('closed');
-        jQuery(this).parents('.action').find('.action-body').removeClass('open').addClass('closed');
-    } else {
-        jQuery(this).parent().removeClass('closed').addClass('open');
-        jQuery(this).parents('.action').find('.action-body').removeClass('closed').addClass('open');
-    }
-}
-
-function coursepress_module_toggle_visibility() {
-    if (jQuery(this).parents('.level-operation').hasClass('closed')) {
-        jQuery(this).parents('.level-operation').removeClass('closed').addClass('open');
-    } else {
-        jQuery(this).parents('.level-operation').removeClass('open').addClass('closed');
-    }
-    return false;
-}
-
-function coursepress_modules_ready() {
-
-    jQuery('.draggable-module').draggable({
-        opacity: 0.7,
-        helper: 'clone',
-        start: function(event, ui) {
-            jQuery('input#beingdragged').val(jQuery(this).attr('id'));
-        },
-        stop: function(event, ui) {
-            //jQuery('input#beingdragged').val('');
-        }
-    });
-
-    jQuery('.level-droppable-rules').droppable({
-        hoverClass: 'hoveringover',
-        drop: function(event, ui) {
-   
-            var cloned = jQuery('.module-holder-' + jQuery('input#beingdragged').val()).html();
-            jQuery('.modules_accordion').html(cloned + jQuery('.modules_accordion').html());
-            jQuery('.modules_accordion').accordion("refresh");
-            //jQuery('.main-'+jQuery('input#beingdragged').val()).clone().appendTo('.modules_accordion');
-
-            moving = jQuery('input#beingdragged').val();
-            if (moving != '') {
-                /*
-                 jQuery('#main-' + moving).prependTo('#' + ruleplace + '-holder');
-                 jQuery('#' + moving).hide();
-                 
-                 // redisplay our one
-                 jQuery('#main-' + moving).removeClass('closed').addClass('open');
-                 */
-            }
-        }
-    });
-
-    jQuery('.action .action-top .action-button').click(coursepress_module_click_action_toggle);
-    jQuery('div.level-operation h2.sidebar-name').click(coursepress_module_toggle_visibility);
-
-}
-
-jQuery(document).ready(coursepress_modules_ready);
-
-/* END-UNIT MODULES*/
-
-jQuery(function() {
-    jQuery(".spinners").spinner({
-        min: 0
-    });
-    jQuery('.dateinput').datepicker({
-        dateFormat: 'yy-mm-dd'
-    });
-    /*jQuery("#course-start-date").datepicker();
-     jQuery("#course-end-date").datepicker();
-     jQuery("#enrollment-start-date").datepicker();
-     jQuery("#enrollment-end-date").datepicker();
-     */
-//getFullYear
-//getDate
-//getMonth
-
-//var currentDate = $( ".selector" ).datepicker( "getDate" );
-
-});
 function unenroll_student_confirmed() {
     return confirm(coursepress.unenroll_student_alert);
 }
@@ -151,22 +67,21 @@ jQuery(document).ready(function() {
         }
     });
 
-jQuery(function() {
-    jQuery("#modules_accordion").sortable({
-        handle: "h3",
-        /*placeholder: "ui-state-highlight",*/
-        stop: function(event, ui) {
-            //update_sortable_indexes();
-        }
-    });
+    jQuery(function() {
+        jQuery("#modules_accordion").sortable({
+            handle: "h3",
+            /*placeholder: "ui-state-highlight",*/
+            stop: function(event, ui) {
+                //update_sortable_indexes();
+            }
+        });
 
-    jQuery("#sortable-units").disableSelection();
-});
+        jQuery("#sortable-units").disableSelection();
+    });
 
     jQuery(function() {
         jQuery("#students_accordion").accordion({
             heightStyle: "content",
-            
         });
 
         jQuery("#modules_accordion").accordion({

@@ -1,21 +1,23 @@
 <?php
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
 
 if (!class_exists('Instructor_Search')) {
 
     class Instructor_Search extends WP_User_Query {
 
-        var $users_per_page = 25;
+        var $users_per_page = 10;
         var $search_errors = false;
 
-        function __construct($search_term = '', $page = '') {
+        function __construct($search_term = '', $page_num = '') {
 
             $this->search_term = $search_term;
-            $this->raw_page = ( '' == $page ) ? false : (int) $page;
-            $this->page = (int) ( '' == $page ) ? 1 : $page;
+            $this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
+            $this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
 
             $args = array('search' => $this->search_term,
                 'number' => $this->users_per_page,
-                'offset' => ( $this->page - 1 ) * $this->users_per_page,
+                'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
                 'fields' => 'all'
             );
 
@@ -31,7 +33,7 @@ if (!class_exists('Instructor_Search')) {
                 'search_columns' => array(),
                 'orderby' => 'login',
                 'order' => 'ASC',
-                'offset' => '',
+                'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
                 'number' => '',
                 'count_total' => true,
                 'fields' => 'all',
@@ -43,8 +45,8 @@ if (!class_exists('Instructor_Search')) {
             $this->do_paging();
         }
 
-        function Instructor_Search($search_term = '', $page = '') {
-            $this->__construct($search_term, $page);
+        function Instructor_Search($search_term = '', $page_num = '') {
+            $this->__construct($search_term, $page_num);
         }
 
         function do_paging() {
@@ -63,20 +65,29 @@ if (!class_exists('Instructor_Search')) {
 
                 $this->paging_text = paginate_links(array(
                     'total' => ceil($this->total_users_for_query / $this->users_per_page),
-                    'current' => $this->page,
+                    'current' => $this->page_num,
                     'base' => 'admin.php?page=students&%_%',
                     'format' => 'userspage=%#%',
                     'add_args' => $args
                         ));
                 if ($this->paging_text) {
-                    $this->paging_text = sprintf('<span class="displaying-num">' . __('Displaying %s&#8211;%s of %s', 'cp') . '</span>%s', number_format_i18n(( $this->page - 1 ) * $this->users_per_page + 1), number_format_i18n(min($this->page * $this->users_per_page, $this->total_users_for_query)), number_format_i18n($this->total_users_for_query), $this->paging_text
+                    $this->paging_text = sprintf('<span class="displaying-num">' . __('Displaying %s&#8211;%s of %s', 'cp') . '</span>%s', number_format_i18n(( $this->page_num - 1 ) * $this->users_per_page + 1), number_format_i18n(min($this->page_num * $this->users_per_page, $this->total_users_for_query)), number_format_i18n($this->total_users_for_query), $this->paging_text
                     );
                 }
             }
         }
 
-        function page_links(){
-            echo 'pagination goes here';
+        function page_links() {
+            $pagination = new CoursePress_Pagination();
+            $pagination->Items($this->get_total());
+            $pagination->limit($this->users_per_page);
+            $pagination->parameterName = 'page_num';
+            $pagination->target("admin.php?page=instructors");
+            $pagination->currentPage($this->page_num);
+            $pagination->nextIcon('&#9658;');
+            $pagination->prevIcon('&#9668;');
+            $pagination->items_title = __('instructors', 'cp');
+            $pagination->show();
         }
        
         function prepare_query() {

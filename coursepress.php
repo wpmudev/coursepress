@@ -6,7 +6,7 @@
   Description: Create courses, write lessons, and add quizzes...
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.5
+  Version: 0.7b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.5';
+        var $version = '0.7';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -47,8 +47,6 @@ if (!class_exists('CoursePress')) {
         }
 
         function __construct() {
-
-            //ini_set('xdebug.max_nesting_level', 400);
             //Register Globals
             $GLOBALS['course_slug'] = $this->get_course_slug();
             $GLOBALS['units_slug'] = $this->get_units_slug();
@@ -73,9 +71,6 @@ if (!class_exists('CoursePress')) {
                 // Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
-                // Module class
-                require_once( $this->plugin_dir . 'includes/classes/class.course.unit.module.php' );
-
                 //Load unit modules
                 $this->load_modules();
 
@@ -87,6 +82,9 @@ if (!class_exists('CoursePress')) {
 
                 // Search Instructor class
                 require_once( $this->plugin_dir . 'includes/classes/class.instructorsearch.php' );
+
+                //Pagination Class
+                require_once( $this->plugin_dir . 'includes/classes/class.pagination.php');
             }
 
             // Instructor class
@@ -116,6 +114,7 @@ if (!class_exists('CoursePress')) {
             //Add virtual pages
             add_action('init', array(&$this, 'create_virtual_pages'), 99);
 
+            //Check for $_GET actions
             add_action('init', array(&$this, 'check_for_get_actions'), 98);
 
             //Add plugin admin menu - Network
@@ -158,10 +157,6 @@ if (!class_exists('CoursePress')) {
 
             add_action('wp_ajax_update_units_positions', array($this, 'update_units_positions'));
 
-            //add_action('admin_notices', array(&$this, 'dev_check_current_screen'));
-            //Load Templates for custom Post Types
-            //add_filter('template_include', array(&$this, 'load_custom_template'), 1);
-
             wp_enqueue_style('front_general', $this->plugin_url . 'css/front_general.css');
 
             add_filter('query_vars', array($this, 'units_filter_query_vars'));
@@ -172,10 +167,10 @@ if (!class_exists('CoursePress')) {
 
         function load_plugin_templates() {
             global $wp_query;
+
             if (get_query_var('course') != '') {
                 add_filter('the_content', array(&$this, 'add_custom_after_course_single_content'), 1);
                 add_filter('the_content', array(&$this, 'add_custom_before_course_single_content'), 1);
-                //include($this->plugin_dir . 'includes/templates/courses-single.php');
             }
 
             if (get_post_type() == 'course' && is_archive()) {
@@ -213,6 +208,7 @@ if (!class_exists('CoursePress')) {
 
                 $pg = new CoursePress_Virtual_Page($args);
             }
+
             /* Show Units archive template */
             if (array_key_exists('coursename', $wp->query_vars) && !array_key_exists('unitname', $wp->query_vars)) {
 
@@ -290,9 +286,7 @@ if (!class_exists('CoursePress')) {
 
         function courses_archive_custom_content($content) {
             global $post;
-            //$content = $post->post_excerpt.$this->get_template_details($this->plugin_dir . 'includes/templates/courses-archive.php');
             $content = $post->post_excerpt;
-            //$content .= '<a href="" class="apply-button apply-button-archive">More Info</a>';
             return $content;
         }
 
@@ -368,15 +362,17 @@ if (!class_exists('CoursePress')) {
         }
 
         function install() {
-            include_once( 'includes/install.php' );
             update_option('coursepress_version', $this->version);
             $this->add_user_roles_and_caps(); //This setting is saved to the database (in table wp_options, field wp_user_roles), so it might be better to run this on theme/plugin activation
-            //set_course_slug();
+
             //Set default course groups
             if (!get_option('course_groups')) {
                 $default_groups = range('A', 'Z');
                 update_option('course_groups', $default_groups);
             }
+            
+            //Redirect to Create New Course page
+            wp_redirect('admin.php?page=course_details');
         }
 
         function set_course_slug($slug = '') {
@@ -445,7 +441,6 @@ if (!class_exists('CoursePress')) {
 
         function localization() {
             // Load up the localization file if we're using WordPress in a different language
-
             if ($this->location == 'mu-plugins') {
                 load_muplugin_textdomain('cp', '/languages/');
             } else if ($this->location == 'subfolder-plugins') {
@@ -558,12 +553,12 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array(&$this, 'coursepress_students_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
 
-            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
-            do_action('coursepress_add_menu_items_after_assessment');
+            /* add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
+              do_action('coursepress_add_menu_items_after_assessment');
 
-            add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
-            do_action('coursepress_add_menu_items_after_instructors');
-
+              add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
+              do_action('coursepress_add_menu_items_after_instructors');
+             */
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
             do_action('coursepress_add_menu_items_after_settings');
 
@@ -650,7 +645,6 @@ if (!class_exists('CoursePress')) {
             do_action('after_custom_post_types');
         }
 
-//flush_rewrite_rules();
 //Add new roles and user capabilities
         function add_user_roles_and_caps() {
             global $user;
@@ -691,11 +685,11 @@ if (!class_exists('CoursePress')) {
         }
 
         function coursepress_assessment_admin() {
-            include_once($this->plugin_dir . 'includes/admin-pages/assessment.php');
+            //include_once($this->plugin_dir . 'includes/admin-pages/assessment.php');
         }
 
         function coursepress_reports_admin() {
-            include_once($this->plugin_dir . 'includes/admin-pages/reports.php');
+            //include_once($this->plugin_dir . 'includes/admin-pages/reports.php');
         }
 
         function coursepress_settings_admin() {
@@ -787,15 +781,12 @@ if (!class_exists('CoursePress')) {
         }
 
         function admin_coursepress_page_reports() {
-            /* wp_enqueue_script('jquery-ui-tabs');
-              wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in
-              wp_enqueue_style('reports', $this->plugin_url . 'css/admin_coursepress_page_reports.css'); */
+            wp_enqueue_style('reports', $this->plugin_url . 'css/admin_coursepress_page_reports.css');
             wp_enqueue_script('reports-admin', $this->plugin_url . 'js/reports-admin.js');
             // tell WordPress to load jQuery UI tabs
             wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
             wp_enqueue_script('jquery-ui-core');
             wp_enqueue_script('jquery-ui-tabs');
-
         }
 
         function admin_coursepress_page_students() {
@@ -883,6 +874,7 @@ if (!class_exists('CoursePress')) {
             $sorted_menu_items[] = $courses;
 
             /* Student Dashboard page */
+
             if ($is_in) {
                 $dashboard = new stdClass;
 

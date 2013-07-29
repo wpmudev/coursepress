@@ -1,5 +1,158 @@
 <?php
 
+function coursepress_send_email($email_args = array()) {
+
+    if ($email_args['email_type'] == 'student_registration') {
+        global $course_slug;
+        $student_email = $email_args['student_email'];
+        $wp_mail_from = coursepress_get_registration_from_email();
+        $wp_mail_from_name = coursepress_get_registration_from_name();
+        $subject = coursepress_get_registration_email_subject();
+        $courses_address = '<a href="' . trailingslashit(site_url()) . trailingslashit($course_slug) . '">' . trailingslashit(site_url()) . trailingslashit($course_slug) . '</a>';
+
+        $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS');
+        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url());
+        $message = coursepress_get_registration_content_email();
+
+        $message = str_replace($tags, $tags_replaces, $message);
+    }
+
+    if ($email_args['email_type'] == 'student_invitation') {
+        global $course_slug;
+        $student_email = $email_args['student_email'];
+        $wp_mail_from = coursepress_get_invitation_passcode_from_email();
+        $wp_mail_from_name = coursepress_get_invitation_passcode_from_name();
+        $subject = coursepress_get_invitation_passcode_email_subject();
+        $course_address = '<a href="' . trailingslashit(site_url()) . trailingslashit($course_slug) . '">' . trailingslashit(site_url()) . trailingslashit($course_slug) . '</a>';
+
+        $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS ');
+        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $course_address, site_url());
+        $message = coursepress_get_invitation_content_passcode_email();
+
+        $message = str_replace($tags, $tags_replaces, $message);
+    }
+
+    add_filter('wp_mail_from', 'my_mail_from_function');
+
+    function my_mail_from_function($email) {
+        global $wp_mail_from;
+        return $wp_mail_from;
+    }
+
+    add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+
+    function my_mail_from_name_function($email) {
+        global $wp_mail_from_name;
+        return $wp_mail_from_name; //Default is WordPress
+    }
+
+    add_filter('wp_mail_content_type', 'set_content_type');
+
+    function set_content_type($content_type) {
+        return 'text/html';
+    }
+
+    add_filter('wp_mail_charset', 'set_charset');
+
+    function set_charset($charset) {
+        return get_option('blog_charset');
+    }
+
+    wp_mail($student_email, $subject, $message);
+}
+
+/* Get Student Invitation with Passcode to a Course E-mail data */
+
+function coursepress_get_invitation_passcode_from_name() {
+    return get_option('invitation_passcode_from_name', get_option('blogname'));
+}
+
+function coursepress_get_invitation_passcode_from_email() {
+    return get_option('invitation_passcode_from_email', get_option('admin_email'));
+}
+
+function coursepress_get_invitation_passcode_email_subject() {
+    return get_option('invitation_passcode_email_subject', 'Invitation to a Course (Psss...for selected ones only)');
+}
+
+function coursepress_get_invitation_content_passcode_email() {
+    $default_invitation_content_passcode_email = sprintf(__('Hi %1$s,
+
+we would like to invite you to participate in the course: "%2$s"
+
+Since the course is only for selected ones, it is passcode protected. Here is the passcode for you: %6$s
+
+What is all about: 
+%3$s
+
+Check this page for more info on the course: %4$s
+
+If you have any question fill free to contact us.
+
+Yours sincerely,
+%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE');
+
+    return get_option('invitation_content_passcode_email', $default_invitation_content_passcode_email);
+}
+
+/* Get Student Invitation to a Course E-mail data */
+
+function coursepress_get_invitation_from_name() {
+    return get_option('invitation_from_name', get_option('blogname'));
+}
+
+function coursepress_get_invitation_from_email() {
+    return get_option('invitation_from_email', get_option('admin_email'));
+}
+
+function coursepress_get_invitation_email_subject() {
+    return get_option('invitation_email_subject', 'Invitation to a Course');
+}
+
+function coursepress_get_invitation_content_email() {
+    $default_invitation_content_email = sprintf(__('Hi %1$s,
+
+we would like to invite you to participate in the course: "%2$s"
+
+What is all about: 
+%3$s
+
+Check this page for more info on the course: %4$s
+
+If you have any question fill free to contact us.
+
+Yours sincerely,
+%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS');
+    return get_option('invitation_content_email', $default_invitation_content_email);
+}
+
+/* Get registration email data */
+
+function coursepress_get_registration_from_name() {
+    return get_option('registration_from_name', get_option('blogname'));
+}
+
+function coursepress_get_registration_from_email() {
+    return get_option('registration_from_email', get_option('admin_email'));
+}
+
+function coursepress_get_registration_email_subject() {
+    return get_option('registration_email_subject', 'Registration Status');
+}
+
+function coursepress_get_registration_content_email() {
+    $default_registration_content_email = sprintf(__('Hi %1$s,
+
+Congratulations! You have registered account with %2$s successfully! You may log into your account here: %3$s.
+
+Get started by exploring our courses here: %4$s
+
+Yours sincerely,
+%5$s Team'), 'STUDENT_FIRST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS');
+
+    return get_option('registration_content_email', $default_registration_content_email);
+}
+
 function coursepress_admin_notice($notice, $type = 'updated') {
     if ($notice <> '') {
         echo '<div class="' . $type . '"><p>' . $notice . '</p></div>';
@@ -239,31 +392,29 @@ function get_number_of_days_between_dates($start_date, $end_date) {
     return $numberDays;
 }
 
+if (!function_exists('coursepress_register_module')) {
 
-  if (!function_exists('coursepress_register_module')) {
+    function coursepress_register_module($rule_name, $class_name, $section) {
 
-  function coursepress_register_module($rule_name, $class_name, $section) {
+        global $M_Rules, $M_SectionRules;
 
-  global $M_Rules, $M_SectionRules;
+        if (!is_array($M_Rules)) {
+            $M_Rules = array();
+        }
 
-  if (!is_array($M_Rules)) {
-  $M_Rules = array();
-  }
+        if (!is_array($M_SectionRules)) {
+            $M_SectionRules = array();
+        }
 
-  if (!is_array($M_SectionRules)) {
-  $M_SectionRules = array();
-  }
+        if (class_exists($class_name)) {
+            $M_SectionRules[$section][$rule_name] = $class_name;
+            $M_Rules[$rule_name] = $class_name;
+        } else {
+            return false;
+        }
+    }
 
-  if (class_exists($class_name)) {
-  $M_SectionRules[$section][$rule_name] = $class_name;
-  $M_Rules[$rule_name] = $class_name;
-  } else {
-  return false;
-  }
-  }
-
-  }
- 
+}
 
 function sp2nbsp($string) {
     return str_replace(' ', '&nbsp;', $string);
@@ -277,7 +428,7 @@ if (!function_exists('get_userdatabynicename')) :
 
         if (empty($user_nicename))
             return false;
-        
+
         if (!$user = $wpdb->get_row("SELECT * FROM $wpdb->users WHERE user_nicename = '$user_nicename' LIMIT 1"))
             return false;
 
@@ -308,4 +459,18 @@ if (!function_exists('get_userdatabynicename')) :
     }
 
 endif;
+
+function coursepress_get_count_of_users($role = '') {
+    $result = count_users();
+    if ($role == '') {
+        return $result['total_users'];
+    } else {
+        foreach ($result['avail_roles'] as $roles => $count)
+           if($roles == $role){
+               return $count;
+           }
+    }
+    return 0;
+}
+
 ?>
