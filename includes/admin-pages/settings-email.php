@@ -141,7 +141,7 @@
 
         </div><!--/postbox-->
 
-        <p class="submit">
+        <p class="save-shanges">
             <?php submit_button(__('Save Changes', 'cp')); ?>
         </p>
 

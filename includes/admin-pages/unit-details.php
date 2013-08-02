@@ -4,13 +4,18 @@ global $page, $user_id, $coursepress_admin_notice;
 $course_id = '';
 
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
-    $course_id = $_GET['course_id'];
+    $course_id = (int) $_GET['course_id'];
+    $course = new Course($course_id);
+}
+
+if (!current_user_can('coursepress_view_all_units_cap') && $course->details->post_author != get_current_user_id()) {
+    die(__('You do not have required persmissions to access this page.', 'cp'));
 }
 
 if (isset($_GET['unit_id'])) {
     $unit = new Unit($_GET['unit_id']);
     $unit_details = $unit->get_unit();
-    $unit_id = $_GET['unit_id'];
+    $unit_id = (int) $_GET['unit_id'];
 } else {
     $unit = new Unit();
     $unit_id = 0;
@@ -20,23 +25,32 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
     if (wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id)) {
 
-        $new_post_id = $unit->update_unit();
+        //if (($_POST['action'] == 'add_unit' && current_user_can('coursepress_create_course_unit_cap')) || ($_POST['action'] == 'update_unit' && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {
 
-        if ($new_post_id != 0) {
-            wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
-        } else {
-            //an error occured
-        }
-    }
+            $new_post_id = $unit->update_unit();
+
+            if ($new_post_id != 0) {
+                if (isset($_GET['ms'])) {
+                    wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+                } else {
+                    wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
+                }
+            } else {
+                //an error occured
+            }
+        
+    /*}else{
+        die(__('You don\'t have right permissions for the requested action', 'cp'));
+    }*/
+}
 }
 ?>
 
 <div class='wrap nocoursesub'>
-    <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" name="unit-add" method="post">
-        <input type="hidden" name="beingdragged" id="beingdragged" value="" />
-        <div class='course-liquid-left'>
+    <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" method="post">
+        <div class='course'>
 
-            <div id='course-left'>
+            <div id='course'>
 
 
                 <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
@@ -45,10 +59,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                     <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                     <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
                     <input type="hidden" name="action" value="update_unit" />
-                    <input type="hidden" name="plugin_notice" value="<?php _e('Unit has been updated.', 'cp'); ?>" />
                 <?php } else { ?>
                     <input type="hidden" name="action" value="add_unit" />
-                    <input type="hidden" name="plugin_notice" value="<?php _e('New Unit has been created.', 'cp'); ?>" />
                 <?php } ?>
 
                 <div id='edit-sub' class='course-holder-wrap'>
@@ -78,16 +90,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
                         </div>
 
-                        <div class="level-droppable-rules levels-sortable ui-droppable">
-                            <?php _e('Drag & Drop unit modules here', 'cp'); ?>
-                        </div>
-
-                        <div id="modules_accordion" class="modules_accordion">
-                            <!--modules will appear here-->
-                        </div>
-
                         <div class="buttons">
-                            <input type="submit" value="<?php ($unit_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp')); ?>" class="button-primary" />
+                            <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
+                                ?>
+                                <input type="submit" value="<?php ($unit_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp')); ?>" class="button-primary" />
+                            <?php } ?>
                         </div>
 
                     </div>

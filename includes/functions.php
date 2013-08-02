@@ -159,7 +159,22 @@ function coursepress_admin_notice($notice, $type = 'updated') {
     }
 }
 
-function coursepress_instructors_avatars($course_id) {
+function coursepress_get_number_of_instructors() {
+
+    $args = array(
+        'blog_id' => $GLOBALS['blog_id'],
+        'role' => 'instructor',
+        'count_total' => false,
+        'fields' => array('display_name', 'ID'),
+        'who' => ''
+    );
+
+    $instructors = get_users($args);
+
+    return count($instructors);
+}
+
+function coursepress_instructors_avatars($course_id, $remove_buttons = true) {
     global $post_id;
 
     $content = '';
@@ -186,7 +201,11 @@ function coursepress_instructors_avatars($course_id) {
     $instructors = get_users($args);
 
     foreach ($instructors as $instructor) {
-        $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+        if ($remove_buttons) {
+            $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+        } else {
+            $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+        }
     }
 
     echo $content;
@@ -466,9 +485,9 @@ function coursepress_get_count_of_users($role = '') {
         return $result['total_users'];
     } else {
         foreach ($result['avail_roles'] as $roles => $count)
-           if($roles == $role){
-               return $count;
-           }
+            if ($roles == $role) {
+                return $count;
+            }
     }
     return 0;
 }

@@ -41,6 +41,20 @@ if (!class_exists('Instructor')) {
             return $assigned_courses;
         }
         
+        function unassign_from_course($course_id = 0){
+            delete_user_meta($this->id, 'course_' . $course_id);
+            delete_user_meta($this->id, 'enrolled_course_date_' . $course_id);
+            delete_user_meta($this->id, 'enrolled_course_class_' . $course_id);
+            delete_user_meta($this->id, 'enrolled_course_group_' . $course_id);
+        }
+        
+        function unassign_from_all_courses(){
+            $courses = $this->get_assigned_courses_ids();
+            foreach($courses as $course_id){
+                $this->unassign_from_course($course_id);
+            }
+        }
+        
         //Get number of instructor's assigned courses
         function get_courses_number(){
             global $wpdb;

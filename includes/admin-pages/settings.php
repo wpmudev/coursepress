@@ -5,8 +5,8 @@ wp_reset_vars(array('action', 'page'));
 if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     foreach ($_POST as $key => $value) {
         if (preg_match("/option_/i", $key)) {//every field name with prefix "option_" will be saved as an option
-            if($_POST[$key] != ''){
-            update_option(str_replace('option_', '', $key), $value);
+            if ($_POST[$key] != '') {
+                update_option(str_replace('option_', '', $key), $value);
             }
         }
     }
@@ -18,19 +18,51 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     <h2><?php _e('Settings', 'cp'); ?></h2>
 
     <?php
+    if (isset($_POST['submit'])) {
+        ?>
+        <div id="message" class="updated fade"><p><?php _e('Settings saved successfully.', 'cp'); ?></p></div>
+        <?php
+    }
+    ?>
+
+    <?php
     $tab = (isset($_GET['tab'])) ? $_GET['tab'] : '';
     if (empty($tab)) {
-        $tab = 'general';
+        if (current_user_can('administrator')) {
+            $tab = 'general';
+        } else if (current_user_can('coursepress_settings_groups_page_cap')) {
+            $tab = 'groups';
+        } else if (current_user_can('coursepress_settings_shortcode_page_cap')) {
+            $tab = 'shortcodes';
+        } else {
+            die(__('You do not have required permissions to access Settings.', 'cp'));
+        }
     }
     ?>
 
     <?php
     $menus = array();
-    $menus['general'] = __('General', 'cp');
-    $menus['groups'] = __('Class Groups', 'cp');
-    $menus['payment'] = __('Payment Settings', 'cp');
-    $menus['email'] = __('E-mail Settings', 'cp');
-    $menus['shortcodes'] = __('Shortcodes', 'cp');
+    if (current_user_can('administrator')) {
+        $menus['general'] = __('General', 'cp');
+    }
+
+    if (current_user_can('coursepress_settings_groups_page_cap')) {
+        $menus['groups'] = __('Class Groups', 'cp');
+    }
+
+    if (current_user_can('administrator')) {
+        /*$menus['payment'] = __('Payment Settings', 'cp');*/
+        $menus['email'] = __('E-mail Settings', 'cp');
+    }
+
+    if (current_user_can('administrator')) {
+        $menus['instructor_capabilities'] = __('Instructor Capabilities', 'cp');
+    }
+
+    if (current_user_can('coursepress_settings_shortcode_page_cap')) {
+        $menus['shortcodes'] = __('Shortcodes', 'cp');
+    }
+
     $menus = apply_filters('coursepress_settings_new_menus', $menus);
     ?>
 
@@ -38,9 +70,10 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
         <?php
         foreach ($menus as $key => $menu) {
             ?>
-            <a class="nav-tab<?php if ($tab == $key)
-            echo ' nav-tab-active';
-            ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
+            <a class="nav-tab<?php
+               if ($tab == $key)
+                   echo ' nav-tab-active';
+               ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
                <?php
            }
            ?>
@@ -49,19 +82,42 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     <?php
     switch ($tab) {
 
-        case 'general': $this->show_settings_general();
+
+        case 'general':
+            if (current_user_can('administrator')) {
+                $this->show_settings_general();
+            }
             break;
 
-        case 'groups': $this->show_settings_groups();
+
+        case 'groups':
+            if (current_user_can('coursepress_settings_groups_page_cap')) {
+                $this->show_settings_groups();
+            }
             break;
 
-        case 'payment': $this->show_settings_payment();
+        /*case 'payment':
+            if (current_user_can('administrator')) {
+                $this->show_settings_payment();
+            }
+            break;*/
+
+        case 'shortcodes':
+            if (current_user_can('coursepress_settings_shortcode_page_cap')) {
+                $this->show_settings_shortcodes();
+            }
             break;
 
-        case 'shortcodes': $this->show_settings_shortcodes();
+        case 'instructor_capabilities':
+            if (current_user_can('administrator')) {
+                $this->show_settings_instructor_capabilities();
+            }
             break;
 
-        case 'email': $this->show_settings_email();
+        case 'email':
+            if (current_user_can('administrator')) {
+                $this->show_settings_email();
+            }
             break;
 
         default: do_action('coursepress_settings_menu_' . $tab);

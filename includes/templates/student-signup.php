@@ -4,6 +4,9 @@
     $student = new Student(0);
 
     if (isset($_POST['student-settings-submit'])) {
+        
+        check_admin_referer('student_signup');
+        
         $student_data = array();
         $form_errors = 0;
 
@@ -59,6 +62,7 @@
     <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
 
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
+
         <label>
             <?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="" />
@@ -90,9 +94,10 @@
         </label>
 
         <label class="full">
-            <a href="<?php echo wp_login_url();?>"><?php _e('Already have an Account?', 'cp');?></a>
+            <a href="<?php echo wp_login_url(); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Create an Account', 'cp'); ?>" />
         </label>
+        <?php wp_nonce_field('student_signup'); ?>
     </form>
     <?php
 } else {

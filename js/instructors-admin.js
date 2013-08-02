@@ -1,9 +1,9 @@
-function delete_instructor_confirmed() {
-    return confirm(instructor.delete_instructor_alert);
+function delete_instructors_confirmed() {
+    return confirm(instructor.delete_instructors_alert);
 }
 
-function removeInstructor() {
-    if (delete_instructor_confirmed()) {
+function removeInstructors() {
+    if (delete_instructors_confirmed()) {
         return true;
     } else {
         return false;

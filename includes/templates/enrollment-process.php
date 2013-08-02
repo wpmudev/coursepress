@@ -1,11 +1,14 @@
 <?php
-
 $student = new Student(get_current_user_id());
-//enroll_in_course
+
 $course_price = 0;
+
+if(current_user_can('student')){
 
 if (isset($_POST['course_id']) && is_numeric($_POST['course_id'])) {
 
+    check_admin_referer('enrollment_process');
+    
     $course_id = $_POST['course_id'];
     $course = new Course($course_id);
     $pass_errors = 0;
@@ -36,5 +39,8 @@ if (isset($_POST['course_id']) && is_numeric($_POST['course_id'])) {
     }
 } else {
     _e('Please select a course first you want to enroll in.', 'cp');
+}
+}else{
+    _e('You do not have required permission for this action', 'cp');
 }
 ?>

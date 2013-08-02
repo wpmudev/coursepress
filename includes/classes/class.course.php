@@ -56,7 +56,7 @@ if (!class_exists('Course')) {
 
             if ($post) {
                 return $post[0]->ID;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -117,8 +117,9 @@ if (!class_exists('Course')) {
         }
 
         function delete_course($force_delete = true) {
+
             $wpdb;
-            
+
             wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
 
             /* Delete all usermeta associated to the course */

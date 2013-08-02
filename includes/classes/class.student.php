@@ -1,11 +1,12 @@
 <?php
+
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
 if (!class_exists('Student')) {
 
     class Student extends WP_User {
-        
+
         var $first_name = '';
         var $last_name = '';
         var $courses_number = 0;
@@ -23,7 +24,6 @@ if (!class_exists('Student')) {
             $this->first_name = get_user_meta($id, 'first_name', true);
             $this->last_name = get_user_meta($id, 'last_name', true);
             $this->courses_number = $this->get_courses_number();
-           
         }
 
         function Student($id, $name = '') {
@@ -48,7 +48,7 @@ if (!class_exists('Student')) {
             update_user_meta($this->id, 'enrolled_course_date_' . $course_id, $current_time); //Link courses and student (in order to avoid custom tables) for easy MySql queries (get courses stats, student courses, etc.)
             update_user_meta($this->id, 'enrolled_course_class_' . $course_id, $class);
             update_user_meta($this->id, 'enrolled_course_group_' . $course_id, $group);
-            
+
             return true;
             //TO DO: add new payment status if it's paid
         }
@@ -61,10 +61,20 @@ if (!class_exists('Student')) {
             delete_user_meta($this->id, 'enrolled_course_date_' . $course_id);
             delete_user_meta($this->id, 'enrolled_course_class_' . $course_id);
             delete_user_meta($this->id, 'enrolled_course_group_' . $course_id);
+
             if ($keep_unenrolled_record) {
                 update_user_meta($this->id, 'unenrolled_course_date_' . $course_id, $current_time); //keep a record of all unenrolled students
             }
-            
+        }
+
+        //Unenroll from all courses
+
+        function unenroll_from_all_courses() {
+            $courses = $this->get_enrolled_courses_ids();
+
+            foreach ($courses as $course_id) {
+                $this->unenroll_from_course($course_id);
+            }
         }
 
         function get_enrolled_courses_ids() {
@@ -109,32 +119,32 @@ if (!class_exists('Student')) {
                 return false;
             }
         }
-        
-        function update_student_data($student_data){
-            if(wp_update_user($student_data)){
+
+        function update_student_data($student_data) {
+            if (wp_update_user($student_data)) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
-        
-        function update_student_group($course_id, $group){
-            if(update_user_meta($this->id, 'enrolled_course_group_'.$course_id, $group)){
+
+        function update_student_group($course_id, $group) {
+            if (update_user_meta($this->id, 'enrolled_course_group_' . $course_id, $group)) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
-        
-        function update_student_class($course_id, $class){
-            if(update_user_meta($this->id, 'enrolled_course_class_'.$course_id, $class)){
+
+        function update_student_class($course_id, $class) {
+            if (update_user_meta($this->id, 'enrolled_course_class_' . $course_id, $class)) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
-        
-        function add_student($student_data){
+
+        function add_student($student_data) {
             $student_data['role'] = 'student';
             return wp_insert_user($student_data);
         }

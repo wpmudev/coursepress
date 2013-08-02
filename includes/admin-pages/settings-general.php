@@ -103,7 +103,7 @@
         do_action('coursepress_general_options_page');
         ?>
 
-        <p class="submit">
+        <p class="save-shanges">
             <?php submit_button(__('Save Changes', 'cp')); ?>
         </p>
 

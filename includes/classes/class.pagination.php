@@ -47,13 +47,11 @@ class CoursePress_Pagination {
     }
 
     #How many adjacent pages should be shown on each side of the current page?
-
     function adjacents($value) {
         $this->adjacents = (int) $value;
     }
 
     #show counter?
-
     function showCounter($value = "") {
         $this->showCounter = ($value === true) ? true : false;
     }
@@ -129,19 +127,19 @@ class CoursePress_Pagination {
         $this->calculate == true;
         $error = false;
         if ($this->urlF and $this->urlF != '%' and strpos($this->target, $this->urlF) === false) {
-            echo "You have specified one wildcard to replace, but does it does not exist in the target<br />";
+            //_e("You have specified one wildcard to replace, but does it does not exist in the target", 'cp');
             $error = true;
         } elseif ($this->urlF and $this->urlF == '%' and strpos($this->target, $this->urlF) === false) {
-            echo "You must specify the wildcard% target to replace the page number<br />";
+            //_e("You must specify the wildcard% target to replace the page number", 'cp');
             $error = true;
         }
 
         if ($this->total_pages < 0) {
-            echo "It is necessary to specify the <strong>number of pages</strong> (\$class->items(1000))<br />";
+            //echo "It is necessary to specify the <strong>number of pages</strong> (\$class->items(1000))<br />";
             $error = true;
         }
         if ($this->limit == null) {
-            echo "It is necessary to specify the <strong>limit of items</strong> to show per page (\$class->limit(10))<br />";
+            //echo "It is necessary to specify the <strong>limit of items</strong> to show per page (\$class->limit(10))<br />";
             $error = true;
         }
         if ($error)
@@ -161,11 +159,6 @@ class CoursePress_Pagination {
         $next = $this->page + 1;                            //next page is page + 1
         $lastpage = ceil($this->total_pages / $this->limit);        //lastpage is = total pages / items per page, rounded up.
         $lpm1 = $lastpage - 1;                        //last page minus 1
-
-        /*
-          Now we apply our rules and draw the pagination object.
-          We're actually saving the code to a variable in case we want to draw it more than once.
-         */
 
         if ($lastpage > 1) {
             if ($this->page) {

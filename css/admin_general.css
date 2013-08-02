@@ -1,3 +1,10 @@
+.right{
+    float: right;
+}
+
+.tablenav .actions.new-actions{
+    padding: 2px 0px 0px 0px;
+}
 .zero{
     padding: 0px 10px 14px;
 }

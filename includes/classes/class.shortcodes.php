@@ -171,6 +171,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         }
                     }
                 }
+
+                $course->button .= wp_nonce_field('enrollment_process');
             }
 
             if ($field == 'passcode_input') {
@@ -186,9 +188,13 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             extract(shortcode_atts(array('instructor_id' => 0), $atts));
 
+            $doc = new DOMDocument();
+            $doc->loadHTML(get_avatar($instructor_id, 80));
+            $imageTags = $doc->getElementsByTagName('img');
 
-            $avatar_url = preg_match('@src="([^"]+)"@', get_avatar($instructor_id, 80), $match);
-            $avatar_url = $match[1];
+            foreach ($imageTags as $tag) {
+                $avatar_url = $tag->getAttribute('src');
+            }
 ?>
             <?php
 
@@ -214,12 +220,18 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $instructors_count = 0;
 
             foreach ($instructors as $instructor) {
-                $avatar_url = preg_match('@src="([^"]+)"@', get_avatar($instructor->ID, 80), $match);
-                $avatar_url = $match[1];
+
+                $doc = new DOMDocument();
+                $doc->loadHTML(get_avatar($instructor->ID, 80));
+                $imageTags = $doc->getElementsByTagName('img');
+
+                foreach ($imageTags as $tag) {
+                    $avatar_url = $tag->getAttribute('src');
+                }
             ?>
                 <?php
 
-                $content .= '<div class="instructor"><a href="' . trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_nicename) . '">';
+                $content .= '<div class="instructor"><a href="' . trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login) . '">';
                 $content .= '<div class="small-circle-profile-image" style="background: url(' . $avatar_url . ');"></div>';
                 $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
                 $content .= '</a></div>';
@@ -246,7 +258,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
         }
 
         function course_units($atts) {
-            $course = new Course();
+
 
             if (empty($course_id)) {
                 $course_id = 0;
@@ -255,26 +267,45 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $content = '';
 
             extract(shortcode_atts(array('course_id' => $course_id), $atts));
-
+            
+            $course = new Course($course_id);
             $units = $course->get_units($course_id, 'publish');
 
             $student = new Student(get_current_user_id());
             //redirect to the parent course page if not enrolled
-            if (!current_user_can('administrator')) {
-                if (!$student->has_access_to_course($course_id)) {
-                    wp_redirect(get_permalink($course_id));
-                    exit;
+            if (!current_user_can('administrator')) {//If current user is not admin, check if he can access to the units
+                if ($course->details->post_author != get_current_user_id()) {//check if user is an author of a course (probably instructor)
+                    if (!current_user_can('coursepress_view_all_units_cap')) {//check if the instructor, even if it's not the author of the course, maybe has a capability given by the admin
+                        if (!$student->has_access_to_course($course_id)) {//if it's not an instructor who made the course, check if he is enrolled to course
+                            wp_redirect(get_permalink($course_id)); //if not, redirect him to the course page so he may enroll it if the enrollment is available
+                            exit;
+                        }
+                    }
                 }
             }
 
             $content .= '<ol>';
+            $last_unit_url = '';
+            
             foreach ($units as $unit) {
                 $unit_details = new Unit($unit->ID);
                 $content .= '<li><a href="' . $unit_details->get_permalink($course_id) . '">' . $unit->post_title . '</a></li>';
+                $last_unit_url =  $unit_details->get_permalink($course_id);
             }
+            
             $content .= '</ol>';
 
+            if(count($units) == 0){
+                $content = __('0 course units prepared yet. Please check back later.', 'cp');
+            }
+            
+            if(count($units) == 1){
+                wp_redirect($last_unit_url);
+                exit;
+            }
+            
             return $content;
+            
         }
 
         function course_unit_details($atts) {

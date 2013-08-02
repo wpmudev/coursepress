@@ -80,8 +80,10 @@ jQuery(document).ready(function() {
     });
 
     jQuery(function() {
+        
         jQuery("#students_accordion").accordion({
             heightStyle: "content",
+            active: parseInt(coursepress.active_student_tab)
         });
 
         jQuery("#modules_accordion").accordion({
