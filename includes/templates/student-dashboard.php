@@ -41,7 +41,6 @@
     ?>
     <?php
 } else {
-    //_e('You don\'t have required permissions to access this page', 'cp');
     wp_redirect(wp_login_url());
     exit;
 }

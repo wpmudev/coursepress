@@ -1,3 +1,13 @@
+jQuery(function() {
+    jQuery(".spinners").spinner({
+        min: 0
+    });
+    jQuery('.dateinput').datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+});
+
 function unenroll_student_confirmed() {
     return confirm(coursepress.unenroll_student_alert);
 }

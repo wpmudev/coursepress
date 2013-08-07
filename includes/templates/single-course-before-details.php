@@ -35,14 +35,10 @@ the_excerpt();
             <span class="strong"><?php _e('Who can Enroll: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="enroll_type"]'); ?><br />
             <span class="strong"><?php _e('Price: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="price"]'); ?>
         </div></div>
-    <div class="enroll-box-right"><form name="enrollment-process" method="post" action="<?php echo do_shortcode('[courses_urls url="enrollment-process"]'); ?>">
+    <div class="enroll-box-right">
         <div class="apply-box">
             <?php echo do_shortcode('[course_details field="button"]'); ?>
         </div>
-        
-        <input type="hidden" name="course_id" value="<?php echo do_shortcode('[course_details field="ID"]'); ?>" />
-        </form>
     </div>
-
 </div>
 <div class="devider"></div>

@@ -1,5 +1,6 @@
 <?php
 $page = $_GET['page'];
+$s = (isset($_GET['s']) ? $_GET['s'] : '');
 
 if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('administrator')) {
     check_admin_referer('bulk-instructors');
@@ -76,7 +77,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Instructors', 'cp'); ?>:</label>
-                        <input type="text" value="<?php echo esc_attr($s); ?>" name="s">
+                        <input type="text" value="<?php echo esc_attr(isset($s) ? $s : ''); ?>" name="s">
                         <input type="submit" class="button" value="<?php _e('Search Instructors', 'cp'); ?>">
                     </p>
                 </form>
@@ -174,7 +175,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                         <?php
                         if (count($wp_user_search->get_results()) == 0) {
                             ?>
-                            <tr><td colspan="8"><div class="zero"><?php _e('0 instructors found', 'cp'); ?></div></td></tr>
+                            <tr><td colspan="8"><div class="zero"><?php _e('No instructors found.', 'cp'); ?></div></td></tr>
                             <?php
                         }
                         ?>

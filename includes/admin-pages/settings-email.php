@@ -1,3 +1,5 @@
+<?php $page = $_GET['page']; ?>
+
 <div id="poststuff" class="metabox-holder m-settings email-settings">
     <form action='' method='post'>
 
@@ -40,7 +42,7 @@
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', 'cp');?></p>
                                 <?php
                                 $args = array("textarea_name" => "option_registration_content_email", "textarea_rows" => 10);
-                                wp_editor(esc_html(coursepress_get_registration_content_email()), "option_registration_content_email", $args);
+                                wp_editor(esc_html(stripslashes(coursepress_get_registration_content_email())), "option_registration_content_email", $args);
                                 ?>
                             </td>
                         </tr>
@@ -84,8 +86,8 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS', 'cp');?></p>
                                 <?php
-                                $args = array("textarea_name" => "option_registration_content_email", "textarea_rows" => 10);
-                                wp_editor(esc_html(coursepress_get_invitation_content_email()), "option_invitation_content_email", $args);
+                                $args = array("textarea_name" => "option_invitation_content_email", "textarea_rows" => 10);
+                                wp_editor(esc_html(stripslashes(coursepress_get_invitation_content_email())), "option_invitation_content_email", $args);
                                 ?>
                             </td>
                         </tr>
@@ -129,8 +131,8 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, PASSCODE', 'cp');?></p>
                                 <?php
-                                $args = array("textarea_name" => "option_registration_content_email", "textarea_rows" => 10);
-                                wp_editor(esc_html(coursepress_get_invitation_content_passcode_email()), "option_invitation_content_passcode_email", $args);
+                                $args = array("textarea_name" => "option_invitation_content_passcode_email", "textarea_rows" => 10);
+                                wp_editor(esc_html(stripslashes(coursepress_get_invitation_content_passcode_email())), "option_invitation_content_passcode_email", $args);
                                 ?>
                             </td>
                         </tr>

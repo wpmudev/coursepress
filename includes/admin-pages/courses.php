@@ -2,7 +2,12 @@
 if (isset($_GET['quick_setup'])) {
     include('quick-setup.php');
 } else {
-
+    if(isset($_GET['s'])){
+        $s = $_GET['s'];
+    }else{
+        $s = '';
+    }
+    
     $page = $_GET['page'];
 
     if (isset($_POST['action']) && isset($_POST['courses'])) {
@@ -22,7 +27,7 @@ if (isset($_GET['quick_setup'])) {
                             $course->change_status('publish');
                             $message = __('Selected courses have been published successfully.', 'cp');
                         } else {
-                            $message = __('You don\'t have right persmissions to change course status.', 'cp');
+                            $message = __("You don't have right persmissions to change course status.", 'cp');
                         }
                         break;
 
@@ -31,7 +36,7 @@ if (isset($_GET['quick_setup'])) {
                             $course->change_status('private');
                             $message = __('Selected courses have been unpublished successfully.', 'cp');
                         } else {
-                            $message = __('You don\'t have right persmissions to change course status.', 'cp');
+                            $message = __("You don't have right persmissions to change course status.", 'cp');
                         }
                         break;
 
@@ -40,7 +45,7 @@ if (isset($_GET['quick_setup'])) {
                             $course->delete_course();
                             $message = __('Selected courses have been deleted successfully.', 'cp');
                         } else {
-                            $message = __('You don\'t have right persmissions to delete the course.', 'cp');
+                            $message = __("You don't have right persmissions to delete the course.", 'cp');
                         }
                         break;
                 }
@@ -73,7 +78,7 @@ if (isset($_GET['quick_setup'])) {
             $course->delete_course($force_delete = true);
             $message = __('Selected course has been deleted successfully.', 'cp');
         } else {
-            $message = __('You don\'t have right persmissions to delete the course.', 'cp');
+            $message = __("You don't have right persmissions to delete the course.", 'cp');
         }
     }
 
@@ -229,7 +234,7 @@ if (isset($_GET['quick_setup'])) {
                         if (count($wp_course_search->get_results()) == 0) {
                             ?>
                             <tr>
-                                <td colspan="6"><div class="zero"><?php _e('0 courses found', 'cp') ?></div></td>
+                                <td colspan="6"><div class="zero"><?php _e('No courses found.', 'cp') ?></div></td>
                             </tr>
                             <?php
                         }

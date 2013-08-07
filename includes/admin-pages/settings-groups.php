@@ -5,6 +5,9 @@ if (isset($_POST['item_title'])) {
     update_option('course_groups', $groups);
 }
 ?>
+
+<?php $page = $_GET['page']; ?>
+
 <div id="poststuff" class="metabox-holder m-settings">
     <form action='' method='post'>
 

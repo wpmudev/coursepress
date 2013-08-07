@@ -7,14 +7,16 @@ if (isset($_POST['invite_student'])) {
     check_admin_referer('student_invitation');
     if ((current_user_can('coursepress_invite_students_cap')) || (current_user_can('coursepress_invite_my_students_cap') && $course->details->post_author == get_current_user_id())) {
         $email_args['email_type'] = 'student_invitation';
+        $email_args['course_id'] = $course_id;
         $email_args['student_first_name'] = $_POST['first_name'];
         $email_args['student_last_name'] = $_POST['last_name'];
         $email_args['student_email'] = $_POST['email'];
+        $email_args['enroll_type'] = $course->details->enroll_type;
         if (is_email($_POST['email'])) {
             coursepress_send_email($email_args);
             wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=is');
         } else {
-            wp_redirect('?page=course_details&tab=students&course_id=' . $course_id);
+            wp_redirect('?page=course_details&tab=students&course_id=' . $course_id .'&ems=wrong_email');
         }
         wp_redirect('?page=course_details&tab=students&course_id=' . $course_id);
     }
@@ -137,7 +139,7 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
 <div id="students_accordion">
     <?php
     $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
-    $search_args['meta_value'] = $class;
+    $search_args['meta_value'] = (isset($class) ? $class : '');
 
     $args = array(
         'meta_query' => array(
@@ -208,13 +210,13 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
 
             <div class="additional_class_actions">
                 <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                    <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode($class); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
+                    <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
                 <?php } ?>
             </div>
 
             <div class="additional_class_actions_add_student">
                 <?php if ((current_user_can('coursepress_add_move_students_cap')) || (current_user_can('coursepress_add_move_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
+                <form name="add_new_student_to_class_<?php echo (isset($class) ? $class : '');; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
                     <input type="hidden" name="class_name" value="" />
                     <input type="hidden" name="active_student_tab" value="0" /> 
                     <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
@@ -239,7 +241,7 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
 
             <div class="additional_class_actions_add_student">
                 <?php if ((current_user_can('coursepress_add_move_students_cap')) || (current_user_can('coursepress_add_move_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                    <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
+                    <form name="add_new_student_to_class_<?php echo (isset($class) ? $class : ''); ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
@@ -268,7 +270,7 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
             $wp_user_search = new WP_User_Query($args);
             ?>
             <div class="sidebar-name no-movecursor" area-selected="true">
-                <h3><?php echo $class; ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
+                <h3><?php echo (isset($class) ? $class : ''); ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
             </div>
             <?php
             if ($wp_user_search->get_results()) {
@@ -327,21 +329,21 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
 
                     <div class="additional_class_actions">
                         <?php if ((current_user_can('coursepress_delete_classes_cap')) || (current_user_can('coursepress_delete_my_classes_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode($class); ?>" onClick="return deleteClass();" title="<?php _e('Delete Class and move students to Default class', 'cp'); ?>"><?php _e('Delete Class', 'cp'); ?></a>
+                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return deleteClass();" title="<?php _e('Delete Class and move students to Default class', 'cp'); ?>"><?php _e('Delete Class', 'cp'); ?></a>
                         <?php } ?>
                         <?php if (((current_user_can('coursepress_delete_classes_cap')) || (current_user_can('coursepress_delete_my_classes_cap') && $course->details->post_author == get_current_user_id())) && (((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())))) { ?>
                             | 
                         <?php } ?>
                         <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode($class); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
+                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
                         <?php } ?>
                     </div>
 
 
                     <div class="additional_class_actions_add_student">
                         <?php if ((current_user_can('coursepress_add_move_students_cap')) || (current_user_can('coursepress_add_move_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                            <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
-                                <input type="hidden" name="class_name" value="<?php echo $class; ?>" />
+                            <form name="add_new_student_to_class_<?php echo (isset($class) ? $class : ''); ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
+                                <input type="hidden" name="class_name" value="<?php echo (isset($class) ? $class : ''); ?>" />
                                 <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" /> 
                                 <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
                                 <?php wp_nonce_field('student_details'); ?>

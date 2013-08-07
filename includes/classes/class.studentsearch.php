@@ -28,7 +28,9 @@ if (!class_exists('Student_Search')) {
                 'fields' => 'all'
             );
 
-
+            $search_args['meta_key'] = (isset($search_args['meta_key']) ? $search_args['meta_key'] : '');
+            $search_args['meta_value'] = (isset($search_args['meta_value']) ? $search_args['meta_value'] : '');
+            
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
                 'role' => 'student',

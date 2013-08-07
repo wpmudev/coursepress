@@ -2,12 +2,37 @@
 global $action, $page;
 wp_reset_vars(array('action', 'page'));
 
-if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
-    foreach ($_POST as $key => $value) {
-        if (preg_match("/option_/i", $key)) {//every field name with prefix "option_" will be saved as an option
-            if ($_POST[$key] != '') {
-                update_option(str_replace('option_', '', $key), $value);
+$page = $_GET['page'];
+
+$tab = (isset($_GET['tab'])) ? $_GET['tab'] : '';
+if (empty($tab)) {
+    if (current_user_can('administrator')) {
+        $tab = 'general';
+    } else if (current_user_can('coursepress_settings_groups_page_cap')) {
+        $tab = 'groups';
+    } else if (current_user_can('coursepress_settings_shortcode_page_cap')) {
+        $tab = 'shortcodes';
+    } else {
+        die(__('You do not have required permissions to access Settings.', 'cp'));
+    }
+}
+
+if (isset($_POST['_wpnonce'])) {
+    if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
+        foreach ($_POST as $key => $value) {
+            if (preg_match("/option_/i", $key)) {//every field name with prefix "option_" will be saved as an option
+                if ($_POST[$key] != '') {
+                    update_option(str_replace('option_', '', $key), $value);
+                }
             }
+        }
+    }
+
+    if ($tab == 'general') {
+        if (isset($_POST['display_menu_items'])) {
+            update_option('display_menu_items', 1);
+        } else {
+            update_option('display_menu_items', 0);
         }
     }
 }
@@ -25,20 +50,6 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     }
     ?>
 
-    <?php
-    $tab = (isset($_GET['tab'])) ? $_GET['tab'] : '';
-    if (empty($tab)) {
-        if (current_user_can('administrator')) {
-            $tab = 'general';
-        } else if (current_user_can('coursepress_settings_groups_page_cap')) {
-            $tab = 'groups';
-        } else if (current_user_can('coursepress_settings_shortcode_page_cap')) {
-            $tab = 'shortcodes';
-        } else {
-            die(__('You do not have required permissions to access Settings.', 'cp'));
-        }
-    }
-    ?>
 
     <?php
     $menus = array();
@@ -51,7 +62,7 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
     }
 
     if (current_user_can('administrator')) {
-        /*$menus['payment'] = __('Payment Settings', 'cp');*/
+        /* $menus['payment'] = __('Payment Settings', 'cp'); */
         $menus['email'] = __('E-mail Settings', 'cp');
     }
 
@@ -96,11 +107,11 @@ if (wp_verify_nonce($_REQUEST['_wpnonce'], 'update-coursepress-options')) {
             }
             break;
 
-        /*case 'payment':
-            if (current_user_can('administrator')) {
-                $this->show_settings_payment();
-            }
-            break;*/
+        /* case 'payment':
+          if (current_user_can('administrator')) {
+          $this->show_settings_payment();
+          }
+          break; */
 
         case 'shortcodes':
             if (current_user_can('coursepress_settings_shortcode_page_cap')) {

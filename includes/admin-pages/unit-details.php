@@ -72,7 +72,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                     <div class='course-holder'>
                         <div class='course-details'>
                             <label for='unit_name'><?php _e('Unit Name', 'cp'); ?></label>
-                            <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr(stripslashes($unit_details->post_title)); ?>' />
+                            <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr(stripslashes(isset($unit_details->post_title) ? $unit_details->post_title : '')); ?>' />
                             <br/><br/>
                             <label for='unit_description'><?php _e('Unit Description', 'cp'); ?></label>
                             <?php

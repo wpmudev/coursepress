@@ -17,6 +17,7 @@ if (!class_exists('Unit')) {
             $this->id = $id;
             $this->output = $output;
             $this->details = get_post($this->id, $this->output);
+           
             $this->course_id = $this->get_parent_course_id();
         }
 
@@ -34,7 +35,7 @@ if (!class_exists('Unit')) {
                     $unit->post_title = __('Untitled', 'cp');
                 }
 
-                if ($unit->post_status == 'private') {
+                if ($unit->post_status == 'private' || $unit->post_status == 'draft') {
                     $unit->post_status = __('unpublished', 'cp');
                 }
 

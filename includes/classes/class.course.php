@@ -31,7 +31,7 @@ if (!class_exists('Course')) {
                 if (!isset($course->post_title) || $course->post_title == '') {
                     $course->post_title = __('Untitled', 'cp');
                 }
-                if ($course->post_status == 'private') {
+                if ($course->post_status == 'private' || $course->post_status == 'draft') {
                     $course->post_status = __('unpublished', 'cp');
                 }
 
@@ -39,7 +39,7 @@ if (!class_exists('Course')) {
 
                 return $course;
             } else {
-                return false;
+                return new stdClass();
             }
         }
 
@@ -108,8 +108,10 @@ if (!class_exists('Course')) {
 
                 update_post_meta($post_id, 'instructors', $_POST['instructor']); //Save instructors for the Course
 
-                foreach ($_POST['instructor'] as $instructor_id) {
-                    update_user_meta($instructor_id, 'course_' . $post_id, $post_id); //Link courses and instructors (in order to avoid custom tables) for easy MySql queries (get instructor stats, his courses, etc.)
+                if (isset($_POST['instructor'])) {
+                    foreach ($_POST['instructor'] as $instructor_id) {
+                        update_user_meta($instructor_id, 'course_' . $post_id, $post_id); //Link courses and instructors (in order to avoid custom tables) for easy MySql queries (get instructor stats, his courses, etc.)
+                    }
                 }
             }
 

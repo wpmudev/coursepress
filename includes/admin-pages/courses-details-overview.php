@@ -6,18 +6,9 @@ if (isset($_GET['course_id'])) {
     $course_details = $course->get_course();
     $course_id = $_GET['course_id'];
 } else {
-    $course = new Course();
+    $course = new course();
     $course_id = 0;
 }
-
-$course_marking_type = $course->details->course_marking_type; //get_post_meta($course_id, 'course_marking_type', true);
-$class_size = $course->details->class_size;
-$enroll_type = $course->details->enroll_type;
-$passcode = $course->details->passcode;
-$course_start_date = $course->details->course_start_date;
-$course_end_date = $course->details->course_end_date;
-$enrollment_start_date = $course->details->enrollment_start_date;
-$enrollment_end_date = $course->details->enrollment_end_date;
 
 if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] == 'update')) {
 
@@ -34,6 +25,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     } else {
         //an error occured
     }
+}
+
+if (isset($_GET['course_id'])) {
+//$course_marking_type = $course->details->course_marking_type; //get_post_meta($course_id, 'course_marking_type', true);
+    $class_size = $course->details->class_size;
+    $enroll_type = $course->details->enroll_type;
+    $passcode = $course->details->passcode;
+    $course_start_date = $course->details->course_start_date;
+    $course_end_date = $course->details->course_end_date;
+    $enrollment_start_date = $course->details->enrollment_start_date;
+    $enrollment_end_date = $course->details->enrollment_end_date;
+} else {
+    $class_size = 0;
+    $enroll_type = '';
+    $passcode = '';
+    $course_start_date = '';
+    $course_end_date = '';
+    $enrollment_start_date = '';
+    $enrollment_end_date = '';
 }
 ?>
 
@@ -62,7 +72,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                     <div class='course-holder'>
                         <div class='course-details'>
                             <label for='course_name'><?php _e('Course Name', 'cp'); ?></label>
-                            <input class='wide' type='text' name='course_name' id='course_name' value='<?php echo esc_attr(stripslashes($course_details->post_title)); ?>' />
+                            <input class='wide' type='text' name='course_name' id='course_name' value='<?php
+                            if (isset($_GET['course_id'])) {
+                                echo esc_attr(stripslashes($course->details->post_title));
+                            }
+                            ?>' />
 
                             <br/><br/>
                             <label for='course_excerpt'><?php _e('Course Excerpt', 'cp'); ?></label>
@@ -75,7 +89,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                             }
 
                             $desc = '';
-                            wp_editor(stripslashes($course_details->post_excerpt), "course_excerpt", $args);
+                            wp_editor(stripslashes((isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
                             ?>
 
                             <br/><br/>
@@ -93,7 +107,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                             ?>
                             <br/>
 
-                            <div class="half">
+                            <!--<div class="half">
                                 <label for='meta_course_marking_type'><?php _e('Marking Type', 'cp'); ?></label>
 
                                 <select class="wide" name="meta_course_marking_type" id="course_marking_type">
@@ -101,16 +115,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                                     <option value="grade" <?php echo ($course_marking_type == 'grade' ? 'selected=""' : '') ?>><?php _e('Grade', 'cp'); ?></option>
                                 </select>
 
-                            </div>
+                            </div>-->
 
 
-                            <div class="fullwidth">
+                            <div class="half">
                                 <label for='meta_class-size'><?php _e('Class size', 'cp'); ?></label>
                                 <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
                                 <p class="description"><?php _e('select 0 for infinite', 'cp'); ?></p>
                             </div>
 
-                            <br clear="all" />
+                            <!--<br clear="all" />-->
 
                             <div class="half">
                                 <label for='meta_enroll_type'><?php _e('How & Who can Enroll?', 'cp'); ?></label>
@@ -177,7 +191,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                             if ($course_id !== 0) {
                                 ?>
                                 <a href="?page=<?php echo $page; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
-                            <?php } ?>
+<?php } ?>
                         </div>
 
                     </div>
@@ -205,32 +219,32 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
                             }
                             ?>
 
-                            <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
+                        <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
                         </div>
 
-                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) { ?>
+<?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) { ?>
                             <?php coursepress_instructors_avatars_array(); ?>
+
                             <div class="clearfix"></div>
-                            <?php coursepress_instructors_drop_down(); ?>
-                            <?php
-                            if (coursepress_get_number_of_instructors() != 0) { ?>
+    <?php coursepress_instructors_drop_down(); ?>
+                                    <?php if (coursepress_get_number_of_instructors() != 0) { ?>
                                 <div class = "inner-right inner-link">
-                                <a href = "javascript:void(0)" id = "add-instructor-trigger"><?php _e('Add new Instructor', 'cp');
-                                ?></a>
-                            </div>
-                        <?php
-                        } else {
-                            _e('You do not have any available instructors yet. <a href="user-new.php" target="_new">Create one user with the Instructor role</a> in order to assign it to the courses.', 'cp');
-                        }
-                        ?>
+                                    <a href = "javascript:void(0)" id = "add-instructor-trigger"><?php _e('Add new Instructor', 'cp');
+                                        ?></a>
+                                </div>
+                                <?php
+                            } else {
+                                _e('You do not have any available instructors yet. <a href="user-new.php" target="_new">Create one user with the Instructor role</a> in order to assign it to the courses.', 'cp');
+                            }
+                            ?>
 
 <?php } ?>
 
+                    </div>
                 </div>
-            </div>
-        </div> <!-- course-holder-wrap -->
+            </div> <!-- course-holder-wrap -->
 
-</div> <!-- course-liquid-right -->
-</form>
+        </div> <!-- course-liquid-right -->
+    </form>
 
 </div> <!-- wrap -->

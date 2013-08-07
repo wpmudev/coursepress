@@ -1,6 +1,9 @@
 <?php if (!current_user_can('student')) { ?>
 
     <?php
+    $form_message_class = '';
+    $form_message = '';
+    
     $student = new Student(0);
 
     if (isset($_POST['student-settings-submit'])) {
@@ -72,7 +75,7 @@
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="" />
         </label>
-
+            
         <label>
             <?php _e('Username', 'cp'); ?>:
             <input type="text" name="username" value="" />

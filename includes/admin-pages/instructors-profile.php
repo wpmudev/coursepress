@@ -4,13 +4,12 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 }
 ?>
 <div class='wrap nocoursesub'>
-    <form action='?page=<?php echo esc_attr($page); ?><?php echo ($course_id !== 0) ? '&course_id=' . $course_id : '' ?>' name='course-add' method='post'>
-
+   
         <div class='course-liquid-left'>
 
             <div id='course-left'>
 
-                <?php wp_nonce_field('instructor_profile_' . $instructor->id); ?>
+                <?php wp_nonce_field('instructor_profile_' . $instructor->ID); ?>
 
                 <div id='edit-sub' class='course-holder-wrap'>
 
@@ -156,7 +155,5 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 
             </div> <!-- course-liquid-right -->
         <?php } ?>
-
-    </form>
 
 </div> <!-- wrap -->

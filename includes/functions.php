@@ -5,45 +5,64 @@ function coursepress_send_email($email_args = array()) {
     if ($email_args['email_type'] == 'student_registration') {
         global $course_slug;
         $student_email = $email_args['student_email'];
-        $wp_mail_from = coursepress_get_registration_from_email();
-        $wp_mail_from_name = coursepress_get_registration_from_name();
         $subject = coursepress_get_registration_email_subject();
         $courses_address = '<a href="' . trailingslashit(site_url()) . trailingslashit($course_slug) . '">' . trailingslashit(site_url()) . trailingslashit($course_slug) . '</a>';
 
         $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS');
         $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url());
+
         $message = coursepress_get_registration_content_email();
 
         $message = str_replace($tags, $tags_replaces, $message);
+
+        add_filter('wp_mail_from', 'my_mail_from_function');
+
+        function my_mail_from_function($email) {
+            return coursepress_get_registration_from_email();
+        }
+
+        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+
+        function my_mail_from_name_function($name) {
+            return coursepress_get_registration_from_name();
+        }
+
     }
 
     if ($email_args['email_type'] == 'student_invitation') {
         global $course_slug;
-        $student_email = $email_args['student_email'];
-        $wp_mail_from = coursepress_get_invitation_passcode_from_email();
-        $wp_mail_from_name = coursepress_get_invitation_passcode_from_name();
-        $subject = coursepress_get_invitation_passcode_email_subject();
-        $course_address = '<a href="' . trailingslashit(site_url()) . trailingslashit($course_slug) . '">' . trailingslashit(site_url()) . trailingslashit($course_slug) . '</a>';
 
-        $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS ');
-        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $course_address, site_url());
-        $message = coursepress_get_invitation_content_passcode_email();
+        $student_email = $email_args['student_email'];
+
+        if (isset($email_args['course_id'])) {
+            $course = new Course($email_args['course_id']);
+        }
+
+        $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE');
+        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), $course->details->post_excerpt, $course->get_permalink(), site_url(), $course->details->passcode);
+
+        if ($email_args['enroll_type'] == 'passcode') {
+            $message = coursepress_get_invitation_content_passcode_email();
+            $subject = coursepress_get_invitation_passcode_email_subject();
+        } else {
+            $message = coursepress_get_invitation_content_email();
+            $subject = coursepress_get_invitation_email_subject();
+        }
 
         $message = str_replace($tags, $tags_replaces, $message);
-    }
 
-    add_filter('wp_mail_from', 'my_mail_from_function');
+        add_filter('wp_mail_from', 'my_mail_from_function');
 
-    function my_mail_from_function($email) {
-        global $wp_mail_from;
-        return $wp_mail_from;
-    }
+        function my_mail_from_function($email) {
+            return coursepress_get_invitation_passcode_from_email();
+        }
 
-    add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
 
-    function my_mail_from_name_function($email) {
-        global $wp_mail_from_name;
-        return $wp_mail_from_name; //Default is WordPress
+        function my_mail_from_name_function($name) {
+            return coursepress_get_invitation_passcode_from_name();
+        }
+
     }
 
     add_filter('wp_mail_content_type', 'set_content_type');
@@ -58,7 +77,7 @@ function coursepress_send_email($email_args = array()) {
         return get_option('blog_charset');
     }
 
-    wp_mail($student_email, $subject, $message);
+    wp_mail($student_email, $subject, nl2br($message));
 }
 
 /* Get Student Invitation with Passcode to a Course E-mail data */
@@ -87,7 +106,7 @@ What is all about:
 
 Check this page for more info on the course: %4$s
 
-If you have any question fill free to contact us.
+If you have any question feel free to contact us.
 
 Yours sincerely,
 %5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE');
@@ -119,7 +138,7 @@ What is all about:
 
 Check this page for more info on the course: %4$s
 
-If you have any question fill free to contact us.
+If you have any question feel free to contact us.
 
 Yours sincerely,
 %5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS');
@@ -238,7 +257,7 @@ function coursepress_instructors_avatars_array($args = array()) {
     $instructors = get_users($args);
 
     foreach ($instructors as $instructor) {
-        $content .= "instructor_avatars[" . $instructor->ID . "] = '" . get_avatar($instructor->ID, 80, "", $instructor->display_name) . "';";
+        $content .= 'instructor_avatars[' . $instructor->ID . '] = "' . get_avatar($instructor->ID, 80, "", $instructor->display_name) . '";';
     }
 
     $content .= '</script>';
@@ -369,6 +388,11 @@ function get_the_post_excerpt($id = false, $length = 55) {
 function get_the_course_excerpt($id = false, $length = 55) {
     global $post;
 
+    if (empty($post)) {
+        $post = new StdClass;
+        $post->ID = 0;
+    }
+
     $old_post = $post;
     if ($id != $post->ID) {
         $post = get_page($id);
@@ -412,27 +436,7 @@ function get_number_of_days_between_dates($start_date, $end_date) {
 }
 
 if (!function_exists('coursepress_register_module')) {
-
-    function coursepress_register_module($rule_name, $class_name, $section) {
-
-        global $M_Rules, $M_SectionRules;
-
-        if (!is_array($M_Rules)) {
-            $M_Rules = array();
-        }
-
-        if (!is_array($M_SectionRules)) {
-            $M_SectionRules = array();
-        }
-
-        if (class_exists($class_name)) {
-            $M_SectionRules[$section][$rule_name] = $class_name;
-            $M_Rules[$rule_name] = $class_name;
-        } else {
-            return false;
-        }
-    }
-
+    //to do
 }
 
 function sp2nbsp($string) {

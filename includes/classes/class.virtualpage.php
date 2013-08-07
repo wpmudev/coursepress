@@ -25,6 +25,12 @@ if (!class_exists('CoursePress_Virtual_Page')) {
             $this->date = isset($args['date']) ? $args['date'] : current_time('mysql');
             $this->dategmt = isset($args['date']) ? $args['date'] : current_time('mysql', 1);
             $this->type = isset($args['type']) ? $args['type'] : 'page';
+            
+            $this->is_page = isset($args['is_page']) ? $args['is_page'] : TRUE;
+            $this->is_singular = isset($args['is_singular']) ? $args['is_singular'] : TRUE;
+            $this->is_archive = isset($args['is_archive']) ? $args['is_archive'] : FALSE;
+            
+            
             add_filter('the_posts', array(&$this, 'virtualPage'));
             add_filter('the_title', array(&$this, 'hide_title'), 10, 2);
         }
@@ -59,14 +65,14 @@ if (!class_exists('CoursePress_Virtual_Page')) {
                 $post->post_parent = 0;
                 $post->guid = get_home_url('/' . $this->slug);
                 $post->menu_order = 0;
-                $post->post_type = $this->type;
+                $post->post_type = 'unit';
                 $post->post_mime_type = '';
                 $post->comment_count = -1;
 
                 $posts = array($post);
 
-                $wp_query->is_page = TRUE;
-                $wp_query->is_singular = TRUE;
+                $wp_query->is_page = $this->is_page;
+                $wp_query->is_singular = $this->is_singular;
                 $wp_query->is_home = FALSE;
                 $wp_query->is_archive = FALSE;
                 $wp_query->is_category = FALSE;

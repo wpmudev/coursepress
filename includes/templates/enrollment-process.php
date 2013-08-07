@@ -40,6 +40,7 @@ if (isset($_POST['course_id']) && is_numeric($_POST['course_id'])) {
 } else {
     _e('Please select a course first you want to enroll in.', 'cp');
 }
+
 }else{
     _e('You do not have required permission for this action', 'cp');
 }

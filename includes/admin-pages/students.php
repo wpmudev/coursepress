@@ -1,5 +1,6 @@
 <?php
 $page = $_GET['page'];
+$s = (isset($_GET['s']) ? $_GET['s'] : '');
 
 if (isset($_POST['action']) && isset($_POST['users'])) {
     check_admin_referer('bulk-students');
@@ -177,7 +178,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                         <?php
                         if (count($wp_user_search->get_results()) == 0) {
                             ?>
-                            <tr><td colspan="8"><div class="zero"><?php _e('0 students found', 'cp'); ?></div></td></tr>
+                            <tr><td colspan="8"><div class="zero"><?php _e('No students found.', 'cp'); ?></div></td></tr>
                             <?php
                         }
                         ?>

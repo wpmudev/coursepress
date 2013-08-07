@@ -1,3 +1,5 @@
+<?php $page = $_GET['page']; ?>
+
 <div id="poststuff" class="metabox-holder m-settings">
     <form action='' method='post'>
 
@@ -30,7 +32,7 @@
                             <th scope="row"><?php _e('Units Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url()));
+                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
                                 ?>&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php esc_attr_e($this->get_units_slug());
                                 ?>' />&nbsp;/
                                
@@ -88,16 +90,27 @@
                         </tr>
                         
                         
-                        
-                        
-                        
                     </tbody>
                 </table>
-                
-                
-
             </div>
         </div>
+        
+         <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('Theme Menu Items', 'cp'); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme must have defined a menu in order to attach new menu items to it.', 'cp'); ?></p>
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Display menu items', 'cp'); ?></th>
+                            <td>
+                                <input type='checkbox' name='display_menu_items' <?php echo ((get_option('display_menu_items', 1)) ? 'checked' : ''); ?> />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
 
         <?php
         do_action('coursepress_general_options_page');

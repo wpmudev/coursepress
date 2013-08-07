@@ -98,7 +98,7 @@ if (isset($_POST['course_id'])) {
                                 <tr>
                                     <td <?php echo $style; ?> colspan="2">
                                         
-                                        <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->id; ?>">
+                                        <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->ID; ?>">
                                             <?php wp_nonce_field('save_class_and_group_changes', 'save_class_and_group_changes'); ?>
                                             
                                                 <input type="hidden" name="course_id" value="<?php echo $course_object->ID; ?>" />
@@ -224,8 +224,6 @@ if (isset($_POST['course_id'])) {
         </div> <!-- course-holder-wrap -->
 
     </div> <!-- course-liquid-right -->
-
-
 
 
 </div> <!-- wrap -->
