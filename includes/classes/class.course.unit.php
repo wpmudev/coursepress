@@ -48,19 +48,21 @@ if (!class_exists('Unit')) {
 
         function update_unit() {
             global $user_id, $wpdb;
-            $unit = get_post($this->id, $this->output);
+            
+            $unit_id = (isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id);
+            
+            $unit = get_post($unit_id, $this->output);
 
             if ($_POST['unit_name'] != '' && $_POST['unit_name'] != __('Untitled', 'cp') && $_POST['unit_description'] != '') {
                 if ($unit->post_status != 'publish') {
-                    $post_status = 'publish';
-                }
-                if ($unit->post_status != 'private') {
                     $post_status = 'private';
+                }else{
+                    $post_status = 'publish';
                 }
             } else {
                 $post_status = 'draft';
             }
-
+            
             $post = array(
                 'post_author' => $user_id,
                 'post_content' => $_POST['unit_description'],

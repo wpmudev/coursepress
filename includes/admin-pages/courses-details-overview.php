@@ -14,6 +14,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     check_admin_referer('course_details_overview');
 
+    if(!isset($_POST['meta_open_ended_course'])){
+        $_POST['meta_open_ended_course'] = 'off';
+    }
+    
     $new_post_id = $course->update_course();
 
     if ($new_post_id != 0) {
@@ -36,6 +40,7 @@ if (isset($_GET['course_id'])) {
     $course_end_date = $course->details->course_end_date;
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
+    $open_ended_course = $course->details->open_ended_course;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -44,6 +49,7 @@ if (isset($_GET['course_id'])) {
     $course_end_date = '';
     $enrollment_start_date = '';
     $enrollment_end_date = '';
+    $open_ended_course = 'off';
 }
 ?>
 
@@ -137,6 +143,7 @@ if (isset($_GET['course_id'])) {
 
                             </div>
 
+
                             <div class="half" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?></label>
                                 <input type="text" name="meta_passcode" value="<?php echo esc_attr(stripslashes($passcode)); ?>" />
@@ -145,34 +152,50 @@ if (isset($_GET['course_id'])) {
 
                             <br clear="all" />
 
-                            <label><?php _e('Course Dates:', 'cp'); ?></label>
+                            <div class="full border-devider">
+                                <label><?php _e('Open-ended course:', 'cp'); ?>
+                                    <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />
+                                </label>
 
-                            <p class="description"></p>
-
-                            <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                <input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" />
+                                <p class="description"><?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?></p>
                             </div>
 
-                            <div class="half"><?php _e('End Date', 'cp'); ?> 
-                                <input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" />
-                            </div>
-
-                            <br clear="all" />
-                            <br clear="all" />
-
-                            <label><?php _e('Enrollment Dates:', 'cp'); ?></label>
-
-                            <p class="description"><?php _e('Student may enroll only during selected date range', 'cp'); ?></p>
 
 
-                            <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                <input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" />
-                            </div>
+                            
 
-                            <div class="half"><?php _e('End Date', 'cp'); ?>
-                                <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
-                            </div>
+                                <div id="all_course_dates" class="border-devider" <?php echo ($open_ended_course == 'on') ? 'style="display:none;"' : ''; ?>>
 
+                                    <label><?php _e('Course Dates:', 'cp'); ?></label>
+
+                                    <p class="description"></p>
+
+                                    <div class="half"><?php _e('Start Date', 'cp'); ?>
+                                        <input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" />
+                                    </div>
+
+                                    <div class="half"><?php _e('End Date', 'cp'); ?> 
+                                        <input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" />
+                                    </div>
+
+                                    <br clear="all" />
+                                    <br clear="all" />
+
+                                    <label><?php _e('Enrollment Dates:', 'cp'); ?></label>
+
+                                    <p class="description"><?php _e('Student may enroll only during selected date range', 'cp'); ?></p>
+
+
+                                    <div class="half"><?php _e('Start Date', 'cp'); ?>
+                                        <input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" />
+                                    </div>
+
+                                    <div class="half"><?php _e('End Date', 'cp'); ?>
+                                        <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
+                                    </div>
+                                </div><!--/all-course-dates-->
+   
+                               
                             <br clear="all" />
 
                         </div>
@@ -191,7 +214,7 @@ if (isset($_GET['course_id'])) {
                             if ($course_id !== 0) {
                                 ?>
                                 <a href="?page=<?php echo $page; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
-<?php } ?>
+                            <?php } ?>
                         </div>
 
                     </div>
@@ -219,18 +242,18 @@ if (isset($_GET['course_id'])) {
                             }
                             ?>
 
-                        <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
+                            <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
                         </div>
 
-<?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) { ?>
                             <?php coursepress_instructors_avatars_array(); ?>
 
                             <div class="clearfix"></div>
-    <?php coursepress_instructors_drop_down(); ?>
-                                    <?php if (coursepress_get_number_of_instructors() != 0) { ?>
+                            <?php coursepress_instructors_drop_down(); ?>
+                            <?php if (coursepress_get_number_of_instructors() != 0) { ?>
                                 <div class = "inner-right inner-link">
                                     <a href = "javascript:void(0)" id = "add-instructor-trigger"><?php _e('Add new Instructor', 'cp');
-                                        ?></a>
+                                ?></a>
                                 </div>
                                 <?php
                             } else {
@@ -238,7 +261,7 @@ if (isset($_GET['course_id'])) {
                             }
                             ?>
 
-<?php } ?>
+                        <?php } ?>
 
                     </div>
                 </div>

@@ -88,10 +88,10 @@ if (isset($_POST['course_id'])) {
 
                                     <td <?php echo $style; ?> width="25%">
                                         <div class="course_additional_info">
-                                            <div><span class="info_caption"><?php _e('Start', 'cp'); ?>:</span><span class="info"><?php echo $course_object->course_start_date; ?></span></div>
-                                            <div><span class="info_caption"><?php _e('End', 'cp'); ?>:</span><?php echo $course_object->course_end_date; ?></span></div>
-                                            <div><span class="info_caption"><?php _e('Duration', 'cp'); ?>:</span><span class="info"><?php echo get_number_of_days_between_dates($course_object->course_start_date, $course_object->course_end_date); ?> <?php _e('Days', 'cp'); ?></span></div>
-                                        </div>
+                                                <div><span class="info_caption"><?php _e('Start', 'cp'); ?>:</span><span class="info"><?php if($course_object->open_ended_course == 'on'){ _e('Open-ended', 'cp'); }else{ echo $course_object->course_start_date;} ?></span></div>
+                                                <div><span class="info_caption"><?php _e('End', 'cp'); ?>:</span><?php if($course_object->open_ended_course == 'on'){ _e('Open-ended', 'cp'); }else{ echo $course_object->course_end_date;} ?></span></div>
+                                                <div><span class="info_caption"><?php _e('Duration', 'cp'); ?>:</span><span class="info"><?php if($course_object->open_ended_course == 'on'){ echo '&infin;';} else{ echo get_number_of_days_between_dates($course_object->course_start_date, $course_object->course_end_date); } ?> <?php _e('Days', 'cp'); ?></span></div>
+                                            </div>
                                     </td>
                                 </tr>
                                 <?php if ((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) { ?>

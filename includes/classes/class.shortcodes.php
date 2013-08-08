@@ -67,7 +67,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $unenroll_link_visible = false;
 
                 if ($student->user_enrolled_in_course($course_id)) {
-                    if (strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) {//course is currently active
+                    if (((strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) || (strtotime($course->course_end_date) >= time())) || $course->open_ended_course == 'on') {//course is currently active or is not yet active (will be active in the future)
                         $unenroll_link_visible = true;
                     }
                 }
@@ -111,15 +111,19 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if ($field == 'course_start_date' or $field == 'course_end_date' or $field == 'enrollment_start_date' or $field == 'enrollment_end_date') {
                 $date_format = get_option('date_format');
-                if ($course->$field == '') {
-                    $course->$field = __('N/A', 'cp');
+                if ($course->open_ended_course == 'on') {
+                    $course->$field = __('Open-ended', 'cp');
                 } else {
-                    $course->$field = sp2nbsp(date($date_format, strtotime($course->$field)));
+                    if ($course->$field == '') {
+                        $course->$field = __('N/A', 'cp');
+                    } else {
+                        $course->$field = sp2nbsp(date($date_format, strtotime($course->$field)));
+                    }
                 }
             }
 
             if ($field == 'price') {
-                $course->price = 'FREE (to do)';
+                $course->price = 'FREE';
             }
 
             if ($field == 'button') {
@@ -130,10 +134,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
                     if (!$student->user_enrolled_in_course($course_id)) {
                         if ($course->enroll_type != 'manually') {
-                            if (strtotime($course->course_end_date) <= time()) {//Course is no longer active
+                            if (strtotime($course->course_end_date) <= time() && $course->open_ended_course == 'off') {//Course is no longer active
                                 $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
                             } else {
-                                if ($course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime($course->enrollment_start_date) <= time() && strtotime($course->enrollment_end_date) >= time()) {
+                                if (($course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime($course->enrollment_start_date) <= time() && strtotime($course->enrollment_end_date) >= time()) || $course->open_ended_course == 'on') {
                                     $course->button .= '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
                                     $course->button .= '<div class="passcode-box">' . do_shortcode('[course_details field="passcode_input"]') . '</div>';
                                 } else {
@@ -148,8 +152,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                             //don't show any button because public enrollments are disabled with manuall enroll type
                         }
                     } else {
-                        if ($course->course_start_date !== '' && $course->course_end_date !== '') {//Course is currently active
-                            if (strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) {//Course is currently active
+                        if (($course->course_start_date !== '' && $course->course_end_date !== '') || $course->open_ended_course == 'on') {//Course is currently active
+                            if ((strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) || $course->open_ended_course == 'on') {//Course is currently active
                                 $course->button .= '<a href="' . get_permalink($course->ID) . 'units/" class="apply-button-enrolled">' . __('Go to Class', 'cp') . '</a>';
                             } else {
 
@@ -166,14 +170,14 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     }
                 } else {
                     if ($course->enroll_type != 'manually') {
-                        if (strtotime($course->course_end_date) <= time()) {//Course is no longer active
+                        if ((strtotime($course->course_end_date) <= time()) && $course->open_ended_course == 'off') {//Course is no longer active
                             $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
-                        } else if ($course->course_start_date == '' || $course->course_end_date == '') {
+                        } else if (($course->course_start_date == '' || $course->course_end_date == '') && $course->open_ended_course == 'off') {
                             $course->button .= '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
                         } else {
 
 
-                            if (strtotime($course->enrollment_end_date) <= time()) {
+                            if ((strtotime($course->enrollment_end_date) <= time()) && $course->open_ended_course == 'off') {
                                 $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
                             } else {
                                 $course->button .= '<a href="' . $signup_url . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
@@ -183,7 +187,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 }
                 $course->button .= '<div class="clearfix"></div>';
                 $course->button .= wp_nonce_field('enrollment_process');
-                $course->button .= '<input type="hidden" name="course_id" value="' . do_shortcode("[course_details field='ID']") . '" />';
+                $course->button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
                 $course->button .= '</form>';
             }
 
@@ -192,11 +196,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     $course->passcode_input = '<label>' . __("Passcode: ", "cp") . '<input type="password" name="passcode" /></label>';
                 }
             }
-            
-            if(!isset($course->$field)){
+
+            if (!isset($course->$field)) {
                 $course->$field = '';
             }
-            
+
             return $course->$field;
         }
 

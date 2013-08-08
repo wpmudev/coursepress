@@ -400,7 +400,7 @@ if (!class_exists('CoursePress')) {
         function coursepress_plugin_do_activation_redirect() {
             if (get_option('coursepress_plugin_do_first_activation_redirect', false)) {
                 delete_option('coursepress_plugin_do_first_activation_redirect');
-                wp_redirect('admin.php?page=courses&quick_setup');
+                wp_redirect(trailingslashit(site_url()).'wp-admin/admin.php?page=courses&quick_setup');
                 exit;
             }
         }

@@ -13,12 +13,12 @@ if (isset($_POST['invite_student'])) {
         $email_args['student_email'] = $_POST['email'];
         $email_args['enroll_type'] = $course->details->enroll_type;
         if (is_email($_POST['email'])) {
-            coursepress_send_email($email_args);
+            //coursepress_send_email($email_args);
             wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=is');
         } else {
             wp_redirect('?page=course_details&tab=students&course_id=' . $course_id .'&ems=wrong_email');
         }
-        wp_redirect('?page=course_details&tab=students&course_id=' . $course_id);
+        //wp_redirect('?page=course_details&tab=students&course_id=' . $course_id);
     }
 }
 

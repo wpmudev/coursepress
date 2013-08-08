@@ -1,3 +1,9 @@
+.border-devider{
+    border-top: 1px solid #dfdfdf;
+    margin: 25px 10px 25px 0px;
+    padding-top: 20px;
+}
+
 .right{
     float: right;
 }
@@ -7,6 +13,10 @@
 }
 .zero{
     padding: 0px 10px 14px;
+}
+
+.zero-courses{
+    padding: 10px 10px 14px;
 }
 
 .email-settings input[type="text"]{

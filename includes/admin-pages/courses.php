@@ -234,7 +234,7 @@ if (isset($_GET['quick_setup'])) {
                         if (count($wp_course_search->get_results()) == 0) {
                             ?>
                             <tr>
-                                <td colspan="6"><div class="zero"><?php _e('No courses found.', 'cp') ?></div></td>
+                                <td colspan="6"><div class="zero-courses"><?php _e('No courses found.', 'cp') ?></div></td>
                             </tr>
                             <?php
                         }

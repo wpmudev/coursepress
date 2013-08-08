@@ -67,7 +67,7 @@ jQuery(document).ready(function() {
                 'display': 'none'
             });
         }
-    })
+    });
 
     jQuery('#add-instructor-trigger').click(function() {
         var instructor_id = jQuery('#instructors option:selected').val();
@@ -90,7 +90,7 @@ jQuery(document).ready(function() {
     });
 
     jQuery(function() {
-        
+
         jQuery("#students_accordion").accordion({
             heightStyle: "content",
             active: parseInt(coursepress.active_student_tab)
@@ -108,6 +108,14 @@ jQuery(document).ready(function() {
         });
 
 
+    });
+
+    jQuery('#open_ended_course').change(function() {
+        if (this.checked) {
+            jQuery('#all_course_dates').hide(500);
+        }else{
+            jQuery('#all_course_dates').show(500);
+        }
     });
 
 });

@@ -27,7 +27,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
         //if (($_POST['action'] == 'add_unit' && current_user_can('coursepress_create_course_unit_cap')) || ($_POST['action'] == 'update_unit' && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {
 
-            $new_post_id = $unit->update_unit();
+            $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0);
 
             if ($new_post_id != 0) {
                 if (isset($_GET['ms'])) {
