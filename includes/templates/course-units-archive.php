@@ -12,5 +12,9 @@ do_shortcode('[course_units_loop]');//required for getting unit results
     endif;
     ?>
 </ol>
+<?php
+//do_shortcode('[course_discussion]');
+
+?>
 
 

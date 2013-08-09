@@ -113,7 +113,7 @@ if (!class_exists('CoursePress')) {
 
             //Output buffer hack
             add_action('init', array(&$this, 'output_buffer'), 0);
-            
+
             //Register custom post types
             add_action('init', array(&$this, 'register_custom_posts'), 1);
 
@@ -145,7 +145,9 @@ if (!class_exists('CoursePress')) {
 
             add_filter('login_redirect', array(&$this, 'login_redirect'), 10, 3);
 
-
+            add_filter('comments_open', array(&$this, 'check_for_discussion_form'), 10, 2);
+            add_filter('comment_post_redirect', array(&$this, 'check_for_comment_redirect_after_post'), 10, 2);
+            add_filter('post_type_link', array(&$this, 'check_for_valid_post_type_permalinks'), 10, 3);
             // Load payment gateways
             $this->load_payment_gateways();
 
@@ -400,7 +402,7 @@ if (!class_exists('CoursePress')) {
         function coursepress_plugin_do_activation_redirect() {
             if (get_option('coursepress_plugin_do_first_activation_redirect', false)) {
                 delete_option('coursepress_plugin_do_first_activation_redirect');
-                wp_redirect(trailingslashit(site_url()).'wp-admin/admin.php?page=courses&quick_setup');
+                wp_redirect(trailingslashit(site_url()) . 'wp-admin/admin.php?page=courses&quick_setup');
                 exit;
             }
         }
@@ -1160,6 +1162,48 @@ if (!class_exists('CoursePress')) {
                 }
             } else {
                 return $redirect_to;
+            }
+        }
+
+        function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
+            global $wp;
+
+            if (is_array($wp->query_vars)) {
+                if (array_key_exists('unitname', $wp->query_vars)) {
+                    $unit = new Unit();
+                    $post_id = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
+                } else if (array_key_exists('coursename', $wp->query_vars)) {
+                    $course = new Course();
+                    $post_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
+                } else {
+                    $post_id = $post_id;
+                }
+
+                if (get_post_type($post_id) == 'course') {
+                    return false;
+                }
+
+                if (get_post_type($post_id) == 'unit') {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        function check_for_comment_redirect_after_post($location) {
+            /*if (isset($_POST['comment_post_ID'])) {
+                return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
+            }*/
+            return $location;
+        }
+
+        function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
+            if (get_post_type($post->ID) == 'unit') {
+                $unit = new Unit($post->ID);
+                return $unit->get_permalink();
+            } else {
+                return $permalink;
             }
         }
 

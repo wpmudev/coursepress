@@ -108,7 +108,7 @@ if (!class_exists('Unit')) {
             global $units_slug;
 
             if ($course_id == '') {
-                $course_id = get_post_meta($post_id, 'course_id', true);
+                $course_id = get_post_meta($this->id, 'course_id', true);
             }
 
             $course = new Course($course_id);

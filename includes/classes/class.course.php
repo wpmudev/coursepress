@@ -206,6 +206,21 @@ if (!class_exists('Course')) {
             }
             return get_permalink($course_id);
         }
+        
+        function get_permalink_to_do($course_id = '') {
+            global $course_slug;
+            global $units_slug;
+
+            if ($course_id == '') {
+                $course_id = get_post_meta($post_id, 'course_id', true);
+            }
+
+            $course = new Course($course_id);
+            $course = $course->get_course();
+
+            $unit_permalink = site_url() . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name . '/';
+            return $unit_permalink;
+        }
 
         function get_number_of_students($course_id = '') {
             if ($course_id == '') {

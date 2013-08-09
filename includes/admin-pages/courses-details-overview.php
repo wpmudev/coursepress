@@ -14,10 +14,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     check_admin_referer('course_details_overview');
 
-    if(!isset($_POST['meta_open_ended_course'])){
+    if (!isset($_POST['meta_open_ended_course'])) {
         $_POST['meta_open_ended_course'] = 'off';
     }
-    
+
     $new_post_id = $course->update_course();
 
     if ($new_post_id != 0) {
@@ -41,6 +41,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
     $open_ended_course = $course->details->open_ended_course;
+    $allow_course_discussion = $course->details->allow_course_discussion;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -50,6 +51,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = '';
     $enrollment_end_date = '';
     $open_ended_course = 'off';
+    $allow_course_discussion = 'off';
 }
 ?>
 
@@ -160,42 +162,45 @@ if (isset($_GET['course_id'])) {
                                 <p class="description"><?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?></p>
                             </div>
 
+                            <div id="all_course_dates" class="border-devider" <?php echo ($open_ended_course == 'on') ? 'style="display:none;"' : ''; ?>>
+
+                                <label><?php _e('Course Dates:', 'cp'); ?></label>
+
+                                <p class="description"></p>
+
+                                <div class="half"><?php _e('Start Date', 'cp'); ?>
+                                    <input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" />
+                                </div>
+
+                                <div class="half"><?php _e('End Date', 'cp'); ?> 
+                                    <input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" />
+                                </div>
+
+                                <br clear="all" />
+                                <br clear="all" />
+
+                                <label><?php _e('Enrollment Dates:', 'cp'); ?></label>
+
+                                <p class="description"><?php _e('Student may enroll only during selected date range', 'cp'); ?></p>
 
 
+                                <div class="half"><?php _e('Start Date', 'cp'); ?>
+                                    <input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" />
+                                </div>
+
+                                <div class="half"><?php _e('End Date', 'cp'); ?>
+                                    <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
+                                </div>
+                            </div><!--/all-course-dates-->
                             
+                            <div class="full border-devider">
+                                <label><?php _e('Allow Course Discussion', 'cp'); ?>
+                                    <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
+                                </label>
 
-                                <div id="all_course_dates" class="border-devider" <?php echo ($open_ended_course == 'on') ? 'style="display:none;"' : ''; ?>>
+                                <p class="description"><?php _e('If checked, students can post comments and follow discussion within the course.', 'cp') ?></p>
+                            </div>
 
-                                    <label><?php _e('Course Dates:', 'cp'); ?></label>
-
-                                    <p class="description"></p>
-
-                                    <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                        <input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" />
-                                    </div>
-
-                                    <div class="half"><?php _e('End Date', 'cp'); ?> 
-                                        <input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" />
-                                    </div>
-
-                                    <br clear="all" />
-                                    <br clear="all" />
-
-                                    <label><?php _e('Enrollment Dates:', 'cp'); ?></label>
-
-                                    <p class="description"><?php _e('Student may enroll only during selected date range', 'cp'); ?></p>
-
-
-                                    <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                        <input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" />
-                                    </div>
-
-                                    <div class="half"><?php _e('End Date', 'cp'); ?>
-                                        <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
-                                    </div>
-                                </div><!--/all-course-dates-->
-   
-                               
                             <br clear="all" />
 
                         </div>

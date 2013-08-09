@@ -29,6 +29,9 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_unit_single', array(&$this, 'course_unit_single'));
             add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
+            add_shortcode('course_discussion', array(&$this, 'course_discussion'));
+            add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
+            
 
             $GLOBALS['units_breadcrumbs'] = '';
         }
@@ -376,6 +379,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             $content .= '</ol>';
 
+            if (count($units) >= 1) {
+                $content .= do_shortcode('[course_discussion]');
+            }
+
             if (count($units) == 0) {
                 $content = __('0 course units prepared yet. Please check back later.', 'cp');
             }
@@ -458,6 +465,53 @@ if (!class_exists('CoursePress_Shortcodes')) {
               }
 
               } */
+        }
+
+        function course_discussion($atts) {
+            global $wp;
+
+            if (array_key_exists('coursename', $wp->query_vars)) {
+                $course = new Course();
+                $course_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
+            } else {
+                $course_id = 0;
+            }
+            
+            $comments_args = array(
+                // change the title of send button 
+                'label_submit' => 'Send',
+                // change the title of the reply section
+                'title_reply' => 'Write a Reply or Comment',
+                // remove "Text or HTML to be displayed after the set of comment fields"
+                'comment_notes_after' => '',
+                // redefine your own textarea (the comment body)
+                'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+            );
+
+            comment_form($comments_args, $course_id);
+        }
+        
+        function unit_discussion($atts) {
+            global $wp;
+            if (array_key_exists('unitname', $wp->query_vars)) {
+                $unit = new Unit();
+                $unit_id = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
+            } else {
+                $unit_id = 0;
+            }
+            
+            $comments_args = array(
+                // change the title of send button 
+                'label_submit' => 'Send',
+                // change the title of the reply secpertion
+                'title_reply' => 'Write a Reply or Comment',
+                // remove "Text or HTML to be displayed after the set of comment fields"
+                'comment_notes_after' => '',
+                // redefine your own textarea (the comment body)
+                'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+            );
+
+            comment_form($comments_args, $unit_id);
         }
 
         function student_registration_form() {
