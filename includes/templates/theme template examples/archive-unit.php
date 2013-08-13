@@ -17,7 +17,7 @@ get_header();
         <ol>
             <?php if (have_posts()) : ?>
                 <?php while (have_posts()) : the_post(); ?>
-                    <li><a href="<?php echo do_shortcode('[course_unit_details field="permalink" unit_id="'.get_the_ID().'"]'); ?>" rel="bookmark"><?php the_title(); ?></a></li>
+                    <li><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></li>
                     <?php
                 endwhile;
             endif;

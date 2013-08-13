@@ -13,8 +13,8 @@ do_shortcode('[course_units_loop]');//required for getting unit results
     ?>
 </ol>
 <?php
-//do_shortcode('[course_discussion]');
-
+do_shortcode('[course_discussion]');
+//comments_template( '', true );
 ?>
 
 

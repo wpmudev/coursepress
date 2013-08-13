@@ -3,13 +3,13 @@
     <?php
     $form_message_class = '';
     $form_message = '';
-    
+
     $student = new Student(0);
 
     if (isset($_POST['student-settings-submit'])) {
-        
+
         check_admin_referer('student_signup');
-        
+
         $student_data = array();
         $form_errors = 0;
 
@@ -75,7 +75,7 @@
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="" />
         </label>
-            
+
         <label>
             <?php _e('Username', 'cp'); ?>:
             <input type="text" name="username" value="" />
@@ -104,7 +104,9 @@
     </form>
     <?php
 } else {
-    wp_redirect($this->get_student_dashboard_slug(true));
-    exit;
+    if (isset($this)) {
+        wp_redirect($this->get_student_dashboard_slug(true));
+        exit;
+    }
 }
 ?>

@@ -146,8 +146,13 @@ if (!class_exists('CoursePress')) {
             add_filter('login_redirect', array(&$this, 'login_redirect'), 10, 3);
 
             add_filter('comments_open', array(&$this, 'check_for_discussion_form'), 10, 2);
-            add_filter('comment_post_redirect', array(&$this, 'check_for_comment_redirect_after_post'), 10, 2);
+            //add_filter('comment_post_redirect', array(&$this, 'check_for_comment_redirect_after_post'), 10, 2);
             add_filter('post_type_link', array(&$this, 'check_for_valid_post_type_permalinks'), 10, 3);
+
+            add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
+            add_filter('comments_template', array(&$this, 'comments_template'));
+
+
             // Load payment gateways
             $this->load_payment_gateways();
 
@@ -218,6 +223,7 @@ if (!class_exists('CoursePress')) {
                         'slug' => $wp->request,
                         'title' => __($vars['user']->display_name, 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/instructor-single.php', $vars),
+                        'type' => 'virtual_page'
                     );
 
                     $pg = new CoursePress_Virtual_Page($args);
@@ -232,6 +238,25 @@ if (!class_exists('CoursePress')) {
 
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
 
+                /* $theme_file = locate_template(array('archive-unit.php'));
+
+                  if ($theme_file != '') {
+                  do_shortcode('[course_units_loop]');
+                  require_once($theme_file);
+                  exit;
+                  } else {
+                  $args = array(
+                  'slug' => $wp->request,
+                  'title' => __('Course Units', 'cp'),
+                  'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
+                  'is_page' => FALSE,
+                  'is_singular' => FALSE,
+                  'is_archive' => TRUE
+                  );
+
+                  $pg = new CoursePress_Virtual_Page($args);
+                  do_shortcode('[course_units_loop]');
+                  } */
                 $theme_file = locate_template(array('archive-unit.php'));
 
                 if ($theme_file != '') {
@@ -244,11 +269,11 @@ if (!class_exists('CoursePress')) {
                         'slug' => $wp->request,
                         'title' => __('Course Units', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
+                        'type' => 'unit',
                         'is_page' => FALSE,
                         'is_singular' => FALSE,
                         'is_archive' => TRUE
                     );
-
                     $pg = new CoursePress_Virtual_Page($args);
                     do_shortcode('[course_units_loop]');
                 }
@@ -278,6 +303,7 @@ if (!class_exists('CoursePress')) {
                         'slug' => $wp->request,
                         'title' => $unit->details->post_title,
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-single.php', $vars),
+                        'type' => 'unit',
                         'is_page' => FALSE,
                         'is_singular' => TRUE,
                         'is_archive' => FALSE
@@ -580,7 +606,14 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Courses', 'cp'), __('Courses', 'cp'), 'coursepress_courses_cap', 'courses', array(&$this, 'coursepress_courses_admin'));
             do_action('coursepress_add_menu_items_after_courses');
 
-            add_submenu_page('courses', __('New Course', 'cp'), __('New Course', 'cp'), 'coursepress_courses_cap', 'course_details', array(&$this, 'coursepress_course_details_admin'));
+            if(isset($_GET['page']) && $_GET['page'] == 'course_details' && isset($_GET['course_id'])){
+                $new_or_current_course_menu_item_title = __('Course', 'cp');
+            }else{
+                $new_or_current_course_menu_item_title = __('New Course', 'cp');
+            }
+                
+            
+            add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array(&$this, 'coursepress_course_details_admin'));
             do_action('coursepress_add_menu_items_after_new_courses');
 
             add_submenu_page('courses', __('Instructors', 'cp'), __('Instructors', 'cp'), 'coursepress_instructors_cap', 'instructors', array(&$this, 'coursepress_instructors_admin'));
@@ -751,6 +784,8 @@ if (!class_exists('CoursePress')) {
             /* - Settings > Groups capabilities */
             //$role->add_cap('coursepress_settings_groups_page_cap'); //Access to group settings page
             $role->add_cap('coursepress_settings_shortcode_page_cap'); //View shortcode page
+            //$role->add_cap('coursepress_send_bulk_my_students_email_cap'); //Send bulk emails
+            $role->add_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
 
 
             /* ---------------------------- ADD Role Student and capabilities */
@@ -819,6 +854,8 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_change_my_students_group_class_cap'); //Change student's group and class where the instructor is an author of the course
             $role->add_cap('coursepress_add_new_students_cap'); //Add new users with students role to blog
             $role->add_cap('coursepress_delete_students_cap'); //Delete users with Student role
+            $role->add_cap('coursepress_send_bulk_my_students_email_cap'); //Send bulk emails
+            $role->add_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
 
             /* - Settings > Groups capabilities */
             $role->add_cap('coursepress_settings_groups_page_cap'); //Access to group settings page
@@ -990,7 +1027,8 @@ if (!class_exists('CoursePress')) {
                     $args = array(
                         'slug' => $this->get_enrollment_process_slug(),
                         'title' => __('Enrollment', 'cp'),
-                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/enrollment-process.php')
+                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/enrollment-process.php'),
+                        'type' => 'virtual_page'
                     );
 
                     $pg = new CoursePress_Virtual_Page($args);
@@ -1010,7 +1048,8 @@ if (!class_exists('CoursePress')) {
                     $args = array(
                         'slug' => $this->get_signup_slug(),
                         'title' => __('Sign Up', 'cp'),
-                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-signup.php')
+                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-signup.php'),
+                        'type' => 'virtual_page'
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
@@ -1030,6 +1069,7 @@ if (!class_exists('CoursePress')) {
                         'slug' => $this->get_student_dashboard_slug(),
                         'title' => __('Dashboard - Courses', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-dashboard.php'),
+                        'type' => 'virtual_page'
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
@@ -1049,6 +1089,7 @@ if (!class_exists('CoursePress')) {
                         'slug' => $this->get_student_settings_slug(),
                         'title' => __('Dashboard - Settings', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-settings.php'),
+                        'type' => 'virtual_page'
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
@@ -1165,8 +1206,17 @@ if (!class_exists('CoursePress')) {
             }
         }
 
+        function comments_template($template) {
+            global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
+            if (get_post_type($id) == 'course') {
+                $template = $this->plugin_dir . 'includes/templates/no-comments.php';
+            }
+            return $template;
+        }
+
         function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
-            global $wp;
+            global $wp, $post_id;
+
 
             if (is_array($wp->query_vars)) {
                 if (array_key_exists('unitname', $wp->query_vars)) {
@@ -1179,12 +1229,20 @@ if (!class_exists('CoursePress')) {
                     $post_id = $post_id;
                 }
 
-                if (get_post_type($post_id) == 'course') {
+
+                if (get_post_type($post_id) == 'virtual_page') {
                     return false;
                 }
+                /* if (get_post_type($post_id) == 'course') {
+                  if (get_permalink($post_id) != curPageURL()) {
+                  return true;
+                  } else {
+                  return false; //we want to have separate page to show comments
+                  }
+                  } */
 
                 if (get_post_type($post_id) == 'unit') {
-                    return true;
+                    return false;
                 }
             } else {
                 return true;
@@ -1192,9 +1250,9 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_for_comment_redirect_after_post($location) {
-            /*if (isset($_POST['comment_post_ID'])) {
-                return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
-            }*/
+            /* if (isset($_POST['comment_post_ID'])) {
+              return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
+              } */
             return $location;
         }
 
@@ -1209,6 +1267,16 @@ if (!class_exists('CoursePress')) {
 
         function output_buffer() {
             ob_start();
+        }
+
+        function get_comment_link($link, $comment, $args) {
+            if (get_post_type($comment->comment_post_ID) == 'unit') {
+                $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '#comment-' . $comment->comment_ID;
+                return $link;
+            }/* else if (get_post_type($comment->comment_post_ID) == 'course') {
+              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '/units/#comment-' . $comment->comment_ID;
+              } */
+            return $link;
         }
 
     }

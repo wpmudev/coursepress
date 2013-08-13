@@ -41,7 +41,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
     $open_ended_course = $course->details->open_ended_course;
-    $allow_course_discussion = $course->details->allow_course_discussion;
+    //$allow_course_discussion = $course->details->allow_course_discussion;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -51,7 +51,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = '';
     $enrollment_end_date = '';
     $open_ended_course = 'off';
-    $allow_course_discussion = 'off';
+    //$allow_course_discussion = 'off';
 }
 ?>
 
@@ -193,13 +193,13 @@ if (isset($_GET['course_id'])) {
                                 </div>
                             </div><!--/all-course-dates-->
                             
-                            <div class="full border-devider">
+                            <!--<div class="full border-devider">
                                 <label><?php _e('Allow Course Discussion', 'cp'); ?>
                                     <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
                                 </label>
 
                                 <p class="description"><?php _e('If checked, students can post comments and follow discussion within the course.', 'cp') ?></p>
-                            </div>
+                            </div>-->
 
                             <br clear="all" />
 

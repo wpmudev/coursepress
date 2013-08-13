@@ -31,7 +31,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
             add_shortcode('course_discussion', array(&$this, 'course_discussion'));
             add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
-            
+
 
             $GLOBALS['units_breadcrumbs'] = '';
         }
@@ -216,6 +216,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $doc->loadHTML(get_avatar($instructor_id, 80));
             $imageTags = $doc->getElementsByTagName('img');
 
+            $content = '';
+            
             foreach ($imageTags as $tag) {
                 $avatar_url = $tag->getAttribute('src');
             }
@@ -476,7 +478,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             } else {
                 $course_id = 0;
             }
-            
+
             $comments_args = array(
                 // change the title of send button 
                 'label_submit' => 'Send',
@@ -487,10 +489,54 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 // redefine your own textarea (the comment body)
                 'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
             );
+            
+            $defaults = array(
+                'author_email' => '',
+                'ID' => '',
+                'karma' => '',
+                'number' => '',
+                'offset' => '',
+                'orderby' => '',
+                'order' => 'DESC',
+                'parent' => '',
+                'post_id' => $course_id,
+                'post_author' => '',
+                'post_name' => '',
+                'post_parent' => '',
+                'post_status' => '',
+                'post_type' => '',
+                'status' => '',
+                'type' => '',
+                'user_id' => '',
+                'search' => '',
+                'count' => false,
+                'meta_key' => '',
+                'meta_value' => '',
+                'meta_query' => '',
+            );
+
+            $wp_list_comments_args = array(
+                'walker' => null,
+                'max_depth' => '',
+                'style' => 'ul',
+                'callback' => null,
+                'end-callback' => null,
+                'type' => 'all',
+                'reply_text' => 'Reply',
+                'page' => '',
+                'per_page' => '',
+                'avatar_size' => 32,
+                'reverse_top_level' => null,
+                'reverse_children' => '',
+                'format' => 'xhtml', //or html5 @since 3.6
+                'short_ping' => false // @since 3.6
+            );
 
             comment_form($comments_args, $course_id);
+            wp_list_comments($wp_list_comments_args, get_comments($defaults));
+            //comments_template()
         }
-        
+
         function unit_discussion($atts) {
             global $wp;
             if (array_key_exists('unitname', $wp->query_vars)) {
@@ -499,7 +545,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             } else {
                 $unit_id = 0;
             }
-            
+
             $comments_args = array(
                 // change the title of send button 
                 'label_submit' => 'Send',
