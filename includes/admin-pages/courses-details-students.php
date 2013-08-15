@@ -447,15 +447,15 @@ if ($course->details->enroll_type != 'manually') {//There shouldn't be invitatio
 
 
 <?php if ((current_user_can('coursepress_send_bulk_students_email_cap')) || (current_user_can('coursepress_send_bulk_my_students_email_cap') && $course->details->post_author == get_current_user_id())) { ?>
-    <div class="invite_student_area">
+    <div class="students_bulk_email_area">
         <form name="students_bulk_email" method="post">
             <?php wp_nonce_field('students_bulk_email'); ?>
             <h2><?php _e('Send an e-mail notification to students', 'cp'); ?></h2>
 
-            <label><?php _e('E-Mail Subject', 'cp'); ?>
+            <label class="email_subject"><?php _e('E-Mail Subject', 'cp'); ?>
                 <input type="text" name="email_subject" value="" />
-            </label><br />
-            <label><?php _e('E-Mail Body', 'cp'); ?>
+            </label>
+            <label class="email_body"><?php _e('E-Mail Body', 'cp'); ?>
                 <?php
                 $args = array("textarea_name" => "email_body", "textarea_rows" => 3);
                 wp_editor('', "email_body", $args);

@@ -1,5 +1,7 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice;
+global $coursepress_modules;
+
 
 $course_id = '';
 
@@ -27,30 +29,31 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
         //if (($_POST['action'] == 'add_unit' && current_user_can('coursepress_create_course_unit_cap')) || ($_POST['action'] == 'update_unit' && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {
 
-            $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0);
+        $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0);
 
-            if ($new_post_id != 0) {
-                if (isset($_GET['ms'])) {
-                    wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']);
-                } else {
-                    wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
-                }
+        if ($new_post_id != 0) {
+            if (isset($_GET['ms'])) {
+                wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']);
             } else {
-                //an error occured
+                wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
             }
-        
-    /*}else{
-        die(__('You don\'t have right permissions for the requested action', 'cp'));
-    }*/
-}
+        } else {
+            //an error occured
+        }
+
+        /* }else{
+          die(__('You don\'t have right permissions for the requested action', 'cp'));
+          } */
+    }
 }
 ?>
 
 <div class='wrap nocoursesub'>
-    <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" method="post">
-        <div class='course'>
 
-            <div id='course'>
+    <div class='course-liquid-left'>
+        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" method="post">
+            <input type="hidden" name="beingdragged" id="beingdragged" value="" />
+            <div id='course-left'>
 
 
                 <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
@@ -90,6 +93,20 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
                         </div>
 
+                        <div class="level-droppable-rules levels-sortable ui-droppable">
+                            <?php _e('Drag & Drop unit modules here', 'cp'); ?>
+                        </div>
+
+                        <div id="modules_accordion" class="modules_accordion">
+                            <!--modules will appear here-->
+                            <?php
+                            if (isset($_GET['unit_id'])) {
+                                $module = new Unit_Module();
+                                $module->get_modules_admin_forms($_GET['unit_id']);
+                            }
+                            ?>
+                        </div>
+
                         <div class="buttons">
                             <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                 ?>
@@ -97,11 +114,49 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                             <?php } ?>
                         </div>
 
-                    </div>
+                    </div><!--/course-holder-->
+                </div><!--/course-holder-wrap-->
+            </div><!--/course-->
+        </form>
+    </div> <!-- course-liquid-left -->
+
+
+    <div class='level-liquid-right'>
+        <div class="level-holder-wrap">
+            <?php
+            $sections['modules'] = array("title" => __('Modules', 'cp'));
+
+            foreach ($sections as $key => $section) {
+                ?>
+
+                <div class="sidebar-name no-movecursor">
+                    <h3><?php echo $section['title']; ?></h3>
                 </div>
 
-            </div>
-        </div> <!-- course-liquid-left -->
-    </form>
+                <div class="section-holder" id="sidebar-<?php echo $key; ?>" style="min-height: 98px;">
+                    <ul class='modules'>
+                        <?php
+                        if (isset($coursepress_modules[$key])) {
+                            foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
+                                $module = new $mclass();
+
+                                if (!array_key_exists($mmodule, $module)) {
+                                    $module->admin_sidebar(false);
+                                } else {
+                                    $module->admin_sidebar(true);
+                                }
+
+                                $module->admin_main(array());
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+                <?php
+            }
+            ?>
+        </div> <!-- level-holder-wrap -->
+
+    </div> <!-- level-liquid-right -->
 
 </div> <!-- wrap -->

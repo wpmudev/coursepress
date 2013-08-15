@@ -571,6 +571,10 @@ div.buttons a.cancellink {
     border:none;
 }
 
+#students_accordion .sidebar-name{
+    border-color: #dfdfdf;
+}
+
 #sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
 #sortable-units li.postbox { width: 46%; float: left; margin: 0 1% 1% 0%; padding: 1%; font-size: 1.2em; min-height: 100px; }
 html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }

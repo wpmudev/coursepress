@@ -123,7 +123,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     '8', '15', '15', '20', '10', '7'
                 );
 
-                if (current_user_can('administrator')) {
+                if (current_user_can('coursepress_delete_students_cap')) {
                     $columns["delete"] = __('Delete', 'cp');
                     $col_sizes[] = '5';
                 }

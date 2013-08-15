@@ -90,7 +90,7 @@ $instructor_capabilities_students = array(
     'coursepress_add_new_students_cap' => __('Add new users with Student role to the blog', 'cp'),
     'coursepress_send_bulk_my_students_email_cap' => __("Send bulk e-mail to students", 'cp'),
     'coursepress_send_bulk_students_email_cap' => __("Send bulk e-mail to students within a course made by the instructor only", 'cp'),
-    
+    'coursepress_delete_students_cap' => __("Delete Students", 'cp'),   
 );
 
 $instructor_capabilities_groups = array(

@@ -37,6 +37,27 @@
     padding-top: 20px;
 }
 
+.students_bulk_email_area{
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+.students_bulk_email_area label.email_subject{
+    margin-bottom:20px;
+    width: 100%;
+    display: block;
+}
+
+.students_bulk_email_area input[type="text"], .students_bulk_email_area textarea {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.students_bulk_email_area .email_subject{
+    margin-bottom:10px;
+}
+
 .additional_class_actions_add_student{
     padding: 10px 1% 10px 1%;
     text-align: left;

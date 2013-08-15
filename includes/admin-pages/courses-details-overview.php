@@ -250,7 +250,7 @@ if (isset($_GET['course_id'])) {
                             <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
                         </div>
 
-                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id()) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']))) { ?>
                             <?php coursepress_instructors_avatars_array(); ?>
 
                             <div class="clearfix"></div>
@@ -266,7 +266,11 @@ if (isset($_GET['course_id'])) {
                             }
                             ?>
 
-                        <?php } ?>
+                        <?php }else{
+                            if(coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0){//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                                _e('You do not have required permissions to assign instructors to a course.', 'cp');
+                            }
+                        } ?>
 
                     </div>
                 </div>

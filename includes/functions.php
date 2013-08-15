@@ -193,7 +193,7 @@ function coursepress_get_number_of_instructors() {
     return count($instructors);
 }
 
-function coursepress_instructors_avatars($course_id, $remove_buttons = true) {
+function coursepress_instructors_avatars($course_id, $remove_buttons = true, $just_count = false) {
     global $post_id;
 
     $content = '';
@@ -219,6 +219,10 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true) {
 
     $instructors = get_users($args);
 
+    if($just_count == true){
+        return count($instructors);
+    }else{
+    
     foreach ($instructors as $instructor) {
         if ($remove_buttons) {
             $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
@@ -228,6 +232,7 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true) {
     }
 
     echo $content;
+    }
 }
 
 function coursepress_instructors_avatars_array($args = array()) {
@@ -508,6 +513,25 @@ function curPageURL() {
         $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
     }
     return $pageURL;
+}
+
+if (!function_exists('coursepress_register_module')) {
+
+    function coursepress_register_module($module_name, $class_name, $section) {
+
+        global $coursepress_modules;
+
+        if (!is_array($coursepress_modules)) {
+            $coursepress_modules = array();
+        }
+
+        if (class_exists($class_name)) {
+            $coursepress_modules[$section][$module_name] = $class_name;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 ?>

@@ -59,12 +59,16 @@ if (!class_exists('CoursePress')) {
             $GLOBALS['instructor_profile_slug'] = $this->get_instructor_profile_slug();
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
             $GLOBALS['signup_url'] = $this->get_signup_slug(true);
+
+            
             // Load the common functions
             require_once('includes/functions.php');
 
             //install plugin
             register_activation_hook(__FILE__, array($this, 'install'));
 
+            global $last_inserted_unit_id;
+            
             //Administration area
             if (is_admin()) {
 
@@ -73,9 +77,6 @@ if (!class_exists('CoursePress')) {
 
                 // Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
-
-                //Load unit modules
-                $this->load_modules();
 
                 // Contextual help
                 require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
@@ -96,11 +97,18 @@ if (!class_exists('CoursePress')) {
             // Unit class
             require_once( $this->plugin_dir . 'includes/classes/class.course.unit.php' );
 
+
             // Course class
             require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
             // Student class
             require_once( $this->plugin_dir . 'includes/classes/class.student.php' );
+
+            // Unit module class
+            require_once( $this->plugin_dir . 'includes/classes/class.course.unit.module.php' );
+
+            //Load unit modules
+            $this->load_modules();
 
             // Shortcodes class
             require_once( $this->plugin_dir . 'includes/classes/class.shortcodes.php' );
@@ -606,13 +614,13 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Courses', 'cp'), __('Courses', 'cp'), 'coursepress_courses_cap', 'courses', array(&$this, 'coursepress_courses_admin'));
             do_action('coursepress_add_menu_items_after_courses');
 
-            if(isset($_GET['page']) && $_GET['page'] == 'course_details' && isset($_GET['course_id'])){
+            if (isset($_GET['page']) && $_GET['page'] == 'course_details' && isset($_GET['course_id'])) {
                 $new_or_current_course_menu_item_title = __('Course', 'cp');
-            }else{
+            } else {
                 $new_or_current_course_menu_item_title = __('New Course', 'cp');
             }
-                
-            
+
+
             add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array(&$this, 'coursepress_course_details_admin'));
             do_action('coursepress_add_menu_items_after_new_courses');
 
@@ -703,13 +711,13 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
             );
 
-            register_post_type('unit', $args);
+            register_post_type('module', $args);
 
             do_action('after_custom_post_types');
         }

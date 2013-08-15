@@ -47,7 +47,7 @@ if (!class_exists('Unit')) {
         }
 
         function update_unit() {
-            global $user_id, $wpdb;
+            global $user_id, $last_inserted_unit_id;
             
             $unit_id = (isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id);
             
@@ -77,14 +77,14 @@ if (!class_exists('Unit')) {
 
             $post_id = wp_insert_post($post);
 
+            $last_inserted_unit_id = $post_id;
+            
             update_post_meta($post_id, 'course_id', $_POST['course_id']);
 
             if (!get_post_meta($_post_id, 'unit_order', true)) {
                 update_post_meta($post_id, 'unit_order', '');
             }
-
-
-
+            
             return $post_id;
         }
 

@@ -18,40 +18,46 @@ if (isset($_POST['submit'])) {
 
         if (!username_exists($_POST['username'])) {
 
-            if ($_POST['password'] == $_POST['password_confirmation']) {
-                $student_data['user_pass'] = $_POST['password'];
-            } else {
-                $form_message = __("Passwords don't match", 'cp');
-                $form_message_class = 'error';
-                $form_errors++;
-            }
+            if (!email_exists($_POST['email'])) {
 
-            $student_data['role'] = 'student';
-            $student_data['user_login'] = $_POST['username'];
-            $student_data['user_email'] = $_POST['email'];
-            $student_data['first_name'] = $_POST['first_name'];
-            $student_data['last_name'] = $_POST['last_name'];
-
-            if (!is_email($_POST['email'])) {
-                $form_message = __('E-mail address is not valid.', 'cp');
-                $form_message_class = 'error';
-                $form_errors++;
-            }
-
-            if ($form_errors == 0) {
-                if ($student_id = $student->add_student($student_data) !== 0) {
-                    $form_message = __('Account created successfully!', 'cp');
-                    $form_message_class = 'updated';
-                    /* $email_args['email_type'] = 'student_registration';
-                      $email_args['student_id'] = $student_id;
-                      $email_args['student_email'] = $student_data['user_email'];
-                      $email_args['student_first_name'] = $student_data['first_name'];
-                      $email_args['student_last_name'] = $student_data['last_name'];
-                      coursepress_send_email($email_args); */
+                if ($_POST['password'] == $_POST['password_confirmation']) {
+                    $student_data['user_pass'] = $_POST['password'];
                 } else {
-                    $form_message = __('An error occured while creating the account. Please check the form and try again.', 'cp');
+                    $form_message = __("Passwords don't match", 'cp');
                     $form_message_class = 'error';
+                    $form_errors++;
                 }
+
+                $student_data['role'] = 'student';
+                $student_data['user_login'] = $_POST['username'];
+                $student_data['user_email'] = $_POST['email'];
+                $student_data['first_name'] = $_POST['first_name'];
+                $student_data['last_name'] = $_POST['last_name'];
+
+                if (!is_email($_POST['email'])) {
+                    $form_message = __('E-mail address is not valid.', 'cp');
+                    $form_message_class = 'error';
+                    $form_errors++;
+                }
+
+                if ($form_errors == 0) {
+                    if ($student_id = $student->add_student($student_data) !== 0) {
+                        $form_message = __('Account created successfully!', 'cp');
+                        $form_message_class = 'updated';
+                        /* $email_args['email_type'] = 'student_registration';
+                          $email_args['student_id'] = $student_id;
+                          $email_args['student_email'] = $student_data['user_email'];
+                          $email_args['student_first_name'] = $student_data['first_name'];
+                          $email_args['student_last_name'] = $student_data['last_name'];
+                          coursepress_send_email($email_args); */
+                    } else {
+                        $form_message = __('An error occured while creating the account. Please check the form and try again.', 'cp');
+                        $form_message_class = 'error';
+                    }
+                }
+            } else {
+                $form_message = __('User with the same e-mail already exists.', 'cp');
+                $form_message_class = 'error';
             }
         } else {
             $form_message = __('Username already exists. Please choose another one.', 'cp');
@@ -77,7 +83,7 @@ if (isset($_POST['submit'])) {
         }
         ?>
 
-        
+
 
         <div id="edit-sub" class="course-holder-wrap">
 
