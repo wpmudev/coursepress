@@ -254,7 +254,7 @@ a.action-to-negative {
 	min-height: 80px;
 }
 
-.level-droppable-rules {
+.module-droppable {
 	width: 95%;
 	margin-left: 15px;
 	margin-bottom: 20px;
@@ -272,7 +272,7 @@ a.action-to-negative {
 	clear: both;
 }
 
-.level-droppable-rules.hoveringover {
+.module-droppable.hoveringover {
 	border: 3px dashed #78aad3;
 	color: #78aad3;
 }

@@ -93,7 +93,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 
                         </div>
 
-                        <div class="level-droppable-rules levels-sortable ui-droppable">
+                        <div class="module-droppable levels-sortable ui-droppable">
                             <?php _e('Drag & Drop unit modules here', 'cp'); ?>
                         </div>
 
@@ -101,10 +101,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                             <!--modules will appear here-->
                             <?php
                             if (isset($_GET['unit_id'])) {
-                                $module = new Unit_Module();
-                                $module->get_modules_admin_forms($_GET['unit_id']);
-                            }
+                              $module = new Unit_Module();
+                              $module->get_modules_admin_forms($_GET['unit_id']);
+                              }
                             ?>
+
                         </div>
 
                         <div class="buttons">

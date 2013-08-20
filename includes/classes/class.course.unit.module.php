@@ -52,6 +52,7 @@ if (!class_exists('Unit_Module')) {
 
             if (isset($data->ID) && $data->ID != '' && $data->ID != 0) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+                //echo 'post ID (update): ' . $post['ID'];
             }
 
             $post_id = wp_insert_post($post);
@@ -67,33 +68,45 @@ if (!class_exists('Unit_Module')) {
 
             return $post_id;
         }
-        
+
         function get_modules($unit_id) {
 
             $args = array(
-                'name' => $slug,
-                'post_type' => 'course',
+                'post_type' => 'module',
                 'post_status' => 'any',
-                'posts_per_page' => 1
+                'posts_per_page' => -1,
+                'post_parent' => $unit_id,
+                'meta_key' => 'module_order',
+                'orderby' => 'meta_value_num',
+                'order' => 'ASC',
             );
 
-            $post = get_posts($args);
+            $modules = get_posts($args);
 
-            if ($post) {
-                return $post[0]->ID;
-            } else {
-                return false;
-            }
+            return $modules;
         }
 
         function get_modules_admin_forms($unit_id = 0) {
             global $coursepress_modules;
-            
-            if (isset($coursepress_modules[$key])) {
-                foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
-                    $module = new $mclass();
-                    $module->admin_main(array());
-                }
+
+            $modules = $this->get_modules($unit_id);
+
+            foreach ($modules as $mod) {
+                $class_name = $mod->module_type;
+                $module = new $class_name();
+                $module->admin_main($mod);
+            }
+        }
+
+        function get_modules_front($unit_id = 0) {
+            global $coursepress_modules;
+
+            $modules = $this->get_modules($unit_id);
+
+            foreach ($modules as $mod) {
+                $class_name = $mod->module_type;
+                $module = new $class_name();
+                $module->front_main($mod);
             }
         }
 

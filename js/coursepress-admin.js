@@ -10,15 +10,6 @@ function coursepress_module_click_action_toggle() {
     }
 }
 
-function coursepress_module_toggle_visibility() {
-    if (jQuery(this).parents('.level-operation').hasClass('closed')) {
-        jQuery(this).parents('.level-operation').removeClass('closed').addClass('open');
-    } else {
-        jQuery(this).parents('.level-operation').removeClass('open').addClass('closed');
-    }
-    return false;
-}
-
 function coursepress_modules_ready() {
 
     jQuery('.draggable-module').draggable({
@@ -32,32 +23,17 @@ function coursepress_modules_ready() {
         }
     });
 
-    jQuery('.level-droppable-rules').droppable({
+    jQuery('.module-droppable').droppable({
         hoverClass: 'hoveringover',
         drop: function(event, ui) {
             var stamp = new Date().getTime();
-            var cloned = jQuery('.module-holder-' + jQuery('input#beingdragged').val()).html();
-            
+            var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
+            cloned = '<div class="module-holder-' + jQuery('input#beingdragged').val() + ' module-holder-title">' + cloned + '</div>';
+
             jQuery('.modules_accordion').html(cloned + jQuery('.modules_accordion').html());
-            
-            jQuery('#modules_accordion input, #modules_accordion textarea').each( function() {
-                var current_object_name = jQuery(this).attr('name');
-                //alert(current_object_name);
-                var matched_results = new Array();
-                matched_results = current_object_name.match(/new/gi);
-                if (typeof matched_results !== 'undefined' && matched_results !== null) {
-                    jQuery(this).attr('name', current_object_name.replace("_new","_not_saved"));
-                    jQuery(this).attr('name', jQuery(this).attr('name') + '_' + stamp);
-                    jQuery(this).attr('id', jQuery(this).attr('name'));
-                }
-            });
-         
-            
-            //jQuery('#modules_accordion .wp-editor-area').first().attr('name', current_module_name.attr('name') + '_' + stamp);
-            //jQuery('#modules_accordion .wp-editor-area').first().attr('id', current_module_name.attr('name'));
-            
+
+
             jQuery('.modules_accordion').accordion("refresh");
-            //jQuery('.main-'+jQuery('input#beingdragged').val()).clone().appendTo('.modules_accordion');
 
             moving = jQuery('input#beingdragged').val();
             if (moving != '') {
@@ -73,7 +49,6 @@ function coursepress_modules_ready() {
     });
 
     jQuery('.action .action-top .action-button').click(coursepress_module_click_action_toggle);
-    jQuery('div.level-operation h2.sidebar-name').click(coursepress_module_toggle_visibility);
 
 }
 
@@ -160,17 +135,16 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery(function() {
-        jQuery("#modules_accordion").sortable({
-            handle: "h3",
-            /*placeholder: "ui-state-highlight",*/
-            stop: function(event, ui) {
-                //update_sortable_indexes();
-            }
-        });
-
-        jQuery("#sortable-units").disableSelection();
-    });
+    /*jQuery(function() {
+     jQuery("#modules_accordion").sortable({
+     handle: "h3",
+     stop: function(event, ui) {
+     //update_sortable_indexes();
+     }
+     });
+     
+     jQuery("#modules_accordion").disableSelection();
+     });*/
 
     jQuery(function() {
 
@@ -181,22 +155,30 @@ jQuery(document).ready(function() {
 
         jQuery("#modules_accordion").accordion({
             heightStyle: "content",
+            header: "> div > h3"
         }).sortable({
             axis: "y",
             stop: function(event, ui) {
                 // IE doesn't register the blur when sorting
                 // so trigger focusout handlers to remove .ui-state-focus
                 //ui.item.children("h3").triggerHandler("focusout");
+                update_sortable_module_indexes();
             }
         });
-
-
     });
+
+    function update_sortable_module_indexes() {
+        jQuery('.module_order').each(function(i, obj) {
+            jQuery(this).val(i + 1);
+        });
+    }
+
+
 
     jQuery('#open_ended_course').change(function() {
         if (this.checked) {
             jQuery('#all_course_dates').hide(500);
-        }else{
+        } else {
             jQuery('#all_course_dates').show(500);
         }
     });

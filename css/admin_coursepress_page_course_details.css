@@ -12,7 +12,9 @@
 
 /* UNIT MODULES */
 
- #modules_accordion.ui-accordion .ui-accordion-content{
+
+
+#modules_accordion.ui-accordion .ui-accordion-content{
     padding: 10px;
 
 }
@@ -57,14 +59,14 @@ div.level-holder-wrap {
 	background-image: url(../images/ed-bg.gif);
 	text-shadow: #FFF 0 1px 0;
 	border-color: #dfdfdf;
-	-moz-border-radius-topleft: 8px;
-	-moz-border-radius-topright: 8px;
-	-webkit-border-top-right-radius: 8px;
-	-webkit-border-top-left-radius: 8px;
-	-khtml-border-top-right-radius: 8px;
-	-khtml-border-top-left-radius: 8px;
-	border-top-right-radius: 8px;
-	border-top-left-radius: 8px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-khtml-border-top-right-radius: 4px;
+	-khtml-border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
 }
 
 .sidebar-name:hover {
@@ -216,7 +218,7 @@ a.action-to-negative {
 	min-height: 80px;
 }
 
-.level-droppable-rules {
+.module-droppable {
 	width: 95%;
 	margin-left: 15px;
 	margin-bottom: 20px;
@@ -234,7 +236,7 @@ a.action-to-negative {
 	clear: both;
 }
 
-.level-droppable-rules.hoveringover {
+.module-droppable.hoveringover {
 	border: 3px dashed #78aad3;
 	color: #78aad3;
 }
@@ -247,14 +249,14 @@ a.action-to-negative {
 }
 
 .action-top.open {
-	-moz-border-radius-topleft: 6px;
-	-moz-border-radius-topright: 6px;
-	-webkit-border-top-right-radius: 6px;
-	-webkit-border-top-left-radius: 6px;
-	-khtml-border-top-right-radius: 6px;
-	-khtml-border-top-left-radius: 6px;
-	border-top-right-radius: 6px;
-	border-top-left-radius: 6px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-khtml-border-top-right-radius: 4px;
+	-khtml-border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
 	background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
 	text-shadow: #fff 0 1px 0;
 	width: 260px;
@@ -558,6 +560,13 @@ div.buttons a.cancellink {
     padding-left: 16px;
 }
 
+#modules_accordion.ui-accordion .ui-accordion-header{
+    padding: 10px;
+    padding-left:25px;
+    border: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+} 
+
 #students_accordion.ui-accordion .ui-accordion-content{
     padding:0px;
 }
@@ -817,14 +826,14 @@ div.course-holder-wrap {
     background-image: url(../images/ed-bg.gif);
     text-shadow: #FFF 0 1px 0;
     border-color: #dfdfdf;
-    -moz-border-radius-topleft: 8px;
-    -moz-border-radius-topright: 8px;
-    -webkit-border-top-right-radius: 8px;
-    -webkit-border-top-left-radius: 8px;
-    -khtml-border-top-right-radius: 8px;
-    -khtml-border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    border-top-left-radius: 8px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -khtml-border-top-right-radius: 4px;
+    -khtml-border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
 }
 
 .sidebar-name:hover {
@@ -955,14 +964,14 @@ input.wide, textarea.wide {
 }
 
 .action-top.open {
-    -moz-border-radius-topleft: 6px;
-    -moz-border-radius-topright: 6px;
-    -webkit-border-top-right-radius: 6px;
-    -webkit-border-top-left-radius: 6px;
-    -khtml-border-top-right-radius: 6px;
-    -khtml-border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -khtml-border-top-right-radius: 4px;
+    -khtml-border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
     background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;

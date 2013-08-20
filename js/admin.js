@@ -1,4 +1,3 @@
-
 jQuery(function() {
     jQuery(".spinners").spinner({
         min: 0

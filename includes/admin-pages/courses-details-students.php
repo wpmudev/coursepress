@@ -446,7 +446,9 @@ if ($course->details->enroll_type != 'manually') {//There shouldn't be invitatio
 <?php } ?>
 
 
-<?php if ((current_user_can('coursepress_send_bulk_students_email_cap')) || (current_user_can('coursepress_send_bulk_my_students_email_cap') && $course->details->post_author == get_current_user_id())) { ?>
+<?php 
+/*
+if ((current_user_can('coursepress_send_bulk_students_email_cap')) || (current_user_can('coursepress_send_bulk_my_students_email_cap') && $course->details->post_author == get_current_user_id())) { ?>
     <div class="students_bulk_email_area">
         <form name="students_bulk_email" method="post">
             <?php wp_nonce_field('students_bulk_email'); ?>
@@ -464,4 +466,4 @@ if ($course->details->enroll_type != 'manually') {//There shouldn't be invitatio
             <?php submit_button(__('Send', 'cp'), 'primary', 'send_bulk_email_to_students', ''); ?>
         </form>
     </div>
-<?php } ?>
+<?php }*/ ?>

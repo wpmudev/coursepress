@@ -7,6 +7,8 @@ echo do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="post_c
 
 do_shortcode('[unit_discussion]');
 
+$module = new Unit_Module();
+$module->get_modules_front($unit_id);
 
 $comments_args = array(
     'author_email' => '',

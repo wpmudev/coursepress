@@ -6,7 +6,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.9b
+  Version: 0.9.1 b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9b';
+        var $version = '0.9.1 b';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -60,7 +60,7 @@ if (!class_exists('CoursePress')) {
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
             $GLOBALS['signup_url'] = $this->get_signup_slug(true);
 
-            
+
             // Load the common functions
             require_once('includes/functions.php');
 
@@ -68,7 +68,7 @@ if (!class_exists('CoursePress')) {
             register_activation_hook(__FILE__, array($this, 'install'));
 
             global $last_inserted_unit_id;
-            
+
             //Administration area
             if (is_admin()) {
 
@@ -961,6 +961,10 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
 
+            //wp_enqueue_script("jquery");
+            //wp_enqueue_script("jquery-ui");
+            //wp_enqueue_script("jquery-ui-core");
+            
             wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array('jquery', 'jquery-ui'), false, false);
             wp_localize_script('courses_bulk', 'coursepress', array(
                 'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
