@@ -32,6 +32,44 @@ function coursepress_modules_ready() {
 
             jQuery('.modules_accordion').html(cloned + jQuery('.modules_accordion').html());
 
+            var data = '';
+            jQuery.post('admin-ajax.php?action=dynamic_wp_editor', data, function(response) {
+                jQuery('#modules_accordion .editor_to_place').html(response);
+            });
+
+            /*            jQuery('textarea, div, a, input').each(function() {
+             var attr = jQuery(this).attr('id');
+             var str_to_replace = '';
+             
+             if (typeof attr !== 'undefined' && attr !== false) {
+             var current_object_id = jQuery(this).attr('id');
+             var matched_results = new Array();
+             matched_results = current_object_id.match(/id_placeholder/g);
+             if (typeof matched_results !== 'undefined' && matched_results !== null) {
+             str_to_replace = jQuery(this).attr('id');
+             
+             jQuery(this).attr('id', str_to_replace.replace('id_placeholder','editor_' + stamp));
+             }
+             }
+             });
+             
+             jQuery('a').each(function() {
+             var attr = jQuery(this).attr('data-editor');
+             var str_to_replace = '';
+             
+             if (typeof attr !== 'undefined' && attr !== false) {
+             var current_object_id = jQuery(this).attr('data-editor');
+             var matched_results = new Array();
+             matched_results = current_object_id.match(/id_placeholder/g);
+             if (typeof matched_results !== 'undefined' && matched_results !== null) {
+             str_to_replace = jQuery(this).attr('data-editor');
+             
+             jQuery(this).attr('data-editor', str_to_replace.replace('id_placeholder','editor_' + stamp));
+             }
+             }
+             });*/
+
+
 
             jQuery('.modules_accordion').accordion("refresh");
 

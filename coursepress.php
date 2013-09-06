@@ -1,5 +1,4 @@
 <?php
-
 /*
   Plugin Name: CoursePress
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
@@ -89,6 +88,8 @@ if (!class_exists('CoursePress')) {
 
                 //Pagination Class
                 require_once( $this->plugin_dir . 'includes/classes/class.pagination.php');
+
+                add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));
             }
 
             // Instructor class
@@ -143,6 +144,7 @@ if (!class_exists('CoursePress')) {
             //Custom header actions
             add_action('wp_enqueue_scripts', array(&$this, 'header_actions'));
 
+
             add_action('admin_enqueue_scripts', array(&$this, 'admin_header_actions'));
             add_action('load-coursepress_page_course_details', array(&$this, 'admin_coursepress_page_course_details'));
             add_action('load-coursepress_page_settings', array(&$this, 'admin_coursepress_page_settings'));
@@ -184,6 +186,32 @@ if (!class_exists('CoursePress')) {
             if (get_option('display_menu_items', 1)) {
                 add_filter('wp_nav_menu_objects', array(&$this, 'main_navigation_links'), 10, 2);
             }
+        }
+
+        function dynamic_wp_editor() {
+            $id = 'editor_' . rand(0, 999) . rand(0, 999);
+            $args = array("textarea_name" => $id . "_content[]", "textarea_rows" => 5);
+
+            wp_editor('', $id, $args);
+            ?>
+            <script>
+                //init quicktags
+                
+                /*quicktags({id:<?php echo $id; ?>});
+
+                //init tinymce
+                tinyMCE.init({
+                    theme : "advanced",
+                    skin: "wp_theme",
+                    buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
+                            // other options here
+                });
+               
+                tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
+                //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
+            </script>
+            <?php
+            die(0);
         }
 
         function load_plugin_templates() {
@@ -960,11 +988,10 @@ if (!class_exists('CoursePress')) {
 
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
-
             //wp_enqueue_script("jquery");
             //wp_enqueue_script("jquery-ui");
             //wp_enqueue_script("jquery-ui-core");
-            
+
             wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array('jquery', 'jquery-ui'), false, false);
             wp_localize_script('courses_bulk', 'coursepress', array(
                 'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),

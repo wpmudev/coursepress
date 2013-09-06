@@ -1,5 +1,7 @@
 <?php
 
+//get_site_option instead of get_option
+
 function coursepress_send_email($email_args = array()) {
 
     if ($email_args['email_type'] == 'student_registration') {
@@ -219,19 +221,19 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true, $ju
 
     $instructors = get_users($args);
 
-    if($just_count == true){
+    if ($just_count == true) {
         return count($instructors);
-    }else{
-    
-    foreach ($instructors as $instructor) {
-        if ($remove_buttons) {
-            $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-        } else {
-            $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-        }
-    }
+    } else {
 
-    echo $content;
+        foreach ($instructors as $instructor) {
+            if ($remove_buttons) {
+                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+            } else {
+                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+            }
+        }
+
+        echo $content;
     }
 }
 
@@ -533,5 +535,4 @@ if (!function_exists('coursepress_register_module')) {
     }
 
 }
-
 ?>

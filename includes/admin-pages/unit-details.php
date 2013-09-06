@@ -101,9 +101,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                             <!--modules will appear here-->
                             <?php
                             if (isset($_GET['unit_id'])) {
-                              $module = new Unit_Module();
-                              $module->get_modules_admin_forms($_GET['unit_id']);
-                              }
+                                $module = new Unit_Module();
+                                $module->get_modules_admin_forms($_GET['unit_id']);
+                            }
                             ?>
 
                         </div>
@@ -125,13 +125,13 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
     <div class='level-liquid-right'>
         <div class="level-holder-wrap">
             <?php
-            $sections['modules'] = array("title" => __('Modules', 'cp'));
+            $sections = array("instructors" => __('Instructors', 'cp'), "students" => __('Students', 'cp'));
 
             foreach ($sections as $key => $section) {
                 ?>
 
                 <div class="sidebar-name no-movecursor">
-                    <h3><?php echo $section['title']; ?></h3>
+                    <h3><?php echo $section; ?></h3>
                 </div>
 
                 <div class="section-holder" id="sidebar-<?php echo $key; ?>" style="min-height: 98px;">

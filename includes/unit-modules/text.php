@@ -26,7 +26,7 @@ class text_module extends Unit_Module {
     function admin_main($data) {
         ?>
 
-        <div class="<?php if (empty($data)) { ?>draggable-<?php }?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
+        <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></h3>
 
@@ -37,10 +37,16 @@ class text_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                <?php
-                $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), '', $args);
-                ?>
+                <?php// if (!empty($data)) { ?>
+                    <div class="editor_in_place">
+                        <?php
+                        $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
+                        wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
+                        ?>
+                    </div>
+                <?php //}else{ ?>
+                <!--<div class="editor_to_place">Loading editor...</div>-->
+                <?php //} ?>
             </div>
 
         </div>
@@ -64,7 +70,7 @@ class text_module extends Unit_Module {
             $data->content = '';
             $data->metas = array();
             $data->metas['module_type'] = $this->name;
-            
+
 
             foreach ($_POST[$this->name . '_id'] as $key => $value) {
                 $data->ID = $_POST[$this->name . '_id'][$key];
@@ -79,5 +85,5 @@ class text_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_module', 'text_module', 'modules');
+coursepress_register_module('text_module', 'text_module', 'instructors');
 ?>
