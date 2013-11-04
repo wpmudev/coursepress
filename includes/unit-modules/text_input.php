@@ -1,25 +1,45 @@
 <?php
 
-class text_module extends Unit_Module {
+class text_input_module extends Unit_Module {
 
-    var $name = 'text_module';
-    var $label = 'Text';
-    var $description = 'Allows adding text blocks to the unit';
-    var $front_save = false;
-    
+    var $name = 'text_input_module';
+    var $label = 'Text Input';
+    var $description = 'Allows adding input text blocks to the unit';
+    var $front_save = true;
+
     function __construct() {
         $this->on_create();
     }
 
-    function text_module() {
+    function text_input_module() {
         $this->__construct();
     }
 
     function front_main($data) {
+
+        $already_respond_posts_args = array(
+            'posts_per_page' => 1,
+            'meta_key' => 'user_ID',
+            'meta_value' => get_current_user_id(),
+            'post_type' => 'module_reponse',
+            'post_parent' => $data->ID,
+            'post_status' => 'publish'
+        );
+        
+        $already_respond_posts = get_posts($already_respond_posts_args);
+        $response = $already_respond_posts[0];
+        
+        if(count($response) == 0){
+            $enabled = 'enabled';
+        }else{
+            $enabled = 'disabled';
+        }
+        
         ?>
         <div class="<?php echo $this->name; ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
+            <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
         </div>
         <?php
     }
@@ -38,16 +58,16 @@ class text_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                <?php // if (!empty($data)) { ?>
+                <?php // if (!empty($data)) {    ?>
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
                     wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
                     ?>
                 </div>
-                <?php //}else{ ?>
+                <?php //}else{    ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-                <?php //} ?>
+                <?php //}    ?>
             </div>
 
         </div>
@@ -88,9 +108,37 @@ class text_module extends Unit_Module {
                 }
             }
         }
+
+        if (isset($_POST['submit_modules_data'])) {
+
+            foreach ($_POST as $response_name => $response_value) {
+
+                if (preg_match('/' . $this->name . '_front_/', $response_name)) {
+                    //echo $response_name . ',' . $response_value . '<br />';
+
+                    $response_id = intval(str_replace($this->name . '_front_', '', $response_name));
+
+                    if ($response_value != '') {
+                        $data = new stdClass();
+                        $data->ID = '';
+                        $data->title = '';
+                        $data->excerpt = '';
+                        $data->content = '';
+                        $data->metas = array();
+                        $data->metas['user_ID'] = get_current_user_id();
+                        $data->post_type = 'module_reponse';
+                        $data->response_id = $response_id;
+                        $data->title = ''; //__('Response to '.$response_id.' module (Unit '.$_POST['unit_id'].')');
+                        $data->content = $response_value;
+
+                        parent::update_module_response($data);
+                    }
+                }
+            }
+        }
     }
 
 }
 
-coursepress_register_module('text_module', 'text_module', 'instructors');
+coursepress_register_module('text_input_module', 'text_input_module', 'students');
 ?>

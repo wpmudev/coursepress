@@ -520,7 +520,6 @@ function curPageURL() {
 if (!function_exists('coursepress_register_module')) {
 
     function coursepress_register_module($module_name, $class_name, $section) {
-
         global $coursepress_modules;
 
         if (!is_array($coursepress_modules)) {
@@ -534,5 +533,17 @@ if (!function_exists('coursepress_register_module')) {
         }
     }
 
+}
+
+if (!function_exists('cp_write_log')) {
+    function cp_write_log ( $log )  {
+        //if ( true === WP_DEBUG ) {
+            if ( is_array( $log ) || is_object( $log ) ) {
+                error_log( print_r( $log, true ) );
+            } else {
+                error_log( $log );
+            }
+        //}
+    }
 }
 ?>

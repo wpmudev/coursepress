@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.1 b
+  Version: 0.9.2 b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.1 b';
+        var $version = '0.9.2 b';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -58,7 +58,6 @@ if (!class_exists('CoursePress')) {
             $GLOBALS['instructor_profile_slug'] = $this->get_instructor_profile_slug();
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
             $GLOBALS['signup_url'] = $this->get_signup_slug(true);
-
 
             // Load the common functions
             require_once('includes/functions.php');
@@ -98,7 +97,6 @@ if (!class_exists('CoursePress')) {
             // Unit class
             require_once( $this->plugin_dir . 'includes/classes/class.course.unit.php' );
 
-
             // Course class
             require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
@@ -121,8 +119,7 @@ if (!class_exists('CoursePress')) {
             add_action('plugins_loaded', array(&$this, 'localization'), 9);
 
             //Output buffer hack
-            add_action('init', array(&$this, 'output_buffer'), 0);
-
+            //add_action('init', array(&$this, 'output_buffer'), 0);
             //Register custom post types
             add_action('init', array(&$this, 'register_custom_posts'), 1);
 
@@ -162,6 +159,9 @@ if (!class_exists('CoursePress')) {
             add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
             add_filter('comments_template', array(&$this, 'comments_template'));
 
+            add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
+            // Add Filter Hook  
+            add_filter('post_mime_types', array(&$this, 'modify_post_mime_types'));
 
             // Load payment gateways
             $this->load_payment_gateways();
@@ -188,6 +188,22 @@ if (!class_exists('CoursePress')) {
             }
         }
 
+        function add_custom_upload_mimes($existing_mimes = array()) {
+            // Add file extension 'extension' with mime type 'mime/type'
+            $existing_mimes['ai'] = 'application/postscript';
+            $existing_mimes['psd'] = 'application/octet-stream';
+
+            return $existing_mimes;
+        }
+
+        function modify_post_mime_types($post_mime_types) {
+            $post_mime_types['application/postscript'] = array(__('AIs'), __('Manage AIs'), _n_noop('AI <span class="count">(%s)</span>', 'AIs <span class="count">(%s)</span>'));
+            $post_mime_types['application/octet-stream'] = array(__('PSDs'), __('Manage PSDs'), _n_noop('PSD <span class="count">(%s)</span>', 'PSDs <span class="count">(%s)</span>'));
+
+            // then we return the $post_mime_types variable  
+            return $post_mime_types;
+        }
+
         function dynamic_wp_editor() {
             $id = 'editor_' . rand(0, 999) . rand(0, 999);
             $args = array("textarea_name" => $id . "_content[]", "textarea_rows" => 5);
@@ -196,19 +212,19 @@ if (!class_exists('CoursePress')) {
             ?>
             <script>
                 //init quicktags
-                
-                /*quicktags({id:<?php echo $id; ?>});
 
-                //init tinymce
-                tinyMCE.init({
-                    theme : "advanced",
-                    skin: "wp_theme",
-                    buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
-                            // other options here
-                });
-               
-                tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
-                //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
+                /*quicktags({id:<?php echo $id; ?>});
+                             
+                 //init tinymce
+                 tinyMCE.init({
+                 theme : "advanced",
+                 skin: "wp_theme",
+                 buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
+                 // other options here
+                 });
+                             
+                 tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
+                 //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
             </script>
             <?php
             die(0);
@@ -424,7 +440,7 @@ if (!class_exists('CoursePress')) {
                 update_post_meta($position, 'unit_order', $i);
                 $i++;
             }
-            echo $response; //just for debugging purposes
+            //echo $response; //just for debugging purposes
             die();
         }
 
@@ -446,6 +462,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function install() {
+            update_option('display_menu_items', 0); //T-E-M-P-O-R-A-R-Y J-U-S-T O-N L-I-V-E D-E-V, otherwise it will be active by default
             $this->coursepress_plugin_activate();
             update_option('coursepress_version', $this->version);
             $this->add_user_roles_and_caps(); //This setting is saved to the database (in table wp_options, field wp_user_roles), so it might be better to run this on theme/plugin activation
@@ -648,7 +665,6 @@ if (!class_exists('CoursePress')) {
                 $new_or_current_course_menu_item_title = __('New Course', 'cp');
             }
 
-
             add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array(&$this, 'coursepress_course_details_admin'));
             do_action('coursepress_add_menu_items_after_new_courses');
 
@@ -664,6 +680,7 @@ if (!class_exists('CoursePress')) {
               add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
               do_action('coursepress_add_menu_items_after_instructors');
              */
+
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
             do_action('coursepress_add_menu_items_after_settings');
 
@@ -746,6 +763,30 @@ if (!class_exists('CoursePress')) {
             );
 
             register_post_type('module', $args);
+
+            //Register Modules Responses (Unit Module Responses) post type
+            $args = array(
+                'labels' => array('name' => __('Module Responses', 'cp'),
+                    'singular_name' => __('Module Response', 'cp'),
+                    'add_new' => __('Create New', 'cp'),
+                    'add_new_item' => __('Create New Response', 'cp'),
+                    'edit_item' => __('Edit Response', 'cp'),
+                    'edit' => __('Edit', 'cp'),
+                    'new_item' => __('New Response', 'cp'),
+                    'view_item' => __('View Response', 'cp'),
+                    'search_items' => __('Search Responses', 'cp'),
+                    'not_found' => __('No Module Responses Found', 'cp'),
+                    'not_found_in_trash' => __('No Responses found in Trash', 'cp'),
+                    'view' => __('View Response', 'cp')
+                ),
+                'public' => false,
+                'show_ui' => true,
+                'publicly_queryable' => false,
+                'capability_type' => 'post',
+                'query_var' => true
+            );
+
+            register_post_type('module_reponse', $args);
 
             do_action('after_custom_post_types');
         }
@@ -1130,6 +1171,7 @@ if (!class_exists('CoursePress')) {
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-settings.php'),
                         'type' => 'virtual_page'
                     );
+
                     $pg = new CoursePress_Virtual_Page($args);
                 }
             }
@@ -1255,7 +1297,6 @@ if (!class_exists('CoursePress')) {
 
         function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
             global $wp, $post_id;
-
 
             if (is_array($wp->query_vars)) {
                 if (array_key_exists('unitname', $wp->query_vars)) {

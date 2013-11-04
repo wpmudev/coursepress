@@ -2,7 +2,6 @@
 global $page, $user_id, $coursepress_admin_notice;
 global $coursepress_modules;
 
-
 $course_id = '';
 
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
@@ -140,7 +139,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                         if (isset($coursepress_modules[$key])) {
                             foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
                                 $module = new $mclass();
-
                                 if (!array_key_exists($mmodule, $module)) {
                                     $module->admin_sidebar(false);
                                 } else {
