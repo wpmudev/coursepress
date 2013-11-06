@@ -6,6 +6,7 @@ class textarea_input_module extends Unit_Module {
     var $label = 'Text Area Input';
     var $description = 'Allows adding input text area blocks to the unit';
     var $front_save = true;
+    var $response_type = 'view';
 
     function __construct() {
         $this->on_create();
@@ -15,19 +16,24 @@ class textarea_input_module extends Unit_Module {
         $this->__construct();
     }
 
-    function front_main($data) {
-
+    function get_response($user_ID, $response_request_ID){
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'meta_key' => 'user_ID',
-            'meta_value' => get_current_user_id(),
+            'meta_value' => $user_ID,
             'post_type' => 'module_reponse',
-            'post_parent' => $data->ID,
+            'post_parent' => $response_request_ID,
             'post_status' => 'publish'
         );
-        
+
         $already_respond_posts = get_posts($already_respond_posts_args);
         $response = $already_respond_posts[0];
+        return $response;
+    }
+    
+    function front_main($data) {
+
+        $response = $this->get_response(get_current_user_id(), $data->ID);
         
         if(count($response) == 0){
             $enabled = 'enabled';

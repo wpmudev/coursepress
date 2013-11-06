@@ -8,6 +8,7 @@ if (!class_exists('Unit_Module')) {
         var $label = 'None Set';
         var $description = '';
         var $front_save = false;
+        var $response_type = '';
 
         function __construct() {
             $this->on_create();
@@ -176,6 +177,10 @@ if (!class_exists('Unit_Module')) {
             <?php
         }
 
+        function get_response(){
+            
+        }
+        
         function on_create() {
             
         }

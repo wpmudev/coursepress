@@ -6,6 +6,7 @@ class file_input_module extends Unit_Module {
     var $label = 'File Upload';
     var $description = 'Allows adding file upload blocks to the unit';
     var $front_save = true;
+    var $response_type = 'file';
 
     function __construct() {
         $this->on_create();
@@ -14,20 +15,25 @@ class file_input_module extends Unit_Module {
     function text_input_module() {
         $this->__construct();
     }
-
-    function front_main($data) {
-
+    
+    function get_response($user_ID, $response_request_ID){
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'meta_key' => 'user_ID',
-            'meta_value' => get_current_user_id(),
+            'meta_value' => $user_ID,
             'post_type' => 'attachment',
-            'post_parent' => $data->ID,
+            'post_parent' => $response_request_ID,
             'post_status' => 'inherit'
         );
 
         $already_respond_posts = get_posts($already_respond_posts_args);
         $response = $already_respond_posts[0];
+        return $response;
+    }
+
+    function front_main($data) {
+
+        $response = $this->get_response(get_current_user_id(), $data->ID);
 
         if (count($response) == 0) {
             $enabled = 'enabled';
@@ -38,8 +44,7 @@ class file_input_module extends Unit_Module {
         <div class="<?php echo $this->name; ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
-            <div class="module_file_input">
-                <?php //echo (count($response >= 1) ? esc_attr($response->post_content) : '');  ?>
+            <div class="module_file_input">     
                 <input type="file" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
             </div>
         </div>
@@ -60,16 +65,16 @@ class file_input_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                <?php // if (!empty($data)) {     ?>
+                <?php // if (!empty($data)) {      ?>
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
                     wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
                     ?>
                 </div>
-                <?php //}else{     ?>
+                <?php //}else{      ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-                <?php //}     ?>
+                <?php //}      ?>
             </div>
 
         </div>
@@ -137,16 +142,15 @@ class file_input_module extends Unit_Module {
                             $wp_upload_dir = wp_upload_dir();
 
                             $attachment = array(
-                                'guid' => $wp_upload_dir['url'] . '/' . basename($array->name),
+                                'guid' => $movefile['url'],
                                 'post_mime_type' => $movefile['type'],
-                                'post_title' => $array->name,
+                                'post_title' => basename($movefile['url']),
                                 'post_content' => '',
                                 'post_status' => 'inherit'
                             );
 
                             $attach_id = wp_insert_attachment($attachment, $filename, $response_id);
                             update_post_meta($attach_id, 'user_ID', get_current_user_ID());
-                            
                         } else {
                             ?>
                             <p class="form-info-red"><?php echo $movefile['error']; ?></p>

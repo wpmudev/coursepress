@@ -73,7 +73,7 @@ if (!class_exists('CoursePress')) {
                 // Support for WPMU DEV Dashboard plugin
                 include_once( $this->plugin_dir . 'includes/external/wpmudev-dash-notification.php' );
 
-                // Course search
+                // Course searchas
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
                 // Contextual help
@@ -147,6 +147,7 @@ if (!class_exists('CoursePress')) {
             add_action('load-coursepress_page_settings', array(&$this, 'admin_coursepress_page_settings'));
             add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
             add_action('load-coursepress_page_reports', array(&$this, 'admin_coursepress_page_reports'));
+            add_action('load-coursepress_page_assessment', array(&$this, 'admin_coursepress_page_assessment'));
             add_action('load-coursepress_page_students', array(&$this, 'admin_coursepress_page_students'));
             add_action('load-coursepress_page_instructors', array(&$this, 'admin_coursepress_page_instructors'));
 
@@ -159,11 +160,11 @@ if (!class_exists('CoursePress')) {
             add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
             add_filter('comments_template', array(&$this, 'comments_template'));
 
-            add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
+            //add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
             // Add Filter Hook  
-            add_filter('post_mime_types', array(&$this, 'modify_post_mime_types'));
+            //add_filter('post_mime_types', array(&$this, 'modify_post_mime_types'));
 
-            // Load payment gateways
+            // Load payment gateways (coming soon)
             $this->load_payment_gateways();
 
             //Load add-ons
@@ -188,21 +189,21 @@ if (!class_exists('CoursePress')) {
             }
         }
 
-        function add_custom_upload_mimes($existing_mimes = array()) {
+        /*function add_custom_upload_mimes($existing_mimes = array()) {
             // Add file extension 'extension' with mime type 'mime/type'
             $existing_mimes['ai'] = 'application/postscript';
             $existing_mimes['psd'] = 'application/octet-stream';
 
             return $existing_mimes;
-        }
+        }*/
 
-        function modify_post_mime_types($post_mime_types) {
+        /*function modify_post_mime_types($post_mime_types) {
             $post_mime_types['application/postscript'] = array(__('AIs'), __('Manage AIs'), _n_noop('AI <span class="count">(%s)</span>', 'AIs <span class="count">(%s)</span>'));
             $post_mime_types['application/octet-stream'] = array(__('PSDs'), __('Manage PSDs'), _n_noop('PSD <span class="count">(%s)</span>', 'PSDs <span class="count">(%s)</span>'));
 
             // then we return the $post_mime_types variable  
             return $post_mime_types;
-        }
+        }*/
 
         function dynamic_wp_editor() {
             $id = 'editor_' . rand(0, 999) . rand(0, 999);
@@ -674,9 +675,10 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array(&$this, 'coursepress_students_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
 
-            /* add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
-              do_action('coursepress_add_menu_items_after_assessment');
-
+            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
+            do_action('coursepress_add_menu_items_after_assessment');
+            
+            /*
               add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
               do_action('coursepress_add_menu_items_after_instructors');
              */
@@ -808,7 +810,8 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_courses_cap'); //access to courses
             $role->add_cap('coursepress_instructors_cap'); //access to instructors
             $role->add_cap('coursepress_students_cap'); //access to students
-            //$role->add_cap('coursepress_reports_cap'); //access to reports
+            $role->add_cap('coursepress_assessment_cap'); //access to assessment
+            $role->add_cap('coursepress_reports_cap'); //access to reports
             $role->add_cap('coursepress_settings_cap'); //access to settings
 
             /* =============== Action capabilities ============== */
@@ -881,6 +884,7 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_courses_cap'); //access to courses
             $role->add_cap('coursepress_instructors_cap'); //access to instructors
             $role->add_cap('coursepress_students_cap'); //access to students
+            $role->add_cap('coursepress_assessment_cap'); //access to assessment
             $role->add_cap('coursepress_reports_cap'); //access to reports
             $role->add_cap('coursepress_settings_cap'); //access to settings
 
@@ -958,7 +962,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function coursepress_assessment_admin() {
-            //include_once($this->plugin_dir . 'includes/admin-pages/assessment.php');
+            include_once($this->plugin_dir . 'includes/admin-pages/assessment.php');
         }
 
         function coursepress_reports_admin() {
@@ -1026,7 +1030,6 @@ if (!class_exists('CoursePress')) {
 
         function admin_header_actions() {
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css');
-
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
             //wp_enqueue_script("jquery");
@@ -1072,6 +1075,16 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_script('jquery-ui-core');
             wp_enqueue_script('jquery-ui-tabs');
         }
+        
+        function admin_coursepress_page_assessment() {
+            wp_enqueue_style('assessment', $this->plugin_url . 'css/admin_coursepress_page_assessment.css');
+            wp_enqueue_script('assessment-admin', $this->plugin_url . 'js/assessment-admin.js');
+            wp_enqueue_style('jquery-ui-admin', 'http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css'); //need to change this to built-in
+            wp_enqueue_script('jquery-ui-core');
+            wp_enqueue_script('jquery-ui-tabs');
+        }
+        
+        
 
         function admin_coursepress_page_students() {
             wp_enqueue_style('students', $this->plugin_url . 'css/admin_coursepress_page_students.css');

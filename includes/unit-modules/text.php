@@ -6,6 +6,7 @@ class text_module extends Unit_Module {
     var $label = 'Text';
     var $description = 'Allows adding text blocks to the unit';
     var $front_save = false;
+    var $response_type = '';
     
     function __construct() {
         $this->on_create();
