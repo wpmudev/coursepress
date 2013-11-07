@@ -56,5 +56,59 @@ function update_sortable_indexes() {
     jQuery.post(ajaxurl, data, function(response) {
         //alert(response);
     });
-    
+
 }
+
+/* Native WP media browser for audio module (unit module) */
+
+jQuery(document).ready(function()
+{
+    jQuery('.audio_url_button').click(function()
+    {
+        var target_url_field = jQuery(this).prevAll(".audio_url:first");
+        
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            jQuery(target_url_field).val(attachment.url);
+        };
+        wp.media.editor.open(this);
+        return false;
+    });
+});
+
+/* Native WP media browser for video module (unit module) */
+
+jQuery(document).ready(function()
+{
+    jQuery('.video_url_button').click(function()
+    {
+        var target_url_field = jQuery(this).prevAll(".video_url:first");
+
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            jQuery(target_url_field).val(attachment.url);
+        };
+
+        wp.media.editor.open(this);
+        return false;
+    });
+});
+
+/* Native WP media browser for file module (for instructors) */
+
+jQuery(document).ready(function()
+{
+    jQuery('.file_url_button').click(function()
+    {
+        
+        var target_url_field = jQuery(this).prevAll(".file_url:first");
+
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            jQuery(target_url_field).val(attachment.url);
+        };
+
+        wp.media.editor.open(this);
+        return false;
+    });
+});

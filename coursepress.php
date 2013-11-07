@@ -50,6 +50,7 @@ if (!class_exists('CoursePress')) {
             //setup our variables
             $this->init_vars();
 
+
             //Register Globals
             $GLOBALS['plugin_dir'] = $this->plugin_dir;
             $GLOBALS['course_slug'] = $this->get_course_slug();
@@ -121,6 +122,9 @@ if (!class_exists('CoursePress')) {
             //Output buffer hack
             //add_action('init', array(&$this, 'output_buffer'), 0);
             //Register custom post types
+
+            add_action('init', array(&$this, 'check_for_force_download_file_request'), 1);
+
             add_action('init', array(&$this, 'register_custom_posts'), 1);
 
             //Add virtual pages
@@ -163,7 +167,6 @@ if (!class_exists('CoursePress')) {
             //add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
             // Add Filter Hook  
             //add_filter('post_mime_types', array(&$this, 'modify_post_mime_types'));
-
             // Load payment gateways (coming soon)
             $this->load_payment_gateways();
 
@@ -189,21 +192,42 @@ if (!class_exists('CoursePress')) {
             }
         }
 
-        /*function add_custom_upload_mimes($existing_mimes = array()) {
-            // Add file extension 'extension' with mime type 'mime/type'
-            $existing_mimes['ai'] = 'application/postscript';
-            $existing_mimes['psd'] = 'application/octet-stream';
+        /* function add_custom_upload_mimes($existing_mimes = array()) {
+          // Add file extension 'extension' with mime type 'mime/type'
+          $existing_mimes['ai'] = 'application/postscript';
+          $existing_mimes['psd'] = 'application/octet-stream';
 
-            return $existing_mimes;
-        }*/
+          return $existing_mimes;
+          } */
 
-        /*function modify_post_mime_types($post_mime_types) {
-            $post_mime_types['application/postscript'] = array(__('AIs'), __('Manage AIs'), _n_noop('AI <span class="count">(%s)</span>', 'AIs <span class="count">(%s)</span>'));
-            $post_mime_types['application/octet-stream'] = array(__('PSDs'), __('Manage PSDs'), _n_noop('PSD <span class="count">(%s)</span>', 'PSDs <span class="count">(%s)</span>'));
+        /* function modify_post_mime_types($post_mime_types) {
+          $post_mime_types['application/postscript'] = array(__('AIs'), __('Manage AIs'), _n_noop('AI <span class="count">(%s)</span>', 'AIs <span class="count">(%s)</span>'));
+          $post_mime_types['application/octet-stream'] = array(__('PSDs'), __('Manage PSDs'), _n_noop('PSD <span class="count">(%s)</span>', 'PSDs <span class="count">(%s)</span>'));
 
-            // then we return the $post_mime_types variable  
-            return $post_mime_types;
-        }*/
+          // then we return the $post_mime_types variable
+          return $post_mime_types;
+          } */
+
+        function check_for_force_download_file_request() {
+            if (isset($_GET['fdcpf'])) {
+                ob_start();
+                $requested_file = $_GET['fdcpf'];
+                $requested_file_obj = wp_check_filetype($requested_file);
+                header('Pragma: public');  // required
+                header('Expires: 0');  // no cache
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                //header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($requested_file)) . ' GMT'); //not possible via URL
+                header('Cache-Control: private', false);
+                header('Content-Type: ' . $requested_file_obj["type"]);
+                header('Content-Disposition: attachment; filename="' . basename($requested_file) . '"');
+                header('Content-Transfer-Encoding: binary');
+                //header('Content-Length: ' . filesize($requested_file)); // provide file size (not possible via URL)
+                header('Connection: close');
+                //readfile($requested_file);
+                echo wp_remote_retrieve_body(wp_remote_get($requested_file));
+                exit();
+            }
+        }
 
         function dynamic_wp_editor() {
             $id = 'editor_' . rand(0, 999) . rand(0, 999);
@@ -677,7 +701,7 @@ if (!class_exists('CoursePress')) {
 
             add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
             do_action('coursepress_add_menu_items_after_assessment');
-            
+
             /*
               add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
               do_action('coursepress_add_menu_items_after_instructors');
@@ -1075,7 +1099,7 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_script('jquery-ui-core');
             wp_enqueue_script('jquery-ui-tabs');
         }
-        
+
         function admin_coursepress_page_assessment() {
             wp_enqueue_style('assessment', $this->plugin_url . 'css/admin_coursepress_page_assessment.css');
             wp_enqueue_script('assessment-admin', $this->plugin_url . 'js/assessment-admin.js');
@@ -1083,8 +1107,6 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_script('jquery-ui-core');
             wp_enqueue_script('jquery-ui-tabs');
         }
-        
-        
 
         function admin_coursepress_page_students() {
             wp_enqueue_style('students', $this->plugin_url . 'css/admin_coursepress_page_students.css');

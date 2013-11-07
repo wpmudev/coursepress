@@ -1215,3 +1215,60 @@ div.levelinformation {
 .module-content label{
     font-weight: normal;
 }
+
+.audio_url_holder{
+    margin-top: 10px;
+}
+
+.audio_url_holder input.audio_url{
+    width: 90%;
+}
+
+.audio_url_holder input.audio_url_button{
+    width: 9%;
+}
+
+.audio_additional_controls label{
+    margin-top:10px;    
+    padding-bottom:5px;    
+}
+
+.video_url_holder{
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+.video_url_holder input.video_url{
+    width: 90%;
+}
+
+.video_url_holder input.video_url_button{
+    width: 9%;
+}
+
+.video_additional_controls label{
+    margin-top:10px;    
+    padding-bottom:5px;    
+}
+
+****
+
+.file_url_holder{
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+.file_url_holder input.file_url{
+    width: 90%;
+}
+
+.file_url_holder input.file_url_button{
+    width: 9%;
+}
+
+.file_additional_controls label{
+    margin-top:10px;    
+    padding-bottom:5px;    
+}
