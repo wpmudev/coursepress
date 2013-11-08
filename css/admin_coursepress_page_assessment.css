@@ -110,3 +110,72 @@
 .assessment .widefat td:first-child{
     padding: 4px 7px 2px;
 }*/
+
+.assessment-holder{
+    position: relative;
+    background-color: #fff;
+    border-color: #ddd;
+    border-width: 0 1px 1px;
+    border-style: none solid solid;
+    -moz-border-radius-bottomleft: 8px;
+    -moz-border-radius-bottomright: 8px;
+    -webkit-border-bottom-right-radius: 8px;
+    -webkit-border-bottom-left-radius: 8px;
+    -khtml-border-bottom-right-radius: 8px;
+    -khtml-border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 0;
+}
+
+.assesment-response-details{
+    padding:10px;
+}
+
+.assessment-response-wrap{
+    margin: 4px 0px 0 0;
+}
+
+
+h3 .response-response-name{
+    float: left;
+    width: 70%; 
+}
+
+h3 .response-student-info{
+    float: right;
+    display: block;
+    width: 29%;
+    text-align: right;
+}
+
+.module_response_description{
+
+}
+
+.assessment-holder label, .assesment-response-details label{
+    width: 100%;
+    color:#000;
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: block;
+}
+
+.regular-border-devider{
+    border-top: 1px solid #dfdfdf;
+    margin: 20px 10px 20px 0px;
+}
+
+.front_response_content{
+    border: 1px solid #ddd;
+    padding: 5px 10px 5px 10px;
+    background-color: #fcfcfc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 98%;
+}
+
+.module_textarea_response_answer .front_response_content{
+    max-height: 300px;
+    overflow-y: scroll;
+}

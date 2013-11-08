@@ -118,6 +118,11 @@ if (!class_exists('Unit_Module')) {
             }
         }
 
+        function get_module($module_id){
+            $module = get_post($module_id);
+            return $module;
+        }
+        
         function get_modules($unit_id) {
 
             $args = array(
@@ -177,6 +182,10 @@ if (!class_exists('Unit_Module')) {
             <?php
         }
 
+        function get_response_form(){
+            //module does not overwrite this method message?
+        }
+        
         function get_response(){
             
         }

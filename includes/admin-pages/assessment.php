@@ -4,7 +4,78 @@
 
     <?php
     if (isset($_GET['response_id'])) {
-        
+        $response_id = $_GET['response_id'];
+        $module_id = $_GET['module_id'];
+        $user_id = $_GET['user_id'];
+        $unit_id = $_GET['unit_id'];
+        ?>
+        <div class="assessment-response-wrap">
+            <form action="" name="assessment-response" method="post">
+
+                <?php wp_nonce_field('course_details_overview'); ?>
+                <input type="hidden" name="response_id" value="<?php echo $response_id; ?>">
+
+                <div id="edit-sub" class="assessment-holder-wrap">
+
+                    <?php
+                    $unit_module = new Unit_Module();
+                    $unit_module = $unit_module->get_module($module_id);
+                    $student = get_userdata($user_id);
+                    /*
+                     * $user_object = new Student($user->ID);
+
+                      $module = new Unit_Module();
+                      $modules = $module->get_modules($current_unit->ID);
+
+                      $input_modules_count = 0;
+
+                      foreach ($modules as $mod) {
+                      $class_name = $mod->module_type;
+                      $module = new $class_name();
+
+                      if ($module->front_save) {
+                     */
+                    ?>
+
+                    <div class="sidebar-name no-movecursor">
+                        <h3><span class="response-response-name"><?php echo $unit_module->post_title; ?></span><span class="response-student-info"><a href="admin.php?page=students&action=view&student_id=<?php echo $user_id; ?>"><?php echo $student->display_name; ?></a></span></h3>
+                    </div>
+
+                    <div class="assessment-holder">
+                        <div class="assesment-response-details">
+                            
+                            <?php if(isset($unit_module->post_content) && !empty($unit_module->post_content)){?>
+                            <div class="module_response_description">
+                                <label><?php _e('Description', 'cp'); ?></label>
+                                <?php echo $unit_module->post_content; ?>
+                            </div>
+
+                            <div class="full regular-border-devider"></div>
+                            <?php } ?>
+                            
+                            <?php 
+                            $mclass = $unit_module->module_type;
+                            $response = new $mclass();
+                            
+                            echo $response->get_response_form($user_id, $module_id);
+                            
+                            ?>
+                            <br clear="all">
+                        </div>
+
+                        <div class="buttons">
+                            <input type="submit" value="Update" class="button-primary">
+                            <a href="?page=course_details&amp;tab=units&amp;course_id=303" class="button-secondary">Add Units »</a> 
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <?php
+        /* ================================ARCHIVE============================== */
     } else {
         ?>
         <div class="tablenav">
@@ -243,7 +314,13 @@
                                                     </td>
 
                                                     <td class="<?php echo $style; ?>">
-                                                        <?php echo 'grade'; ?>
+                                                        <?php
+                                                        if (count($response) >= 1) {
+                                                            _e('Pending grade', 'cp');
+                                                        }else{
+                                                            _e('0%', 'cp');
+                                                        }
+                                                        ?>
                                                     </td>
 
                                                     <td class="<?php echo $style; ?>">
@@ -273,4 +350,5 @@
         ?>
 
     </div>
-<?php }//Regular (not view) ?>
+    <?php
+}//Regular (not view) ?>

@@ -209,22 +209,24 @@ if (!class_exists('CoursePress')) {
           } */
 
         function check_for_force_download_file_request() {
-            if (isset($_GET['fdcpf'])) {
+            if (isset($_GET['fdcpf'])) {           
                 ob_start();
-                $requested_file = $_GET['fdcpf'];
+     
+                require_once( $this->plugin_dir . 'includes/classes/class.encryption.php' );
+                $encryption = new CP_Encryption();
+                $requested_file = $encryption->decode($_GET['fdcpf']);
+
                 $requested_file_obj = wp_check_filetype($requested_file);
-                header('Pragma: public');  // required
-                header('Expires: 0');  // no cache
+                header('Pragma: public');
+                header('Expires: 0');
                 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                //header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($requested_file)) . ' GMT'); //not possible via URL
                 header('Cache-Control: private', false);
                 header('Content-Type: ' . $requested_file_obj["type"]);
                 header('Content-Disposition: attachment; filename="' . basename($requested_file) . '"');
                 header('Content-Transfer-Encoding: binary');
-                //header('Content-Length: ' . filesize($requested_file)); // provide file size (not possible via URL)
                 header('Connection: close');
-                //readfile($requested_file);
-                echo wp_remote_retrieve_body(wp_remote_get($requested_file));
+                
+                echo wp_remote_retrieve_body(wp_remote_get($requested_file), array('user-agent'  => $this->name.' / ' . $this->version . ';'));//readfile($requested_file);
                 exit();
             }
         }

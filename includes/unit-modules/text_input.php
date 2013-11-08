@@ -15,6 +15,28 @@ class text_input_module extends Unit_Module {
     function text_input_module() {
         $this->__construct();
     }
+    
+    function get_response_form($user_ID, $response_request_ID, $show_label = true) {
+        $response = $this->get_response($user_ID, $response_request_ID);
+        if (count($response >= 1)) {
+            ?>
+            <div class="module_text_response_answer">
+                <?php if ($show_label) { ?>
+                    <label><?php _e('Response', 'cp'); ?></label>
+                <?php } ?>
+                <div class="front_response_content">
+                    <?php echo nl2br($response->post_content); ?>
+                </div>
+            </div>
+
+            <?php
+        } else {
+            _e('No answer / response', 'cp');
+        }
+        ?>
+        <div class="full regular-border-devider"></div>
+        <?php
+    }
 
     function get_response($user_ID, $response_request_ID){
         $already_respond_posts_args = array(
@@ -45,7 +67,16 @@ class text_input_module extends Unit_Module {
         <div class="<?php echo $this->name; ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
-            <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
+            
+            
+            <?php if(count($response) >= 1 && trim($response->post_content) !== '') { ?>
+                <div class="front_response_content">
+                    <?php echo $response->post_content;?>
+                </div>
+                <?php }else{ ?>
+                    <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
+                <?php } ?>
+                    
         </div>
         <?php
     }

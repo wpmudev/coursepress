@@ -4,7 +4,7 @@ class file_module extends Unit_Module {
 
     var $name = 'file_module';
     var $label = 'File Download';
-    var $description = 'Allows adding files ready for download';
+    var $description = 'Allows adding encrypted links to files (URLs) and force download in browser.';
     var $front_save = false;
     var $response_type = '';
 
@@ -23,9 +23,17 @@ class file_module extends Unit_Module {
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
-            <?php if ($data->file_url != '') { ?>  
+            <?php
+            if ($data->file_url != '') {
+                global $coursepress;
+                
+                require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
+                $encryption = new CP_Encryption();
+
+                $data->file_url = $encryption->encode($data->file_url);
+                ?>  
                 <div class="file_holder">
-                    <a href="<?php echo trailingslashit(site_url()).'?fdcpf='.$data->file_url;?>" /><?php echo $data->post_title; ?></a> 
+                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo $data->post_title; ?></a> 
                 </div>
         <?php } ?>
         </div>
@@ -58,7 +66,7 @@ class file_module extends Unit_Module {
                         <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
-   
+
             </div>
 
         </div>

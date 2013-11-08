@@ -16,7 +16,29 @@ class textarea_input_module extends Unit_Module {
         $this->__construct();
     }
 
-    function get_response($user_ID, $response_request_ID){
+    function get_response_form($user_ID, $response_request_ID, $show_label = true) {
+        $response = $this->get_response($user_ID, $response_request_ID);
+        if (count($response >= 1)) {
+            ?>
+            <div class="module_textarea_response_answer">
+                <?php if ($show_label) { ?>
+                    <label><?php _e('Response', 'cp'); ?></label>
+                <?php } ?>
+                <div class="front_response_content">
+                    <?php echo nl2br($response->post_content); ?>
+                </div>
+            </div>
+
+            <?php
+        } else {
+            _e('No answer / response', 'cp');
+        }
+        ?>
+        <div class="full regular-border-devider"></div>
+        <?php
+    }
+
+    function get_response($user_ID, $response_request_ID) {
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'meta_key' => 'user_ID',
@@ -28,25 +50,27 @@ class textarea_input_module extends Unit_Module {
 
         $already_respond_posts = get_posts($already_respond_posts_args);
         $response = $already_respond_posts[0];
+
+        //$response->post_content = apply_filters('the_content', $response->post_content);
+
         return $response;
     }
-    
+
     function front_main($data) {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
-        
-        if(count($response) == 0){
-            $enabled = 'enabled';
-        }else{
-            $enabled = 'disabled';
-        }
-        
         ?>
         <div class="<?php echo $this->name; ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
             <div class="module_textarea_input">
-                <textarea <?php echo $enabled; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>"><?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?></textarea>
+                    <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
+                    <div class="front_response_content">
+                    <?php echo $response->post_content; ?>
+                    </div>
+                <?php } else { ?>
+                    <textarea class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>"></textarea>
+        <?php } ?>
             </div>
         </div>
         <?php
@@ -66,16 +90,16 @@ class textarea_input_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                <?php // if (!empty($data)) {    ?>
+                    <?php // if (!empty($data)) {        ?>
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
                     wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
                     ?>
                 </div>
-                <?php //}else{    ?>
+                <?php //}else{        ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-                <?php //}    ?>
+        <?php //}        ?>
             </div>
 
         </div>
