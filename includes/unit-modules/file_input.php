@@ -18,14 +18,14 @@ class file_input_module extends Unit_Module {
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         global $coursepress;
-        
+
         $response = $this->get_response($user_ID, $response_request_ID);
         if (count($response >= 1)) {
             require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
             $encryption = new CP_Encryption();
-            
+
             $file_extension = strtoupper(pathinfo($response->guid, PATHINFO_EXTENSION));
-            
+
             $response->guid = $encryption->encode($response->guid);
             ?>
             <div class="module_file_response_answer">
@@ -33,8 +33,10 @@ class file_input_module extends Unit_Module {
                     <label><?php _e('Uploaded File', 'cp'); ?></label>
                 <?php } ?>
                 <div class="front_response_content">
-                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' .$response->guid; ?>"><?php _e('Download file ', 'cp');
-            echo ' (' . $file_extension . ')'; ?></a>
+                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $response->guid; ?>"><?php
+                        _e('Download file ', 'cp');
+                        echo ' (' . $file_extension . ')';
+                        ?></a>
                 </div>
             </div>
 
@@ -96,16 +98,16 @@ class file_input_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                    <?php // if (!empty($data)) {       ?>
+                    <?php // if (!empty($data)) {         ?>
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
                     wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
                     ?>
                 </div>
-                <?php //}else{       ?>
+                <?php //}else{         ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-        <?php //}       ?>
+        <?php //}         ?>
             </div>
 
         </div>
@@ -115,6 +117,7 @@ class file_input_module extends Unit_Module {
 
     function on_create() {
         $this->save_module_data();
+        parent::additional_module_actions();
     }
 
     function save_module_data() {
@@ -181,7 +184,12 @@ class file_input_module extends Unit_Module {
                             );
 
                             $attach_id = wp_insert_attachment($attachment, $filename, $response_id);
+
+                            $unit_id = get_post_ancestors($response_id);
+                            $course_id = get_post_meta($unit_id[0], 'course_id', true);
+                            
                             update_post_meta($attach_id, 'user_ID', get_current_user_ID());
+                            update_post_meta($attach_id, 'course_id', $course_id);
                         } else {
                             ?>
                             <p class="form-info-red"><?php echo $movefile['error']; ?></p>

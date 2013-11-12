@@ -114,6 +114,7 @@ class text_input_module extends Unit_Module {
 
     function on_create() {
         $this->save_module_data();
+        parent::additional_module_actions();
     }
 
     function save_module_data() {

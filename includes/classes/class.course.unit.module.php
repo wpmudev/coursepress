@@ -72,8 +72,11 @@ if (!class_exists('Unit_Module')) {
         }
 
         function update_module_response($data) {
-            global $user_id, $wpdb;
-
+            global $user_id, $wpdb;          
+            
+            $unit_id = get_post_ancestors($data->response_id);
+            $course_id = get_post_meta($unit_id[0], 'course_id', true); 
+            
             $post = array(
                 'post_author' => $user_id,
                 'post_parent' => $data->response_id,
@@ -104,6 +107,8 @@ if (!class_exists('Unit_Module')) {
                 $post_id = wp_insert_post($post);
 
                 //Update post meta
+                $data->metas['course_id'] = $course_id;
+                
                 if ($post_id != 0) {
                     if (isset($data->metas)) {
                         foreach ($data->metas as $key => $value) {
@@ -113,16 +118,16 @@ if (!class_exists('Unit_Module')) {
                 }
 
                 return $post_id;
-            }else{
+            } else {
                 return false;
             }
         }
 
-        function get_module($module_id){
+        function get_module($module_id) {
             $module = get_post($module_id);
             return $module;
         }
-        
+
         function get_modules($unit_id) {
 
             $args = array(
@@ -182,14 +187,116 @@ if (!class_exists('Unit_Module')) {
             <?php
         }
 
-        function get_response_form(){
+        function get_module_response_comment_form($post_id) {
+            $post = get_post($post_id);
+            $settings = array(
+                'media_buttons' => false,
+                'textarea_rows' => 2,
+                'editor_class' => 'response_comment'
+            );
+            ?>
+            <label><?php _e('Comment', 'cp'); ?></label>
+            <?php
+            return wp_editor($post->response_comment, 'response_comment', $settings);
+        }
+
+        function additional_module_actions() {
+            $this->save_response_comment();
+            $this->save_response_grade();
+        }
+
+        function save_response_comment() {
+            if (isset($_POST['response_id']) && isset($_POST['response_comment']) && is_admin()) {
+                update_post_meta($_POST['response_id'], 'response_comment', $_POST['response_comment']);
+            }
+        }
+
+        function save_response_grade() {
+            if (isset($_POST['response_id']) && isset($_POST['response_grade']) && is_admin()) {
+                $grade_data = array(
+                    'grade' => $_POST['response_grade'],
+                    'instructor' => get_current_user_ID(),
+                    'time' => current_time('timestamp')
+                );
+
+                update_post_meta($_POST['response_id'], 'response_grade', $grade_data);
+                
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function get_response_grade($response_id, $data = '') {
+            $grade_data = get_post_meta($response_id, 'response_grade');
+            if ($data !== '') {
+                return $grade_data[0][$data];
+            } else {
+                return $grade_data[0];
+            }
+        }
+
+        function get_ungraded_response_count($course_id = '') {
+
+            if ($course_id == '') {
+
+                $args = array(
+                    'post_type' => array('module_reponse', 'attachment'),
+                    'post_status' => array('publish', 'inherit'),
+                    'posts_per_page' => -1,
+                    'meta_key' => 'course_id',
+                    'meta_value' => $course_id,
+                    'meta_query' => array(
+                        'relation' => 'AND',
+                        array(
+                            'key' => 'response_grade',
+                            'compare' => 'NOT EXISTS',
+                            'value' => ''
+                        )
+                    )
+                );
+
+                $ungraded_responses = get_posts($args);
+
+                return count($ungraded_responses);
+            } else {
+                
+                $args = array(
+                    'post_type' => array('module_reponse', 'attachment'),
+                    'post_status' => array('publish', 'inherit'),
+                    'posts_per_page' => -1,
+                    'meta_query' => array(
+                        'relation' => 'AND',
+                        array(
+                            'key' => 'response_grade',
+                            'compare' => 'NOT EXISTS',
+                            'value' => ''
+                        ),
+                        array(
+                            'key' => 'course_id',
+                            'value' => $course_id
+                        )
+                    )
+                );
+     
+                $ungraded_responses = get_posts($args);
+
+                return count($ungraded_responses);
+            }
+        }
+
+        function get_response_comment($response_id, $count = false) {
+            return get_post_meta($response_id, 'response_comment', true);
+        }
+
+        function get_response_form() {
             //module does not overwrite this method message?
         }
-        
-        function get_response(){
+
+        function get_response() {
             
         }
-        
+
         function on_create() {
             
         }

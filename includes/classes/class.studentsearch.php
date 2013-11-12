@@ -9,10 +9,12 @@ if (!class_exists('Student_Search')) {
 
         var $users_per_page = 25;
         var $search_errors = false;
+        var $additional_url_args = array();
 
-        function __construct($search_term = '', $page_num = '', $search_args = array()) {
-
-
+        function __construct($search_term = '', $page_num = '', $search_args = array(), $meta_args = array(), $additional_url_args = array()) {
+ 
+            $this->additional_url_args = $additional_url_args;
+            
             if (!empty($search_args['users_per_page']) && is_numeric($search_args['users_per_page'])) {
                 $this->users_per_page = $search_args['users_per_page'];
             }
@@ -30,6 +32,12 @@ if (!class_exists('Student_Search')) {
 
             $search_args['meta_key'] = (isset($search_args['meta_key']) ? $search_args['meta_key'] : '');
             $search_args['meta_value'] = (isset($search_args['meta_value']) ? $search_args['meta_value'] : '');
+            
+            if(!empty($meta_args)){
+                $meta_args['number'] = $this->users_per_page;
+                $meta_args['offset'] = ( $this->page_num - 1 ) * $this->users_per_page;
+                $args = $meta_args;
+            }
             
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
@@ -60,11 +68,11 @@ if (!class_exists('Student_Search')) {
         }
 
         function do_paging() {
-
+            
             $this->total_users_for_query = $this->get_total();
 
             if ($this->total_users_for_query > $this->users_per_page) { // pagination required
-                $args = array();
+                
                 if (!empty($this->search_term)) {
                     $args['s'] = urlencode($this->search_term);
                 }
@@ -80,6 +88,7 @@ if (!class_exists('Student_Search')) {
                     'format' => 'userspage=%#%',
                     'add_args' => $args
                 ));
+                
                 if ($this->paging_text) {
                     $this->paging_text = sprintf('<span class="displaying-num">' . __('Displaying %s&#8211;%s of %s', 'cp') . '</span>%s', number_format_i18n(( $this->page_num - 1 ) * $this->users_per_page + 1), number_format_i18n(min($this->page_num * $this->users_per_page, $this->total_users_for_query)), number_format_i18n($this->total_users_for_query), $this->paging_text
                     );
@@ -88,11 +97,13 @@ if (!class_exists('Student_Search')) {
         }
 
         function page_links() {
+            
+            
             $pagination = new CoursePress_Pagination();
             $pagination->Items($this->get_total());
             $pagination->limit($this->users_per_page);
             $pagination->parameterName = 'page_num';
-            $pagination->target("admin.php?page=students");
+            $pagination->target("admin.php?page=".(isset($_GET['page']) ? $_GET['page'] : 'students').'&'.http_build_query($this->additional_url_args));
             $pagination->currentPage($this->page_num);
             $pagination->nextIcon('&#9658;');
             $pagination->prevIcon('&#9668;');
