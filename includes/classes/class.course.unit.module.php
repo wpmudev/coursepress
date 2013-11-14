@@ -12,6 +12,7 @@ if (!class_exists('Unit_Module')) {
 
         function __construct() {
             $this->on_create();
+            $this->check_for_modules_to_delete();
         }
 
         function Unit_Module() {
@@ -54,7 +55,6 @@ if (!class_exists('Unit_Module')) {
 
             if (isset($data->ID) && $data->ID != '' && $data->ID != 0) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-                //echo 'post ID (update): ' . $post['ID'];
             }
 
             $post_id = wp_insert_post($post);
@@ -71,12 +71,24 @@ if (!class_exists('Unit_Module')) {
             return $post_id;
         }
 
+        function check_for_modules_to_delete() {
+            if (is_admin()) {
+                if (isset($_POST['modules_to_execute'])) {
+                    $modules_to_delete = $_POST['modules_to_execute'];
+                    foreach ($modules_to_delete as $module_to_delete) {
+                        //echo 'Module to delete:' . $module_to_delete . '<br />';
+                        wp_delete_post($module_to_delete, true);
+                    }
+                }
+            }
+        }
+
         function update_module_response($data) {
-            global $user_id, $wpdb;          
-            
+            global $user_id, $wpdb, $coursepress;
+
             $unit_id = get_post_ancestors($data->response_id);
-            $course_id = get_post_meta($unit_id[0], 'course_id', true); 
-            
+            $course_id = get_post_meta($unit_id[0], 'course_id', true);
+
             $post = array(
                 'post_author' => $user_id,
                 'post_parent' => $data->response_id,
@@ -84,7 +96,7 @@ if (!class_exists('Unit_Module')) {
                 'post_content' => (isset($data->content) ? $data->content : ''),
                 'post_status' => 'publish',
                 'post_title' => (isset($data->title) ? $data->title : ''),
-                'post_type' => (isset($data->post_type) ? $data->post_type : 'module_reponse'),
+                'post_type' => (isset($data->post_type) ? $data->post_type : 'module_response'),
             );
 
             if (isset($data->ID) && $data->ID != '' && $data->ID != 0) {
@@ -96,7 +108,7 @@ if (!class_exists('Unit_Module')) {
                 'posts_per_page' => 1,
                 'meta_key' => 'user_ID',
                 'meta_value' => get_current_user_id(),
-                'post_type' => (isset($data->post_type) ? $data->post_type : 'module_reponse'),
+                'post_type' => (isset($data->post_type) ? $data->post_type : 'module_response'),
                 'post_parent' => $data->response_id,
                 'post_status' => 'publish');
 
@@ -108,7 +120,7 @@ if (!class_exists('Unit_Module')) {
 
                 //Update post meta
                 $data->metas['course_id'] = $course_id;
-                
+
                 if ($post_id != 0) {
                     if (isset($data->metas)) {
                         foreach ($data->metas as $key => $value) {
@@ -117,6 +129,7 @@ if (!class_exists('Unit_Module')) {
                     }
                 }
 
+                //$coursepress->set_latest_activity(get_current_user_id());
                 return $post_id;
             } else {
                 return false;
@@ -152,8 +165,10 @@ if (!class_exists('Unit_Module')) {
 
             foreach ($modules as $mod) {
                 $class_name = $mod->module_type;
-                $module = new $class_name();
-                $module->admin_main($mod);
+                if (class_exists($class_name)) {
+                    $module = new $class_name();
+                    $module->admin_main($mod);
+                }
             }
         }
 
@@ -167,10 +182,12 @@ if (!class_exists('Unit_Module')) {
                 <?php
                 foreach ($modules as $mod) {
                     $class_name = $mod->module_type;
-                    $module = new $class_name();
-                    $module->front_main($mod);
-                    if ($module->front_save) {
-                        $front_save = true;
+                    if (class_exists($class_name)) {
+                        $module = new $class_name();
+                        $module->front_main($mod);
+                        if ($module->front_save) {
+                            $front_save = true;
+                        }
                     }
                 }
 
@@ -220,7 +237,7 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 update_post_meta($_POST['response_id'], 'response_grade', $grade_data);
-                
+
                 return true;
             } else {
                 return false;
@@ -241,7 +258,7 @@ if (!class_exists('Unit_Module')) {
             if ($course_id == '') {
 
                 $args = array(
-                    'post_type' => array('module_reponse', 'attachment'),
+                    'post_type' => array('module_response', 'attachment'),
                     'post_status' => array('publish', 'inherit'),
                     'posts_per_page' => -1,
                     'meta_key' => 'course_id',
@@ -260,9 +277,9 @@ if (!class_exists('Unit_Module')) {
 
                 return count($ungraded_responses);
             } else {
-                
+
                 $args = array(
-                    'post_type' => array('module_reponse', 'attachment'),
+                    'post_type' => array('module_response', 'attachment'),
                     'post_status' => array('publish', 'inherit'),
                     'posts_per_page' => -1,
                     'meta_query' => array(
@@ -278,11 +295,32 @@ if (!class_exists('Unit_Module')) {
                         )
                     )
                 );
-     
+
                 $ungraded_responses = get_posts($args);
 
                 return count($ungraded_responses);
             }
+        }
+
+        function get_module_delete_link($module_id) {
+            ?>
+            <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
+                                    jQuery(this).parent().parent().remove();
+                                    update_sortable_module_indexes();
+                                }
+                                ;"><?php _e('Delete');
+            echo $data->ID;
+            ?></a><!--href="admin.php?page=course_details&tab=units&course_id=<?php echo $_GET['course_id']; ?>&action=edit&unit_id=<?php echo $_GET['unit_id']; ?>&secondary_action=delete&module_id=<?php echo $data->ID; ?>"-->
+            <?php
+        }
+
+        function get_module_remove_link() {
+            ?>
+            <a class="remove_module_link" onclick="if (removeModule()) {
+                                    jQuery(this).parent().parent().remove();
+                                    update_sortable_module_indexes();
+                                }"><?php _e('Remove') ?></a>
+            <?php
         }
 
         function get_response_comment($response_id, $count = false) {

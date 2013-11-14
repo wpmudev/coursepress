@@ -67,7 +67,7 @@
                                 $grade = $grade_data['grade'];
                                 $instructor_id = $grade_data['instructor'];
                                 $instructor_name = get_userdata($instructor_id);
-                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($grade_data['time']));
+                                $grade_time = date_i18n(get_option('date_format').' '.get_option('time_format'), $grade_data['time']);
 
                                 if (!empty($grade)) {
                                     _e('Grade by ');
@@ -384,7 +384,7 @@
                                                             $grade = $grade_data['grade'];
                                                             $instructor_id = $grade_data['instructor'];
                                                             $instructor_name = get_userdata($instructor_id);
-                                                            $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($grade_data['time']));
+                                                            $grade_time = date_i18n(get_option('date_format').' '.get_option('time_format'), $grade_data['time']);
 
                                                             if (count($response) >= 1) {
                                                                 if ($grade_data) {

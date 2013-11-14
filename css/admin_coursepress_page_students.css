@@ -74,3 +74,19 @@
 .button-settings{
     margin-bottom: 10px;
 }
+
+.latest_activity{
+    display:block;
+    float:left;
+    width: 90%;
+}
+
+.activity_circle{
+    border-radius: 50%;
+    background: #BADA55;
+    width: 10px;
+    height: 10px;
+    display:block;
+    float: left;
+    margin-top: 3px;
+}

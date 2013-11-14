@@ -1,4 +1,6 @@
 <?php
+global $coursepress;
+
 $page = $_GET['page'];
 $s = (isset($_GET['s']) ? $_GET['s'] : '');
 
@@ -115,12 +117,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     "user_firstname" => __('First Name', 'cp'),
                     "user_lastname" => __('Surname', 'cp'),
                     "registration_date" => __('Registered', 'cp'),
+                    "latest_activity" => __('Latest Activity', 'cp'),
                     "courses" => __('Courses', 'cp'),
                     "edit" => __('Profile', 'cp'),
                 );
 
                 $col_sizes = array(
-                    '8', '15', '15', '20', '10', '7'
+                    '8', '10', '10', '15', '15', '10', '7'
                 );
 
                 if (current_user_can('coursepress_delete_students_cap')) {
@@ -165,6 +168,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
                                 <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
                                 <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
+                                <td <?php echo $style; ?>><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity): __('N/A', 'cp')); ?></span> <?php if($coursepress->user_is_currently_active($user_object->ID)){ ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp');?>"  title="<?php _e('User is currently active on the website', 'cp');?>"></a><?php } ?> </td>
                                 <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
                                 <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>

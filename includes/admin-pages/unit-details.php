@@ -50,7 +50,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
 <div class='wrap nocoursesub'>
 
     <div class='course-liquid-left'>
-        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" method="post">
+        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" id="unit-add" method="post">
             <input type="hidden" name="beingdragged" id="beingdragged" value="" />
             <div id='course-left'>
 
@@ -124,7 +124,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
     <div class='level-liquid-right'>
         <div class="level-holder-wrap">
             <?php
-            $sections = array("instructors" => __('Instructors', 'cp'), "students" => __('Students', 'cp'));
+            $sections = array("instructors" => __('Content building blocks', 'cp'), "students" => __('Students Responses', 'cp'));
 
             foreach ($sections as $key => $section) {
                 ?>

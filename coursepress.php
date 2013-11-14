@@ -123,6 +123,8 @@ if (!class_exists('CoursePress')) {
             //add_action('init', array(&$this, 'output_buffer'), 0);
             //Register custom post types
 
+            //add_action('init', array(&$this, 'pdf_report'), 0);
+            
             add_action('init', array(&$this, 'check_for_force_download_file_request'), 1);
 
             add_action('init', array(&$this, 'register_custom_posts'), 1);
@@ -190,6 +192,8 @@ if (!class_exists('CoursePress')) {
             if (get_option('display_menu_items', 1)) {
                 add_filter('wp_nav_menu_objects', array(&$this, 'main_navigation_links'), 10, 2);
             }
+
+            add_action('wp_login', array(&$this, 'set_latest_student_activity_uppon_login'), 10, 2);
         }
 
         /* function add_custom_upload_mimes($existing_mimes = array()) {
@@ -208,10 +212,18 @@ if (!class_exists('CoursePress')) {
           return $post_mime_types;
           } */
 
+        function set_latest_student_activity_uppon_login($user_login, $user) {
+            $this->set_latest_activity($user->data->ID);
+        }
+
+        function set_latest_activity($user_id) {
+            update_user_meta($user_id, 'latest_activity', current_time('timestamp'));
+        }
+
         function check_for_force_download_file_request() {
-            if (isset($_GET['fdcpf'])) {           
+            if (isset($_GET['fdcpf'])) {
                 ob_start();
-     
+
                 require_once( $this->plugin_dir . 'includes/classes/class.encryption.php' );
                 $encryption = new CP_Encryption();
                 $requested_file = $encryption->decode($_GET['fdcpf']);
@@ -225,8 +237,8 @@ if (!class_exists('CoursePress')) {
                 header('Content-Disposition: attachment; filename="' . basename($requested_file) . '"');
                 header('Content-Transfer-Encoding: binary');
                 header('Connection: close');
-                
-                echo wp_remote_retrieve_body(wp_remote_get($requested_file), array('user-agent'  => $this->name.' / ' . $this->version . ';'));//readfile($requested_file);
+
+                echo wp_remote_retrieve_body(wp_remote_get($requested_file), array('user-agent' => $this->name . ' / ' . $this->version . ';')); //readfile($requested_file);
                 exit();
             }
         }
@@ -307,6 +319,8 @@ if (!class_exists('CoursePress')) {
 
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+
+                $this->set_latest_activity(get_current_user_id());
             }
 
             /* Show Units archive template */
@@ -356,6 +370,7 @@ if (!class_exists('CoursePress')) {
                     $pg = new CoursePress_Virtual_Page($args);
                     do_shortcode('[course_units_loop]');
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
 
             /* Show Unit single template */
@@ -390,6 +405,7 @@ if (!class_exists('CoursePress')) {
 
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
         }
 
@@ -701,13 +717,20 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array(&$this, 'coursepress_students_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
 
-            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp'), 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
+            $main_module = new Unit_Module();
+            $count = $main_module->get_ungraded_response_count();
+
+            if ($count == 0) {
+                $count_output = '';
+            } else {
+                $count_output = '&nbsp;<span class="update-plugins"><span class="updates-count count-' . $count . '">' . $count . '</span></span>';
+            }
+
+            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp') . $count_output, 'coursepress_assessment_cap', 'assessment', array(&$this, 'coursepress_assessment_admin'));
             do_action('coursepress_add_menu_items_after_assessment');
 
-            /*
-              add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
-              do_action('coursepress_add_menu_items_after_instructors');
-             */
+            add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
+            do_action('coursepress_add_menu_items_after_reports');
 
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
             do_action('coursepress_add_menu_items_after_settings');
@@ -814,7 +837,7 @@ if (!class_exists('CoursePress')) {
                 'query_var' => true
             );
 
-            register_post_type('module_reponse', $args);
+            register_post_type('module_response', $args);
 
             do_action('after_custom_post_types');
         }
@@ -992,7 +1015,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function coursepress_reports_admin() {
-            //include_once($this->plugin_dir . 'includes/admin-pages/reports.php');
+            include_once($this->plugin_dir . 'includes/admin-pages/reports.php');
         }
 
         function coursepress_settings_admin() {
@@ -1068,7 +1091,9 @@ if (!class_exists('CoursePress')) {
                 'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
                 'unenroll_student_alert' => __('Please confirm that you want to un-enroll student from this course. If you un-enroll, you will no longer be able to see student\'s records for this course.', 'cp'),
                 'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp'),
-                'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0)
+                'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),
+                'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
+                'remove_module_alert' => __('Please confirm that you want to remove selected module?', 'cp'),
             ));
         }
 
@@ -1150,6 +1175,7 @@ if (!class_exists('CoursePress')) {
 
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
 
             //Custom signup page
@@ -1170,6 +1196,7 @@ if (!class_exists('CoursePress')) {
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
 
             //Student Dashboard page
@@ -1190,6 +1217,7 @@ if (!class_exists('CoursePress')) {
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
 
             //Student Settings page
@@ -1211,6 +1239,7 @@ if (!class_exists('CoursePress')) {
 
                     $pg = new CoursePress_Virtual_Page($args);
                 }
+                $this->set_latest_activity(get_current_user_id());
             }
         }
 
@@ -1394,6 +1423,71 @@ if (!class_exists('CoursePress')) {
               $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '/units/#comment-' . $comment->comment_ID;
               } */
             return $link;
+        }
+
+        function user_is_currently_active($user_id, $latest_activity_in_minutes = 5) {
+            if (empty($user_id)) {
+                exit;
+            }
+            $latest_user_activity = get_user_meta($user_id, 'latest_activity', true);
+            $current_time = current_time('timestamp');
+
+            $minutes_ago = round(abs($current_time - $latest_user_activity) / 60, 2);
+
+            if ($minutes_ago <= $latest_activity_in_minutes) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function pdf_report($report = '') {
+            ob_end_clean();
+            ob_start();
+            require_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php');
+            require_once( $this->plugin_dir . 'includes/external/tcpdf/tcpdf.php');
+
+            // create new PDF document
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+            // set document information
+            $pdf->SetCreator($this->name);
+            $pdf->SetTitle(__('Student Report', 'cp'));
+            $pdf->SetKeywords('');
+
+            // remove default header/footer
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+            //set margins
+            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+            //set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+            //set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+            //set some language-dependent strings
+            $pdf->setLanguageArray($l);
+            // ---------------------------------------------------------
+            // set font
+            $pdf->SetFont('helvetica', '', 14);
+            // add a page
+            $pdf->AddPage();
+            $html = '';
+            $html .= make_clickable(wpautop($report));
+            // output the HTML content
+            $pdf->writeHTML($html, true, false, true, false, '');
+            //Close and output PDF document
+            ob_end_clean();
+            $pdf->Output('xyz', 'D');
+            exit;
         }
 
     }

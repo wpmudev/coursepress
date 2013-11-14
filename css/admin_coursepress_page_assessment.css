@@ -179,3 +179,43 @@ h3 .response-student-info{
     max-height: 300px;
     overflow-y: scroll;
 }
+
+.assessment-holder .buttons{
+    text-align: right;
+    margin-right: 10px;
+    float: right;
+    width: 100%;
+}
+
+.assessment-holder .buttons p{
+    padding-top: 0px;
+    float: right;
+    width: 10%;
+    min-width: 120px;
+}
+
+.assessment-holder #response_grade{
+    float: right;
+    width: 10%;
+    min-width: 120px;
+    margin-top: 5px;
+}
+
+.additional_grade_info{
+    width: 30%;
+    min-width: 200px;
+    float: left;
+    text-align: left;
+    margin-left: 30px;
+    margin-top: 15px;
+}
+
+td.less_visible_row{
+    color:#ddd !important;
+}
+
+.ungraded{
+    padding-top: 5px;
+    float: left;
+    margin-left: 20px;
+}

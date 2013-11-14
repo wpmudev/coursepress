@@ -120,6 +120,61 @@ if (!class_exists('Student')) {
             }
         }
 
+        function get_number_of_responses($course_id) {
+            $args = array(
+                'post_type' => array('module_response', 'attachment'),
+                'post_status' => array('publish', 'inherit'),
+                'meta_query' => array(
+                    array(
+                        'key' => 'user_ID',
+                        'value' => $this->ID
+                    ),
+                    array(
+                        'key' => 'course_ID',
+                        'value' => $course_id
+                    ),
+                )
+            );
+
+            return count(get_posts($args));
+        }
+
+        function get_avarage_response_grade($course_id) {
+            $args = array(
+                'post_type' => array('module_response', 'attachment'),
+                'post_status' => array('publish', 'inherit'),
+                'meta_query' => array(
+                    array(
+                        'key' => 'user_ID',
+                        'value' => $this->ID
+                    ),
+                    array(
+                        'key' => 'course_ID',
+                        'value' => $course_id
+                    ),
+                )
+            );
+
+            $posts = get_posts($args);
+            $graded_responses = 0;
+            $total_grade = 0;
+
+            foreach ($posts as $post) {
+                if (isset($post->response_grade['grade']) && is_numeric($post->response_grade['grade'])) {
+                    $total_grade = $total_grade + (int) $post->response_grade['grade'];
+                    $graded_responses++;
+                }
+            }
+
+            if ($total_grade >= 1) {
+                $avarage_grade = round(($total_grade / $graded_responses), 2);
+            }else{
+                $avarage_grade = 0;
+            }
+
+            return $avarage_grade;
+        }
+
         function update_student_data($student_data) {
             if (wp_update_user($student_data)) {
                 return true;

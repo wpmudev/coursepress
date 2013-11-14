@@ -30,14 +30,13 @@ class audio_module extends Unit_Module {
                     <?php
                     $attr = array(
                         'src' => $data->audio_url,
-                        'loop' => (checked( $data->loop, 'Yes', false ) ? 'on' : ''),
-                        'autoplay' => (checked( $data->autoplay, 'Yes', false ) ? 'on' : ''),
+                        'loop' => (checked($data->loop, 'Yes', false) ? 'on' : ''),
+                        'autoplay' => (checked($data->autoplay, 'Yes', false) ? 'on' : ''),
                     );
                     echo wp_audio_shortcode($attr);
-                    
                     ?>
                 </div>
-        <?php } ?>
+            <?php } ?>
         </div>
         <?php
     }
@@ -51,11 +50,11 @@ class audio_module extends Unit_Module {
         $supported_audio_extensions = implode(",", wp_get_audio_extensions());
 
         if (!empty($data)) {
-            
+
             if (!isset($data->autoplay) or empty($data->autoplay)) {
                 $data->autoplay = 'No';
             }
-            
+
             if (!isset($data->loop) or empty($data->loop)) {
                 $data->loop = 'No';
             }
@@ -64,10 +63,13 @@ class audio_module extends Unit_Module {
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></h3>
+            <h3 class="module-title sidebar-name">
+                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></span>
+            </h3>
 
             <div class="module-content">
-                <input type="hidden" name="module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? get_post_meta($data->ID, 'module_order', true) : 999); ?>" />
+                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
                 <label><?php _e('Title', 'cp'); ?>
@@ -87,17 +89,17 @@ class audio_module extends Unit_Module {
                         <input class="audio_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
-                
+
                 <div class="audio_additional_controls">
                     <label><?php _e('Play in a loop', 'cp'); ?></label>
-                        <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked( $data->loop, 'Yes', true ); ?>> Yes<br>
-                        <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked( $data->loop, 'No', true ); ?>> No<br>
-                    
-                    
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data->loop, 'Yes', true); ?>> Yes<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data->loop, 'No', true); ?>> No<br>
+
+
                     <label><?php _e('Autoplay', 'cp'); ?></label>
-                        <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked( $data->autoplay, 'Yes', true ); ?>> Yes<br>
-                        <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked( $data->autoplay, 'No', true ); ?>> No<br>
-                    
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data->autoplay, 'Yes', true); ?>> Yes<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data->autoplay, 'No', true); ?>> No<br>
+
                 </div>
 
             </div>
@@ -135,7 +137,7 @@ class audio_module extends Unit_Module {
                         $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST['module_order'][$key];
+                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                         $data->metas['audio_url'] = $_POST[$this->name . '_audio_url'][$key];
                         $data->metas['autoplay'] = $_POST[$this->name . '_autoplay'][$key];
                         $data->metas['loop'] = $_POST[$this->name . '_loop'][$key];

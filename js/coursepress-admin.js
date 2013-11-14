@@ -20,6 +20,7 @@ function coursepress_modules_ready() {
         },
         stop: function(event, ui) {
             //jQuery('input#beingdragged').val('');
+
         }
     });
 
@@ -33,6 +34,7 @@ function coursepress_modules_ready() {
             jQuery('.modules_accordion').html(cloned + jQuery('.modules_accordion').html());
 
             var data = '';
+
             jQuery.post('admin-ajax.php?action=dynamic_wp_editor', data, function(response) {
                 jQuery('#modules_accordion .editor_to_place').html(response);
             });
@@ -74,7 +76,9 @@ function coursepress_modules_ready() {
             jQuery('.modules_accordion').accordion("refresh");
 
             moving = jQuery('input#beingdragged').val();
+
             if (moving != '') {
+
                 /*
                  jQuery('#main-' + moving).prependTo('#' + ruleplace + '-holder');
                  jQuery('#' + moving).hide();
@@ -83,6 +87,9 @@ function coursepress_modules_ready() {
                  jQuery('#main-' + moving).removeClass('closed').addClass('open');
                  */
             }
+            jQuery('.module_order').each(function(i, obj) {
+                jQuery(this).val(i + 1);
+            });
         }
     });
 
@@ -110,6 +117,40 @@ function unenroll_student_confirmed() {
 
 function unenrollStudent() {
     if (unenroll_student_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function remove_module_confirmed() {
+    return confirm(coursepress.remove_module_alert);
+}
+
+function removeModule() {
+    if (remove_module_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function delete_module_confirmed() {
+    return confirm(coursepress.delete_module_alert);
+}
+
+function prepare_module_for_execution(module_to_execute_id) {
+    jQuery('<input>').attr({
+        type: 'hidden',
+        name: 'modules_to_execute[]',
+        value: module_to_execute_id
+    }).appendTo('#unit-add');
+}
+
+
+function deleteModule(module_to_execute_id) {
+    if (delete_module_confirmed()) {
+        prepare_module_for_execution(module_to_execute_id);
         return true;
     } else {
         return false;
@@ -152,6 +193,9 @@ function removeInstructor(instructor_id) {
 }
 
 jQuery(document).ready(function() {
+
+
+
     jQuery('#enroll_type').change(function() {
         var enroll_type = jQuery("#enroll_type").val();
         if (enroll_type == 'passcode') {
@@ -193,7 +237,8 @@ jQuery(document).ready(function() {
 
         jQuery("#modules_accordion").accordion({
             heightStyle: "content",
-            header: "> div > h3"
+            header: "> div > h3",
+            //active: ".remove_module_link"
         }).sortable({
             axis: "y",
             stop: function(event, ui) {
@@ -209,6 +254,7 @@ jQuery(document).ready(function() {
         jQuery('.module_order').each(function(i, obj) {
             jQuery(this).val(i + 1);
         });
+
     }
 
 
@@ -220,5 +266,21 @@ jQuery(document).ready(function() {
             jQuery('#all_course_dates').show(500);
         }
     });
+
+
+    //capture the click on the a tag
+    /*   jQuery("#modules_accordion div h3 a").click(function() {
+     alert(jQuery(this).attr('href'));
+     
+     if (jQuery(this).attr('href') == 'remove') {
+     jQuery(this).parent('.module-holder-title').remove();
+     } else {
+     window.location = jQuery(this).attr('href');
+     }
+     
+     return false;
+     });*/
+
+
 
 });

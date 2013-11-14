@@ -43,7 +43,7 @@ class textarea_input_module extends Unit_Module {
             'posts_per_page' => 1,
             'meta_key' => 'user_ID',
             'meta_value' => $user_ID,
-            'post_type' => 'module_reponse',
+            'post_type' => 'module_response',
             'post_parent' => $response_request_ID,
             'post_status' => 'publish'
         );
@@ -64,13 +64,13 @@ class textarea_input_module extends Unit_Module {
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
             <div class="module_textarea_input">
-                    <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
+                <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
                     <div class="front_response_content">
-                    <?php echo $response->post_content; ?>
+                        <?php echo $response->post_content; ?>
                     </div>
                 <?php } else { ?>
                     <textarea class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>"></textarea>
-        <?php } ?>
+                <?php } ?>
             </div>
         </div>
         <?php
@@ -81,16 +81,19 @@ class textarea_input_module extends Unit_Module {
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></h3>
+            <h3 class="module-title sidebar-name">
+                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></span>
+            </h3>
 
             <div class="module-content">
-                <input type="hidden" name="module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? get_post_meta($data->ID, 'module_order', true) : 999); ?>" />
+                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                    <?php // if (!empty($data)) {        ?>
+                <?php // if (!empty($data)) {        ?>
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
@@ -99,7 +102,7 @@ class textarea_input_module extends Unit_Module {
                 </div>
                 <?php //}else{        ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-        <?php //}        ?>
+                <?php //}        ?>
             </div>
 
         </div>
@@ -135,7 +138,7 @@ class textarea_input_module extends Unit_Module {
                         $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST['module_order'][$key];
+                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                         parent::update_module($data);
                     }
                 }
@@ -159,7 +162,7 @@ class textarea_input_module extends Unit_Module {
                         $data->content = '';
                         $data->metas = array();
                         $data->metas['user_ID'] = get_current_user_id();
-                        $data->post_type = 'module_reponse';
+                        $data->post_type = 'module_response';
                         $data->response_id = $response_id;
                         $data->title = ''; //__('Response to '.$response_id.' module (Unit '.$_POST['unit_id'].')');
                         $data->content = $response_value;

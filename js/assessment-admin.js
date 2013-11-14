@@ -4,15 +4,25 @@ jQuery(document).ready(function($) {
     });
 });
 
-
-
 jQuery(function() {
     // bind change event to select
     jQuery('#dynamic_courses').bind('change', function() {
-        var url = jQuery(this).val(); // get selected value
-        if (url && url != '') { // require a URL
-            window.location = url; // redirect
-        }
-        return false;
+        jQuery('#dynamic_classes').val('all');
+        jQuery("#course-filter").submit();
     });
+
+    jQuery('#dynamic_classes').bind('change', function() {
+        jQuery("#course-filter").submit();
+    });
+
+
+    jQuery('#ungraded').bind('change', function() {
+        if (jQuery('#ungraded').is(':checked')) {
+            jQuery('#ungraded').val('yes');
+        } else {
+            jQuery('#ungraded').val('no');
+        }
+        jQuery("#course-filter").submit();
+    });
+
 });
