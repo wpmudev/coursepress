@@ -2,7 +2,7 @@
 $plugins = get_option('active_plugins');
 $required_plugin = 'wordpress-chat/wordpress-chat.php';
 
-if (in_array($required_plugin, $plugins)) {
+if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
 
     class chat_module extends Unit_Module {
 

@@ -548,4 +548,12 @@ if (!function_exists('cp_write_log')) {
     }
 
 }
+
+if (!function_exists('is_plugin_network_active')) {
+
+    function is_plugin_network_active($plugin_file) {
+        return ( array_key_exists($plugin_file, maybe_unserialize(get_site_option('active_sitewide_plugins'))) );
+    }
+
+}
 ?>

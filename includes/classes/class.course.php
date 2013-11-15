@@ -43,6 +43,26 @@ if (!class_exists('Course')) {
             }
         }
 
+        
+        function get_course_by_marketpress_product_id($marketpress_product_id) {
+
+            $args = array(
+                'post_type' => 'course',
+                'post_status' => 'any',
+                'meta_key' => 'marketpress_product',
+                'meta_value' => $marketpress_product_id,
+                'posts_per_page' => 1
+            );
+
+            $post = get_posts($args);
+
+            if ($post) {
+                return $post[0];
+            } else {
+                return false;
+            }
+        }
+        
         function get_course_id_by_name($slug) {
 
             $args = array(
@@ -206,7 +226,7 @@ if (!class_exists('Course')) {
             }
             return get_permalink($course_id);
         }
-        
+
         function get_permalink_to_do($course_id = '') {
             global $course_slug;
             global $units_slug;
@@ -234,6 +254,34 @@ if (!class_exists('Course')) {
 
             $wp_user_search = new WP_User_Query($args);
             return count($wp_user_search->get_results());
+        }
+
+        function show_purchase_form($product_id) {
+            echo do_shortcode('[mp_product_meta product_id="' . $product_id . '"]');
+        }
+
+        function is_user_purchased_course($product_id, $user_id) {
+            global $mp;
+
+            $args = array(
+                'author' => $user_id,
+                'post_type' => 'mp_order',
+                'post_status' => 'order_paid',
+                'posts_per_page' => '-1'
+            );
+
+            $purchases = get_posts($args);
+
+            foreach ($purchases as $purchase) {
+
+                $purchase_records = $mp->get_order($purchase->ID);
+
+                if (array_key_exists($product_id, $purchase_records->mp_cart_info)) {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
     }

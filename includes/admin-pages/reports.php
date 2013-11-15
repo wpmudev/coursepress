@@ -5,7 +5,7 @@ $unit_module_main = new Unit_Module();
 $page = $_GET['page'];
 $s = (isset($_GET['s']) ? $_GET['s'] : '');
 
-if(isset($_GET['action']) && $_GET['action'] == 'report'){
+if (isset($_GET['action']) && $_GET['action'] == 'report') {
     $report_content = '<div>A content goes here!</div>';
     $coursepress->pdf_report($report_content);
 }
@@ -87,16 +87,16 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
 
             <div class="alignleft actions">
         <?php if (current_user_can('coursepress_unenroll_students_cap') || current_user_can('coursepress_delete_students_cap')) { ?>
-                        <select name="action">
-                            <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
+                                        <select name="action">
+                                            <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
             <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
-                                    <option value="delete"><?php _e('Delete', 'cp'); ?></option>
+                                                                    <option value="delete"><?php _e('Delete', 'cp'); ?></option>
             <?php } ?>
             <?php if (current_user_can('coursepress_unenroll_students_cap')) { ?>
-                                    <option value="unenroll"><?php _e('Unenroll from all courses', 'cp'); ?></option>
+                                                                    <option value="unenroll"><?php _e('Unenroll from all courses', 'cp'); ?></option>
             <?php } ?>
-                        </select>
-                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'membership'); ?>" />
+                                        </select>
+                                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'membership'); ?>" />
         <?php } ?>
             </div>
 
@@ -209,94 +209,105 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         '8', '10', '10', '10', '10', '5'//, '15'
     );
     ?>
-
-    <table cellspacing="0" class="widefat fixed shadow-table">
-        <thead>
-            <tr>
-                <th style="" class="manage-column column-cb check-column" width="1%" id="cb" scope="col"><input type="checkbox"></th>
-                <?php
-                $n = 0;
-                foreach ($columns as $key => $col) {
-                    ?>
-                    <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+    <form method="post" id="generate-report">
+        <table cellspacing="0" class="widefat fixed shadow-table">
+            <thead>
+                <tr>
+                    <th style="" class="manage-column column-cb check-column" width="1%" id="cb" scope="col"><input type="checkbox"></th>
                     <?php
-                    $n++;
+                    $n = 0;
+                    foreach ($columns as $key => $col) {
+                        ?>
+                        <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                        <?php
+                        $n++;
+                    }
+                    ?>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php
+                $style = '';
+
+                //search for students
+                if (isset($_GET['classes'])) {
+                    $classes = $_GET['classes'];
+                } else {
+                    $classes = 'all';
+                }
+
+                if ($classes !== 'all') {
+                    $args = array(
+                        'meta_query' => array(
+                            array(
+                                'key' => 'enrolled_course_class_' . $current_course_id,
+                                'value' => $classes,
+                            ))
+                    );
+                } else {
+                    $args = array(
+                        'meta_query' => array(
+                            array(
+                                'key' => 'enrolled_course_class_' . $current_course_id
+                            ))
+                    );
+                }
+
+                $additional_url_args = array();
+                $additional_url_args['course_id'] = $current_course_id;
+                $additional_url_args['classes'] = urlencode($classes);
+
+                $student_search = new Student_Search('', $page_num, array(), $args, $additional_url_args);
+
+                foreach ($student_search->get_results() as $user) {
+
+                    $user_object = new Student($user->ID);
+                    $roles = $user_object->roles;
+                    $role = array_shift($roles);
+
+                    $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                    ?>
+                    <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
+                        <th scope='row' class='check-column'>
+                            <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
+                        </th>
+                        <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
+                        <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
+                        <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
+
+                        <td <?php echo $style; ?>><?php echo $user_object->get_number_of_responses($current_course_id); ?></td>
+                        <td <?php echo $style; ?>><?php echo $user_object->get_avarage_response_grade($current_course_id) . '%'; ?></td>
+                        <td <?php echo $style; ?>><a href="?page=reports&action=report&student_id=<?php echo $user_object->ID; ?>&course_id=<?php echo $current_course_id; ?>&unit_id=YYY" class="pdf">&nbsp;</a></td>
+                    </tr>
+
+                    <?php
                 }
                 ?>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php
-            $style = '';
-
-            //search for students
-            if (isset($_GET['classes'])) {
-                $classes = $_GET['classes'];
-            } else {
-                $classes = 'all';
-            }
-
-            if ($classes !== 'all') {
-                $args = array(
-                    'meta_query' => array(
-                        array(
-                            'key' => 'enrolled_course_class_' . $current_course_id,
-                            'value' => $classes,
-                        ))
-                );
-            } else {
-                $args = array(
-                    'meta_query' => array(
-                        array(
-                            'key' => 'enrolled_course_class_' . $current_course_id
-                        ))
-                );
-            }
-
-            $additional_url_args = array();
-            $additional_url_args['course_id'] = $current_course_id;
-            $additional_url_args['classes'] = urlencode($classes);
-
-            $student_search = new Student_Search('', $page_num, array(), $args, $additional_url_args);
-
-            foreach ($student_search->get_results() as $user) {
-
-                $user_object = new Student($user->ID);
-                $roles = $user_object->roles;
-                $role = array_shift($roles);
-
-                $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-                ?>
-                <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
-                    <th scope='row' class='check-column'>
-                        <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
-                    </th>
-                    <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
-                    <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
-                    <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
-
-                    <td <?php echo $style; ?>><?php echo $user_object->get_number_of_responses($current_course_id); ?></td>
-                    <td <?php echo $style; ?>><?php echo $user_object->get_avarage_response_grade($current_course_id).'%'; ?></td>
-                    <td <?php echo $style; ?>><a href="?page=reports&action=report&student_id=<?php echo $user_object->ID; ?>&course_id=<?php echo $current_course_id;?>&unit_id=YYY" class="pdf">&nbsp;</a></td>
-                </tr>
-
                 <?php
-            }
-            ?>
-            <?php
-            if (count($wp_user_search->get_results()) == 0) {
+                if (count($wp_user_search->get_results()) == 0) {
+                    ?>
+                    <tr><td colspan="8"><div class="zero"><?php _e('No students found.', 'cp'); ?></div></td></tr>
+                    <?php
+                }
                 ?>
-                <tr><td colspan="8"><div class="zero"><?php _e('No students found.', 'cp'); ?></div></td></tr>
-                <?php
-            }
-            ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-    <div class="tablenav">
-        <div class="tablenav-pages"><?php $student_search->page_links(); ?></div>
-    </div><!--/tablenav-->
+        <div class="tablenav">
+            <div class="alignleft actions">
+                <select name="units">
+                    <option value="all" selected="selected"><?php _e('All Units') ?></option>
+                    <option value="edit" class="hide-if-no-js">Edit</option>
+                    <option value="trash">Move to Trash</option>
+                </select>
+                <?php submit_button('Generate Report', 'primary', 'generate_report_button', false); ?>
+            </div>
+            
+            <div class="tablenav-pages"><?php $student_search->page_links(); ?></div>
+
+        </div><!--/tablenav-->
+    </form>
 
 
 

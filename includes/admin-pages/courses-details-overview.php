@@ -1,5 +1,6 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice;
+global $coursepress;
 
 if (isset($_GET['course_id'])) {
     $course = new Course($_GET['course_id']);
@@ -41,6 +42,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
     $open_ended_course = $course->details->open_ended_course;
+    $marketpress_product = $course->details->marketpress_product;
     //$allow_course_discussion = $course->details->allow_course_discussion;
 } else {
     $class_size = 0;
@@ -51,6 +53,7 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = '';
     $enrollment_end_date = '';
     $open_ended_course = 'off';
+    $marketpress_product = '';
     //$allow_course_discussion = 'off';
 }
 ?>
@@ -192,7 +195,7 @@ if (isset($_GET['course_id'])) {
                                     <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
                                 </div>
                             </div><!--/all-course-dates-->
-                            
+
                             <!--<div class="full border-devider">
                                 <label><?php _e('Allow Course Discussion', 'cp'); ?>
                                     <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
@@ -266,15 +269,51 @@ if (isset($_GET['course_id'])) {
                             }
                             ?>
 
-                        <?php }else{
-                            if(coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0){//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                            <?php
+                        } else {
+                            if (coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
                                 _e('You do not have required permissions to assign instructors to a course.', 'cp');
                             }
-                        } ?>
+                        }
+                        ?>
 
                     </div>
                 </div>
             </div> <!-- course-holder-wrap -->
+
+            <?php
+            
+            if ($coursepress->is_marketpress_active()) {
+                ?>
+                <div class="course-holder-wrap">
+
+                    <div class="sidebar-name no-movecursor">
+                        <h3><?php _e('MarketPress Integration', 'cp'); ?></h3>
+                    </div>
+
+                    <div class="level-holder" id="sidebar-levels">
+                        <div class='sidebar-inner'>
+                            <?php _e('Choose MarketPress product which represents this course (only for paid courses):'); ?>
+                            <select name="meta_marketpress_product" id="meta_marketpress_product">
+                                <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
+                                <?php
+                                global $post;
+                                $args = array(
+                                    'numberposts' => -1,
+                                    'post_type' => 'product'
+                                );
+                                $posts = get_posts($args);
+                                foreach ($posts as $post) {
+                                    setup_postdata($post);
+                                    ?>
+                                    <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
+                                <?php } ?>
+                            </select>
+
+                        </div>
+                    </div>
+                </div> <!-- course-holder-wrap -->
+            <?php } ?>
 
         </div> <!-- course-liquid-right -->
     </form>

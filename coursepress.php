@@ -122,9 +122,8 @@ if (!class_exists('CoursePress')) {
             //Output buffer hack
             //add_action('init', array(&$this, 'output_buffer'), 0);
             //Register custom post types
-
             //add_action('init', array(&$this, 'pdf_report'), 0);
-            
+
             add_action('init', array(&$this, 'check_for_force_download_file_request'), 1);
 
             add_action('init', array(&$this, 'register_custom_posts'), 1);
@@ -194,6 +193,8 @@ if (!class_exists('CoursePress')) {
             }
 
             add_action('wp_login', array(&$this, 'set_latest_student_activity_uppon_login'), 10, 2);
+
+            add_action('mp_order_paid', array(&$this, 'listen_for_paid_status_for_courses'));
         }
 
         /* function add_custom_upload_mimes($existing_mimes = array()) {
@@ -253,7 +254,7 @@ if (!class_exists('CoursePress')) {
                 //init quicktags
 
                 /*quicktags({id:<?php echo $id; ?>});
-                             
+                 
                  //init tinymce
                  tinyMCE.init({
                  theme : "advanced",
@@ -261,7 +262,7 @@ if (!class_exists('CoursePress')) {
                  buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
                  // other options here
                  });
-                             
+                 
                  tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
                  //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
             </script>
@@ -488,7 +489,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_rewrite_rules() {
-            flush_rewrite_rules();
+            //flush_rewrite_rules();
         }
 
         function flush_rewrite_rules() {
@@ -1244,6 +1245,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_for_get_actions() {
+            
             if (isset($_GET['unenroll']) && is_numeric($_GET['unenroll'])) {
                 $student = new Student(get_current_user_id());
                 $student->unenroll_from_course($_GET['unenroll']);
@@ -1439,6 +1441,33 @@ if (!class_exists('CoursePress')) {
             } else {
                 return false;
             }
+        }
+
+        function is_marketpress_active() {
+            $plugins = get_option('active_plugins');
+            $required_plugin = 'marketpress/marketpress.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function listen_for_paid_status_for_courses($order) {
+            global $mp;
+            
+            $purchase_order = $mp->get_order($order->ID);
+            $product_id = key($purchase_order->mp_cart_info);
+            
+            $course = new Course();
+            $course_details = $course->get_course_by_marketpress_product_id($product_id);
+
+            if ($course_details && !empty($course_details)) {
+                $student = new Student($order->post_author);
+                $student->enroll_in_course($course_details->ID);
+            }
+
         }
 
         function pdf_report($report = '') {

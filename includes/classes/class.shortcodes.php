@@ -126,7 +126,12 @@ if (!class_exists('CoursePress_Shortcodes')) {
             }
 
             if ($field == 'price') {
-                $course->price = 'FREE';
+                global $coursepress;
+                if (isset($course->marketpress_product) && $course->marketpress_product != '' && $coursepress->is_marketpress_active()) {
+                    echo do_shortcode('[mp_product_price product_id="'.$course->marketpress_product.'" label=""]');
+                } else {
+                    $course->price = __('FREE', 'cp');
+                }
             }
 
             if ($field == 'button') {
@@ -217,7 +222,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $imageTags = $doc->getElementsByTagName('img');
 
             $content = '';
-            
+
             foreach ($imageTags as $tag) {
                 $avatar_url = $tag->getAttribute('src');
             }
@@ -489,7 +494,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 // redefine your own textarea (the comment body)
                 'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
             );
-            
+
             $defaults = array(
                 'author_email' => '',
                 'ID' => '',
