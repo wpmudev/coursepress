@@ -309,7 +309,7 @@ if (!class_exists('Unit_Module')) {
                                     update_sortable_module_indexes();
                                 }
                                 ;"><?php _e('Delete');
-            echo $data->ID;
+            //echo $data->ID;
             ?></a><!--href="admin.php?page=course_details&tab=units&course_id=<?php echo $_GET['course_id']; ?>&action=edit&unit_id=<?php echo $_GET['unit_id']; ?>&secondary_action=delete&module_id=<?php echo $data->ID; ?>"-->
             <?php
         }

@@ -63,6 +63,7 @@
     height: 16px;
     display: block;
     margin-left: 12px;
+    cursor: pointer;
 }
 
 .widefat td{

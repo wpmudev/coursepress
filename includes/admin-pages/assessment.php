@@ -67,7 +67,7 @@
                                 $grade = $grade_data['grade'];
                                 $instructor_id = $grade_data['instructor'];
                                 $instructor_name = get_userdata($instructor_id);
-                                $grade_time = date_i18n(get_option('date_format').' '.get_option('time_format'), $grade_data['time']);
+                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
 
                                 if (!empty($grade)) {
                                     _e('Grade by ');
@@ -262,7 +262,7 @@
                             $additional_url_args['course_id'] = $current_course_id;
                             $additional_url_args['classes'] = urlencode($classes);
                             $additional_url_args['ungraded'] = (isset($_GET['ungraded']) ? $_GET['ungraded'] : 'no');
-                            
+
                             $student_search = new Student_Search('', $page_num, array(), $args, $additional_url_args);
                             ?>
                             <div id="tabs-<?php echo $i; ?>">
@@ -311,11 +311,11 @@
 
                                         foreach ($modules as $mod) {
                                             $class_name = $mod->module_type;
-                                            $module = new $class_name();
-
-                                            if ($module->front_save) {
-
-                                                $input_modules_count++;
+                                            if (class_exists($class_name)) {
+                                                $module = new $class_name();
+                                                if ($module->front_save) {
+                                                    $input_modules_count++;
+                                                }
                                             }
                                         }
 
@@ -323,109 +323,112 @@
 
                                         foreach ($modules as $mod) {
                                             $class_name = $mod->module_type;
-                                            $module = new $class_name();
 
-                                            if ($module->front_save) {
-                                                $response = $module->get_response($user_object->ID, $mod->ID);
-                                                $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
+                                            if (class_exists($class_name)) {
+                                                $module = new $class_name();
 
-                                                $grade_data = $unit_module_main->get_response_grade($response->ID);
+                                                if ($module->front_save) {
+                                                    $response = $module->get_response($user_object->ID, $mod->ID);
+                                                    $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
 
-                                                if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
-                                                    if (count($response) >= 1 && !$grade_data) {
-                                                        $general_col_visibility = true;
+                                                    $grade_data = $unit_module_main->get_response_grade($response->ID);
+
+                                                    if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
+                                                        if (count($response) >= 1 && !$grade_data) {
+                                                            $general_col_visibility = true;
+                                                        } else {
+                                                            $general_col_visibility = false;
+                                                        }
                                                     } else {
-                                                        $general_col_visibility = false;
-                                                    }
-                                                } else {
-                                                    $general_col_visibility = true;
-                                                }
-                                                ?>
-                                                <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; ?>">
-                                                    <?php if ($current_row == 0) { ?>
-                                                        <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
-                                                            <span class="uppercase block"><?php echo $user_object->last_name; ?></span>
-                                                            <?php echo $user_object->first_name; ?>
-                                                        </td>
-                                                        <?php
+                                                        $general_col_visibility = true;
                                                     }
                                                     ?>
-                                                    <?php
-                                                    if ($general_col_visibility) {
+                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; ?>">
+                                                        <?php if ($current_row == 0) { ?>
+                                                            <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
+                                                                <span class="uppercase block"><?php echo $user_object->last_name; ?></span>
+                                                                <?php echo $user_object->first_name; ?>
+                                                            </td>
+                                                            <?php
+                                                        }
                                                         ?>
-                                                        <td class = "<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php echo $module->label;
+                                                        <?php
+                                                        if ($general_col_visibility) {
                                                             ?>
-                                                        </td>
-
-                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php echo $mod->post_title; ?>
-                                                        </td>
-
-                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
-                                                        </td>
-
-                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php
-                                                            if (count($response) >= 1) {
+                                                            <td class = "<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                <?php echo $module->label;
                                                                 ?>
-                                                                <a class="assessment-view-response-link" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $current_unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
+                                                            </td>
 
+                                                            <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                <?php echo $mod->post_title; ?>
+                                                            </td>
+
+                                                            <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                                            </td>
+
+                                                            <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
-
-                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php
-                                                            $grade = $grade_data['grade'];
-                                                            $instructor_id = $grade_data['instructor'];
-                                                            $instructor_name = get_userdata($instructor_id);
-                                                            $grade_time = date_i18n(get_option('date_format').' '.get_option('time_format'), $grade_data['time']);
-
-                                                            if (count($response) >= 1) {
-                                                                if ($grade_data) {
+                                                                if (count($response) >= 1) {
                                                                     ?>
-                                                                    <a class="response_grade" alt="<?php
-                                                                    _e('Grade by ');
-                                                                    echo $instructor_name->display_name;
-                                                                    _e(' on ' . $grade_time);
-                                                                    ?>" title="<?php
-                                                                       _e('Grade by ');
-                                                                       echo $instructor_name->display_name;
-                                                                       _e(' on ' . $grade_time);
-                                                                       ?>"><?php echo $grade; ?>%</a>
-                                                                       <?php
-                                                                   } else {
-                                                                       _e('Pending grade', 'cp');
-                                                                   }
-                                                               } else {
-                                                                   echo '-';
-                                                               }
-                                                               ?>
-                                                        </td>
+                                                                    <a class="assessment-view-response-link" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $current_unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
 
-                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                            <?php
-                                                            $comment = $unit_module_main->get_response_comment($response->ID);
-
-                                                            if ($comment) {
+                                                                    <?php
+                                                                } else {
+                                                                    echo '-';
+                                                                }
                                                                 ?>
-                                                                <a class="response_comment" alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>">✓</a>
+                                                            </td>
+
+                                                            <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php
-                                                            } else {
-                                                                echo '-';
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                    <?php }//general col visibility  ?>
-                                                </tr>
-                                                <?php
+                                                                $grade = $grade_data['grade'];
+                                                                $instructor_id = $grade_data['instructor'];
+                                                                $instructor_name = get_userdata($instructor_id);
+                                                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+
+                                                                if (count($response) >= 1) {
+                                                                    if ($grade_data) {
+                                                                        ?>
+                                                                        <a class="response_grade" alt="<?php
+                                                                        _e('Grade by ');
+                                                                        echo $instructor_name->display_name;
+                                                                        _e(' on ' . $grade_time);
+                                                                        ?>" title="<?php
+                                                                           _e('Grade by ');
+                                                                           echo $instructor_name->display_name;
+                                                                           _e(' on ' . $grade_time);
+                                                                           ?>"><?php echo $grade; ?>%</a>
+                                                                           <?php
+                                                                       } else {
+                                                                           _e('Pending grade', 'cp');
+                                                                       }
+                                                                   } else {
+                                                                       echo '-';
+                                                                   }
+                                                                   ?>
+                                                            </td>
+
+                                                            <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                <?php
+                                                                $comment = $unit_module_main->get_response_comment($response->ID);
+
+                                                                if ($comment) {
+                                                                    ?>
+                                                                    <a class="response_comment" alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>">✓</a>
+                                                                    <?php
+                                                                } else {
+                                                                    echo '-';
+                                                                }
+                                                                ?>
+                                                            </td>
+                                                        <?php }//general col visibility  ?>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                $current_row++;
                                             }
-                                            $current_row++;
                                         }
                                     }
 

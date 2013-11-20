@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.2 b
+  Version: 0.9.5 b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.2 b';
+        var $version = '0.9.5 b';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -163,7 +163,12 @@ if (!class_exists('CoursePress')) {
             add_filter('post_type_link', array(&$this, 'check_for_valid_post_type_permalinks'), 10, 3);
 
             add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
+            //add_filter('comment_reply_link', array(&$this, 'get_comment_link'), 10, 3);
+
+
             add_filter('comments_template', array(&$this, 'comments_template'));
+
+            add_filter('comment_post_redirect', array(&$this, 'redirect_after_comment'));
 
             //add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
             // Add Filter Hook  
@@ -212,6 +217,10 @@ if (!class_exists('CoursePress')) {
           // then we return the $post_mime_types variable
           return $post_mime_types;
           } */
+
+        function redirect_after_comment($location) {
+            return $_SERVER["HTTP_REFERER"];
+        }
 
         function set_latest_student_activity_uppon_login($user_login, $user) {
             $this->set_latest_activity($user->data->ID);
@@ -1095,6 +1104,7 @@ if (!class_exists('CoursePress')) {
                 'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),
                 'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
                 'remove_module_alert' => __('Please confirm that you want to remove selected module?', 'cp'),
+                'remove_row' => __('Remove', 'cp')
             ));
         }
 
@@ -1245,7 +1255,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_for_get_actions() {
-            
+
             if (isset($_GET['unenroll']) && is_numeric($_GET['unenroll'])) {
                 $student = new Student(get_current_user_id());
                 $student->unenroll_from_course($_GET['unenroll']);
@@ -1379,15 +1389,16 @@ if (!class_exists('CoursePress')) {
 
 
                 if (get_post_type($post_id) == 'virtual_page') {
-                    return false;
+                    return true;
                 }
-                /* if (get_post_type($post_id) == 'course') {
-                  if (get_permalink($post_id) != curPageURL()) {
-                  return true;
-                  } else {
-                  return false; //we want to have separate page to show comments
-                  }
-                  } */
+
+                if (get_post_type($post_id) == 'course') {
+                    if (get_permalink($post_id) != curPageURL()) {
+                        return true;
+                    } else {
+                        return false; //we want to have separate page to show comments
+                    }
+                }
 
                 if (get_post_type($post_id) == 'unit') {
                     return false;
@@ -1418,12 +1429,18 @@ if (!class_exists('CoursePress')) {
         }
 
         function get_comment_link($link, $comment, $args) {
-            if (get_post_type($comment->comment_post_ID) == 'unit') {
-                $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '#comment-' . $comment->comment_ID;
-                return $link;
-            }/* else if (get_post_type($comment->comment_post_ID) == 'course') {
-              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '/units/#comment-' . $comment->comment_ID;
+            /* if (get_post_type($comment->comment_post_ID) == 'unit') {
+              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '#comment-' . $comment->comment_ID;
+              return $link;
+              } else if (get_post_type($comment->comment_post_ID) == 'course') {
+              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . 'units/#comment-' . $comment->comment_ID;
               } */
+
+            if (get_post_type($comment->comment_post_ID) == 'course') {
+                //COURSE PERMA IS NEEDED HERE
+                $link = trailingslashit(get_permalink($comment->comment_post_ID)) . $this->get_units_slug() . '/#comment-' . $comment->comment_ID;
+            }
+
             return $link;
         }
 
@@ -1453,13 +1470,24 @@ if (!class_exists('CoursePress')) {
                 return false;
             }
         }
+        
+        function is_chat_plugin_active(){
+            $plugins = get_option('active_plugins');
+            $required_plugin = 'wordpress-chat/wordpress-chat.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         function listen_for_paid_status_for_courses($order) {
             global $mp;
-            
+
             $purchase_order = $mp->get_order($order->ID);
             $product_id = key($purchase_order->mp_cart_info);
-            
+
             $course = new Course();
             $course_details = $course->get_course_by_marketpress_product_id($product_id);
 
@@ -1467,10 +1495,9 @@ if (!class_exists('CoursePress')) {
                 $student = new Student($order->post_author);
                 $student->enroll_in_course($course_details->ID);
             }
-
         }
 
-        function pdf_report($report = '') {
+        function pdf_report($report = '', $report_name = '', $report_title = 'Student Report', $preview = false) {
             ob_end_clean();
             ob_start();
             require_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php');
@@ -1481,7 +1508,7 @@ if (!class_exists('CoursePress')) {
 
             // set document information
             $pdf->SetCreator($this->name);
-            $pdf->SetTitle(__('Student Report', 'cp'));
+            $pdf->SetTitle($report_title);
             $pdf->SetKeywords('');
 
             // remove default header/footer
@@ -1506,7 +1533,7 @@ if (!class_exists('CoursePress')) {
             $pdf->setLanguageArray($l);
             // ---------------------------------------------------------
             // set font
-            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetFont('helvetica', '', 12);
             // add a page
             $pdf->AddPage();
             $html = '';
@@ -1515,7 +1542,11 @@ if (!class_exists('CoursePress')) {
             $pdf->writeHTML($html, true, false, true, false, '');
             //Close and output PDF document
             ob_end_clean();
-            $pdf->Output('xyz', 'D');
+            if ($preview) {
+                $pdf->Output($report_name, 'I');
+            } else {
+                $pdf->Output($report_name, 'D');
+            }
             exit;
         }
 

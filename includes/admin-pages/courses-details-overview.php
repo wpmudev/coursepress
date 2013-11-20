@@ -19,6 +19,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
         $_POST['meta_open_ended_course'] = 'off';
     }
 
+    if (!isset($_POST['meta_allow_course_discussion'])) {
+        $_POST['meta_allow_course_discussion'] = 'off';
+    }
+
     $new_post_id = $course->update_course();
 
     if ($new_post_id != 0) {
@@ -33,28 +37,30 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 }
 
 if (isset($_GET['course_id'])) {
-//$course_marking_type = $course->details->course_marking_type; //get_post_meta($course_id, 'course_marking_type', true);
+    //$course_marking_type = $course->details->course_marking_type; //get_post_meta($course_id, 'course_marking_type', true);
     $class_size = $course->details->class_size;
     $enroll_type = $course->details->enroll_type;
     $passcode = $course->details->passcode;
+    $prerequisite = $course->details->prerequisite;
     $course_start_date = $course->details->course_start_date;
     $course_end_date = $course->details->course_end_date;
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
     $open_ended_course = $course->details->open_ended_course;
     $marketpress_product = $course->details->marketpress_product;
-    //$allow_course_discussion = $course->details->allow_course_discussion;
+    $allow_course_discussion = $course->details->allow_course_discussion;
 } else {
     $class_size = 0;
     $enroll_type = '';
     $passcode = '';
+    $prerequisite = '';
     $course_start_date = '';
     $course_end_date = '';
     $enrollment_start_date = '';
     $enrollment_end_date = '';
     $open_ended_course = 'off';
     $marketpress_product = '';
-    //$allow_course_discussion = 'off';
+    $allow_course_discussion = 'off';
 }
 ?>
 
@@ -118,17 +124,6 @@ if (isset($_GET['course_id'])) {
                             ?>
                             <br/>
 
-                            <!--<div class="half">
-                                <label for='meta_course_marking_type'><?php _e('Marking Type', 'cp'); ?></label>
-
-                                <select class="wide" name="meta_course_marking_type" id="course_marking_type">
-                                    <option value="percentages" <?php echo ($course_marking_type == 'percentages' ? 'selected=""' : '') ?>><?php _e('Percentages', 'cp'); ?></option>
-                                    <option value="grade" <?php echo ($course_marking_type == 'grade' ? 'selected=""' : '') ?>><?php _e('Grade', 'cp'); ?></option>
-                                </select>
-
-                            </div>-->
-
-
                             <div class="half">
                                 <label for='meta_class-size'><?php _e('Class size', 'cp'); ?></label>
                                 <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
@@ -143,11 +138,39 @@ if (isset($_GET['course_id'])) {
                                 <select class="wide" name="meta_enroll_type" id="enroll_type">
                                     <option value="anyone" <?php echo ($enroll_type == 'anyone' ? 'selected=""' : '') ?>><?php _e(' Anyone ', 'cp'); ?></option>
                                     <option value="passcode" <?php echo ($enroll_type == 'passcode' ? 'selected=""' : '') ?>><?php _e('Anyone with a pass code', 'cp'); ?></option>
+                                    <option value="prerequisite" <?php echo ($enroll_type == 'prerequisite' ? 'selected=""' : '') ?>><?php _e('Anyone who fulfil prerequisite (course)', 'cp'); ?></option>
                                     <option value="manually" <?php echo ($enroll_type == 'manually' ? 'selected=""' : '') ?>><?php _e('Manually added only', 'cp'); ?></option>
                                 </select>
 
                             </div>
 
+                            <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
+                                <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
+                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));     ?>" />-->
+                                <select name="meta_prerequisite">
+
+                                    <?php
+                                    $args = array(
+                                        'post_type' => 'course',
+                                        'post_status' => 'any',
+                                        'posts_per_page' => -1,
+                                        'exclude' => $course_id
+                                    );
+
+                                    $pre_courses = get_posts($args);
+
+                                    foreach ($pre_courses as $pre_course) {
+
+                                        $pre_course_obj = new Course($pre_course->ID);
+                                        $pre_course_object = $pre_course_obj->get_course();
+                                        ?>
+                                        <option value="<?php echo $pre_course->ID; ?>" <?php selected($prerequisite, $pre_course->ID, true); ?>><?php echo $pre_course->post_title; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                                <p class="description"><?php _e('Students will need to fulfil prerequisite in order to enroll', 'cp'); ?></p>
+                            </div>
 
                             <div class="half" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?></label>
@@ -196,13 +219,15 @@ if (isset($_GET['course_id'])) {
                                 </div>
                             </div><!--/all-course-dates-->
 
-                            <!--<div class="full border-devider">
+                            <br clear="all" />
+
+                            <div class="full border-devider">
                                 <label><?php _e('Allow Course Discussion', 'cp'); ?>
                                     <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
                                 </label>
 
                                 <p class="description"><?php _e('If checked, students can post comments and follow discussion within the course.', 'cp') ?></p>
-                            </div>-->
+                            </div>
 
                             <br clear="all" />
 
@@ -282,7 +307,6 @@ if (isset($_GET['course_id'])) {
             </div> <!-- course-holder-wrap -->
 
             <?php
-            
             if ($coursepress->is_marketpress_active()) {
                 ?>
                 <div class="course-holder-wrap">
@@ -314,6 +338,31 @@ if (isset($_GET['course_id'])) {
                     </div>
                 </div> <!-- course-holder-wrap -->
             <?php } ?>
+
+            <div class="course-holder-wrap">
+
+                <div class="sidebar-name no-movecursor">
+                    <h3><?php _e('Course Image', 'cp'); ?></h3>
+                </div>
+
+                <div class="level-holder" id="sidebar-levels">
+                    <div class='sidebar-inner'>
+                        <div class="featured_url_holder">
+                            <?php _e('Browse for an image.', 'cp'); ?>
+                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
+                            <input class="featured_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
+                            <?php
+                            //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
+                            echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                            echo get_post_meta($course_id, '_thumbnail_id', true);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- course-holder-wrap -->
+
+
 
         </div> <!-- course-liquid-right -->
     </form>

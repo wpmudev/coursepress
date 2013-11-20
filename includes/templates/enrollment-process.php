@@ -32,7 +32,7 @@ if (current_user_can('student')) {
                 if ($course_price == 0) {//Course is FREE
                     //Enroll student in
                     if ($student->enroll_in_course($course_id)) {
-                        printf(__('Congratulations, you have successfully enrolled in "<strong>%s</strong>" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), $course->details->post_title);
+                        printf(__('Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), '<strong>'.$course->details->post_title.'</strong>');
                     } else {
                         _e('Something went wrong during the enrollment process. Please try again later.', 'cp');
                     }
@@ -40,7 +40,7 @@ if (current_user_can('student')) {
                     if ($course->is_user_purchased_course($course->details->marketpress_product, get_current_user_ID())) {
                         //Enroll student in
                         if ($student->enroll_in_course($course_id)) {
-                            printf(__('Congratulations, you have successfully enrolled in "<strong>%s</strong>" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), $course->details->post_title);
+                            printf(__('Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), '<strong>'.$course->details->post_title.'</strong>');
                         } else {
                             _e('Something went wrong during the enrollment process. Please try again later.', 'cp');
                         }

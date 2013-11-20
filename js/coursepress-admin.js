@@ -209,6 +209,19 @@ jQuery(document).ready(function() {
         }
     });
 
+    jQuery('#enroll_type').change(function() {
+        var enroll_type = jQuery("#enroll_type").val();
+        if (enroll_type == 'prerequisite') {
+            jQuery("#enroll_type_prerequisite_holder").css({
+                'display': 'block'
+            });
+        } else {
+            jQuery("#enroll_type_prerequisite_holder").css({
+                'display': 'none'
+            });
+        }
+    });
+
     jQuery('#add-instructor-trigger').click(function() {
         var instructor_id = jQuery('#instructors option:selected').val();
 
@@ -284,3 +297,71 @@ jQuery(document).ready(function() {
 
 
 });
+
+
+jQuery(document).ready(function()
+{
+    jQuery('.featured_url_button').click(function()
+    {
+
+        var target_url_field = jQuery(this).prevAll(".featured_url:first");
+
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            jQuery(target_url_field).val(attachment.url);
+            jQuery('#thumbnail_id').val(attachment.id);
+
+        };
+
+        wp.media.editor.open(this);
+        return false;
+    });
+});
+
+
+var ct = 2;
+
+function radio_new_link()
+{
+    radio_addRow();
+    jQuery('#r' + ct + 'td1').html('<input class="radio_answer" type="text" name="radio_input_module_radio_answers[]" /><input class="radio_answer_check" type="radio" name="radio_input_module_radio_answers_check[]" />');
+    if (ct >= 3) {
+        jQuery('#r' + ct + 'td4').html('<a href="javascript:radio_removeElement(\'items\',\'r' + ct + '\');">' + coursepress.remove_row + '</a>');
+    } else {
+        jQuery('#r' + ct + 'td4').html('');
+    }
+}
+
+function radio_removeElement(parentDiv, childDiv) {
+    if (childDiv == parentDiv) {
+        //alert("The parent div cannot be removed.");
+    }
+    else if (document.getElementById(childDiv)) {
+        var child = document.getElementById(childDiv);
+        var parent = document.getElementById(parentDiv);
+        parent.removeChild(child);
+    }
+    else {
+        //alert("Child div has already been removed or does not exist.");
+        //return false;
+    }
+}
+
+
+function radio_addRow() {
+    ct++;
+    var r = document.createElement('tr');
+    r.setAttribute('id', 'r' + ct);
+
+    var ca = document.createElement('td');
+    ca.setAttribute('id', 'r' + ct + 'td1');
+
+    var cd = document.createElement('td');
+    cd.setAttribute('id', 'r' + ct + 'td4');
+
+    var t = document.getElementById('items');
+
+    r.appendChild(ca);
+    r.appendChild(cd);
+    t.appendChild(r);
+}

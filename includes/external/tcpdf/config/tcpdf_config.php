@@ -95,14 +95,14 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	* For WPMUDEV. Move cache up into a safe download directory
 	*/
-	$kpmc = dirname(dirname(dirname(dirname(plugin_dir_path(__FILE__)))))  .  '/download-temp/receipts/';
+	/*$kpmc = dirname(dirname(dirname(dirname(plugin_dir_path(__FILE__)))))  .  '/download-temp/receipts/';
 	define ('K_PATH_CACHE', $kpmc);
 
 	/**
 	 * cache directory for temporary files (url path)
 	 */
-	$kpuc = dirname(dirname(dirname(dirname(plugin_dir_url(__FILE__)))))  .  '/download-temp/receipts/';
-	define ('K_PATH_URL_CACHE', $kpuc);
+	/*$kpuc = dirname(dirname(dirname(dirname(plugin_dir_url(__FILE__)))))  .  '/download-temp/receipts/';
+	define ('K_PATH_URL_CACHE', $kpuc);*/
 
 	/**
 	 *images directory
@@ -122,7 +122,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * page orientation (P=portrait, L=landscape)
 	 */
-	define ('PDF_PAGE_ORIENTATION', 'P');
+	define ('PDF_PAGE_ORIENTATION', 'L');
 
 	/**
 	 * document creator

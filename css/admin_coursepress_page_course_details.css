@@ -901,6 +901,7 @@ div.course-details {
 .course-holder div select {
     margin-bottom: 10px;
     margin-top: 0;
+    max-width: 390px;
 }
 
 input.wide, textarea.wide {
@@ -1266,6 +1267,21 @@ div.levelinformation {
     width: 9%;
 }
 
+
+.featured_url_holder{
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+.featured_url_holder input.featured_url{
+    width: 70%;
+}
+
+.featured_url_holder input.featured_url_button{
+    width: 25%;
+}
+
 .file_additional_controls label{
     margin-top:10px;    
     padding-bottom:5px;    
@@ -1287,4 +1303,14 @@ a.delete_module_link:hover, a.remove_module_link:hover {
 
 #meta_marketpress_product{
     margin-top: 20px;
+}
+
+.radio_answer_check{
+    float: left;
+    width: 10% !important;
+}
+
+.radio_answer{
+    float: left;
+    width: 90% !important;
 }

@@ -30,7 +30,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
             add_shortcode('course_discussion', array(&$this, 'course_discussion'));
-            add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
+            //add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
 
 
             $GLOBALS['units_breadcrumbs'] = '';
@@ -62,8 +62,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'field' => 'course_start_date'
                             ), $atts));
 
-            $course = new Course($course_id);
-            $course = $course->get_course();
+            $course_obj = new Course($course_id);
+            $course = $course_obj->get_course();
 
             if ($field == 'action_links') {
 
@@ -86,6 +86,9 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($field == 'class_size') {
                 if ($course->class_size == '0' || $course->class_size == '') {
                     $course->class_size = __('Infinite', 'cp');
+                } else {
+                    $count_left = $course->class_size - $course_obj->get_number_of_students();
+                    $course->class_size = $course->class_size . ' ' . sprintf(__('(%d left)', 'cp'), $count_left);
                 }
             }
 
@@ -97,6 +100,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 if ($course->enroll_type == 'passcode') {
                     $course->enroll_type = __('Anyone with a Passcode', 'cp');
                     $passcode_box_visible = true;
+                }
+
+                if ($course->enroll_type == 'prerequisite') {
+                    $course->init_enroll_type = 'prerequisite';
+                    $course->enroll_type = sprintf(__('Anyone who attanded to the %1s', 'cp'), '<a href="' . get_permalink($course->prerequisite) . '">' . __('prerequisite course', 'cp') . '</a>'); //__('Anyone who attended to the ', 'cp');
                 }
             }
 
@@ -128,7 +136,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($field == 'price') {
                 global $coursepress;
                 if (isset($course->marketpress_product) && $course->marketpress_product != '' && $coursepress->is_marketpress_active()) {
-                    echo do_shortcode('[mp_product_price product_id="'.$course->marketpress_product.'" label=""]');
+                    echo do_shortcode('[mp_product_price product_id="' . $course->marketpress_product . '" label=""]');
                 } else {
                     $course->price = __('FREE', 'cp');
                 }
@@ -141,23 +149,31 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 if (current_user_can('student')) {
 
                     if (!$student->user_enrolled_in_course($course_id)) {
-                        if ($course->enroll_type != 'manually') {
-                            if (strtotime($course->course_end_date) <= time() && $course->open_ended_course == 'off') {//Course is no longer active
-                                $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
-                            } else {
-                                if (($course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime($course->enrollment_start_date) <= time() && strtotime($course->enrollment_end_date) >= time()) || $course->open_ended_course == 'on') {
-                                    $course->button .= '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
-                                    $course->button .= '<div class="passcode-box">' . do_shortcode('[course_details field="passcode_input"]') . '</div>';
+                        if (!$course_obj->is_populated()) {
+                            if ($course->enroll_type != 'manually') {
+                                if (strtotime($course->course_end_date) <= time() && $course->open_ended_course == 'off') {//Course is no longer active
+                                    $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
                                 } else {
-                                    if (strtotime($course->enrollment_end_date) <= time()) {
-                                        $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                                    if (($course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime($course->enrollment_start_date) <= time() && strtotime($course->enrollment_end_date) >= time()) || $course->open_ended_course == 'on') {
+                                        if (($course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course($course->prerequisite)) || $course->init_enroll_type !== 'prerequisite') {
+                                            $course->button .= '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
+                                            $course->button .= '<div class="passcode-box">' . do_shortcode('[course_details field="passcode_input"]') . '</div>';
+                                        }else{
+                                            $course->button .= '<span class="apply-button-finished">' . __('Prerequisite Required', 'cp') . '</span>';
+                                        }
                                     } else {
-                                        $course->button .= '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                                        if (strtotime($course->enrollment_end_date) <= time()) {
+                                            $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                                        } else {
+                                            $course->button .= '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
+                                        }
                                     }
                                 }
+                            } else {
+                                //don't show any button because public enrollments are disabled with manuall enroll type
                             }
                         } else {
-                            //don't show any button because public enrollments are disabled with manuall enroll type
+                            $course->button .= '<span class="apply-button-finished">' . __('Populated', 'cp') . '</span>';
                         }
                     } else {
                         if (($course->course_start_date !== '' && $course->course_end_date !== '') || $course->open_ended_course == 'on') {//Course is currently active
@@ -177,19 +193,24 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         }
                     }
                 } else {
+
                     if ($course->enroll_type != 'manually') {
-                        if ((strtotime($course->course_end_date) <= time()) && $course->open_ended_course == 'off') {//Course is no longer active
-                            $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
-                        } else if (($course->course_start_date == '' || $course->course_end_date == '') && $course->open_ended_course == 'off') {
-                            $course->button .= '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
-                        } else {
-
-
-                            if ((strtotime($course->enrollment_end_date) <= time()) && $course->open_ended_course == 'off') {
-                                $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                        if (!$course_obj->is_populated()) {
+                            if ((strtotime($course->course_end_date) <= time()) && $course->open_ended_course == 'off') {//Course is no longer active
+                                $course->button .= '<span class="apply-button-finished">' . __('Finished', 'cp') . '</span>';
+                            } else if (($course->course_start_date == '' || $course->course_end_date == '') && $course->open_ended_course == 'off') {
+                                $course->button .= '<span class="apply-button-finished">' . __('Not available yet', 'cp') . '</span>';
                             } else {
-                                $course->button .= '<a href="' . $signup_url . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
+
+
+                                if ((strtotime($course->enrollment_end_date) <= time()) && $course->open_ended_course == 'off') {
+                                    $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
+                                } else {
+                                    $course->button .= '<a href="' . $signup_url . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
+                                }
                             }
+                        } else {
+                            $course->button .= '<span class="apply-button-finished">' . __('Populated', 'cp') . '</span>';
                         }
                     }
                 }
@@ -484,62 +505,67 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $course_id = 0;
             }
 
-            $comments_args = array(
-                // change the title of send button 
-                'label_submit' => 'Send',
-                // change the title of the reply section
-                'title_reply' => 'Write a Reply or Comment',
-                // remove "Text or HTML to be displayed after the set of comment fields"
-                'comment_notes_after' => '',
-                // redefine your own textarea (the comment body)
-                'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
-            );
+            $course = new Course($course_id);
 
-            $defaults = array(
-                'author_email' => '',
-                'ID' => '',
-                'karma' => '',
-                'number' => '',
-                'offset' => '',
-                'orderby' => '',
-                'order' => 'DESC',
-                'parent' => '',
-                'post_id' => $course_id,
-                'post_author' => '',
-                'post_name' => '',
-                'post_parent' => '',
-                'post_status' => '',
-                'post_type' => '',
-                'status' => '',
-                'type' => '',
-                'user_id' => '',
-                'search' => '',
-                'count' => false,
-                'meta_key' => '',
-                'meta_value' => '',
-                'meta_query' => '',
-            );
+            if ($course->details->allow_course_discussion == 'on') {
 
-            $wp_list_comments_args = array(
-                'walker' => null,
-                'max_depth' => '',
-                'style' => 'ul',
-                'callback' => null,
-                'end-callback' => null,
-                'type' => 'all',
-                'reply_text' => 'Reply',
-                'page' => '',
-                'per_page' => '',
-                'avatar_size' => 32,
-                'reverse_top_level' => null,
-                'reverse_children' => '',
-                'format' => 'xhtml', //or html5 @since 3.6
-                'short_ping' => false // @since 3.6
-            );
+                $comments_args = array(
+                    // change the title of send button 
+                    'label_submit' => __('Send', 'cp'),
+                    // change the title of the reply section
+                    'title_reply' => __('Write a Reply or Comment', 'cp'),
+                    // remove "Text or HTML to be displayed after the set of comment fields"
+                    'comment_notes_after' => '',
+                    // redefine your own textarea (the comment body)
+                    'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x('Comment', 'noun') . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+                );
 
-            comment_form($comments_args, $course_id);
-            wp_list_comments($wp_list_comments_args, get_comments($defaults));
-            //comments_template()
+                $defaults = array(
+                    'author_email' => '',
+                    'ID' => '',
+                    'karma' => '',
+                    'number' => '',
+                    'offset' => '',
+                    'orderby' => '',
+                    'order' => 'DESC',
+                    'parent' => '',
+                    'post_id' => $course_id,
+                    'post_author' => '',
+                    'post_name' => '',
+                    'post_parent' => '',
+                    'post_status' => '',
+                    'post_type' => '',
+                    'status' => '',
+                    'type' => '',
+                    'user_id' => '',
+                    'search' => '',
+                    'count' => false,
+                    'meta_key' => '',
+                    'meta_value' => '',
+                    'meta_query' => '',
+                );
+
+                $wp_list_comments_args = array(
+                    'walker' => null,
+                    'max_depth' => '',
+                    'style' => 'ul',
+                    'callback' => null,
+                    'end-callback' => null,
+                    'type' => 'all',
+                    'reply_text' => __('Reply', 'cp'),
+                    'page' => '',
+                    'per_page' => '',
+                    'avatar_size' => 32,
+                    'reverse_top_level' => null,
+                    'reverse_children' => '',
+                    'format' => 'xhtml', //or html5 @since 3.6
+                    'short_ping' => false // @since 3.6
+                );
+
+                comment_form($comments_args = array(), $course_id);
+                wp_list_comments($wp_list_comments_args, get_comments($defaults));
+                //comments_template()
+            }
         }
 
         function unit_discussion($atts) {

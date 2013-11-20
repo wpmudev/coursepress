@@ -35,6 +35,7 @@ if (!class_exists('Course')) {
                     $course->post_status = __('unpublished', 'cp');
                 }
 
+                $course->allow_course_discussion = get_post_meta($this->id, 'allow_course_discussion', true);
                 $course->class_size = get_post_meta($this->id, 'class_size', true);
 
                 return $course;
@@ -43,7 +44,6 @@ if (!class_exists('Course')) {
             }
         }
 
-        
         function get_course_by_marketpress_product_id($marketpress_product_id) {
 
             $args = array(
@@ -62,7 +62,7 @@ if (!class_exists('Course')) {
                 return false;
             }
         }
-        
+
         function get_course_id_by_name($slug) {
 
             $args = array(
@@ -116,6 +116,29 @@ if (!class_exists('Course')) {
                 foreach ($_POST as $key => $value) {
                     if (preg_match("/meta_/i", $key)) {//every field name with prefix "meta_" will be saved as post meta automatically
                         update_post_meta($post_id, str_replace('meta_', '', $key), $value);
+                    }
+                }
+
+                //Add featured image
+                if (isset($_POST['_thumbnail_id']) && is_numeric($_POST['_thumbnail_id'])) {
+                    
+
+                    $upload_dir_info = wp_upload_dir();
+                    $image = wp_get_image_editor(trailingslashit($upload_dir_info['path']).basename($_POST['meta_featured_url'])); // Return an implementation that extends <tt>WP_Image_Editor</tt>
+
+                    if (!is_wp_error($image)) {
+                        $image->resize(100, 100, true);
+                        $final_image = $image->save($file);
+                        
+                        $new_file_path = str_replace(basename($_POST['meta_featured_url']), $final_image['file'], $_POST['meta_featured_url']);
+                        update_post_meta($post_id, '_thumbnail_id', $new_file_path);
+                        
+                       //print_r($final_image);
+                        //exit;
+                    }else{
+                        
+                        //echo 'an error occured: '.trailingslashit($upload_dir_info['path']).basename($_POST['meta_featured_url']);
+                        //exit;
                     }
                 }
 
@@ -254,6 +277,26 @@ if (!class_exists('Course')) {
 
             $wp_user_search = new WP_User_Query($args);
             return count($wp_user_search->get_results());
+        }
+
+        function is_populated($course_id = '') {
+            if ($course_id == '') {
+                $course_id = $this->id;
+            }
+
+            $class_size = $this->get_course()->class_size;
+
+            $number_of_enrolled_students = $this->get_number_of_students($course_id);
+
+            if ($class_size == 0) {
+                return false;
+            } else {
+                if ($class_size > $number_of_enrolled_students) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
         }
 
         function show_purchase_form($product_id) {
