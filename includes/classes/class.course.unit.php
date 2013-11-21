@@ -81,7 +81,7 @@ if (!class_exists('Unit')) {
             
             update_post_meta($post_id, 'course_id', $_POST['course_id']);
 
-            if (!get_post_meta($_post_id, 'unit_order', true)) {
+            if (!get_post_meta($post_id, 'unit_order', true)) {
                 update_post_meta($post_id, 'unit_order', '');
             }
             

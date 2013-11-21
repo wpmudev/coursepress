@@ -115,7 +115,7 @@ class radio_input_module extends Unit_Module {
                         <tbody id="items">
                             <tr>
                                 <th width="90%"><div class="radio_answer"><?php _e('Answers', 'cp'); ?></div><div class="radio_answer_check"><?php _e('Correct');?></div></th>
-                                <th width="10%"><a href="javascript:radio_new_link();"><?php _e('Add New', 'cp'); ?></a></th>
+                                <th width="10%"><a class="radio_new_link" href="javascript:radio_new_link();"><?php _e('Add New', 'cp'); ?></a></th>
                             </tr>
 
                             <?php
@@ -186,13 +186,13 @@ class radio_input_module extends Unit_Module {
                     foreach ($_POST[$this->name . '_id'] as $key => $value) {
                         $answers = array();
                         $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                        $data->unit_id = ((isset($_POST['unit_id']) and isset($_POST['unit']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
                         $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        $data->metas['checked_answer'] = $_POST[$this->name . '_radio_answers_check'][$key];
+                        //$data->metas['checked_answer'] = $_POST[$this->name . '_radio_answers_check'][$key];
                         //$data->metas['answers'] = $_POST[$this->name . '_radio_answers'][$key];
-                        cp_write_log($_POST[$this->name . '_radio_answers'].'<br />'.$key);
+                        cp_write_log($_POST[$this->name . '_radio_answers']);
                        /* foreach($_POST[$this->name . '_radio_answers'] as $key2 => $value2){
                             $answers[] = $_POST[$this->name . '_radio_answers'][$key2][$key];
                         }*/

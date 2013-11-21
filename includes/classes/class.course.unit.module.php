@@ -308,14 +308,12 @@ if (!class_exists('Unit_Module')) {
                                     jQuery(this).parent().parent().remove();
                                     update_sortable_module_indexes();
                                 }
-                                ;"><?php _e('Delete');
-            //echo $data->ID;
-            ?></a><!--href="admin.php?page=course_details&tab=units&course_id=<?php echo $_GET['course_id']; ?>&action=edit&unit_id=<?php echo $_GET['unit_id']; ?>&secondary_action=delete&module_id=<?php echo $data->ID; ?>"-->
-            <?php
-        }
+                                ;"><?php _e('Delete'); ?></a>
+               <?php
+           }
 
-        function get_module_remove_link() {
-            ?>
+           function get_module_remove_link() {
+               ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
                                     jQuery(this).parent().parent().remove();
                                     update_sortable_module_indexes();

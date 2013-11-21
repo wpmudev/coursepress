@@ -35,23 +35,27 @@ class text_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <?php if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                } ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                <?php // if (!empty($data)) { ?>
+                    <?php // if (!empty($data)) { ?>
                 <div class="editor_in_place">
-                    <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                    wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
-                    ?>
+                <?php
+                $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
+                wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
+                ?>
                 </div>
-                <?php //}else{ ?>
+        <?php //}else{  ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-                <?php //} ?>
+        <?php //}  ?>
             </div>
 
         </div>
@@ -82,13 +86,15 @@ class text_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
-                        $data->title = $_POST[$this->name . '_title'][$key];
-                        $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        parent::update_module($data);
+                    if (isset($_POST[$this->name . '_id'])) {
+                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                            $data->ID = $_POST[$this->name . '_id'][$key];
+                            $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->title = $_POST[$this->name . '_title'][$key];
+                            $data->content = $_POST[$this->name . '_content'][$key];
+                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            parent::update_module($data);
+                        }
                     }
                 }
             }

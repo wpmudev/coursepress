@@ -87,10 +87,15 @@ function coursepress_modules_ready() {
                  jQuery('#main-' + moving).removeClass('closed').addClass('open');
                  */
             }
+
             jQuery('.module_order').each(function(i, obj) {
                 jQuery(this).val(i + 1);
             });
+
+
         }
+    }).on('click', 'a', function(e) {
+        e.stopPropagation();
     });
 
     jQuery('.action .action-top .action-button').click(coursepress_module_click_action_toggle);
@@ -243,6 +248,10 @@ jQuery(document).ready(function() {
 
     jQuery(function() {
 
+        jQuery('a.radio_new_link').click(function() {
+            alert('ADDED :)');
+        });
+
         jQuery("#students_accordion").accordion({
             heightStyle: "content",
             active: parseInt(coursepress.active_student_tab)
@@ -260,7 +269,13 @@ jQuery(document).ready(function() {
                 //ui.item.children("h3").triggerHandler("focusout");
                 update_sortable_module_indexes();
             }
-        });
+        }, function() {
+            jQuery('a').click(function(e) {
+                e.stopPropagation();
+            })
+        }).on('click', 'a', function(e) {
+            e.stopPropagation();
+        })
     });
 
     function update_sortable_module_indexes() {

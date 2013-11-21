@@ -68,7 +68,11 @@ class audio_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <?php if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                } ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -77,28 +81,32 @@ class audio_module extends Unit_Module {
                 </label>
 
                 <div class="editor_in_place">
-                    <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                    wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
-                    ?>
+        <?php
+        $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
+        wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
+        ?>
                 </div>
 
                 <div class="audio_url_holder">
                     <label><?php _e('Put a URL or Browse for an audio file. Supported audio extensions (' . $supported_audio_extensions . ')', 'cp'); ?>
-                        <input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr($data->audio_url); ?>" />
+                        <input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr((isset($data->audio_url) ? $data->audio_url : '')); ?>" />
                         <input class="audio_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
 
                 <div class="audio_additional_controls">
                     <label><?php _e('Play in a loop', 'cp'); ?></label>
-                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data->loop, 'Yes', true); ?>> Yes<br>
-                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data->loop, 'No', true); ?>> No<br>
+                    <?php
+                    $data_loop = (isset($data->loop) ? $data->loop : 'No');
+                    $data_autoplay = (isset($data->autoplay) ? $data->autoplay : 'No');
+                    ?>
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data_loop, 'Yes', true); ?>> Yes<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data_loop, 'No', true); ?>> No<br>
 
 
                     <label><?php _e('Autoplay', 'cp'); ?></label>
-                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data->autoplay, 'Yes', true); ?>> Yes<br>
-                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data->autoplay, 'No', true); ?>> No<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>> Yes<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data_autoplay, 'No', true); ?>> No<br>
 
                 </div>
 
@@ -132,16 +140,18 @@ class audio_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
-                        $data->title = $_POST[$this->name . '_title'][$key];
-                        $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        $data->metas['audio_url'] = $_POST[$this->name . '_audio_url'][$key];
-                        $data->metas['autoplay'] = $_POST[$this->name . '_autoplay'][$key];
-                        $data->metas['loop'] = $_POST[$this->name . '_loop'][$key];
-                        parent::update_module($data);
+                    if (isset($_POST[$this->name . '_id'])) {
+                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                            $data->ID = $_POST[$this->name . '_id'][$key];
+                            $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->title = $_POST[$this->name . '_title'][$key];
+                            $data->content = $_POST[$this->name . '_content'][$key];
+                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            $data->metas['audio_url'] = $_POST[$this->name . '_audio_url'][$key];
+                            $data->metas['autoplay'] = $_POST[$this->name . '_autoplay'][$key];
+                            $data->metas['loop'] = $_POST[$this->name . '_loop'][$key];
+                            parent::update_module($data);
+                        }
                     }
                 }
             }

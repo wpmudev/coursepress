@@ -82,7 +82,13 @@ class video_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <?php
+                if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                }
+                ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -98,8 +104,13 @@ class video_module extends Unit_Module {
                 </div>
 
                 <div class="video_url_holder">
-                    <label><?php _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp'); echo '<br />'; _e(' Supported video extensions ', 'cp'); echo '(' . $supported_video_extensions . ')'; ?>
-                        <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr($data->video_url); ?>" />
+                    <label><?php
+                        _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp');
+                        echo '<br />';
+                        _e(' Supported video extensions ', 'cp');
+                        echo '(' . $supported_video_extensions . ')';
+                        ?>
+                        <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr((isset($data->video_url) ? $data->video_url : '')); ?>" />
                         <input class="video_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
@@ -109,9 +120,6 @@ class video_module extends Unit_Module {
                     <label><?php _e('Player Width', 'cp'); ?></label>
                     <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo (isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 640 : $content_width)); ?>" />
 
-                            <!--<label><?php _e('Player Height', 'cp'); ?></label>
-                            <input type="text" name="<?php echo $this->name; ?>_player_height[]" value="<?php echo esc_attr($data->player_height); ?>" />
-                    -->
                 </div>
 
             </div>
@@ -144,17 +152,19 @@ class video_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
-                        $data->title = $_POST[$this->name . '_title'][$key];
-                        $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
-                        $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
-                        //$data->metas['player_height'] = $_POST[$this->name . '_player_height'][$key];
+                    if (isset($_POST[$this->name . '_id'])) {
+                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                            $data->ID = $_POST[$this->name . '_id'][$key];
+                            $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->title = $_POST[$this->name . '_title'][$key];
+                            $data->content = $_POST[$this->name . '_content'][$key];
+                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
+                            $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
+                            //$data->metas['player_height'] = $_POST[$this->name . '_player_height'][$key];
 
-                        parent::update_module($data);
+                            parent::update_module($data);
+                        }
                     }
                 }
             }

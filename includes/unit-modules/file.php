@@ -54,7 +54,11 @@ class file_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) { parent::get_module_delete_link($data->ID); }else{ parent::get_module_remove_link();} ?>
+                <?php if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                } ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -65,7 +69,7 @@ class file_module extends Unit_Module {
 
                 <div class="file_url_holder">
                     <label><?php _e('Put a URL or Browse for a file.', 'cp'); ?>
-                        <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr($data->file_url); ?>" />
+                        <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr((isset($data->file_url) ? $data->file_url : '')); ?>" />
                         <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
@@ -100,13 +104,15 @@ class file_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
-                        $data->title = $_POST[$this->name . '_title'][$key];
-                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
-                        parent::update_module($data);
+                    if (isset($_POST[$this->name . '_id'])) {
+                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                            $data->ID = $_POST[$this->name . '_id'][$key];
+                            $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->title = $_POST[$this->name . '_title'][$key];
+                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
+                            parent::update_module($data);
+                        }
                     }
                 }
             }
