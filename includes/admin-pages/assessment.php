@@ -301,7 +301,7 @@
 
                                     <?php
                                     foreach ($student_search->get_results() as $user) {
-                                        $style = ( ' alternate' == $style ) ? '' : ' alternate';
+                                        $style = ( isset($style) && 'alternate' == $style ) ? '' : ' alternate';
                                         $user_object = new Student($user->ID);
 
                                         $module = new Unit_Module();

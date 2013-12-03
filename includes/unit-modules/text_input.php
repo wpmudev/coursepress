@@ -48,8 +48,15 @@ class text_input_module extends Unit_Module {
             'post_status' => 'publish'
         );
 
+
         $already_respond_posts = get_posts($already_respond_posts_args);
-        $response = $already_respond_posts[0];
+
+        if (isset($already_respond_posts[0]) && is_object($already_respond_posts[0])) {
+            $response = $already_respond_posts[0];
+        } else {
+            $response = $already_respond_posts;
+        }
+
         return $response;
     }
 
@@ -67,12 +74,12 @@ class text_input_module extends Unit_Module {
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
 
-            <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
+            <?php if (is_object($response) && count($response) >= 1 && trim($response->post_content) !== '') { ?>
                 <div class="front_response_content">
                     <?php echo $response->post_content; ?>
                 </div>
             <?php } else { ?>
-                <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
+                <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
             <?php } ?>
 
         </div>
@@ -89,11 +96,13 @@ class text_input_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) {
+                <?php
+                if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);
                 } else {
                     parent::get_module_remove_link();
-                } ?>
+                }
+                ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -102,14 +111,14 @@ class text_input_module extends Unit_Module {
                 </label>
                     <?php // if (!empty($data)) {     ?>
                 <div class="editor_in_place">
-                <?php
-                $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
-                ?>
+                    <?php
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
+                    wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
+                    ?>
                 </div>
-        <?php //}else{      ?>
+                <?php //}else{      ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-        <?php //}      ?>
+        <?php //}       ?>
             </div>
 
         </div>

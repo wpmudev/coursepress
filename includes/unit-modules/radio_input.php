@@ -49,7 +49,13 @@ class radio_input_module extends Unit_Module {
         );
 
         $already_respond_posts = get_posts($already_respond_posts_args);
-        $response = $already_respond_posts[0];
+
+        if (isset($already_respond_posts[0]) && is_object($already_respond_posts[0])) {
+            $response = $already_respond_posts[0];
+        } else {
+            $response = $already_respond_posts;
+        }
+
         return $response;
     }
 
@@ -62,18 +68,29 @@ class radio_input_module extends Unit_Module {
         } else {
             $enabled = 'disabled';
         }
+        
         ?>
         <div class="<?php echo $this->name; ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
 
-            <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
-                <div class="front_response_content">
-                    <?php echo $response->post_content; ?>
-                </div>
-            <?php } else { ?>
-                <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
-            <?php } ?>
+            <?php
+            /*
+             * if (is_object($response) && count($response) >= 1 && trim($response->post_content) !== '') {
+             */
+            ?>
+
+            <ul class='radio_answer_check_li'>
+                <?php
+                foreach ($data->answers as $answer) {
+                    ?>
+                    <li>
+                        <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr($answer);?>' <?php echo $enabled;?> <?php if(trim($response->post_content) == $answer){ echo 'checked';}?> /><?php echo $answer; ?>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
 
         </div>
         <?php
@@ -96,6 +113,8 @@ class radio_input_module extends Unit_Module {
                     parent::get_module_remove_link();
                 }
                 ?>
+                <input type="hidden" name="<?php echo $this->name; ?>_checked_index[]" class='checked_index' value="0" />
+
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -106,47 +125,74 @@ class radio_input_module extends Unit_Module {
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                    wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : '')), $args);
+                    wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
                     ?>
                 </div>
 
                 <div class="radio-editor">
                     <table class="form-table">
-                        <tbody id="items">
+                        <tbody class="ri_items">
                             <tr>
-                                <th width="90%"><div class="radio_answer"><?php _e('Answers', 'cp'); ?></div><div class="radio_answer_check"><?php _e('Correct');?></div></th>
-                                <th width="10%"><a class="radio_new_link" href="javascript:radio_new_link();"><?php _e('Add New', 'cp'); ?></a></th>
+                                <th width="90%">
+                        <div class="radio_answer"><?php _e('Answers', 'cp'); ?></div>
+                        <div class="radio_answer_check"><?php _e('Correct'); ?></div>
+                        </th>
+                        <th width="10%">
+                            <a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>
+                        </th>
+                        </tr>
+
+                        <?php
+                        $i = 1;
+                        ?>
+
+                        <?php
+                        if (isset($data->ID)) {
+                            //print_r($data->answers);
+                            $answer_cnt = 0;
+
+                            foreach ($data->answers as $answer) {
+                                ?>
+                                <tr>
+                                    <td width="90%">
+                                        <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
+                                        <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" <?php
+                                        if ($data->checked_answer == $answer) {
+                                            echo 'checked';
+                                        }
+                                        ?> />
+                                    </td>
+                                    <?php if ($answer_cnt >= 2) { ?>
+                                        <td width="10%">    
+                                            <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
+                                        </td>
+                                    <?php } else { ?>
+                                        <td width="10%">&nbsp;</td>
+                                    <?php } ?>
+                                </tr>
+                                <?php
+                                $answer_cnt++;
+                            }
+                        } else {
+                            ?>
+                            <tr>
+                                <td width="90%">
+                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
+                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" checked />
+                                </td>
+                                <td width="10%">&nbsp;</td>  
                             </tr>
 
-                            <?php
-                             $i = 1;
-/*
-                              $groups = get_option('course_groups');
-                              if (count($groups) >= 1 && $groups != '') {
-                              foreach ($groups as $group) { */
-                            ?>
-                            <tr id="r<?php echo $i; ?>">
+                            <tr>
                                 <td width="90%">
-                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[]'; ?>" />
-                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_answers_check[]'; ?>" checked />
-                                </td>
-                                <td width="10%">
-                                    <!--<a href="javascript:radio_removeElement('items','r<?php echo $i; ?>');"><?php _e('Remove', 'cp'); ?></a>-->
-                                </td>  
-                            </tr>
-                            
-                            <tr id="r<?php echo $i+1; ?>">
-                                <td width="90%">
-                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[]'; ?>" />
-                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_answers_check[]'; ?>" />
+                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
+                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
                                 </td>
                                 <td width="10%">&nbsp;</td>  
                             </tr>
                             <?php
-                            /* $i++;
-                              }
-                              } */
-                            ?>
+                        }
+                        ?>
                         </tbody>
                     </table>
 
@@ -169,6 +215,12 @@ class radio_input_module extends Unit_Module {
 
         if (isset($_POST['module_type'])) {
 
+            $answers = array();
+
+            foreach ($_POST[$this->name . '_radio_answers'] as $post_answers) {
+                $answers[] = $post_answers;
+            }
+
             foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
                 if ($module_value == $this->name) {
                     $data = new stdClass();
@@ -181,26 +233,17 @@ class radio_input_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    $answers = array();
-                    
                     foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        $answers = array();
+                        //cp_write_log($key);
                         $data->ID = $_POST[$this->name . '_id'][$key];
                         $data->unit_id = ((isset($_POST['unit_id']) and isset($_POST['unit']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
                         $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        //$data->metas['checked_answer'] = $_POST[$this->name . '_radio_answers_check'][$key];
-                        //$data->metas['answers'] = $_POST[$this->name . '_radio_answers'][$key];
-                        cp_write_log($_POST[$this->name . '_radio_answers']);
-                       /* foreach($_POST[$this->name . '_radio_answers'] as $key2 => $value2){
-                            $answers[] = $_POST[$this->name . '_radio_answers'][$key2][$key];
-                        }*/
-                        
-                        $data->metas['answers'] = $answers;
-                        //print_r('Checked answer: ').$_POST[$this->name . '_radio_answers_check'][$key];
+                        $data->metas['checked_answer'] = $_POST[$this->name . '_checked_index'][$key];
+                        $data->metas['answers'] = $answers[$key];
+
                         parent::update_module($data);
-                        
                     }
                 }
             }
@@ -211,7 +254,6 @@ class radio_input_module extends Unit_Module {
             foreach ($_POST as $response_name => $response_value) {
 
                 if (preg_match('/' . $this->name . '_front_/', $response_name)) {
-                    //echo $response_name . ',' . $response_value . '<br />';
 
                     $response_id = intval(str_replace($this->name . '_front_', '', $response_name));
 

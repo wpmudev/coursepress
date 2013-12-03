@@ -263,7 +263,7 @@ if (!class_exists('CoursePress')) {
                 //init quicktags
 
                 /*quicktags({id:<?php echo $id; ?>});
-                 
+                             
                  //init tinymce
                  tinyMCE.init({
                  theme : "advanced",
@@ -271,7 +271,7 @@ if (!class_exists('CoursePress')) {
                  buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
                  // other options here
                  });
-                 
+                             
                  tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
                  //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
             </script>
@@ -792,10 +792,11 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Unit', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 //Add later rewrite for customizable slugs!!!
+                //'rewrite' => array('slug' => trailingslashit($this->get_course_slug()).$this->get_units_slug(), 'with_front' => false),
                 'query_var' => true
             );
 
@@ -1470,8 +1471,8 @@ if (!class_exists('CoursePress')) {
                 return false;
             }
         }
-        
-        function is_chat_plugin_active(){
+
+        function is_chat_plugin_active() {
             $plugins = get_option('active_plugins');
             $required_plugin = 'wordpress-chat/wordpress-chat.php';
 
