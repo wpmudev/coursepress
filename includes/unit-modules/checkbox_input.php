@@ -1,10 +1,10 @@
 <?php
 
-class radio_input_module extends Unit_Module {
+class checkbox_input_module extends Unit_Module {
 
-    var $name = 'radio_input_module';
-    var $label = 'Radio Box Input';
-    var $description = 'Allows adding radio boxes to the unit';
+    var $name = 'checkbox_input_module';
+    var $label = 'Check Box Input';
+    var $description = 'Allows adding check boxes to the unit';
     var $front_save = true;
     var $response_type = 'view';
 
@@ -12,13 +12,14 @@ class radio_input_module extends Unit_Module {
         $this->on_create();
     }
 
-    function radio_input_module() {
+    function checkbox_input_module() {
         $this->__construct();
     }
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         $response = $this->get_response($user_ID, $response_request_ID);
         if (count($response >= 1)) {
+            $student_checked_answers = get_post_meta($response->ID, 'student_checked_answers', true);
             ?>
             <div class="module_text_response_answer">
                 <?php if ($show_label) { ?>
@@ -28,18 +29,21 @@ class radio_input_module extends Unit_Module {
                     <ul class='radio_answer_check_li'>
                         <?php
                         $answers = get_post_meta($response_request_ID, 'answers', true);
-                        $checked_answer = get_post_meta($response_request_ID, 'checked_answer', true);
+                        $checked_answers = get_post_meta($response_request_ID, 'checked_answers', true);
 
                         foreach ($answers as $answer) {
                             ?>
                             <li>
-                                <input class="radio_answer_check" type="radio" value='<?php echo esc_attr($answer); ?>' disabled <?php echo (isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : ''); ?> /><?php echo $answer; ?><?php if(isset($response->post_content) && trim($response->post_content) == $answer){ echo ($checked_answer == $answer ? '<span class="correct_answer">✓</span>' : '<span class="not_correct_answer">✘</span>');};?>
+                                <input class="radio_answer_check" type="checkbox" value='<?php echo esc_attr($answer); ?>' disabled <?php echo (isset($student_checked_answers) && in_array($answer, $student_checked_answers) ? 'checked' : ''); ?> /><?php echo $answer; ?><?php
+                                if (isset($student_checked_answers) && in_array($answer, $student_checked_answers)) {
+                                    echo (in_array($answer, $checked_answers) ? '<span class="correct_answer">✓</span>' : '<span class="not_correct_answer">✘</span>');
+                                };
+                                ?>
                             </li>
                             <?php
                         }
                         ?>
                     </ul>
-                    <?php //echo nl2br($response->post_content);  ?>
                 </div>
             </div>
 
@@ -77,6 +81,10 @@ class radio_input_module extends Unit_Module {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
 
+        if (is_object($response)) {
+            $student_checked_answers = get_post_meta($response->ID, 'student_checked_answers', true);
+        }
+
         if (count($response) == 0) {
             $enabled = 'enabled';
         } else {
@@ -92,7 +100,7 @@ class radio_input_module extends Unit_Module {
                 foreach ($data->answers as $answer) {
                     ?>
                     <li>
-                        <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo (isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : ''); ?> /><?php echo $answer; ?>
+                        <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_front_' . $data->ID; ?>[]" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo (isset($student_checked_answers) && in_array($answer, (is_array($student_checked_answers) ? $student_checked_answers : array())) ? 'checked' : ''); ?> /><?php echo $answer; ?>
                     </li>
                     <?php
                 }
@@ -120,7 +128,7 @@ class radio_input_module extends Unit_Module {
                     parent::get_module_remove_link();
                 }
                 ?>
-                <input type="hidden" name="<?php echo $this->name; ?>_checked_index[]" class='checked_index' value="0" />
+                <!--<input type="hidden" name="<?php echo $this->name; ?>_checked_index[]" class='checked_index' value="0" />-->
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
@@ -136,16 +144,16 @@ class radio_input_module extends Unit_Module {
                     ?>
                 </div>
 
-                <div class="radio-editor">
+                <div class="checkbox-editor">
                     <table class="form-table">
-                        <tbody class="ri_items">
+                        <tbody class="ci_items">
                             <tr>
                                 <th width="90%">
-                        <div class="radio_answer"><?php _e('Answers', 'cp'); ?></div>
-                        <div class="radio_answer_check"><?php _e('Correct'); ?></div>
+                        <div class="checkbox_answer"><?php _e('Answers', 'cp'); ?></div>
+                        <div class="checkbox_answer_check"><?php _e('Correct'); ?></div>
                         </th>
                         <th width="10%">
-                            <a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>
+                            <a class="checkbox_new_link"><?php _e('Add New', 'cp'); ?></a>
                         </th>
                         </tr>
 
@@ -155,45 +163,47 @@ class radio_input_module extends Unit_Module {
 
                         <?php
                         if (isset($data->ID)) {
-                            //print_r($data->answers);
+
                             $answer_cnt = 0;
 
-                            foreach ($data->answers as $answer) {
-                                ?>
-                                <tr>
-                                    <td width="90%">
-                                        <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
-                                        <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" <?php
-                                        if ($data->checked_answer == $answer) {
-                                            echo 'checked';
-                                        }
-                                        ?> />
-                                    </td>
-                                    <?php if ($answer_cnt >= 2) { ?>
-                                        <td width="10%">    
-                                            <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
+                            if (isset($data->answers)) {
+                                foreach ($data->answers as $answer) {
+                                    ?>
+                                    <tr>
+                                        <td width="90%">
+                                            <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
+                                            <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' <?php
+                                            if (in_array($answer, $data->checked_answers)) {
+                                                echo 'checked';
+                                            }
+                                            ?> />
                                         </td>
-                                    <?php } else { ?>
-                                        <td width="10%">&nbsp;</td>
-                                    <?php } ?>
-                                </tr>
-                                <?php
-                                $answer_cnt++;
+                                        <?php if ($answer_cnt >= 2) { ?>
+                                            <td width="10%">    
+                                                <a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
+                                            </td>
+                                        <?php } else { ?>
+                                            <td width="10%">&nbsp;</td>
+                                        <?php } ?>
+                                    </tr>
+                                    <?php
+                                    $answer_cnt++;
+                                }
                             }
                         } else {
                             ?>
                             <tr>
                                 <td width="90%">
-                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
-                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" checked />
+                                    <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
+                                    <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" checked />
                                 </td>
                                 <td width="10%">&nbsp;</td>  
                             </tr>
 
                             <tr>
                                 <td width="90%">
-                                    <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
-                                    <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
+                                    <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
+                                    <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" />
                                 </td>
                                 <td width="10%">&nbsp;</td>  
                             </tr>
@@ -223,12 +233,20 @@ class radio_input_module extends Unit_Module {
         if (isset($_POST['module_type'])) {
 
             $answers = array();
+            $checked_answers = array();
 
-            foreach ($_POST[$this->name . '_radio_answers'] as $post_answers) {
+            foreach ($_POST[$this->name . '_checkbox_answers'] as $post_answers) {
                 $answers[] = $post_answers;
             }
 
+            foreach ($_POST[$this->name . '_checkbox_check'] as $post_checked_answers) {
+                $checked_answers[] = $post_checked_answers;
+            }
+
+            //cp_write_log($checked_answers);
+
             foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
+
                 if ($module_value == $this->name) {
                     $data = new stdClass();
                     $data->ID = '';
@@ -241,14 +259,14 @@ class radio_input_module extends Unit_Module {
                     $data->post_type = 'module';
 
                     foreach ($_POST[$this->name . '_id'] as $key => $value) {
-                        //cp_write_log($key);
+
                         $data->ID = $_POST[$this->name . '_id'][$key];
                         $data->unit_id = ((isset($_POST['unit_id']) and isset($_POST['unit']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
                         $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        $data->metas['checked_answer'] = $_POST[$this->name . '_checked_index'][$key];
                         $data->metas['answers'] = $answers[$key];
+                        $data->metas['checked_answers'] = $checked_answers[$key];
 
                         parent::update_module($data);
                     }
@@ -259,6 +277,7 @@ class radio_input_module extends Unit_Module {
         if (isset($_POST['submit_modules_data'])) {
 
             foreach ($_POST as $response_name => $response_value) {
+
 
                 if (preg_match('/' . $this->name . '_front_/', $response_name)) {
 
@@ -275,19 +294,39 @@ class radio_input_module extends Unit_Module {
                         $data->post_type = 'module_response';
                         $data->response_id = $response_id;
                         $data->title = ''; //__('Response to '.$response_id.' module (Unit '.$_POST['unit_id'].')');
-                        $data->content = $response_value;
+                        $data->content = '';
+                        $data->metas['student_checked_answers'] = $response_value;
 
                         /* CHECK AND SET THE GRADE AUTOMATICALLY */
 
-                        $checked_value = get_post_meta($response_id, 'checked_answer', true);
+                        $chosen_answers = array();
 
-                        if ($response_value == $checked_value) {
-                            $response_grade = 100;
-                        } else {
-                            $response_grade = 0;
+                        foreach ($response_value as $post_response_val) {
+                            $chosen_answers[] = $post_response_val;
                         }
 
-                        $data->auto_grade = $response_grade;
+
+                        if (count($chosen_answers) !== 0) {
+                            $right_answers = get_post_meta($response_id, 'checked_answers', true);
+                            $response_grade = 0;
+
+                            foreach ($chosen_answers as $chosen_answer) {
+                                if (in_array($chosen_answer, $right_answers)) {
+                                    $response_grade = $response_grade + 100;
+                                } else {
+                                    //$response_grade = $response_grade + 0;//this line can be empty as well :)
+                                }
+                            }
+
+                            if (count($chosen_answers) >= count($right_answers)) {
+                                $grade_cnt = count($chosen_answers);
+                            } else {
+                                $grade_cnt = count($right_answers);
+                            }
+
+                            $response_grade = round(($response_grade / $grade_cnt), 0);
+                            $data->auto_grade = $response_grade;
+                        }
 
                         parent::update_module_response($data);
                     }
@@ -298,5 +337,5 @@ class radio_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('radio_input_module', 'radio_input_module', 'students');
+coursepress_register_module('checkbox_input_module', 'checkbox_input_module', 'students');
 ?>

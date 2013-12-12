@@ -243,16 +243,16 @@ a.apply-button:hover, input[type="submit"].apply-button:hover{
     overflow-y: scroll;
 }
 
-.radio_input_module ul.radio_answer_check_li{
+.radio_input_module ul.radio_answer_check_li, .checkbox_input_module ul.radio_answer_check_li{
     list-style: none;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.radio_input_module ul.radio_answer_check_li li{
+.radio_input_module ul.radio_answer_check_li li, .checkbox_input_module ul.radio_answer_check_li li{
     margin-left: 10px;
 }
 
-.radio_input_module ul.radio_answer_check_li li .radio_answer_check{
+.radio_input_module ul.radio_answer_check_li li .radio_answer_check, .checkbox_input_module ul.radio_answer_check_li li .checkbox_answer_check{
     margin-right: 10px;
 }

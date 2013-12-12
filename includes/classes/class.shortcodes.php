@@ -3,9 +3,9 @@
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
-/*
-  CoursePress Shortcodes
- */
+    /*
+      CoursePress Shortcodes
+     */
 
 if (!class_exists('CoursePress_Shortcodes')) {
 
@@ -158,7 +158,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                                         if (($course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course($course->prerequisite)) || $course->init_enroll_type !== 'prerequisite') {
                                             $course->button .= '<input type="submit" class="apply-button" value="' . __('Enroll Now', 'cp') . '" />';
                                             $course->button .= '<div class="passcode-box">' . do_shortcode('[course_details field="passcode_input"]') . '</div>';
-                                        }else{
+                                        } else {
                                             $course->button .= '<span class="apply-button-finished">' . __('Prerequisite Required', 'cp') . '</span>';
                                         }
                                     } else {
@@ -264,6 +264,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             extract(shortcode_atts(array(
                 'course_id' => $wp_query->post->ID,
                 'count' => false,
+                'list' => false,
+                'avatar_size' => 80
                             ), $atts));
 
             $course = new Course($course_id);
@@ -271,11 +273,12 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             $instructors_count = 0;
             $content = '';
+            $list = array();
 
             foreach ($instructors as $instructor) {
-
+                $list[] = $instructor->display_name;
                 $doc = new DOMDocument();
-                $doc->loadHTML(get_avatar($instructor->ID, 80));
+                $doc->loadHTML(get_avatar($instructor->ID, $avatar_size));
                 $imageTags = $doc->getElementsByTagName('img');
 
                 foreach ($imageTags as $tag) {
@@ -291,8 +294,12 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $instructors_count++;
             }
 
+            $list = implode(", ", $list);
+
             if ($count) {
                 return $instructors_count;
+            } elseif ($list) {
+                return $list;
             } else {
                 return $content;
             }

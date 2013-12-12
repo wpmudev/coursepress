@@ -1314,3 +1314,13 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     float: left;
     width: 90% !important;
 }
+
+.checkbox_answer_check{
+    float: left;
+    width: 10% !important;
+}
+
+.checkbox_answer{
+    float: left;
+    width: 90% !important;
+}

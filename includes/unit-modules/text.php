@@ -50,7 +50,7 @@ class text_module extends Unit_Module {
                 <div class="editor_in_place">
                 <?php
                 $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                wp_editor(stripslashes(esc_attr(isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
+                wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
                 ?>
                 </div>
         <?php //}else{  ?>

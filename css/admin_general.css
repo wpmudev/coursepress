@@ -193,6 +193,6 @@
     width: 99%;
 }
 
-.radio_new_link, .radio_remove{
+.radio_new_link, .radio_remove, .checkbox_new_link, .checkbox_remove{
     cursor: pointer;
 }

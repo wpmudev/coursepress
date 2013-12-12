@@ -129,6 +129,11 @@ if (!class_exists('Unit_Module')) {
                     }
                 }
 
+                //SET AUTO GRADE IF REQUESTED BY A MODULE
+                if (isset($data->auto_grade) && is_numeric($data->auto_grade)) {
+                    $this->save_response_grade($post_id, $data->auto_grade);
+                }
+
                 //$coursepress->set_latest_activity(get_current_user_id());
                 return $post_id;
             } else {
@@ -228,15 +233,16 @@ if (!class_exists('Unit_Module')) {
             }
         }
 
-        function save_response_grade() {
-            if (isset($_POST['response_id']) && isset($_POST['response_grade']) && is_admin()) {
+        function save_response_grade($response_id = '', $response_grade = '') {
+            if ((isset($_POST['response_id']) || $response_id !== '') && (isset($_POST['response_grade']) || $response_grade !== '')) {
+
                 $grade_data = array(
-                    'grade' => $_POST['response_grade'],
+                    'grade' => ($response_grade !== '' && is_numeric($response_grade) ? $response_grade : $_POST['response_grade']),
                     'instructor' => get_current_user_ID(),
                     'time' => current_time('timestamp')
                 );
 
-                update_post_meta($_POST['response_id'], 'response_grade', $grade_data);
+                update_post_meta(($response_id !== '' && is_numeric($response_id) ? $response_id : $_POST['response_id']), 'response_grade', $grade_data);
 
                 return true;
             } else {

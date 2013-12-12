@@ -49,6 +49,8 @@ if (isset($_GET['course_id'])) {
     $open_ended_course = $course->details->open_ended_course;
     $marketpress_product = $course->details->marketpress_product;
     $allow_course_discussion = $course->details->allow_course_discussion;
+    $course_category = $course->details->course_category;
+    $language = $course->details->course_language;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -61,6 +63,8 @@ if (isset($_GET['course_id'])) {
     $open_ended_course = 'off';
     $marketpress_product = '';
     $allow_course_discussion = 'off';
+    $course_category = 0;
+    $language = __('English', 'cp');
 }
 ?>
 
@@ -146,7 +150,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));     ?>" />-->
+                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));          ?>" />-->
                                 <select name="meta_prerequisite">
 
                                     <?php
@@ -176,6 +180,45 @@ if (isset($_GET['course_id'])) {
                                 <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?></label>
                                 <input type="text" name="meta_passcode" value="<?php echo esc_attr(stripslashes($passcode)); ?>" />
                                 <p class="description"><?php _e('Students will need to enter the pass code in order to enroll', 'cp'); ?></p>
+                            </div>
+
+                            <br clear="all" />
+                            <br clear="all" />
+
+                            <div class="half">
+                                <label><?php _e('Course Category', 'cp'); ?></label>
+                                <?php
+                                $tax_args = array(
+                                    'show_option_all' => '',
+                                    'show_option_none' => '',
+                                    'orderby' => 'ID',
+                                    'order' => 'ASC',
+                                    'show_count' => 0,
+                                    'hide_empty' => 0,
+                                    'echo' => 1,
+                                    'selected' => $course_category,
+                                    'hierarchical' => 0,
+                                    'name' => 'meta_course_category',
+                                    'id' => '',
+                                    'class' => 'postform',
+                                    'depth' => 0,
+                                    'tab_index' => 0,
+                                    'taxonomy' => 'course_category',
+                                    'hide_if_empty' => false,
+                                    'walker' => ''
+                                );
+
+                                $taxonomies = array('course_category');
+                                //echo get_terms_dropdown($taxonomies, $tax_args);
+                                wp_dropdown_categories($tax_args);
+                                ?>
+                                <a href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
+
+                            </div>
+
+                            <div class="half">
+                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
+                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
                             </div>
 
                             <br clear="all" />

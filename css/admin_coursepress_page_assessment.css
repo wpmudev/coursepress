@@ -266,3 +266,22 @@ td.less_visible_row{
     right: 10px;
     left: auto;
 }
+
+.radio_input_module ul.radio_answer_check_li{
+    list-style: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.radio_input_module ul.radio_answer_check_li li{
+    margin-left: 10px;
+}
+
+.radio_input_module ul.radio_answer_check_li li .radio_answer_check{
+    margin-right: 10px;
+}
+
+.correct_answer, .not_correct_answer{
+    width: 20px;
+    margin-left: 10px;
+}

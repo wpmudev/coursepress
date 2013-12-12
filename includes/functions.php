@@ -552,8 +552,26 @@ if (!function_exists('cp_write_log')) {
 if (!function_exists('is_plugin_network_active')) {
 
     function is_plugin_network_active($plugin_file) {
-        return ( array_key_exists($plugin_file, maybe_unserialize(get_site_option('active_sitewide_plugins'))) );
+        if (is_multisite()) {
+            return ( array_key_exists($plugin_file, maybe_unserialize(get_site_option('active_sitewide_plugins'))) );
+        }
     }
 
 }
+
+function get_terms_dropdown($taxonomies, $args) {
+    $myterms = get_terms($taxonomies, $args);
+    $output = "<select>";
+    foreach ($myterms as $term) {
+        $root_url = get_bloginfo('url');
+        $term_taxonomy = $term->taxonomy;
+        $term_slug = $term->slug;
+        $term_name = $term->name;
+        $link = $root_url . '/' . $term_taxonomy . '/' . $term_slug;
+        $output .="<option value='" . $link . "'>" . $term_name . "</option>";
+    }
+    $output .="</select>";
+    return $output;
+}
+
 ?>

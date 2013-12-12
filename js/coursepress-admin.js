@@ -1,12 +1,14 @@
+/* Selecting valid menu item based on the current tab */
+
+jQuery(document).ready(function() {
+    if (coursepress.course_taxonomy_screen) {
+        //jQuery('#adminmenu .wp-submenu li.current').removeClass("current");
+        jQuery('a[href="edit-tags.php?taxonomy=course_category&post_type=course"]').parent().addClass("current");
+    }
+});
+
 /* UNIT MODULES */
 jQuery(document).ready(function() {
-
-
-    /*jQuery("input[name*='radio_check']").change(function() {
-     jQuery("input[name*='radio_check']:checked").each(function() {
-     jQuery(this).closest(".module-content").find('.checked_index').val(jQuery(this).parent().find('.radio_answer').val());
-     });
-     });*/
 
     jQuery('.button-primary').click(function() {
         jQuery("input[name*='radio_check']:checked").each(function() {
@@ -108,6 +110,14 @@ jQuery(document).ready(function() {
 
                 jQuery("input[name*='radio_check']").each(function(i, obj) {
                     jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+                });
+
+                jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
+                    jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+                });
+
+                jQuery("input[name*='checkbox_check']").each(function(i, obj) {
+                    jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
                 });
 
 
@@ -248,41 +258,11 @@ jQuery(document).ready(function() {
                 jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
             }
         });
-        /*jQuery(function() {
-         jQuery("#modules_accordion").sortable({
-         handle: "h3",
-         stop: function(event, ui) {
-         //update_sortable_indexes();
-         }
-         });
-         
-         jQuery("#modules_accordion").disableSelection();
-         });*/
-        var ct = 2;
 
-        /*jQuery(function() {*/
+        var ct = 2;
 
         jQuery('a.radio_new_link').click(function() {
             var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
-            //alert(unique_group_id);
-            /*ct++;
-             var r = document.createElement('tr');
-             r.setAttribute('id', 'r' + ct);
-             var ca = document.createElement('td');
-             ca.setAttribute('id', 'r' + ct + 'td1');
-             var cd = document.createElement('td');
-             cd.setAttribute('id', 'r' + ct + 'td4');
-             var t = document.getElementById('items');
-             r.appendChild(ca);
-             r.appendChild(cd);
-             jQuery(this).parent().parent().parent().append(r);
-             
-             jQuery('#r' + ct + 'td1').html('<input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]" /><input class="radio_answer_check" type="radio" name="radio_input_module_radio_answers_check_' + unique_group_id + '[]" />');
-             if (ct >= 3) {
-             jQuery('#r' + ct + 'td4').html('<a class="radio_remove" onClick="jQuery(this).parent().parent().remove();" >' + coursepress.remove_row + '</a>'); //href="javascript:radio_removeElement(\'items\',\'r' + ct + '\');"
-             } else {
-             jQuery('#r' + ct + 'td4').html('');
-             }*/
 
             var r = '<tr><td><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"><input class="radio_answer_check" type="radio" name="radio_input_module_radio_answers_check_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
             jQuery(this).parent().parent().parent().append(r);
@@ -294,7 +274,24 @@ jQuery(document).ready(function() {
             jQuery("input[name*='radio_check']").each(function(i, obj) {
                 jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
             });
+
         });
+
+        jQuery('a.checkbox_new_link').click(function() {
+            var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
+
+            var r = '<tr><td><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_answers_check_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+            jQuery(this).parent().parent().parent().append(r);
+            
+            jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
+                jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+            });
+
+            jQuery("input[name*='checkbox_check']").each(function(i, obj) {
+                jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+            });
+        });
+
         jQuery("#students_accordion").accordion({
             heightStyle: "content",
             active: parseInt(coursepress.active_student_tab)
@@ -332,9 +329,14 @@ jQuery(document).ready(function() {
                 jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
             });
 
-            /*jQuery("input[name*='radio_answers[999]'], input[name*='radio_answers_check[999]']").each(function(i, obj) {
-             jQuery(this).attr("name", "radio_input_module_radio_answers[" + (i + 1) + '][]');
-             });*/
+            jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
+                jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+            });
+
+            jQuery("input[name*='checkbox_check']").each(function(i, obj) {
+                jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+            });
+
         }
 
 
@@ -392,7 +394,6 @@ jQuery(document).ready(function() {
 
     function radio_removeElement(parentDiv, childDiv) {
         if (childDiv == parentDiv) {
-//alert("The parent div cannot be removed.");
         }
         else if (document.getElementById(childDiv)) {
             var child = document.getElementById(childDiv);
@@ -400,8 +401,6 @@ jQuery(document).ready(function() {
             parent.removeChild(child);
         }
         else {
-//alert("Child div has already been removed or does not exist.");
-//return false;
         }
     }
 
