@@ -91,18 +91,20 @@ class checkbox_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
 
             <ul class='radio_answer_check_li'>
                 <?php
-                foreach ($data->answers as $answer) {
-                    ?>
-                    <li>
-                        <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_front_' . $data->ID; ?>[]" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo (isset($student_checked_answers) && in_array($answer, (is_array($student_checked_answers) ? $student_checked_answers : array())) ? 'checked' : ''); ?> /><?php echo $answer; ?>
-                    </li>
-                    <?php
+                if (isset($data->answers) && !empty($data->answers)) {
+                    foreach ($data->answers as $answer) {
+                        ?>
+                        <li>
+                            <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_front_' . $data->ID; ?>[]" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo (isset($student_checked_answers) && in_array($answer, (is_array($student_checked_answers) ? $student_checked_answers : array())) ? 'checked' : ''); ?> /><?php echo $answer; ?>
+                        </li>
+                        <?php
+                    }
                 }
                 ?>
             </ul>

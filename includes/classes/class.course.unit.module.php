@@ -83,6 +83,25 @@ if (!class_exists('Unit_Module')) {
             }
         }
 
+        function did_student_responed($unit_module_id, $student_id) {
+            //Check if response already exists (from the user. Only one response is allowed per persponse request / module per user)
+            $already_respond_posts_args = array(
+                'posts_per_page' => 1,
+                'meta_key' => 'user_ID',
+                'meta_value' => $student_id,
+                'post_type' => 'module_response',
+                'post_parent' => $unit_module_id,
+                'post_status' => 'publish');
+
+            $already_respond_posts = get_posts($already_respond_posts_args);
+            
+            if (count($already_respond_posts) > 0) {
+                return true;
+            }else{
+                return false;
+            }
+        }
+
         function update_module_response($data) {
             global $user_id, $wpdb, $coursepress;
 
@@ -311,19 +330,19 @@ if (!class_exists('Unit_Module')) {
         function get_module_delete_link($module_id) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }
-                                ;"><?php _e('Delete'); ?></a>
+                                        jQuery(this).parent().parent().remove();
+                                        update_sortable_module_indexes();
+                                    }
+                                    ;"><?php _e('Delete'); ?></a>
                <?php
            }
 
            function get_module_remove_link() {
                ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }"><?php _e('Remove') ?></a>
+                                        jQuery(this).parent().parent().remove();
+                                        update_sortable_module_indexes();
+                                    }"><?php _e('Remove') ?></a>
             <?php
         }
 

@@ -30,6 +30,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
             add_shortcode('course_discussion', array(&$this, 'course_discussion'));
+            add_shortcode('instructor_profile_url', array(&$this, 'instructor_profile_url'));
+            add_shortcode('get_parent_course_id', array(&$this, 'get_parent_course_id'));
             //add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
 
 
@@ -236,10 +238,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
         function course_instructor_avatar($atts) {
             global $wp_query;
 
-            extract(shortcode_atts(array('instructor_id' => 0), $atts));
+            extract(shortcode_atts(array('instructor_id' => 0, 'thumb_size' => 80, 'class' => 'small-circle-profile-image'), $atts));
 
             $doc = new DOMDocument();
-            $doc->loadHTML(get_avatar($instructor_id, 80));
+            $doc->loadHTML(get_avatar($instructor_id, $thumb_size));
             $imageTags = $doc->getElementsByTagName('img');
 
             $content = '';
@@ -251,10 +253,35 @@ if (!class_exists('CoursePress_Shortcodes')) {
             <?php
 
             $content .= '<div class="instructor-avatar">';
-            $content .= '<div class="small-circle-profile-image" style="background: url(' . $avatar_url . ');"></div>';
+            $content .= '<div class="' . $class . '" style="background: url(' . $avatar_url . ');"></div>';
             $content .= '</div>';
 
             return $content;
+        }
+
+        function instructor_profile_url($atts) {
+            global $instructor_profile_slug;
+
+            extract(shortcode_atts(array(
+                'instructor_id' => 0), $atts));
+
+            $instructor = get_userdata($instructor_id);
+
+            if ($instructor_id) {
+                return trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+            }
+        }
+
+        function get_parent_course_id($atts) {
+            global $wp;
+
+            if (array_key_exists('coursename', $wp->query_vars)) {
+                $course = new Course();
+                $course_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
+            } else {
+                $course_id = 0;
+            }
+            return $course_id;
         }
 
         function course_instructors($atts) {
@@ -262,7 +289,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             global $instructor_profile_slug;
 
             extract(shortcode_atts(array(
-                'course_id' => $wp_query->post->ID,
+                'course_id' => (isset($wp_query->post->ID) ? $wp_query->post->ID : 0),
                 'count' => false,
                 'list' => false,
                 'avatar_size' => 80
@@ -333,7 +360,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'post_type' => 'unit',
                 'p' => $unit_id
             );
+            
+            cp_suppress_errors();
             query_posts($args);
+            //cp_show_errors();
         }
 
         function course_units_loop($atts) {
@@ -434,7 +464,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             extract(shortcode_atts(array(
                 'unit_id' => 0,
-                'field' => 'post_title'
+                'field' => 'post_title',
+                'student_id' => get_current_user_ID(),
                             ), $atts));
 
             $unit = new Unit($unit_id);
@@ -451,6 +482,42 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if ($field == 'permalink') {
                 $unit->details->$field = $unit->get_permalink($unit->course_id);
+            }
+
+            if ($field == 'input_modules_count') {
+                $unit_module = new Unit_Module();
+
+                $front_save_count = 0;
+
+                $modules = $unit_module->get_modules($unit_id);
+
+                foreach ($modules as $mod) {
+
+                    $class_name = $mod->module_type;
+
+                    if (class_exists($class_name)) {
+                        $module = new $class_name();
+                        if ($module->front_save) {
+                            $front_save_count++;
+                        }
+                    }
+                }
+
+                $unit->details->$field = $front_save_count;
+            }
+
+            if ($field == 'student_module_responses') {
+                $unit_module = new Unit_Module();
+                $responses_count = 0;
+
+                $modules = $unit_module->get_modules($unit_id);
+                foreach ($modules as $module) {
+                    $unit_module = new Unit_Module();
+                    if ($unit_module->did_student_responed($module->ID, $student_id)) {
+                        $responses_count++;
+                    }
+                }
+                $unit->details->$field = $responses_count;
             }
 
             return $unit->details->$field;

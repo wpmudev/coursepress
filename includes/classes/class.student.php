@@ -39,6 +39,24 @@ if (!class_exists('Student')) {
                 return false;
             }
         }
+        
+        function is_course_visited($course_ID = 0, $user_ID = '') {
+            if($user_ID == ''){
+                $user_ID = $this->ID;
+            }
+            
+            $get_old_values = get_user_meta($user_ID, 'visited_courses', false);
+            
+            if($get_old_values == false){
+                $get_old_values = array();
+            }
+            
+            if(cp_in_array_r($course_ID, $get_old_values)){
+                return true;
+            }else{
+                return false;
+            }
+        }
 
         //Enroll student in the course
         function enroll_in_course($course_id, $class = '', $group = '') {

@@ -574,4 +574,24 @@ function get_terms_dropdown($taxonomies, $args) {
     return $output;
 }
 
+function cp_in_array_r($needle, $haystack, $strict = false) {
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && cp_in_array_r($needle, $item, $strict))) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function cp_suppress_errors() {
+    ini_set('display_errors', 0);
+    ini_set('scream.enabled', false);
+}
+
+function cp_show_errors() {
+    ini_set('display_errors', 1);
+    ini_set('scream.enabled', true);
+}
+
 ?>

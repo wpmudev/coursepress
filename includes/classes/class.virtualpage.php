@@ -29,6 +29,8 @@ if (!class_exists('CoursePress_Virtual_Page')) {
             $this->is_page = isset($args['is_page']) ? $args['is_page'] : TRUE;
             $this->is_singular = isset($args['is_singular']) ? $args['is_singular'] : TRUE;
             $this->is_archive = isset($args['is_archive']) ? $args['is_archive'] : FALSE;
+            $this->comment_status = isset($args['comment_status']) ? $args['comment_status'] : 'closed';
+            $this->post_type = 'public';
             
             
             add_filter('the_posts', array(&$this, 'virtualPage'));
@@ -45,7 +47,7 @@ if (!class_exists('CoursePress_Virtual_Page')) {
 
                 $post = new stdClass;
 
-                $post->ID = 99999999999;/* non-existed post ID */
+                $post->ID = '';/* 99999999999 non-existed post ID */
                 $post->post_author = $this->author;
                 $post->post_date = $this->date;
                 $post->post_date_gmt = $this->dategmt;
@@ -53,7 +55,7 @@ if (!class_exists('CoursePress_Virtual_Page')) {
                 $post->post_title = $this->title;
                 $post->post_excerpt = '';
                 $post->post_status = 'publish';
-                $post->comment_status = 'closed';
+                $post->comment_status = $this->comment_status;
                 $post->ping_status = 'closed';
                 $post->post_password = '';
                 $post->post_name = $this->slug;

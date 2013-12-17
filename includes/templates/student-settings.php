@@ -2,7 +2,7 @@
     <?php
     $form_message_class = '';
     $form_message = '';
-    
+
     if (isset($_POST['student-settings-submit'])) {
         $student_data = array();
         $student_data['ID'] = get_current_user_id();
@@ -46,33 +46,23 @@
         <label>
             <?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="<?php esc_attr_e($student->user_firstname); ?>" />
-        </label>
-
-        <label>
+        </label><label>
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="<?php esc_attr_e($student->user_lastname); ?>" />
-        </label>
-
-        <label>
+        </label><label>
             <?php _e('E-mail', 'cp'); ?>:
             <input type="text" name="email" value="<?php esc_attr_e($student->user_email); ?>" />
-        </label>
-
-        <label>
+        </label><label>
             <?php _e('Password (empty = don\'t change)', 'cp'); ?>:
             <input type="password" name="password" value="" />
-        </label>
-
-        <label class="right">
+        </label><label class="right">
             <?php _e('Confirm Password', 'cp'); ?>:
             <input type="password" name="password_confirmation" value="" />
-        </label>
-
-        <label class="full">
+        </label><label class="full">
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Save Changes', 'cp'); ?>" />
         </label>
     </form>
-<?php
+    <?php
 } else {
     wp_redirect(wp_login_url());
     exit;

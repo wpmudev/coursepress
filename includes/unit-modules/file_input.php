@@ -80,7 +80,7 @@ class file_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
             <div class="module_file_input">     

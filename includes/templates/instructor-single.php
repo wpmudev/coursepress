@@ -3,7 +3,7 @@ echo do_shortcode('[course_instructor_avatar instructor_id="' . $user->ID . '"]'
 echo get_user_meta($user->ID, 'description', true);
 ?>
 
-<h2><?php _e('Courses', 'cp'); ?></h2>
+<h2 class="h2-instructor-bio"><?php _e('Courses', 'cp'); ?></h2>
 
 <?php
 $instructor = new Instructor($user->ID);
