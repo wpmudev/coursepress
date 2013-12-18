@@ -164,7 +164,7 @@ if (!class_exists('CoursePress')) {
 
             //add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
 //add_filter('comment_reply_link', array(&$this, 'get_comment_link'), 10, 3);
-             //add_filter('comments_template', array(&$this, 'comments_template'));
+            //add_filter('comments_template', array(&$this, 'comments_template'));
             //add_filter('comment_post_redirect', array(&$this, 'redirect_after_comment'));
 //add_filter('upload_mimes', array(&$this, 'add_custom_upload_mimes'));
 // Add Filter Hook  
@@ -1132,6 +1132,13 @@ if (!class_exists('CoursePress')) {
         }
 
         function admin_header_actions() {
+            global $wp_version;
+
+            if ($wp_version >= 3.8) {
+                wp_register_style('cp-38', $this->plugin_url . 'css/admin-icon.css');
+                wp_enqueue_style('cp-38');
+            }
+
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css');
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
@@ -1483,234 +1490,234 @@ if (!class_exists('CoursePress')) {
             ?>
             <div class="menu">
                 <ul class='nav-menu'>
-            <?php
-            foreach ($main_sorted_menu_items as $menu_item) {
-                ?>
+                    <?php
+                    foreach ($main_sorted_menu_items as $menu_item) {
+                        ?>
                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                        <?php if ($menu_item->db_id !== '') { ?>
+                            <?php if ($menu_item->db_id !== '') { ?>
                                 <ul>
-                            <?php
-                            foreach ($sub_sorted_menu_items as $menu_item) {
-                                ?>
-                                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                    <?php } ?>
-                                </ul>
-                                <?php } ?>
-                        </li>
                                     <?php
-                                }
-                                ?>
+                                    foreach ($sub_sorted_menu_items as $menu_item) {
+                                        ?>
+                                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
+                                        <?php } ?>
+                                </ul>
+                            <?php } ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
                 </ul>
             </div>
 
-                    <?php
-                }
-
-                function login_redirect($redirect_to, $request, $user) {
-                    global $user;
-
-                    if (isset($user->roles) && is_array($user->roles)) {
-//check for students
-                        if (in_array("student", $user->roles)) {
-// redirect them to the default place
-                            return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
-                        } else {
-                            return $redirect_to;
-                        }
-                    } else {
-                        return $redirect_to;
-                    }
-                }
-
-                function comments_template($template) {
-                    global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
-                    if (get_post_type($id) == 'course') {
-                        $template = $this->plugin_dir . 'includes/templates/no-comments.php';
-                    }
-                    return $template;
-                }
-
-                function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
-                    global $wp, $post_id;
-
-                    if (is_array($wp->query_vars)) {
-                        if (array_key_exists('unitname', $wp->query_vars)) {
-                            $unit = new Unit();
-                            $post_id = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
-                        } else if (array_key_exists('coursename', $wp->query_vars)) {
-                            $course = new Course();
-                            $post_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
-                        } else {
-                            $post_id = $post_id;
-                        }
-
-
-                        if (get_post_type($post_id) == 'virtual_page') {
-                            return true;
-                        }
-
-                        if (get_post_type($post_id) == 'course') {
-                            if (get_permalink($post_id) != curPageURL()) {
-                                return true;
-                            } else {
-                                return false; //we want to have separate page to show comments
-                            }
-                        }
-
-                        if (get_post_type($post_id) == 'unit') {
-                            return false;
-                        }
-                    } else {
-                        return true;
-                    }
-                }
-
-                function check_for_comment_redirect_after_post($location) {
-                    /* if (isset($_POST['comment_post_ID'])) {
-                      return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
-                      } */
-                    return $location;
-                }
-
-                function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
-                    if (get_post_type($post->ID) == 'unit') {
-                        $unit = new Unit($post->ID);
-                        return $unit->get_permalink();
-                    } else {
-                        return $permalink;
-                    }
-                }
-
-                function output_buffer() {
-                    ob_start();
-                }
-
-                function get_comment_link($link, $comment, $args) {
-                    /* if (get_post_type($comment->comment_post_ID) == 'unit') {
-                      $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '#comment-' . $comment->comment_ID;
-                      return $link;
-                      } else if (get_post_type($comment->comment_post_ID) == 'course') {
-                      $link = trailingslashit(get_permalink($comment->comment_post_ID)) . 'units/#comment-' . $comment->comment_ID;
-                      } */
-
-                    if (get_post_type($comment->comment_post_ID) == 'course') {
-//COURSE PERMA IS NEEDED HERE
-                        $link = trailingslashit(get_permalink($comment->comment_post_ID)) . $this->get_units_slug() . '/#comment-' . $comment->comment_ID;
-                    }
-
-                    return $link;
-                }
-
-                function user_is_currently_active($user_id, $latest_activity_in_minutes = 5) {
-                    if (empty($user_id)) {
-                        exit;
-                    }
-                    $latest_user_activity = get_user_meta($user_id, 'latest_activity', true);
-                    $current_time = current_time('timestamp');
-
-                    $minutes_ago = round(abs($current_time - $latest_user_activity) / 60, 2);
-
-                    if ($minutes_ago <= $latest_activity_in_minutes) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                function is_marketpress_active() {
-                    $plugins = get_option('active_plugins');
-                    $required_plugin = 'marketpress/marketpress.php';
-
-                    if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                function is_chat_plugin_active() {
-                    $plugins = get_option('active_plugins');
-                    $required_plugin = 'wordpress-chat/wordpress-chat.php';
-
-                    if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                function listen_for_paid_status_for_courses($order) {
-                    global $mp;
-
-                    $purchase_order = $mp->get_order($order->ID);
-                    $product_id = key($purchase_order->mp_cart_info);
-
-                    $course = new Course();
-                    $course_details = $course->get_course_by_marketpress_product_id($product_id);
-
-                    if ($course_details && !empty($course_details)) {
-                        $student = new Student($order->post_author);
-                        $student->enroll_in_course($course_details->ID);
-                    }
-                }
-
-                function pdf_report($report = '', $report_name = '', $report_title = 'Student Report', $preview = false) {
-                    ob_end_clean();
-                    ob_start();
-                    require_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php');
-                    require_once( $this->plugin_dir . 'includes/external/tcpdf/tcpdf.php');
-
-// create new PDF document
-                    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-// set document information
-                    $pdf->SetCreator($this->name);
-                    $pdf->SetTitle($report_title);
-                    $pdf->SetKeywords('');
-
-// remove default header/footer
-                    $pdf->setPrintHeader(false);
-                    $pdf->setPrintFooter(false);
-
-// set default monospaced font
-                    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-//set margins
-                    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-                    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-                    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-//set auto page breaks
-                    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-//set image scale factor
-                    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-//set some language-dependent strings
-                    $pdf->setLanguageArray($l);
-// ---------------------------------------------------------
-// set font
-                    $pdf->SetFont('helvetica', '', 12);
-// add a page
-                    $pdf->AddPage();
-                    $html = '';
-                    $html .= make_clickable(wpautop($report));
-// output the HTML content
-                    $pdf->writeHTML($html, true, false, true, false, '');
-//Close and output PDF document
-                    ob_end_clean();
-                    if ($preview) {
-                        $pdf->Output($report_name, 'I');
-                    } else {
-                        $pdf->Output($report_name, 'D');
-                    }
-                    exit;
-                }
-
-            }
-
+            <?php
         }
 
-        global $coursepress;
-        $coursepress = new CoursePress();
-        ?>
+        function login_redirect($redirect_to, $request, $user) {
+            global $user;
+
+            if (isset($user->roles) && is_array($user->roles)) {
+//check for students
+                if (in_array("student", $user->roles)) {
+// redirect them to the default place
+                    return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
+                } else {
+                    return $redirect_to;
+                }
+            } else {
+                return $redirect_to;
+            }
+        }
+
+        function comments_template($template) {
+            global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
+            if (get_post_type($id) == 'course') {
+                $template = $this->plugin_dir . 'includes/templates/no-comments.php';
+            }
+            return $template;
+        }
+
+        function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
+            global $wp, $post_id;
+
+            if (is_array($wp->query_vars)) {
+                if (array_key_exists('unitname', $wp->query_vars)) {
+                    $unit = new Unit();
+                    $post_id = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
+                } else if (array_key_exists('coursename', $wp->query_vars)) {
+                    $course = new Course();
+                    $post_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
+                } else {
+                    $post_id = $post_id;
+                }
+
+
+                if (get_post_type($post_id) == 'virtual_page') {
+                    return true;
+                }
+
+                if (get_post_type($post_id) == 'course') {
+                    if (get_permalink($post_id) != curPageURL()) {
+                        return true;
+                    } else {
+                        return false; //we want to have separate page to show comments
+                    }
+                }
+
+                if (get_post_type($post_id) == 'unit') {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        function check_for_comment_redirect_after_post($location) {
+            /* if (isset($_POST['comment_post_ID'])) {
+              return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
+              } */
+            return $location;
+        }
+
+        function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
+            if (get_post_type($post->ID) == 'unit') {
+                $unit = new Unit($post->ID);
+                return $unit->get_permalink();
+            } else {
+                return $permalink;
+            }
+        }
+
+        function output_buffer() {
+            ob_start();
+        }
+
+        function get_comment_link($link, $comment, $args) {
+            /* if (get_post_type($comment->comment_post_ID) == 'unit') {
+              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . '#comment-' . $comment->comment_ID;
+              return $link;
+              } else if (get_post_type($comment->comment_post_ID) == 'course') {
+              $link = trailingslashit(get_permalink($comment->comment_post_ID)) . 'units/#comment-' . $comment->comment_ID;
+              } */
+
+            if (get_post_type($comment->comment_post_ID) == 'course') {
+//COURSE PERMA IS NEEDED HERE
+                $link = trailingslashit(get_permalink($comment->comment_post_ID)) . $this->get_units_slug() . '/#comment-' . $comment->comment_ID;
+            }
+
+            return $link;
+        }
+
+        function user_is_currently_active($user_id, $latest_activity_in_minutes = 5) {
+            if (empty($user_id)) {
+                exit;
+            }
+            $latest_user_activity = get_user_meta($user_id, 'latest_activity', true);
+            $current_time = current_time('timestamp');
+
+            $minutes_ago = round(abs($current_time - $latest_user_activity) / 60, 2);
+
+            if ($minutes_ago <= $latest_activity_in_minutes) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function is_marketpress_active() {
+            $plugins = get_option('active_plugins');
+            $required_plugin = 'marketpress/marketpress.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function is_chat_plugin_active() {
+            $plugins = get_option('active_plugins');
+            $required_plugin = 'wordpress-chat/wordpress-chat.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function listen_for_paid_status_for_courses($order) {
+            global $mp;
+
+            $purchase_order = $mp->get_order($order->ID);
+            $product_id = key($purchase_order->mp_cart_info);
+
+            $course = new Course();
+            $course_details = $course->get_course_by_marketpress_product_id($product_id);
+
+            if ($course_details && !empty($course_details)) {
+                $student = new Student($order->post_author);
+                $student->enroll_in_course($course_details->ID);
+            }
+        }
+
+        function pdf_report($report = '', $report_name = '', $report_title = 'Student Report', $preview = false) {
+            ob_end_clean();
+            ob_start();
+            require_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php');
+            require_once( $this->plugin_dir . 'includes/external/tcpdf/tcpdf.php');
+
+// create new PDF document
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// set document information
+            $pdf->SetCreator($this->name);
+            $pdf->SetTitle($report_title);
+            $pdf->SetKeywords('');
+
+// remove default header/footer
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+
+// set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+//set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+//set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+//set some language-dependent strings
+            $pdf->setLanguageArray($l);
+// ---------------------------------------------------------
+// set font
+            $pdf->SetFont('helvetica', '', 12);
+// add a page
+            $pdf->AddPage();
+            $html = '';
+            $html .= make_clickable(wpautop($report));
+// output the HTML content
+            $pdf->writeHTML($html, true, false, true, false, '');
+//Close and output PDF document
+            ob_end_clean();
+            if ($preview) {
+                $pdf->Output($report_name, 'I');
+            } else {
+                $pdf->Output($report_name, 'D');
+            }
+            exit;
+        }
+
+    }
+
+}
+
+global $coursepress;
+$coursepress = new CoursePress();
+?>

@@ -15,7 +15,6 @@
 }
 
 .assessment .ui-tabs-nav a:hover{
-    border-color: #ccc #ccc #fff;
 }
 
 .assessment .ui-tabs .ui-tabs-nav{
@@ -29,9 +28,7 @@
 }
 
 .assessment .ui-tabs .ui-tabs-nav li.ui-tabs-active{
-    /*border-color: #ccc #ccc #fff;*/
     border: 1px solid #ccc;
-    border-bottom: 1px solid #fff;
 }
 
 .assessment .ui-tabs .ui-tabs-nav li.ui-tabs-active a{
@@ -47,7 +44,7 @@
 
 .assessment .ui-tabs .ui-tabs-nav li:hover{
     border: 1px solid #ccc;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid #ccc;
     cursor: pointer;
 }
 
@@ -117,14 +114,6 @@
     border-color: #ddd;
     border-width: 0 1px 1px;
     border-style: none solid solid;
-    -moz-border-radius-bottomleft: 8px;
-    -moz-border-radius-bottomright: 8px;
-    -webkit-border-bottom-right-radius: 8px;
-    -webkit-border-bottom-left-radius: 8px;
-    -khtml-border-bottom-right-radius: 8px;
-    -khtml-border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
     padding: 0;
 }
 
@@ -192,6 +181,8 @@ h3 .response-student-info{
     float: right;
     width: 10%;
     min-width: 120px;
+    margin-top: 5px;
+    margin-left: 40px;
 }
 
 .assessment-holder #response_grade{
@@ -225,8 +216,6 @@ td.less_visible_row{
     position: relative;
     width: 100%;
     background: #ddd;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
     padding: 0em 0em;
     color: rgba(0,0,0, .8);
     text-shadow: 0 1px 0 #fff;
@@ -284,4 +273,14 @@ td.less_visible_row{
 .correct_answer, .not_correct_answer{
     width: 20px;
     margin-left: 10px;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-right,  .ui-corner-tl, .ui-corner-tr{
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.assessment .ui-widget-content{
+    background: transparent;
 }

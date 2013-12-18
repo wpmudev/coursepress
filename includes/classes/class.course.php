@@ -300,7 +300,8 @@ if (!class_exists('Course')) {
         }
 
         function show_purchase_form($product_id) {
-            echo do_shortcode('[mp_product_meta product_id="' . $product_id . '"]');
+            echo do_shortcode('[mp_product product_id="' . $product_id . '" title="true" content="full"]');
+            //echo do_shortcode('[mp_product_meta product_id="' . $product_id . '"]');
         }
 
         function is_user_purchased_course($product_id, $user_id) {

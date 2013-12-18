@@ -8,7 +8,6 @@ jQuery(document).ready(function() {
 });
 
 /* UNIT MODULES */
-jQuery(document).ready(function() {
 
     jQuery('.button-primary').click(function() {
         jQuery("input[name*='radio_check']:checked").each(function() {
@@ -145,6 +144,7 @@ jQuery(document).ready(function() {
             dateFormat: 'yy-mm-dd'
         });
     });
+    
     function unenroll_student_confirmed() {
         return confirm(coursepress.unenroll_student_alert);
     }
@@ -425,5 +425,3 @@ jQuery(document).ready(function() {
     jQuery('a').click(function(e) {
         e.stopPropagation();
     });
-
-});

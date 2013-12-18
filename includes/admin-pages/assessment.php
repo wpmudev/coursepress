@@ -331,7 +331,9 @@
                                                     $response = $module->get_response($user_object->ID, $mod->ID);
                                                     $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
 
-                                                    $grade_data = $unit_module_main->get_response_grade($response->ID);
+                                                    if (count($response) >= 1) {
+                                                        $grade_data = $unit_module_main->get_response_grade($response->ID);
+                                                    }
 
                                                     if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
                                                         if (count($response) >= 1 && !$grade_data) {
@@ -412,8 +414,9 @@
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php
-                                                                $comment = $unit_module_main->get_response_comment($response->ID);
-
+                                                                if (count($response) >= 1) {
+                                                                    $comment = $unit_module_main->get_response_comment($response->ID);
+                                                                }
                                                                 if ($comment) {
                                                                     ?>
                                                                     <a class="response_comment" alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>">✓</a>

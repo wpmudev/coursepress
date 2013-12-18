@@ -15,6 +15,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     check_admin_referer('course_details_overview');
 
+    if ($_POST['meta_course_category'] != -1) {
+        $term = get_term_by('id', $_POST['meta_course_category'], 'course_category');
+            wp_set_object_terms( $course_id, $term->slug, 'course_category', false );
+    }
+
     if (!isset($_POST['meta_open_ended_course'])) {
         $_POST['meta_open_ended_course'] = 'off';
     }
@@ -150,7 +155,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));          ?>" />-->
+                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));             ?>" />-->
                                 <select name="meta_prerequisite">
 
                                     <?php
@@ -190,7 +195,7 @@ if (isset($_GET['course_id'])) {
                                 <?php
                                 $tax_args = array(
                                     'show_option_all' => '',
-                                    'show_option_none' => '',
+                                    'show_option_none' => __('-- None --', 'coursepress'),
                                     'orderby' => 'ID',
                                     'order' => 'ASC',
                                     'show_count' => 0,
@@ -202,7 +207,7 @@ if (isset($_GET['course_id'])) {
                                     'id' => '',
                                     'class' => 'postform',
                                     'depth' => 0,
-                                    'tab_index' => 0,
+                                    'tab_index' => -1,
                                     'taxonomy' => 'course_category',
                                     'hide_if_empty' => false,
                                     'walker' => ''
@@ -382,28 +387,30 @@ if (isset($_GET['course_id'])) {
                 </div> <!-- course-holder-wrap -->
             <?php } ?>
 
-            <div class="course-holder-wrap">
+            <?php if (0 == 1) { ?>
+                <div class="course-holder-wrap">
 
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php _e('Course Image', 'cp'); ?></h3>
-                </div>
+                    <div class="sidebar-name no-movecursor">
+                        <h3><?php _e('Course Image', 'cp'); ?></h3>
+                    </div>
 
-                <div class="level-holder" id="sidebar-levels">
-                    <div class='sidebar-inner'>
-                        <div class="featured_url_holder">
-                            <?php _e('Browse for an image.', 'cp'); ?>
-                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
-                            <input class="featured_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
-                            <?php
-                            //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
-                            echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                            echo get_post_meta($course_id, '_thumbnail_id', true);
-                            ?>
+                    <div class="level-holder" id="sidebar-levels">
+                        <div class='sidebar-inner'>
+                            <div class="featured_url_holder">
+                                <?php _e('Browse for an image.', 'cp'); ?>
+                                <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
+                                <input class="featured_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                                <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
+                                <?php
+                                //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
+                                echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                                echo get_post_meta($course_id, '_thumbnail_id', true);
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> <!-- course-holder-wrap -->
+                </div> <!-- course-holder-wrap -->
+            <?php } ?>
 
 
 

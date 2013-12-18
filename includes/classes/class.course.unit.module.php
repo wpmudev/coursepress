@@ -94,10 +94,10 @@ if (!class_exists('Unit_Module')) {
                 'post_status' => 'publish');
 
             $already_respond_posts = get_posts($already_respond_posts_args);
-            
+
             if (count($already_respond_posts) > 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -202,7 +202,7 @@ if (!class_exists('Unit_Module')) {
 
             $modules = $this->get_modules($unit_id);
             ?>
-            <form name="modules_form" enctype="multipart/form-data" method="post">
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post">
                 <?php
                 foreach ($modules as $mod) {
                     $class_name = $mod->module_type;
@@ -271,10 +271,15 @@ if (!class_exists('Unit_Module')) {
 
         function get_response_grade($response_id, $data = '') {
             $grade_data = get_post_meta($response_id, 'response_grade');
-            if ($data !== '') {
-                return $grade_data[0][$data];
-            } else {
-                return $grade_data[0];
+
+            if ($grade_data) {
+                if ($data !== '') {
+                    return $grade_data[0][$data];
+                } else {
+                    return $grade_data[0];
+                } 
+            }else{
+                
             }
         }
 
@@ -330,19 +335,19 @@ if (!class_exists('Unit_Module')) {
         function get_module_delete_link($module_id) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                        jQuery(this).parent().parent().remove();
-                                        update_sortable_module_indexes();
-                                    }
-                                    ;"><?php _e('Delete'); ?></a>
+                                    jQuery(this).parent().parent().remove();
+                                    update_sortable_module_indexes();
+                                }
+                                ;"><?php _e('Delete'); ?></a>
                <?php
            }
 
            function get_module_remove_link() {
                ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                                        jQuery(this).parent().parent().remove();
-                                        update_sortable_module_indexes();
-                                    }"><?php _e('Remove') ?></a>
+                                    jQuery(this).parent().parent().remove();
+                                    update_sortable_module_indexes();
+                                }"><?php _e('Remove') ?></a>
             <?php
         }
 

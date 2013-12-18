@@ -79,7 +79,7 @@ function coursepress_send_email($email_args = array()) {
         return get_option('blog_charset');
     }
 
-    wp_mail($student_email, $subject, nl2br($message));
+    wp_mail($student_email, stripslashes($subject), stripslashes(nl2br($message)));
 }
 
 /* Get Student Invitation with Passcode to a Course E-mail data */
@@ -398,6 +398,8 @@ function get_the_course_excerpt($id = false, $length = 55) {
     if (empty($post)) {
         $post = new StdClass;
         $post->ID = 0;
+        $post->post_excerpt = '';
+        $post->post_content = '';
     }
 
     $old_post = $post;

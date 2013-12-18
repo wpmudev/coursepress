@@ -18,7 +18,7 @@ class checkbox_input_module extends Unit_Module {
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count($response >= 1)) {
+        if ($response) {
             $student_checked_answers = get_post_meta($response->ID, 'student_checked_answers', true);
             ?>
             <div class="module_text_response_answer">
@@ -175,7 +175,7 @@ class checkbox_input_module extends Unit_Module {
                                         <td width="90%">
                                             <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
                                             <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' <?php
-                                            if (in_array($answer, $data->checked_answers)) {
+                                            if (is_array($data->checked_answers) && in_array($answer, $data->checked_answers)) {
                                                 echo 'checked';
                                             }
                                             ?> />
