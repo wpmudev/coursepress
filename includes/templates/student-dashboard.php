@@ -55,6 +55,7 @@
     ?>
     <?php
 } else {
+    //ob_start();
     wp_redirect(wp_login_url());
     exit;
 }

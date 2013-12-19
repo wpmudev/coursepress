@@ -18,7 +18,7 @@ class text_module extends Unit_Module {
 
     function front_main($data) {
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
         </div>
@@ -35,27 +35,29 @@ class text_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
-                <?php if (isset($data->ID)) {
+                <?php
+                if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);
                 } else {
                     parent::get_module_remove_link();
-                } ?>
+                }
+                ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                    <?php // if (!empty($data)) { ?>
+                <?php // if (!empty($data)) { ?>
                 <div class="editor_in_place">
-                <?php
-                $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
-                ?>
+                    <?php
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
+                    wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
+                    ?>
                 </div>
-        <?php //}else{  ?>
+                <?php //}else{  ?>
                 <!--<div class="editor_to_place">Loading editor...</div>-->
-        <?php //}  ?>
+                <?php //}   ?>
             </div>
 
         </div>
@@ -70,7 +72,7 @@ class text_module extends Unit_Module {
 
     function save_module_data() {
         global $wpdb, $last_inserted_unit_id;
-
+        
         if (isset($_POST['module_type'])) {
 
             foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {

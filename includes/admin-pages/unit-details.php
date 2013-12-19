@@ -31,10 +31,13 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
         $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0);
 
         if ($new_post_id != 0) {
+            ob_start();
             if (isset($_GET['ms'])) {
                 wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+                //exit;
             } else {
                 wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
+                //exit;
             }
         } else {
             //an error occured
@@ -124,7 +127,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
     <div class='level-liquid-right'>
         <div class="level-holder-wrap">
             <?php
-            $sections = array("instructors" => __('Content building blocks', 'cp'), "students" => __('Students Responses', 'cp'));
+            $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
 
             foreach ($sections as $key => $section) {
                 ?>

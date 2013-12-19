@@ -426,6 +426,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 if ($course->details->post_author != get_current_user_id()) {//check if user is an author of a course (probably instructor)
                     if (!current_user_can('coursepress_view_all_units_cap')) {//check if the instructor, even if it's not the author of the course, maybe has a capability given by the admin
                         if (!$student->has_access_to_course($course_id)) {//if it's not an instructor who made the course, check if he is enrolled to course
+                            //ob_start();
                             wp_redirect(get_permalink($course_id)); //if not, redirect him to the course page so he may enroll it if the enrollment is available
                             exit;
                         }
@@ -453,6 +454,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             }
 
             if (count($units) == 1) {
+                //ob_start();
                 wp_redirect($last_unit_url);
                 exit;
             }
@@ -475,6 +477,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             //redirect to the parent course page if not enrolled
             if (!current_user_can('administrator')) {
                 if (!$student->has_access_to_course($unit->course_id)) {
+                    //ob_start();
                     wp_redirect(get_permalink($unit->course_id));
                     exit;
                 }

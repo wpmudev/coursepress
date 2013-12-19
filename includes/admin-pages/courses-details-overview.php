@@ -29,12 +29,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     }
 
     $new_post_id = $course->update_course();
-
+    
     if ($new_post_id != 0) {
+        ob_start();
         if (isset($_GET['ms'])) {
-            wp_redirect('?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+            wp_redirect('?page=' . $page .'&course_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+            exit;
         } else {
             wp_redirect('?page=' . $page . '&course_id=' . $new_post_id);
+            exit;
         }
     } else {
         //an error occured

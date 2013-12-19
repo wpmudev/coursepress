@@ -120,6 +120,7 @@ get_header();
             </form>
             <?php
         } else {
+            //ob_start();
             wp_redirect($this->get_student_dashboard_slug(true));
             exit;
         }

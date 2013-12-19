@@ -120,7 +120,7 @@ if (!class_exists('CoursePress')) {
             add_action('plugins_loaded', array(&$this, 'localization'), 9);
 
 //Output buffer hack
-//add_action('init', array(&$this, 'output_buffer'), 0);
+            add_action('init', array(&$this, 'output_buffer'), 0);
 //Register custom post types
 //add_action('init', array(&$this, 'pdf_report'), 0);
 
@@ -653,6 +653,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function init_vars() {
+            $GLOBALS['global_post'] = 'asdasdaasd';$_POST;
 //setup proper directories
             if (defined('WP_PLUGIN_URL') && defined('WP_PLUGIN_DIR') && file_exists(WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename(__FILE__))) {
                 $this->location = 'subfolder-plugins';
@@ -835,7 +836,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Unit', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 //Add later rewrite for customizable slugs!!!
@@ -861,7 +862,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -885,7 +886,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Response', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true

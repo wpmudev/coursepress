@@ -72,6 +72,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function check_for_modules_to_delete() {
+
             if (is_admin()) {
                 if (isset($_POST['modules_to_execute'])) {
                     $modules_to_delete = $_POST['modules_to_execute'];
@@ -277,8 +278,8 @@ if (!class_exists('Unit_Module')) {
                     return $grade_data[0][$data];
                 } else {
                     return $grade_data[0];
-                } 
-            }else{
+                }
+            } else {
                 
             }
         }
@@ -364,7 +365,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function on_create() {
-            
+
         }
 
         function save_module_data() {

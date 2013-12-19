@@ -523,7 +523,9 @@ if (!function_exists('coursepress_register_module')) {
 
     function coursepress_register_module($module_name, $class_name, $section) {
         global $coursepress_modules;
-
+        
+        //cp_write_log($_POST);
+        
         if (!is_array($coursepress_modules)) {
             $coursepress_modules = array();
         }
@@ -595,5 +597,4 @@ function cp_show_errors() {
     ini_set('display_errors', 1);
     ini_set('scream.enabled', true);
 }
-
 ?>

@@ -14,11 +14,16 @@ if (isset($_POST['invite_student'])) {
         $email_args['enroll_type'] = $course->details->enroll_type;
         if (is_email($_POST['email'])) {
             coursepress_send_email($email_args);
+            //ob_start();
             wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=is');
+            exit;
         } else {
+            //ob_start();
             wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ems=wrong_email');
+            exit;
         }
         //wp_redirect('?page=course_details&tab=students&course_id=' . $course_id);
+        //exit;
     }
 }
 
@@ -27,7 +32,9 @@ if (isset($_POST['students']) && is_numeric($_POST['students'])) {
     check_admin_referer('student_details');
     $student = new Student($_POST['students']);
     $student->enroll_in_course($course_id, $_POST['class_name']);
+    //ob_start();
     wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=as');
+    exit;
 }
 
 /* Add new course class */
@@ -73,8 +80,9 @@ if (isset($_GET['delete_class'])) {
             update_post_meta($course_id, 'course_classes', $course_classes);
         }
     }
-
+    //ob_start();
     wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=dc');
+    exit;
 }
 
 $course_classes = get_post_meta($course_id, 'course_classes', true);
@@ -107,7 +115,9 @@ if (isset($_GET['unenroll_all'])) {
             }
         }
     }
+    //ob_start();
     wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=usl');
+    exit;
 }
 
 /* Un-enroll a Student from class */
@@ -116,7 +126,9 @@ if (isset($_GET['unenroll']) && is_numeric($_GET['unenroll'])) {
         $student = new Student($_GET['unenroll']);
         $student->unenroll_from_course($course_id);
     }
+    //ob_start();
     wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=us');
+    exit;
 }
 
 $columns = array(
