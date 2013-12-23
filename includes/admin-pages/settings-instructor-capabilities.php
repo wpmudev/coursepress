@@ -34,7 +34,8 @@ $capability_boxes = array(
     'instructor_capabilities_instructors' => __('Instructors', 'cp'),
     'instructor_capabilities_classes' => __('Classes', 'cp'),
     'instructor_capabilities_students' => __('Students', 'cp'),
-    'instructor_capabilities_groups' => __('Settings Pages', 'cp')
+    'instructor_capabilities_notifications' => __('Notifications', 'cp'),
+    'instructor_capabilities_groups' => __('Settings Pages', 'cp'),
 );
 
 $instructor_capabilities_general = array(
@@ -96,6 +97,16 @@ $instructor_capabilities_students = array(
 $instructor_capabilities_groups = array(
     'coursepress_settings_groups_page_cap' => __('View Groups tab within the Settings page', 'cp'),
     'coursepress_settings_shortcode_page_cap' => __('View Shortcode within the Settings page', 'cp')
+);
+
+$instructor_capabilities_notifications = array(
+    'coursepress_create_notification_cap' => __('Create new notifications', 'cp'),
+    'coursepress_update_notification_cap' => __('Update every notification', 'cp'),
+    'coursepress_update_my_notification_cap' => __('Update notifications made by the instructor only', 'cp'),
+    'coursepress_delete_notification_cap' => __('Delete every notification', 'cp'),
+    'coursepress_delete_my_notification_cap' => __('Delete notifications made by the instructor only', 'cp'),
+    'coursepress_change_notification_status_cap' => __('Change status of every notification', 'cp'),
+    'coursepress_change_my_notification_status_cap' => __('Change statuses of notifications made by the instructor only', 'cp')
 );
 ?>
 <div id="poststuff" class="metabox-holder m-settings">

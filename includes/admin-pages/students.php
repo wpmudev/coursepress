@@ -100,7 +100,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <option value="unenroll"><?php _e('Unenroll from all courses', 'cp'); ?></option>
                             <?php } ?>
                         </select>
-                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'membership'); ?>" />
+                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'cp'); ?>" />
                     <?php } ?>
                 </div>
 

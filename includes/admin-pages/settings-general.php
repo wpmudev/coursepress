@@ -87,8 +87,7 @@
                                 ?>&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php esc_attr_e($this->get_instructor_profile_slug());
                                 ?>' />&nbsp;/
                             </td>
-                        </tr>
-                        
+                        </tr>                        
                         
                     </tbody>
                 </table>

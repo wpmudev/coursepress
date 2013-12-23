@@ -125,7 +125,7 @@ if (isset($_GET['quick_setup'])) {
                                 <option value="delete"><?php _e('Delete', 'cp'); ?></option>
                             <?php } ?>
                         </select>
-                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'membership'); ?>" />
+                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'cp'); ?>" />
                     </div>
                 <?php } ?>
 

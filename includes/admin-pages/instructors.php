@@ -92,7 +92,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             <option value="delete"><?php _e('Delete', 'cp'); ?></option>
                             <option value="unassign"><?php _e('Unassign from all courses', 'cp'); ?></option>
                         </select>
-                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'membership'); ?>" />
+                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'cp'); ?>" />
                     <?php } ?>
                 </div>
 
