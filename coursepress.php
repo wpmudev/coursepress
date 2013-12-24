@@ -55,6 +55,7 @@ if (!class_exists('CoursePress')) {
             $GLOBALS['plugin_dir'] = $this->plugin_dir;
             $GLOBALS['course_slug'] = $this->get_course_slug();
             $GLOBALS['units_slug'] = $this->get_units_slug();
+            $GLOBALS['notifications_slug'] = $this->get_notifications_slug();
             $GLOBALS['module_slug'] = $this->get_module_slug();
             $GLOBALS['instructor_profile_slug'] = $this->get_instructor_profile_slug();
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
@@ -103,7 +104,7 @@ if (!class_exists('CoursePress')) {
 
 // Course class
             require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
-            
+
             // Notification class
             require_once( $this->plugin_dir . 'includes/classes/class.notification.php' );
 
@@ -192,7 +193,7 @@ if (!class_exists('CoursePress')) {
             add_action('pre_get_posts', array(&$this, 'remove_canonical'));
             //add_action('option_rewrite_rules', array(&$this, 'check_rewrite_rules'));
             add_action('wp_ajax_update_units_positions', array($this, 'update_units_positions'));
-            add_filter('query_vars', array($this, 'units_filter_query_vars'));
+            add_filter('query_vars', array($this, 'filter_query_vars'));
             add_filter('get_edit_post_link', array($this, 'courses_edit_post_link'), 10, 3);
             add_action('parse_request', array($this, 'action_parse_request'));
             add_action('admin_init', array(&$this, 'coursepress_plugin_do_activation_redirect'));
@@ -239,11 +240,6 @@ if (!class_exists('CoursePress')) {
             if ($taxonomy == 'course_category') {
                 $parent_file = 'courses';
             }
-            /*
-              if ($post_type == 'notifications') {
-              $parent_file = 'courses';
-              }
-             */
             return $parent_file;
         }
 
@@ -372,51 +368,87 @@ if (!class_exists('CoursePress')) {
             /* Show Units archive template */
             if (array_key_exists('coursename', $wp->query_vars) && !array_key_exists('unitname', $wp->query_vars)) {
 
+                $units_archive_page = false;
+                $notifications_archive_page = false;
+
+                $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+                
+                if (preg_match('/' . $this->get_units_slug() . '/', $url)) {
+                    $units_archive_page = true;
+                }
+
+                if (preg_match('/' . $this->get_notifications_slug() . '/', $url)) {
+                    $notifications_archive_page = true;
+                }
+
                 $vars = array();
                 $course = new Course();
-
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
 
-                /* $theme_file = locate_template(array('archive-unit.php'));
+                if($notifications_archive_page){
+                    $theme_file = locate_template(array('archive-notifications.php'));
 
-                  if ($theme_file != '') {
-                  do_shortcode('[course_units_loop]');
-                  require_once($theme_file);
-                  exit;
-                  } else {
-                  $args = array(
-                  'slug' => $wp->request,
-                  'title' => __('Course Units', 'cp'),
-                  'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
-                  'is_page' => FALSE,
-                  'is_singular' => FALSE,
-                  'is_archive' => TRUE
-                  );
-
-                  $pg = new CoursePress_Virtual_Page($args);
-                  do_shortcode('[course_units_loop]');
-                  } */
-                $theme_file = locate_template(array('archive-unit.php'));
-
-                if ($theme_file != '') {
-                    do_shortcode('[course_units_loop]');
-                    require_once($theme_file);
-                    exit;
-                } else {
-
-                    $args = array(
-                        'slug' => $wp->request,
-                        'title' => __('Course Units', 'cp'),
-                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
-                        'type' => 'unit',
-                        'is_page' => FALSE,
-                        'is_singular' => FALSE,
-                        'is_archive' => TRUE
-                    );
-                    $pg = new CoursePress_Virtual_Page($args);
-                    do_shortcode('[course_units_loop]');
+                    if ($theme_file != '') {
+                        //do_shortcode('[course_notifications_loop]');
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Notifications', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-notifications-archive.php', $vars),
+                            'type' => 'notifications',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                        do_shortcode('[course_notifications_loop]');
+                    }
                 }
-                $this->set_latest_activity(get_current_user_id());
+
+                if ($units_archive_page) {
+
+                    /* $theme_file = locate_template(array('archive-unit.php'));
+
+                      if ($theme_file != '') {
+                      do_shortcode('[course_units_loop]');
+                      require_once($theme_file);
+                      exit;
+                      } else {
+                      $args = array(
+                      'slug' => $wp->request,
+                      'title' => __('Course Units', 'cp'),
+                      'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
+                      'is_page' => FALSE,
+                      'is_singular' => FALSE,
+                      'is_archive' => TRUE
+                      );
+
+                      $pg = new CoursePress_Virtual_Page($args);
+                      do_shortcode('[course_units_loop]');
+                      } */
+                    $theme_file = locate_template(array('archive-unit.php'));
+
+                    if ($theme_file != '') {
+                        do_shortcode('[course_units_loop]');
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Course Units', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
+                            'type' => 'unit',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                        do_shortcode('[course_units_loop]');
+                    }
+                    $this->set_latest_activity(get_current_user_id());
+                }
             }
 
 
@@ -465,10 +497,11 @@ if (!class_exists('CoursePress')) {
             update_user_meta($user_ID, 'visited_courses', $get_old_values);
         }
 
-        function units_filter_query_vars($query_vars) {
+        function filter_query_vars($query_vars) {
             $query_vars[] = 'coursename';
             $query_vars[] = 'unitname';
             $query_vars[] = 'instructor_username';
+            ;
             return $query_vars;
         }
 
@@ -476,6 +509,7 @@ if (!class_exists('CoursePress')) {
             $new_rules = array();
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
             //flush_rewrite_rules();
             return array_merge($new_rules, $rules);
@@ -598,6 +632,11 @@ if (!class_exists('CoursePress')) {
         function get_units_slug() {
             $default_slug_value = 'units';
             return get_option('coursepress_units_slug', $default_slug_value);
+        }
+
+        function get_notifications_slug() {
+            $default_slug_value = 'notifications';
+            return get_option('coursepress_notifications_slug', $default_slug_value);
         }
 
         function get_enrollment_process_slug($url = false) {
@@ -1242,8 +1281,8 @@ if (!class_exists('CoursePress')) {
         function admin_coursepress_page_courses() {
             wp_enqueue_style('courses', $this->plugin_url . 'css/admin_coursepress_page_courses.css', array(), $this->version);
         }
-        
-        function admin_coursepress_page_notifications(){
+
+        function admin_coursepress_page_notifications() {
             wp_enqueue_style('notifications', $this->plugin_url . 'css/admin_coursepress_page_notifications.css', array(), $this->version);
         }
 
@@ -1551,15 +1590,15 @@ if (!class_exists('CoursePress')) {
                     foreach ($main_sorted_menu_items as $menu_item) {
                         ?>
                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                            <?php if ($menu_item->db_id !== '') { ?>
+                                <?php if ($menu_item->db_id !== '') { ?>
                                 <ul>
                                     <?php
                                     foreach ($sub_sorted_menu_items as $menu_item) {
                                         ?>
                                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                        <?php } ?>
+                                <?php } ?>
                                 </ul>
-                            <?php } ?>
+                        <?php } ?>
                         </li>
                         <?php
                     }

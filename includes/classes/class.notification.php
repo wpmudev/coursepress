@@ -66,7 +66,7 @@ if (!class_exists('Notification')) {
                 'post_content' => $_POST['notification_description'],
                 'post_status' => 'publish',
                 'post_title' => $_POST['notification_name'],
-                'post_type' => 'notiications',
+                'post_type' => 'notifications',
             );
 
             if (isset($_POST['notification_id'])) {

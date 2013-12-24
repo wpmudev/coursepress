@@ -34,6 +34,7 @@ if (isset($_POST['_wpnonce'])) {
         } else {
             update_option('display_menu_items', 0);
         }
+        flush_rewrite_rules();
     }
 }
 ?>

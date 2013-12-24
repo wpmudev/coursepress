@@ -1,48 +1,48 @@
 .shadow-table
 {
-  position: relative;
-  width: 100%;
-  background: #ddd;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  padding: 0em 0em;
-  color: rgba(0,0,0, .8);
-  text-shadow: 0 1px 0 #fff;
-  line-height: 1.5;
-  margin: 0px auto;
+    position: relative;
+    width: 100%;
+    background: #ddd;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 0em 0em;
+    color: rgba(0,0,0, .8);
+    text-shadow: 0 1px 0 #fff;
+    line-height: 1.5;
+    margin: 0px auto;
 }
 
 
 .shadow-table:before, .shadow-table:after 
 {
-  z-index: -1; 
-  position: absolute; 
-  content: "";
-  bottom: 15px;
-  left: 10px;
-  width: 50%; 
-  top: 80%;
-  max-width:300px;
-  background: rgba(0, 0, 0, 0.7); 
-  -webkit-box-shadow: 0 15px 10px rgba(0,0,0, 0.7);   
-  -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-  box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-  -webkit-transform: rotate(-3deg);    
-  -moz-transform: rotate(-3deg);   
-  -o-transform: rotate(-3deg);
-  -ms-transform: rotate(-3deg);
-  transform: rotate(-3deg);
+    z-index: -1; 
+    position: absolute; 
+    content: "";
+    bottom: 15px;
+    left: 10px;
+    width: 50%; 
+    top: 80%;
+    max-width:300px;
+    background: rgba(0, 0, 0, 0.7); 
+    -webkit-box-shadow: 0 15px 10px rgba(0,0,0, 0.7);   
+    -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    -webkit-transform: rotate(-3deg);    
+    -moz-transform: rotate(-3deg);   
+    -o-transform: rotate(-3deg);
+    -ms-transform: rotate(-3deg);
+    transform: rotate(-3deg);
 }
 
 .shadow-table:after 
 {
-  -webkit-transform: rotate(3deg);
-  -moz-transform: rotate(3deg);
-  -o-transform: rotate(3deg);
-  -ms-transform: rotate(3deg);
-  transform: rotate(3deg);
-  right: 10px;
-  left: auto;
+    -webkit-transform: rotate(3deg);
+    -moz-transform: rotate(3deg);
+    -o-transform: rotate(3deg);
+    -ms-transform: rotate(3deg);
+    transform: rotate(3deg);
+    right: 10px;
+    left: auto;
 }
 
 .center{
@@ -71,3 +71,223 @@
     width: 17%;
 }
 
+
+/* OVERVIEW */
+
+
+/* UNIT MODULES */
+
+
+.add-new-unit-title{
+    padding-top: 43px;
+}
+
+.plusTitle a{
+    font: 44px/100% Arial, sans-serif;
+    color:#ddd;
+    text-decoration: none;
+}
+
+.plusTitle a:hover{
+    color:#ccc;
+    text-decoration: none;
+}
+
+.add-new-unit-title{
+    text-align: center;
+}
+
+.numberCircle {
+    -webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+    border-radius: 999px;
+    behavior: url(PIE.htc);
+
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+
+    background: #fff;
+    border: 2px solid #666;
+    color: #666;
+    text-align: center;
+
+    font: 12px Arial, sans-serif
+}
+/*END UNITS*/
+
+#ui-datepicker-div{/*fix for the date picker issue*/
+    display: none;
+}
+
+.transparent_class {
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+
+    /* IE 5-7 */
+    filter: alpha(opacity=70);
+
+    /* Netscape */
+    -moz-opacity: 0.7;
+
+    /* Safari 1.x */
+    -khtml-opacity: 0.7;
+
+    /* Good browsers */
+    opacity: 0.7;
+}
+
+.instructor-avatar-holder{
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    float: left;
+    width: 80px;
+    min-height: 120px;
+    border: 1px solid #f5f5f5;
+    text-align: center;
+    position: relative;
+}
+
+.instructor-avatar-holder:hover{
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+
+    /* IE 5-7 */
+    filter: alpha(opacity=70);
+
+    /* Netscape */
+    -moz-opacity: 0.7;
+
+    /* Safari 1.x */
+    -khtml-opacity: 0.7;
+
+    /* Good browsers */
+    opacity: 0.7;
+}
+
+.instructor-remove a:hover{
+    background-image: url("../images/delete.png");
+    background-position: 30px 31px;
+    background-repeat: no-repeat;
+    height: 80px;
+    position: absolute;
+    width: 80px;
+    display: block;
+}
+
+.instructor-remove a{
+    display: block;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+}
+
+.instructor-name{
+    display: block;
+    float: left;
+    text-align: center;
+    font-size: 10px;
+    width: 80px;
+}
+
+div.course-liquid-left {
+    float: left;
+    clear: left;
+    width: 100%;
+    margin-right: -325px;
+}
+div.course-liquid-right {
+    float: right;
+    clear: right;
+    width: 300px;
+}
+#course-left {
+    margin-left: 5px;
+    margin-right: 325px;
+}
+#course-left #edit-sub {
+    background-color: transparent;
+    border: 0 none;
+}
+div.course-holder-wrap {
+    padding: 0;
+    margin: 10px 0 20px;
+}
+
+.sidebar-name {
+    border-color: #dfdfdf;
+}
+
+.sidebar-name:hover {
+    color: #333 !Important;
+    cursor: move;
+}
+
+#main-start .sidebar-name:hover {
+    color: #333 !Important;
+    cursor: auto;
+}
+
+p.description {
+    margin: 0 12px 12px;
+}
+
+.level-holder {
+    border-width: 1px;
+    border-style: solid;
+
+    border-color: #ddd;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    min-height: 98px;
+}
+
+.course-holder {
+    position: relative;
+    background-color: #fff;
+    border-color: #ddd;
+    border-width: 1px 1px 1px 1px;
+    border-style: solid solid solid;
+    padding: 0;
+}
+
+div.course-details {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.course-holder label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: block;
+}
+
+.course-holder div select {
+    margin-bottom: 10px;
+    margin-top: 0;
+    max-width: 390px;
+}
+
+.unit-buttons{
+    float: left;
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.course-holder .buttons{
+    display: block;
+    float: right;
+    margin-right: 1%;
+    margin-bottom: 15px;
+}
+
+input.wide, textarea.wide, #wp-notification_description-wrap {
+    margin-top: 5px;
+    width: 99%;
+    margin-left: 0;
+    margin-bottom: 5px;
+}

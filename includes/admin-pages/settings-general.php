@@ -40,6 +40,17 @@
                         </tr>
                         
                         <tr valign="top">
+                            <th scope="row"><?php _e('Course Notifications Slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                ?>&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='units_slug' value='<?php esc_attr_e($this->get_notifications_slug());
+                                ?>' />&nbsp;/
+                               
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
                             <th scope="row"><?php _e('Enrollment Process page', 'cp'); ?></th>
                             <td>
                                 <?php

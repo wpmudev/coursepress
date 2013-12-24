@@ -26,6 +26,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('courses_urls', array(&$this, 'courses_urls'));
             add_shortcode('course_units', array(&$this, 'course_units'));
             add_shortcode('course_units_loop', array(&$this, 'course_units_loop'));
+            add_shortcode('course_notifications_loop', array(&$this, 'course_notifications_loop'));
             add_shortcode('course_unit_single', array(&$this, 'course_unit_single'));
             add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
@@ -400,6 +401,47 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             query_posts($args);
         }
+        
+        function course_notifications_loop($atts) {
+            global $wp;
+
+            extract(shortcode_atts(array('course_id' => 0), $atts));
+
+            if (empty($course_id)) {
+                if (array_key_exists('coursename', $wp->query_vars)) {
+                    $course = new Course();
+                    $course_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
+                } else {
+                    $course_id = 0;
+                }
+            }
+
+            $args = array(
+                'category' => '',
+                'order' => 'ASC',
+                'post_type' => 'notifications',
+                'post_mime_type' => '',
+                'post_parent' => '',
+                'post_status' => 'publish',
+                'orderby' => 'meta_value_num',
+                'posts_per_page' => '-1',
+                'meta_query' => array(
+                    'relation' => 'OR',
+                    array(
+                        'key' => 'course_id',
+                        'value' => $course_id
+                    ),
+                    array(
+                        'key' => 'course_id',
+                        'value' => ''
+                    ),
+                )
+            );
+
+            query_posts($args);
+        }
+        
+        
 
         function course_units($atts) {
             global $wp;
