@@ -17,7 +17,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     if ($_POST['meta_course_category'] != -1) {
         $term = get_term_by('id', $_POST['meta_course_category'], 'course_category');
-            wp_set_object_terms( $course_id, $term->slug, 'course_category', false );
+        wp_set_object_terms($course_id, $term->slug, 'course_category', false);
     }
 
     if (!isset($_POST['meta_open_ended_course'])) {
@@ -29,11 +29,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     }
 
     $new_post_id = $course->update_course();
-    
+
     if ($new_post_id != 0) {
         ob_start();
         if (isset($_GET['ms'])) {
-            wp_redirect('?page=' . $page .'&course_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+            wp_redirect('?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms']);
             exit;
         } else {
             wp_redirect('?page=' . $page . '&course_id=' . $new_post_id);
@@ -59,6 +59,7 @@ if (isset($_GET['course_id'])) {
     $allow_course_discussion = $course->details->allow_course_discussion;
     $course_category = $course->details->course_category;
     $language = $course->details->course_language;
+    $course_video_url = $course->details->course_video_url;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -73,6 +74,7 @@ if (isset($_GET['course_id'])) {
     $allow_course_discussion = 'off';
     $course_category = 0;
     $language = __('English', 'cp');
+    $course_video_url = '';
 }
 ?>
 
@@ -158,7 +160,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));             ?>" />-->
+                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));                  ?>" />-->
                                 <select name="meta_prerequisite">
 
                                     <?php
@@ -390,30 +392,71 @@ if (isset($_GET['course_id'])) {
                 </div> <!-- course-holder-wrap -->
             <?php } ?>
 
-            <?php if (0 == 1) { ?>
-                <div class="course-holder-wrap">
 
-                    <div class="sidebar-name no-movecursor">
-                        <h3><?php _e('Course Image', 'cp'); ?></h3>
-                    </div>
+            <div class="course-holder-wrap">
 
-                    <div class="level-holder" id="sidebar-levels">
-                        <div class='sidebar-inner'>
-                            <div class="featured_url_holder">
-                                <?php _e('Browse for an image.', 'cp'); ?>
-                                <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
-                                <input class="featured_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                                <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
-                                <?php
-                                //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
-                                echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                                echo get_post_meta($course_id, '_thumbnail_id', true);
-                                ?>
-                            </div>
+                <div class="sidebar-name no-movecursor">
+                    <h3><?php _e('Course Image', 'cp'); ?></h3>
+                </div>
+
+                <div class="level-holder" id="sidebar-levels">
+                    <div class='sidebar-inner'>
+                        <div class="featured_url_holder">
+                            <?php _e('Browse for an image.', 'cp'); ?>
+                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
+                            <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
+                            <?php
+                            //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
+                            echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                            echo get_post_meta($course_id, '_thumbnail_id', true);
+                            ?>
                         </div>
                     </div>
-                </div> <!-- course-holder-wrap -->
-            <?php } ?>
+                </div>
+            </div> <!-- course-holder-wrap -->
+
+            <?php
+            global $content_width;
+
+            wp_enqueue_style('thickbox');
+            wp_enqueue_script('thickbox');
+            wp_enqueue_media();
+            wp_enqueue_script('media-upload');
+
+            $supported_video_extensions = implode(",", wp_get_video_extensions());
+
+            if (!empty($data)) {
+                if (!isset($data->player_width) or empty($data->player_width)) {
+                    $data->player_width = empty($content_width) ? 640 : $content_width;
+                }
+            }
+            ?>
+
+            <div class="course-holder-wrap">
+
+                <div class="sidebar-name no-movecursor">
+                    <h3><?php _e('Featured Course Video', 'cp'); ?></h3>
+                </div>
+
+                <div class="level-holder" id="sidebar-levels">
+                    <div class='sidebar-inner'>
+
+                        <div class="video_url_holder">
+                            <?php _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp'); ?>
+                            <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" />
+
+                            <?php
+                            //echo '(' . $supported_video_extensions . ')';
+                            ?>
+                            
+                            <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
 
 

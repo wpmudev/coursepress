@@ -44,9 +44,28 @@
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
-                                ?>&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='units_slug' value='<?php esc_attr_e($this->get_notifications_slug());
+                                ?>&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='notifications_slug' value='<?php esc_attr_e($this->get_notifications_slug());
                                 ?>' />&nbsp;/
-                               
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Course Discussions Slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug' id='discussion_slug' value='<?php esc_attr_e($this->get_discussion_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Course New Discussions Slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp'); echo ''.$this->get_discussion_slug().'/';
+                                ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug_new' id='discussion_slug_new' value='<?php esc_attr_e($this->get_discussion_slug_new());
+                                ?>' />&nbsp;/
                             </td>
                         </tr>
                         

@@ -115,7 +115,6 @@ class checkbox_input_module extends Unit_Module {
 
     function admin_main($data) {
         ?>
-
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">

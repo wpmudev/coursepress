@@ -196,3 +196,12 @@
 .radio_new_link, .radio_remove, .checkbox_new_link, .checkbox_remove{
     cursor: pointer;
 }
+
+input[type=text].course_video_url{
+    width: 100%;
+}
+
+.course_video_url_button{
+    float: right;
+    margin-top: 13px;
+}

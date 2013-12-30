@@ -46,7 +46,6 @@ if (!class_exists('CoursePress')) {
         }
 
         function __construct() {
-
 //setup our variables
             $this->init_vars();
 
@@ -128,6 +127,8 @@ if (!class_exists('CoursePress')) {
 
 //Output buffer hack
             add_action('init', array(&$this, 'output_buffer'), 0);
+
+            add_action('init', array(&$this, 'add_rewrite_tag'));
 //Register custom post types
             //add_action('init', array(&$this, 'pdf_report'), 0);
 
@@ -230,6 +231,10 @@ if (!class_exists('CoursePress')) {
           // then we return the $post_mime_types variable
           return $post_mime_types;
           } */
+
+        function add_rewrite_tag() {
+            //add_rewrite_tag('%course%', '([^&]+)', 'parent_course=');
+        }
 
         function parent_file_correction($parent_file) {
             global $current_screen;
@@ -339,7 +344,69 @@ if (!class_exists('CoursePress')) {
 
         function action_parse_request(&$wp) {
 
+
+            /* if(array_key_exists('discussion_action', $wp->query_vars)){
+              echo 'Greats!';
+              exit;
+              } */
+
+            /* Show Discussion single template */
+            if (array_key_exists('discussion_name', $wp->query_vars)) {
+                $vars['discussion_name'] = $wp->query_vars['discussion_name'];
+                $course = new Course();
+                $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
+            }
+
+            /* Add New Discussion template */
+ 
+            if (array_key_exists('discussion_archive', $wp->query_vars) || (array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
+                $course = new Course();
+                $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
+
+                if ((array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
+                    $theme_file = locate_template(array('page-add-new-discussion.php'));
+                    if ($theme_file != '') {
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Add New Discussion', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/page-add-new-discussion.php', $vars),
+                            'type' => 'discussion',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                    }
+                } else {
+                    /* Archive Discussion template */
+
+                    $theme_file = locate_template(array('archive-discussion.php'));
+
+                    if ($theme_file != '') {
+                        //do_shortcode('[course_notifications_loop]');
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Discussion', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-discussion-archive.php', $vars),
+                            'type' => 'discussion',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                        do_shortcode('[course_discussion_loop]');
+                    }
+                }
+            }
+
             /* Show Instructor single template */
+
             if (array_key_exists('instructor_username', $wp->query_vars)) {
                 $vars = array();
                 $vars['instructor_username'] = $wp->query_vars['instructor_username'];
@@ -372,7 +439,7 @@ if (!class_exists('CoursePress')) {
                 $notifications_archive_page = false;
 
                 $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-                
+
                 if (preg_match('/' . $this->get_units_slug() . '/', $url)) {
                     $units_archive_page = true;
                 }
@@ -385,7 +452,7 @@ if (!class_exists('CoursePress')) {
                 $course = new Course();
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
 
-                if($notifications_archive_page){
+                if ($notifications_archive_page) {
                     $theme_file = locate_template(array('archive-notifications.php'));
 
                     if ($theme_file != '') {
@@ -501,17 +568,24 @@ if (!class_exists('CoursePress')) {
             $query_vars[] = 'coursename';
             $query_vars[] = 'unitname';
             $query_vars[] = 'instructor_username';
-            ;
+            $query_vars[] = 'discussion_name';
+            $query_vars[] = 'discussion_archive';
+            $query_vars[] = 'discussion_action';
+
             return $query_vars;
         }
 
         function add_rewrite_rules($rules) {
             $new_rules = array();
+
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
+            //$new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug(). '/'.$this->get_discussion_slug_new().'/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_action=add_new_discussion';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
-            //flush_rewrite_rules();
+            //flush_rewrite_rules(); //only on activation and deactivation (it's too expensive)
             return array_merge($new_rules, $rules);
         }
 
@@ -582,6 +656,15 @@ if (!class_exists('CoursePress')) {
             print_r($current_screen);
         }
 
+        function plugin_activation() {
+
+            // Register types to register the rewrite rules  
+            $this->register_custom_posts();
+
+            // Then flush them  
+            flush_rewrite_rules();
+        }
+
         function install() {
             update_option('display_menu_items', 0); //T-E-M-P-O-R-A-R-Y J-U-S-T O-N L-I-V-E D-E-V, otherwise it will be active by default
             $this->coursepress_plugin_activate();
@@ -597,6 +680,9 @@ if (!class_exists('CoursePress')) {
             require(ABSPATH . WPINC . '/pluggable.php');
 
             add_action('admin_init', 'my_plugin_redirect');
+
+
+            $this->plugin_activation();
         }
 
         function coursepress_plugin_do_activation_redirect() {
@@ -637,6 +723,16 @@ if (!class_exists('CoursePress')) {
         function get_notifications_slug() {
             $default_slug_value = 'notifications';
             return get_option('coursepress_notifications_slug', $default_slug_value);
+        }
+
+        function get_discussion_slug() {
+            $default_slug_value = 'discussion';
+            return get_option('coursepress_discussion_slug', $default_slug_value);
+        }
+
+        function get_discussion_slug_new() {
+            $default_slug_value = 'add_new_discussion';
+            return get_option('coursepress_discussion_slug_new', $default_slug_value);
         }
 
         function get_enrollment_process_slug($url = false) {
@@ -857,7 +953,10 @@ if (!class_exists('CoursePress')) {
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'query_var' => true,
-                'rewrite' => array('slug' => $this->get_course_slug(), 'with_front' => false)
+                'rewrite' => array(
+                    'slug' => $this->get_course_slug(),
+                    'with_front' => false
+                )
             );
 
             register_post_type('course', $args);
@@ -959,6 +1058,34 @@ if (!class_exists('CoursePress')) {
             );
 
             register_post_type('notifications', $args);
+
+            //Register Discussion post type
+            $args = array(
+                'labels' => array('name' => __('Discussions', 'cp'),
+                    'singular_name' => __('Discussions', 'cp'),
+                    'add_new' => __('Create New', 'cp'),
+                    'add_new_item' => __('Create New Discussion', 'cp'),
+                    'edit_item' => __('Edit Discussion', 'cp'),
+                    'edit' => __('Edit', 'cp'),
+                    'new_item' => __('New Discussion', 'cp'),
+                    'view_item' => __('View Discussion', 'cp'),
+                    'search_items' => __('Search Discussions', 'cp'),
+                    'not_found' => __('No Discussions Found', 'cp'),
+                    'not_found_in_trash' => __('No Discussions found in Trash', 'cp'),
+                    'view' => __('View Discussion', 'cp')
+                ),
+                'public' => true,
+                'has_archive' => true,
+                'show_ui' => true,
+                'publicly_queryable' => true,
+                'capability_type' => 'post',
+                'hierarchical' => true,
+                'query_var' => true,
+                'rewrite' => array('slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug())
+            );
+
+
+            register_post_type('discussions', $args);
 
             do_action('after_custom_post_types');
         }
@@ -1590,15 +1717,15 @@ if (!class_exists('CoursePress')) {
                     foreach ($main_sorted_menu_items as $menu_item) {
                         ?>
                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                                <?php if ($menu_item->db_id !== '') { ?>
+                            <?php if ($menu_item->db_id !== '') { ?>
                                 <ul>
                                     <?php
                                     foreach ($sub_sorted_menu_items as $menu_item) {
                                         ?>
                                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                <?php } ?>
+                                        <?php } ?>
                                 </ul>
-                        <?php } ?>
+                            <?php } ?>
                         </li>
                         <?php
                     }
@@ -1676,6 +1803,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
+
             if (get_post_type($post->ID) == 'unit') {
                 $unit = new Unit($post->ID);
                 return $unit->get_permalink();
