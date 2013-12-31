@@ -34,6 +34,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_discussion', array(&$this, 'course_discussion'));
             add_shortcode('instructor_profile_url', array(&$this, 'instructor_profile_url'));
             add_shortcode('get_parent_course_id', array(&$this, 'get_parent_course_id'));
+            add_shortcode('units_dropdown', array(&$this, 'units_dropdown'));
+
             //add_shortcode('unit_discussion', array(&$this, 'unit_discussion'));
 
 
@@ -54,6 +56,26 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($url == 'signup') {
                 return $signup_url;
             }
+        }
+
+        function units_dropdown($atts) {
+            extract(shortcode_atts(array('course_id' => (isset($wp_query->post->ID) ? $wp_query->post->ID : 0), 'include_general' => false, 'general_title' => ''), $atts));
+            $course_obj = new Course($course_id);
+            $units = $course_obj->get_units();
+
+            $dropdown = '<div class="units_dropdown_holder"><select name="units_dropdown" class="units_dropdown">';
+            if ($include_general) {
+                if ($general_title == '') {
+                    $general_title = __('-- General --', 'cp');
+                }
+                $dropdown .= '<option value="">' . $general_title . '</option>';
+            }
+            foreach ($units as $unit) {
+                $dropdown .= '<option value="' . $unit->ID . '">' . $unit->post_title . '</option>';
+            }
+            $dropdown .= '</select></div>';
+
+            return $dropdown;
         }
 
         function course_details($atts) {
@@ -362,7 +384,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'post_type' => 'unit',
                 'p' => $unit_id
             );
-            
+
             cp_suppress_errors();
             query_posts($args);
             //cp_show_errors();
@@ -402,7 +424,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             query_posts($args);
         }
-        
+
         function course_notifications_loop($atts) {
             global $wp;
 
@@ -441,7 +463,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             query_posts($args);
         }
-        
+
         function course_discussion_loop($atts) {
             global $wp;
 
@@ -455,30 +477,28 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     $course_id = 0;
                 }
             }
+           
 
             $args = array(
                 'category' => '',
                 'order' => 'ASC',
-                'post_type' => 'discussion',
+                'post_type' => 'discussions',
                 'post_mime_type' => '',
                 'post_parent' => '',
                 'post_status' => 'publish',
-                'orderby' => 'meta_value_num',
                 'posts_per_page' => '-1',
-                'meta_query' => array(
+                'meta_key' => 'course_id',
+                'meta_value' => $course_id
+                /*'meta_query' => array(
                     array(
                         'key' => 'course_id',
                         'value' => $course_id
                     ),
-                )
+                )*/
             );
 
             query_posts($args);
         }
-        
-        
-        
-        
 
         function course_units($atts) {
             global $wp;

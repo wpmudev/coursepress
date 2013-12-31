@@ -94,6 +94,11 @@ if (!class_exists('CoursePress')) {
 
                 add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));
             }
+// Discusson class
+            require_once( $this->plugin_dir . 'includes/classes/class.discussion.php' );
+
+// Search Discusson class
+            require_once( $this->plugin_dir . 'includes/classes/class.discussionsearch.php' );
 
 // Instructor class
             require_once( $this->plugin_dir . 'includes/classes/class.instructor.php' );
@@ -300,7 +305,7 @@ if (!class_exists('CoursePress')) {
                 //init quicktags
 
                 /*quicktags({id:<?php echo $id; ?>});
-                             
+                 
                  //init tinymce
                  tinyMCE.init({
                  theme : "advanced",
@@ -308,7 +313,7 @@ if (!class_exists('CoursePress')) {
                  buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
                  // other options here
                  });
-                             
+                 
                  tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
                  //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
             </script>
@@ -358,7 +363,7 @@ if (!class_exists('CoursePress')) {
             }
 
             /* Add New Discussion template */
- 
+
             if (array_key_exists('discussion_archive', $wp->query_vars) || (array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
                 $course = new Course();
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
