@@ -476,12 +476,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 } else {
                     $course_id = 0;
                 }
-            }
-           
+            } 
 
             $args = array(
                 'category' => '',
-                'order' => 'ASC',
+                'order' => 'DESC',
                 'post_type' => 'discussions',
                 'post_mime_type' => '',
                 'post_parent' => '',
@@ -489,12 +488,6 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'posts_per_page' => '-1',
                 'meta_key' => 'course_id',
                 'meta_value' => $course_id
-                /*'meta_query' => array(
-                    array(
-                        'key' => 'course_id',
-                        'value' => $course_id
-                    ),
-                )*/
             );
 
             query_posts($args);
@@ -656,19 +649,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($position == 'shortcode') {
                 return $units_breadcrumbs;
             }
-
-            /* if ($position = 'before_title') {
-
-              add_filter('the_title', 'breadcrumb_before_post_title');
-
-              function breadcrumb_before_post_title($title) {
-              global $units_breadcrumbs;
-
-              $title = $units_breadcrumbs . $title;
-              return $title;
-              }
-
-              } */
+            
         }
 
         function course_discussion($atts) {
@@ -777,4 +758,4 @@ if (!class_exists('CoursePress_Shortcodes')) {
 }
 
 $coursepress_shortcodes = new CoursePress_Shortcodes();
-                ?>
+?>

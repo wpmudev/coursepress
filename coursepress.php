@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.6 beta
+  Version: 0.9.7 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.6 beta';
+        var $version = '0.9.7 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -172,8 +172,7 @@ if (!class_exists('CoursePress')) {
 
             add_filter('login_redirect', array(&$this, 'login_redirect'), 10, 3);
 
-            //add_filter('comments_open', array(&$this, 'check_for_discussion_form'), 10, 2);
-//add_filter('comment_post_redirect', array(&$this, 'check_for_comment_redirect_after_post'), 10, 2);
+            add_filter('comments_open', array(&$this, 'check_for_discussion_form'), 10, 2);
             add_filter('post_type_link', array(&$this, 'check_for_valid_post_type_permalinks'), 10, 3);
 
             //add_filter('get_comment_link', array(&$this, 'get_comment_link'), 10, 3);
@@ -305,7 +304,7 @@ if (!class_exists('CoursePress')) {
                 //init quicktags
 
                 /*quicktags({id:<?php echo $id; ?>});
-                 
+                             
                  //init tinymce
                  tinyMCE.init({
                  theme : "advanced",
@@ -313,7 +312,7 @@ if (!class_exists('CoursePress')) {
                  buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"
                  // other options here
                  });
-                 
+                             
                  tinyMCE.execCommand('mceAddControl', false, '<?php echo $id; ?>');
                  //tinymce.init(tinyMCEPreInit.mceInit['<?php echo $id; ?>']);*/
             </script>
@@ -584,13 +583,12 @@ if (!class_exists('CoursePress')) {
             $new_rules = array();
 
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
-            //$new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug(). '/'.$this->get_discussion_slug_new().'/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_action=add_new_discussion';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
-            //flush_rewrite_rules(); //only on activation and deactivation (it's too expensive)
+
             return array_merge($new_rules, $rules);
         }
 
@@ -933,11 +931,11 @@ if (!class_exists('CoursePress')) {
 
             // Register custom taxonomy
             register_taxonomy(
-                    'course_category', 'course', apply_filters('cp_register_course_category', array("hierarchical" => true,
+                'course_category', 'course', apply_filters('cp_register_course_category', array("hierarchical" => true,
                 'label' => __('Course Categories', 'cp'),
                 'singular_label' => __('Course Category', 'cp'))));
 
-//Register Courses post type
+            //Register Courses post type
             $args = array(
                 'labels' => array('name' => __('Courses', 'cp'),
                     'singular_name' => __('Course', 'cp'),
@@ -1081,7 +1079,7 @@ if (!class_exists('CoursePress')) {
                 ),
                 'public' => true,
                 'has_archive' => true,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'hierarchical' => true,
@@ -1767,49 +1765,20 @@ if (!class_exists('CoursePress')) {
 
         function check_for_discussion_form($open = null, $post_id = null, $cat = null, $days_old = '') {
             global $wp, $post_id;
-
-            if (is_array($wp->query_vars)) {
-                if (array_key_exists('unitname', $wp->query_vars)) {
-                    $unit = new Unit();
-                    $post_id = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
-                } else if (array_key_exists('coursename', $wp->query_vars)) {
-                    $course = new Course();
-                    $post_id = $course->get_course_id_by_name($wp->query_vars['coursename']);
-                } else {
-                    $post_id = $post_id;
-                }
-
-
-                if (get_post_type($post_id) == 'virtual_page') {
-                    return true;
-                }
-
-                if (get_post_type($post_id) == 'course') {
-                    if (get_permalink($post_id) != curPageURL()) {
-                        return true;
-                    } else {
-                        return false; //we want to have separate page to show comments
-                    }
-                }
-
-                if (get_post_type($post_id) == 'unit') {
-                    return false;
-                }
-            } else {
+            
+            /* force showing comments for discussions */
+            if (get_post_type($post_id) == 'discussions') {
                 return true;
             }
-        }
-
-        function check_for_comment_redirect_after_post($location) {
-            /* if (isset($_POST['comment_post_ID'])) {
-              return $location . '?redirect_discussion_of_unit_to=' . $_POST['comment_post_ID'];
-              } */
-            return $location;
+            
         }
 
         function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
-
-            if (get_post_type($post->ID) == 'unit') {
+            if (get_post_type($post->ID) == 'discussions') {
+                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+                $course = $course_obj->get_course();
+                return str_replace('%course%', $course->post_name, $permalink);
+            } else if (get_post_type($post->ID) == 'unit') {
                 $unit = new Unit($post->ID);
                 return $unit->get_permalink();
             } else {

@@ -33,6 +33,16 @@ if (!class_exists('Discussion')) {
             }
         }
 
+        function get_unit_name(){
+            if(!isset($this->details->unit_id) || $this->details->unit_id == ''){
+                return __('General', 'coursepress');
+            }else{
+                $unit_obj = new Unit($this->details->unit_id);
+                $unit = $unit_obj->get_unit();
+                return $unit->post_title;
+            }
+        }
+        
         function get_discussion_id_by_name($slug) {
 
             $args = array(
@@ -51,7 +61,7 @@ if (!class_exists('Discussion')) {
             }
         }
 
-        function update_discussion($discussion_title = '', $discussion_description = '', $course_id) {
+        function update_discussion($discussion_title = '', $discussion_description = '', $course_id = '', $unit_id = '') {
             global $user_id, $wpdb;
 
             $discussion = get_post($this->id, $this->output);
@@ -76,7 +86,13 @@ if (!class_exists('Discussion')) {
             
             //Update post meta
             if ($post_id != 0) {
+                
+                if($unit_id == ''){
+                    $unit_id = $_POST['units_dropdown'];
+                }
+                
                 update_post_meta($post_id, 'course_id', $course_id);
+                update_post_meta($post_id, 'unit_id', $unit_id);
                 
                 foreach ($_POST as $key => $value) {
                     if (preg_match("/meta_/i", $key)) {//every field name with prefix "meta_" will be saved as post meta automatically

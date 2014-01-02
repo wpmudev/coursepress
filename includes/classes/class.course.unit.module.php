@@ -305,8 +305,15 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
-
-                return count($ungraded_responses);
+                /*$admins_responses = 0;
+                
+                foreach ($ungraded_responses as $ungraded_responses) {
+                    if(user_can($ungraded_responses->post_author, 'administrator')){
+                        $admins_responses++;
+                    }
+                }*/
+                
+                return count($ungraded_responses);// - $admins_responses;
             } else {
 
                 $args = array(
