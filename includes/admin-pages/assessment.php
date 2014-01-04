@@ -345,7 +345,8 @@
                                                         $general_col_visibility = true;
                                                     }
                                                     ?>
-                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; ?>">
+                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; echo 'row-'.$current_row;?>">
+                                                        
                                                         <?php if ($current_row == 0) { ?>
                                                             <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
                                                                 <span class="uppercase block"><?php echo $user_object->last_name; ?></span>
@@ -429,8 +430,9 @@
                                                         <?php }//general col visibility  ?>
                                                     </tr>
                                                     <?php
+                                                    $current_row++;
                                                 }
-                                                $current_row++;
+                                                
                                             }
                                         }
                                     }

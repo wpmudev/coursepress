@@ -316,8 +316,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'course_id' => (isset($wp_query->post->ID) ? $wp_query->post->ID : 0),
                 'count' => false,
                 'list' => false,
+                'link' => true,
                 'avatar_size' => 80
                             ), $atts));
+           
 
             $course = new Course($course_id);
             $instructors = $course->get_course_instructors();
@@ -327,7 +329,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             $list = array();
 
             foreach ($instructors as $instructor) {
-                $list[] = $instructor->display_name;
+                $list[] = ($link == true ? '<a href="' . trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login) . '">'.$instructor->display_name.'</a>' : $instructor->display_name);
                 $doc = new DOMDocument();
                 $doc->loadHTML(get_avatar($instructor->ID, $avatar_size));
                 $imageTags = $doc->getElementsByTagName('img');

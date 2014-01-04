@@ -669,7 +669,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function install() {
-            update_option('display_menu_items', 0); //T-E-M-P-O-R-A-R-Y J-U-S-T O-N L-I-V-E D-E-V, otherwise it will be active by default
+            update_option('display_menu_items', 1); //T-E-M-P-O-R-A-R-Y J-U-S-T O-N L-I-V-E D-E-V, otherwise it will be inactive by default
             $this->coursepress_plugin_activate();
             update_option('coursepress_version', $this->version);
             $this->add_user_roles_and_caps(); //This setting is saved to the database (in table wp_options, field wp_user_roles), so it might be better to run this on theme/plugin activation
