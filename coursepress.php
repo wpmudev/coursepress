@@ -440,12 +440,17 @@ if (!class_exists('CoursePress')) {
             if (array_key_exists('coursename', $wp->query_vars) && !array_key_exists('unitname', $wp->query_vars)) {
 
                 $units_archive_page = false;
+                $units_archive_grades_page = false;
                 $notifications_archive_page = false;
 
                 $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
+                
                 if (preg_match('/' . $this->get_units_slug() . '/', $url)) {
                     $units_archive_page = true;
+                }
+                
+                if (preg_match('/' . $this->get_grades_slug() . '/', $url)) {
+                    $units_archive_grades_page = true;
                 }
 
                 if (preg_match('/' . $this->get_notifications_slug() . '/', $url)) {
@@ -480,25 +485,6 @@ if (!class_exists('CoursePress')) {
 
                 if ($units_archive_page) {
 
-                    /* $theme_file = locate_template(array('archive-unit.php'));
-
-                      if ($theme_file != '') {
-                      do_shortcode('[course_units_loop]');
-                      require_once($theme_file);
-                      exit;
-                      } else {
-                      $args = array(
-                      'slug' => $wp->request,
-                      'title' => __('Course Units', 'cp'),
-                      'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
-                      'is_page' => FALSE,
-                      'is_singular' => FALSE,
-                      'is_archive' => TRUE
-                      );
-
-                      $pg = new CoursePress_Virtual_Page($args);
-                      do_shortcode('[course_units_loop]');
-                      } */
                     $theme_file = locate_template(array('archive-unit.php'));
 
                     if ($theme_file != '') {
@@ -510,6 +496,29 @@ if (!class_exists('CoursePress')) {
                             'slug' => $wp->request,
                             'title' => __('Course Units', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
+                            'type' => 'unit',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                        do_shortcode('[course_units_loop]');
+                    }
+                    $this->set_latest_activity(get_current_user_id());
+                }
+                
+                if($units_archive_grades_page){
+                    $theme_file = locate_template(array('archive-unit-grades.php'));
+
+                    if ($theme_file != '') {
+                        do_shortcode('[course_units_loop]');
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Course Grades', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars),
                             'type' => 'unit',
                             'is_page' => FALSE,
                             'is_singular' => FALSE,
@@ -536,6 +545,8 @@ if (!class_exists('CoursePress')) {
 
                 $unit = new Unit($vars['unit_id']);
 
+                $this->set_unit_visited(get_current_user_id(), $vars['unit_id']);
+                
                 $theme_file = locate_template(array('single-unit.php'));
 
                 if ($theme_file != '') {
@@ -567,6 +578,17 @@ if (!class_exists('CoursePress')) {
             }
             update_user_meta($user_ID, 'visited_courses', $get_old_values);
         }
+        
+        function set_unit_visited($user_ID, $unit_ID) {
+            $get_old_values = get_user_meta($user_ID, 'visited_units', true);
+            $get_new_values = explode('|', $get_old_values);
+            
+            if (!cp_in_array_r($unit_ID, $get_new_values)) {
+                $get_old_values = $get_old_values . '|' .$unit_ID;
+                update_user_meta( $user_ID, 'visited_units', $get_old_values );
+            }
+            
+        }
 
         function filter_query_vars($query_vars) {
             $query_vars[] = 'coursename';
@@ -574,6 +596,7 @@ if (!class_exists('CoursePress')) {
             $query_vars[] = 'instructor_username';
             $query_vars[] = 'discussion_name';
             $query_vars[] = 'discussion_archive';
+            $query_vars[] = 'grades_archive';
             $query_vars[] = 'discussion_action';
 
             return $query_vars;
@@ -584,6 +607,7 @@ if (!class_exists('CoursePress')) {
 
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
@@ -731,6 +755,11 @@ if (!class_exists('CoursePress')) {
         function get_discussion_slug() {
             $default_slug_value = 'discussion';
             return get_option('coursepress_discussion_slug', $default_slug_value);
+        }
+        
+        function get_grades_slug(){
+            $default_slug_value = 'grades';
+            return get_option('coursepress_grades_slug', $default_slug_value);
         }
 
         function get_discussion_slug_new() {

@@ -6,12 +6,12 @@ global $coursepress;
 $notification_id = '';
 
 if (isset($_GET['notification_id'])) {
-$notification = new Notification($_GET['notification_id']);
-$notification_details = $notification->get_notification();
-$notification_id = $_GET['notification_id'];
+    $notification = new Notification($_GET['notification_id']);
+    $notification_details = $notification->get_notification();
+    $notification_id = $_GET['notification_id'];
 } else {
-$notification = new Notification();
-$notification_id = 0;
+    $notification = new Notification();
+    $notification_id = 0;
 }
 
 wp_reset_vars(array('action', 'page'));

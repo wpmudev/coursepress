@@ -90,9 +90,10 @@ if (!class_exists('Unit_Module')) {
                 'posts_per_page' => 1,
                 'meta_key' => 'user_ID',
                 'meta_value' => $student_id,
-                'post_type' => 'module_response',
+                'post_type' => array('module_response', 'attachment'),
                 'post_parent' => $unit_module_id,
-                'post_status' => 'publish');
+                'post_status' => array('publish', 'inherit')
+            );
 
             $already_respond_posts = get_posts($already_respond_posts_args);
 
@@ -305,15 +306,15 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
-                /*$admins_responses = 0;
-                
-                foreach ($ungraded_responses as $ungraded_responses) {
-                    if(user_can($ungraded_responses->post_author, 'administrator')){
-                        $admins_responses++;
-                    }
-                }*/
-                
-                return count($ungraded_responses);// - $admins_responses;
+                /* $admins_responses = 0;
+
+                  foreach ($ungraded_responses as $ungraded_responses) {
+                  if(user_can($ungraded_responses->post_author, 'administrator')){
+                  $admins_responses++;
+                  }
+                  } */
+
+                return count($ungraded_responses); // - $admins_responses;
             } else {
 
                 $args = array(
@@ -372,7 +373,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function on_create() {
-
+            
         }
 
         function save_module_data() {

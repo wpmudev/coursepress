@@ -39,21 +39,36 @@ if (!class_exists('Student')) {
                 return false;
             }
         }
-        
+
         function is_course_visited($course_ID = 0, $user_ID = '') {
-            if($user_ID == ''){
+            if ($user_ID == '') {
                 $user_ID = $this->ID;
             }
-            
+
             $get_old_values = get_user_meta($user_ID, 'visited_courses', false);
-            
-            if($get_old_values == false){
+
+            if ($get_old_values == false) {
                 $get_old_values = array();
             }
-            
-            if(cp_in_array_r($course_ID, $get_old_values)){
+
+            if (cp_in_array_r($course_ID, $get_old_values)) {
                 return true;
-            }else{
+            } else {
+                return false;
+            }
+        }
+
+        function is_unit_visited($unit_ID = 0, $user_ID = '') {
+            if ($user_ID == '') {
+                $user_ID = $this->ID;
+            }
+
+            $get_old_values = get_user_meta($user_ID, 'visited_units', true);
+            $get_old_values = explode('|', $get_old_values);
+
+            if (cp_in_array_r($unit_ID, $get_old_values)) {
+                return true;
+            } else {
                 return false;
             }
         }
@@ -186,7 +201,7 @@ if (!class_exists('Student')) {
 
             if ($total_grade >= 1) {
                 $avarage_grade = round(($total_grade / $graded_responses), 2);
-            }else{
+            } else {
                 $avarage_grade = 0;
             }
 

@@ -345,12 +345,13 @@
                                                         $general_col_visibility = true;
                                                     }
                                                     ?>
-                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; echo 'row-'.$current_row;?>">
-                                                        
-                                                        <?php if ($current_row == 0) { ?>
+                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style;
+                                echo 'row-' . $current_row; ?>">
+
+                                <?php if ($current_row == 0) { ?>
                                                             <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
                                                                 <span class="uppercase block"><?php echo $user_object->last_name; ?></span>
-                                                                <?php echo $user_object->first_name; ?>
+                                                            <?php echo $user_object->first_name; ?>
                                                             </td>
                                                             <?php
                                                         }
@@ -364,11 +365,11 @@
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                                <?php echo $mod->post_title; ?>
+                                    <?php echo $mod->post_title; ?>
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                                <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                    <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -386,13 +387,14 @@
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php
-                                                                $grade = $grade_data['grade'];
-                                                                $instructor_id = $grade_data['instructor'];
-                                                                $instructor_name = get_userdata($instructor_id);
-                                                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
-
+                                                                if (isset($grade_data)) {
+                                                                    $grade = $grade_data['grade'];
+                                                                    $instructor_id = $grade_data['instructor'];
+                                                                    $instructor_name = get_userdata($instructor_id);
+                                                                    $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+                                                                }
                                                                 if (count($response) >= 1) {
-                                                                    if ($grade_data) {
+                                                                    if (isset($grade_data)) {
                                                                         ?>
                                                                         <a class="response_grade" alt="<?php
                                                                         _e('Grade by ');
@@ -418,7 +420,7 @@
                                                                 if (count($response) >= 1) {
                                                                     $comment = $unit_module_main->get_response_comment($response->ID);
                                                                 }
-                                                                if ($comment) {
+                                                                if (isset($comment)) {
                                                                     ?>
                                                                     <a class="response_comment" alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>">✓</a>
                                                                     <?php
@@ -427,12 +429,11 @@
                                                                 }
                                                                 ?>
                                                             </td>
-                                                        <?php }//general col visibility  ?>
+                                                    <?php }//general col visibility   ?>
                                                     </tr>
                                                     <?php
                                                     $current_row++;
                                                 }
-                                                
                                             }
                                         }
                                     }

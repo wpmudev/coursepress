@@ -27,6 +27,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     if (!isset($_POST['meta_allow_course_discussion'])) {
         $_POST['meta_allow_course_discussion'] = 'off';
     }
+    
+    if (!isset($_POST['meta_allow_course_grades_page'])) {
+        $_POST['meta_allow_course_grades_page'] = 'off';
+    }
 
     $new_post_id = $course->update_course();
 
@@ -57,6 +61,7 @@ if (isset($_GET['course_id'])) {
     $open_ended_course = $course->details->open_ended_course;
     $marketpress_product = $course->details->marketpress_product;
     $allow_course_discussion = $course->details->allow_course_discussion;
+    $allow_course_grades_page = $course->details->allow_course_grades_page;
     $course_category = $course->details->course_category;
     $language = $course->details->course_language;
     $course_video_url = $course->details->course_video_url;
@@ -72,6 +77,7 @@ if (isset($_GET['course_id'])) {
     $open_ended_course = 'off';
     $marketpress_product = '';
     $allow_course_discussion = 'off';
+    $allow_course_grades_page = 'off';
     $course_category = 0;
     $language = __('English', 'cp');
     $course_video_url = '';
@@ -279,7 +285,15 @@ if (isset($_GET['course_id'])) {
                                     <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
                                 </label>
 
-                                <p class="description"><?php _e('If checked, students can post comments and follow discussion within the course.', 'cp') ?></p>
+                                <p class="description"><?php _e('If checked, students can post questions and get answers.', 'cp') ?></p>
+                            </div>
+                            
+                            <div class="full border-devider">
+                                <label><?php _e('Allow Grades Page', 'cp'); ?>
+                                    <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
+                                </label>
+
+                                <p class="description"><?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?></p>
                             </div>
 
                             <br clear="all" />
