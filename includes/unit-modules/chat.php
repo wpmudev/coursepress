@@ -22,7 +22,7 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
 
         function front_main($data) {
             ?>
-            <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+            <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
                 <div class="module_description"><?php echo $data->post_content; ?></div>
                 <?php echo do_shortcode('[chat id="' . $data->ID . '"]'); ?>
@@ -40,11 +40,13 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
                 </h3>
 
                 <div class="module-content">
-                    <?php if (isset($data->ID)) {
+                    <?php
+                    if (isset($data->ID)) {
                         parent::get_module_delete_link($data->ID);
                     } else {
                         parent::get_module_remove_link();
-                    } ?>
+                    }
+                    ?>
                     <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                     <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                     <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -53,10 +55,15 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
                     </label>
 
                     <div class="editor_in_place">
-            <?php
-            $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-            wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
-            ?>
+                        <?php
+                        $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
+                            array(
+                                'skin' => 'wp_theme',
+                                'theme' => 'advanced',
+                        ));
+                        $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                        wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                        ?>
                     </div>
 
                 </div>

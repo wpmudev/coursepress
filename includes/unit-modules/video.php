@@ -98,11 +98,16 @@ class video_module extends Unit_Module {
 
                 <div class="editor_in_place">
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                    wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
+                        array(
+                            'skin' => 'wp_theme',
+                            'theme' => 'advanced',
+                    ));
+                    $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                    wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
-
+                
                 <div class="video_url_holder">
                     <label><?php
                         _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp');

@@ -80,7 +80,7 @@ class file_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
             <div class="module_file_input">     
@@ -113,16 +113,18 @@ class file_input_module extends Unit_Module {
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
-                    <?php // if (!empty($data)) {         ?>
+                
                 <div class="editor_in_place">
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5);
-                    wp_editor(stripslashes((isset($data->post_content) ? $data->post_content : '')), (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999))), $args);
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
+                        array(
+                            'skin' => 'wp_theme',
+                            'theme' => 'advanced',
+                    ));
+                    $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                    wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
-                <?php //}else{          ?>
-                <!--<div class="editor_to_place">Loading editor...</div>-->
-        <?php //}           ?>
             </div>
 
         </div>

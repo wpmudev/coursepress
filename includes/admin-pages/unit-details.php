@@ -160,5 +160,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
         </div> <!-- level-holder-wrap -->
 
     </div> <!-- level-liquid-right -->
-
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('#modules_accordion .switch-tmce').each(function(){
+               jQuery(this).trigger('click'); 
+            });
+        });
+    </script>
 </div> <!-- wrap -->
