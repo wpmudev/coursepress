@@ -79,7 +79,7 @@ if (isset($_GET['notification_id'])) {
                                 <label for='course_name'><?php _e('Notification Content', 'cp'); ?></label>
                                 <?php
                                 $args = array("textarea_name" => "notification_description", "textarea_rows" => 10);
-                                wp_editor(stripslashes(isset($notification->details->post_content) ? $notification->details->post_content : ''), "notification_description", $args);
+                                wp_editor(htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : ''), "notification_description", $args);
                                 ?>
                                 <br/>
 

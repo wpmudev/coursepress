@@ -347,8 +347,12 @@ jQuery(document).ready(function()
         var target_url_field = jQuery(this).prevAll(".featured_url:first");
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            //alert(JSON.stringify(props));
+            //alert(JSON.stringify(attachment));
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
+            jQuery('#featured_url_size').val(props.size);
+            
         };
         wp.media.editor.open(this);
         return false;

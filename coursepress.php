@@ -2,7 +2,7 @@
 /*
   Plugin Name: CoursePress
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
-  Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!
+  Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
   Version: 0.9.8 beta
@@ -67,6 +67,8 @@ if (!class_exists('CoursePress')) {
             register_activation_hook(__FILE__, array($this, 'install'));
 
             global $last_inserted_unit_id;
+
+            add_theme_support('post-thumbnails');
 
             //Administration area
             if (is_admin()) {
@@ -146,6 +148,11 @@ if (!class_exists('CoursePress')) {
             //Add virtual pages
             add_action('init', array(&$this, 'create_virtual_pages'), 99);
 
+            //Add custom image sizes
+            add_action('init', array(&$this, 'add_custom_image_sizes'));
+
+            //Add custom image sizes to media library
+            //add_filter('image_size_names_choose', array(&$this, 'add_custom_media_library_sizes'));
             //Add plugin admin menu - Network
             add_action('network_admin_menu', array(&$this, 'add_admin_menu_network'));
 
@@ -203,6 +210,19 @@ if (!class_exists('CoursePress')) {
                     add_filter('wp_page_menu', array(&$this, 'main_navigation_links_fallback'), 20, 2);
                 }
             }
+        }
+
+        function add_custom_image_sizes() {
+            if (function_exists('add_image_size')) {
+                $course_image_width = get_option('course_image_width', 235);
+                $course_image_height = get_option('course_image_height', 225);
+                add_image_size('course_thumb', $course_image_width, $course_image_height, true);
+            }
+        }
+
+        function add_custom_media_library_sizes($sizes) {
+            $sizes['course_thumb'] = __('Course Image');
+            return $sizes;
         }
 
         /* highlight the proper top level menu */
@@ -937,11 +957,12 @@ if (!class_exists('CoursePress')) {
                 'rewrite' => array(
                     'slug' => $this->get_course_slug(),
                     'with_front' => false
-                )
+                ),
+                'supports' => array('thumbnail')
             );
 
             register_post_type('course', $args);
-
+            //add_theme_support('post-thumbnails');
             //Register Units post type
             $args = array(
                 'labels' => array('name' => __('Units', 'cp'),
@@ -1338,7 +1359,7 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
-            
+
             if (isset($_GET['page'])) {
                 $page = isset($_GET['page']);
             } else {
@@ -1752,6 +1773,7 @@ if (!class_exists('CoursePress')) {
         }
 
         /* Check if user is currently active on the website */
+
         function user_is_currently_active($user_id, $latest_activity_in_minutes = 5) {
             if (empty($user_id)) {
                 exit;
@@ -1768,7 +1790,8 @@ if (!class_exists('CoursePress')) {
             }
         }
 
-        /* Check if MarketPress plugin is installed and active (using in Course Overview)*/
+        /* Check if MarketPress plugin is installed and active (using in Course Overview) */
+
         function is_marketpress_active() {
             $plugins = get_option('active_plugins');
             $required_plugin = 'marketpress/marketpress.php';
@@ -1781,6 +1804,7 @@ if (!class_exists('CoursePress')) {
         }
 
         /* Check if Chat plugin is installed and activated (using in Chat unit module) */
+
         function is_chat_plugin_active() {
             $plugins = get_option('active_plugins');
             $required_plugin = 'wordpress-chat/wordpress-chat.php';
@@ -1793,6 +1817,7 @@ if (!class_exists('CoursePress')) {
         }
 
         /* Listen for MarketPress purchase status changes */
+
         function listen_for_paid_status_for_courses($order) {
             global $mp;
 
@@ -1808,7 +1833,8 @@ if (!class_exists('CoursePress')) {
             }
         }
 
-        /* Make PDF report*/
+        /* Make PDF report */
+
         function pdf_report($report = '', $report_name = '', $report_title = 'Student Report', $preview = false) {
             ob_end_clean();
             ob_start();

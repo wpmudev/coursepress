@@ -22,63 +22,64 @@
                                 esc_html_e(trailingslashit(site_url()));
                                 ?>&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php esc_attr_e($this->get_course_slug());
                                 ?>' />&nbsp;/
-                                
-                                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(site_url()));?><?php echo esc_attr_e($this->get_course_slug());?><?php _e('/example-course-name/', 'cp');?></p>
-                                
+
+                                <p class='description'><?php _e('Your course URL will look like: ', 'cp'); ?><?php echo esc_html_e(trailingslashit(site_url())); ?><?php echo esc_attr_e($this->get_course_slug()); ?><?php _e('/example-course-name/', 'cp'); ?></p>
+
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Units Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
                                 ?>&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php esc_attr_e($this->get_units_slug());
                                 ?>' />&nbsp;/
-                               
+
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Course Notifications Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
                                 ?>&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='notifications_slug' value='<?php esc_attr_e($this->get_notifications_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Course Discussions Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
                                 ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug' id='discussion_slug' value='<?php esc_attr_e($this->get_discussion_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Course New Discussions Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp'); echo ''.$this->get_discussion_slug().'/';
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
+                                echo '' . $this->get_discussion_slug() . '/';
                                 ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug_new' id='discussion_slug_new' value='<?php esc_attr_e($this->get_discussion_slug_new());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Course Grades Slug', 'cp'); ?></th>
                             <td>
                                 <?php
-                                esc_html_e(trailingslashit(site_url())).''._e('example-course-name/', 'cp');
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
                                 ?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='discussion_slug' value='<?php esc_attr_e($this->get_grades_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Enrollment Process page', 'cp'); ?></th>
                             <td>
@@ -88,7 +89,7 @@
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Sign Up page', 'cp'); ?></th>
                             <td>
@@ -98,7 +99,7 @@
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Student Dashboard page', 'cp'); ?></th>
                             <td>
@@ -108,7 +109,7 @@
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Student Settings page', 'cp'); ?></th>
                             <td>
@@ -118,7 +119,7 @@
                                 ?>' />&nbsp;/
                             </td>
                         </tr>
-                        
+
                         <tr valign="top">
                             <th scope="row"><?php _e('Instructor profile slug', 'cp'); ?></th>
                             <td>
@@ -128,13 +129,13 @@
                                 ?>' />&nbsp;/
                             </td>
                         </tr>                        
-                        
+
                     </tbody>
                 </table>
             </div>
         </div>
-        
-         <div class="postbox">
+
+        <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Theme Menu Items', 'cp'); ?></span></h3>
             <div class="inside">
                 <p class='description'><?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme <strong>must have defined a Primary Menu</strong> <!--(with at least one item)--> in order to attach new menu items to it.', 'cp'); ?></p>
@@ -149,14 +150,40 @@
                     </tbody>
                 </table>
             </div>
-         </div>
+        </div>
+
+        <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('Course Images', 'cp'); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e('Size for (newly uploaded) course images', 'cp'); ?></p>
+                <table class="form-table">
+                    <tbody>
+
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Image Width', 'cp'); ?></th>
+                            <td>
+                                <input type='text' name='option_course_image_width' value="<?php echo esc_attr(get_option('course_image_width', 235)); ?>"  />
+                            </td>
+                        </tr>
+
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Image Height', 'cp'); ?></th>
+                            <td>
+                                <input type='text' name='option_course_image_height' value="<?php echo esc_attr(get_option('course_image_height', 225)); ?>"  />
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <?php
         do_action('coursepress_general_options_page');
         ?>
 
         <p class="save-shanges">
-            <?php submit_button(__('Save Changes', 'cp')); ?>
+<?php submit_button(__('Save Changes', 'cp')); ?>
         </p>
 
     </form>

@@ -43,6 +43,19 @@ if (!class_exists('Course')) {
                 return new stdClass();
             }
         }
+        
+        function get_course_thumbnail() {
+            $thumb = get_post_thumbnail_id($this->id);
+            if ($thumb !== '') {
+                return $thumb;
+            }else{
+                if($this->details->featured_url !== ''){
+                    return $this->details->featured_url;
+                }else{
+                    return false;
+                }
+            }
+        }
 
         function get_course_by_marketpress_product_id($marketpress_product_id) {
 
@@ -119,26 +132,28 @@ if (!class_exists('Course')) {
                     }
                 }
 
-                //Add featured image
-                if (isset($_POST['_thumbnail_id']) && is_numeric($_POST['_thumbnail_id'])) {
+                 //Add featured image
+                if (isset($_POST['_thumbnail_id']) && is_numeric($_POST['_thumbnail_id']) && isset($_POST['meta_featured_url']) && $_POST['meta_featured_url'] !== '') {
+
+                    $course_image_width = get_option('course_image_width', 235);
+                    $course_image_height =  get_option('course_image_height', 225);
                     
-
                     $upload_dir_info = wp_upload_dir();
-                    $image = wp_get_image_editor(trailingslashit($upload_dir_info['path']).basename($_POST['meta_featured_url'])); // Return an implementation that extends <tt>WP_Image_Editor</tt>
+                    $fl = trailingslashit($upload_dir_info['path']) . basename($_POST['meta_featured_url']);
 
+                    $image = wp_get_image_editor($fl); // Return an implementation that extends <tt>WP_Image_Editor</tt>
+                    
                     if (!is_wp_error($image)) {
-                        $image->resize(100, 100, true);
-                        $final_image = $image->save($file);
-                        
-                        $new_file_path = str_replace(basename($_POST['meta_featured_url']), $final_image['file'], $_POST['meta_featured_url']);
+                        $ext = pathinfo($fl, PATHINFO_EXTENSION);
+                        $new_file_name = str_replace('.'.$ext, '-'.$course_image_width.'x'.$course_image_height.'.'.$ext, basename($_POST['meta_featured_url']));
+                        $new_file_path = str_replace(basename($_POST['meta_featured_url']), $new_file_name, $_POST['meta_featured_url']);
                         update_post_meta($post_id, '_thumbnail_id', $new_file_path);
-                        
-                       //print_r($final_image);
-                        //exit;
-                    }else{
-                        
-                        //echo 'an error occured: '.trailingslashit($upload_dir_info['path']).basename($_POST['meta_featured_url']);
-                        //exit;
+                    } else {
+                        update_post_meta($post_id, '_thumbnail_id', $_POST['meta_featured_url']);
+                    }
+                }else{
+                    if(isset($_POST['meta_featured_url']) || $_POST['meta_featured_url'] == ''){
+                        update_post_meta($post_id, '_thumbnail_id', '');
                     }
                 }
 

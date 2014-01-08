@@ -126,7 +126,7 @@ if (isset($_GET['course_id'])) {
                             }
 
                             $desc = '';
-                            wp_editor(stripslashes((isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
+                            wp_editor(htmlspecialchars_decode((isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
                             ?>
 
                             <br/><br/>
@@ -140,7 +140,7 @@ if (isset($_GET['course_id'])) {
                             }
 
                             $desc = '';
-                            wp_editor(stripslashes($course_details->post_content), "course_description", $args);
+                            wp_editor(htmlspecialchars_decode($course_details->post_content), "course_description", $args);
                             ?>
                             <br/>
 
@@ -225,7 +225,6 @@ if (isset($_GET['course_id'])) {
                                 );
 
                                 $taxonomies = array('course_category');
-                                //echo get_terms_dropdown($taxonomies, $tax_args);
                                 wp_dropdown_categories($tax_args);
                                 ?>
                                 <a href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
@@ -421,9 +420,9 @@ if (isset($_GET['course_id'])) {
                             <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                             <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
                             <?php
-                            //get_the_post_thumbnail($course_id, 'course-thumb', array(100, 100));
-                            echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                            echo get_post_meta($course_id, '_thumbnail_id', true);
+                            //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
+                            //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                            //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
                             ?>
                         </div>
                     </div>

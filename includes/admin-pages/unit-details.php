@@ -89,7 +89,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
                             }
 
                             $desc = '';
-                            wp_editor(stripslashes($unit_details->post_content), "unit_description", $args);
+                            wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
                             ?>
                             <br/>
 
