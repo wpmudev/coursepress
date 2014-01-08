@@ -43,6 +43,9 @@ $instructor_capabilities_general = array(
     'coursepress_courses_cap' => __('Access to the Courses menu item', 'cp'),
     'coursepress_instructors_cap' => __('Access to the Intructors menu item', 'cp'),
     'coursepress_students_cap' => __('Access to the Students menu item', 'cp'),
+    'coursepress_assessment_cap' => __('Assessment', 'cp'),
+    'coursepress_reports_cap' => __('Reports', 'cp'),
+    'coursepress_notifications_cap' => __('Notifications', 'cp'),
     'coursepress_settings_cap' => __('Access to the Settings menu item', 'cp'),
 );
 
@@ -91,7 +94,7 @@ $instructor_capabilities_students = array(
     'coursepress_add_new_students_cap' => __('Add new users with Student role to the blog', 'cp'),
     'coursepress_send_bulk_my_students_email_cap' => __("Send bulk e-mail to students", 'cp'),
     'coursepress_send_bulk_students_email_cap' => __("Send bulk e-mail to students within a course made by the instructor only", 'cp'),
-    'coursepress_delete_students_cap' => __("Delete Students", 'cp'),   
+    'coursepress_delete_students_cap' => __("Delete Students", 'cp'),
 );
 
 $instructor_capabilities_groups = array(

@@ -49,7 +49,6 @@ if (!class_exists('CoursePress')) {
             //setup our variables
             $this->init_vars();
 
-
             //Register Globals
             $GLOBALS['plugin_dir'] = $this->plugin_dir;
             $GLOBALS['course_slug'] = $this->get_course_slug();
@@ -914,7 +913,7 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array(&$this, 'coursepress_reports_admin'));
             do_action('coursepress_add_menu_items_after_reports');
 
-            add_submenu_page('courses', __('Notifications', 'cp'), __('Notifications', 'cp'), 'coursepress_courses_cap', 'notifications', array(&$this, 'coursepress_notifications_admin'));
+            add_submenu_page('courses', __('Notifications', 'cp'), __('Notifications', 'cp'), 'coursepress_notifications_cap', 'notifications', array(&$this, 'coursepress_notifications_admin'));
             do_action('coursepress_add_menu_items_after_course_notifications');
 
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
@@ -1109,6 +1108,7 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_students_cap'); //access to students
             $role->add_cap('coursepress_assessment_cap'); //access to assessment
             $role->add_cap('coursepress_reports_cap'); //access to reports
+            $role->add_cap('coursepress_notifications_cap');//access to notifications
             $role->add_cap('coursepress_settings_cap'); //access to settings
 
             /* =============== Action capabilities ============== */
@@ -1191,6 +1191,7 @@ if (!class_exists('CoursePress')) {
             $role->add_cap('coursepress_instructors_cap'); //access to instructors
             $role->add_cap('coursepress_students_cap'); //access to students
             $role->add_cap('coursepress_assessment_cap'); //access to assessment
+            $role->add_cap('coursepress_notifications_cap');//access to notifications
             $role->add_cap('coursepress_reports_cap'); //access to reports
             $role->add_cap('coursepress_settings_cap'); //access to settings
 

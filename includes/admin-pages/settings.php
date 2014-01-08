@@ -122,6 +122,7 @@ if (isset($_POST['_wpnonce'])) {
 
         case 'instructor_capabilities':
             if (current_user_can('administrator')) {
+                //$this->add_user_roles_and_caps();
                 $this->show_settings_instructor_capabilities();
             }
             break;
