@@ -438,7 +438,7 @@
                                         }
                                     }
 
-                                    if ($input_modules_count == 0) {
+                                    if (!isset($input_modules_count) ||  isset($input_modules_count) && $input_modules_count == 0) {
                                         ?>
                                         <tr>
                                             <td colspan="7"><?php _e('0 input modules in the selected unit.', 'cp'); ?></td>

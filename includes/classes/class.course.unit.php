@@ -103,6 +103,15 @@ if (!class_exists('Unit')) {
             wp_update_post($post);
         }
 
+        function can_show_permalink() {
+            $unit = $this->get_unit();
+            if ($unit->post_status !== 'draft') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
         function get_permalink($course_id = '') {
             global $course_slug;
             global $units_slug;

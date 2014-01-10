@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: Marko Miljus (Incsub)
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.8 beta
+  Version: 0.9.8.3 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8 beta';
+        var $version = '0.9.8.3 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -586,6 +586,7 @@ if (!class_exists('CoursePress')) {
             $query_vars[] = 'instructor_username';
             $query_vars[] = 'discussion_name';
             $query_vars[] = 'discussion_archive';
+            $query_vars[] = 'notifications_archive';
             $query_vars[] = 'grades_archive';
             $query_vars[] = 'discussion_action';
             $query_vars[] = 'paged';
@@ -605,7 +606,10 @@ if (!class_exists('CoursePress')) {
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
-            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
+            
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() . '/page/([0-9])/?'] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
+            
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
 
             return array_merge($new_rules, $rules);
@@ -938,6 +942,9 @@ if (!class_exists('CoursePress')) {
 
             add_submenu_page('courses', __('Notifications', 'cp'), __('Notifications', 'cp'), 'coursepress_notifications_cap', 'notifications', array(&$this, 'coursepress_notifications_admin'));
             do_action('coursepress_add_menu_items_after_course_notifications');
+            
+            add_submenu_page('courses', __('Discussions', 'cp'), __('Discussions', 'cp'), 'coursepress_discussions_cap', 'discussions', array(&$this, 'coursepress_discussions_admin'));
+            do_action('coursepress_add_menu_items_after_course_discussions');
 
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
             do_action('coursepress_add_menu_items_after_settings');
@@ -1073,10 +1080,12 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Notification', 'cp')
                 ),
                 'public' => false,
+                'has_archive' => true,
                 'show_ui' => false,
-                'publicly_queryable' => false,
+                'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'query_var' => true,
+                'rewrite' => array('slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_notifications_slug())
             );
 
             register_post_type('notifications', $args);
@@ -1098,7 +1107,7 @@ if (!class_exists('CoursePress')) {
                 ),
                 'public' => false,
                 'has_archive' => true,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'query_var' => true,
@@ -1305,6 +1314,10 @@ if (!class_exists('CoursePress')) {
 
         function coursepress_notifications_admin() {
             include_once($this->plugin_dir . 'includes/admin-pages/notifications.php');
+        }
+        
+        function coursepress_discussions_admin(){
+            include_once($this->plugin_dir . 'includes/admin-pages/discussions.php');
         }
 
         function coursepress_reports_admin() {
@@ -1779,6 +1792,10 @@ if (!class_exists('CoursePress')) {
 
         function check_for_valid_post_type_permalinks($permalink, $post, $leavename) {
             if (get_post_type($post->ID) == 'discussions') {
+                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+                $course = $course_obj->get_course();
+                return str_replace('%course%', $course->post_name, $permalink);
+            } else if(get_post_type($post->ID) == 'notifications'){
                 $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
                 $course = $course_obj->get_course();
                 return str_replace('%course%', $course->post_name, $permalink);

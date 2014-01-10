@@ -86,7 +86,8 @@
 .view-course-link{
     text-align:right; 
     float: right;
-    margin-left: 5px;
+    margin: -2px 7px 1px 0px;
+    background: #fff;
 }
 .wp-core-ui a.button-delete{
     background: none repeat scroll 0 0 #db2020;
@@ -115,9 +116,14 @@
     width: 100%;
     text-align: center;
     margin: 2px 0px 3px 0px;
+
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px; 
+    border-radius: 0px; 
+    border-width: 0px;
 }
 
-.wp-core-ui a.button-settings:hover{
+.wp-core-ui a.button.button-settings:hover{
     background: none repeat scroll 0 0 #05C8F2;
     text-shadow: none;
     color: #fff;
@@ -136,6 +142,11 @@
     width: 100%;
     text-align: center;
     margin: 2px 0px 3px 0px;
+
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px; 
+    border-radius: 0px; 
+    border-width: 0px;
 }
 
 .wp-core-ui a.button-units:hover{
@@ -156,6 +167,11 @@
     width: 100%;
     text-align: center;
     margin: 2px 0px 3px 0px;
+
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px; 
+    border-radius: 0px; 
+    border-width: 0px;
 }
 
 .wp-core-ui a.button-publish:hover{
@@ -176,6 +192,11 @@
     width: 100%;
     text-align: center;
     margin: 2px 0px 3px 0px;
+
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px; 
+    border-radius: 0px; 
+    border-width: 0px;
 }
 
 .wp-core-ui a.button-unpublish:hover{

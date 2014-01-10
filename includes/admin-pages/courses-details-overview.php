@@ -27,7 +27,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     if (!isset($_POST['meta_allow_course_discussion'])) {
         $_POST['meta_allow_course_discussion'] = 'off';
     }
-    
+
     if (!isset($_POST['meta_allow_course_grades_page'])) {
         $_POST['meta_allow_course_grades_page'] = 'off';
     }
@@ -166,7 +166,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));                  ?>" />-->
+                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));                   ?>" />-->
                                 <select name="meta_prerequisite">
 
                                     <?php
@@ -286,7 +286,7 @@ if (isset($_GET['course_id'])) {
 
                                 <p class="description"><?php _e('If checked, students can post questions and get answers.', 'cp') ?></p>
                             </div>
-                            
+
                             <div class="full border-devider">
                                 <label><?php _e('Allow Grades Page', 'cp'); ?>
                                     <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
@@ -416,9 +416,13 @@ if (isset($_GET['course_id'])) {
                     <div class='sidebar-inner'>
                         <div class="featured_url_holder">
                             <?php _e('Browse for an image.', 'cp'); ?>
-                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php echo esc_attr($course->details->featured_url); ?>" />
+                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php if ($course_id !== 0) {
+                                echo esc_attr($course->details->featured_url);
+                            } ?>" />
                             <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php echo get_post_meta($course_id, '_thumbnail_id', true); ?>" />
+                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php if ($course_id !== 0) {
+                                echo get_post_meta($course_id, '_thumbnail_id', true);
+                            } ?>" />
                             <?php
                             //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
                             //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
@@ -459,10 +463,10 @@ if (isset($_GET['course_id'])) {
                             <?php _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp'); ?>
                             <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" />
 
-                            <?php
-                            //echo '(' . $supported_video_extensions . ')';
-                            ?>
-                            
+<?php
+//echo '(' . $supported_video_extensions . ')';
+?>
+
                             <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
 
                         </div>

@@ -2,9 +2,15 @@
 global $action, $page;
 wp_reset_vars(array('action', 'page'));
 
+$unit_id = '';
 $course_id = '';
+
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
     $course_id = $_GET['course_id'];
+}
+
+if (isset($_GET['unit_id']) && is_numeric($_GET['unit_id'])) {
+    $unit_id = $_GET['unit_id'];
 }
 
 $course = new Course($course_id);
@@ -62,7 +68,7 @@ $students_count = $course->get_number_of_students();
     $message['us'] = __('Selected student has been unenrolled successfully from the course.', 'cp');
     $message['usl'] = __('Selected students has been unenrolled successfully from the course.', 'cp');
     $message['is'] = __('Invitation sent sucessfully.', 'cp');
-    
+
     $error_message['wrong_email'] = __('Please enter valid e-mail address', 'cp');
 
     if (isset($_GET['unit_id']) && isset($_GET['new_status'])) {
@@ -78,7 +84,7 @@ $students_count = $course->get_number_of_students();
     if (isset($_GET['ms'])) {
         $ms = $_GET['ms'];
     }
-    
+
     $ems = null;
     if (isset($_GET['ems'])) {
         $ems = $_GET['ems'];
@@ -89,7 +95,7 @@ $students_count = $course->get_number_of_students();
         <div id="message" class="updated fade"><p><?php echo $message[$ms]; ?></p></div>
         <?php
     }
-    
+
     if (isset($ems)) {
         ?>
         <div id="message" class="error fade"><p><?php echo $error_message[$ems]; ?></p></div>
@@ -123,7 +129,18 @@ $students_count = $course->get_number_of_students();
                $course = new Course($course_id);
                if ($course->can_show_permalink()) {
                    ?>
-                <a class="view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new">View Course</a>
+                <a class="nav-tab view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('View Course', 'cp'); ?></a>
+                <?php
+            }
+        }
+        ?>
+                
+                <?php
+        if ($unit_id != '') {
+               $unit = new Course($unit_id);
+               if ($unit->can_show_permalink()) {
+                   ?>
+                <a class="nav-tab view-course-link" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('View Unit', 'cp');?></a>
                 <?php
             }
         }

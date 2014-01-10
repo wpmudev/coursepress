@@ -1,10 +1,12 @@
-/* Selecting valid menu item based on the current tab */
+
 
 
 jQuery(document).ready(function() {
     jQuery('.checkbox_answer').live('input', function() {
         jQuery(this).closest('td').find(".checkbox_answer_check").val(jQuery(this).val());
     });
+
+
 });
 
 jQuery(document).ready(function() {
@@ -16,11 +18,21 @@ jQuery(document).ready(function() {
 
 /* UNIT MODULES */
 jQuery(document).ready(function() {
-    jQuery('.button-primary').click(function() {
-        jQuery("input[name*='radio_check']:checked").each(function() {
-            var vl = jQuery(this).parent().find('.radio_answer').val();
-            jQuery(this).closest(".module-content").find('.checked_index').val(vl);
-        });
+    jQuery('.action .action-top .action-button').live('click', function() {
+        if (jQuery(this).parent().hasClass('open')) {
+            jQuery(this).parent().removeClass('open').addClass('closed');
+            jQuery(this).parents('.action').find('.action-body').removeClass('open').addClass('closed');
+        } else {
+            jQuery(this).parent().removeClass('closed').addClass('open');
+            jQuery(this).parents('.action').find('.action-body').removeClass('closed').addClass('open');
+        }
+    });
+});
+
+jQuery('.button-primary').click(function() {
+    jQuery("input[name*='radio_check']:checked").each(function() {
+        var vl = jQuery(this).parent().find('.radio_answer').val();
+        jQuery(this).closest(".module-content").find('.checked_index').val(vl);
     });
 });
 
@@ -34,6 +46,7 @@ function coursepress_module_click_action_toggle() {
         jQuery(this).parents('.action').find('.action-body').removeClass('closed').addClass('open');
     }
 }
+
 
 function coursepress_modules_ready() {
 
@@ -93,7 +106,7 @@ function coursepress_modules_ready() {
 
 
             /* Dynamic WP Editor */
-            var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100);
+            var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
             jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
                     .success(function(editor) {
@@ -103,7 +116,7 @@ function coursepress_modules_ready() {
                     });
         }
     });
-    jQuery('.action .action-top .action-button').click(coursepress_module_click_action_toggle());
+
 }
 
 jQuery(document).ready(coursepress_modules_ready);
@@ -237,8 +250,10 @@ jQuery(document).ready(function() {
     jQuery('a.radio_new_link').live('click', function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
 
-        var r = '<tr><td><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"><input class="radio_answer_check" type="radio" name="radio_input_module_radio_answers_check_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+        var r = '<tr><td><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+
         jQuery(this).parent().parent().parent().append(r);
+
 
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
@@ -253,7 +268,7 @@ jQuery(document).ready(function() {
     jQuery('a.checkbox_new_link').live('click', function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
 
-        var r = '<tr><td><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_answers_check_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+        var r = '<tr><td><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
         jQuery(this).parent().parent().parent().append(r);
 
         jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
@@ -352,7 +367,7 @@ jQuery(document).ready(function()
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
             jQuery('#featured_url_size').val(props.size);
-            
+
         };
         wp.media.editor.open(this);
         return false;

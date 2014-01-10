@@ -188,7 +188,7 @@ if (isset($_GET['quick_setup'])) {
                                     <input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
                                 </th>
                                 <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
-                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
+                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_course"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>

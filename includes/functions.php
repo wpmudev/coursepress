@@ -409,6 +409,7 @@ function get_the_course_excerpt($id = false, $length = 55) {
 
     if (!$excerpt = trim($post->post_excerpt)) {
         $excerpt = $post->post_content;
+    }
         $excerpt = strip_shortcodes($excerpt);
         $excerpt = apply_filters('the_content', $excerpt);
         $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
@@ -424,7 +425,7 @@ function get_the_course_excerpt($id = false, $length = 55) {
         } else {
             $excerpt = implode(' ', $words);
         }
-    }
+    
 
     $post = $old_post;
 
