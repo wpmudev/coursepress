@@ -74,6 +74,7 @@ function coursepress_modules_ready() {
 
             var data = '';
 
+            jQuery('#modules_accordion').accordion();
             jQuery('#modules_accordion').accordion("refresh");
 
             moving = jQuery('input#beingdragged').val();
