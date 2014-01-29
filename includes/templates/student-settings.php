@@ -7,6 +7,9 @@
         $student_data = array();
         $student_data['ID'] = get_current_user_id();
         $form_errors = 0;
+        
+        do_action('before_settings_validation');
+        
         if ($_POST['password'] != '') {
             if ($_POST['password'] == $_POST['password_confirmation']) {
                 $student_data['user_pass'] = $_POST['password'];
@@ -41,27 +44,27 @@
     $student = new Student(get_current_user_id());
     ?>
     <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
-
+    <?php do_action('before_settings_form');?>
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
         <label>
             <?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="<?php esc_attr_e($student->user_firstname); ?>" />
-        </label><label>
+        </label><label><?php do_action('after_settings_first_name');?>
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="<?php esc_attr_e($student->user_lastname); ?>" />
-        </label><label>
+        </label><label><?php do_action('after_settings_last_name');?>
             <?php _e('E-mail', 'cp'); ?>:
             <input type="text" name="email" value="<?php esc_attr_e($student->user_email); ?>" />
-        </label><label>
+        </label><label><?php do_action('after_settings_email');?>
             <?php _e('Password (empty = don\'t change)', 'cp'); ?>:
             <input type="password" name="password" value="" />
-        </label><label class="right">
+        </label><label class="right"><?php do_action('after_settings_passwordon');?>
             <?php _e('Confirm Password', 'cp'); ?>:
             <input type="password" name="password_confirmation" value="" />
-        </label><label class="full">
+        </label><label class="full"><?php do_action('after_settings_pasword');?>
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Save Changes', 'cp'); ?>" />
         </label>
-    </form>
+    </form><?php do_action('after_settings_form');?>
     <?php
 } else {
     //ob_start();

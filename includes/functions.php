@@ -410,22 +410,22 @@ function get_the_course_excerpt($id = false, $length = 55) {
     if (!$excerpt = trim($post->post_excerpt)) {
         $excerpt = $post->post_content;
     }
-        $excerpt = strip_shortcodes($excerpt);
-        $excerpt = apply_filters('the_content', $excerpt);
-        $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
-        $excerpt = strip_tags($excerpt);
-        $excerpt_length = apply_filters('excerpt_length', $length);
-        $excerpt_more = apply_filters('excerpt_more', ' ' . '[...]');
+    $excerpt = strip_shortcodes($excerpt);
+    $excerpt = apply_filters('the_content', $excerpt);
+    $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
+    $excerpt = strip_tags($excerpt);
+    $excerpt_length = apply_filters('excerpt_length', $length);
+    $excerpt_more = apply_filters('excerpt_more', ' ' . '[...]');
 
-        $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
-        if (count($words) > $excerpt_length) {
-            array_pop($words);
-            $excerpt = implode(' ', $words);
-            $excerpt = $excerpt . $excerpt_more;
-        } else {
-            $excerpt = implode(' ', $words);
-        }
-    
+    $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
+    if (count($words) > $excerpt_length) {
+        array_pop($words);
+        $excerpt = implode(' ', $words);
+        $excerpt = $excerpt . $excerpt_more;
+    } else {
+        $excerpt = implode(' ', $words);
+    }
+
 
     $post = $old_post;
 
@@ -524,9 +524,9 @@ if (!function_exists('coursepress_register_module')) {
 
     function coursepress_register_module($module_name, $class_name, $section) {
         global $coursepress_modules;
-        
+
         //cp_write_log($_POST);
-        
+
         if (!is_array($coursepress_modules)) {
             $coursepress_modules = array();
         }
@@ -598,4 +598,5 @@ function cp_show_errors() {
     ini_set('display_errors', 1);
     ini_set('scream.enabled', true);
 }
+
 ?>

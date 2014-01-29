@@ -2,7 +2,6 @@
 the_excerpt();
 ?>
 
-
 <div class="instructors-box">
     <?php
     //Get instructors count for this course
