@@ -256,3 +256,44 @@ a.apply-button:hover, input[type="submit"].apply-button:hover{
 .radio_input_module ul.radio_answer_check_li li .radio_answer_check, .checkbox_input_module ul.radio_answer_check_li li .checkbox_answer_check{
     margin-right: 10px;
 }
+
+.nav-submenu li.submenu-item{
+    display: inline;
+    margin: 0px;
+}
+
+.units-archive ul.units-archive-list{
+    list-style: none;
+    list-style-type: none;
+}
+
+.units-archive ul.units-archive-list li{
+    margin: 0px;
+}
+
+.unit-archive-single-module-status{
+    margin-left:45px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.nav-submenu li.submenu-item:after{
+    content:"   |   ";
+}
+
+.nav-submenu li.submenu-item:last-child:after{
+    content:"";
+}
+
+.nav-submenu a{
+    text-decoration: none;
+}
+
+.nav-submenu .submenu-active a{
+    text-decoration: underline;
+}
+
+span.percentage{
+    display: inline-block;
+    width: 45px;
+}

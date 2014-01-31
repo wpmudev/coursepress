@@ -46,8 +46,7 @@
     <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
     <?php do_action('before_settings_form');?>
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
-        <label>
-            <?php _e('First Name', 'cp'); ?>:
+        <label><?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="<?php esc_attr_e($student->user_firstname); ?>" />
         </label><label><?php do_action('after_settings_first_name');?>
             <?php _e('Last Name', 'cp'); ?>:

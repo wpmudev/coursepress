@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
@@ -30,6 +29,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             add_shortcode('course_discussion_loop', array(&$this, 'course_discussion_loop'));
             add_shortcode('course_unit_single', array(&$this, 'course_unit_single'));
             add_shortcode('course_unit_details', array(&$this, 'course_unit_details'));
+            add_shortcode('course_unit_archive_submenu', array(&$this, 'course_unit_archive_submenu'));
             add_shortcode('course_breadcrumbs', array(&$this, 'course_breadcrumbs'));
             add_shortcode('course_discussion', array(&$this, 'course_discussion'));
             add_shortcode('instructor_profile_url', array(&$this, 'instructor_profile_url'));
@@ -40,6 +40,41 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
 
             $GLOBALS['units_breadcrumbs'] = '';
+        }
+
+        function course_unit_archive_submenu($atts) {
+            global $coursepress;
+
+            extract(shortcode_atts(array(
+                'course_id' => ''
+                            ), $atts));
+
+            if ($course_id == '') {
+                $course_id = do_shortcode('[get_parent_course_id]');
+            }
+
+            $subpage = $coursepress->units_archive_subpage;
+            ?>
+            <div class="submenu-main-container">
+                <ul id="submenu-main" class="submenu nav-submenu">
+                    <li class="submenu-item submenu-units <?php echo(isset($subpage) && $subpage == 'units' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_units_slug(); ?>/"><?php _e('Units', 'coursepress'); ?></a></li>
+                    <li class="submenu-item submenu-notifications <?php echo(isset($subpage) && $subpage == 'notifications' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_notifications_slug(); ?>/"><?php _e('Notifications', 'coursepress'); ?></a></li>
+                    <?php
+                    $course_obj = new Course($course_id);
+                    $course = $course_obj->get_course();
+                    if ($course->allow_course_discussion == 'on') {
+                        ?>
+                        <li class="submenu-item submenu-discussions <?php echo(isset($subpage) && $subpage == 'discussions' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_discussion_slug(); ?>/"><?php _e('Discussions', 'coursepress'); ?></a></li>
+                        <?php
+                    }
+                    if ($course->allow_course_grades_page == 'on') {
+                        ?>
+                        <li class="submenu-item submenu-grades <?php echo(isset($subpage) && $subpage == 'grades' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_grades_slug(); ?>/"><?php _e('Grades', 'coursepress'); ?></a></li>
+                    <?php } ?>
+                    <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Info', 'coursepress'); ?></a></li>
+                </ul><!--submenu-main-->
+            </div><!--submenu-main-container-->
+            <?php
         }
 
         function courses_urls($atts) {
@@ -273,9 +308,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             foreach ($imageTags as $tag) {
                 $avatar_url = $tag->getAttribute('src');
             }
-?>
+            ?>
             <?php
-
             $content .= '<div class="instructor-avatar">';
             $content .= '<div class="' . $class . '" style="background: url(' . $avatar_url . ');"></div>';
             $content .= '</div>';
@@ -337,9 +371,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 foreach ($imageTags as $tag) {
                     $avatar_url = $tag->getAttribute('src');
                 }
-            ?>
+                ?>
                 <?php
-
                 $content .= '<div class="instructor"><a href="' . trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login) . '">';
                 $content .= '<div class="small-circle-profile-image" style="background: url(' . $avatar_url . ');"></div>';
                 $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
@@ -565,9 +598,106 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'student_id' => get_current_user_ID(),
                             ), $atts));
 
+            if ($unit_id == 0) {
+                $unit_id = get_the_ID();
+            }
+
             $unit = new Unit($unit_id);
 
             $student = new Student(get_current_user_id());
+
+            /* ------------ */
+            $unit_module = new Unit_Module();
+
+            $front_save_count = 0;
+
+            $modules = $unit_module->get_modules($unit_id);
+
+            foreach ($modules as $mod) {
+
+                $class_name = $mod->module_type;
+
+                if (class_exists($class_name)) {
+                    $module = new $class_name();
+                    if ($module->front_save) {
+                        $front_save_count++;
+                    }
+                }
+            }
+
+            $input_modules_count = $front_save_count;
+            /* ------------ */
+            //$input_modules_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . $unit_id . '"]');
+            $unit_module = new Unit_Module();
+            $responses_count = 0;
+
+            $modules = $unit_module->get_modules($unit_id);
+            foreach ($modules as $module) {
+                $unit_module = new Unit_Module();
+                if ($unit_module->did_student_responed($module->ID, $student_id)) {
+                    $responses_count++;
+                }
+            }
+            $student_modules_responses_count = $responses_count;
+
+            //$student_modules_responses_count = do_shortcode('[course_unit_details field="student_module_responses" unit_id="' . $unit_id . '"]');
+
+            if ($student_modules_responses_count > 0) {
+                $percent_value = round((100 / $input_modules_count) * $student_modules_responses_count, 0);
+            } else {
+                $percent_value = 0;
+            }
+
+            if ($input_modules_count == 0) {
+                $unit_module = new Unit_Module();
+                $grade = 0;
+                $front_save_count = 0;
+                $responses = 0;
+                $graded = 0;
+                //$input_modules_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
+                $modules = $unit_module->get_modules($unit_id);
+
+
+                if ($input_modules_count > 0) {
+                    foreach ($modules as $mod) {
+
+                        $class_name = $mod->module_type;
+
+                        if (class_exists($class_name)) {
+                            $module = new $class_name();
+                            if ($module->front_save) {
+                                $front_save_count++;
+                                $response = $module->get_response($student_id, $mod->ID);
+
+                                if (isset($response->ID)) {
+                                    $grade_data = $unit_module->get_response_grade($response->ID);
+                                    $grade = $grade + $grade_data['grade'];
+
+                                    if (get_post_meta($response->ID, 'response_grade')) {
+                                        $graded++;
+                                    }
+
+                                    $responses++;
+                                }
+                            } else {
+                                //read only module
+                            }
+                        }
+                    }
+                    $percent_value = ($format == true ? ($responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">') . ($grade > 0 ? round(($grade / $front_save_count), 0) : 0) . '%</span>' : ($grade > 0 ? round(($grade / $front_save_count), 0) : 0));
+                } else {
+                    $student = new Student($student_id);
+                    if ($student->is_unit_visited($unit_id, $student_id)) {
+                        $grade = 100;
+                        $percent_value = ($format == true ? '<span class="grade-active">' . $grade . '%</span>' : $grade);
+                    } else {
+                        $grade = 0;
+                        $percent_value = ($format == true ? '<span class="grade-inactive">' . $grade . '%</span>' : $grade);
+                    }
+                }
+                
+                //$percent_value = do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]');
+            }
 
             //redirect to the parent course page if not enrolled
             if (!current_user_can('administrator')) {
@@ -576,6 +706,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     wp_redirect(get_permalink($unit->course_id));
                     exit;
                 }
+            }
+
+            if ($field == 'percent') {
+                $unit->details->$field = $percent_value;
             }
 
             if ($field == 'permalink') {
@@ -627,7 +761,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $input_modules_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
                 $modules = $unit_module->get_modules($unit_id);
 
-                
+
                 if ($input_modules_count > 0) {
                     foreach ($modules as $mod) {
 
@@ -847,4 +981,4 @@ if (!class_exists('CoursePress_Shortcodes')) {
 }
 
 $coursepress_shortcodes = new CoursePress_Shortcodes();
-                ?>
+?>

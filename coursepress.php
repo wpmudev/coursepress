@@ -3,7 +3,7 @@
   Plugin Name: CoursePress
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
-  Author: Marko Miljus (Incsub)
+  Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Version: 0.9.8.3 beta
   TextDomain: cp
@@ -166,7 +166,7 @@ if (!class_exists('CoursePress')) {
 
             //add_action('admin_enqueue_scripts', array(&$this, 'add_jquery_ui'));
             add_action('admin_enqueue_scripts', array(&$this, 'admin_header_actions'));
-            
+
             add_action('load-coursepress_page_course_details', array(&$this, 'admin_coursepress_page_course_details'));
             add_action('load-coursepress_page_settings', array(&$this, 'admin_coursepress_page_settings'));
             add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
@@ -212,6 +212,20 @@ if (!class_exists('CoursePress')) {
                     add_filter('wp_page_menu', array(&$this, 'main_navigation_links_fallback'), 20, 2);
                 }
             }
+
+            //add_filter('plugin_row_meta', array(&$this, 'set_plugin_meta'), 10, 2);
+        }
+
+        function set_plugin_meta($links, $file) {
+
+            $plugin = plugin_basename(__FILE__);
+
+            if ($file == $plugin) {
+                return array_merge(
+                        $links, array(sprintf('%s <a href="https://twitter.com/markomiljus">%s</a>', __('Contributor'), __('Marko Miljus')))
+                );
+            }
+            return $links;
         }
 
         function check_access($course_id) {
@@ -347,6 +361,7 @@ if (!class_exists('CoursePress')) {
 
             /* Show Discussion single template */
             if (array_key_exists('discussion_name', $wp->query_vars)) {
+
                 $vars['discussion_name'] = $wp->query_vars['discussion_name'];
                 $course = new Course();
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
@@ -357,9 +372,12 @@ if (!class_exists('CoursePress')) {
             if (array_key_exists('discussion_archive', $wp->query_vars) || (array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
                 $course = new Course();
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
-
+                
                 if ((array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
+                    $this->units_archive_subpage = 'discussions';
+
                     $theme_file = locate_template(array('page-add-new-discussion.php'));
+
                     if ($theme_file != '') {
                         require_once($theme_file);
                         exit;
@@ -377,7 +395,7 @@ if (!class_exists('CoursePress')) {
                     }
                 } else {
                     /* Archive Discussion template */
-
+                    $this->units_archive_subpage = 'discussions';
                     $theme_file = locate_template(array('archive-discussions.php'));
 
                     if ($theme_file != '') {
@@ -453,6 +471,8 @@ if (!class_exists('CoursePress')) {
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
 
                 if ($notifications_archive_page) {
+                    $this->units_archive_subpage = 'notifications';
+
                     $theme_file = locate_template(array('archive-notifications.php'));
 
                     if ($theme_file != '') {
@@ -475,6 +495,8 @@ if (!class_exists('CoursePress')) {
                 }
 
                 if ($units_archive_page) {
+
+                    $this->units_archive_subpage = 'units';
 
                     $theme_file = locate_template(array('archive-unit.php'));
 
@@ -499,6 +521,9 @@ if (!class_exists('CoursePress')) {
                 }
 
                 if ($units_archive_grades_page) {
+
+                    $this->units_archive_subpage = 'grades';
+
                     $theme_file = locate_template(array('archive-unit-grades.php'));
 
                     if ($theme_file != '') {
@@ -641,7 +666,9 @@ if (!class_exists('CoursePress')) {
 
         function courses_archive_custom_content($content) {
             global $post;
+
             $content = $post->post_excerpt;
+
             return $content;
         }
 
@@ -1431,7 +1458,7 @@ if (!class_exists('CoursePress')) {
             }
 
             //$this->add_jquery_ui();
-            
+
             if ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || (isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category')) {
                 wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js');
                 wp_localize_script('courses_bulk', 'coursepress', array(
@@ -1449,7 +1476,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function admin_coursepress_page_course_details() {
-   
+
             wp_enqueue_script('courses-units', $this->plugin_url . 'js/coursepress-courses.js');
             wp_localize_script('courses-units', 'coursepress_units', array(
                 'unenroll_class_alert' => __('Please confirm that you want to un-enroll all students from this class?', 'cp'),

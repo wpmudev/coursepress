@@ -4,6 +4,7 @@ the_excerpt();
 
 <div class="instructors-box">
     <?php
+    $course = new Course(get_the_ID());
     //Get instructors count for this course
     $instructors = do_shortcode('[course_instructors count="true"]');
 
@@ -19,6 +20,8 @@ the_excerpt();
         }
     }
 
+    $course_language = $course->details->course_language;
+    
     //List of instructors
     echo do_shortcode('[course_instructors]');
     ?>
@@ -42,8 +45,9 @@ the_excerpt();
             }
             ?><br />
             <span class="strong"><?php _e('Class Size: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="class_size"]'); ?><br />
-            <span class="strong"><?php _e('Who can Enroll: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="enroll_type"]'); ?><br />
-            <span class="strong"><?php _e('Price: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="price"]'); ?>
+            <span class="strong"><?php _e('Who can Enroll: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="enroll_type"]'); ?>
+            <?php if (isset($course_language) && $course_language !== '') { ?>
+                <br /><span class="strong"><?php _e('Language: ', 'cp'); ?></span><span><?php echo $course_language; ?></span><?php } ?><br /><span class="strong"><?php _e('Price: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="price"]'); ?>
         </div></div>
     <div class="enroll-box-right">
         <div class="apply-box">
