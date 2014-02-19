@@ -117,33 +117,33 @@ $students_count = $course->get_number_of_students();
             if ($key == 'overview' || ($key != 'overview' && $course_id != '')) {
                 ?>
                 <a class="nav-tab<?php
-                if ($tab == $key)
-                    echo ' nav-tab-active';
-                ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
+                   if ($tab == $key)
+                       echo ' nav-tab-active';
+                   ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
                    <?php
                }
            }
            ?>
            <?php
-           if ($course_id != '') {
-               $course = new Course($course_id);
-               if ($course->can_show_permalink()) {
-                   ?>
-                <a class="nav-tab view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('View Course', 'cp'); ?></a>
-                <?php
-            }
-        }
-        ?>
-                
-                <?php
-        if ($unit_id != '') {
-               $unit = new Course($unit_id);
-               if ($unit->can_show_permalink()) {
-                   ?>
-                <a class="nav-tab view-course-link" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('View Unit', 'cp');?></a>
-                <?php
-            }
-        }
+           /* if ($course_id != '') {
+             $course = new Course($course_id);
+             if ($course->can_show_permalink()) {
+             ?>
+             <a class="nav-tab view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('View Course', 'cp'); ?></a>
+             <?php
+             }
+             } */
+           ?>
+
+        <?php
+        /* if ($unit_id != '') {
+          $unit = new Course($unit_id);
+          if ($unit->can_show_permalink()) {
+          ?>
+          <a class="nav-tab view-course-link" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('View Unit', 'cp');?></a>
+          <?php
+          }
+          } */
         ?>
     </h3>
 

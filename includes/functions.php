@@ -523,7 +523,7 @@ function curPageURL() {
 if (!function_exists('coursepress_register_module')) {
 
     function coursepress_register_module($module_name, $class_name, $section) {
-        global $coursepress_modules;
+        global $coursepress_modules, $coursepress_modules_labels;
 
         //cp_write_log($_POST);
 
@@ -531,8 +531,13 @@ if (!function_exists('coursepress_register_module')) {
             $coursepress_modules = array();
         }
 
+        
         if (class_exists($class_name)) {
+            $class = new $class_name();
+            $coursepress_modules_labels[$module_name] = $class->label;
+            
             $coursepress_modules[$section][$module_name] = $class_name;
+           
         } else {
             return false;
         }

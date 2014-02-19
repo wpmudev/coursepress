@@ -216,6 +216,8 @@ if (!class_exists('CoursePress')) {
             //add_filter('plugin_row_meta', array(&$this, 'set_plugin_meta'), 10, 2);
         }
 
+    
+
         function set_plugin_meta($links, $file) {
 
             $plugin = plugin_basename(__FILE__);
@@ -372,7 +374,7 @@ if (!class_exists('CoursePress')) {
             if (array_key_exists('discussion_archive', $wp->query_vars) || (array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
                 $course = new Course();
                 $vars['course_id'] = $course->get_course_id_by_name($wp->query_vars['coursename']);
-                
+
                 if ((array_key_exists('discussion_name', $wp->query_vars) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new())) {
                     $this->units_archive_subpage = 'discussions';
 
@@ -1440,16 +1442,19 @@ if (!class_exists('CoursePress')) {
 
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             /* wp_enqueue_script('jquery-ui-datepicker');
-
-              wp_enqueue_script('jquery-ui-core');
-
               wp_enqueue_script('jquery-ui-accordion');
               wp_enqueue_script('jquery-ui-sortable');
               wp_enqueue_script('jquery-ui-resizable');
               wp_enqueue_script('jquery-ui-draggable');
               wp_enqueue_script('jquery-ui-droppable'); */
             //add_action('wp_enqueue_scripts', array(&$this, 'add_jquery_ui'));
+            wp_enqueue_script('jquery');
+            //wp_enqueue_script('jquery-ui-core');
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
+            wp_enqueue_script('jquery-ui-spinner');
+
+
+
 
             if (isset($_GET['page'])) {
                 $page = isset($_GET['page']);
@@ -1458,6 +1463,12 @@ if (!class_exists('CoursePress')) {
             }
 
             //$this->add_jquery_ui();
+
+            if ($page == 'course_details') {
+                wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
+                wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
+                wp_enqueue_script('cp-settings', $this->plugin_url . 'js/settings.js', array('jquery', 'jquery-ui', 'jquery-ui-spinner'), $this->version);
+            }
 
             if ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || (isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category')) {
                 wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js');

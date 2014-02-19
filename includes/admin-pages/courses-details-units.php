@@ -44,6 +44,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET[
 
             $unit_object = new Unit($unit->ID);
             $unit_object = $unit_object->get_unit();
+            
+            
             ?>
             <li class="postbox ui-state-default clearfix">
                 <div class="unit-order-number"><div class="numberCircle"><?php echo $list_order; ?></div></div>
@@ -54,6 +56,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET[
                     <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();" class="remove-button"></a></div>
                 <?php } ?>
 
+                    <?php echo 'Unit post status:'.$unit_object->post_status;?>
+                    
                 <div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
                     <?php if ((current_user_can('coursepress_change_course_unit_status_cap')) || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
                         <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($unit_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>

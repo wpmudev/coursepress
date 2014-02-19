@@ -49,7 +49,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 }
 
 if (isset($_GET['course_id'])) {
-    //$course_marking_type = $course->details->course_marking_type; //get_post_meta($course_id, 'course_marking_type', true);
     $class_size = $course->details->class_size;
     $enroll_type = $course->details->enroll_type;
     $passcode = $course->details->passcode;
@@ -166,9 +165,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <!--<input type="text" name="meta_prerequisite" value="<?php //echo esc_attr(stripslashes($prerequisite));                   ?>" />-->
                                 <select name="meta_prerequisite">
-
                                     <?php
                                     $args = array(
                                         'post_type' => 'course',
@@ -206,7 +203,7 @@ if (isset($_GET['course_id'])) {
                                 <?php
                                 $tax_args = array(
                                     'show_option_all' => '',
-                                    'show_option_none' => __('-- None --', 'coursepress'),
+                                    'show_option_none' => __('-- None --', 'cp'),
                                     'orderby' => 'ID',
                                     'order' => 'ASC',
                                     'show_count' => 0,

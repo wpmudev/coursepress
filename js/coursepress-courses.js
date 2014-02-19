@@ -31,6 +31,11 @@ jQuery(function() {
     });
 
     jQuery("#sortable-units").disableSelection();
+
+    jQuery(".save-unit-button").click(function() {
+        jQuery("#unit-add").submit();
+    });
+
 });
 
 function update_sortable_indexes() {
@@ -66,7 +71,7 @@ jQuery(document).ready(function()
     jQuery('.audio_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".audio_url:first");
-        
+
         wp.media.editor.send.attachment = function(props, attachment)
         {
             jQuery(target_url_field).val(attachment.url);
@@ -80,7 +85,7 @@ jQuery(document).ready(function()
 
 jQuery(document).ready(function()
 {
-    jQuery('.video_url_button').live('click',function()
+    jQuery('.video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".video_url:first");
 
@@ -92,8 +97,8 @@ jQuery(document).ready(function()
         wp.media.editor.open(this);
         return false;
     });
-    
-    jQuery('.course_video_url_button').live('click',function()
+
+    jQuery('.course_video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".course_video_url:first");
 
@@ -105,7 +110,7 @@ jQuery(document).ready(function()
         wp.media.editor.open(this);
         return false;
     });
-   
+
 });
 
 /* Native WP media browser for file module (for instructors) */
@@ -114,7 +119,7 @@ jQuery(document).ready(function()
 {
     jQuery('.file_url_button').live('click', function()
     {
-        
+
         var target_url_field = jQuery(this).prevAll(".file_url:first");
 
         wp.media.editor.send.attachment = function(props, attachment)

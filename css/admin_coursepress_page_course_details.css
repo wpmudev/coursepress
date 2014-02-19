@@ -12,6 +12,53 @@
 
 /* UNIT MODULES */
 
+.unit-control-buttons{
+    margin: 10px 0px 10px 0px;
+}
+
+.unit-control-buttons a.button.button-preview{
+    background: none repeat scroll 0 0 #ccc;
+    text-shadow: none;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    margin: 2px 0px 3px 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    border-width: 0px;
+}
+
+.unit-control-buttons a.button.button-preview:hover{
+    background: #d7d3d3;
+}
+
+.unit-control-buttons a.button.button-unpublish{
+    background: #F27405;
+}
+
+.unit-control-buttons a.button.button-publish{
+    background: #1ecd8e;
+}
+
+.unit-control-buttons a.button.button-publish:hover{
+    background:#3ed69f;
+}
+
+.unit-control-buttons a.button.button-units,
+.unit-control-buttons a.button.button-publish,
+.unit-control-buttons a.button.button-unpublish,
+.unit-control-buttons a.button.button-preview{
+    display: inline-block;
+    width: 120px;
+}
+
+.unit-control-buttons a.button.button-unpublish,
+.unit-control-buttons a.button.button-publish,
+.unit-control-buttons a.button.button-preview{
+    margin-left: 5px;
+}
+
 
 
 #modules_accordion.ui-accordion .ui-accordion-content{
@@ -718,7 +765,7 @@ div.course-liquid-right {
 }
 #course-left {
     margin-left: 5px;
-    margin-right: 325px;
+    /*margin-right: 325px;*/
 }
 #course-left #edit-sub {
     background-color: transparent;
