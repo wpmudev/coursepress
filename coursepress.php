@@ -1440,6 +1440,7 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_style('cp-38');
             }
 
+            wp_enqueue_style('font_awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             /* wp_enqueue_script('jquery-ui-datepicker');
               wp_enqueue_script('jquery-ui-accordion');

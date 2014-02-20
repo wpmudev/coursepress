@@ -79,11 +79,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                       <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();" class="remove-button"></a></div>
                       <?php } */ ?>
 
-                                                                                    <!--<div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
+                                                                                                <!--<div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
                     <?php /* if ((current_user_can('coursepress_change_course_unit_status_cap')) || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
                       <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($unit_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
                       <?php } */ ?>
-                                                                                    </div>-->
+                                                                                                </div>-->
                 </li>
                 <?php
                 $list_order++;
@@ -125,6 +125,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <label for='unit_name'><?php _e('Unit Title', 'cp'); ?></label>
                             <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr(stripslashes(isset($unit_details->post_title) ? $unit_details->post_title : '')); ?>' />
 
+                            <div class="wide">
+                                <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
+                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr($course_start_date); ?>" />
+                            </div>
+
                             <div class="unit-control-buttons">
                                 <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                     ?>
@@ -149,7 +154,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     }
                                 }
                                 ?>
+
                             </div>
+
 
                             <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
                             <?php
@@ -166,6 +173,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <br/>
 
                         </div>
+
+                        <div class="mp-wrap mp-postbox mp-default-margin"></div>
 
                         <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
                             <?php _e('Drag & Drop unit modules here', 'cp'); ?>
@@ -186,7 +195,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <select name='unit-module-list' id='unit-module-list'>
                                 <?php
                                 $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
-                                
+
                                 foreach ($sections as $key => $section) {
 
                                     if (isset($coursepress_modules[$key])) {

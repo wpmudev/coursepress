@@ -1167,12 +1167,12 @@ div.levelinformation {
 
 a.delete_module_link, a.remove_module_link {
     position: absolute;
-    right: 20px;
+    right: 5px;
     cursor: pointer;
     z-index:9999;
     color:#ccc;
     text-decoration: none;
-    margin-top: -37px;
+    margin-top: 0px;
 }
 
 a.delete_module_link:hover, a.remove_module_link:hover {

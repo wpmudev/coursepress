@@ -344,19 +344,21 @@ if (!class_exists('Unit_Module')) {
         function get_module_delete_link($module_id) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }
-                                ;"><?php _e('Delete'); ?></a>
+                        jQuery(this).parent().parent().parent().remove();
+                        jQuery(this).parent().parent().remove();
+
+                        update_sortable_module_indexes();
+                    }
+                    ;"><?php //_e('Delete'); ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
                <?php
            }
 
            function get_module_remove_link() {
                ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }"><?php _e('Remove') ?></a>
+                        jQuery(this).parent().parent().remove();
+                        update_sortable_module_indexes();
+                    }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
             <?php
         }
 
