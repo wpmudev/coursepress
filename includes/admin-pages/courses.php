@@ -156,7 +156,7 @@ if (isset($_GET['quick_setup'])) {
                 }
                 ?>
 
-                <table cellspacing="0" class="widefat shadow-table">
+                <table cellspacing="0" class="widefat shadow-table unit-control-buttons">
                     <thead>
                         <tr>
                             <th style="" class="manage-column column-cb check-column" id="cb" scope="col" width="<?php echo $col_sizes[0] . '%'; ?>"><input type="checkbox"></th>
@@ -182,6 +182,8 @@ if (isset($_GET['quick_setup'])) {
                             $course_object = $course_obj->get_course();
 
                             $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                            
+                            unit-control-buttons
                             ?>
                             <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
                                 <th scope='row' class='check-column'>
@@ -216,7 +218,7 @@ if (isset($_GET['quick_setup'])) {
                                         <a href="?page=course_details&tab=units&course_id=<?php echo $course_object->ID; ?>" class="button button-units"><?php _e('Units', 'cp'); ?></a>
                                     <?php } ?>
                                     <?php if (current_user_can('coursepress_change_course_status_cap') || (current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id())) { ?>
-                                        <a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>
+                                        <a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>
                                 <?php } ?>
                                 <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap'))) { ?>
                                     <td <?php echo $style; ?>>

@@ -204,7 +204,7 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                             <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>
-                            <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('Edit', 'cp'); ?></a></td>
+                            <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-units save-unit-button"><?php _e('Edit', 'cp'); ?></a></td>
                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                 <td class="<?php echo $style . ' delete-button-student-td'; ?>">
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
@@ -325,7 +325,7 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                                     <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                                     <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                                     <td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>
-                                    <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('Edit', 'cp'); ?></a></td>
+                                    <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-units save-unit-button"><?php _e('Edit', 'cp'); ?></a></td>
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                         <td class="<?php echo $style . ' delete-button-student-td'; ?>">
                                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>

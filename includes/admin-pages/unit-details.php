@@ -101,8 +101,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     <div class='mp-settings'><!--course-liquid-left-->
         <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" id="unit-add" method="post">
             <input type="hidden" name="beingdragged" id="beingdragged" value="" />
-            <div id='course-left'>
-
+            <div id='course'>
 
                 <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
 
@@ -127,7 +126,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                             <div class="wide">
                                 <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
-                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr($course_start_date); ?>" />
+                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(trim($course_start_date) !== '' ? $course_start_date : (date( 'Y-m-d', current_time( 'timestamp', 0 ) )) ); ?>" />
                             </div>
 
                             <div class="unit-control-buttons">

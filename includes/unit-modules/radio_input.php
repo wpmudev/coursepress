@@ -33,13 +33,15 @@ class radio_input_module extends Unit_Module {
                         foreach ($answers as $answer) {
                             ?>
                             <li>
-                                <input class="radio_answer_check" type="radio" value='<?php echo esc_attr($answer); ?>' disabled <?php echo (isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : ''); ?> /><?php echo $answer; ?><?php if(isset($response->post_content) && trim($response->post_content) == $answer){ echo ($checked_answer == $answer ? '<span class="correct_answer">✓</span>' : '<span class="not_correct_answer">✘</span>');};?>
+                                <input class="radio_answer_check" type="radio" value='<?php echo esc_attr($answer); ?>' disabled <?php echo (isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : ''); ?> /><?php echo $answer; ?><?php if (isset($response->post_content) && trim($response->post_content) == $answer) {
+                    echo ($checked_answer == $answer ? '<span class="correct_answer">✓</span>' : '<span class="not_correct_answer">✘</span>');
+                }; ?>
                             </li>
                             <?php
                         }
                         ?>
                     </ul>
-                    <?php //echo nl2br($response->post_content);  ?>
+            <?php //echo nl2br($response->post_content);   ?>
                 </div>
             </div>
 
@@ -83,7 +85,7 @@ class radio_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
 
@@ -109,17 +111,16 @@ class radio_input_module extends Unit_Module {
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">
-                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?></span>
+                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?><?php
+                    if (isset($data->ID)) {
+                        parent::get_module_delete_link($data->ID);
+                    } else {
+                        parent::get_module_remove_link();
+                    }
+                    ?></span>
             </h3>
 
             <div class="module-content">
-                <?php
-                if (isset($data->ID)) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
-                ?>
                 <input type="hidden" name="<?php echo $this->name; ?>_checked_index[]" class='checked_index' value="0" />
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
@@ -173,13 +174,13 @@ class radio_input_module extends Unit_Module {
                                         }
                                         ?> />
                                     </td>
-                                    <?php if ($answer_cnt >= 2) { ?>
+                <?php if ($answer_cnt >= 2) { ?>
                                         <td width="10%">    
                                             <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
                                         </td>
                                     <?php } else { ?>
                                         <td width="10%">&nbsp;</td>
-                                    <?php } ?>
+                                <?php } ?>
                                 </tr>
                                 <?php
                                 $answer_cnt++;

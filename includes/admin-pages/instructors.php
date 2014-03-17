@@ -126,7 +126,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 }
                 ?>
 
-                <table cellspacing="0" class="widefat fixed shadow-table">
+                <table cellspacing="0" class="widefat fixed shadow-table unit-control-buttons">
                     <thead>
                         <tr>
                             <th style="" class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"></th>
