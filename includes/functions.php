@@ -3,20 +3,24 @@
 /**
  * Unit unit module pagination
  */
-function coursepress_unit_module_pagination() {
+function coursepress_unit_module_pagination($unit_id, $pages_num) {
+    global $wp, $wp_query, $paged, $coursepress_modules;
 
-    if (is_singular())
+    $modules_class = new Unit_Module();
+
+    if (!isset($unit_id) || !is_singular()) {
         return;
+    }
 
-    global $wp_query, $paged;
-    /** Stop execution if there's only 1 page */
+
+    $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+
+    $max = intval($pages_num); //number of page-break modules + 1
+
+    $wp_query->max_num_pages = $max;
 
     if ($wp_query->max_num_pages <= 1)
         return;
-
-    $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-    
-    $max = intval($wp_query->max_num_pages);
 
     /** 	Add current page to the array */
     if ($paged >= 1)
@@ -33,7 +37,7 @@ function coursepress_unit_module_pagination() {
         $links[] = $paged + 1;
     }
 
-    echo '<div class="navigation"><ul>' . "\n";
+    echo '<br clear="all"><div class="navigation"><ul>' . "\n";
 
     /** 	Previous Post Link */
     if (get_previous_posts_link())
@@ -65,9 +69,14 @@ function coursepress_unit_module_pagination() {
         printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url(get_pagenum_link($max)), $max);
     }
 
+    $nextpage = intval($paged) + 1;
     /** 	Next Post Link */
-    if (get_next_posts_link())
+    if ($nextpage <= $pages_num) {
+        $attr = apply_filters('next_posts_link_attributes', '');
+
+
         printf('<li>%s</li>' . "\n", get_next_posts_link('<span class="meta-nav">&rarr;</span>'));
+    }
 
     echo '</ul></div>' . "\n";
 }
@@ -603,13 +612,12 @@ if (!function_exists('coursepress_register_module')) {
             $coursepress_modules = array();
         }
 
-        
+
         if (class_exists($class_name)) {
             $class = new $class_name();
             $coursepress_modules_labels[$module_name] = $class->label;
-            
+
             $coursepress_modules[$section][$module_name] = $class_name;
-           
         } else {
             return false;
         }

@@ -39,16 +39,16 @@ class page_break_module extends Unit_Module {
                     ?></span>
             </h3>
 
-            <div class="module-content">
+            <!--<div class="module-content">-->
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
                 <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
 
-                <p><?php echo $this->description;?></p>
+                <!--<p><?php echo $this->description;?></p>-->
 
-            </div>
+            <!--</div>-->
 
         </div>
 

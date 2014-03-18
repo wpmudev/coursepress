@@ -199,23 +199,38 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_modules_front($unit_id = 0) {
-            global $coursepress_modules;
+            global $coursepress_modules, $wp;
+
             $front_save = false;
+            $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
 
             $modules = $this->get_modules($unit_id);
             ?>
             <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post">
                 <?php
+                $pages_num = 1;
+
                 foreach ($modules as $mod) {
                     $class_name = $mod->module_type;
+
                     if (class_exists($class_name)) {
                         $module = new $class_name();
-                        $module->front_main($mod);
-                        if ($module->front_save) {
-                            $front_save = true;
+
+                        if ($module->name == 'page_break_module') {
+                            $pages_num++;
+                        } else {
+                            if ($pages_num == $paged) {
+
+                                $module->front_main($mod);
+
+                                if ($module->front_save) {
+                                    $front_save = true;
+                                }
+                            }
                         }
                     }
                 }
+
 
                 wp_nonce_field('modules_nonce');
 
@@ -228,6 +243,7 @@ if (!class_exists('Unit_Module')) {
                 ?>
             </form>
             <?php
+            coursepress_unit_module_pagination($unit_id, $pages_num);
         }
 
         function get_module_response_comment_form($post_id) {
@@ -359,7 +375,7 @@ if (!class_exists('Unit_Module')) {
                         jQuery(this).parent().parent().remove();
                         update_sortable_module_indexes();
                     }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
-            <?php
+               <?php
         }
 
         function get_response_comment($response_id, $count = false) {

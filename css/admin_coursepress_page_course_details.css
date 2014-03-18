@@ -1181,3 +1181,19 @@ a.delete_module_link:hover, a.remove_module_link:hover {
 .editor_in_place .wp_themeSkin table.mceLayout{
     width: 100% !important;
 }
+
+div.modules_accordion .module-holder-page_break_module h3{
+    background: #f5f5f5;
+}
+
+#modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
+    border: 1px dashed;
+}
+
+div.modules_accordion .module-holder-page_break_module .ui-accordion-header-icon{
+    display: none;
+}
+
+div.modules_accordion .module-holder-page_break_module .module-content{
+    display: none;
+}
