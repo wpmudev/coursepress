@@ -216,8 +216,6 @@ if (!class_exists('CoursePress')) {
             //add_filter('plugin_row_meta', array(&$this, 'set_plugin_meta'), 10, 2);
         }
 
-    
-
         function set_plugin_meta($links, $file) {
 
             $plugin = plugin_basename(__FILE__);
@@ -567,25 +565,50 @@ if (!class_exists('CoursePress')) {
 
                 $theme_file = locate_template(array('single-unit.php'));
 
-                if ($theme_file != '') {
-                    do_shortcode('[course_unit_single]'); //required for getting unit results
-                    require_once($theme_file);
-                    exit;
+                $forced_previous_completion_template = locate_template(array('single-previous-unit.php'));
+
+                $unit_details = $unit->get_unit();
+
+                $current_date = (date('Y-m-d', current_time('timestamp', 0)));
+                
+                if ($current_date < $unit_details->unit_availability) {
+                    if ($forced_previous_completion_template != '') {
+                        do_shortcode('[course_unit_single]'); //required for getting unit results
+                        require_once($forced_previous_completion_template);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => $unit->details->post_title,
+                            'content' => __('This Unit is not available at the moment. Please check back later.', 'cp'),
+                            'type' => 'page',
+                            'is_page' => TRUE,
+                            'is_singular' => FALSE,
+                            'is_archive' => FALSE
+                        );
+
+                        $pg = new CoursePress_Virtual_Page($args);
+                    }
                 } else {
+                    if ($theme_file != '') {
+                        do_shortcode('[course_unit_single]'); //required for getting unit results
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => $unit->details->post_title,
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-single.php', $vars),
+                            'type' => 'unit',
+                            'is_page' => FALSE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
+                        );
 
-                    $args = array(
-                        'slug' => $wp->request,
-                        'title' => $unit->details->post_title,
-                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-single.php', $vars),
-                        'type' => 'unit',
-                        'is_page' => FALSE,
-                        'is_singular' => TRUE,
-                        'is_archive' => FALSE
-                    );
-
-                    $pg = new CoursePress_Virtual_Page($args);
+                        $pg = new CoursePress_Virtual_Page($args);
+                    }
+                    $this->set_latest_activity(get_current_user_id());
                 }
-                $this->set_latest_activity(get_current_user_id());
             }
         }
 
@@ -632,7 +655,7 @@ if (!class_exists('CoursePress')) {
             //$new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug().'/([^/]+)/page/?([0-9]{1,})/?$'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
 
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
-            
+
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([0-9])/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
@@ -1815,23 +1838,23 @@ if (!class_exists('CoursePress')) {
             ?>
             <div class="menu">
                 <ul class='nav-menu'>
-                    <?php
-                    foreach ($main_sorted_menu_items as $menu_item) {
-                        ?>
+            <?php
+            foreach ($main_sorted_menu_items as $menu_item) {
+                ?>
                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                            <?php if ($menu_item->db_id !== '') { ?>
+                        <?php if ($menu_item->db_id !== '') { ?>
                                 <ul>
-                                    <?php
-                                    foreach ($sub_sorted_menu_items as $menu_item) {
-                                        ?>
+                                <?php
+                                foreach ($sub_sorted_menu_items as $menu_item) {
+                                    ?>
                                         <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                        <?php } ?>
+                                    <?php } ?>
                                 </ul>
-                            <?php } ?>
+                                    <?php } ?>
                         </li>
-                        <?php
-                    }
-                    ?>
+                            <?php
+                        }
+                        ?>
                 </ul>
             </div>
 

@@ -80,7 +80,11 @@ if (!class_exists('Unit')) {
             $last_inserted_unit_id = $post_id;
             
             update_post_meta($post_id, 'course_id', $_POST['course_id']);
-
+            
+            update_post_meta($post_id, 'unit_availability', $_POST['unit_availability']);
+            
+            update_post_meta($post_id, 'force_previous_unit_completion', $_POST['force_previous_unit_completion']);
+            
             if (!get_post_meta($post_id, 'unit_order', true)) {
                 update_post_meta($post_id, 'unit_order', '');
             }

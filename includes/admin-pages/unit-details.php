@@ -13,14 +13,23 @@ if (!current_user_can('coursepress_view_all_units_cap') && $course->details->pos
     die(__('You do not have required persmissions to access this page.', 'cp'));
 }
 
+if (!isset($_POST['force_previous_unit_completion'])) {
+    $_POST['force_previous_unit_completion'] = 'off';
+}
+
 if (isset($_GET['unit_id'])) {
     $unit = new Unit($_GET['unit_id']);
     $unit_details = $unit->get_unit();
     $unit_id = (int) $_GET['unit_id'];
+    $force_previous_unit_completion = $unit->details->force_previous_unit_completion;
 } else {
     $unit = new Unit();
     $unit_id = 0;
+    $force_previous_unit_completion = 'off';
 }
+
+
+
 
 if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action'] == 'update_unit')) {
 
@@ -79,11 +88,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                       <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();" class="remove-button"></a></div>
                       <?php } */ ?>
 
-                                                                                                <!--<div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
+                                                                                                    <!--<div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
                     <?php /* if ((current_user_can('coursepress_change_course_unit_status_cap')) || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
                       <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($unit_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
                       <?php } */ ?>
-                                                                                                </div>-->
+                                                                                                    </div>-->
                 </li>
                 <?php
                 $list_order++;
@@ -126,7 +135,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                             <div class="wide">
                                 <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
-                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(trim($course_start_date) !== '' ? $course_start_date : (date( 'Y-m-d', current_time( 'timestamp', 0 ) )) ); ?>" />
+                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (trim($course_start_date) !== '' ? $course_start_date : (date('Y-m-d', current_time('timestamp', 0)))))); ?>" />
+
+                                <input type="checkbox" name="force_previous_unit_completion" id="force_previous_unit_completion" value="on" <?php echo ($force_previous_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete previous unit in order access to the current one', 'cp'); ?>
                             </div>
 
                             <div class="unit-control-buttons">

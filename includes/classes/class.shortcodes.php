@@ -439,6 +439,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 }
             }
 
+            $current_date = date('Y-m-d', current_time('timestamp', 0));
+
             $args = array(
                 'category' => '',
                 'order' => 'ASC',
@@ -450,10 +452,16 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'orderby' => 'meta_value_num',
                 'posts_per_page' => '-1',
                 'meta_query' => array(
+                    'relation' => 'AND',
                     array(
                         'key' => 'course_id',
                         'value' => $course_id
                     ),
+                    /*array(
+                        'key' => 'unit_availability',
+                        'value' => $current_date,
+                        'compare' => '<='
+                    ),*/
                 )
             );
 
@@ -695,7 +703,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         $percent_value = ($format == true ? '<span class="grade-inactive">' . $grade . '%</span>' : $grade);
                     }
                 }
-                
+
                 //$percent_value = do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]');
             }
 

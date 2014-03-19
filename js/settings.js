@@ -70,7 +70,7 @@ jQuery(document).ready(function($){
 	});
 	
 	//iCheck
-	mp_iCheck($('.mp-settings').find(':checkbox,:radio'));
+	//mp_iCheck($('.mp-settings').find(':checkbox,:radio'));
 	
 	//Chosen
 	mp_chosen($('.mp-settings').find('.mp-chosen-select').filter(':visible'));
