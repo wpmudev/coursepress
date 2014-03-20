@@ -2,12 +2,12 @@
 if (isset($_GET['quick_setup'])) {
     include('quick-setup.php');
 } else {
-    if(isset($_GET['s'])){
+    if (isset($_GET['s'])) {
         $s = $_GET['s'];
-    }else{
+    } else {
         $s = '';
     }
-    
+
     $page = $_GET['page'];
 
     if (isset($_POST['action']) && isset($_POST['courses'])) {
@@ -182,8 +182,8 @@ if (isset($_GET['quick_setup'])) {
                             $course_object = $course_obj->get_course();
 
                             $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-                            
-                            unit-control-buttons
+
+                            unit - control - buttons
                             ?>
                             <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
                                 <th scope='row' class='check-column'>
@@ -223,7 +223,9 @@ if (isset($_GET['quick_setup'])) {
                                 <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();" class="remove-button"></a>
+                                            <a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();">
+                                                <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                            </a>
                                         <?php } ?>
                                     </td>
                                 <?php } ?>

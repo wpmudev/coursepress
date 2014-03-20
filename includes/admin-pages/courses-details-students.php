@@ -208,7 +208,9 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                 <td class="<?php echo $style . ' delete-button-student-td'; ?>">
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                        <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();" class="remove-button-student"></a>
+                                        <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
+                                            <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                        </a>
                                     <?php } ?>
                                 </td>
                             <?php } ?>
@@ -329,7 +331,9 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                         <td class="<?php echo $style . ' delete-button-student-td'; ?>">
                                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                                <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();" class="remove-button-student"></a>
+                                                <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
+                                                    <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                                </a>
                                             <?php } ?>
                                         </td>
                                     <?php } ?>
@@ -458,24 +462,23 @@ if ($course->details->enroll_type != 'manually') {//There shouldn't be invitatio
 <?php } ?>
 
 
-<?php 
-/*
-if ((current_user_can('coursepress_send_bulk_students_email_cap')) || (current_user_can('coursepress_send_bulk_my_students_email_cap') && $course->details->post_author == get_current_user_id())) { ?>
-    <div class="students_bulk_email_area">
-        <form name="students_bulk_email" method="post">
-            <?php wp_nonce_field('students_bulk_email'); ?>
-            <h2><?php _e('Send an e-mail notification to students', 'cp'); ?></h2>
+<?php /*
+  if ((current_user_can('coursepress_send_bulk_students_email_cap')) || (current_user_can('coursepress_send_bulk_my_students_email_cap') && $course->details->post_author == get_current_user_id())) { ?>
+  <div class="students_bulk_email_area">
+  <form name="students_bulk_email" method="post">
+  <?php wp_nonce_field('students_bulk_email'); ?>
+  <h2><?php _e('Send an e-mail notification to students', 'cp'); ?></h2>
 
-            <label class="email_subject"><?php _e('E-Mail Subject', 'cp'); ?>
-                <input type="text" name="email_subject" value="" />
-            </label>
-            <label class="email_body"><?php _e('E-Mail Body', 'cp'); ?>
-                <?php
-                $args = array("textarea_name" => "email_body", "textarea_rows" => 3);
-                wp_editor('', "email_body", $args);
-                ?>
-            </label><br />
-            <?php submit_button(__('Send', 'cp'), 'primary', 'send_bulk_email_to_students', ''); ?>
-        </form>
-    </div>
-<?php }*/ ?>
+  <label class="email_subject"><?php _e('E-Mail Subject', 'cp'); ?>
+  <input type="text" name="email_subject" value="" />
+  </label>
+  <label class="email_body"><?php _e('E-Mail Body', 'cp'); ?>
+  <?php
+  $args = array("textarea_name" => "email_body", "textarea_rows" => 3);
+  wp_editor('', "email_body", $args);
+  ?>
+  </label><br />
+  <?php submit_button(__('Send', 'cp'), 'primary', 'send_bulk_email_to_students', ''); ?>
+  </form>
+  </div>
+  <?php } */ ?>

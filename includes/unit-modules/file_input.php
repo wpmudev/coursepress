@@ -176,6 +176,7 @@ class file_input_module extends Unit_Module {
                     $response_id = intval(str_replace($this->name . '_front_', '', $file));
 
                     if (!function_exists('wp_handle_upload')) {
+                        require_once( ABSPATH . 'wp-includes/pluggable.php');
                         require_once( ABSPATH . 'wp-admin/includes/file.php' );
                     }
 

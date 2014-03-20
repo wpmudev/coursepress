@@ -165,7 +165,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
                                 <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;"><a href="?page=instructors&action=view&instructor_id=<?php echo $user_object->ID; ?>" class="button button-settings"><?php _e('View', 'cp'); ?></a></td>
                                 <?php if (current_user_can('administrator')) { ?>
-                                    <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=instructors&action=delete&instructor_id=<?php echo $user_object->ID; ?>" onclick="return removeInstructors();" class="remove-button">&nbsp;</a></td>
+                                    <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=instructors&action=delete&instructor_id=<?php echo $user_object->ID; ?>" onclick="return removeInstructors();">
+                                            <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                        </a></td>
                                 <?php } ?>
                             </tr>
                             <?php

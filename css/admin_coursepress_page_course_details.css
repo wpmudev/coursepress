@@ -12,6 +12,14 @@
 
 /* UNIT MODULES */
 
+.new-unit-element-holder{
+    background-color: #f1f1f1;
+    margin-right: 15px;
+    margin-top: 15px;
+    margin-left: 15px;
+    padding-bottom: 5px;
+}
+
 #modules_accordion.ui-accordion .ui-accordion-content{
     padding: 10px;
 
@@ -543,11 +551,6 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     padding-right: 1%;
     height: 85px;
     overflow: hidden;
-}
-
-.unit-remove{
-    float: right;
-    width: 11%;
 }
 
 .remove-button{
@@ -1196,4 +1199,19 @@ div.modules_accordion .module-holder-page_break_module .ui-accordion-header-icon
 
 div.modules_accordion .module-holder-page_break_module .module-content{
     display: none;
+}
+
+a .remove-btn{
+    margin-left: 17px;
+    margin-right: auto;
+    margin-top: 1px;
+    font-size: 22px;
+}
+
+.unit-remove {
+    float: right;
+    width: 5%;
+    top: 15px;
+    position: absolute;
+    right: 15px;
 }

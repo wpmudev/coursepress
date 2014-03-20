@@ -190,7 +190,7 @@
                                 ?>
                             </select>
 
-                            <label class="ungraded"><?php _e('Ungraded Modules Only', 'cp'); ?>
+                            <label class="ungraded"><?php _e('Ungraded Elements Only', 'cp'); ?>
                                 <?php
                                 if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
                                     $ungraded_filter = 'yes';
@@ -270,7 +270,7 @@
                                 <?php
                                 $columns = array(
                                     "name" => __('Student Name', 'cp'),
-                                    "module" => __('Module', 'cp'),
+                                    "module" => __('Element', 'cp'),
                                     "title" => __('Title', 'cp'),
                                     "submission_date" => __('Submitted', 'cp'),
                                     "response" => __('Response', 'cp'),
@@ -441,7 +441,7 @@
                                     if (!isset($input_modules_count) ||  isset($input_modules_count) && $input_modules_count == 0) {
                                         ?>
                                         <tr>
-                                            <td colspan="7"><?php _e('0 input modules in the selected unit.', 'cp'); ?></td>
+                                            <td colspan="7"><?php _e('0 input elements in the selected unit.', 'cp'); ?></td>
                                         </tr>
                                         <?php
                                     }

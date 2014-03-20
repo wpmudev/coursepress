@@ -198,10 +198,10 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                     </div>
                                 </td>
                                 <?php
-                                if(isset($notification_object->course_id) && $notification_object->course_id !== ''){
+                                if (isset($notification_object->course_id) && $notification_object->course_id !== '') {
                                     $course = new Course($notification_object->course_id);
                                     $course_name = $course->details->post_title;
-                                }else{
+                                } else {
                                     $course_name = __('All Courses', 'cp');
                                 }
                                 ?>
@@ -210,7 +210,9 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeCourse();" class="remove-button"></a>
+                                            <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeCourse();">
+                                                <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                            </a>
                                         <?php } ?>
                                     </td>
                                 <?php } ?>

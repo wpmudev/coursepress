@@ -160,7 +160,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($discussion_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_discussion"><a href="?page=discussions&action=edit&discussion_id=<?php echo $discussion_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
-                                        
+
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
                                             <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeNotification();"><?php _e('Delete', 'cp'); ?></a> | </span>
                                         <?php } ?>
@@ -179,7 +179,9 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeCourse();" class="remove-button"></a>
+                                            <a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeCourse();">
+                                                <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                            </a>
                                         <?php } ?>
                                     </td>
                                 <?php } ?>

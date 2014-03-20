@@ -171,6 +171,7 @@ if (!class_exists('CoursePress')) {
             add_action('load-coursepress_page_settings', array(&$this, 'admin_coursepress_page_settings'));
             add_action('load-toplevel_page_courses', array(&$this, 'admin_coursepress_page_courses'));
             add_action('load-coursepress_page_notifications', array(&$this, 'admin_coursepress_page_notifications'));
+            add_action('load-coursepress_page_discussions', array(&$this, 'admin_coursepress_page_discussions'));
             add_action('load-coursepress_page_reports', array(&$this, 'admin_coursepress_page_reports'));
             add_action('load-coursepress_page_assessment', array(&$this, 'admin_coursepress_page_assessment'));
             add_action('load-coursepress_page_students', array(&$this, 'admin_coursepress_page_students'));
@@ -567,16 +568,14 @@ if (!class_exists('CoursePress')) {
 
                 $forced_previous_completion_template = locate_template(array('single-previous-unit.php'));
 
-                $unit_details = $unit->get_unit();
-
-                $current_date = (date('Y-m-d', current_time('timestamp', 0)));
-                
-                if ($current_date < $unit_details->unit_availability) {
+              
+                if (!$unit->is_unit_available($vars['unit_id'])) {
                     if ($forced_previous_completion_template != '') {
                         do_shortcode('[course_unit_single]'); //required for getting unit results
                         require_once($forced_previous_completion_template);
                         exit;
                     } else {
+
                         $args = array(
                             'slug' => $wp->request,
                             'title' => $unit->details->post_title,
@@ -1537,6 +1536,10 @@ if (!class_exists('CoursePress')) {
         function admin_coursepress_page_notifications() {
             wp_enqueue_style('notifications', $this->plugin_url . 'css/admin_coursepress_page_notifications.css', array(), $this->version);
         }
+        
+        function admin_coursepress_page_discussions() {
+            wp_enqueue_style('discussions', $this->plugin_url . 'css/admin_coursepress_page_discussions.css', array(), $this->version);
+        }
 
         function admin_coursepress_page_reports() {
             wp_enqueue_style('reports', $this->plugin_url . 'css/admin_coursepress_page_reports.css', array(), $this->version);
@@ -1838,23 +1841,23 @@ if (!class_exists('CoursePress')) {
             ?>
             <div class="menu">
                 <ul class='nav-menu'>
-            <?php
-            foreach ($main_sorted_menu_items as $menu_item) {
-                ?>
-                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                        <?php if ($menu_item->db_id !== '') { ?>
-                                <ul>
-                                <?php
-                                foreach ($sub_sorted_menu_items as $menu_item) {
-                                    ?>
-                                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                    <?php } ?>
-                                </ul>
-                                    <?php } ?>
-                        </li>
-                            <?php
-                        }
+                    <?php
+                    foreach ($main_sorted_menu_items as $menu_item) {
                         ?>
+                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
+                            <?php if ($menu_item->db_id !== '') { ?>
+                                <ul>
+                                    <?php
+                                    foreach ($sub_sorted_menu_items as $menu_item) {
+                                        ?>
+                                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
+                                        <?php } ?>
+                                </ul>
+                            <?php } ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
                 </ul>
             </div>
 

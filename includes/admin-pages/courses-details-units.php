@@ -53,7 +53,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET[
                 <div class="unit-description"><?php echo get_the_course_excerpt($unit_object->ID, 28); ?></div>
 
                 <?php if ((current_user_can('coursepress_delete_course_units_cap')) || (current_user_can('coursepress_delete_my_course_units_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                    <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();" class="remove-button"></a></div>
+                    <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();">
+                        <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                        </a></div>
                 <?php } ?>
                     
                 <div class="unit-buttons unit-control-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-units save-unit-button">Settings</a>

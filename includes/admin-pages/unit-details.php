@@ -201,7 +201,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                         </div>
 
-                        <div class='course-details'>
+                        <div class='course-details new-unit-element-holder'>
+                            
+                            <label><?php _e('New Unit Element', 'cp');?></label>
+                            
                             <select name='unit-module-list' id='unit-module-list'>
                                 <?php
                                 $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
@@ -230,8 +233,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <option value="text_input_module">Text Input</option>
                                 <option value="textarea_input_module">Text Area Input</option>
                             </select>-->
-
-                            <input type='button' name='unit-module-add' id='unit-module-add' value='Add' />
+                            
+                            <input type='button' name='unit-module-add' id='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary" />
                         </div>
 
                         <div class="course-details">

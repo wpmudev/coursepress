@@ -614,6 +614,10 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             $student = new Student(get_current_user_id());
 
+            
+            if ($field == 'is_unit_available') {
+                $unit->details->$field = $unit->is_unit_available();
+            }
             /* ------------ */
             $unit_module = new Unit_Module();
 

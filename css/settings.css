@@ -2662,3 +2662,7 @@ label.error:before {
 .fa-arrow-circle-up:before{
     content:"\f0aa";
 }
+
+.fa fa-user:before{
+    content:"\f007";
+}

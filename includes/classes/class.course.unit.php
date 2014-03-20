@@ -17,7 +17,7 @@ if (!class_exists('Unit')) {
             $this->id = $id;
             $this->output = $output;
             $this->details = get_post($this->id, $this->output);
-           
+
             $this->course_id = $this->get_parent_course_id();
         }
 
@@ -40,33 +40,95 @@ if (!class_exists('Unit')) {
                 }
 
                 return $unit;
-                
             } else {
                 return false;
             }
         }
 
+        function is_unit_available($unit_id = '') {
+            
+            if($unit_id == ''){
+                $unit_id = $this->id;
+            }
+            
+            $unit_details = $this->get_unit($unit_id);
+
+            $current_date = (date('Y-m-d', current_time('timestamp', 0)));
+
+            /* Check if previous unit must be 100% completed */
+
+            $forced_not_available = false;
+
+            if ($unit_details->force_previous_unit_completion == 'on') {
+                $previous_unit = $this->get_previous_unit_from_the_same_course($unit_id);
+
+                if ($previous_unit) {
+                    if (do_shortcode('[course_unit_details field="percent" unit_id="' . $previous_unit[0]->ID . '"]') < 100) {
+                        $forced_not_available = true;
+                    }
+                }
+            }
+
+            if ($forced_not_available) {
+                return false;
+            }
+
+            if ($current_date < $unit_details->unit_availability || $forced_not_available) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function get_previous_unit_from_the_same_course($unit_id = '', $post_status = 'publish') {
+
+            if ($unit_id == '') {
+                $unit_id = $this->id;
+            }
+
+            $current_unit_order = get_post_meta($unit_id, 'unit_order', true);
+
+            $args = array(
+                'post_type' => 'unit',
+                'post_status' => $post_status,
+                'posts_per_page' => -1,
+                'meta_key' => 'course_id',
+                'meta_value' => $this->course_id,
+                'meta_query' => array(
+                    array(
+                        'key' => 'unit_order',
+                        'compare' => '=',
+                        'value' => $current_unit_order - 1
+                    ),
+                )
+            );
+
+            $previous_unit = get_posts($args);
+
+            return $previous_unit;
+        }
+
         function update_unit() {
             global $user_id, $last_inserted_unit_id;
-            
+
             $unit_id = (isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id);
-            
+
             $unit = get_post($unit_id, $this->output);
 
-            if ($_POST['unit_name'] !== '' && $_POST['unit_name'] !== __('Untitled', 'cp') /*&& $_POST['unit_description'] !== ''*/) {
+            if ($_POST['unit_name'] !== '' && $_POST['unit_name'] !== __('Untitled', 'cp') /* && $_POST['unit_description'] !== '' */) {
                 if ($unit->post_status !== 'publish') {
                     $post_status = 'private';
-                }else{
+                } else {
                     $post_status = 'publish';
                 }
             } else {
                 $post_status = 'draft';
             }
-            
+
             $post = array(
                 'post_author' => $user_id,
                 'post_content' => $_POST['unit_description'],
-                'post_status' => $post_status,//$post_status
+                'post_status' => $post_status, //$post_status
                 'post_title' => $_POST['unit_name'],
                 'post_type' => 'unit',
             );
@@ -78,17 +140,17 @@ if (!class_exists('Unit')) {
             $post_id = wp_insert_post($post);
 
             $last_inserted_unit_id = $post_id;
-            
+
             update_post_meta($post_id, 'course_id', $_POST['course_id']);
-            
+
             update_post_meta($post_id, 'unit_availability', $_POST['unit_availability']);
-            
+
             update_post_meta($post_id, 'force_previous_unit_completion', $_POST['force_previous_unit_completion']);
-            
+
             if (!get_post_meta($post_id, 'unit_order', true)) {
                 update_post_meta($post_id, 'unit_order', '');
             }
-            
+
             return $post_id;
         }
 
@@ -115,7 +177,7 @@ if (!class_exists('Unit')) {
                 return false;
             }
         }
-        
+
         function get_permalink($course_id = '') {
             global $course_slug;
             global $units_slug;

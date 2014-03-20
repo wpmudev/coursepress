@@ -931,4 +931,11 @@ div.levelinformation {
     margin-bottom: 10px;
 }
 
+a .remove-btn{
+    margin-left: 17px;
+    margin-right: auto;
+    margin-top: 1px;
+    font-size: 22px;
+}
+
 /* Instructor profile */
