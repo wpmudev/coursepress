@@ -78,7 +78,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                 ?>
                 <table cellspacing="0" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="color:#ccc;"><?php _e('0 input modules in the selected unit.', 'cp'); ?></td>
+                        <td colspan="4" style="color:#ccc;"><?php _e('0 input elements in the selected unit.', 'cp'); ?></td>
                     </tr>
                 </table>
                 <?php

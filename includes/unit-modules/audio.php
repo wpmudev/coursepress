@@ -18,7 +18,7 @@ class audio_module extends Unit_Module {
 
     function front_main($data) {
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <?php if ($data->post_title != '') { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
@@ -64,13 +64,17 @@ class audio_module extends Unit_Module {
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">
-                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?><?php
+                <span class="h3-label">
+                    <?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp')); ?>
+                    <span class="h3-label-right"><?php echo $this->label; ?></span>
+                    <?php
                     if (isset($data->ID)) {
                         parent::get_module_delete_link($data->ID);
                     } else {
                         parent::get_module_remove_link();
                     }
-                    ?></span>
+                    ?>
+                </span>
             </h3>
 
             <div class="module-content">
@@ -106,13 +110,13 @@ class audio_module extends Unit_Module {
                     $data_loop = (isset($data->loop) ? $data->loop : 'No');
                     $data_autoplay = (isset($data->autoplay) ? $data->autoplay : 'No');
                     ?>
-                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data_loop, 'Yes', true); ?>> Yes<br>
-                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data_loop, 'No', true); ?>> No<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data_loop, 'Yes', true); ?>> Yes<br /><br />
+                    <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data_loop, 'No', true); ?>> No<br /><br />
 
 
                     <label><?php _e('Autoplay', 'cp'); ?></label>
-                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>> Yes<br>
-                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data_autoplay, 'No', true); ?>> No<br>
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>> Yes<br /><br />
+                    <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data_autoplay, 'No', true); ?>> No<br /><br />
 
                 </div>
 

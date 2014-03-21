@@ -308,7 +308,7 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true, $ju
 
         foreach ($instructors as $instructor) {
             if ($remove_buttons) {
-                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"><a href="javascript:removeInstructor(' . $instructor->ID . ');"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
             } else {
                 $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-remove"></div>' . get_avatar($instructor->ID, 80) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
             }
@@ -345,7 +345,7 @@ function coursepress_instructors_avatars_array($args = array()) {
     $instructors = get_users($args);
 
     foreach ($instructors as $instructor) {
-        $content .= 'instructor_avatars[' . $instructor->ID . '] = "' . get_avatar($instructor->ID, 80, "", $instructor->display_name) . '";';
+        $content .= "instructor_avatars[" . $instructor->ID . "] = '" . get_avatar($instructor->ID, 80, "", $instructor->display_name) . "';";
     }
 
     $content .= '</script>';

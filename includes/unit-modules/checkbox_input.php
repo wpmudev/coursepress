@@ -91,7 +91,7 @@ class checkbox_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : '');?>">
+        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <div class="module_description"><?php echo $data->post_content; ?></div>
 
@@ -118,13 +118,17 @@ class checkbox_input_module extends Unit_Module {
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">
-                <span class="h3-label"><?php echo $this->label; ?><?php echo (isset($data->post_title) ? ' (' . $data->post_title . ')' : ''); ?><?php
+                <span class="h3-label">
+                    <?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp')); ?>
+                    <span class="h3-label-right"><?php echo $this->label; ?></span>
+                    <?php
                     if (isset($data->ID)) {
                         parent::get_module_delete_link($data->ID);
                     } else {
                         parent::get_module_remove_link();
                     }
-                    ?></span>
+                    ?>
+                </span>
             </h3>
 
             <div class="module-content">
@@ -154,9 +158,10 @@ class checkbox_input_module extends Unit_Module {
                         <tbody class="ci_items">
                             <tr>
                                 <th width="90%">
-                        <div class="checkbox_answer"><?php _e('Answers', 'cp'); ?></div>
-                        <div class="checkbox_answer_check"><?php _e('Correct'); ?></div>
+                        <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
+                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');    ?></div>
                         </th>
+
                         <th width="10%">
                             <a class="checkbox_new_link"><?php _e('Add New', 'cp'); ?></a>
                         </th>
@@ -176,12 +181,12 @@ class checkbox_input_module extends Unit_Module {
                                     ?>
                                     <tr>
                                         <td width="90%">
-                                            <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
                                             <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' <?php
                                             if (is_array($data->checked_answers) && in_array($answer, $data->checked_answers)) {
                                                 echo 'checked';
                                             }
                                             ?> />
+                                            <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . (isset($data->module_order) ? $data->module_order : 999) . '][]'; ?>" value='<?php echo esc_attr((isset($answer) ? $answer : '')); ?>' />
                                         </td>
                                         <?php if ($answer_cnt >= 2) { ?>
                                             <td width="10%">    

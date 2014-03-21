@@ -1488,7 +1488,7 @@ if (!class_exists('CoursePress')) {
 
             //$this->add_jquery_ui();
 
-            if ($page == 'course_details') {
+            if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
                 wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
                 wp_enqueue_script('cp-settings', $this->plugin_url . 'js/settings.js', array('jquery', 'jquery-ui', 'jquery-ui-spinner'), $this->version);

@@ -33,7 +33,13 @@ jQuery(function() {
     jQuery("#sortable-units").disableSelection();
 
     jQuery(".save-unit-button").click(function() {
+        jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
+            var vl = jQuery(this).parent().find('.radio_answer').val();
+            jQuery(this).closest(".module-content").find('.checked_index').val(vl);
+        });
+
         jQuery("#unit-add").submit();
+
     });
 
 });

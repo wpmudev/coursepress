@@ -30,13 +30,17 @@ class page_break_module extends Unit_Module {
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">
-                <span class="h3-label"><?php echo $this->label; ?><?php
+                <span class="h3-label">
+                    <?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label); ?>
+                    <span class="h3-label-right"><?php echo $this->label; ?></span>
+                    <?php
                     if (isset($data->ID)) {
                         parent::get_module_delete_link($data->ID);
                     } else {
                         parent::get_module_remove_link();
                     }
-                    ?></span>
+                    ?>
+                </span>
             </h3>
 
             <!--<div class="module-content">-->

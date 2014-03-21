@@ -347,9 +347,8 @@ if (isset($_GET['course_id'])) {
                             <div class="clearfix"></div>
                             <?php coursepress_instructors_drop_down(); ?>
                             <?php if (coursepress_get_number_of_instructors() != 0) { ?>
-                                <div class = "inner-right inner-link">
-                                    <a href = "javascript:void(0)" id = "add-instructor-trigger"><?php _e('Add new Instructor', 'cp');
-                                ?></a>
+                                <div class="inner-right inner-link">
+                                    <input class="button-secondary" id="add-instructor-trigger" type="button" value="<?php _e('Assign Selected Instructor', 'cp'); ?>">
                                 </div>
                                 <?php
                             } else {
@@ -413,18 +412,22 @@ if (isset($_GET['course_id'])) {
                     <div class='sidebar-inner'>
                         <div class="featured_url_holder">
                             <?php _e('Browse for an image.', 'cp'); ?>
-                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php if ($course_id !== 0) {
+                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
+                            if ($course_id !== 0) {
                                 echo esc_attr($course->details->featured_url);
-                            } ?>" />
+                            }
+                            ?>" />
                             <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php if ($course_id !== 0) {
-                                echo get_post_meta($course_id, '_thumbnail_id', true);
-                            } ?>" />
-                            <?php
-                            //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
-                            //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                            //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
-                            ?>
+                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
+                                   if ($course_id !== 0) {
+                                       echo get_post_meta($course_id, '_thumbnail_id', true);
+                                   }
+                                   ?>" />
+                                   <?php
+                                   //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
+                                   //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                                   //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
+                                   ?>
                         </div>
                     </div>
                 </div>

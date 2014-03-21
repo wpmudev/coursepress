@@ -29,14 +29,6 @@ jQuery(document).ready(function() {
     });
 });
 
-jQuery('.button-primary').click(function() {
-    jQuery("input[name*='radio_check']:checked").each(function() {
-        var vl = jQuery(this).parent().find('.radio_answer').val();
-        jQuery(this).closest(".module-content").find('.checked_index').val(vl);
-    });
-});
-
-
 function coursepress_module_click_action_toggle() {
     if (jQuery(this).parent().hasClass('open')) {
         jQuery(this).parent().removeClass('open').addClass('closed');
@@ -64,7 +56,7 @@ function coursepress_modules_ready() {
     jQuery('#unit-module-add').click(function() {
         var stamp = new Date().getTime();
         var module_count = 0;
-        
+
         jQuery('input#beingdragged').val(jQuery("#unit-module-list option:selected").val());
 
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
@@ -87,7 +79,7 @@ function coursepress_modules_ready() {
             jQuery(this).val(i + 1);
             module_count = i;
         });
-        
+
         module_count = module_count - jQuery("#unit-module-list option").size();
 
 
@@ -120,7 +112,7 @@ function coursepress_modules_ready() {
                     quicktags({id: rand_id});
                 });
     });
-    
+
     /* Drag & Drop */
 
     jQuery('.module-droppable').droppable({
@@ -303,7 +295,7 @@ jQuery(document).ready(function() {
     jQuery('#add-instructor-trigger').click(function() {
         var instructor_id = jQuery('#instructors option:selected').val();
         if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
-            jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+            jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
         }
     });
 
@@ -312,7 +304,7 @@ jQuery(document).ready(function() {
     jQuery('a.radio_new_link').live('click', function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
 
-        var r = '<tr><td><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+        var r = '<tr><td><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
 
         jQuery(this).parent().parent().parent().append(r);
 
@@ -330,7 +322,7 @@ jQuery(document).ready(function() {
     jQuery('a.checkbox_new_link').live('click', function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
 
-        var r = '<tr><td><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
+        var r = '<tr><td><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
         jQuery(this).parent().parent().parent().append(r);
 
         jQuery("input[name*='checkbox_answers']").each(function(i, obj) {

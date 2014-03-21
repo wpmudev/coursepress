@@ -136,7 +136,7 @@ $columns = array(
     "user_firstname" => __('First Name', 'cp'),
     "user_lastname" => __('Surname', 'cp'),
     "group" => __('Group', 'cp'),
-    "edit" => __('Edit', 'cp'),
+    "edit" => __('Profile', 'cp'),
 );
 
 $col_sizes = array(
@@ -204,9 +204,13 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                             <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>
-                            <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-units save-unit-button"><?php _e('Edit', 'cp'); ?></a></td>
+                            <td class="<?php echo $style . ' edit-button-student-td'; ?>">
+                                <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <i class="fa fa-user cp-move-icon remove-btn"></i>
+                                </a>
+                            </td>
                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                <td class="<?php echo $style . ' delete-button-student-td'; ?>">
+                                <td class="<?php echo $style . ' edit-button-student-td'; ?>">
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                         <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
@@ -327,9 +331,12 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                                     <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                                     <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                                     <td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>
-                                    <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>" class="button button-units save-unit-button"><?php _e('Edit', 'cp'); ?></a></td>
+                                    <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                            <i class="fa fa-user cp-move-icon remove-btn"></i>
+                                        </a>
+                                    </td>
                                     <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                        <td class="<?php echo $style . ' delete-button-student-td'; ?>">
+                                        <td class="<?php echo $style . ' edit-button-student-td'; ?>">
                                             <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                                 <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
                                                     <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
