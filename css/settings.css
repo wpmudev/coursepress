@@ -480,6 +480,12 @@ x:-o-prefocus,
     position: absolute !important;
 }
 /* Chosen v1.0.0 | (c) 2011-2013 by Harvest | MIT License, https://github.com/harvesthq/chosen/blob/master/LICENSE.md */
+
+.chosen-select-student{
+    min-width: 100px;
+    text-align: left;
+}
+
 .chosen-container {
     position: relative;
     display: inline-block;
@@ -491,6 +497,18 @@ x:-o-prefocus,
     -moz-user-select: none;
     user-select: none;
 }
+#enroll_type_prerequisite_holder .chosen-container{
+    min-width: 290px;
+}
+#enroll_type_prerequisite_holder .chosen-container-active.chosen-with-drop .chosen-single
+{
+    min-width: 280px;
+}
+
+#enroll_type_prerequisite_holder .chosen-container.chosen-with-drop .chosen-drop{
+    min-width: 290px;
+}
+
 .chosen-container .chosen-drop {
     position: absolute;
     top: 100%;
@@ -518,15 +536,15 @@ x:-o-prefocus,
     padding: 0 0 0 8px;
     height: 23px;
     border: 1px solid #aaa;
-    border-radius: 5px;
+    border-radius: 0px;
     background-color: #fff;
-    background: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
+    /*background: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
     background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
     background: -moz-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
     background: -o-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
     background: linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
     background-clip: padding-box;
-    box-shadow: 0 0 3px #ffffff inset, 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 3px #ffffff inset, 0 1px 1px rgba(0, 0, 0, 0.1);*/
     color: #444;
     text-decoration: none;
     white-space: nowrap;
@@ -537,7 +555,7 @@ x:-o-prefocus,
 }
 .chosen-container-single .chosen-single span {
     display: block;
-    overflow: hidden;
+    overflow: visible;
     margin-right: 26px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -593,11 +611,11 @@ x:-o-prefocus,
     outline: 0;
     border: 1px solid #aaa;
     background: #ffffff url(../images/chosen-sprite.png) no-repeat 100% -20px;
-    background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+    /*background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
     background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
     background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
     background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
-    background: url(../images/chosen-sprite.png) no-repeat 100% -20px, linear-gradient(#eeeeee 1%, #ffffff 15%);
+    background: url(../images/chosen-sprite.png) no-repeat 100% -20px, linear-gradient(#eeeeee 1%, #ffffff 15%);*/
     font-size: 1em;
     font-family: sans-serif;
     line-height: normal;
@@ -639,11 +657,11 @@ x:-o-prefocus,
 }
 .chosen-container .chosen-results li.highlighted {
     background-color: #3875d7;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #3875d7), color-stop(90%, #2a62bc));
+    /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #3875d7), color-stop(90%, #2a62bc));
     background-image: -webkit-linear-gradient(#3875d7 20%, #2a62bc 90%);
     background-image: -moz-linear-gradient(#3875d7 20%, #2a62bc 90%);
     background-image: -o-linear-gradient(#3875d7 20%, #2a62bc 90%);
-    background-image: linear-gradient(#3875d7 20%, #2a62bc 90%);
+    background-image: linear-gradient(#3875d7 20%, #2a62bc 90%);*/
     color: #ffffff;
 }
 .chosen-container .chosen-results li.no-results {
@@ -675,11 +693,11 @@ x:-o-prefocus,
     height: 1%;
     border: 1px solid #aaa;
     background-color: #fff;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+    /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
     background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
     background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
     background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
-    background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
+    background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);*/
     cursor: text;
 }
 .chosen-container-multi .chosen-choices li {
@@ -715,13 +733,13 @@ x:-o-prefocus,
     border: 1px solid #aaa;
     border-radius: 3px;
     background-color: #e4e4e4;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
+    /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
     background-image: -webkit-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: -moz-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: -o-linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-clip: padding-box;
-    box-shadow: 0 0 2px #ffffff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 2px #ffffff inset, 0 1px 0 rgba(0, 0, 0, 0.05);*/
     color: #333;
     line-height: 13px;
     cursor: default;
@@ -743,11 +761,11 @@ x:-o-prefocus,
     padding-right: 5px;
     border: 1px solid #ccc;
     background-color: #e4e4e4;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
+    /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
     background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: -o-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-    background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+    background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);/*
     color: #666666;
 }
 .chosen-container-multi .chosen-choices li.search-choice-focus {
@@ -766,8 +784,8 @@ x:-o-prefocus,
     cursor: default;
 }
 .chosen-container-active .chosen-single {
-    border: 1px solid #5897fb;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    /*border: 1px solid #5897fb;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);*/
 }
 .chosen-container-active.chosen-with-drop .chosen-single {
     border: 1px solid #aaa;
@@ -775,11 +793,11 @@ x:-o-prefocus,
     border-bottom-right-radius: 0;
     -moz-border-radius-bottomleft: 0;
     border-bottom-left-radius: 0;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #eeeeee), color-stop(80%, #ffffff));
+   /* background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #eeeeee), color-stop(80%, #ffffff));
     background-image: -webkit-linear-gradient(#eeeeee 20%, #ffffff 80%);
     background-image: -moz-linear-gradient(#eeeeee 20%, #ffffff 80%);
     background-image: -o-linear-gradient(#eeeeee 20%, #ffffff 80%);
-    background-image: linear-gradient(#eeeeee 20%, #ffffff 80%);
+    background-image: linear-gradient(#eeeeee 20%, #ffffff 80%);*/
     box-shadow: 0 1px 0 #ffffff inset;
 }
 .chosen-container-active.chosen-with-drop .chosen-single div {

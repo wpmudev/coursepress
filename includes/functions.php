@@ -354,7 +354,7 @@ function coursepress_instructors_avatars_array($args = array()) {
 
 function coursepress_students_drop_down() {
     $content = '';
-    $content .= '<select name="students">';
+    $content .= '<select name="students" data-placeholder="'.__('Choose a Student...', 'cp').'" class="chosen-select">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
@@ -393,7 +393,7 @@ function coursepress_students_drop_down() {
 
 function coursepress_instructors_drop_down() {
     $content = '';
-    $content .= '<select name="instructors" id="instructors">';
+    $content .= '<select name="instructors" id="instructors" data-placeholder="Choose a Course Instructor..." class="chosen-select">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],

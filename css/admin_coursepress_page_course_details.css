@@ -6,6 +6,10 @@
     padding: 14px 7px 0px;
 }
 
+#students_accordion .widefat td{
+    padding: 14px 7px 12px;
+}
+
 .add-student-class-area{
     margin-top: 20px;
 }
@@ -483,6 +487,10 @@ div.buttons a.cancellink {
 
 #students_accordion.ui-accordion .ui-accordion-content{
     padding:0px;
+    display: inline-block;
+    overflow: visible;
+    position: relative;
+    width: 99.9%;
 }
 
 #students_accordion .widefat, #modules_accordion .widefat{
@@ -571,11 +579,15 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .edit-button-student-td{
-    padding: 7px 4px 7px 0px !important;
+    padding: 13px 0px 0px 24px !important;
+}
+
+.edit-button-student-td .cp-move-icon{
+    font-size: 22px;
 }
 
 .delete-button-student-td{
-    padding: 12px 7px 0px !important;
+    padding: 13px 0px 0px 24px !important;
 }
 
 .unit-buttons{
@@ -770,7 +782,7 @@ p.description {
     padding-top: 15px;
     padding-bottom: 15px;
     margin-bottom: 20px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     min-height: 98px;
 }
 

@@ -568,7 +568,7 @@ if (!class_exists('CoursePress')) {
 
                 $forced_previous_completion_template = locate_template(array('single-previous-unit.php'));
 
-              
+
                 if (!$unit->is_unit_available($vars['unit_id'])) {
                     if ($forced_previous_completion_template != '') {
                         do_shortcode('[course_unit_single]'); //required for getting unit results
@@ -1492,6 +1492,7 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
                 wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
                 wp_enqueue_script('cp-settings', $this->plugin_url . 'js/settings.js', array('jquery', 'jquery-ui', 'jquery-ui-spinner'), $this->version);
+                wp_enqueue_script('cp-chosen-config', $this->plugin_url . 'js/chosen-config.js', array('cp-settings'), $this->version, true);
             }
 
             if ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || (isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category')) {
@@ -1536,7 +1537,7 @@ if (!class_exists('CoursePress')) {
         function admin_coursepress_page_notifications() {
             wp_enqueue_style('notifications', $this->plugin_url . 'css/admin_coursepress_page_notifications.css', array(), $this->version);
         }
-        
+
         function admin_coursepress_page_discussions() {
             wp_enqueue_style('discussions', $this->plugin_url . 'css/admin_coursepress_page_discussions.css', array(), $this->version);
         }

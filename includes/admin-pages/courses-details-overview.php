@@ -165,7 +165,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?></label>
-                                <select name="meta_prerequisite">
+                                <select name="meta_prerequisite" class="chosen-select">
                                     <?php
                                     $args = array(
                                         'post_type' => 'course',
@@ -213,7 +213,7 @@ if (isset($_GET['course_id'])) {
                                     'hierarchical' => 0,
                                     'name' => 'meta_course_category',
                                     'id' => '',
-                                    'class' => 'postform',
+                                    'class' => 'postform chosen-select',
                                     'depth' => 0,
                                     'tab_index' => -1,
                                     'taxonomy' => 'course_category',
@@ -346,6 +346,7 @@ if (isset($_GET['course_id'])) {
 
                             <div class="clearfix"></div>
                             <?php coursepress_instructors_drop_down(); ?>
+                            
                             <?php if (coursepress_get_number_of_instructors() != 0) { ?>
                                 <div class="inner-right inner-link">
                                     <input class="button-secondary" id="add-instructor-trigger" type="button" value="<?php _e('Assign Selected Instructor', 'cp'); ?>">
@@ -419,10 +420,10 @@ if (isset($_GET['course_id'])) {
                             ?>" />
                             <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                             <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
-                                   if ($course_id !== 0) {
-                                       echo get_post_meta($course_id, '_thumbnail_id', true);
-                                   }
-                                   ?>" />
+                            if ($course_id !== 0) {
+                                echo get_post_meta($course_id, '_thumbnail_id', true);
+                            }
+                            ?>" />
                                    <?php
                                    //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
                                    //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
@@ -463,9 +464,9 @@ if (isset($_GET['course_id'])) {
                             <?php _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp'); ?>
                             <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" />
 
-<?php
+                            <?php
 //echo '(' . $supported_video_extensions . ')';
-?>
+                            ?>
 
                             <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
 
