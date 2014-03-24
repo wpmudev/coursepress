@@ -490,7 +490,7 @@ x:-o-prefocus,
     position: relative;
     display: inline-block;
     vertical-align: middle;
-    font-size: 13px;
+    font-size: 14px;
     zoom: 1;
     *display: inline;
     -webkit-user-select: none;
@@ -518,7 +518,7 @@ x:-o-prefocus,
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     border-top: 0;
     background: #fff;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
@@ -533,9 +533,9 @@ x:-o-prefocus,
     position: relative;
     display: block;
     overflow: hidden;
-    padding: 0 0 0 8px;
+    padding: 2px 0 1px 8px;
     height: 23px;
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     border-radius: 0px;
     background-color: #fff;
     /*background: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
@@ -549,13 +549,14 @@ x:-o-prefocus,
     text-decoration: none;
     white-space: nowrap;
     line-height: 24px;
+    margin-top: 1px;
 }
 .chosen-container-single .chosen-default {
     color: #999999;
 }
 .chosen-container-single .chosen-single span {
     display: block;
-    overflow: visible;
+    overflow: hidden;
     margin-right: 26px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -581,7 +582,7 @@ x:-o-prefocus,
 }
 .chosen-container-single .chosen-single div {
     position: absolute;
-    top: 0;
+    top: 2px;
     right: 0;
     display: block;
     width: 18px;
@@ -609,7 +610,7 @@ x:-o-prefocus,
     width: 100%;
     height: auto;
     outline: 0;
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     background: #ffffff url(../images/chosen-sprite.png) no-repeat 100% -20px;
     /*background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
     background: url(../images/chosen-sprite.png) no-repeat 100% -20px, -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
@@ -691,7 +692,7 @@ x:-o-prefocus,
     width: 100%;
     height: auto!important;
     height: 1%;
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     background-color: #fff;
     /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
     background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
@@ -730,7 +731,7 @@ x:-o-prefocus,
     position: relative;
     margin: 3px 0 3px 5px;
     padding: 3px 20px 3px 5px;
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     border-radius: 3px;
     background-color: #e4e4e4;
     /*background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
@@ -788,7 +789,7 @@ x:-o-prefocus,
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);*/
 }
 .chosen-container-active.chosen-with-drop .chosen-single {
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     -moz-border-radius-bottomright: 0;
     border-bottom-right-radius: 0;
     -moz-border-radius-bottomleft: 0;
@@ -808,7 +809,7 @@ x:-o-prefocus,
     background-position: -18px 2px;
 }
 .chosen-container-active .chosen-choices {
-    border: 1px solid #5897fb;
+    border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .chosen-container-active .chosen-choices li.search-field input[type=text] {
@@ -1691,7 +1692,7 @@ body .ui-tooltip {
     font-size: 1em;
 }
 .ui-widget-content {
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     background: #ffffff url(smoothness/images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;
     color: #222222;
 }
@@ -1699,7 +1700,7 @@ body .ui-tooltip {
     color: #222222;
 }
 .ui-widget-header {
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     background: #cccccc url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
     color: #222;
     font-weight: bold;
@@ -1746,7 +1747,7 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-    border: 1px solid #aaa;
+    border: 1px solid #ddd;
     background: #ffffff url(smoothness/images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x;
     font-weight: normal;
     color: #212121;

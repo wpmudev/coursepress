@@ -345,7 +345,7 @@ function coursepress_instructors_avatars_array($args = array()) {
     $instructors = get_users($args);
 
     foreach ($instructors as $instructor) {
-        $content .= "instructor_avatars[" . $instructor->ID . "] = '" . get_avatar($instructor->ID, 80, "", $instructor->display_name) . "';";
+        $content .= "instructor_avatars[" . $instructor->ID . "] = '" . str_replace("'", '"', get_avatar($instructor->ID, 80, "", $instructor->display_name)) . "';";
     }
 
     $content .= '</script>';
@@ -354,7 +354,7 @@ function coursepress_instructors_avatars_array($args = array()) {
 
 function coursepress_students_drop_down() {
     $content = '';
-    $content .= '<select name="students" data-placeholder="'.__('Choose a Student...', 'cp').'" class="chosen-select">';
+    $content .= '<select name="students" data-placeholder="' . __('Choose a Student...', 'cp') . '" class="chosen-select">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],

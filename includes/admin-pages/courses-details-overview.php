@@ -381,7 +381,7 @@ if (isset($_GET['course_id'])) {
                     <div class="level-holder" id="sidebar-levels">
                         <div class='sidebar-inner'>
                             <?php _e('Choose your MarketPress product which represents this course (only for paid courses):'); ?>
-                            <select name="meta_marketpress_product" id="meta_marketpress_product">
+                            <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
                                 <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
                                 <?php
                                 global $post;

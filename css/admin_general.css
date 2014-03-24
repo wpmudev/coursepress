@@ -12,6 +12,16 @@
     padding: 2px 0px 0px 0px;
 }
 
+.tablenav .actions{
+    overflow: visible;
+}
+
+.tablenav .actions .chosen-container{
+    float: left;
+    min-width: 300px;
+    margin-right: 5px;
+}
+
 .zero{
     padding: 0px 10px 14px;
 }

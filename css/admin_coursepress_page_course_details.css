@@ -1260,3 +1260,8 @@ a .remove-btn:hover{
     text-decoration: none;
     margin-top: 0px;
 }
+
+#sortable-units .cp-move-icon{
+    font-size: 23px;
+    padding: 0px 5px 0px 18px;
+}

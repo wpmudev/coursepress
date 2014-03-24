@@ -46,11 +46,11 @@ if (!class_exists('Unit')) {
         }
 
         function is_unit_available($unit_id = '') {
-            
-            if($unit_id == ''){
+
+            if ($unit_id == '') {
                 $unit_id = $this->id;
             }
-            
+
             $unit_details = $this->get_unit($unit_id);
 
             $current_date = (date('Y-m-d', current_time('timestamp', 0)));
@@ -59,10 +59,11 @@ if (!class_exists('Unit')) {
 
             $forced_not_available = false;
 
-            if ($unit_details->force_previous_unit_completion == 'on') {
-                $previous_unit = $this->get_previous_unit_from_the_same_course($unit_id);
+            //if ($unit_details->force_current_unit_completion == 'on') {
+            $previous_unit = $this->get_previous_unit_from_the_same_course($unit_id);
 
-                if ($previous_unit) {
+            if ($previous_unit) {
+                if ($previous_unit[0]->force_current_unit_completion == 'on') {
                     if (do_shortcode('[course_unit_details field="percent" unit_id="' . $previous_unit[0]->ID . '"]') < 100) {
                         $forced_not_available = true;
                     }
@@ -145,10 +146,10 @@ if (!class_exists('Unit')) {
 
             update_post_meta($post_id, 'unit_availability', $_POST['unit_availability']);
 
-            update_post_meta($post_id, 'force_previous_unit_completion', $_POST['force_previous_unit_completion']);
+            update_post_meta($post_id, 'force_current_unit_completion', $_POST['force_current_unit_completion']);
 
             if (!get_post_meta($post_id, 'unit_order', true)) {
-                update_post_meta($post_id, 'unit_order', '');
+                update_post_meta($post_id, 'unit_order', $post_id);
             }
 
             return $post_id;

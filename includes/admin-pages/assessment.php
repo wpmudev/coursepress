@@ -111,7 +111,7 @@
                 <input type="hidden" name="page" value="<?php echo esc_attr($_GET['page']); ?>" />
                 <input type="hidden" name="page_num" value="<?php echo esc_attr($page_num); ?>" />
                 <div class="alignleft actions">
-                    <select name="course_id" id="dynamic_courses">
+                    <select name="course_id" id="dynamic_courses" class="chosen-select">
 
                         <?php
                         $assessment_page = 1;

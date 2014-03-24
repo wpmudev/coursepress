@@ -108,7 +108,7 @@ if (isset($_POST['course_id'])) {
                                                     <label class="class-label">
                                                         <?php _e('Class', 'cp'); ?>
 
-                                                        <select name="course_class" data-placeholder="'.__('Choose a Class...', 'cp').'" class="chosen-select chosen-select-student" id="course_class_<?php echo $course_object->ID; ?>">
+                                                        <select name="course_class" data-placeholder="'.__('Choose a Class...', 'cp').'" id="course_class_<?php echo $course_object->ID; ?>">
 
                                                             <option value=""<?php echo ($student->{'enrolled_course_class_' . $course_object->ID} == '' ? ' selected="selected"' : ''); ?>><?php _e('Default', 'cp'); ?></option>
                                                             <?php
@@ -126,7 +126,7 @@ if (isset($_POST['course_id'])) {
 
                                                     <label class="group-label">
                                                         <?php _e('Group', 'cp'); ?>
-                                                        <select name="course_group" id="course_group_<?php echo $course_object->ID; ?>" data-placeholder="'.__('Choose a Group...', 'cp').'" class="chosen-select chosen-select-student">
+                                                        <select name="course_group" id="course_group_<?php echo $course_object->ID; ?>" data-placeholder="'.__('Choose a Group...', 'cp').'">
                                                             <option value=""<?php echo ($student->{'enrolled_course_group_' . $course_object->ID} == '' ? ' selected="selected"' : ''); ?>><?php _e('Default', 'cp'); ?></option>
                                                             <?php
                                                             $groups = get_option('course_groups');

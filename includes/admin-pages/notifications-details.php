@@ -87,7 +87,7 @@ if (isset($_GET['notification_id'])) {
 
                                 <div class="full">
                                     <label><?php _e('Course', 'cp'); ?></label>
-                                    <select name="meta_course_id">
+                                    <select name="meta_course_id" class="chosen-select">
                                         <option value="" <?php selected($meta_course_id, ''); ?>><?php _e('All Courses', 'cp'); ?></option>
                                         <?php
                                         $args = array(

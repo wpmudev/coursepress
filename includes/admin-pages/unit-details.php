@@ -13,19 +13,19 @@ if (!current_user_can('coursepress_view_all_units_cap') && $course->details->pos
     die(__('You do not have required persmissions to access this page.', 'cp'));
 }
 
-if (!isset($_POST['force_previous_unit_completion'])) {
-    $_POST['force_previous_unit_completion'] = 'off';
+if (!isset($_POST['force_current_unit_completion'])) {
+    $_POST['force_current_unit_completion'] = 'off';
 }
 
 if (isset($_GET['unit_id'])) {
     $unit = new Unit($_GET['unit_id']);
     $unit_details = $unit->get_unit();
     $unit_id = (int) $_GET['unit_id'];
-    $force_previous_unit_completion = $unit->details->force_previous_unit_completion;
+    $force_current_unit_completion = $unit->details->force_current_unit_completion;
 } else {
     $unit = new Unit();
     $unit_id = 0;
-    $force_previous_unit_completion = 'off';
+    $force_current_unit_completion = 'off';
 }
 
 
@@ -137,7 +137,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
                                 <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (trim($course_start_date) !== '' ? $course_start_date : (date('Y-m-d', current_time('timestamp', 0)))))); ?>" />
 
-                                <input type="checkbox" name="force_previous_unit_completion" id="force_previous_unit_completion" value="on" <?php echo ($force_previous_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete previous unit in order access to the current one', 'cp'); ?>
+                                <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ($force_current_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order access to the next one', 'cp'); ?>
                             </div>
 
                             <div class="unit-control-buttons">

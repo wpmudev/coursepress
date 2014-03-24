@@ -127,12 +127,10 @@ jQuery(document).ready(function()
     {
 
         var target_url_field = jQuery(this).prevAll(".file_url:first");
-
         wp.media.editor.send.attachment = function(props, attachment)
         {
             jQuery(target_url_field).val(attachment.url);
         };
-
         wp.media.editor.open(this);
         return false;
     });
