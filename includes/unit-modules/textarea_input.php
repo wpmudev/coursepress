@@ -65,7 +65,7 @@ class textarea_input_module extends Unit_Module {
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
             <h2 class="module_title"><?php echo $data->post_title; ?></h2>
-            <div class="module_description"><?php echo $data->post_content; ?></div>
+            <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <div class="module_textarea_input">
                 <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
                     <div class="front_response_content">

@@ -33,7 +33,7 @@ class file_module extends Unit_Module {
                 $data->file_url = $encryption->encode($data->file_url);
                 ?>  
                 <div class="file_holder">
-                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo $data->post_title; ?></a> 
+                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo (isset($data->link_text) ? $data->link_text : $data->post_title); ?></a> 
                 </div>
             <?php } ?>
         </div>
@@ -73,6 +73,10 @@ class file_module extends Unit_Module {
                 </label>
 
                 <div class="file_url_holder">
+                    <label><?php _e('Link Text', 'cp'); ?>
+                        <input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr(isset($data->link_text) ? $data->link_text : 'Download'); ?>" />
+                    </label>
+
                     <label><?php _e('Put a URL or Browse for a file.', 'cp'); ?>
                         <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr((isset($data->file_url) ? $data->file_url : '')); ?>" />
                         <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
@@ -115,6 +119,7 @@ class file_module extends Unit_Module {
                             $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            $data->metas['link_text'] = $_POST[$this->name . '_link_text'][$key];
                             $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
                             parent::update_module($data);
                         }

@@ -24,7 +24,7 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
             ?>
             <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
-                <div class="module_description"><?php echo $data->post_content; ?></div>
+                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
                 <?php echo do_shortcode('[chat id="' . $data->ID . '"]'); ?>
             </div>
             <?php

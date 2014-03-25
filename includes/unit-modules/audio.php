@@ -23,7 +23,7 @@ class audio_module extends Unit_Module {
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
             <?php if ($data->post_content != '') { ?>  
-                <div class="module_description"><?php echo $data->post_content; ?></div>
+                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
             <?php if ($data->audio_url != '') { ?>  
                 <div class="audio_player">

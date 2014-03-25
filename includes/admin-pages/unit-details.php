@@ -70,7 +70,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 <div class='wrap mp-wrap nocoursesub'>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
-        <ul class="mp-tabs" style="">
+        <ul id="sortable-units" class="mp-tabs" style="">
             <?php
             $units = $course->get_units();
 
@@ -81,29 +81,27 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 $unit_object = new Unit($unit->ID);
                 $unit_object = $unit_object->get_unit();
                 ?>
-                <li class="mp-tab <?php echo (isset($_GET['unit_id']) && $unit->ID == $_GET['unit_id'] ? 'active' : ''); ?>"><!--postbox ui-state-default clearfix-->
+                <li class="mp-tab <?php echo (isset($_GET['unit_id']) && $unit->ID == $_GET['unit_id'] ? 'active' : ''); ?>">
                     <a class="mp-tab-link" href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit"><?php echo $unit_object->post_title; ?></a>
+                    <i class="fa fa-arrows-v cp-move-icon"></i>
 
-                    <?php /* if ((current_user_can('coursepress_delete_course_units_cap')) || (current_user_can('coursepress_delete_my_course_units_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                      <div class="unit-remove"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=delete_unit" onClick="return removeUnit();" class="remove-button"></a></div>
-                      <?php } */ ?>
-
-                                                                                                    <!--<div class="unit-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-settings">Settings</a>
-                    <?php /* if ((current_user_can('coursepress_change_course_unit_status_cap')) || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                      <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'unpublish' : 'publish'; ?>"><?php ($unit_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
-                      <?php } */ ?>
-                                                                                                    </div>-->
+                    <input type="hidden" class="unit_order" value="<?php echo $list_order; ?>" name="unit_order_<?php echo $unit_object->ID; ?>" />
+                    <input type="hidden" name="unit_id" class="unit_id" value="<?php echo $unit_object->ID; ?>" />                                                                                         
                 </li>
                 <?php
                 $list_order++;
             }
             ?>
-            <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
-                <li class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab active' : ''); ?>">
-                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
-                </li>
-            <?php } ?>
+
         </ul>
+
+        <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
+            <div class="mp-tabs">
+                <div class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : ''); ?>">
+                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
+                </div>
+            </div>
+        <?php } ?>
 
     </div>
 
@@ -190,11 +188,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <?php _e('Drag & Drop unit modules here', 'cp'); ?>
                         </div>
 
+                        <?php
+                        $module = new Unit_Module();
+                        $modules = $module->get_modules($_GET['unit_id']);
+
+                        if (is_array($modules) && count($modules) >= 1) {
+                            ?>
+                            <div class="loading_elements"><?php _e('Loading Unit elements, please wait...', 'cp'); ?></div>
+                        <?php } ?>
+
                         <div id="modules_accordion" class="modules_accordion">
                             <!--modules will appear here-->
                             <?php
                             if (isset($_GET['unit_id'])) {
-                                $module = new Unit_Module();
                                 $module->get_modules_admin_forms($_GET['unit_id']);
                             }
                             ?>
@@ -202,9 +208,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                         </div>
 
                         <div class='course-details new-unit-element-holder'>
-                            
-                            <label><?php _e('New Unit Element', 'cp');?></label>
-                            
+
+                            <label><?php _e('New Unit Element', 'cp'); ?></label>
+
                             <select name='unit-module-list' id='unit-module-list'>
                                 <?php
                                 $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
@@ -233,7 +239,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <option value="text_input_module">Text Input</option>
                                 <option value="textarea_input_module">Text Area Input</option>
                             </select>-->
-                            
+
                             <input type='button' name='unit-module-add' id='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary" />
                         </div>
 

@@ -23,7 +23,7 @@ class video_module extends Unit_Module {
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
             <?php if ($data->post_content != '') { ?>  
-                <div class="module_description"><?php echo $data->post_content; ?></div>
+                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
             <?php if ($data->video_url != '') { ?>  
                 <div class="video_player">
@@ -66,7 +66,7 @@ class video_module extends Unit_Module {
 
         if (!empty($data)) {
             if (!isset($data->player_width) or empty($data->player_width)) {
-                $data->player_width = empty($content_width) ? 640 : $content_width;
+                $data->player_width = empty($content_width) ? 960 : $content_width;
             }
 
             /* if (!isset($data->player_height) or empty($data->player_height)) {
@@ -126,7 +126,7 @@ class video_module extends Unit_Module {
                 <div class="video_additional_controls">
 
                     <label><?php _e('Player Width', 'cp'); ?></label>
-                    <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo (isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 640 : $content_width)); ?>" />
+                    <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo (isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width)); ?>" />
 
                 </div>
 

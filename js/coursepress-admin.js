@@ -339,6 +339,9 @@ jQuery(document).ready(function() {
         active: parseInt(coursepress.active_student_tab)
     });
 
+    jQuery("#modules_accordion").show();
+    jQuery(".loading_elements").hide();
+   
     jQuery("#modules_accordion").accordion({
         heightStyle: "content",
         header: "> div > h3",

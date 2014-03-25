@@ -19,7 +19,7 @@ class page_break_module extends Unit_Module {
     function front_main($data) {
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            BREAK HERE
+            <!--BREAK HERE-->
         </div>
         <?php
     }

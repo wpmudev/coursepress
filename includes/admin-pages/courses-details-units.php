@@ -35,6 +35,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'change_status' && isset($_GET[
 if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['unit_id']))) {
     $this->show_unit_details();
 } else {
+    
+    wp_redirect("admin.php?page=course_details&tab=units&course_id=".$course_id."&action=add_new_unit");
+    exit;
+
     ?>
 
     <ul id="sortable-units">

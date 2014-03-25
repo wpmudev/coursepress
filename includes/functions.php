@@ -684,4 +684,29 @@ function cp_show_errors() {
     ini_set('scream.enabled', true);
 }
 
+function cp_replace_img_src($original_img_tag, $new_src_url) {
+    $doc = new DOMDocument();
+    $doc->loadHTML($original_img_tag);
+
+    $tags = $doc->getElementsByTagName('img');
+    if (count($tags) > 0) {
+        $tag = $tags->item(0);
+        $tag->setAttribute('src', $new_src_url);
+        return $doc->saveXML($tag);
+    }
+
+    return false;
+}
+
+function callback_img($match) {
+    list(, $img, $src) = $match;
+    $new_src = str_replace('../wp-content', WP_CONTENT_URL, $src);
+    return "$img=\"$new_src\" ";
+}
+
+function callback_link($match) {
+    $new_url = str_replace('../wp-content', WP_CONTENT_URL, $match[0]);
+    return $new_url;
+}
+
 ?>

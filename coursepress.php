@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.8.3 beta
+  Version: 0.9.8.5 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8.3 beta';
+        var $version = '0.9.8.5 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -214,19 +214,18 @@ if (!class_exists('CoursePress')) {
                 }
             }
 
-            //add_filter('plugin_row_meta', array(&$this, 'set_plugin_meta'), 10, 2);
+            add_filter('element_content_filter', array(&$this, 'element_content_img_filter'), 10, 1);
+            
+            add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
         }
 
-        function set_plugin_meta($links, $file) {
-
-            $plugin = plugin_basename(__FILE__);
-
-            if ($file == $plugin) {
-                return array_merge(
-                        $links, array(sprintf('%s <a href="https://twitter.com/markomiljus">%s</a>', __('Contributor'), __('Marko Miljus')))
-                );
-            }
-            return $links;
+        /* Fix for the broken images in the Unit elements content */
+        function element_content_img_filter($content) {
+            return preg_replace_callback('#(<img\s[^>]*src)="([^"]+)"#', "callback_img", $content);
+        }
+        
+        function element_content_link_filter($content) {
+            return preg_replace_callback('#(<a\s[^>]*href)="([^"]+)".*<img#', "callback_link", $content);
         }
 
         function check_access($course_id) {

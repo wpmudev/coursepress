@@ -469,6 +469,16 @@ div.buttons a.cancellink {
 
 /* UNITS */
 
+.loading_elements{
+    padding-left: 15px;
+    padding-bottom: 5px;
+    color: #F27405;
+}
+
+#modules_accordion{
+    display: none;
+}
+
 #students_accordion .ui-widget-content, #modules_accordion .ui-widget-content{
     border: 1px solid #ddd;
 }
@@ -506,7 +516,7 @@ div.buttons a.cancellink {
     border-color: #dfdfdf;
 }
 
-#sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
+/*#sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
 #sortable-units li.postbox { width: 46%; float: left; margin: 0 1% 1% 0%; padding: 1%; font-size: 1.2em; min-height: 100px; }
 html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 #sortable-units .ui-state-highlight { 
@@ -518,6 +528,34 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     margin: 0 1% 1% 0%; 
     min-height: 140px; 
     border: 1px dashed #cccccc; 
+}*/
+
+#sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#sortable-units li .cp-move-icon{
+    display: none;
+}
+#sortable-units li a:hover + .cp-move-icon{
+    font-size: 16px;
+    padding: 0px 5px 0px 18px;
+    position: absolute;
+    right: -20px;
+    z-index: 9999;
+    top: 10px;
+    display: block;
+    color: #ccc;
+}
+#sortable-units .ui-state-highlight { 
+    height: 1.5em; 
+    line-height: 1.2em; 
+    min-height: 35px; 
+    border: 1px dashed #cccccc; 
+    border-right: 0px; 
+    background: transparent;
+    border-color: #ccc;
+    border-radius: 4px 0 0 4px;
+    border-width: 1px 0 1px 1px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .add-new-unit-box{
