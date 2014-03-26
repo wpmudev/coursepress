@@ -2685,3 +2685,13 @@ label.error:before {
 .fa fa-user:before{
     content:"\f007";
 }
+
+wrap mp-wrap nocoursesub mp-wrap{
+    
+}
+
+#settings-wrap.mp-wrap .mp-help-icon
+{
+    float: left;
+    margin: -5px 5px 0 0;
+}

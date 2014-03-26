@@ -1303,3 +1303,14 @@ a .remove-btn:hover{
     font-size: 23px;
     padding: 0px 5px 0px 18px;
 }
+
+.mp-wrap .level-holder .mp-help-icon
+{
+    float: left;
+    margin: -5px 5px 0 0;
+}
+
+#course-left .mp-wrap .mp-help-icon{
+    float: none;
+    margin: -5px 5px 0 0;
+}

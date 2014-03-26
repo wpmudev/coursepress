@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.8.5 beta
+  Version: 0.9.8.6 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8.5 beta';
+        var $version = '0.9.8.6 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -1933,7 +1933,7 @@ if (!class_exists('CoursePress')) {
             $plugins = get_option('active_plugins');
             $required_plugin = 'marketpress/marketpress.php';
 
-            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins)) {
                 return true;
             } else {
                 return false;
@@ -1946,7 +1946,7 @@ if (!class_exists('CoursePress')) {
             $plugins = get_option('active_plugins');
             $required_plugin = 'wordpress-chat/wordpress-chat.php';
 
-            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^wordpress-chat.*/', $plugins)) {
                 return true;
             } else {
                 return false;

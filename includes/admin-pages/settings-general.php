@@ -138,12 +138,13 @@
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Theme Menu Items', 'cp'); ?></span></h3>
             <div class="inside">
-                <p class='description'><?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme <strong>must have defined a Primary Menu</strong> <!--(with at least one item)--> in order to attach new menu items to it.', 'cp'); ?></p>
                 <table class="form-table">
                     <tbody>
                         <tr valign="top">
                             <th scope="row"><?php _e('Display menu items', 'cp'); ?></th>
                             <td>
+                                <a class="mp-help-icon" href="javascript:;"></a>
+                                <div class="mp-help-text"><?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme <strong>must have defined a Primary Menu</strong> in order to attach new menu items to it.', 'cp'); ?></div>
                                 <input type='checkbox' name='display_menu_items' <?php echo ((get_option('display_menu_items', 1)) ? 'checked' : ''); ?> />
                             </td>
                         </tr>
@@ -183,7 +184,7 @@
         ?>
 
         <p class="save-shanges">
-<?php submit_button(__('Save Changes', 'cp')); ?>
+            <?php submit_button(__('Save Changes', 'cp')); ?>
         </p>
 
     </form>
