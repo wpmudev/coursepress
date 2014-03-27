@@ -18,9 +18,9 @@ if (isset($_POST['course_id'])) {
 ?>
 <div class="wrap nocoursesub">
 
-    <h2><?php _e('Student Profile', 'cp'); ?></h2>
+    <h2><?php _e('Student Workbook', 'cp'); ?></h2>
 
-    <form action="?page=course_details&amp;course_id=<?php echo $_POST['course_id'];?>&amp;ms=cu" name="course-add" method="post">
+    <form action="?page=course_details&amp;course_id=1046&amp;ms=cu" name="course-add" method="post">
 
         <div class="course">
 
@@ -70,16 +70,13 @@ if (isset($_POST['course_id'])) {
                                     <span class="info_caption"><?php _e('Edit', 'cp'); ?></span>
                                     <span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
                                 </div>
+                                <div>
+                                    <span class="info_caption"><?php _e('Profile', 'cp'); ?></span>
+                                    <span class="info"><a href="admin.php?page=students&action=view&student_id=<?php echo $student->ID; ?>"><i class="fa fa-user"></i></a></span>
+                                </div>
                             </div>
                             <div class="full border-devider"></div>
                         </div><!--student-profile-info-->
-
-                        <?php
-                        $columns = array(
-                            "course" => __('', 'cp'),
-                            "additional_info" => __('', 'cp'),
-                        );
-                        ?>
 
                         <div class="courses">
                             <div class="sidebar-name no-movecursor">
@@ -104,7 +101,7 @@ if (isset($_POST['course_id'])) {
                                         <div class="student-course">
 
                                             <div class="student-course-left">
-                                                <a href="admin.php?page=students&action=workbook&student_id=<?php echo $student->ID;?>&course_id=<?php echo $course_object->ID; ?>" class="button button-units"><?php _e('View Workbook', 'cp');?> <i class="fa fa-book cp-move-icon"></i></a>
+                                                <a href="" class="button button-units">View Workbook <i class="fa fa-book cp-move-icon"></i></a>
                                             </div>
 
                                             <div class="student-course-right">

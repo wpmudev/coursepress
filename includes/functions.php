@@ -484,15 +484,19 @@ function get_the_course_excerpt($id = false, $length = 55) {
     }
 
     $old_post = $post;
+
     if ($id != $post->ID) {
         $post = get_page($id);
     }
 
-    if (!$excerpt = trim($post->post_excerpt)) {
+    $excerpt = trim($post->post_excerpt);
+
+    if (!$excerpt) {
         $excerpt = $post->post_content;
     }
+   
     $excerpt = strip_shortcodes($excerpt);
-    $excerpt = apply_filters('the_content', $excerpt);
+    //$excerpt = apply_filters('the_content', $excerpt);
     $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
     $excerpt = strip_tags($excerpt);
     $excerpt_length = apply_filters('excerpt_length', $length);

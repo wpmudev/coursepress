@@ -54,6 +54,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['studen
 
 if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == 'view') && isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
     include('student-profile.php');
+} else if (isset($_GET['action']) && ($_GET['action'] == 'workbook')) {
+    include('student-workbook.php');
 } else if (isset($_GET['action']) && ($_GET['action'] == 'add_new')) {
     include('student-add.php');
 } else {
@@ -119,15 +121,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     "registration_date" => __('Registered', 'cp'),
                     "latest_activity" => __('Latest Activity', 'cp'),
                     "courses" => __('Courses', 'cp'),
+                    "workbook" => __('Workbook', 'cp'),
                     "edit" => __('Profile', 'cp'),
                 );
 
                 $col_sizes = array(
-                    '8', '10', '10', '15', '15', '10', '7'
+                    '8', '10', '10', '15', '15', '10', '7', '7'
                 );
 
                 if (current_user_can('coursepress_delete_students_cap')) {
-                    $columns["delete"] = __('Delete', 'cp');
+                    $columns["delete"] = __('Remove', 'cp');
                     $col_sizes[] = '5';
                 }
                 ?>
@@ -169,11 +172,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
                                 <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
                                 <td <?php echo $style; ?>><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?> </td>
-                                <td <?php echo $style; ?>><?php echo $user_object->courses_number; ?></td>
-                                <td <?php echo $style; ?> style="padding-top:9px; padding-right:15px;">
+                                <td <?php echo $style; ?> style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
+                                <td <?php echo $style; ?> style="padding-top:13px;">
+                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                       <i class="fa fa-book cp-move-icon remove-btn"></i>
+                                    </a>
+                                </td>
+                                <td <?php echo $style; ?> style="padding-top:13px;">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                        <i class="fa fa-user cp-move-icon remove-btn"></i>
-                                    </a></td>
+                                    </a>
+                                </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
                                     <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>

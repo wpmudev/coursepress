@@ -1559,7 +1559,7 @@ if (!class_exists('CoursePress')) {
 
         function admin_coursepress_page_students() {
             wp_enqueue_style('students', $this->plugin_url . 'css/admin_coursepress_page_students.css', array(), $this->version);
-            wp_enqueue_style('instructors', $this->plugin_url . 'css/admin_coursepress_page_instructors.css', array(), $this->version);
+            //wp_enqueue_style('instructors', $this->plugin_url . 'css/admin_coursepress_page_instructors.css', array(), $this->version);
             wp_enqueue_script('students', $this->plugin_url . 'js/students-admin.js');
             wp_localize_script('students', 'student', array(
                 'delete_student_alert' => __('Please confirm that you want to remove the student and the all associated records?', 'cp'),
