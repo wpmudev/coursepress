@@ -1495,6 +1495,13 @@ a .remove-btn:hover{
     padding: 0px 0px 10px 0px;
 }
 
+#units_accordion .sidebar-name h3{
+    padding: 0px 0px 0px 0px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
 .course-info-holder{
     margin-top: 18px;
     font-size: 14px;
@@ -1547,7 +1554,37 @@ a .remove-btn:hover{
     border-bottom: 1px solid #dfdfdf;
 }
 
-.sidebar-name h3,
-.student-course-left{
-    margin-left: 10px;
+#units-wrap{
+    padding: 10px;
+    padding-top: 0px;
+}
+
+#units-wrap .border-devider{
+    margin-bottom: 8px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+#units_accordion .widefat td{
+    padding: 14px 7px 12px;
+}
+
+#units_accordion .widefat td, .widefat th{
+    border:none;
+}
+
+#units_accordion.ui-accordion .ui-accordion-content{
+    padding: 0px;
+}
+
+#units_accordion table.widefat{
+    border:none;
+}
+
+#units_accordion .widefat td{
+    font-size: 13px;
+}
+
+#units_accordion a.button-units{
+    width: 60%;
 }

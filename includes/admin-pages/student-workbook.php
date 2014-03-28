@@ -20,202 +20,354 @@ if (isset($_POST['course_id'])) {
 
     <h2><?php _e('Student Workbook', 'cp'); ?></h2>
 
-    <form action="?page=course_details&amp;course_id=1046&amp;ms=cu" name="course-add" method="post">
+    <div class="course">
 
-        <div class="course">
-
-            <?php
-            if (isset($message)) {
-                ?>
-                <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
-                <?php
-            }
+        <?php
+        if (isset($message)) {
             ?>
+            <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
+            <?php
+        }
+        ?>
 
-            <div id="course">
+        <div id="course">
 
-                <input type="hidden" id="_wpnonce" name="_wpnonce" value="1e1904a7ac"><input type="hidden" name="_wp_http_referer" value="/wpmu/wp-admin/admin.php?page=course_details&amp;course_id=1046">
-                <input type="hidden" name="course_id" value="1046">
-                <input type="hidden" name="action" value="update">
+            <div id="edit-sub" class="course-holder-wrap mp-wrap">
 
-                <div id="edit-sub" class="course-holder-wrap mp-wrap">
+                <div class="course-holder">
 
-                    <div class="course-holder">
+                    <div class='student-profile-info'>
+                        <?php echo get_avatar($student->ID, '80'); ?>
 
-                        <div class='student-profile-info'>
-                            <?php echo get_avatar($student->ID, '80'); ?>
-
-                            <div class="student_additional_info">
-                                <div>
-                                    <span class="info_caption"><?php _e('Student ID', 'cp'); ?></span>
-                                    <span class="info"><?php echo $student->ID; ?></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('First Name', 'cp'); ?></span>
-                                    <span class="info"><?php echo $student->user_firstname; ?></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('Surname', 'cp'); ?></span>
-                                    <span class="info"><?php echo $student->user_lastname; ?></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('Email', 'cp'); ?></span>
-                                    <span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('Courses', 'cp'); ?></span>
-                                    <span class="info"><?php echo $student->get_courses_number(); ?></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('Edit', 'cp'); ?></span>
-                                    <span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
-                                </div>
-                                <div>
-                                    <span class="info_caption"><?php _e('Profile', 'cp'); ?></span>
-                                    <span class="info"><a href="admin.php?page=students&action=view&student_id=<?php echo $student->ID; ?>"><i class="fa fa-user"></i></a></span>
-                                </div>
+                        <div class="student_additional_info">
+                            <div>
+                                <span class="info_caption"><?php _e('Student ID', 'cp'); ?></span>
+                                <span class="info"><?php echo $student->ID; ?></span>
                             </div>
-                            <div class="full border-devider"></div>
-                        </div><!--student-profile-info-->
-
-                        <div class="courses">
-                            <div class="sidebar-name no-movecursor">
-                                <h3><?php _e('Courses', 'cp'); ?></h3>
-
-                                <?php
-                                $enrolled_courses = $student->get_enrolled_courses_ids();
-
-                                if (count($enrolled_courses) == 0) {
-                                    ?>
-                                    <div class="zero-courses"><?php _e('Student did not enroll in any course yet.', 'cp'); ?></div>
-                                    <?php
-                                }
-
-                                foreach ($enrolled_courses as $course_id) {
-
-                                    $course_object = new Course($course_id);
-                                    $course_object = $course_object->get_course();
-
-                                    if ($course_object) {
-                                        ?>
-                                        <div class="student-course">
-
-                                            <div class="student-course-left">
-                                                <a href="" class="button button-units">View Workbook <i class="fa fa-book cp-move-icon"></i></a>
-                                            </div>
-
-                                            <div class="student-course-right">
-                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a><a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
-
-                                                <div class="course-excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
-
-                                                <div class="course-info-holder">
-                                                    <span class="course_info_caption"><?php _e('Start', 'cp'); ?> <i class="fa fa-calendar"></i></span>
-                                                    <span class="course_info">
-                                                        <?php
-                                                        if ($course_object->open_ended_course == 'on') {
-                                                            _e('Open-ended', 'cp');
-                                                        } else {
-                                                            echo $course_object->course_start_date;
-                                                        }
-                                                        ?>
-                                                    </span>
-
-                                                    <span class="course_info_caption"><?php _e('End', 'cp'); ?> <i class="fa fa-calendar"></i></span>
-                                                    <span class="course_info">
-                                                        <?php
-                                                        if ($course_object->open_ended_course == 'on') {
-                                                            _e('Open-ended', 'cp');
-                                                        } else {
-                                                            echo $course_object->course_end_date;
-                                                        }
-                                                        ?>
-                                                    </span>
-
-                                                    <span class="course_info_caption"><?php _e('Duration', 'cp'); ?> <i class="fa fa-clock-o"></i></span>
-                                                    <span class="course_info">
-                                                        <?php
-                                                        if ($course_object->open_ended_course == 'on') {
-                                                            echo '&infin;';
-                                                        } else {
-                                                            echo get_number_of_days_between_dates($course_object->course_start_date, $course_object->course_end_date);
-                                                        }
-                                                        ?> <?php _e('Days', 'cp'); ?>
-                                                    </span>
-                                                </div>
-
-                                            </div><!--student-course-right-->
-
-                                            <?php if ((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) { ?>
-                                                <div class="course-controls alternate">
-
-                                                    <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->ID; ?>">
-                                                        <?php wp_nonce_field('save_class_and_group_changes', 'save_class_and_group_changes'); ?>
-
-                                                        <input type="hidden" name="course_id" value="<?php echo $course_object->ID; ?>" />
-                                                        <input type="hidden" name="student_id" value="<?php echo $student->ID; ?>" />
-
-                                                        <div class="changable">
-                                                            <label class="class-label">
-                                                                <?php _e('Class', 'cp'); ?>
-
-                                                                <select name="course_class" data-placeholder="'.__('Choose a Class...', 'cp').'" id="course_class_<?php echo $course_object->ID; ?>">
-
-                                                                    <option value=""<?php echo ($student->{'enrolled_course_class_' . $course_object->ID} == '' ? ' selected="selected"' : ''); ?>><?php _e('Default', 'cp'); ?></option>
-                                                                    <?php
-                                                                    $course_classes = get_post_meta($course_object->ID, 'course_classes', true);
-                                                                    if (!empty($course_classes)) {
-                                                                        foreach ($course_classes as $class) {
-                                                                            ?>
-                                                                            <option value="<?php echo $class; ?>"<?php echo ($student->{'enrolled_course_class_' . $course_object->ID} == $class ? ' selected="selected"' : ''); ?>><?php echo $class; ?></option>
-                                                                            <?php
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </label>
-
-                                                            <label class="group-label">
-                                                                <?php _e('Group', 'cp'); ?>
-                                                                <select name="course_group" id="course_group_<?php echo $course_object->ID; ?>" data-placeholder="'.__('Choose a Group...', 'cp').'">
-                                                                    <option value=""<?php echo ($student->{'enrolled_course_group_' . $course_object->ID} == '' ? ' selected="selected"' : ''); ?>><?php _e('Default', 'cp'); ?></option>
-                                                                    <?php
-                                                                    $groups = get_option('course_groups');
-                                                                    if (count($groups) >= 1 && $groups != '') {
-                                                                        foreach ($groups as $group) {
-                                                                            ?>
-                                                                            <option value="<?php echo $group; ?>"<?php echo ($student->{'enrolled_course_group_' . $course_object->ID} == $group ? ' selected="selected"' : ''); ?>><?php echo $group; ?></option>
-                                                                            <?php
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                            </label>
-
-                                                            <?php submit_button('Save Changes', 'secondary', 'save-group-class-changes', '') ?>
-
-                                                        </div>
-
-                                                    </form>
-
-                                                </div>
-                                            <?php } else { ?>
-                                                <div class="full border-devider"></div>
-                                            <?php } ?>
-                                        </div>
-                                        <?php
-                                    }
-                                }
-                                ?>
+                            <div>
+                                <span class="info_caption"><?php _e('First Name', 'cp'); ?></span>
+                                <span class="info"><?php echo $student->user_firstname; ?></span>
+                            </div>
+                            <div>
+                                <span class="info_caption"><?php _e('Surname', 'cp'); ?></span>
+                                <span class="info"><?php echo $student->user_lastname; ?></span>
+                            </div>
+                            <div>
+                                <span class="info_caption"><?php _e('Email', 'cp'); ?></span>
+                                <span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span>
+                            </div>
+                            <div>
+                                <span class="info_caption"><?php _e('Courses', 'cp'); ?></span>
+                                <span class="info"><?php echo $student->get_courses_number(); ?></span>
+                            </div>
+                            <div>
+                                <span class="info_caption"><?php _e('Edit', 'cp'); ?></span>
+                                <span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
+                            </div>
+                            <div>
+                                <span class="info_caption"><?php _e('Profile', 'cp'); ?></span>
+                                <span class="info"><a href="admin.php?page=students&action=view&student_id=<?php echo $student->ID; ?>"><i class="fa fa-user"></i></a></span>
                             </div>
                         </div>
+                        <div class="full border-devider"></div>
+                    </div><!--student-profile-info-->
 
-                    </div><!-- course holder -->
-                </div>
+                    <div id="units-wrap">
+                        <div class="sidebar-name no-movecursor">
 
+                            <?php
+                            $enrolled_courses = $student->get_enrolled_courses_ids();
+
+                            if (count($enrolled_courses) == 0) {
+                                ?>
+                                <div class="zero-courses"><?php _e('Student did not enroll in any course yet.', 'cp'); ?></div>
+                            <?php } else {
+                                ?>
+                                <div class="tablenav">
+                                    <form method="get" id="course-filter">
+
+                                        <input type="hidden" name="action" value="workbook" />
+                                        <input type="hidden" name="student_id" value="<?php echo esc_attr($_GET['student_id']); ?>" />
+                                        <input type="hidden" name="page" value="<?php echo esc_attr($_GET['page']); ?>" />
+
+                                        <div class="alignleft actions">
+                                            <select name="course_id" id="dynamic_courses" class="chosen-select">
+
+                                                <?php
+                                                $assessment_page = 1;
+
+                                                $courses = get_posts($args);
+                                                $courses_with_students = 0;
+                                                $course_num = 0;
+                                                $first_course_id = 0;
+                                                $count = 0;
+
+                                                foreach ($enrolled_courses as $course_id) {
+
+                                                    if ($course_num == 0) {
+                                                        $first_course_id = $course_id;
+                                                    }
+
+                                                    $course_obj = new Course($course_id);
+                                                    $course_object = $course_obj->get_course();
+
+                                                    //$count = $unit_module_main->get_ungraded_response_count($course->ID);
+
+                                                    if ($course_obj->get_number_of_students() >= 1) {
+                                                        $courses_with_students++;
+                                                        ?>
+                                                        <option value="<?php echo $course_object->ID; ?>" <?php echo ((isset($_GET['course_id']) && $_GET['course_id'] == $course_object->ID) ? 'selected="selected"' : ''); ?>><?php echo $course_object->post_title; ?></option>
+                                                        <?php
+                                                    }
+                                                    $course_num++;
+                                                }
+
+                                                if ($courses_with_students == 0) {
+                                                    ?>
+                                                    <option value=""><?php _e('Student did not enroll into any course yet.', 'cp'); ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                            <?php
+                                            $current_course_id = 0;
+
+                                            if (isset($_GET['course_id'])) {
+                                                $current_course_id = $_GET['course_id'];
+                                            } else {
+                                                $current_course_id = $first_course_id;
+                                            }
+                                            ?>
+
+                                            <?php
+                                            if ($current_course_id !== 0) {//courses exists, at least one 
+                                                $course = new Course($current_course_id);
+                                                $course_units = $course->get_units();
+
+                                                if (count($course_units) >= 1) {
+                                                    ?>
+
+                                                    <label class="ungraded"><?php _e('Ungraded Elements Only', 'cp'); ?>
+                                                        <?php
+                                                        if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
+                                                            $ungraded_filter = 'yes';
+                                                        } else {
+                                                            $ungraded_filter = 'no';
+                                                        }
+                                                        ?>
+                                                        <input type="checkbox" id="ungraded" name="ungraded" value="yes" <?php checked($ungraded_filter, 'yes', true); ?> />
+                                                    </label>
+
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
+
+                                        </div><!--alignleft actions-->
+                                    </form>
+                                </div><!--tablenav-->
+
+                                <div class="full border-devider"></div>
+                                <?php if (count($course_units) >= 1) { ?>
+                                    <div id="units_accordion" class="units_accordion">
+                                        <?php foreach ($course_units as $unit) { ?>
+                                            <div class="sidebar-name no-movecursor">
+                                                <h3><?php echo $unit->post_title; ?></h3>
+                                            </div>
+                                            <div class="accordion-inner">
+                                                <?php
+                                                $columns = array(
+                                                    "module" => __('Element', 'cp'),
+                                                    "title" => __('Title', 'cp'),
+                                                    "submission_date" => __('Submitted', 'cp'),
+                                                    "response" => __('Response', 'cp'),
+                                                    "grade" => __('Grade', 'cp'),
+                                                    "comment" => __('Comment', 'cp'),
+                                                );
+
+
+                                                $col_sizes = array(
+                                                    '12', '36', '15', '10', '10', '5'
+                                                );
+
+                                                $unit_module_main = new Unit_Module();
+                                                ?>
+                                                <table cellspacing="0" class="widefat shadow-table assessment-archive-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <?php
+                                                            $n = 0;
+                                                            foreach ($columns as $key => $col) {
+                                                                ?>
+                                                                <th class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                                                <?php
+                                                                $n++;
+                                                            }
+                                                            ?>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <?php
+                                                    $user_object = new Student($_GET['student_id']);
+
+                                                    $module = new Unit_Module();
+                                                    $modules = $module->get_modules($unit->ID);
+
+                                                    $input_modules_count = 0;
+
+                                                    foreach ($modules as $mod) {
+                                                        $class_name = $mod->module_type;
+                                                        if (class_exists($class_name)) {
+                                                            $module = new $class_name();
+                                                            if ($module->front_save) {
+                                                                $input_modules_count++;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    $current_row = 0;
+                                                    $style = '';
+                                                    foreach ($modules as $mod) {
+                                                        $class_name = $mod->module_type;
+
+                                                        if (class_exists($class_name)) {
+                                                            $module = new $class_name();
+
+                                                            if ($module->front_save) {
+                                                                $response = $module->get_response($user_object->ID, $mod->ID);
+                                                                $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
+
+                                                                if (count($response) >= 1) {
+                                                                    $grade_data = $unit_module_main->get_response_grade($response->ID);
+                                                                }
+
+                                                                if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
+                                                                    if (count($response) >= 1 && !$grade_data) {
+                                                                        $general_col_visibility = true;
+                                                                    } else {
+                                                                        $general_col_visibility = false;
+                                                                    }
+                                                                } else {
+                                                                    $general_col_visibility = true;
+                                                                }
+                                                                
+                                                                $style = ( isset($style) && 'alternate' == $style ) ? '' : ' alternate';
+                                                                
+                                                                ?>
+                                                                <tr id='user-<?php echo $user_object->ID; ?>' class="<?php
+                                                                echo $style;
+                                                                echo 'row-' . $current_row;
+                                                                ?>">
+
+                                                                    <?php
+                                                                    if ($general_col_visibility) {
+                                                                        ?>
+                                                                        <td class = "<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php echo $module->label;
+                                                                            ?>
+                                                                        </td>
+
+                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php echo $mod->post_title; ?>
+                                                                        </td>
+
+                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                                                        </td>
+
+                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php
+                                                                            if (count($response) >= 1) {
+                                                                                ?>
+                                                                          
+                                                                                <a class="assessment-view-response-link button button-units" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
+
+                                                                                <?php
+                                                                            } else {
+                                                                                echo '-';
+                                                                            }
+                                                                            ?>
+                                                                        </td>
+
+                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php
+                                                                            if (isset($grade_data)) {
+                                                                                $grade = $grade_data['grade'];
+                                                                                $instructor_id = $grade_data['instructor'];
+                                                                                $instructor_name = get_userdata($instructor_id);
+                                                                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+                                                                            }
+                                                                            if (count($response) >= 1) {
+                                                                                if (isset($grade_data)) {
+                                                                                    ?>
+                                                                                    <a class="response_grade" alt="<?php
+                                                _e('Grade by ');
+                                                echo $instructor_name->display_name;
+                                                _e(' on ' . $grade_time);
+                                                                                    ?>" title="<?php
+                                                                                       _e('Grade by ');
+                                                                                       echo $instructor_name->display_name;
+                                                                                       _e(' on ' . $grade_time);
+                                                                                       ?>"><?php echo $grade; ?>%</a>
+                                                                                       <?php
+                                                                                   } else {
+                                                                                       _e('Pending grade', 'cp');
+                                                                                   }
+                                                                               } else {
+                                                                                   echo '-';
+                                                                               }
+                                                                               ?>
+                                                                        </td>
+
+                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                            <?php
+                                                                            if (count($response) >= 1) {
+                                                                                $comment = $unit_module_main->get_response_comment($response->ID);
+                                                                            }
+                                                                            if (isset($comment) && $comment !== '') {
+                                                                                ?>
+                                                                                <a alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>"><i class="fa fa-comment"></i></a>
+                                                                                <?php
+                                                                            } else {
+                                                                                echo '<i class="fa fa-comment-o"></i>';
+                                                                            }
+                                                                            ?>
+                                                                        </td>
+                                                                    <?php }//general col visibility     ?>
+                                                                </tr>
+                                                                <?php
+                                                                $current_row++;
+                                                            }
+                                                        }
+                                                    }
+
+
+                                                    if (!isset($input_modules_count) || isset($input_modules_count) && $input_modules_count == 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td colspan="7"><?php _e('0 input elements in the selected unit.', 'cp'); ?></td>
+                                                        </tr>
+                                                        <?php
+                                                    }
+                                                    ?>
+
+                                                </table>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="zero-courses"><?php _e('0 Units in the course', 'cp'); ?></div>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+
+                </div><!-- course holder -->
             </div>
-        </div> <!-- course -->
 
-    </form>
+        </div>
+    </div> <!-- course -->
 
 </div>

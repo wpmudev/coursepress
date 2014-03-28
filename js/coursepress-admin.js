@@ -341,7 +341,7 @@ jQuery(document).ready(function() {
 
     jQuery("#modules_accordion").show();
     jQuery(".loading_elements").hide();
-   
+
     jQuery("#modules_accordion").accordion({
         heightStyle: "content",
         header: "> div > h3",
@@ -394,22 +394,9 @@ jQuery(document).ready(function() {
             jQuery('#all_course_dates').show(500);
         }
     });
-    //capture the click on the a tag
-    /*   jQuery("#modules_accordion div h3 a").click(function() {
-     alert(jQuery(this).attr('href'));
-     
-     if (jQuery(this).attr('href') == 'remove') {
-     jQuery(this).parent('.module-holder-title').remove();
-     } else {
-     window.location = jQuery(this).attr('href');
-     }
-     
-     return false;
-     });*/
-
-
 
 });
+
 jQuery(document).ready(function()
 {
 
@@ -419,8 +406,6 @@ jQuery(document).ready(function()
         var target_url_field = jQuery(this).prevAll(".featured_url:first");
         wp.media.editor.send.attachment = function(props, attachment)
         {
-            //alert(JSON.stringify(props));
-            //alert(JSON.stringify(attachment));
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
             jQuery('#featured_url_size').val(props.size);
