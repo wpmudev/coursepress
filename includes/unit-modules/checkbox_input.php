@@ -2,9 +2,10 @@
 
 class checkbox_input_module extends Unit_Module {
 
+    var $order = 7;
     var $name = 'checkbox_input_module';
     var $label = 'Check Box Input';
-    var $description = 'Allows adding check boxes to the unit';
+    var $description = '';
     var $front_save = true;
     var $response_type = 'view';
 
@@ -233,6 +234,7 @@ class checkbox_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Multiple choice question where multiple options can be selected', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

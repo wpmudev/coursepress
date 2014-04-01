@@ -1,5 +1,28 @@
 <?php
 
+function preg_array_key_exists($pattern, $array) {
+    $keys = array_keys($array);
+    return (int) preg_grep($pattern, $keys);
+}
+
+function is_chat_plugin_active() {
+    $plugins = get_option('active_plugins');
+
+    if (is_multisite()) {
+        $active_sitewide_plugins = get_site_option("active_sitewide_plugins");
+    } else {
+        $active_sitewide_plugins = array();
+    }
+
+    $required_plugin = 'wordpress-chat/wordpress-chat.php';
+
+    if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^wordpress-chat.*/', $plugins) || preg_array_key_exists('/^wordpress-chat.*/', $active_sitewide_plugins)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /**
  * Unit unit module pagination
  */
@@ -494,7 +517,7 @@ function get_the_course_excerpt($id = false, $length = 55) {
     if (!$excerpt) {
         $excerpt = $post->post_content;
     }
-   
+
     $excerpt = strip_shortcodes($excerpt);
     //$excerpt = apply_filters('the_content', $excerpt);
     $excerpt = str_replace(']]>', ']]&gt;', $excerpt);
@@ -605,26 +628,43 @@ function curPageURL() {
     return $pageURL;
 }
 
+function natkrsort($array) 
+{
+    $keys = array_keys($array);
+    natsort($keys);
+
+    foreach ($keys as $k)
+    {
+        $new_array[$k] = $array[$k];
+    }
+   
+    $new_array = array_reverse($new_array, true);
+
+    return $new_array;
+}
+
 if (!function_exists('coursepress_register_module')) {
 
     function coursepress_register_module($module_name, $class_name, $section) {
-        global $coursepress_modules, $coursepress_modules_labels;
+        global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered;
 
         //cp_write_log($_POST);
 
         if (!is_array($coursepress_modules)) {
             $coursepress_modules = array();
         }
-
-
+        
         if (class_exists($class_name)) {
             $class = new $class_name();
             $coursepress_modules_labels[$module_name] = $class->label;
-
+            $coursepress_modules_descriptions[$module_name] = $class->description;
             $coursepress_modules[$section][$module_name] = $class_name;
+            $coursepress_modules_ordered[$class->order] = $class_name;
         } else {
             return false;
         }
+
+        //print_r($coursepress_modules_ordered);
     }
 
 }

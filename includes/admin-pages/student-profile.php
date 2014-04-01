@@ -17,10 +17,10 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-
+    <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Profile', 'cp'); ?></h2>
 
-    <form action="?page=course_details&amp;course_id=<?php echo $_POST['course_id'];?>&amp;ms=cu" name="course-add" method="post">
+    <form action="?page=course_details&amp;course_id=<?php echo $_POST['course_id']; ?>&amp;ms=cu" name="course-add" method="post">
 
         <div class="course">
 
@@ -81,7 +81,7 @@ if (isset($_POST['course_id'])) {
                         );
                         ?>
 
-                        <div class="courses">
+                        <div class="courses" id="student-profile-courses">
                             <div class="sidebar-name no-movecursor">
                                 <h3><?php _e('Courses', 'cp'); ?></h3>
 
@@ -103,12 +103,12 @@ if (isset($_POST['course_id'])) {
                                         ?>
                                         <div class="student-course">
 
-                                            <div class="student-course-left">
-                                                <a href="admin.php?page=students&action=workbook&student_id=<?php echo $student->ID;?>&course_id=<?php echo $course_object->ID; ?>" class="button button-units"><?php _e('View Workbook', 'cp');?> <i class="fa fa-book cp-move-icon"></i></a>
+                                            <div class="student-course-top">
+                                                <a href="admin.php?page=students&action=workbook&student_id=<?php echo $student->ID; ?>&course_id=<?php echo $course_object->ID; ?>" class="button button-units workbook-button"><?php _e('View Workbook', 'cp'); ?> <i class="fa fa-book cp-move-icon"></i></a>
+                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a><a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
                                             </div>
 
-                                            <div class="student-course-right">
-                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a><a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
+                                            <div class="student-course-bottom">
 
                                                 <div class="course-excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
 

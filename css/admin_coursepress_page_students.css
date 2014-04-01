@@ -1539,8 +1539,32 @@ a .remove-btn:hover{
 
 .student-course-left{
     margin-right: 15px;
-    margin-left: 6px;
+    margin-left: 10px;
     vertical-align: top;
+}
+
+.student-course-top, .student-course-bottom{
+    padding-left: 10px;
+}
+
+.student-course-bottom{
+    margin-top: 10px;
+    padding-left: 167px;
+}
+
+.student-course-bottom .course-excerpt{
+    //padding-right: 160px;
+}
+
+.student-course-top .workbook-button{
+    max-width: 140px;
+    display: inline-block;
+}
+
+.student-course-top .course-title{
+    display: inline-block;
+    padding-left: 15px;
+    margin-top: 5px;
 }
 
 .course-controls{
@@ -1587,4 +1611,8 @@ a .remove-btn:hover{
 
 #units_accordion a.button-units{
     width: 60%;
+}
+
+#student-profile-courses .sidebar-name h3{
+    padding: 0px 0px 10px 10px;
 }

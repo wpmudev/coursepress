@@ -5,7 +5,7 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.8.6 beta
+  Version: 0.9.8.7 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: XXX
@@ -34,7 +34,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8.6 beta';
+        var $version = '0.9.8.7 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -215,15 +215,16 @@ if (!class_exists('CoursePress')) {
             }
 
             add_filter('element_content_filter', array(&$this, 'element_content_img_filter'), 10, 1);
-            
+
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
         }
 
         /* Fix for the broken images in the Unit elements content */
+
         function element_content_img_filter($content) {
             return preg_replace_callback('#(<img\s[^>]*src)="([^"]+)"#', "callback_img", $content);
         }
-        
+
         function element_content_link_filter($content) {
             return preg_replace_callback('#(<a\s[^>]*href)="([^"]+)".*<img#', "callback_link", $content);
         }
@@ -1511,8 +1512,9 @@ if (!class_exists('CoursePress')) {
         }
 
         function admin_coursepress_page_course_details() {
-
             wp_enqueue_script('courses-units', $this->plugin_url . 'js/coursepress-courses.js');
+
+
             wp_localize_script('courses-units', 'coursepress_units', array(
                 'unenroll_class_alert' => __('Please confirm that you want to un-enroll all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
@@ -1559,8 +1561,6 @@ if (!class_exists('CoursePress')) {
 
         function admin_coursepress_page_students() {
             wp_enqueue_style('students', $this->plugin_url . 'css/admin_coursepress_page_students.css', array(), $this->version);
-            //wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css', array(), $this->version);
-            //wp_enqueue_style('instructors', $this->plugin_url . 'css/admin_coursepress_page_instructors.css', array(), $this->version);
             wp_enqueue_script('students', $this->plugin_url . 'js/students-admin.js');
             wp_localize_script('students', 'student', array(
                 'delete_student_alert' => __('Please confirm that you want to remove the student and the all associated records?', 'cp'),
@@ -1932,9 +1932,16 @@ if (!class_exists('CoursePress')) {
 
         function is_marketpress_active() {
             $plugins = get_option('active_plugins');
+
+            if (is_multisite()) {
+                $active_sitewide_plugins = get_site_option("active_sitewide_plugins");
+            } else {
+                $active_sitewide_plugins = array();
+            }
+
             $required_plugin = 'marketpress/marketpress.php';
 
-            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins)) {
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins) || preg_array_key_exists('/^marketpress.*/', $active_sitewide_plugins)) {
                 return true;
             } else {
                 return false;
@@ -1945,9 +1952,16 @@ if (!class_exists('CoursePress')) {
 
         function is_chat_plugin_active() {
             $plugins = get_option('active_plugins');
+
+            if (is_multisite()) {
+                $active_sitewide_plugins = get_site_option("active_sitewide_plugins");
+            } else {
+                $active_sitewide_plugins = array();
+            }
+
             $required_plugin = 'wordpress-chat/wordpress-chat.php';
 
-            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^wordpress-chat.*/', $plugins)) {
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^wordpress-chat.*/', $plugins) || preg_array_key_exists('/^wordpress-chat.*/', $active_sitewide_plugins)) {
                 return true;
             } else {
                 return false;

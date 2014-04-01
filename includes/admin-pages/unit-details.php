@@ -1,6 +1,6 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice;
-global $coursepress_modules, $coursepress_modules_labels;
+global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered;
 
 $course_id = '';
 
@@ -92,15 +92,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 $list_order++;
             }
             ?>
-
+            <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
+                <li class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : ''); ?> static">
+                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>                                                                    
+                </li>
+            <?php } ?>
         </ul>
 
         <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
-            <div class="mp-tabs">
+            <!--<div class="mp-tabs">
                 <div class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : ''); ?>">
                     <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
                 </div>
-            </div>
+            </div>-->
         <?php } ?>
 
     </div>
@@ -215,16 +219,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <?php
                                 $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
 
-                                foreach ($sections as $key => $section) {
+                                ksort($coursepress_modules_ordered);
+                                
+                                foreach ($coursepress_modules_ordered as $coursepress_module) {
+                                            ?>
+                                            <option value='<?php echo $coursepress_module; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$coursepress_module]; ?>"><?php echo $coursepress_modules_labels[$coursepress_module]; ?></option>
+                                            <?php
+                                }
+                                
+                                /*foreach ($sections as $key => $section) {
 
                                     if (isset($coursepress_modules[$key])) {
                                         foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
                                             ?>
-                                            <option value='<?php echo $mmodule; ?>'><?php echo $coursepress_modules_labels[$mmodule]; ?></option>
+                                            <option value='<?php echo $mmodule; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$mmodule]; ?>"><?php echo $coursepress_modules_labels[$mmodule]; ?></option>
                                             <?php
                                         }
                                     }
-                                }
+                                }*/
                                 ?>
                             </select>
 
@@ -241,6 +253,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             </select>-->
 
                             <input type='button' name='unit-module-add' id='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary" />
+                            
+                            <span class="module_description" id="module_description"></span>
+                            
                         </div>
 
                         <div class="course-details">

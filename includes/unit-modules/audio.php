@@ -2,9 +2,10 @@
 
 class audio_module extends Unit_Module {
 
+    var $order = 2;
     var $name = 'audio_module';
     var $label = 'Audio';
-    var $description = 'Allows adding audio files with player to the unit';
+    var $description = '';
     var $front_save = false;
     var $response_type = '';
 
@@ -128,6 +129,7 @@ class audio_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Add audio files with player to the unit', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

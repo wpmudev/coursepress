@@ -2,9 +2,10 @@
 
 class video_module extends Unit_Module {
 
+    var $order = 3;
     var $name = 'video_module';
     var $label = 'Video';
-    var $description = 'Allows adding video files and video embeds to the unit';
+    var $description = '';
     var $front_save = false;
     var $response_type = '';
 
@@ -138,6 +139,7 @@ class video_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

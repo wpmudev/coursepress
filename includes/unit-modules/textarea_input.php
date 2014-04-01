@@ -2,9 +2,10 @@
 
 class textarea_input_module extends Unit_Module {
 
+    var $order = 6;
     var $name = 'textarea_input_module';
     var $label = 'Text Area Input';
-    var $description = 'Allows adding input text area blocks to the unit';
+    var $description = '';
     var $front_save = true;
     var $response_type = 'view';
 
@@ -126,6 +127,7 @@ class textarea_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Allow students to enter multiple lines of text', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

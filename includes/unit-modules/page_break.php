@@ -2,9 +2,10 @@
 
 class page_break_module extends Unit_Module {
 
+    var $order = 1;
     var $name = 'page_break_module';
     var $label = 'Page Break';
-    var $description = 'Break the Unit into more pages';
+    var $description = '';
     var $front_save = false;
     var $response_type = '';
 
@@ -60,6 +61,7 @@ class page_break_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Breaks the Unit into more pages', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

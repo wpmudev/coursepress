@@ -530,7 +530,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     border: 1px dashed #cccccc; 
 }*/
 
-#sortable-units{ list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#sortable-units{ list-style-type: none; margin: 0; padding: 0; }
 #sortable-units li .cp-move-icon{
     display: none;
 }
@@ -1195,6 +1195,15 @@ a.delete_module_link, a.remove_module_link {
 
 a.delete_module_link:hover, a.remove_module_link:hover {
     text-decoration: underline;
+}
+
+.module_description{
+    display: inline-block;
+    margin-left: 2px;
+    font-style: italic;
+    vertical-align: top;
+    margin-top: -4px;
+    width: 100%;
 }
 
 #meta_marketpress_product{

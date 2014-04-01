@@ -1,14 +1,12 @@
 <?php
-$plugins = get_option('active_plugins');
-$required_plugin = 'wordpress-chat/wordpress-chat.php';
-
-if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin)) {
+if (is_chat_plugin_active()) {
 
     class chat_module extends Unit_Module {
 
+        var $order = 9;
         var $name = 'chat_module';
         var $label = 'Live Chat';
-        var $description = 'Allows adding chat blocks from WordPress Chat plugin to the unit';
+        var $description = '';
         var $front_save = false;
         var $response_type = '';
 
@@ -77,6 +75,7 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
         }
 
         function on_create() {
+            $this->description = __('Add a chat box from the Wordpress Chat plugin', 'cp');
             $this->save_module_data();
             parent::additional_module_actions();
         }
@@ -117,5 +116,7 @@ if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_p
     }
 
     coursepress_register_module('chat_module', 'chat_module', 'instructors');
+} else {
+    echo 'NOT activated!';
 }
 ?>

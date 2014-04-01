@@ -2,9 +2,10 @@
 
 class file_input_module extends Unit_Module {
 
+    var $order = 11;
     var $name = 'file_input_module';
     var $label = 'File Upload';
-    var $description = 'Allows adding file upload blocks to the unit';
+    var $description = '';
     var $front_save = true;
     var $response_type = 'file';
 
@@ -136,6 +137,7 @@ class file_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Add file upload blocks to the unit. Useful if students need to send you various files like essay, homework etc.', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

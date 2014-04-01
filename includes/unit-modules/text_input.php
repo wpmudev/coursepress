@@ -2,9 +2,10 @@
 
 class text_input_module extends Unit_Module {
 
+    var $order = 5;
     var $name = 'text_input_module';
     var $label = 'Text Input';
-    var $description = 'Allows adding input text blocks to the unit';
+    var $description = '';
     var $front_save = true;
     var $response_type = 'view';
 
@@ -132,6 +133,7 @@ class text_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Allow students to enter a single line of text', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

@@ -168,19 +168,27 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                                 </th>
                                 <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
-                                <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
-                                <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
+                                <td <?php echo $style; ?>>
+                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                        <?php echo $user_object->first_name; ?>
+                                    </a>
+                                </td>
+                                <td <?php echo $style; ?>>
+                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                        <?php echo $user_object->last_name; ?>
+                                    </a>
+                                </td>
                                 <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
                                 <td <?php echo $style; ?>><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?> </td>
                                 <td <?php echo $style; ?> style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
                                 <td <?php echo $style; ?> style="padding-top:13px;">
-                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
-                                       <i class="fa fa-book cp-move-icon remove-btn"></i>
+                                    <a href="?page=students&action=workbook&student_id=<?php echo $user_object->ID; ?>">
+                                        <i class="fa fa-book cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <td <?php echo $style; ?> style="padding-top:13px;">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
-                                       <i class="fa fa-user cp-move-icon remove-btn"></i>
+                                        <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>

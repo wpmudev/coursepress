@@ -2,9 +2,10 @@
 
 class file_module extends Unit_Module {
 
+    var $order = 10;
     var $name = 'file_module';
     var $label = 'File Download';
-    var $description = 'Allows adding encrypted links to files (URLs) and force download in browser.';
+    var $description = '';
     var $front_save = false;
     var $response_type = '';
 
@@ -77,7 +78,7 @@ class file_module extends Unit_Module {
                         <input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr(isset($data->link_text) ? $data->link_text : 'Download'); ?>" />
                     </label>
 
-                    <label><?php _e('Put a URL or Browse for a file.', 'cp'); ?>
+                    <label><?php _e('Enter a URL or Browse for a file.', 'cp'); ?>
                         <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr((isset($data->file_url) ? $data->file_url : '')); ?>" />
                         <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
@@ -91,6 +92,7 @@ class file_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

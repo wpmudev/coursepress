@@ -23,8 +23,10 @@ function unenrollAllFromClass() {
 }
 
 jQuery(function() {
+
     jQuery("#sortable-units").sortable({
         placeholder: "ui-state-highlight",
+        items: "li:not(.static)",
         stop: function(event, ui) {
             update_sortable_indexes();
         }
@@ -41,6 +43,12 @@ jQuery(function() {
         jQuery("#unit-add").submit();
 
     });
+    
+    jQuery("#unit-module-list").change(function(){
+        jQuery('#module_description').html(jQuery(this).find(':selected').data('module-description'));
+    });
+    
+    jQuery('#module_description').html(jQuery(this).find(':selected').data('module-description'));
 
 });
 

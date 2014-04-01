@@ -2,9 +2,10 @@
 
 class radio_input_module extends Unit_Module {
 
+    var $order = 8;
     var $name = 'radio_input_module';
     var $label = 'Radio Box Input';
-    var $description = 'Allows adding radio boxes to the unit';
+    var $description = '';
     var $front_save = true;
     var $response_type = 'view';
 
@@ -225,6 +226,7 @@ class radio_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->description = __('Multiple choice question where only one option can be selected', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
