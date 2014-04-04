@@ -72,7 +72,7 @@ if (!class_exists('Discussion')) {
                 'post_author' => $user_id,
                 'post_content' => ($discussion_description == '' ? $_POST['discussion_description'] : $discussion_description),
                 'post_status' => $post_status,
-                'post_title' => ($discussion_title == '' ? $_POST['discussion_title'] : $discussion_title),
+                'post_title' => ($discussion_title == '' ? $_POST['discussion_name'] : $discussion_title),
                 'post_type' => 'discussions',
             );
 
@@ -81,8 +81,6 @@ if (!class_exists('Discussion')) {
             }
 
             $post_id = wp_insert_post($post);
-            
-            
             
             //Update post meta
             if ($post_id != 0) {

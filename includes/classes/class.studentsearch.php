@@ -12,9 +12,9 @@ if (!class_exists('Student_Search')) {
         var $additional_url_args = array();
 
         function __construct($search_term = '', $page_num = '', $search_args = array(), $meta_args = array(), $additional_url_args = array()) {
- 
+
             $this->additional_url_args = $additional_url_args;
-            
+
             if (!empty($search_args['users_per_page']) && is_numeric($search_args['users_per_page'])) {
                 $this->users_per_page = $search_args['users_per_page'];
             }
@@ -27,18 +27,18 @@ if (!class_exists('Student_Search')) {
                 'search' => $this->search_term,
                 'number' => $this->users_per_page,
                 'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
-                'fields' => 'all'
+                    /* 'fields' => 'all_with_meta' */
             );
 
             $search_args['meta_key'] = (isset($search_args['meta_key']) ? $search_args['meta_key'] : '');
             $search_args['meta_value'] = (isset($search_args['meta_value']) ? $search_args['meta_value'] : '');
-            
-            if(!empty($meta_args)){
+
+            if (!empty($meta_args)) {
                 $meta_args['number'] = $this->users_per_page;
                 $meta_args['offset'] = ( $this->page_num - 1 ) * $this->users_per_page;
                 $args = $meta_args;
             }
-            
+
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
                 'role' => 'student',
@@ -54,7 +54,7 @@ if (!class_exists('Student_Search')) {
                 'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
                 'number' => '',
                 'count_total' => true,
-                'fields' => 'all',
+                'fields' => 'all_with_meta',
                 'who' => ''
             ));
 
@@ -68,11 +68,10 @@ if (!class_exists('Student_Search')) {
         }
 
         function do_paging() {
-            
+
             $this->total_users_for_query = $this->get_total();
 
             if ($this->total_users_for_query > $this->users_per_page) { // pagination required
-                
                 if (!empty($this->search_term)) {
                     $args['s'] = urlencode($this->search_term);
                 }
@@ -88,7 +87,7 @@ if (!class_exists('Student_Search')) {
                     'format' => 'userspage=%#%',
                     'add_args' => $args
                 ));
-                
+
                 if ($this->paging_text) {
                     $this->paging_text = sprintf('<span class="displaying-num">' . __('Displaying %s&#8211;%s of %s', 'cp') . '</span>%s', number_format_i18n(( $this->page_num - 1 ) * $this->users_per_page + 1), number_format_i18n(min($this->page_num * $this->users_per_page, $this->total_users_for_query)), number_format_i18n($this->total_users_for_query), $this->paging_text
                     );
@@ -97,13 +96,11 @@ if (!class_exists('Student_Search')) {
         }
 
         function page_links() {
-            
-            
             $pagination = new CoursePress_Pagination();
             $pagination->Items($this->get_total());
             $pagination->limit($this->users_per_page);
             $pagination->parameterName = 'page_num';
-            $pagination->target("admin.php?page=".(isset($_GET['page']) ? $_GET['page'] : 'students').'&'.http_build_query($this->additional_url_args));
+            $pagination->target("admin.php?page=" . (isset($_GET['page']) ? $_GET['page'] : 'students') . '&' . http_build_query($this->additional_url_args));
             $pagination->currentPage($this->page_num);
             $pagination->nextIcon('&#9658;');
             $pagination->prevIcon('&#9668;');
@@ -191,7 +188,7 @@ if (!class_exists('Student_Search')) {
 
                 $search_columns = array();
                 if ($qv['search_columns'])
-                    $search_columns = array_intersect($qv['search_columns'], array('ID', 'user_login', 'user_email', 'user_url', 'user_nicename'));
+                    $search_columns = array_intersect($qv['search_columns'], array('ID', 'user_login', 'user_email', 'user_url', 'user_nicename', 'display_name'));
                 if (!$search_columns) {
                     if (false !== strpos($search, '@'))
                         $search_columns = array('user_email');
@@ -247,6 +244,10 @@ if (!class_exists('Student_Search')) {
             } elseif (!empty($qv['exclude'])) {
                 $ids = implode(',', wp_parse_id_list($qv['exclude']));
                 $this->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
+            }
+
+            if (isset($this->search_term) && $this->search_term !== '') {
+                $this->query_where .= $wpdb->prepare(" OR $wpdb->users.display_name LIKE %s", '%' . like_escape($this->search_term) . '%');
             }
 
             do_action_ref_array('pre_user_query', array(&$this));

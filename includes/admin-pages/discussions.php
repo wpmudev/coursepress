@@ -112,12 +112,12 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                 $columns = array(
                     "discussion_title" => __('Discussion', 'cp'),
                     "course" => __('Course', 'cp'),
-                    "status" => __('Status', 'cp'),
+                    //"status" => __('Status', 'cp'),
                 );
 
 
                 $col_sizes = array(
-                    '3', '57', '25', '10', '5'
+                    '3', '67', '25', '5'
                 );
 
                 if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap'))) {
@@ -162,7 +162,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                         <span class="edit_discussion"><a href="?page=discussions&action=edit&discussion_id=<?php echo $discussion_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
 
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeNotification();"><?php _e('Delete', 'cp'); ?></a> | </span>
+                                            <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a> | </span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -175,11 +175,11 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 }
                                 ?>
                                 <td <?php echo $style; ?>> <?php echo $course_name; ?> </td>
-                                <td <?php echo $style; ?>><?php echo ($discussion_object->post_status == 'publish') ? ucfirst($discussion_object->post_status) . 'ed' : ucfirst($discussion_object->post_status); ?></td>
+                               
                                 <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeCourse();">
+                                            <a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>

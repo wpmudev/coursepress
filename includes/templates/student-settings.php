@@ -46,21 +46,43 @@
     <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
     <?php do_action('before_settings_form');?>
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
-        <label><?php _e('First Name', 'cp'); ?>:
+        
+        <label>
+            <?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="<?php esc_attr_e($student->user_firstname); ?>" />
-        </label><label><?php do_action('after_settings_first_name');?>
+        </label>
+        
+        <?php do_action('after_settings_first_name');?>
+        
+        <label>
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="<?php esc_attr_e($student->user_lastname); ?>" />
-        </label><label><?php do_action('after_settings_last_name');?>
+        </label>
+        
+        <?php do_action('after_settings_last_name');?>
+        
+        <label>
             <?php _e('E-mail', 'cp'); ?>:
             <input type="text" name="email" value="<?php esc_attr_e($student->user_email); ?>" />
-        </label><label><?php do_action('after_settings_email');?>
+        </label>
+        
+        <?php do_action('after_settings_email');?>
+        
+        <label>
             <?php _e('Password (empty = don\'t change)', 'cp'); ?>:
             <input type="password" name="password" value="" />
-        </label><label class="right"><?php do_action('after_settings_passwordon');?>
+        </label>
+        
+        <?php do_action('after_settings_passwordon');?>
+        
+        <label class="right">
             <?php _e('Confirm Password', 'cp'); ?>:
             <input type="password" name="password_confirmation" value="" />
-        </label><label class="full"><?php do_action('after_settings_pasword');?>
+        </label>
+        
+        <?php do_action('after_settings_pasword');?>
+        
+        <label class="full">
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Save Changes', 'cp'); ?>" />
         </label>
     </form><?php do_action('after_settings_form');?>

@@ -210,7 +210,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeCourse();">
+                                            <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeNotification();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>

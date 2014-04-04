@@ -3,36 +3,36 @@ global $action, $page;
 global $page, $user_id, $coursepress_admin_notice;
 global $coursepress;
 
-$notification_id = '';
+$discussion_id = '';
 
-if (isset($_GET['notification_id'])) {
-    $notification = new Notification($_GET['notification_id']);
-    $notification_details = $notification->get_notification();
-    $notification_id = $_GET['notification_id'];
+if (isset($_GET['discussion_id'])) {
+    $discussion = new Discussion($_GET['discussion_id']);
+    $discussion_details = $discussion->get_discussion();
+    $discussion_id = $_GET['discussion_id'];
 } else {
-    $notification = new Notification();
-    $notification_id = 0;
+    $discussion = new Discussion();
+    $discussion_id = 0;
 }
 
 wp_reset_vars(array('action', 'page'));
 
 if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] == 'update')) {
 
-    check_admin_referer('notifications_details');
+    check_admin_referer('discussion_details');
 
-    $new_post_id = $notification->update_notification();
+    $new_post_id = $discussion->update_discussion();
 
     if ($new_post_id !== 0) {
         ob_start();
-        wp_redirect('?page=' . $page . '&notification_id=' . $new_post_id . '&action=edit');
+        wp_redirect('?page=' . $page . '&discussion_id=' . $new_post_id . '&action=edit');
         exit;
     } else {
         //an error occured
     }
 }
 
-if (isset($_GET['notification_id'])) {
-    $meta_course_id = $notification->details->course_id;
+if (isset($_GET['discussion_id'])) {
+    $meta_course_id = $discussion->details->course_id;
 } else {
     $meta_course_id = '';
 }
@@ -41,24 +41,24 @@ if (isset($_GET['notification_id'])) {
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-themes"><br></div>
 
-    <h2><?php _e('Notification', 'cp'); ?><?php if (current_user_can('coursepress_create_notification_cap')) { ?><a class="add-new-h2" href="admin.php?page=notifications&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+    <h2><?php _e('Discussion', 'cp'); ?><?php if (current_user_can('coursepress_create_discussion_cap')) { ?><a class="add-new-h2" href="admin.php?page=discussions&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
     <?php
-    $message['ca'] = __('New Notification added successfully!', 'cp');
-    $message['cu'] = __('Notification updated successfully.', 'cp');
+    $message['ca'] = __('New Discussion added successfully!', 'cp');
+    $message['cu'] = __('Discussion updated successfully.', 'cp');
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($notification_id !== 0) ? '&notification_id=' . $notification_id : '' ?><?php echo '&action=' . $action; ?><?php echo ($notification_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='notification-add' method='post'>
+        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '' ?><?php echo '&action=' . $action; ?><?php echo ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='discussion-add' method='post'>
 
             <div class='course-liquid-left'>
 
                 <div id='course-full'>
 
-                    <?php wp_nonce_field('notifications_details'); ?>
+                    <?php wp_nonce_field('discussion_details'); ?>
 
-                    <?php if (isset($notification_id)) { ?>
-                        <input type="hidden" name="notification_id" value="<?php echo esc_attr($notification_id); ?>" />
+                    <?php if (isset($discussion_id)) { ?>
+                        <input type="hidden" name="discussion_id" value="<?php echo esc_attr($discussion_id); ?>" />
                         <input type="hidden" name="action" value="update" />
                     <?php } else { ?>
                         <input type="hidden" name="action" value="add" />
@@ -67,18 +67,18 @@ if (isset($_GET['notification_id'])) {
                     <div id='edit-sub' class='course-holder-wrap'>
                         <div class='course-holder'>
                             <div class='course-details'>
-                                <label for='notification_name'><?php _e('Notification Title', 'cp'); ?></label>
-                                <input class='wide' type='text' name='notification_name' id='notification_name' value='<?php
-                                if (isset($_GET['notification_id'])) {
-                                    echo esc_attr(stripslashes($notification->details->post_title));
+                                <label for='discussion_name'><?php _e('Discussion Title', 'cp'); ?></label>
+                                <input class='wide' type='text' name='discussion_name' id='discussion_name' value='<?php
+                                if (isset($_GET['discussion_id'])) {
+                                    echo esc_attr(stripslashes($discussion->details->post_title));
                                 }
                                 ?>' />
 
                                 <br/><br/>
-                                <label for='course_name'><?php _e('Notification Content', 'cp'); ?></label>
+                                <label for='course_name'><?php _e('Discussion Content', 'cp'); ?></label>
                                 <?php
-                                $args = array("textarea_name" => "notification_description", "textarea_rows" => 10);
-                                wp_editor(htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : ''), "notification_description", $args);
+                                $args = array("textarea_name" => "discussion_description", "textarea_rows" => 10);
+                                wp_editor(htmlspecialchars_decode(isset($discussion->details->post_content) ? $discussion->details->post_content : ''), "discussion_description", $args);
                                 ?>
                                 <br/>
 
@@ -88,7 +88,6 @@ if (isset($_GET['notification_id'])) {
                                 <div class="full">
                                     <label><?php _e('Course', 'cp'); ?></label>
                                     <select name="meta_course_id">
-                                        <option value="" <?php selected($meta_course_id, ''); ?>><?php _e('All Courses', 'cp'); ?></option>
                                         <?php
                                         $args = array(
                                             'post_type' => 'course',
@@ -111,9 +110,9 @@ if (isset($_GET['notification_id'])) {
 
                                 <div class="buttons">
                                     <?php
-                                    if (($notification_id == 0 && current_user_can('coursepress_create_notification_cap')) || ($notification_id != 0 && current_user_can('coursepress_update_notification_cap')) || ($notification_id != 0 && current_user_can('coursepress_update_my_notification_cap') && $notification_details->post_author == get_current_user_id())) {//do not show anything
+                                    if (($discussion_id == 0 && current_user_can('coursepress_create_discussion_cap')) || ($discussion_id != 0 && current_user_can('coursepress_update_discussion_cap')) || ($discussion_id != 0 && current_user_can('coursepress_update_my_discussion_cap') && $discussion_details->post_author == get_current_user_id())) {//do not show anything
                                         ?>
-                                        <input type="submit" value = "<?php ($notification_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp')); ?>" class = "button-primary" />
+                                        <input type="submit" value = "<?php ($discussion_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp')); ?>" class = "button-primary" />
                                         <?php
                                     } else {
                                         _e('You do not have required permissions for this action');
@@ -124,8 +123,6 @@ if (isset($_GET['notification_id'])) {
                                 <br clear="all" />
 
                             </div>
-
-
 
                         </div>
                     </div>

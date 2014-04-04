@@ -285,7 +285,8 @@ div.course-details {
     margin-bottom: 15px;
 }
 
-input.wide, textarea.wide, #wp-notification_description-wrap {
+input.wide, textarea.wide, #wp-discussion_description-wrap
+{
     margin-top: 5px;
     width: 99%;
     margin-left: 0;

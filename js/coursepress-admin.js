@@ -243,6 +243,30 @@ function removeCourse() {
     }
 }
 
+function delete_notification_confirmed() {
+    return confirm(coursepress.delete_notification_alert);
+}
+
+function removeNotification() {
+    if (delete_notification_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function delete_discussion_confirmed() {
+    return confirm(coursepress.delete_discussion_alert);
+}
+
+function removeDiscussion() {
+    if (delete_discussion_confirmed()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function removeUnit() {
     if (delete_unit_confirmed()) {
         return true;

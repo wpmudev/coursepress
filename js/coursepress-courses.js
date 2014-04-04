@@ -43,11 +43,11 @@ jQuery(function() {
         jQuery("#unit-add").submit();
 
     });
-    
-    jQuery("#unit-module-list").change(function(){
+
+    jQuery("#unit-module-list").change(function() {
         jQuery('#module_description').html(jQuery(this).find(':selected').data('module-description'));
     });
-    
+
     jQuery('#module_description').html(jQuery(this).find(':selected').data('module-description'));
 
 });
@@ -115,7 +115,12 @@ jQuery(document).ready(function()
     jQuery('.course_video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".course_video_url:first");
-
+        
+        wp.media.string.props = function(props, attachment)
+        {
+            jQuery(target_url_field).val(props.url);
+        }
+        
         wp.media.editor.send.attachment = function(props, attachment)
         {
             jQuery(target_url_field).val(attachment.url);

@@ -200,8 +200,11 @@ if (!class_exists('Unit_Module')) {
 
         function get_modules_front($unit_id = 0) {
             global $coursepress_modules, $wp;
-            
+
             $front_save = false;
+            $responses = 0;
+            $input_modules = 0;
+
             $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
 
             $modules = $this->get_modules($unit_id);
@@ -225,6 +228,15 @@ if (!class_exists('Unit_Module')) {
 
                                 if ($module->front_save) {
                                     $front_save = true;
+
+                                    if (method_exists($module, 'get_response')) {
+                                        $response = $module->get_response(get_current_user_id(), $mod->ID);
+
+                                        if (count($response) > 0) {
+                                            $responses++;
+                                        }
+                                        $input_modules++;
+                                    }
                                 }
                             }
                         }
@@ -235,10 +247,12 @@ if (!class_exists('Unit_Module')) {
                 wp_nonce_field('modules_nonce');
 
                 if ($front_save) {
-                    ?>
-                    <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
-                    <input type="submit" class="apply-button-enrolled" name="submit_modules_data" value="<?php _e('Submit', 'cp'); ?>">
-                    <?php
+                    if ($input_modules !== $responses) {
+                        ?>
+                        <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
+                        <input type="submit" class="apply-button-enrolled" name="submit_modules_data" value="<?php _e('Submit', 'cp'); ?>">
+                        <?php
+                    }
                 }
                 ?>
             </form>

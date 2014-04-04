@@ -35,6 +35,35 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
         return;
     }
 
+    $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+
+    $max = intval($pages_num); //number of page-break modules + 1
+
+    $wp_query->max_num_pages = $max;
+
+    if ($wp_query->max_num_pages <= 1)
+        return;
+
+    echo '<br clear="all"><div class="navigation"><ul>' . "\n";
+    
+    for ($link_num = 1; $link_num <= $max; $link_num++) {
+        $class = ($paged == $link_num ? ' class="active"' : '');
+
+        printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url(get_pagenum_link($link_num)), $link_num);
+    }
+
+    echo '</ul></div>' . "\n";
+}
+
+function coursepress_unit_module_pagination_ellipsis($unit_id, $pages_num) {
+    global $wp, $wp_query, $paged, $coursepress_modules;
+
+    $modules_class = new Unit_Module();
+
+    if (!isset($unit_id) || !is_singular()) {
+        return;
+    }
+
 
     $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
 
@@ -60,6 +89,7 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
         $links[] = $paged + 1;
     }
 
+
     echo '<br clear="all"><div class="navigation"><ul>' . "\n";
 
     /** 	Previous Post Link */
@@ -78,6 +108,7 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
 
     /** 	Link to current page, plus 2 pages in either direction if necessary */
     sort($links);
+
     foreach ((array) $links as $link) {
         $class = $paged == $link ? ' class="active"' : '';
         printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url(get_pagenum_link($link)), $link);
@@ -628,16 +659,14 @@ function curPageURL() {
     return $pageURL;
 }
 
-function natkrsort($array) 
-{
+function natkrsort($array) {
     $keys = array_keys($array);
     natsort($keys);
 
-    foreach ($keys as $k)
-    {
+    foreach ($keys as $k) {
         $new_array[$k] = $array[$k];
     }
-   
+
     $new_array = array_reverse($new_array, true);
 
     return $new_array;
@@ -653,7 +682,7 @@ if (!function_exists('coursepress_register_module')) {
         if (!is_array($coursepress_modules)) {
             $coursepress_modules = array();
         }
-        
+
         if (class_exists($class_name)) {
             $class = new $class_name();
             $coursepress_modules_labels[$module_name] = $class->label;

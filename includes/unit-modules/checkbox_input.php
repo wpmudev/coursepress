@@ -110,6 +110,19 @@ class checkbox_input_module extends Unit_Module {
                 ?>
             </ul>
 
+            <?php
+            $unit_module_main = new Unit_Module();
+            
+            if (is_object($response) && !empty($response)) {
+            
+                $comment = $unit_module_main->get_response_comment($response->ID);
+                if (!empty($comment)) {
+                    ?>
+                    <div class="response_comment_front"><?php echo $comment;?></div>
+                    <?php
+                }
+            }
+            ?>
         </div>
         <?php
     }
@@ -160,7 +173,7 @@ class checkbox_input_module extends Unit_Module {
                             <tr>
                                 <th width="90%">
                         <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
-                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');    ?></div>
+                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');       ?></div>
                         </th>
 
                         <th width="10%">

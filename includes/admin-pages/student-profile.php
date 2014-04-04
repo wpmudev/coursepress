@@ -105,7 +105,11 @@ if (isset($_POST['course_id'])) {
 
                                             <div class="student-course-top">
                                                 <a href="admin.php?page=students&action=workbook&student_id=<?php echo $student->ID; ?>&course_id=<?php echo $course_object->ID; ?>" class="button button-units workbook-button"><?php _e('View Workbook', 'cp'); ?> <i class="fa fa-book cp-move-icon"></i></a>
-                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a><a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a></div>
+                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a>
+                                                    <a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><i class="fa fa-pencil"></i></a>
+                                                    <a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a>
+                                                    
+                                                </div>
                                             </div>
 
                                             <div class="student-course-bottom">

@@ -1,4 +1,9 @@
+<?php
+$user_id = $_GET['user_id'];
+$course_id = $_GET['course_id'];
+?>
 <div class="wrap nosubsub">
+    <a href="admin.php?action=workbook&student_id=<?php echo $user_id; ?>&page=students&course_id=<?php echo $course_id; ?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e('Assessment', 'cp'); ?></h2>
 
@@ -14,8 +19,6 @@
     if (isset($_GET['response_id'])) {
         $response_id = $_GET['response_id'];
         $module_id = $_GET['module_id'];
-        $user_id = $_GET['user_id'];
-        $course_id = $_GET['course_id'];
         $unit_id = $_GET['unit_id'];
         ?>
         <div class="assessment-response-wrap">
@@ -346,7 +349,8 @@
                                                     }
                                                     ?>
                                                     <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style;
-                                echo 'row-' . $current_row; ?>">
+                                echo 'row-' . $current_row;
+                                                    ?>">
 
                                 <?php if ($current_row == 0) { ?>
                                                             <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
@@ -429,7 +433,7 @@
                                                                 }
                                                                 ?>
                                                             </td>
-                                                    <?php }//general col visibility   ?>
+                                                    <?php }//general col visibility    ?>
                                                     </tr>
                                                     <?php
                                                     $current_row++;
@@ -438,7 +442,7 @@
                                         }
                                     }
 
-                                    if (!isset($input_modules_count) ||  isset($input_modules_count) && $input_modules_count == 0) {
+                                    if (!isset($input_modules_count) || isset($input_modules_count) && $input_modules_count == 0) {
                                         ?>
                                         <tr>
                                             <td colspan="7"><?php _e('0 input elements in the selected unit.', 'cp'); ?></td>
@@ -454,7 +458,7 @@
                                 </div><!--/tablenav-->
 
                             </div><!--a tab-->
-                        <?php } ?>
+            <?php } ?>
                     </div><!--tabs-->
                 </div><!--assessment-->
 

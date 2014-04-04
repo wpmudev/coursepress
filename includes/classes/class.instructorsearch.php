@@ -228,6 +228,8 @@ if (!class_exists('Instructor_Search')) {
                 $this->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
             }
 
+            //$this->query_where .= $wpdb->prepare( " OR $wpdb->users.display_name LIKE %s", '%' . like_escape( $this->search_term ) . '%' );
+            
             do_action_ref_array('pre_user_query', array(&$this));
         }
 

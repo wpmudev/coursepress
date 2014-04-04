@@ -1500,6 +1500,8 @@ if (!class_exists('CoursePress')) {
                 wp_localize_script('courses_bulk', 'coursepress', array(
                     'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
                     'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
+                    'delete_notification_alert' => __('Please confirm that you want to permanently delete the notification?', 'cp'),
+                    'delete_discussion_alert' => __('Please confirm that you want to permanently delete the discussion?', 'cp'),
                     'unenroll_student_alert' => __('Please confirm that you want to un-enroll student from this course. If you un-enroll, you will no longer be able to see student\'s records for this course.', 'cp'),
                     'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp'),
                     'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),

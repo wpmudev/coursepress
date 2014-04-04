@@ -83,6 +83,21 @@ class text_input_module extends Unit_Module {
                 <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
             <?php } ?>
 
+
+            <?php
+            $unit_module_main = new Unit_Module();
+
+            if (is_object($response) && !empty($response)) {
+
+                $comment = $unit_module_main->get_response_comment($response->ID);
+                if (!empty($comment)) {
+                    ?>
+                    <div class="response_comment_front"><?php echo $comment; ?></div>
+                    <?php
+                }
+            }
+            ?>
+
         </div>
         <?php
     }

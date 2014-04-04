@@ -10,12 +10,12 @@
 
         check_admin_referer('student_signup');
         $min_password_length = apply_filters('cp_min_password_length', 6);
-        
+
         $student_data = array();
         $form_errors = 0;
 
         do_action('before_signup_validation');
-        
+
         if ($_POST['username'] != '' && $_POST['first_name'] != '' && $_POST['last_name'] != '' && $_POST['email'] != '' && $_POST['password'] != '' && $_POST['password_confirmation'] != '') {
 
             if (!username_exists($_POST['username'])) {
@@ -23,7 +23,7 @@
                 if (!email_exists($_POST['email'])) {
 
                     if ($_POST['password'] == $_POST['password_confirmation']) {
-                        
+
                         if (!preg_match("#[0-9]+#", $_POST['password']) || !preg_match("#[a-zA-Z]+#", $_POST['password']) || strlen($_POST['password']) < $min_password_length) {
                             $form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'cp'), $min_password_length);
                             $form_message_class = 'red';
@@ -83,73 +83,77 @@
             $form_message = __('All fields are required.', 'cp');
             $form_message_class = 'red';
         }
-    }else{
+    } else {
         $form_message = __('All fields are required.', 'cp');
     }
     ?>
     <p class="form-info-<?php echo apply_filters('signup_form_message_class', $form_message_class); ?>"><?php echo apply_filters('signup_form_message', $form_message); ?></p>
 
     <?php do_action('before_signup_form'); ?>
-    
+
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
 
         <?php do_action('before_all_signup_fields'); ?>
-        
+
         <label>
             <?php _e('First Name', 'cp'); ?>:
             <input type="text" name="first_name" value="<?php echo (isset($_POST['first_name']) ? $_POST['first_name'] : ''); ?>" />
         </label>
 
         <?php do_action('cp_after_signup_first_name'); ?>
-        
+
         <label>
             <?php _e('Last Name', 'cp'); ?>:
             <input type="text" name="last_name" value="<?php echo (isset($_POST['last_name']) ? $_POST['last_name'] : ''); ?>" />
         </label>
 
         <?php do_action('cp_after_signup_last_name'); ?>
-        
+
         <label>
             <?php _e('Username', 'cp'); ?>:
             <input type="text" name="username" value="<?php echo (isset($_POST['username']) ? $_POST['username'] : ''); ?>" />
         </label>
 
         <?php do_action('cp_after_signup_username'); ?>
-        
+
         <label>
             <?php _e('E-mail', 'cp'); ?>:
             <input type="text" name="email" value="<?php echo (isset($_POST['email']) ? $_POST['email'] : ''); ?>" />
         </label>
 
         <?php do_action('cp_after_signup_email'); ?>
-        
+
         <label>
             <?php _e('Password', 'cp'); ?>:
             <input type="password" name="password" value="" />
         </label>
 
         <?php do_action('cp_after_signup_password'); ?>
-        
+
         <label class="right">
             <?php _e('Confirm Password', 'cp'); ?>:
             <input type="password" name="password_confirmation" value="" />
         </label>
 
         <?php do_action('after_all_signup_fields'); ?>
-        
+
         <label class="full">
             <a href="<?php echo wp_login_url(); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
+        </label>
+
+        <label class="full-right">
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Create an Account', 'cp'); ?>" />
         </label>
-        
+
+
         <?php do_action('after_submit'); ?>
-        
-        
+
+
         <?php wp_nonce_field('student_signup'); ?>
     </form>
-    
+
     <?php do_action('after_signup_form'); ?>
-    
+
     <?php
 } else {
     if (isset($this)) {

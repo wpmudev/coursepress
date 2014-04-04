@@ -1532,6 +1532,12 @@ a .remove-btn:hover{
     font-size: 14px;
 }
 
+.student-course .fa-pencil{
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
 .student-course-right,
 .student-course-left{
     display: inline-block;
