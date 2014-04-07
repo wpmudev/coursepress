@@ -782,4 +782,5 @@ function callback_link($match) {
     return $new_url;
 }
 
+require_once('first-install.php');
 ?>

@@ -82,8 +82,14 @@ class file_input_module extends Unit_Module {
         }
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            <h2 class="module_title"><?php echo $data->post_title; ?></h2>
-            <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+                <h2 class="module_title"><?php echo $data->post_title; ?></h2>
+            <?php } ?>
+
+            <?php if ($data->post_content != '') { ?>  
+                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+            <?php } ?>
+                
             <div class="module_file_input">     
                 <input type="file" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
             </div>
@@ -129,8 +135,14 @@ class file_input_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
+
                 <label><?php _e('Title', 'cp'); ?>
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+                </label>
+
+                <label class="show_title_on_front">
+                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
+                    <?php _e('Show title on front', 'cp'); ?>
                 </label>
 
                 <div class="editor_in_place">
@@ -182,6 +194,11 @@ class file_input_module extends Unit_Module {
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            } else {
+                                $data->metas['show_title_on_front'] = 'no';
+                            }
                             parent::update_module($data);
                         }
                     }

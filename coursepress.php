@@ -41,9 +41,9 @@ if (!class_exists('CoursePress')) {
         var $plugin_dir = '';
         var $plugin_url = '';
 
-        function CoursePress() {
-            $this->__construct();
-        }
+        /* function CoursePress() {
+          $this->__construct();
+          } */
 
         function __construct() {
             //setup our variables
@@ -735,6 +735,9 @@ if (!class_exists('CoursePress')) {
 
             // Then flush them  
             flush_rewrite_rules();
+
+            //First install
+            first_install();
         }
 
         function install() {

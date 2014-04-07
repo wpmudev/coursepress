@@ -93,8 +93,13 @@ class checkbox_input_module extends Unit_Module {
         }
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            <h2 class="module_title"><?php echo $data->post_title; ?></h2>
-            <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+                <h2 class="module_title"><?php echo $data->post_title; ?></h2>
+            <?php } ?>
+
+            <?php if ($data->post_content != '') { ?>  
+                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+            <?php } ?>
 
             <ul class='radio_answer_check_li'>
                 <?php
@@ -112,13 +117,13 @@ class checkbox_input_module extends Unit_Module {
 
             <?php
             $unit_module_main = new Unit_Module();
-            
+
             if (is_object($response) && !empty($response)) {
-            
+
                 $comment = $unit_module_main->get_response_comment($response->ID);
                 if (!empty($comment)) {
                     ?>
-                    <div class="response_comment_front"><?php echo $comment;?></div>
+                    <div class="response_comment_front"><?php echo $comment; ?></div>
                     <?php
                 }
             }
@@ -155,6 +160,11 @@ class checkbox_input_module extends Unit_Module {
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
 
+                <label class="show_title_on_front">
+                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
+                    <?php _e('Show title on front', 'cp'); ?>
+                </label>
+
                 <div class="editor_in_place">
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
@@ -173,7 +183,7 @@ class checkbox_input_module extends Unit_Module {
                             <tr>
                                 <th width="90%">
                         <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
-                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');       ?></div>
+                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');           ?></div>
                         </th>
 
                         <th width="10%">
@@ -290,6 +300,11 @@ class checkbox_input_module extends Unit_Module {
                         $data->title = $_POST[$this->name . '_title'][$key];
                         $data->content = $_POST[$this->name . '_content'][$key];
                         $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                        if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                            $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                        } else {
+                            $data->metas['show_title_on_front'] = 'no';
+                        }
                         $data->metas['answers'] = $answers[$key];
                         $data->metas['checked_answers'] = $checked_answers[$key];
 

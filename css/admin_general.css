@@ -263,7 +263,7 @@ input[type=text].course_video_url{
 }
 
 .unit-control-buttons a.button.button-preview{
-    background: none repeat scroll 0 0 #ccc;
+    background: none repeat scroll 0 0 #ec8c35;
     text-shadow: none;
     color: #fff;
     width: 100%;
@@ -276,12 +276,12 @@ input[type=text].course_video_url{
 }
 
 .unit-control-buttons a.button.button-preview:hover{
-    background: #d7d3d3;
+    background: #e99a53;
     color: #fff;
 }
 
 .unit-control-buttons a.button.button-unpublish{
-    background: #F27405;
+    background: #e65c52;
     color: #fff;
 }
 

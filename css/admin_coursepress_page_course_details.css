@@ -1323,3 +1323,7 @@ a .remove-btn:hover{
     float: none;
     margin: -5px 5px 0 0;
 }
+
+.module-content .show_title_on_front{
+    margin-bottom: 15px;
+}

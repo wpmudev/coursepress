@@ -20,7 +20,7 @@ class file_module extends Unit_Module {
     function front_main($data) {
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            <?php if ($data->post_title != '') { ?>
+            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
@@ -73,6 +73,11 @@ class file_module extends Unit_Module {
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
 
+                <label class="show_title_on_front">
+                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
+                    <?php _e('Show title on front', 'cp'); ?>
+                </label>
+
                 <div class="file_url_holder">
                     <label><?php _e('Link Text', 'cp'); ?>
                         <input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr(isset($data->link_text) ? $data->link_text : 'Download'); ?>" />
@@ -123,6 +128,11 @@ class file_module extends Unit_Module {
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['link_text'] = $_POST[$this->name . '_link_text'][$key];
                             $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
+                            if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            } else {
+                                $data->metas['show_title_on_front'] = 'no';
+                            }
                             parent::update_module($data);
                         }
                     }

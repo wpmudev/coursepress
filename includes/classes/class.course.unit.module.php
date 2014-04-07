@@ -389,18 +389,23 @@ if (!class_exists('Unit_Module')) {
                                     jQuery(this).parent().parent().remove();
                                     update_sortable_module_indexes();
                                 }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
-            <?php
+               <?php
+        }
+
+        function display_title_on_front($data) {
+            $to_display = isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? true : (!isset($data->show_title_on_front)) ? true : false;
+            return $to_display;
         }
 
         function get_response_comment($response_id, $count = false) {
             return get_post_meta($response_id, 'response_comment', true);
         }
 
-        function get_response_form() {
+        function get_response_form($user_ID, $response_request_ID, $show_label = true) {
             //module does not overwrite this method message?
         }
 
-        function get_response() {
+        function get_response($user_ID, $response_request_ID) {
             
         }
 
@@ -412,7 +417,7 @@ if (!class_exists('Unit_Module')) {
             
         }
 
-        function admin_main() {
+        function admin_main($data) {
             
         }
 

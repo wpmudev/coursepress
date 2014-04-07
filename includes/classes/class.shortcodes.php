@@ -10,9 +10,9 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
     class CoursePress_Shortcodes extends CoursePress {
 
-        function CoursePress_Shortcodes() {
+        /*function CoursePress_Shortcodes() {
             $this->__construct();
-        }
+        }*/
 
         function __construct() {
             //register plugin shortcodes
