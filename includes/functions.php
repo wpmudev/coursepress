@@ -143,7 +143,7 @@ function coursepress_send_email($email_args = array()) {
         global $course_slug;
         $student_email = $email_args['student_email'];
         $subject = coursepress_get_registration_email_subject();
-        $courses_address = '<a href="' . trailingslashit(site_url()) . trailingslashit($course_slug) . '">' . trailingslashit(site_url()) . trailingslashit($course_slug) . '</a>';
+        $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
 
         $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS');
         $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url());
@@ -176,7 +176,7 @@ function coursepress_send_email($email_args = array()) {
         }
 
         $tags = array('STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE');
-        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), $course->details->post_excerpt, $course->get_permalink(), site_url(), $course->details->passcode);
+        $tags_replaces = array($email_args['student_first_name'], $email_args['student_last_name'], $course->details->post_title, $course->details->post_excerpt, $course->get_permalink(), site_url(), $course->details->passcode);
 
         if ($email_args['enroll_type'] == 'passcode') {
             $message = coursepress_get_invitation_content_passcode_email();
@@ -246,7 +246,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE');
+%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE');
 
     return get_option('invitation_content_passcode_email', $default_invitation_content_passcode_email);
 }
@@ -278,7 +278,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS');
+%5$s Team'), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>');
     return get_option('invitation_content_email', $default_invitation_content_email);
 }
 
@@ -304,7 +304,7 @@ Congratulations! You have registered account with %2$s successfully! You may log
 Get started by exploring our courses here: %4$s
 
 Yours sincerely,
-%5$s Team'), 'STUDENT_FIRST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS');
+%5$s Team'), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>');
 
     return get_option('registration_content_email', $default_registration_content_email);
 }
@@ -335,6 +335,8 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true, $ju
 
     $content = '';
 
+    //coursepress_courses_cap
+    
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
         'role' => 'instructor',
@@ -355,6 +357,7 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true, $ju
     );
 
     $instructors = get_users($args);
+   
 
     if ($just_count == true) {
         return count($instructors);

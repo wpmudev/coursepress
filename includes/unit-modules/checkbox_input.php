@@ -162,7 +162,7 @@ class checkbox_input_module extends Unit_Module {
 
                 <label class="show_title_on_front">
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <?php _e('Show title on front', 'cp'); ?>
+                    <?php _e('Show Title', 'cp'); ?>
                 </label>
 
                 <div class="editor_in_place">
@@ -181,14 +181,20 @@ class checkbox_input_module extends Unit_Module {
                     <table class="form-table">
                         <tbody class="ci_items">
                             <tr>
+
                                 <th width="90%">
                         <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
-                        <div class="checkbox_answer"><?php //_e('Answers', 'cp');           ?></div>
+                        <div class="checkbox_answer"></div>
                         </th>
 
                         <th width="10%">
-                            <a class="checkbox_new_link"><?php _e('Add New', 'cp'); ?></a>
+                            <!--<a class="checkbox_new_link"><?php _e('Add New', 'cp'); ?></a>-->
                         </th>
+
+                        </tr>
+                        
+                        <tr>
+                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp');?></td>
                         </tr>
 
                         <?php
@@ -246,6 +252,8 @@ class checkbox_input_module extends Unit_Module {
                         ?>
                         </tbody>
                     </table>
+                    
+                    <a class="checkbox_new_link button-secondary">Add New</a>
 
                 </div>
 

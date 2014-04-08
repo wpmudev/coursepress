@@ -12,7 +12,7 @@
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('User Registration E-mail', 'cp'); ?></span></h3>
             <div class="inside">
-                <p class="description"><?php _e('Settings for an e-mail student get uppon account registration.', 'cp'); ?></p>
+                <p class="description"><?php _e('Settings for an e-mail student get upon account registration.', 'cp'); ?></p>
                 <table class="form-table">
                     <tbody id="items">
                         <tr>
@@ -41,8 +41,8 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', 'cp');?></p>
                                 <?php
-                                $args = array("textarea_name" => "option_registration_content_email", "textarea_rows" => 10);
-                                wp_editor(htmlspecialchars_decode(coursepress_get_registration_content_email()), "option_registration_content_email", $args);
+                                $args = array("textarea_name" => "option_registration_content_email", "textarea_rows" => 10, 'wpautop' => true);
+                                wp_editor(stripslashes(coursepress_get_registration_content_email()), "option_registration_content_email", $args);
                                 ?>
                             </td>
                         </tr>
@@ -57,7 +57,7 @@
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Student Invitation to a Course E-mail', 'cp'); ?></span></h3>
             <div class="inside">
-                <p class="description"><?php _e('Settings for an e-mail student get uppon receiving an invitation to a course.', 'cp'); ?></p>
+                <p class="description"><?php _e('Settings for an e-mail student get upon receiving an invitation to a course.', 'cp'); ?></p>
                 <table class="form-table">
                     <tbody id="items">
                         <tr>
@@ -86,8 +86,8 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS', 'cp');?></p>
                                 <?php
-                                $args = array("textarea_name" => "option_invitation_content_email", "textarea_rows" => 10);
-                                wp_editor(htmlspecialchars_decode(coursepress_get_invitation_content_email()), "option_invitation_content_email", $args);
+                                $args = array("textarea_name" => "option_invitation_content_email", "textarea_rows" => 10, 'wpautop' => true);
+                                wp_editor(stripslashes(coursepress_get_invitation_content_email()), "option_invitation_content_email", $args);
                                 ?>
                             </td>
                         </tr>
@@ -102,7 +102,7 @@
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Student Invitation with Passcode to a Course E-mail', 'cp'); ?></span></h3>
             <div class="inside">
-                <p class="description"><?php _e('Settings for an e-mail student get uppon receiving an invitation (with passcode) to a course.', 'cp'); ?></p>
+                <p class="description"><?php _e('Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'cp'); ?></p>
                 <table class="form-table">
                     <tbody id="items">
                         <tr>
@@ -131,8 +131,8 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, PASSCODE', 'cp');?></p>
                                 <?php
-                                $args = array("textarea_name" => "option_invitation_content_passcode_email", "textarea_rows" => 10);
-                                wp_editor(htmlspecialchars_decode(coursepress_get_invitation_content_passcode_email()), "option_invitation_content_passcode_email", $args);
+                                $args = array("textarea_name" => "option_invitation_content_passcode_email", "textarea_rows" => 10, 'wpautop' => true);
+                                wp_editor(stripslashes(coursepress_get_invitation_content_passcode_email()), "option_invitation_content_passcode_email", $args);
                                 ?>
                             </td>
                         </tr>

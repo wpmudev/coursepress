@@ -343,3 +343,7 @@ span.percentage{
     border-radius: 2px;
     padding: 14px 20px;
 }
+
+.module_file_input{
+    margin-top: 20px;
+}

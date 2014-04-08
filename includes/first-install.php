@@ -86,7 +86,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
     $course_show_grade_page = 'off';
 
     //If there isn't any course, create one
-    //if (wp_count_posts('course') == 0) {
+    if (wp_count_posts('course') == 0) {
         $new_course = array(
             'post_author' => $course_author,
             'post_excerpt' => $course_excerpt,
@@ -100,7 +100,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
         
         if ($course_id != 0) {
             //Set a instructor - for the example, instructor will be the author of the post
-            update_user_meta($course_author, 'course_' . $course_id, $course_id);
+            //update_user_meta($course_author, 'course_' . $course_id, $course_id); //only could be a user with "Intructor" role so admin can't be assigned
 
             //Set hero video
             update_post_meta($course_id, 'course_video_url', $course_hero_video_url);
@@ -246,7 +246,6 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
             //Add an audio element
 
-            $data = []; //erase previous data
             $data->unit_id = $first_unit_id;
             $data->title = 'Audio Element Title';
             $data->content = 'Vivamus vulputate, ligula a tempus tempor, orci nulla interdum tortor, et malesuada augue nisi eget lacus.';
@@ -256,13 +255,12 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'audio_module';
             $data->metas = array();
-            $data->metas['module_type'] = 1;
+            $data->metas['module_order'] = 1;
 
             $unit_element->update_module($data);
 
             //Add a video element
 
-            $data = []; //erase previous data
             $data->unit_id = $first_unit_id;
             $data->title = 'Video Element Title';
             $data->content = 'Vivamus vulputate, ligula a tempus tempor, orci nulla interdum tortor, et malesuada augue nisi eget lacus.';
@@ -270,29 +268,27 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['player_width'] = '960';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'video_module';
-            $data->metas['module_type'] = 2;
+            $data->metas['module_order'] = 2;
 
             $unit_element->update_module($data);
 
-            $data = []; //erase previous data
             $data->unit_id = $first_unit_id;
             $data->title = 'Text Input Block Title';
             $data->content = 'Pellentesque gravida quam ac consectetur?';
             $data->metas['show_title_on_front'] = 'no';
             $data->metas['module_type'] = 'text_input_module';
-            $data->metas['module_type'] = 3;
+            $data->metas['module_order'] = 3;
 
             $unit_element->update_module($data);
 
             //Add a text element
 
-            $data = []; //erase previous data
             $data->unit_id = $first_unit_id;
             $data->title = 'Simple Text Block';
             $data->content = 'In sodales quam, vel vehicula lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam bibendum viverra leo ut vestibulum.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'text_module';
-            $data->metas['module_type'] = 4;
+            $data->metas['module_order'] = 4;
 
             $unit_element->update_module($data);
 
@@ -304,21 +300,19 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
             //Add a video element
 
-            $data = []; //erase previous data
-            $data->unit_id = $first_unit_id;
+            $data->unit_id = $second_unit_id;
             $data->title = 'Video Element Title';
             $data->content = 'Vivamus vulputate, ligula a tempus tempor, orci nulla interdum tortor, et malesuada augue nisi eget lacus.';
             $data->metas['video_url'] = 'https://www.youtube.com/watch?v=XA0Apzy0V6M';
             $data->metas['player_width'] = '960';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'video_module';
-            $data->metas['module_type'] = 1;
+            $data->metas['module_order'] = 1;
 
             $unit_element->update_module($data);
 
             //Add a text element
 
-            $data = []; //erase previous data
             $data->unit_id = $second_unit_id;
             $data->title = 'Text Element Title';
             $data->content = 'Cras ultricies molestie arcu, a consequat augue elementum molestie. Pellentesque gravida quam ac consectetur fermentum. Nunc accumsan felis risus, sit amet rutrum elit facilisis et. Fusce tempus interdum arcu, sed ornare tellus auctor vitae. Vivamus porta leo augue, sit amet aliquet turpis hendrerit pretium.
@@ -326,17 +320,16 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna tempor quis. Nulla vel felis ligula. Sed dui velit, tristique at justo id, convallis rhoncus nisl. Aenean ut metus dictum, iaculis lacus nec, tincidunt ligula. Vivamus dictum odio sagittis sem consectetur porta. Nunc semper arcu ac arcu cursus, eget porta velit adipiscing. Suspendisse mattis neque in ipsum adipiscing, in convallis nulla laoreet. Quisque ac malesuada nunc, molestie dignissim sem.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'text_module';
-            $data->metas['module_type'] = 2;
+            $data->metas['module_order'] = 2;
 
             $unit_element->update_module($data);
 
-            $data = []; //erase previous data
-            $data->unit_id = $first_unit_id;
+            $data->unit_id = $second_unit_id;
             $data->title = 'Text Input Element Title';
             $data->content = 'Nullam quis pharetra tellus. Ut pretium metus pulvinar ligula scelerisque, ut rhoncus nibh laoreet. Aenean tincidunt iaculis facilisis. In cursus eu augue at pellentesque. Donec sed volutpat urna. Curabitur eu scelerisque nisi, feugiat gravida tellus. Maecenas sit amet quam et nisi hendrerit luctus sed in purus. Curabitur luctus ante lacus, ut laoreet tortor tristique quis. Integer id feugiat enim. Nulla a convallis mauris.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'textarea_input_module';
-            $data->metas['module_type'] = 3;
+            $data->metas['module_order'] = 3;
 
             $unit_element->update_module($data);
 
@@ -347,41 +340,25 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
              *  
              */
 
-            //Add a checkbox element
-
-            $data = []; //erase previous data
-            $data->unit_id = $third_unit_id;
-            $data->title = 'Multiple Answers';
-            $data->content = 'Praesent interdum ipsum eros, sit amet aliquet diam?';
-            $data->metas['show_title_on_front'] = 'yes';
-            $data->metas['module_type'] = 'checkbox_input_module';
-            $data->metas['module_type'] = 1;
-            $data->metas['answers'] = array('Fermentum ', 'Vivamus', 'Mauris');
-            $data->metas['checked_answers'] = 'Vivamus';
-
-            $unit_element->update_module($data);
-
             //Add a text element
 
-            $data = []; //erase previous data
             $data->unit_id = $third_unit_id;
             $data->title = 'Text Element Suspendisse mattis neque in ipsum adipiscing';
             $data->content = 'Vivamus vulputate, ligula a tempus tempor, orci nulla interdum tortor, et malesuada augue nisi eget lacus. Donec quis dapibus lorem. In hac habitasse platea dictumst.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'text_module';
-            $data->metas['module_type'] = 2;
+            $data->metas['module_order'] = 2;
 
             $unit_element->update_module($data);
             
             //Add a checkbox element
 
-            $data = []; //erase previous data
             $data->unit_id = $third_unit_id;
             $data->title = 'Multiple correct answers';
             $data->content = 'Praesent interdum ipsum eros, sit amet aliquet diam?';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'checkbox_input_module';
-            $data->metas['module_type'] = 3;
+            $data->metas['module_order'] = 3;
             $data->metas['answers'] = array('Fermentum ', 'Vivamus', 'Mauris');
             $data->metas['checked_answers'] = array('Fermentum ', 'Vivamus');
 
@@ -389,55 +366,38 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             
             //Add a page break
 
-            $data = []; //erase previous data
             $data->unit_id = $third_unit_id;
             $data->title = '';
             $data->content = '';
             $data->metas['module_type'] = 'page_break_module';
-            $data->metas['module_type'] = 4;
+            $data->metas['module_order'] = 4;
 
             $unit_element->update_module($data);
             
             //Add a radio element
             
-            $data = []; //erase previous data
             $data->unit_id = $third_unit_id;
-            $data->title = 'One answer is right';
-            $data->content = 'Praesent interdum ipsum eros, sit amet aliquet diam?';
-            $data->metas['show_title_on_front'] = 'yes';
-            $data->metas['module_type'] = 'checkbox_input_module';
-            $data->metas['module_type'] = 5;
-            $data->metas['checked_answer'] = array('Nunc', 'Cras', 'Aliquam');
-            $data->metas['answers'] = 'Cras';
-
-            $unit_element->update_module($data);
-            
-            //Add a radio element
-            
-            $data = []; //erase previous data
-            $data->unit_id = $third_unit_id;
-            $data->title = 'File Download Element';
+            $data->title = 'FREE Flat Social Icons';
             $data->content = 'Sed vulputate elit sed ligula bibendum blandit. Praesent quis mattis urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'file_module';
-            $data->metas['module_type'] = 6;
+            $data->metas['module_order'] = 6;
             $data->metas['link_text'] = 'Donec bibendum auctor tellus et venenatis';
-            $data->metas['file_url'] = 'http://freemusicarchive.org/music/download/6a9cee592a19d5670fdc9db350bd4796d6c3fabf';
+            $data->metas['file_url'] = 'https://github.com/danleech/simple-icons/archive/master.zip';
 
             $unit_element->update_module($data);
             
             //Add a file input element
 
-            $data = []; //erase previous data
             $data->unit_id = $third_unit_id;
             $data->title = 'File Input Element';
             $data->content = 'Vivamus vulputate, ligula a tempus tempor, orci nulla interdum tortor, et malesuada augue nisi eget lacus. Donec quis dapibus lorem. In hac habitasse platea dictumst.';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'file_input_module';
-            $data->metas['module_type'] = 7;
+            $data->metas['module_order'] = 7;
 
             $unit_element->update_module($data);
         }
-    //}
+    }
 }
 ?>

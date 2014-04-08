@@ -61,7 +61,7 @@ if (is_chat_plugin_active()) {
 
                     <label class="show_title_on_front">
                         <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                        <?php _e('Show title on front', 'cp'); ?>
+                        <?php _e('Show Title', 'cp'); ?>
                     </label>
 
                     <div class="editor_in_place">

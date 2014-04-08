@@ -159,7 +159,7 @@ class radio_input_module extends Unit_Module {
 
                 <label class="show_title_on_front">
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <?php _e('Show title on front', 'cp'); ?>
+                    <?php _e('Show Title', 'cp'); ?>
                 </label>
 
                 <div class="editor_in_place">
@@ -183,8 +183,12 @@ class radio_input_module extends Unit_Module {
                         <div class="radio_answer"><?php //_e('Answers', 'cp');       ?></div>
                         </th>
                         <th width="10%">
-                            <a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>
+                            <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
                         </th>
+                        </tr>
+                        
+                        <tr>
+                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp');?></td>
                         </tr>
 
                         <?php
@@ -235,17 +239,22 @@ class radio_input_module extends Unit_Module {
                                 </td>
                                 <td width="10%">&nbsp;</td>  
                             </tr>
+                            
                             <?php
                         }
                         ?>
                         </tbody>
                     </table>
+                    
+                    <a class="radio_new_link button-secondary">Add New</a>
 
                 </div>
 
             </div>
 
         </div>
+        
+        
 
         <?php
     }

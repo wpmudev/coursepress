@@ -310,3 +310,13 @@ input[type=text].course_video_url{
 .unit-control-buttons a.button.button-preview{
     /*margin-left: 5px;*/
 }
+
+td.label {
+    padding-left: 20px;
+}
+
+.checkbox-editor .checkbox_new_link,
+.radio-editor .radio_new_link{
+    margin-left: 65px;
+    margin-bottom: 15px;
+}

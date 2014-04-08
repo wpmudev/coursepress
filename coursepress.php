@@ -200,7 +200,7 @@ if (!class_exists('CoursePress')) {
             add_filter('get_edit_post_link', array($this, 'courses_edit_post_link'), 10, 3);
             add_action('parse_request', array($this, 'action_parse_request'));
             add_action('admin_init', array(&$this, 'coursepress_plugin_do_activation_redirect'));
-            add_action('wp_login', array(&$this, 'set_latest_student_activity_uppon_login'), 10, 2);
+            add_action('wp_login', array(&$this, 'set_latest_student_activity_upon_login'), 10, 2);
             add_action('mp_order_paid', array(&$this, 'listen_for_paid_status_for_courses'));
             add_action('parent_file', array(&$this, 'parent_file_correction'));
 
@@ -284,7 +284,7 @@ if (!class_exists('CoursePress')) {
 
         /* Save last student activity (upon login) */
 
-        function set_latest_student_activity_uppon_login($user_login, $user) {
+        function set_latest_student_activity_upon_login($user_login, $user) {
             $this->set_latest_activity($user->data->ID);
         }
 

@@ -330,8 +330,9 @@ jQuery(document).ready(function() {
 
         var r = '<tr><td><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
 
-        jQuery(this).parent().parent().parent().append(r);
+        jQuery(this).parent().find(".ri_items").append(r);
 
+        //jQuery(this).parent().parent().parent().append(r);
 
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
@@ -347,7 +348,9 @@ jQuery(document).ready(function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
 
         var r = '<tr><td><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a></td></tr>';
-        jQuery(this).parent().parent().parent().append(r);
+        //jQuery(this).parent().parent().parent().append(r);
+
+        jQuery(this).parent().find(".ci_items").append(r);
 
         jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
