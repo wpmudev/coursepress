@@ -1,3 +1,13 @@
+jQuery(".save-unit-button").click(function() {
+    jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
+        var vl = jQuery(this).parent().find('.radio_answer').val();
+        jQuery(this).closest(".module-content").find('.checked_index').val(vl);
+    });
+
+    jQuery("#unit-add").submit();
+
+});
+
 function delete_class_confirmed() {
     return confirm(coursepress_units.delete_class);
 }
@@ -34,15 +44,6 @@ jQuery(function() {
 
     jQuery("#sortable-units").disableSelection();
 
-    jQuery(".save-unit-button").click(function() {
-        jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
-            var vl = jQuery(this).parent().find('.radio_answer').val();
-            jQuery(this).closest(".module-content").find('.checked_index').val(vl);
-        });
-
-        jQuery("#unit-add").submit();
-
-    });
 
     jQuery("#unit-module-list").change(function() {
         jQuery('#module_description').html(jQuery(this).find(':selected').data('module-description'));
@@ -115,12 +116,12 @@ jQuery(document).ready(function()
     jQuery('.course_video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".course_video_url:first");
-        
+
         wp.media.string.props = function(props, attachment)
         {
             jQuery(target_url_field).val(props.url);
         }
-        
+
         wp.media.editor.send.attachment = function(props, attachment)
         {
             jQuery(target_url_field).val(attachment.url);

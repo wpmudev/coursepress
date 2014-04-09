@@ -209,7 +209,7 @@ if (!class_exists('Unit_Module')) {
 
             $modules = $this->get_modules($unit_id);
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post">
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>#submit_bottom">
                 <?php
                 $pages_num = 1;
 
@@ -250,6 +250,16 @@ if (!class_exists('Unit_Module')) {
                     if ($input_modules !== $responses) {
                         ?>
                         <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
+                        <a id="submit_bottom"></a>
+                        <?php
+                        if (isset($_POST['submit_modules_data'])) {
+                            $form_message = __('The module data has been submitted successfully.', 'coursepress');
+                        }
+                        if (isset($form_message)) {
+                            ?>
+                            <p class="form-info-regular"><?php echo $form_message; ?></p>
+                        <?php } ?>
+
                         <input type="submit" class="apply-button-enrolled" name="submit_modules_data" value="<?php _e('Submit', 'cp'); ?>">
                         <?php
                     }
@@ -374,22 +384,22 @@ if (!class_exists('Unit_Module')) {
         function get_module_delete_link($module_id) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                    jQuery(this).parent().parent().parent().remove();
-                                    jQuery(this).parent().parent().remove();
+                        jQuery(this).parent().parent().parent().remove();
+                        jQuery(this).parent().parent().remove();
 
-                                    update_sortable_module_indexes();
-                                }
-                                ;"><?php //_e('Delete'); ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
+                        update_sortable_module_indexes();
+                    }
+                    ;"><?php //_e('Delete'); ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
                <?php
            }
 
            function get_module_remove_link() {
                ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
-               <?php
+                        jQuery(this).parent().parent().remove();
+                        update_sortable_module_indexes();
+                    }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i><i class="fa fa-arrows-v cp-move-icon"></i></a>
+            <?php
         }
 
         function display_title_on_front($data) {

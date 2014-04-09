@@ -183,7 +183,6 @@ if (isset($_GET['quick_setup'])) {
 
                             $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
 
-                            unit - control - buttons
                             ?>
                             <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
                                 <th scope='row' class='check-column'>

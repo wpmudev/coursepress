@@ -65,6 +65,7 @@ if (is_chat_plugin_active()) {
                     </label>
 
                     <div class="editor_in_place">
+                        <label><?php _e('Content', 'cp'); ?></label>
                         <?php
                         $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                             array(

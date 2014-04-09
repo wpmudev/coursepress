@@ -347,3 +347,7 @@ span.percentage{
 .module_file_input{
     margin-top: 20px;
 }
+
+#submit_bottom{
+    /*display: none;*/
+}

@@ -20,7 +20,7 @@ if (isset($_POST['course_id'])) {
     <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Profile', 'cp'); ?></h2>
 
-    <form action="?page=course_details&amp;course_id=<?php echo $_POST['course_id']; ?>&amp;ms=cu" name="course-add" method="post">
+    <form action="" name="course-add" method="post">
 
         <div class="course">
 

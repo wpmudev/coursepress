@@ -26,16 +26,16 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
 
     if (isset($_POST['classes'])) {
         $report_classes = $_POST['classes'];
-        if($report_classes == ''){
+        if ($report_classes == '') {
             $report_classes = __('Default Class', 'cp');
-        }else{
+        } else {
             $report_classes .= __(' Class', 'cp');
         }
     } else {
         $report_classes = __('All Classes', 'cp');
     }
-    
-    $report_title = $report_title .= ' | '.$report_classes;
+
+    $report_title = $report_title .= ' | ' . $report_classes;
     ?>
     <h1 style="text-align:center;"><?php echo $course_details->post_title; ?></h1>
     <hr /><br />
@@ -182,17 +182,17 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
         <?php
         $users_num++;
     }//post users
-    
-    if($users_num == 1){
-        $report_title = $report_title .= ' | '.$user_object->first_name . ' ' . $user_object->last_name;
-    }else{
-        $report_title = $report_title .= ' | '.__('All Students', 'cp');
+
+    if ($users_num == 1) {
+        $report_title = $report_title .= ' | ' . $user_object->first_name . ' ' . $user_object->last_name;
+    } else {
+        $report_title = $report_title .= ' | ' . __('All Students', 'cp');
     }
-    
-    
+
+
     $report_content = ob_get_clean();
     //$report_title = __('Report', 'cp');
-    $report_name = __($report_title.'.pdf', 'cp');
+    $report_name = __($report_title . '.pdf', 'cp');
     $coursepress->pdf_report($report_content, $report_name, $report_title);
 }//generate report initiated
 /* * ****************************END OF REPORT********************************** */
@@ -296,7 +296,9 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                         <?php
                     }
                     ?>
+
                 </select>
+
                 <?php
                 $current_course_id = 0;
                 if (isset($_GET['course_id'])) {
@@ -347,14 +349,13 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         "ID" => __('Student ID', 'cp'),
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
-        //"latest_activity" => __('Latest Activity', 'cp'),
         "responses" => __('Responses', 'cp'),
         "avarage_grade" => __('Avarage Grade', 'cp'),
         "report" => __('Report', 'cp'),
     );
 
     $col_sizes = array(
-        '8', '10', '10', '10', '10', '5'//, '15'
+        '8', '10', '10', '10', '10', '5'
     );
     ?>
     <form method="post" id="generate-report">
@@ -362,7 +363,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         <table cellspacing="0" class="widefat fixed shadow-table">
             <thead>
                 <tr>
-                    <th style="" class="manage-column column-cb check-column" width="1%" id="cb" scope="col"><input type="checkbox"></th>
+                    <th class="manage-column column-cb check-column" style="width:5%;" id="cb" scope="col"><input type="checkbox"></th>
                     <?php
                     $n = 0;
                     foreach ($columns as $key => $col) {
@@ -379,7 +380,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                 <?php
                 $style = '';
 
-//search for students
+                //search for students
                 if (isset($_GET['classes'])) {
                     $classes = $_GET['classes'];
                 } else {
@@ -434,7 +435,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                 }
                 ?>
                 <?php
-                if (count($wp_user_search->get_results()) == 0) {
+                if (count($student_search->get_results()) == 0) {
                     ?>
                     <tr><td colspan="8"><div class="zero"><?php _e('No students found.', 'cp'); ?></div></td></tr>
                     <?php

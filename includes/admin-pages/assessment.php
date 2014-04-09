@@ -1,9 +1,11 @@
 <?php
-$user_id = $_GET['user_id'];
-$course_id = $_GET['course_id'];
+$user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
+$course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 ?>
 <div class="wrap nosubsub">
-    <a href="admin.php?action=workbook&student_id=<?php echo $user_id; ?>&page=students&course_id=<?php echo $course_id; ?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>
+    <?php if ($user_id !== '' && $course_id !== '') { ?>
+        <a href="admin.php?action=workbook&student_id=<?php echo $user_id; ?>&page=students&course_id=<?php echo $course_id; ?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>
+    <?php } ?>
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e('Assessment', 'cp'); ?></h2>
 
@@ -114,18 +116,20 @@ $course_id = $_GET['course_id'];
                 <input type="hidden" name="page" value="<?php echo esc_attr($_GET['page']); ?>" />
                 <input type="hidden" name="page_num" value="<?php echo esc_attr($page_num); ?>" />
                 <div class="alignleft actions">
+                    <?php
+                    $args = array(
+                        'post_type' => 'course',
+                        'post_status' => 'any',
+                        'posts_per_page' => -1
+                    );
+
+                    $courses = get_posts($args);
+                    ?>
                     <select name="course_id" id="dynamic_courses" class="chosen-select">
 
                         <?php
                         $assessment_page = 1;
 
-                        $args = array(
-                            'post_type' => 'course',
-                            'post_status' => 'any',
-                            'posts_per_page' => -1
-                        );
-
-                        $courses = get_posts($args);
                         $courses_with_students = 0;
                         $course_num = 0;
                         $first_course_id = 0;
@@ -348,14 +352,15 @@ $course_id = $_GET['course_id'];
                                                         $general_col_visibility = true;
                                                     }
                                                     ?>
-                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style;
-                                echo 'row-' . $current_row;
+                                                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php
+                                                    echo $style;
+                                                    echo 'row-' . $current_row;
                                                     ?>">
 
-                                <?php if ($current_row == 0) { ?>
+                                                        <?php if ($current_row == 0) { ?>
                                                             <td class="<?php echo $style . ' first-right-border'; ?>" rowspan="<?php echo $input_modules_count; ?>">
                                                                 <span class="uppercase block"><?php echo $user_object->last_name; ?></span>
-                                                            <?php echo $user_object->first_name; ?>
+                                                                <?php echo $user_object->first_name; ?>
                                                             </td>
                                                             <?php
                                                         }
@@ -369,11 +374,11 @@ $course_id = $_GET['course_id'];
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                    <?php echo $mod->post_title; ?>
+                                                                <?php echo $mod->post_title; ?>
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                    <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                                                <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
                                                             </td>
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -433,7 +438,7 @@ $course_id = $_GET['course_id'];
                                                                 }
                                                                 ?>
                                                             </td>
-                                                    <?php }//general col visibility    ?>
+                                                        <?php }//general col visibility      ?>
                                                     </tr>
                                                     <?php
                                                     $current_row++;
@@ -458,7 +463,7 @@ $course_id = $_GET['course_id'];
                                 </div><!--/tablenav-->
 
                             </div><!--a tab-->
-            <?php } ?>
+                        <?php } ?>
                     </div><!--tabs-->
                 </div><!--assessment-->
 

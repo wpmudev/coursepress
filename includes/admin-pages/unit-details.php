@@ -137,7 +137,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                             <div class="wide">
                                 <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
-                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (trim($course_start_date) !== '' ? $course_start_date : (date('Y-m-d', current_time('timestamp', 0)))))); ?>" />
+                                <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (date('Y-m-d', current_time('timestamp', 0))))); ?>" />
 
                                 <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ($force_current_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order access to the next one', 'cp'); ?>
                             </div>
@@ -194,7 +194,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                         <?php
                         $module = new Unit_Module();
-                        $modules = $module->get_modules($_GET['unit_id']);
+                        $modules = $module->get_modules(isset($_GET['unit_id']) ? $_GET['unit_id'] : '-1');
 
                         if (is_array($modules) && count($modules) >= 1) {
                             ?>

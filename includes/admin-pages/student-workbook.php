@@ -17,7 +17,7 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-    <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp');?></a>
+    <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Workbook', 'cp'); ?></h2>
 
     <div class="course">
@@ -115,9 +115,11 @@ if (isset($_POST['course_id'])) {
 
                                                     if ($course_obj->get_number_of_students() >= 1) {
                                                         $courses_with_students++;
-                                                        ?>
-                                                        <option value="<?php echo $course_object->ID; ?>" <?php echo ((isset($_GET['course_id']) && $_GET['course_id'] == $course_object->ID) ? 'selected="selected"' : ''); ?>><?php echo $course_object->post_title; ?></option>
-                                                        <?php
+                                                        if (isset($course_object->ID)) {
+                                                            ?>
+                                                            <option value="<?php echo $course_object->ID; ?>" <?php echo ((isset($_GET['course_id']) && $_GET['course_id'] == $course_object->ID) ? 'selected="selected"' : ''); ?>><?php echo $course_object->post_title; ?></option>
+                                                            <?php
+                                                        }
                                                     }
                                                     $course_num++;
                                                 }
@@ -250,13 +252,12 @@ if (isset($_POST['course_id'])) {
                                                                 } else {
                                                                     $general_col_visibility = true;
                                                                 }
-                                                                
+
                                                                 $style = ( isset($style) && 'alternate' == $style ) ? '' : ' alternate';
-                                                                
                                                                 ?>
                                                                 <tr id='user-<?php echo $user_object->ID; ?>' class="<?php
-                                                                echo $style;
-                                                                echo 'row-' . $current_row;
+                                        echo $style;
+                                        echo 'row-' . $current_row;
                                                                 ?>">
 
                                                                     <?php
@@ -279,7 +280,7 @@ if (isset($_POST['course_id'])) {
                                                                             <?php
                                                                             if (count($response) >= 1) {
                                                                                 ?>
-                                                                          
+
                                                                                 <a class="assessment-view-response-link button button-units" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
 
                                                                                 <?php
@@ -333,7 +334,7 @@ if (isset($_POST['course_id'])) {
                                                                             }
                                                                             ?>
                                                                         </td>
-                                                                    <?php }//general col visibility     ?>
+                                                                    <?php }//general col visibility      ?>
                                                                 </tr>
                                                                 <?php
                                                                 $current_row++;

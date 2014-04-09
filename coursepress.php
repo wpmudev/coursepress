@@ -1113,7 +1113,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Response', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true

@@ -21,7 +21,7 @@ class file_input_module extends Unit_Module {
         global $coursepress;
 
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count($response >= 1)) {
+        if (count((array)$response >= 1)) {
             require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
             $encryption = new CP_Encryption();
 
@@ -146,6 +146,7 @@ class file_input_module extends Unit_Module {
                 </label>
 
                 <div class="editor_in_place">
+                    <label><?php _e('Content', 'cp'); ?></label>
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                         array(

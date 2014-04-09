@@ -112,7 +112,6 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                 $columns = array(
                     "discussion_title" => __('Discussion', 'cp'),
                     "course" => __('Course', 'cp'),
-                    //"status" => __('Status', 'cp'),
                 );
 
 
@@ -162,7 +161,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                         <span class="edit_discussion"><a href="?page=discussions&action=edit&discussion_id=<?php echo $discussion_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
 
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a> | </span>
+                                            <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a></span>
                                         <?php } ?>
                                     </div>
                                 </td>

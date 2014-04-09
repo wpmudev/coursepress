@@ -79,6 +79,7 @@ class audio_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
+                
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
@@ -87,12 +88,12 @@ class audio_module extends Unit_Module {
                     <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
 
-                <label class="show_title_on_front">
+                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <?php _e('Show Title', 'cp'); ?>
                 </label>
 
                 <div class="editor_in_place">
+                    <label><?php _e('Content', 'cp'); ?></label>
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                         array(
@@ -120,11 +121,9 @@ class audio_module extends Unit_Module {
                     <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="Yes" <?php checked($data_loop, 'Yes', true); ?>> Yes<br /><br />
                     <input type="radio" name="<?php echo $this->name; ?>_loop[]" value="No" <?php checked($data_loop, 'No', true); ?>> No<br /><br />
 
-
                     <label><?php _e('Autoplay', 'cp'); ?></label>
                     <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>> Yes<br /><br />
                     <input type="radio" name="<?php echo $this->name; ?>_autoplay[]" value="No" <?php checked($data_autoplay, 'No', true); ?>> No<br /><br />
-
                 </div>
 
             </div>

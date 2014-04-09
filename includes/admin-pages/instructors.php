@@ -106,7 +106,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 wp_nonce_field('bulk-instructors');
 
                 $columns = array(
-                    "ID" => __('Instructor ID', 'cp'),
+                    "ID" => __('ID', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),
                     "user_lastname" => __('Surname', 'cp'),
                     "registration_date" => __('Registered', 'cp'),
@@ -117,19 +117,21 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
 
 
                 $col_sizes = array(
-                    '8', '15', '15', '20', '10', '7'
+                    '5', '15', '15', '20', '15', '15'
                 );
 
                 if (current_user_can('administrator')) {
                     $columns["delete"] = __('Delete', 'cp');
-                    $col_sizes[] = '5';
+                    $col_sizes[] = '6';
                 }
                 ?>
 
                 <table cellspacing="0" class="widefat fixed shadow-table unit-control-buttons">
                     <thead>
                         <tr>
-                            <th style="" class="manage-column column-cb check-column" id="cb" scope="col"><input type="checkbox"></th>
+                            <th class="manage-column column-cb check-column" id="cb" scope="col" style="width:5%;">
+                                <input type="checkbox">
+                            </th>
                             <?php
                             $n = 0;
                             foreach ($columns as $key => $col) {

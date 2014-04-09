@@ -166,6 +166,7 @@ class checkbox_input_module extends Unit_Module {
                 </label>
 
                 <div class="editor_in_place">
+                    <label><?php _e('Question', 'cp'); ?></label>
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                         array(

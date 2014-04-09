@@ -19,7 +19,7 @@ class radio_input_module extends Unit_Module {
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count($response >= 1)) {
+        if (count((array)$response >= 1)) {
             ?>
             <div class="module_text_response_answer">
                 <?php if ($show_label) { ?>
@@ -96,7 +96,7 @@ class radio_input_module extends Unit_Module {
             <?php if ($data->post_content != '') { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
-                
+
             <ul class='radio_answer_check_li'>
                 <?php
                 foreach ($data->answers as $answer) {
@@ -163,6 +163,7 @@ class radio_input_module extends Unit_Module {
                 </label>
 
                 <div class="editor_in_place">
+                    <label><?php _e('Question', 'cp'); ?></label>
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                         array(
@@ -180,15 +181,15 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="90%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e('Answers', 'cp');       ?></div>
+                        <div class="radio_answer"><?php //_e('Answers', 'cp');        ?></div>
                         </th>
                         <th width="10%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
                         </th>
                         </tr>
-                        
+
                         <tr>
-                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp');?></td>
+                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp'); ?></td>
                         </tr>
 
                         <?php
@@ -239,13 +240,13 @@ class radio_input_module extends Unit_Module {
                                 </td>
                                 <td width="10%">&nbsp;</td>  
                             </tr>
-                            
+
                             <?php
                         }
                         ?>
                         </tbody>
                     </table>
-                    
+
                     <a class="radio_new_link button-secondary">Add New</a>
 
                 </div>
@@ -253,8 +254,8 @@ class radio_input_module extends Unit_Module {
             </div>
 
         </div>
-        
-        
+
+
 
         <?php
     }

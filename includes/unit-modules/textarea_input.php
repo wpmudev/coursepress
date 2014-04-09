@@ -19,7 +19,7 @@ class textarea_input_module extends Unit_Module {
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count($response >= 1)) {
+        if (count((array)$response >= 1)) {
             ?>
             <div class="module_textarea_response_answer">
                 <?php if ($show_label) { ?>
@@ -135,6 +135,7 @@ class textarea_input_module extends Unit_Module {
                 </label>
 
                 <div class="editor_in_place">
+                    <label><?php _e('Content', 'cp'); ?></label>
                     <?php
                     $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
                         array(
