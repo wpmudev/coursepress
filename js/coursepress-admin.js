@@ -372,8 +372,10 @@ jQuery(document).ready(function() {
     jQuery("#modules_accordion").accordion({
         heightStyle: "content",
         header: "> div > h3",
+        collapsible: true,
         //active: ".remove_module_link"
     }).sortable({
+        handle: "h3",
         axis: "y",
         stop: function(event, ui) {
 // IE doesn't register the blur when sorting

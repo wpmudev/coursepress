@@ -1,11 +1,17 @@
-jQuery(".save-unit-button").click(function() {
-    jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
-        var vl = jQuery(this).parent().find('.radio_answer').val();
-        jQuery(this).closest(".module-content").find('.checked_index').val(vl);
+jQuery(document).ready(function() {
+
+    function submit_elements() {
+        jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
+            var vl = jQuery(this).parent().find('.radio_answer').val();
+            jQuery(this).closest(".module-content").find('.checked_index').val(vl);
+        });
+        
+        jQuery("#unit-add").submit();
+    }
+
+    jQuery(".save-unit-button").click(function() {
+        submit_elements();
     });
-
-    jQuery("#unit-add").submit();
-
 });
 
 function delete_class_confirmed() {

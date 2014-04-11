@@ -161,7 +161,24 @@
     box-shadow: none;
 }
 
-.wp-core-ui a.button-units:hover{
+.wp-core-ui input[type="submit"].button-units{
+    background: none repeat scroll 0 0 #0088A5;
+    text-shadow: none;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    margin: 3px 0px 3px 0px;
+
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px; 
+    border-radius: 0px; 
+    border-width: 0px;
+    box-shadow: none;
+    height: 27px;
+}
+
+.wp-core-ui a.button-units:hover,
+.wp-core-ui input[type="submit"].button-units:hover{
     background: none repeat scroll 0 0 #0088A5;
     text-shadow: none;
     color: #fff;
@@ -296,6 +313,7 @@ input[type=text].course_video_url{
 }
 
 .unit-control-buttons a.button.button-units,
+.unit-control-buttons input[type="submit"].button.button-units,
 .unit-control-buttons a.button.button-publish,
 .unit-control-buttons a.button.button-unpublish,
 .unit-control-buttons a.button.button-preview,

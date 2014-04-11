@@ -32,7 +32,10 @@ class page_break_module extends Unit_Module {
 
             <h3 class="module-title sidebar-name">
                 <span class="h3-label">
-                    <?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label); ?>
+                    
+                    <span class="h3-label-left"><?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label); ?></span>
+                    <span class="page-break-dashed"></span>
+                    <span class="page-break-right-fix">...</span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
                     <?php
                     if (isset($data->ID)) {

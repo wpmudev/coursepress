@@ -110,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     </div>
 
     <div class='mp-settings'><!--course-liquid-left-->
-        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" id="unit-add" method="post">
+        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
             <input type="hidden" name="beingdragged" id="beingdragged" value="" />
             <div id='course'>
 
@@ -145,7 +145,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <div class="unit-control-buttons">
                                 <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>
+                                    <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
+                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?>" />
                                 <?php } ?>
 
                                 <?php
@@ -186,12 +187,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                         </div>
 
-                        <div class="mp-wrap mp-postbox mp-default-margin"></div>
+                        <!--<div class="mp-wrap mp-postbox mp-default-margin"></div>-->
 
+                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit bellow', 'cp');?></h3>
+                        
                         <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
                             <?php _e('Drag & Drop unit modules here', 'cp'); ?>
                         </div>
 
+                        
                         <?php
                         $module = new Unit_Module();
                         $modules = $module->get_modules(isset($_GET['unit_id']) ? $_GET['unit_id'] : '-1');
@@ -200,6 +204,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             ?>
                             <div class="loading_elements"><?php _e('Loading Unit elements, please wait...', 'cp'); ?></div>
                         <?php } ?>
+
 
                         <div id="modules_accordion" class="modules_accordion">
                             <!--modules will appear here-->
@@ -220,23 +225,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
 
                                 ksort($coursepress_modules_ordered);
-                                
-                                foreach ($coursepress_modules_ordered as $coursepress_module) {
-                                            ?>
-                                            <option value='<?php echo $coursepress_module; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$coursepress_module]; ?>"><?php echo $coursepress_modules_labels[$coursepress_module]; ?></option>
-                                            <?php
-                                }
-                                
-                                /*foreach ($sections as $key => $section) {
 
-                                    if (isset($coursepress_modules[$key])) {
-                                        foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
-                                            ?>
-                                            <option value='<?php echo $mmodule; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$mmodule]; ?>"><?php echo $coursepress_modules_labels[$mmodule]; ?></option>
-                                            <?php
-                                        }
-                                    }
-                                }*/
+                                foreach ($coursepress_modules_ordered as $coursepress_module) {
+                                    ?>
+                                    <option value='<?php echo $coursepress_module; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$coursepress_module]; ?>"><?php echo $coursepress_modules_labels[$coursepress_module]; ?></option>
+                                    <?php
+                                }
+
+                                /* foreach ($sections as $key => $section) {
+
+                                  if (isset($coursepress_modules[$key])) {
+                                  foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
+                                  ?>
+                                  <option value='<?php echo $mmodule; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$mmodule]; ?>"><?php echo $coursepress_modules_labels[$mmodule]; ?></option>
+                                  <?php
+                                  }
+                                  }
+                                  } */
                                 ?>
                             </select>
 
@@ -253,16 +258,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             </select>-->
 
                             <input type='button' name='unit-module-add' id='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary" />
-                            
+
                             <span class="module_description" id="module_description"></span>
-                            
+
                         </div>
 
                         <div class="course-details">
                             <div class="unit-control-buttons">
                                 <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>
+                                        <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
+                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?>" />
                                 <?php } ?>
 
                                 <?php

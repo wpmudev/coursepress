@@ -3,7 +3,7 @@
     <h1><?php _e('Welcome to', 'cp'); ?> <?php echo $this->name; ?></h1>
 
     <div class="about-text">
-        <?php echo $this->name; ?> <?php _e('turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course. More coming soon!', 'cp'); ?>
+        <?php echo $this->name; ?> <?php _e('turns WordPress into a powerful learning management system. Set up online courses, create learning units, invite/enroll students to a course.', 'cp'); ?>
         <br /><br />
         <?php _e('Check these simple steps for the quick setup:', 'cp'); ?>
     </div>

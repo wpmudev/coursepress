@@ -7,7 +7,7 @@ $s = (isset($_GET['s']) ? $_GET['s'] : '');
 
 /* * **************************GENERATING REPORT******************************** */
 if (isset($_POST['units']) && isset($_POST['users'])) {
-    cp_suppress_errors();
+    //cp_suppress_errors();
     ob_end_clean();
     ob_start();
     $course_id = $_POST['course_id'];
@@ -194,6 +194,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
     //$report_title = __('Report', 'cp');
     $report_name = __($report_title . '.pdf', 'cp');
     $coursepress->pdf_report($report_content, $report_name, $report_title);
+    exit;
 }//generate report initiated
 /* * ****************************END OF REPORT********************************** */
 

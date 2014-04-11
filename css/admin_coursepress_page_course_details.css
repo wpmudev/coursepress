@@ -69,7 +69,7 @@ div.level-holder-wrap {
 }
 
 .sidebar-name:hover {
-    color: #333 !Important;
+    color: #333 /*!Important*/;
     cursor: move;
 }
 
@@ -495,6 +495,14 @@ div.buttons a.cancellink {
     border-bottom: 1px solid #dfdfdf;
 } 
 
+#modules_accordion .ui-widget-content{
+    border: 1px solid #0092cb;
+}
+
+#modules_accordion.ui-accordion .ui-state-active.ui-accordion-header{
+    border: 1px solid #0092cb;
+}
+
 #students_accordion.ui-accordion .ui-accordion-content{
     padding:0px;
     display: inline-block;
@@ -799,12 +807,12 @@ div.course-holder-wrap {
 }
 
 .sidebar-name:hover {
-    color: #333 !Important;
+    color: #333 /*!Important*/;
     cursor: move;
 }
 
 #main-start .sidebar-name:hover {
-    color: #333 !Important;
+    color: #333/* !Important*/;
     cursor: auto;
 }
 
@@ -1185,12 +1193,50 @@ div.levelinformation {
 
 a.delete_module_link, a.remove_module_link {
     position: absolute;
-    right: 5px;
+    right: 22px;
     cursor: pointer;
     z-index:9999;
     color:#ccc;
     text-decoration: none;
     margin-top: 0px;
+}
+
+.module-holder-page_break_module .h3-label-right, 
+.module-holder-page_break_module .h3-label-right{
+    background: #fff;
+    padding-left: 18px;
+}
+
+.module-holder-page_break_module{
+    background-color: #fff;
+    padding-left: 3px;
+}
+
+span.h3-label > span.h3-label-left{
+    padding-right: 18px; 
+}
+
+.module_move{
+    position: absolute;
+    right: 5px;
+    cursor: pointer;
+    z-index:9999;
+    text-decoration: none;
+    margin-top: 0px;
+}
+
+.page-break-dashed{
+    width: 100%;
+    position: absolute;
+    border-bottom: 1px dashed #000;
+    margin-top: 8px;
+}
+
+.page-break-right-fix{
+    width: 100px;
+    background-color: #fff;
+    position: absolute;
+    right: 0px;
 }
 
 a.delete_module_link:hover, a.remove_module_link:hover {
@@ -1217,17 +1263,16 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     float: left;
 }
 
-.radio_answer_check{
-    float: left;
-}
 
 .radio_answer{
     float: left;
     width: 90% !important;
 }
 
-.checkbox_answer_check{
+.checkbox_answer_check,
+.radio_answer_check{
     float: left;
+    font-weight: bold;
 }
 
 .form-table input[type=checkbox].checkbox_answer_check{
@@ -1248,6 +1293,11 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     line-height: 18px;
 }
 
+.unit-elements-message{
+    margin-left: 15px;
+    margin-top: 65px;
+}
+
 .sidebar-name{
     background: transparent;
 }
@@ -1263,11 +1313,23 @@ a.delete_module_link:hover, a.remove_module_link:hover {
 }
 
 div.modules_accordion .module-holder-page_break_module h3{
-    background: #f5f5f5;
+    background: #fff;
 }
 
 #modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
-    border: 1px dashed;
+    border: 0px dashed;
+}
+
+#modules_accordion.ui-accordion .module-holder-page_break_module .ui-state-active{
+    color: #000;
+}
+
+#modules_accordion .module-holder-title .ui-state-active.sidebar-name:hover{
+    color: #000;
+}
+
+#modules_accordion .module-holder-page_break_module .module-holder-title .ui-state-active.sidebar-name:hover{
+    color: #000;
 }
 
 div.modules_accordion .module-holder-page_break_module .ui-accordion-header-icon{

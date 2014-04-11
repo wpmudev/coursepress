@@ -2037,11 +2037,14 @@ if (!class_exists('CoursePress')) {
             $pdf->writeHTML($html, true, false, true, false, '');
             //Close and output PDF document
 
+            ob_get_clean();
+            
             if ($preview) {
                 $pdf->Output($report_name, 'I');
             } else {
                 $pdf->Output($report_name, 'D');
             }
+            
             exit;
         }
 
