@@ -1,11 +1,15 @@
 jQuery(document).ready(function() {
 
+    jQuery('.element_title').live('input', function() {
+        jQuery(this).parent().parent().parent().find('.h3-label-left').html(jQuery(this).val());
+    });
+
     function submit_elements() {
         jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
             var vl = jQuery(this).parent().find('.radio_answer').val();
             jQuery(this).closest(".module-content").find('.checked_index').val(vl);
         });
-        
+
         jQuery("#unit-add").submit();
     }
 

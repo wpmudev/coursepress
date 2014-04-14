@@ -28,9 +28,6 @@ if (isset($_GET['unit_id'])) {
     $force_current_unit_completion = 'off';
 }
 
-
-
-
 if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action'] == 'update_unit')) {
 
     if (wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id)) {
@@ -127,7 +124,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <div id='edit-sub' class='course-holder-wrap'>
 
                     <div class='sidebar-name no-movecursor'>
-                        <h3><?php _e('Unit Details', 'cp'); ?></h3>
+                        <h3><?php _e('Unit Details', 'cp'); ?>
+                            <?php if ($unit_id != 0) { ?>
+                                <span class="delete_unit">
+                                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_id; ?>&action=delete_unit" onclick="return removeUnit();">
+                                        <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
+                                    </a>
+                                </span>
+                            <?php } ?>
+                        </h3>
                     </div>
 
                     <div class='course-holder'>
@@ -138,14 +143,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <div class="wide">
                                 <label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label>
                                 <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (date('Y-m-d', current_time('timestamp', 0))))); ?>" />
-
-                                <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ($force_current_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order access to the next one', 'cp'); ?>
+                                <div class="force_unit_completion">
+                                    <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ($force_current_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order to access the next one', 'cp'); ?>
+                                </div>
                             </div>
 
                             <div class="unit-control-buttons">
                                 <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
+                                                    <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
                                     <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?>" />
                                 <?php } ?>
 
@@ -189,13 +195,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                         <!--<div class="mp-wrap mp-postbox mp-default-margin"></div>-->
 
-                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit bellow', 'cp');?></h3>
-                        
+                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit bellow', 'cp'); ?></h3>
+
                         <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
                             <?php _e('Drag & Drop unit modules here', 'cp'); ?>
                         </div>
 
-                        
+
                         <?php
                         $module = new Unit_Module();
                         $modules = $module->get_modules(isset($_GET['unit_id']) ? $_GET['unit_id'] : '-1');
@@ -267,7 +273,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             <div class="unit-control-buttons">
                                 <?php if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_details->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                        <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
+                                                        <!--<a class="button button-units save-unit-button"><?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?></a>-->
                                     <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php ($unit_id == 0 ? _e('Save', 'cp') : _e('Save', 'cp')); ?>" />
                                 <?php } ?>
 

@@ -112,18 +112,23 @@ if (!class_exists('Unit')) {
         function update_unit() {
             global $user_id, $last_inserted_unit_id;
 
-            $unit_id = (isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id);
+            $post_status = 'private';
+            
+            if (isset($_POST['unit_id']) && $_POST['unit_id'] != 0) {
 
-            $unit = get_post($unit_id, $this->output);
+                $unit_id = (isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id);
 
-            if ($_POST['unit_name'] !== '' && $_POST['unit_name'] !== __('Untitled', 'cp') /* && $_POST['unit_description'] !== '' */) {
-                if ($unit->post_status !== 'publish') {
-                    $post_status = 'private';
+                $unit = get_post($unit_id, $this->output);
+
+                if ($_POST['unit_name'] !== '' && $_POST['unit_name'] !== __('Untitled', 'cp') /* && $_POST['unit_description'] !== '' */) {
+                    if ($unit->post_status !== 'publish') {
+                        $post_status = 'private';
+                    } else {
+                        $post_status = 'publish';
+                    }
                 } else {
-                    $post_status = 'publish';
+                    $post_status = 'draft';
                 }
-            } else {
-                $post_status = 'draft';
             }
 
             $post = array(

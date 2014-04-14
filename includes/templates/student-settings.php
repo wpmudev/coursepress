@@ -14,7 +14,7 @@
             if ($_POST['password'] == $_POST['password_confirmation']) {
                 $student_data['user_pass'] = $_POST['password'];
             } else {
-                $form_message = __('Passwords don\'t match', 'cp');
+                $form_message = __("Passwords don't match", 'cp');
                 $form_message_class = 'red';
                 $form_errors++;
             }
@@ -33,7 +33,7 @@
         if ($form_errors == 0) {
             $student = new Student(get_current_user_id());
             if ($student->update_student_data($student_data)) {
-                $form_message = __('Settings have been updated successfully.', 'cp');
+                $form_message = __('Profile has been updated successfully.', 'cp');
                 $form_message_class = 'regular';
             } else {
                 $form_message = __('An error occured while updating. Please check the form and try again.', 'cp');
@@ -88,7 +88,6 @@
     </form><?php do_action('after_settings_form');?>
     <?php
 } else {
-    //ob_start();
     wp_redirect(wp_login_url());
     exit;
 }

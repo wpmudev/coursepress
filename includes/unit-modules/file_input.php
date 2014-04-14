@@ -21,7 +21,7 @@ class file_input_module extends Unit_Module {
         global $coursepress;
 
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count((array)$response >= 1)) {
+        if (count((array) $response >= 1)) {
             require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
             $encryption = new CP_Encryption();
 
@@ -89,7 +89,7 @@ class file_input_module extends Unit_Module {
             <?php if ($data->post_content != '') { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
-                
+
             <div class="module_file_input">     
                 <input type="file" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
             </div>
@@ -137,12 +137,13 @@ class file_input_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
                 <label><?php _e('Title', 'cp'); ?>
-                    <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+                    <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
 
-                <label class="show_title_on_front">
+                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <?php _e('Show Title', 'cp'); ?>
+                    <a class="mp-help-icon" href="javascript:;"></a>
+                    <div class="mp-help-text"><?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?></div>
                 </label>
 
                 <div class="editor_in_place">

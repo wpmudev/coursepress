@@ -5,13 +5,14 @@
   Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
-  Version: 0.9.8.7 beta
+  Developer: Marko Miljus (https://twitter.com/markomiljus)
+  Version: 0.9.8.8 beta
   TextDomain: cp
   Domain Path: /languages/
-  WDP ID: XXX
+  WDP ID: N/A
   License: GNU General Public License (Version 2 - GPLv2)
 
-  Copyright 2007-2014 Incsub (http://incsub.com)
+  Copyright 2014 Incsub (http://incsub.com)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -1113,7 +1114,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Response', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1660,7 +1661,7 @@ if (!class_exists('CoursePress')) {
 
                     $args = array(
                         'slug' => $this->get_student_settings_slug(),
-                        'title' => __('Dashboard - Settings', 'cp'),
+                        'title' => __('Dashboard - My Profile', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-settings.php'),
                         'type' => 'virtual_page'
                     );
@@ -1728,7 +1729,7 @@ if (!class_exists('CoursePress')) {
 
                     $settings = new stdClass;
 
-                    $settings->title = __('Settings', 'cp');
+                    $settings->title = __('My Profile', 'cp');
                     $settings->menu_item_parent = -9998;
                     $settings->ID = 'cp-dashboard-settings';
                     $settings->db_id = '';
@@ -1808,7 +1809,7 @@ if (!class_exists('CoursePress')) {
 
                 $settings = new stdClass;
 
-                $settings->title = __('Settings', 'cp');
+                $settings->title = __('My Profile', 'cp');
                 $settings->menu_item_parent = -9998;
                 $settings->ID = 'cp-dashboard-settings';
                 $settings->db_id = '';

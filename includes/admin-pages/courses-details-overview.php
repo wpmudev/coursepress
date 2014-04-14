@@ -107,7 +107,9 @@ if (isset($_GET['course_id'])) {
 
                     <div class='course-holder'>
                         <div class='course-details'>
-                            <label for='course_name'><?php _e('Course Name', 'cp'); ?></label>
+                            <label for='course_name'>
+                                <?php _e('Course Name', 'cp'); ?>
+                            </label>
                             <input class='wide' type='text' name='course_name' id='course_name' value='<?php
                             if (isset($_GET['course_id'])) {
                                 echo esc_attr(stripslashes($course->details->post_title));
@@ -115,7 +117,11 @@ if (isset($_GET['course_id'])) {
                             ?>' />
 
                             <br/><br/>
-                            <label for='course_excerpt'><?php _e('Course Excerpt', 'cp'); ?></label>
+                            <label for='course_excerpt'>
+                                <?php _e('Course Excerpt', 'cp'); ?>
+                                <a class="mp-help-icon" href="javascript:;"></a>
+                                <div class="mp-help-text"><?php _e('Provide a few short sentences to describe the course', 'cp'); ?></div>
+                            </label>
                             <?php
                             $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
 
@@ -129,7 +135,11 @@ if (isset($_GET['course_id'])) {
                             ?>
 
                             <br/><br/>
-                            <label for='course_name'><?php _e('Course Description', 'cp'); ?></label>
+                            <label for='course_name'>
+                                <?php _e('Course Description', 'cp'); ?>
+                                <a class="mp-help-icon" href="javascript:;"></a>
+                                <div class="mp-help-text"><?php _e('Provide a detailed description of the course', 'cp'); ?></div
+                            </label>
                             <?php
                             $args = array("textarea_name" => "course_description", "textarea_rows" => 10);
 
@@ -244,7 +254,7 @@ if (isset($_GET['course_id'])) {
                             <br clear="all" />
 
                             <div class="full border-devider">
-                                <label><?php _e('Open-ended course:', 'cp'); ?>
+                                <label><?php _e('Course can be done at any time', 'cp'); ?>
                                     <a class="mp-help-icon" href="javascript:;"></a>
                                     <div class="mp-help-text"><?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?></div>
                                     <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />

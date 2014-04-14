@@ -1388,4 +1388,23 @@ a .remove-btn:hover{
 
 .module-content .show_title_on_front{
     margin-bottom: 15px;
+    width: 120px;
+}
+
+.module-content .show_title_on_front .mp-help-icon{
+    color: #0092cb;
+}
+
+.force_unit_completion{
+    margin-top: 10px;
+}
+
+.delete_unit{
+    float: right;
+    margin-right: -15px;
+    margin-top: -5px;
+}
+
+.delete_unit .cp-move-icon{
+    font-size: 22px;
 }

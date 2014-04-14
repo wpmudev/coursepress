@@ -157,12 +157,13 @@ class checkbox_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
                 <label><?php _e('Title', 'cp'); ?>
-                    <input type="text" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+                    <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
                 </label>
 
-                <label class="show_title_on_front">
+                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <?php _e('Show Title', 'cp'); ?>
+                    <a class="mp-help-icon" href="javascript:;"></a>
+                    <div class="mp-help-text"><?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?></div>
                 </label>
 
                 <div class="editor_in_place">
@@ -193,9 +194,9 @@ class checkbox_input_module extends Unit_Module {
                         </th>
 
                         </tr>
-                        
+
                         <tr>
-                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp');?></td>
+                            <td class="label" colspan="2"><?php _e('Set the correct answer', 'cp'); ?></td>
                         </tr>
 
                         <?php
@@ -253,7 +254,7 @@ class checkbox_input_module extends Unit_Module {
                         ?>
                         </tbody>
                     </table>
-                    
+
                     <a class="checkbox_new_link button-secondary">Add New</a>
 
                 </div>
@@ -279,45 +280,50 @@ class checkbox_input_module extends Unit_Module {
             $answers = array();
             $checked_answers = array();
 
-            foreach ($_POST[$this->name . '_checkbox_answers'] as $post_answers) {
-                $answers[] = $post_answers;
-            }
+            if (isset($_POST[$this->name . '_checkbox_answers'])) {
 
-            foreach ($_POST[$this->name . '_checkbox_check'] as $post_checked_answers) {
-                $checked_answers[] = $post_checked_answers;
-            }
+                foreach ($_POST[$this->name . '_checkbox_answers'] as $post_answers) {
+                    $answers[] = $post_answers;
+                }
 
-            //cp_write_log($checked_answers);
+                foreach ($_POST[$this->name . '_checkbox_check'] as $post_checked_answers) {
+                    $checked_answers[] = $post_checked_answers;
+                }
 
-            foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
 
-                if ($module_value == $this->name) {
-                    $data = new stdClass();
-                    $data->ID = '';
-                    $data->unit_id = '';
-                    $data->title = '';
-                    $data->excerpt = '';
-                    $data->content = '';
-                    $data->metas = array();
-                    $data->metas['module_type'] = $this->name;
-                    $data->post_type = 'module';
 
-                    foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                //cp_write_log($checked_answers);
 
-                        $data->ID = $_POST[$this->name . '_id'][$key];
-                        $data->unit_id = ((isset($_POST['unit_id']) and isset($_POST['unit']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
-                        $data->title = $_POST[$this->name . '_title'][$key];
-                        $data->content = $_POST[$this->name . '_content'][$key];
-                        $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                        if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
-                            $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                        } else {
-                            $data->metas['show_title_on_front'] = 'no';
+                foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
+
+                    if ($module_value == $this->name) {
+                        $data = new stdClass();
+                        $data->ID = '';
+                        $data->unit_id = '';
+                        $data->title = '';
+                        $data->excerpt = '';
+                        $data->content = '';
+                        $data->metas = array();
+                        $data->metas['module_type'] = $this->name;
+                        $data->post_type = 'module';
+
+                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+
+                            $data->ID = $_POST[$this->name . '_id'][$key];
+                            $data->unit_id = ((isset($_POST['unit_id']) and isset($_POST['unit']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->title = $_POST[$this->name . '_title'][$key];
+                            $data->content = $_POST[$this->name . '_content'][$key];
+                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            } else {
+                                $data->metas['show_title_on_front'] = 'no';
+                            }
+                            $data->metas['answers'] = $answers[$key];
+                            $data->metas['checked_answers'] = $checked_answers[$key];
+
+                            parent::update_module($data);
                         }
-                        $data->metas['answers'] = $answers[$key];
-                        $data->metas['checked_answers'] = $checked_answers[$key];
-
-                        parent::update_module($data);
                     }
                 }
             }
