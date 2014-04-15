@@ -143,8 +143,14 @@
                         <tr valign="top">
                             <th scope="row"><?php _e('Display menu items', 'cp'); ?></th>
                             <td>
-                                <a class="mp-help-icon" href="javascript:;"></a>
-                                <div class="mp-help-text"><?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme <strong>must have defined a Primary Menu</strong> in order to attach new menu items to it.', 'cp'); ?></div>
+                                <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Whether to attach additional plugin menu items automatically (Courses, Student Dashboard, Log Out etc.) to the theme menu on front. Note: theme must have defined a Primary Menu in order to attach new menu items to it.', 'cp') ?>
+                                        </div>
+                                    </div>
                                 <input type='checkbox' name='display_menu_items' <?php echo ((get_option('display_menu_items', 1)) ? 'checked' : ''); ?> />
                             </td>
                         </tr>

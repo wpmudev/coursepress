@@ -768,6 +768,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     font-size: 28px;
     color: white;
     text-indent: 9999px;
+    overflow: hidden;
 }
 
 .instructor-name{
@@ -1388,7 +1389,7 @@ a .remove-btn:hover{
 
 .module-content .show_title_on_front{
     margin-bottom: 15px;
-    width: 120px;
+    width: 140px;
 }
 
 .module-content .show_title_on_front .mp-help-icon{

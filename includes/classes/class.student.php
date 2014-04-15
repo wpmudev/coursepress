@@ -116,7 +116,11 @@ if (!class_exists('Student')) {
             $courses = $wpdb->get_results("SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'enrolled_course_date_%' AND user_id = " . $this->ID, OBJECT);
 
             foreach ($courses as $course) {
-                $enrolled_courses[] = str_replace('enrolled_course_date_', '', $course->meta_key);
+                $course_id = str_replace('enrolled_course_date_', '', $course->meta_key);
+                $course = new Course($course_id);
+                if (!empty($course->course)) {
+                    $enrolled_courses[] = $course_id;
+                }
             }
 
             return $enrolled_courses;

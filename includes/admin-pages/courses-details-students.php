@@ -147,6 +147,8 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
     $columns["delete"] = __('Un-enroll', 'cp');
     $col_sizes[] = '12';
 }
+
+$students = new Student_Search();
 ?>
 <div id="students_accordion">
     <?php
@@ -240,7 +242,9 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                     ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
-                        <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                        <?php if ($students->total_users > 0) { ?>
+                            <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                        <?php } ?>
                         <?php wp_nonce_field('student_details'); ?>
                     </form>
                 <?php } ?>
@@ -265,7 +269,9 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                     <form name="add_new_student_to_class_<?php echo (isset($class) ? $class : ''); ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
-                        <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                        <?php if ($students->total_users > 0) { ?>
+                            <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                        <?php } ?>
                         <?php wp_nonce_field('student_details'); ?>
                     </form>
                 <?php } ?>
@@ -371,7 +377,9 @@ if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can
                             <form name="add_new_student_to_class_<?php echo (isset($class) ? $class : ''); ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
                                 <input type="hidden" name="class_name" value="<?php echo (isset($class) ? $class : ''); ?>" />
                                 <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" /> 
-                                <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                                <?php if ($students->total_users > 0) { ?>
+                                    <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                                <?php } ?>
                                 <?php wp_nonce_field('student_details'); ?>
                             <?php } ?>
                         </form>

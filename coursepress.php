@@ -1494,7 +1494,9 @@ if (!class_exists('CoursePress')) {
 
             if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
+                wp_enqueue_style('cp_tooltips', $this->plugin_url . 'css/tooltips.css', array(), $this->version);
                 wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
+                wp_enqueue_script('cp-tooltips', $this->plugin_url . 'js/tooltips.js', array('jquery'), $this->version);
                 wp_enqueue_script('cp-settings', $this->plugin_url . 'js/settings.js', array('jquery', 'jquery-ui', 'jquery-ui-spinner'), $this->version);
                 wp_enqueue_script('cp-chosen-config', $this->plugin_url . 'js/chosen-config.js', array('cp-settings'), $this->version, true);
             }

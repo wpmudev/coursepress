@@ -9,10 +9,9 @@ if (!defined('ABSPATH'))
 if (!class_exists('CoursePress_Shortcodes')) {
 
     class CoursePress_Shortcodes extends CoursePress {
-
-        /*function CoursePress_Shortcodes() {
-            $this->__construct();
-        }*/
+        /* function CoursePress_Shortcodes() {
+          $this->__construct();
+          } */
 
         function __construct() {
             //register plugin shortcodes
@@ -53,7 +52,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $course_id = do_shortcode('[get_parent_course_id]');
             }
 
-            $subpage = $coursepress->units_archive_subpage;
+            if (isset($coursepress->units_archive_subpage)) {
+                $subpage = $coursepress->units_archive_subpage;
+            }else{
+                $subpage = '';
+            }
             ?>
             <div class="submenu-main-container">
                 <ul id="submenu-main" class="submenu nav-submenu">
@@ -457,11 +460,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         'key' => 'course_id',
                         'value' => $course_id
                     ),
-                    /*array(
-                        'key' => 'unit_availability',
-                        'value' => $current_date,
-                        'compare' => '<='
-                    ),*/
+                /* array(
+                  'key' => 'unit_availability',
+                  'value' => $current_date,
+                  'compare' => '<='
+                  ), */
                 )
             );
 
@@ -614,7 +617,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             $student = new Student(get_current_user_id());
 
-            
+
             if ($field == 'is_unit_available') {
                 $unit->details->$field = $unit->is_unit_available();
             }

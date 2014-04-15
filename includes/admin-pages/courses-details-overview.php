@@ -119,8 +119,14 @@ if (isset($_GET['course_id'])) {
                             <br/><br/>
                             <label for='course_excerpt'>
                                 <?php _e('Course Excerpt', 'cp'); ?>
-                                <a class="mp-help-icon" href="javascript:;"></a>
-                                <div class="mp-help-text"><?php _e('Provide a few short sentences to describe the course', 'cp'); ?></div>
+                                <a class="help-icon" href="javascript:;"></a>
+                                <div class="tooltip">
+                                    <div class="tooltip-before"></div>
+                                    <div class="tooltip-button">&times;</div>
+                                    <div class="tooltip-content">
+                                        <?php _e('Provide a few short sentences to describe the course', 'cp'); ?>
+                                    </div>
+                                </div>
                             </label>
                             <?php
                             $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
@@ -137,8 +143,15 @@ if (isset($_GET['course_id'])) {
                             <br/><br/>
                             <label for='course_name'>
                                 <?php _e('Course Description', 'cp'); ?>
-                                <a class="mp-help-icon" href="javascript:;"></a>
-                                <div class="mp-help-text"><?php _e('Provide a detailed description of the course', 'cp'); ?></div
+                                <a class="help-icon" href="javascript:;"></a>
+                                <div class="tooltip">
+                                    <div class="tooltip-before"></div>
+                                    <div class="tooltip-button">&times;</div>
+                                    <div class="tooltip-content">
+                                        <?php _e('Provide a detailed description of the course', 'cp'); ?>
+                                    </div>
+                                </div>
+
                             </label>
                             <?php
                             $args = array("textarea_name" => "course_description", "textarea_rows" => 10);
@@ -155,8 +168,15 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half">
                                 <label for='meta_class-size'><?php _e('Class size', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('select 0 for infinite', 'cp'); ?></div>
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Select 0 for infinite', 'cp'); ?>
+                                        </div>
+                                    </div>
+
                                 </label>
                                 <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
                             </div>
@@ -177,8 +197,15 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('Students will need to fulfil prerequisite in order to enroll', 'cp'); ?></div
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Students will need to fulfil prerequisite in order to enroll', 'cp'); ?>
+                                        </div>
+                                    </div>
+
                                 </label>
                                 <select name="meta_prerequisite" class="chosen-select">
                                     <?php
@@ -206,8 +233,15 @@ if (isset($_GET['course_id'])) {
 
                             <div class="half" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('Students will need to enter the pass code in order to enroll', 'cp'); ?></div
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Students will need to enter the pass code in order to enroll', 'cp'); ?>
+                                        </div>
+                                    </div>
+
                                 </label>
                                 <input type="text" name="meta_passcode" value="<?php echo esc_attr(stripslashes($passcode)); ?>" />
 
@@ -255,8 +289,15 @@ if (isset($_GET['course_id'])) {
 
                             <div class="full border-devider">
                                 <label><?php _e('Course can be done at any time', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?></div>
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?>
+                                        </div>
+                                    </div>
+
                                     <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />
                                 </label>
                             </div>
@@ -279,8 +320,15 @@ if (isset($_GET['course_id'])) {
                                 <br clear="all" />
 
                                 <label><?php _e('Enrollment Dates:', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('Student may enroll only during selected date range', 'cp'); ?></div>
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Student may enroll only during selected date range', 'cp'); ?>
+                                        </div>
+                                    </div>
+
                                 </label>
 
                                 <div class="half"><?php _e('Start Date', 'cp'); ?>
@@ -296,8 +344,16 @@ if (isset($_GET['course_id'])) {
 
                             <div class="full border-devider">
                                 <label><?php _e('Allow Course Discussion', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('If checked, students can post questions and get answers.', 'cp') ?></div>
+
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('If checked, students can post questions and get answers.', 'cp') ?>
+                                        </div>
+                                    </div>
+
                                     <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
                                 </label>
 
@@ -305,8 +361,14 @@ if (isset($_GET['course_id'])) {
 
                             <div class="full border-devider">
                                 <label><?php _e('Allow Grades Page', 'cp'); ?>
-                                    <a class="mp-help-icon" href="javascript:;"></a>
-                                    <div class="mp-help-text"><?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?></div>
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?>
+                                        </div>
+                                    </div>
 
                                     <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
                                 </label>
@@ -401,9 +463,18 @@ if (isset($_GET['course_id'])) {
 
                     <div class="level-holder" id="sidebar-levels">
                         <div class='sidebar-inner'>
-                            <a class="mp-help-icon" href="javascript:;"></a>
-                            <div class="mp-help-text"><?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?></div>
+
                             <?php _e('MarketPress product'); ?>
+
+                            <a class="help-icon" href="javascript:;"></a>
+                            <div class="tooltip">
+                                <div class="tooltip-before"></div>
+                                <div class="tooltip-button">&times;</div>
+                                <div class="tooltip-content">
+                                    <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
+                                </div>
+                            </div>
+                            
                             <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
                                 <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
                                 <?php
@@ -484,9 +555,21 @@ if (isset($_GET['course_id'])) {
                 <div class="level-holder" id="sidebar-levels">
                     <div class='sidebar-inner'>
 
-                        <div class="video_url_holder">
-                            <?php _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp'); ?>
+                        <div class="video_url_holder mp-wrap">
+
+                            <?php _e('Put a URL or Browse for a video file.', 'cp'); ?>
+
+                            <a class="help-icon" href="javascript:;"></a>
+                            <div class="tooltip">
+                                <div class="tooltip-before"></div>
+                                <div class="tooltip-button">&times;</div>
+                                <div class="tooltip-content">
+                                    <?php printf(__('Below you can enter a Youtube or Vimeo link e.g. %s  (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
+                                </div>
+                            </div>
+
                             <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" />
+
 
                             <?php
 //echo '(' . $supported_video_extensions . ')';

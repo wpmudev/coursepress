@@ -137,8 +137,14 @@ class text_input_module extends Unit_Module {
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <a class="mp-help-icon" href="javascript:;"></a>
-                    <div class="mp-help-text"><?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?></div>
+                    <a class="help-icon" href="javascript:;"></a>
+                    <div class="tooltip">
+                        <div class="tooltip-before"></div>
+                        <div class="tooltip-button">&times;</div>
+                        <div class="tooltip-content">
+                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                        </div>
+                    </div>
                 </label>
 
                 <div class="editor_in_place">

@@ -105,8 +105,14 @@ class video_module extends Unit_Module {
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <a class="mp-help-icon" href="javascript:;"></a>
-                    <div class="mp-help-text"><?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?></div>
+                    <a class="help-icon" href="javascript:;"></a>
+                    <div class="tooltip">
+                        <div class="tooltip-before"></div>
+                        <div class="tooltip-button">&times;</div>
+                        <div class="tooltip-content">
+                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                        </div>
+                    </div>
                 </label>
 
                 <div class="editor_in_place">
@@ -123,12 +129,15 @@ class video_module extends Unit_Module {
                 </div>
 
                 <div class="video_url_holder">
-                    <label><?php
-                        _e('Put a URL (oEmbed support is required) or Browse for a video file.', 'cp');
-                        echo '<br />';
-                        _e(' Supported video extensions ', 'cp');
-                        echo '(' . $supported_video_extensions . ')';
-                        ?>
+                    <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?>
+                        <a class="help-icon" href="javascript:;"></a>
+                        <div class="tooltip">
+                            <div class="tooltip-before"></div>
+                            <div class="tooltip-button">&times;</div>
+                            <div class="tooltip-content">
+                                <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
+                            </div>
+                        </div>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr((isset($data->video_url) ? $data->video_url : '')); ?>" />
                         <input class="video_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>

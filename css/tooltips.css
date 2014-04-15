@@ -1,0 +1,46 @@
+.tooltip {
+    width:255px; 
+    background: #fafafa; 
+    position:absolute; 
+    font: 12px/16px verdana; 
+    left:10px; 
+    color: #555555; 
+    border-radius: 5px; 
+    display:none; 
+    box-shadow: rgba(0, 0, 0, 0.12) -3px 0px 10px 1px;
+    border: 1px solid #ffffff;
+    z-index: 9999; //fix for wp editor buttons
+}
+
+.tooltip-button { position: absolute; top: 10px; right: 10px; font: 16px/12px bold "Helvetica"; cursor: pointer; }
+
+.tooltip-content { padding: 20px; }
+
+/** Add left arrow. */
+.tooltip-before {
+    position: absolute;
+    content: " ";
+    border-bottom: 10px solid transparent;  /* left arrow slant */
+    border-top: 8px solid transparent; /* right arrow slant */
+    border-right: 10px solid #fafafa; /* bottom, add background color here */
+    left:-8px;
+    /*top: 42%;*/
+    top: 5px;
+}
+
+.help-icon {
+    display: inline-block;
+    font: normal normal 30px/1 dashicons;
+    margin: -6px 2px 0 0;
+    outline: 0;
+    text-decoration: none;
+    vertical-align: top;
+}
+
+.help-icon:before {
+    content: "\f223";
+}
+
+.help-text {
+    display: none;
+}

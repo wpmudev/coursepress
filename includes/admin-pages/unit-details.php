@@ -198,7 +198,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                         <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit bellow', 'cp'); ?></h3>
 
                         <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
-                            <?php _e('Drag & Drop unit modules here', 'cp'); ?>
+                            <?php _e('Drag & Drop unit elements here', 'cp'); ?>
                         </div>
 
 
@@ -228,7 +228,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                             <select name='unit-module-list' id='unit-module-list'>
                                 <?php
-                                $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
+                                $sections = array("instructors" => __('Read-only elements', 'cp'), "students" => __('Student Input Elements', 'cp'));
 
                                 ksort($coursepress_modules_ordered);
 
@@ -307,7 +307,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     <div class='level-liquid-right' style="display:none;">
         <div class="level-holder-wrap">
             <?php
-            $sections = array("instructors" => __('Read-only modules', 'cp'), "students" => __('Student Input Modules', 'cp'));
+            $sections = array("instructors" => __('Read-only elements', 'cp'), "students" => __('Student Input Elements', 'cp'));
 
             foreach ($sections as $key => $section) {
                 ?>
