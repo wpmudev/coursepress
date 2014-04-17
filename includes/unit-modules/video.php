@@ -99,9 +99,9 @@ class video_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
-                <label><?php _e('Title', 'cp'); ?>
+                <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
                     <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-                </label>
+                
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
@@ -115,14 +115,15 @@ class video_module extends Unit_Module {
                     </div>
                 </label>
 
+                <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
+                
                 <div class="editor_in_place">
-                    <label><?php _e('Content', 'cp'); ?></label>
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, 'tinymce' =>
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /*'tinymce' =>
                         array(
-                            'skin' => 'wp_theme',
-                            'theme' => 'advanced',
-                    ));
+                            'skin' => 'wordpress',
+                            'theme' => 'modern',
+                    )*/);
                     $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>

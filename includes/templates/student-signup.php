@@ -145,15 +145,12 @@
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Create an Account', 'cp'); ?>" />
         </label>
 
-
         <?php do_action('after_submit'); ?>
-
 
         <?php wp_nonce_field('student_signup'); ?>
     </form>
 
     <?php do_action('after_signup_form'); ?>
-
     <?php
 } else {
     if (isset($this)) {

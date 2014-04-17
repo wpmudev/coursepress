@@ -69,9 +69,9 @@ class file_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
-                <label><?php _e('Title', 'cp'); ?>
+                <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
                     <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-                </label>
+                
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
@@ -130,7 +130,7 @@ class file_module extends Unit_Module {
                     if (isset($_POST[$this->name . '_id'])) {
                         foreach ($_POST[$this->name . '_id'] as $key => $value) {
                             $data->ID = $_POST[$this->name . '_id'][$key];
-                            $data->unit_id = ((isset($_POST['unit_id']) and $_POST['unit'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->unit_id = ((isset($_POST['unit_id']) && $_POST['unit_id'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['link_text'] = $_POST[$this->name . '_link_text'][$key];

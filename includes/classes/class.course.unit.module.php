@@ -57,6 +57,7 @@ if (!class_exists('Unit_Module')) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
             }
 
+            require(ABSPATH . WPINC . '/pluggable.php');
             $post_id = wp_insert_post($post);
 
             //Update post meta
@@ -199,13 +200,13 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_modules_front($unit_id = 0) {
-            global $coursepress_modules, $wp;
+            global $coursepress_modules, $wp, $paged;
 
             $front_save = false;
             $responses = 0;
             $input_modules = 0;
 
-            $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+            $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
             $modules = $this->get_modules($unit_id);
             ?>
@@ -399,43 +400,43 @@ if (!class_exists('Unit_Module')) {
             <a class="remove_module_link" onclick="if (removeModule()) {
                                     jQuery(this).parent().parent().parent().remove();
                                     jQuery(this).parent().parent().remove();
-                                    
+
                                     update_sortable_module_indexes();
                                 }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
-            <?php
-        }
+                                                       <?php
+                                                   }
 
-        function display_title_on_front($data) {
-            $to_display = isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? true : (!isset($data->show_title_on_front)) ? true : false;
-            return $to_display;
-        }
+                                                   function display_title_on_front($data) {
+                                                       $to_display = isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? true : (!isset($data->show_title_on_front)) ? true : false;
+                                                       return $to_display;
+                                                   }
 
-        function get_response_comment($response_id, $count = false) {
-            return get_post_meta($response_id, 'response_comment', true);
-        }
+                                                   function get_response_comment($response_id, $count = false) {
+                                                       return get_post_meta($response_id, 'response_comment', true);
+                                                   }
 
-        function get_response_form($user_ID, $response_request_ID, $show_label = true) {
-            //module does not overwrite this method message?
-        }
+                                                   function get_response_form($user_ID, $response_request_ID, $show_label = true) {
+                                                       //module does not overwrite this method message?
+                                                   }
 
-        function get_response($user_ID, $response_request_ID) {
-            
-        }
+                                                   function get_response($user_ID, $response_request_ID) {
+                                                       
+                                                   }
 
-        function on_create() {
-            
-        }
+                                                   function on_create() {
+                                                       
+                                                   }
 
-        function save_module_data() {
-            
-        }
+                                                   function save_module_data() {
+                                                       
+                                                   }
 
-        function admin_main($data) {
-            
-        }
+                                                   function admin_main($data) {
+                                                       
+                                                   }
 
-    }
+                                               }
 
-}
-?>
+                                           }
+                                           ?>

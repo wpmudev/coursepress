@@ -31,11 +31,11 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
 
     $modules_class = new Unit_Module();
 
-    if (!isset($unit_id) || !is_singular()) {
+    if (!isset($unit_id)) {// || !is_singular()
         return;
     }
 
-    $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+    $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
     $max = intval($pages_num); //number of page-break modules + 1
 
@@ -44,7 +44,7 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
     if ($wp_query->max_num_pages <= 1)
         return;
 
-    echo '<br clear="all"><div class="navigation"><ul>' . "\n";
+    echo '<br clear="all"><div class="navigation" id="navigation-pagination"><ul>' . "\n";
     
     for ($link_num = 1; $link_num <= $max; $link_num++) {
         $class = ($paged == $link_num ? ' class="active"' : '');

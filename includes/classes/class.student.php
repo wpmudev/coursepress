@@ -118,9 +118,9 @@ if (!class_exists('Student')) {
             foreach ($courses as $course) {
                 $course_id = str_replace('enrolled_course_date_', '', $course->meta_key);
                 $course = new Course($course_id);
-                if (!empty($course->course)) {
+                //if (!empty($course->course)) {
                     $enrolled_courses[] = $course_id;
-                }
+                //}
             }
 
             return $enrolled_courses;

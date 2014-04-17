@@ -90,7 +90,7 @@ if (!class_exists('Instructor_Search')) {
             $pagination->show();
         }
        
-        function prepare_query() {
+        function prepare_query($query = Array()) {
             global $wpdb;
 
             $qv = & $this->query_vars;

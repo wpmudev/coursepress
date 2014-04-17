@@ -1,7 +1,8 @@
 jQuery(document).ready(function() {
 
     jQuery('.element_title').live('input', function() {
-        jQuery(this).parent().parent().parent().find('.h3-label-left').html(jQuery(this).val());
+        //jQuery(this).parent().parent().parent().find('.h3-label-left').html(jQuery(this).val());
+        jQuery(this).parent().parent().find('.h3-label-left').html(jQuery(this).val());
     });
 
     function submit_elements() {

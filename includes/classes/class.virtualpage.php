@@ -71,6 +71,8 @@ if (!class_exists('CoursePress_Virtual_Page')) {
                 $post->post_mime_type = '';
                 $post->comment_count = -1;
 
+                //$posts = array_merge($posts, array($post));
+                
                 $posts = array($post);
 
                 $wp_query->is_page = $this->is_page;

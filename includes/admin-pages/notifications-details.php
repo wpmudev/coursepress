@@ -67,23 +67,8 @@ if (isset($_GET['notification_id'])) {
                     <div id='edit-sub' class='course-holder-wrap'>
                         <div class='course-holder'>
                             <div class='course-details'>
-                                <label for='notification_name'><?php _e('Notification Title', 'cp'); ?></label>
-                                <input class='wide' type='text' name='notification_name' id='notification_name' value='<?php
-                                if (isset($_GET['notification_id'])) {
-                                    echo esc_attr(stripslashes($notification->details->post_title));
-                                }
-                                ?>' />
-
-                                <br/><br/>
-                                <label for='course_name'><?php _e('Notification Content', 'cp'); ?></label>
-                                <?php
-                                $args = array("textarea_name" => "notification_description", "textarea_rows" => 10);
-                                wp_editor(htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : ''), "notification_description", $args);
-                                ?>
-                                <br/>
-
-                                <br clear="all" />
-                                <br clear="all" />
+                                <label for='notification_name'><?php _e('Notify Students in selected courses', 'cp'); ?></label>
+                                <p>Notifications are shown to end users in their Notifications menu item</p>
 
                                 <div class="full">
                                     <label><?php _e('Course', 'cp'); ?></label>
@@ -107,6 +92,24 @@ if (isset($_GET['notification_id'])) {
                                     </select>
 
                                 </div>
+                                <br clear="all" />
+
+                                <label for='notification_name'><?php _e('Notification Title', 'cp'); ?></label>
+                                <input class='wide' type='text' name='notification_name' id='notification_name' value='<?php
+                                if (isset($_GET['notification_id'])) {
+                                    echo esc_attr(stripslashes($notification->details->post_title));
+                                }
+                                ?>' />
+
+                                <br/><br/>
+                                <label for='course_name'><?php _e('Notification Content', 'cp'); ?></label>
+                                <?php
+                                $args = array("textarea_name" => "notification_description", "textarea_rows" => 10);
+                                wp_editor(htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : ''), "notification_description", $args);
+                                ?>
+                                <br/>
+
+                                <br clear="all" />
 
 
                                 <div class="buttons">

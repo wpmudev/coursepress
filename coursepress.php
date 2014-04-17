@@ -326,9 +326,9 @@ if (!class_exists('CoursePress')) {
             wp_editor('', $_GET['rand_id'], array(
                 'textarea_name' => $_GET['module_name'] . "_content[]",
                 'media_buttons' => true,
-                'textarea_rows' => 5,
-                'quicktags' => true,
-                'teeny' => true
+                'textarea_rows' => 4,
+                'quicktags' => false,
+                "teeny" => true
             ));
             exit;
         }
@@ -569,14 +569,12 @@ if (!class_exists('CoursePress')) {
 
                 $forced_previous_completion_template = locate_template(array('single-previous-unit.php'));
 
-
                 if (!$unit->is_unit_available($vars['unit_id'])) {
                     if ($forced_previous_completion_template != '') {
                         do_shortcode('[course_unit_single]'); //required for getting unit results
                         require_once($forced_previous_completion_template);
                         exit;
                     } else {
-
                         $args = array(
                             'slug' => $wp->request,
                             'title' => $unit->details->post_title,
@@ -590,6 +588,7 @@ if (!class_exists('CoursePress')) {
                         $pg = new CoursePress_Virtual_Page($args);
                     }
                 } else {
+
                     if ($theme_file != '') {
                         do_shortcode('[course_unit_single]'); //required for getting unit results
                         require_once($theme_file);
@@ -1623,7 +1622,8 @@ if (!class_exists('CoursePress')) {
                         'slug' => $this->get_signup_slug(),
                         'title' => __('Sign Up', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-signup.php'),
-                        'type' => 'virtual_page'
+                        'type' => 'virtual_page',
+                        'is_page' => FALSE,
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
@@ -1691,8 +1691,91 @@ if (!class_exists('CoursePress')) {
 
         //adds our links to custom theme nav menus using wp_nav_menu()
         function main_navigation_links($sorted_menu_items, $args) {
+            if (!is_admin()) {
+                if ($args->theme_location == 'primary') {//put extra menu items only in primary (most likely header) menu
+                    $is_in = is_user_logged_in();
+                    /* Course */
 
-            if ($args->theme_location == 'primary') {//put extra menu items only in primary (most likely header) menu
+                    $courses = new stdClass;
+
+                    $courses->title = __('Courses', 'cp');
+                    $courses->menu_item_parent = 0;
+                    $courses->ID = 'cp-courses';
+                    $courses->db_id = '';
+                    $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
+                    $sorted_menu_items[] = $courses;
+
+                    /* Student Dashboard page */
+
+                    if ($is_in) {
+                        $dashboard = new stdClass;
+
+                        $dashboard->title = __('Dashboard', 'cp');
+                        $dashboard->menu_item_parent = 0;
+                        $dashboard->ID = 'cp-dashboard';
+                        $dashboard->db_id = -9998;
+                        $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                        $sorted_menu_items[] = $dashboard;
+
+                        /* Student Dashboard > Courses page */
+
+                        $dashboard_courses = new stdClass;
+                        $dashboard_courses->title = __('Courses', 'cp');
+                        $dashboard_courses->menu_item_parent = -9998;
+                        $dashboard_courses->ID = 'cp-dashboard-courses';
+                        $dashboard_courses->db_id = '';
+                        $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                        $sorted_menu_items[] = $dashboard_courses;
+
+                        /* Student Dashboard > Settings page */
+
+                        $settings = new stdClass;
+
+                        $settings->title = __('My Profile', 'cp');
+                        $settings->menu_item_parent = -9998;
+                        $settings->ID = 'cp-dashboard-settings';
+                        $settings->db_id = '';
+                        $settings->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
+                        $sorted_menu_items[] = $settings;
+                    }
+
+                    /* Sign up page */
+
+                    $signup = new stdClass;
+
+                    if (!$is_in) {
+                        $signup->title = __('Sign Up', 'cp');
+                        $signup->menu_item_parent = 0;
+                        $signup->ID = 'cp-signup';
+                        $signup->db_id = '';
+                        $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
+                        $sorted_menu_items[] = $signup;
+                    }
+
+                    /* Log in / Log out links */
+
+                    $login = new stdClass;
+                    if ($is_in) {
+                        $login->title = __('Log Out', 'cp');
+                    } else {
+                        $login->title = __('Log In', 'cp');
+                    }
+
+                    $login->menu_item_parent = 0;
+                    $login->ID = 'cp-logout';
+                    $login->db_id = '';
+                    $login->url = $is_in ? wp_logout_url() : wp_login_url();
+
+                    $sorted_menu_items[] = $login;
+                }
+                return $sorted_menu_items;
+            }
+        }
+
+        function main_navigation_links_fallback($current_menu) {
+
+            if (!is_admin()) {
+                //print_r($current_menu);
                 $is_in = is_user_logged_in();
                 /* Course */
 
@@ -1703,7 +1786,7 @@ if (!class_exists('CoursePress')) {
                 $courses->ID = 'cp-courses';
                 $courses->db_id = '';
                 $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
-                $sorted_menu_items[] = $courses;
+                $main_sorted_menu_items[] = $courses;
 
                 /* Student Dashboard page */
 
@@ -1715,7 +1798,7 @@ if (!class_exists('CoursePress')) {
                     $dashboard->ID = 'cp-dashboard';
                     $dashboard->db_id = -9998;
                     $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                    $sorted_menu_items[] = $dashboard;
+                    $main_sorted_menu_items[] = $dashboard;
 
                     /* Student Dashboard > Courses page */
 
@@ -1725,7 +1808,7 @@ if (!class_exists('CoursePress')) {
                     $dashboard_courses->ID = 'cp-dashboard-courses';
                     $dashboard_courses->db_id = '';
                     $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                    $sorted_menu_items[] = $dashboard_courses;
+                    $sub_sorted_menu_items[] = $dashboard_courses;
 
                     /* Student Dashboard > Settings page */
 
@@ -1736,7 +1819,7 @@ if (!class_exists('CoursePress')) {
                     $settings->ID = 'cp-dashboard-settings';
                     $settings->db_id = '';
                     $settings->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
-                    $sorted_menu_items[] = $settings;
+                    $sub_sorted_menu_items[] = $settings;
                 }
 
                 /* Sign up page */
@@ -1749,7 +1832,7 @@ if (!class_exists('CoursePress')) {
                     $signup->ID = 'cp-signup';
                     $signup->db_id = '';
                     $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
-                    $sorted_menu_items[] = $signup;
+                    $main_sorted_menu_items[] = $signup;
                 }
 
                 /* Log in / Log out links */
@@ -1766,111 +1849,32 @@ if (!class_exists('CoursePress')) {
                 $login->db_id = '';
                 $login->url = $is_in ? wp_logout_url() : wp_login_url();
 
-                $sorted_menu_items[] = $login;
-            }
-            return $sorted_menu_items;
-        }
-
-        function main_navigation_links_fallback($current_menu) {
-            //print_r($current_menu);
-            $is_in = is_user_logged_in();
-            /* Course */
-
-            $courses = new stdClass;
-
-            $courses->title = __('Courses', 'cp');
-            $courses->menu_item_parent = 0;
-            $courses->ID = 'cp-courses';
-            $courses->db_id = '';
-            $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
-            $main_sorted_menu_items[] = $courses;
-
-            /* Student Dashboard page */
-
-            if ($is_in) {
-                $dashboard = new stdClass;
-
-                $dashboard->title = __('Dashboard', 'cp');
-                $dashboard->menu_item_parent = 0;
-                $dashboard->ID = 'cp-dashboard';
-                $dashboard->db_id = -9998;
-                $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                $main_sorted_menu_items[] = $dashboard;
-
-                /* Student Dashboard > Courses page */
-
-                $dashboard_courses = new stdClass;
-                $dashboard_courses->title = __('Courses', 'cp');
-                $dashboard_courses->menu_item_parent = -9998;
-                $dashboard_courses->ID = 'cp-dashboard-courses';
-                $dashboard_courses->db_id = '';
-                $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                $sub_sorted_menu_items[] = $dashboard_courses;
-
-                /* Student Dashboard > Settings page */
-
-                $settings = new stdClass;
-
-                $settings->title = __('My Profile', 'cp');
-                $settings->menu_item_parent = -9998;
-                $settings->ID = 'cp-dashboard-settings';
-                $settings->db_id = '';
-                $settings->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
-                $sub_sorted_menu_items[] = $settings;
-            }
-
-            /* Sign up page */
-
-            $signup = new stdClass;
-
-            if (!$is_in) {
-                $signup->title = __('Sign Up', 'cp');
-                $signup->menu_item_parent = 0;
-                $signup->ID = 'cp-signup';
-                $signup->db_id = '';
-                $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
-                $main_sorted_menu_items[] = $signup;
-            }
-
-            /* Log in / Log out links */
-
-            $login = new stdClass;
-            if ($is_in) {
-                $login->title = __('Log Out', 'cp');
-            } else {
-                $login->title = __('Log In', 'cp');
-            }
-
-            $login->menu_item_parent = 0;
-            $login->ID = 'cp-logout';
-            $login->db_id = '';
-            $login->url = $is_in ? wp_logout_url() : wp_login_url();
-
-            $main_sorted_menu_items[] = $login;
-            ?>
-            <div class="menu">
-                <ul class='nav-menu'>
-                    <?php
-                    foreach ($main_sorted_menu_items as $menu_item) {
-                        ?>
-                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                            <?php if ($menu_item->db_id !== '') { ?>
-                                <ul>
-                                    <?php
-                                    foreach ($sub_sorted_menu_items as $menu_item) {
-                                        ?>
-                                        <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                        <?php } ?>
-                                </ul>
-                            <?php } ?>
-                        </li>
+                $main_sorted_menu_items[] = $login;
+                ?>
+                <div class="menu">
+                    <ul class='nav-menu'>
                         <?php
-                    }
-                    ?>
-                </ul>
-            </div>
+                        foreach ($main_sorted_menu_items as $menu_item) {
+                            ?>
+                            <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
+                                <?php if ($menu_item->db_id !== '') { ?>
+                                    <ul>
+                                        <?php
+                                        foreach ($sub_sorted_menu_items as $menu_item) {
+                                            ?>
+                                            <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
+                                            <?php } ?>
+                                    </ul>
+                                <?php } ?>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
 
-            <?php
+                <?php
+            }
         }
 
         function login_redirect($redirect_to, $request, $user) {
@@ -2041,13 +2045,13 @@ if (!class_exists('CoursePress')) {
             //Close and output PDF document
 
             ob_get_clean();
-            
+
             if ($preview) {
                 $pdf->Output($report_name, 'I');
             } else {
                 $pdf->Output($report_name, 'D');
             }
-            
+
             exit;
         }
 

@@ -53,7 +53,8 @@ function coursepress_modules_ready() {
         }
     });
 
-    jQuery('#unit-module-add').click(function() {
+    jQuery('#unit-module-add').live('click', function() {
+        //jQuery('#unit-module-add').click(function() {
         var stamp = new Date().getTime();
         var module_count = 0;
 
@@ -99,18 +100,20 @@ function coursepress_modules_ready() {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
 
-        jQuery('#modules_accordion').accordion("option", "active", module_count);
-
-
         /* Dynamic WP Editor */
         var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
         jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
                 .success(function(editor) {
-                    jQuery('#modules_accordion .editor_in_place').first().html(editor)
-                    tinymce.execCommand('mceAddControl', false, rand_id);
+                    jQuery('#modules_accordion .editor_in_place').last().html(editor);
+                    //tinymce.execCommand('mceAddControl', false, rand_id);
+                    tinymce.execCommand('mceAddEditor', false, rand_id);
                     quicktags({id: rand_id});
+
                 });
+
+        jQuery('#modules_accordion').accordion("option", "active", module_count);
+
     });
 
     /* Drag & Drop */
@@ -158,14 +161,13 @@ function coursepress_modules_ready() {
 
             jQuery('#modules_accordion').accordion("option", "active", 0);
 
-
             /* Dynamic WP Editor */
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
             jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
                     .success(function(editor) {
-                        jQuery('#modules_accordion .editor_in_place').first().html(editor)
-                        tinymce.execCommand('mceAddControl', false, rand_id);
+                        jQuery('#modules_accordion .editor_in_place').last().html(editor)
+                        tinymce.execCommand('mceAddEditor', false, rand_id);
                         quicktags({id: rand_id});
                     });
         }
@@ -382,6 +384,18 @@ jQuery(document).ready(function() {
 // so trigger focusout handlers to remove .ui-state-focus
 //ui.item.children("h3").triggerHandler("focusout");
             update_sortable_module_indexes();
+
+
+            /* Dynamic WP Editor */
+            var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
+
+            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
+                    .success(function(editor) {
+                        jQuery('#modules_accordion .editor_in_place').last().html(editor)
+                        tinymce.execCommand('mceAddEditor', false, rand_id);
+                        quicktags({id: rand_id});
+                    });
+
         }
     }, function() {
         jQuery('a').click(function(e) {

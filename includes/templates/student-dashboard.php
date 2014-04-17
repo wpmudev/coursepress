@@ -2,7 +2,7 @@
     <?php
     $student = new Student(get_current_user_id());
     $student_courses = $student->get_enrolled_courses_ids();
-
+    
     foreach ($student_courses as $course_id) {
         $course = new Course($course_id);
         $course_details = $course->get_course();

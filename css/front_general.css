@@ -351,3 +351,51 @@ span.percentage{
 #submit_bottom{
     /*display: none;*/
 }
+
+#navigation-pagination.navigation{
+    text-align: right;
+}
+
+#navigation-pagination.navigation li a,
+#navigation-pagination.navigation li a:hover,
+#navigation-pagination.navigation li.active a,
+#navigation-pagination.navigation li.disabled {
+    color: #000;
+    text-decoration:none;
+}
+
+#navigation-pagination.navigation li {
+    display: inline;
+    margin: 0px;
+}
+
+#navigation-pagination.navigation li a,
+#navigation-pagination.navigation li a:hover,
+#navigation-pagination.navigation li.active a,
+#navigation-pagination.navigation li.disabled {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    padding: 5px 10px 7px 10px;
+    font-family: 'Dosis', sans-serif;
+    font-size: 15px;
+}
+
+#navigation-pagination.navigation li a:hover,
+#navigation-pagination.navigation li.active a {
+    background-color: #ccc;
+    color: #fff;
+}
+
+.form-info-error, .form-info-regular{
+    color: #fff;
+    padding: 20px;
+}
+
+.form-info-error{
+    background-color: #e2ba92
+}
+
+.form-info-regular{
+    background-color: #88e2ff;
+}
