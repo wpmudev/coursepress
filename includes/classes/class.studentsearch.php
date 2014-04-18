@@ -85,7 +85,7 @@ if (!class_exists('Student_Search')) {
                     'current' => $this->page_num,
                     'base' => 'admin.php?page=students&%_%',
                     'format' => 'userspage=%#%',
-                    'add_args' => $args
+                    'add_args' => isset($args) ? $args : ''
                 ));
 
                 if ($this->paging_text) {

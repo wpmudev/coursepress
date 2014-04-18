@@ -122,7 +122,9 @@ if (!class_exists('CoursePress')) {
             require_once( $this->plugin_dir . 'includes/classes/class.course.unit.module.php' );
 
             //Load unit modules
-            $this->load_modules();
+            //$this->load_modules();
+            
+            add_action('init', array(&$this, 'load_modules'), 11);
 
             // Shortcodes class
             require_once( $this->plugin_dir . 'includes/classes/class.shortcodes.php' );

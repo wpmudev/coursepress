@@ -57,7 +57,7 @@ if (!class_exists('Unit_Module')) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
             }
 
-            require(ABSPATH . WPINC . '/pluggable.php');
+            //require(ABSPATH . WPINC . '/pluggable.php');
             $post_id = wp_insert_post($post);
 
             //Update post meta

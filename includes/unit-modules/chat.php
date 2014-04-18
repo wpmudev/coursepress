@@ -123,7 +123,7 @@ if (is_chat_plugin_active()) {
                         if (isset($_POST[$this->name . '_id'])) {
                             foreach ($_POST[$this->name . '_id'] as $key => $value) {
                                 $data->ID = $_POST[$this->name . '_id'][$key];
-                                $data->unit_id = ((isset($_POST['unit_id']) && $_POST['unit_id'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                                $data->unit_id = ((isset($_POST['unit_id']) and (isset($_POST['unit']) && $_POST['unit'] != '')) ? $_POST['unit_id'] : $last_inserted_unit_id);
                                 $data->title = $_POST[$this->name . '_title'][$key];
                                 $data->content = $_POST[$this->name . '_content'][$key];
                                 $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];

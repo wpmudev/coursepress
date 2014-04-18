@@ -23,9 +23,11 @@ class audio_module extends Unit_Module {
             <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
+
             <?php if ($data->post_content != '') { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
+
             <?php if ($data->audio_url != '') { ?>  
                 <div class="audio_player">
                     <?php
@@ -85,8 +87,8 @@ class audio_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
                 <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
-                    <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-                
+                <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
@@ -101,19 +103,19 @@ class audio_module extends Unit_Module {
                 </label>
 
                 <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
-                
+
                 <div class="editor_in_place">
-                    
-                        <?php
-                        $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
-                                  array(
-                                  'skin' => 'wordpress',
-                                  'theme' => 'modern',
-                                  ) */
-                        );
-                        $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
-                        wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
-                        ?>
+
+                    <?php
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
+                              array(
+                              'skin' => 'wordpress',
+                              'theme' => 'modern',
+                              ) */
+                    );
+                    $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                    wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                    ?>
                 </div>
 
                 <div class="audio_url_holder">
@@ -171,7 +173,7 @@ class audio_module extends Unit_Module {
                     if (isset($_POST[$this->name . '_id'])) {
                         foreach ($_POST[$this->name . '_id'] as $key => $value) {
                             $data->ID = $_POST[$this->name . '_id'][$key];
-                            $data->unit_id = ((isset($_POST['unit_id']) && $_POST['unit_id'] != '') ? $_POST['unit_id'] : $last_inserted_unit_id);
+                            $data->unit_id = ((isset($_POST['unit_id']) and (isset($_POST['unit']) && $_POST['unit'] != '')) ? $_POST['unit_id'] : $last_inserted_unit_id);
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
