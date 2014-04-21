@@ -75,7 +75,17 @@
                             <td>
                                 <?php
                                 esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
-                                ?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='discussion_slug' value='<?php esc_attr_e($this->get_grades_slug());
+                                ?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php esc_attr_e($this->get_grades_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Course Workbook Slug', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url())) . '' . _e('example-course-name/', 'cp');
+                                ?>&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php esc_attr_e($this->get_workbook_slug());
                                 ?>' />&nbsp;/
                             </td>
                         </tr>

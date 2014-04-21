@@ -54,7 +54,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if (isset($coursepress->units_archive_subpage)) {
                 $subpage = $coursepress->units_archive_subpage;
-            }else{
+            } else {
                 $subpage = '';
             }
             ?>
@@ -73,7 +73,12 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     if ($course->allow_course_grades_page == 'on') {
                         ?>
                         <li class="submenu-item submenu-grades <?php echo(isset($subpage) && $subpage == 'grades' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_grades_slug(); ?>/"><?php _e('Grades', 'coursepress'); ?></a></li>
-                    <?php } ?>
+                    <?php
+                    }
+                    if ($course->allow_workbook_page == 'on') {
+                        ?>
+                        <li class="submenu-item submenu-workbook <?php echo(isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'coursepress'); ?></a></li>
+            <?php } ?>
                     <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Info', 'coursepress'); ?></a></li>
                 </ul><!--submenu-main-->
             </div><!--submenu-main-container-->

@@ -31,6 +31,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     if (!isset($_POST['meta_allow_course_grades_page'])) {
         $_POST['meta_allow_course_grades_page'] = 'off';
     }
+    
+    if (!isset($_POST['meta_allow_workbook_page'])) {
+        $_POST['meta_allow_workbook_page'] = 'off';
+    }
 
     $new_post_id = $course->update_course();
 
@@ -61,6 +65,7 @@ if (isset($_GET['course_id'])) {
     $marketpress_product = $course->details->marketpress_product;
     $allow_course_discussion = $course->details->allow_course_discussion;
     $allow_course_grades_page = $course->details->allow_course_grades_page;
+    $allow_workbook_page = $course->details->allow_workbook_page;
     $course_category = $course->details->course_category;
     $language = $course->details->course_language;
     $course_video_url = $course->details->course_video_url;
@@ -77,6 +82,7 @@ if (isset($_GET['course_id'])) {
     $marketpress_product = '';
     $allow_course_discussion = 'off';
     $allow_course_grades_page = 'off';
+    $allow_workbook_page = 'off';
     $course_category = 0;
     $language = __('English', 'cp');
     $course_video_url = '';
@@ -371,6 +377,22 @@ if (isset($_GET['course_id'])) {
                                     </div>
 
                                     <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
+                                </label>
+
+                            </div>
+                            
+                            <div class="full border-devider">
+                                <label><?php _e('Allow Workbook Page', 'cp'); ?>
+                                    <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('If checked, students can see their course workbook in the course submenu.', 'cp') ?>
+                                        </div>
+                                    </div>
+
+                                    <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ($allow_workbook_page == 'on') ? 'checked' : ''; ?> />
                                 </label>
 
                             </div>

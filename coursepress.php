@@ -455,6 +455,7 @@ if (!class_exists('CoursePress')) {
                 $units_archive_page = false;
                 $units_archive_grades_page = false;
                 $notifications_archive_page = false;
+                $units_workbook_page = false;
 
                 $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
@@ -464,6 +465,10 @@ if (!class_exists('CoursePress')) {
 
                 if (preg_match('/' . $this->get_grades_slug() . '/', $url)) {
                     $units_archive_grades_page = true;
+                }
+                
+                if (preg_match('/' . $this->get_workbook_slug() . '/', $url)) {
+                    $units_workbook_page = true;
                 }
 
                 if (preg_match('/' . $this->get_notifications_slug() . '/', $url)) {
@@ -539,6 +544,32 @@ if (!class_exists('CoursePress')) {
                             'slug' => $wp->request,
                             'title' => __('Course Grades', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars),
+                            'type' => 'unit',
+                            'is_page' => FALSE,
+                            'is_singular' => FALSE,
+                            'is_archive' => TRUE
+                        );
+                        $pg = new CoursePress_Virtual_Page($args);
+                        do_shortcode('[course_units_loop]');
+                    }
+                    $this->set_latest_activity(get_current_user_id());
+                }
+                
+                if ($units_workbook_page) {
+
+                    $this->units_archive_subpage = 'workbook';
+
+                    $theme_file = locate_template(array('archive-unit-workbook.php'));
+                    wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
+                    if ($theme_file != '') {
+                        do_shortcode('[course_units_loop]');
+                        require_once($theme_file);
+                        exit;
+                    } else {
+                        $args = array(
+                            'slug' => $wp->request,
+                            'title' => __('Workbook', 'cp'),
+                            'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/archive-unit-workbook.php', $vars),
                             'type' => 'unit',
                             'is_page' => FALSE,
                             'is_singular' => FALSE,
@@ -641,6 +672,7 @@ if (!class_exists('CoursePress')) {
             $query_vars[] = 'discussion_archive';
             $query_vars[] = 'notifications_archive';
             $query_vars[] = 'grades_archive';
+            $query_vars[] = 'workbook';
             $query_vars[] = 'discussion_action';
             $query_vars[] = 'paged';
             return $query_vars;
@@ -656,6 +688,7 @@ if (!class_exists('CoursePress')) {
             //$new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug().'/([^/]+)/page/?([0-9]{1,})/?$'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
 
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_workbook_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
 
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([0-9])/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
@@ -677,7 +710,7 @@ if (!class_exists('CoursePress')) {
                     } else {
 
                         wp_enqueue_style('front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version);
-
+                        
                         if (locate_template(array('single-course.php'))) {//add custom content in the single template ONLY if the post type doesn't already has its own template
                             //just output the content
                         } else {
@@ -813,6 +846,11 @@ if (!class_exists('CoursePress')) {
         function get_grades_slug() {
             $default_slug_value = 'grades';
             return get_option('coursepress_grades_slug', $default_slug_value);
+        }
+        
+        function get_workbook_slug() {
+            $default_slug_value = 'workbook';
+            return get_option('coursepress_workbook_slug', $default_slug_value);
         }
 
         function get_discussion_slug_new() {
@@ -1468,7 +1506,7 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_style('cp-38');
             }
 
-            wp_enqueue_style('font_awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css');
+            wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             /* wp_enqueue_script('jquery-ui-datepicker');
               wp_enqueue_script('jquery-ui-accordion');
