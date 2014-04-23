@@ -347,6 +347,19 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
+                
+                $array_order_num = 0;
+                
+                //Count only ungraded responses from STUDENTS!
+                foreach($ungraded_responses as $ungraded_response){
+                    if(!user_has_role('student', $ungraded_response->post_author)){
+                        unset($ungraded_responses[$array_order_num]);
+                    }
+                    $array_order_num++;
+                }
+
+                
+                
                 /* $admins_responses = 0;
 
                   foreach ($ungraded_responses as $ungraded_responses) {
@@ -377,6 +390,19 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
+                
+                
+                $array_order_num = 0;
+                
+                //Count only ungraded responses from STUDENTS!
+                foreach($ungraded_responses as $ungraded_response){
+                    if(!user_has_role('student', $ungraded_response->post_author)){
+                        unset($ungraded_responses[$array_order_num]);
+                    }
+                    $array_order_num++;
+                }
+                
+                var_dump($ungraded_responses);
 
                 return count($ungraded_responses);
             }

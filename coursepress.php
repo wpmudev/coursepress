@@ -566,6 +566,7 @@ if (!class_exists('CoursePress')) {
                         require_once($theme_file);
                         exit;
                     } else {
+                        do_shortcode('[course_units_loop]');
                         $args = array(
                             'slug' => $wp->request,
                             'title' => __('Workbook', 'cp'),
@@ -989,7 +990,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function add_admin_menu_network() {
-            
+            //to do
         }
 
         //Add plugin admin menu items

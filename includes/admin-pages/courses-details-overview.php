@@ -366,7 +366,7 @@ if (isset($_GET['course_id'])) {
                             </div>
 
                             <div class="full border-devider">
-                                <label><?php _e('Allow Grades Page', 'cp'); ?>
+                                <label><?php _e('Show Grades Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
                                     <div class="tooltip">
                                         <div class="tooltip-before"></div>
@@ -382,7 +382,7 @@ if (isset($_GET['course_id'])) {
                             </div>
                             
                             <div class="full border-devider">
-                                <label><?php _e('Allow Workbook Page', 'cp'); ?>
+                                <label><?php _e('Show Workbook Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
                                     <div class="tooltip">
                                         <div class="tooltip-before"></div>

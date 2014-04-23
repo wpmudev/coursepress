@@ -399,3 +399,92 @@ span.percentage{
 .form-info-regular{
     background-color: #88e2ff;
 }
+
+/* NOTIFICATIONS FRONT */
+
+.notification-archive-list{
+    margin-top: 38px;
+}
+
+.notification-archive-single-meta{
+    float: left;
+    width: 100%;
+}
+
+.notification-date{
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    background-color: #f9a673;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+}
+
+.notification-date .date-part-one{
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    display: block;
+    width: 100%;
+    line-height: 14px;
+}
+
+.notification-date .date-part-two{
+    font-size: 24px;
+    display: block;
+    width: 100%;
+    line-height: 24px;
+}
+
+.notification-time{
+    color: #f9a673;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.notification-meta-devider{
+    background-color: #dbdbdb;
+    height: 2px;
+    width: 24px;
+    margin: 13px auto 10px auto;
+    display: block;
+}
+
+.notification-archive-single{
+    float: left;
+    width: 100%;
+}
+
+.entry-content ul.notification-archive-list,
+.entry-content ul.discussion-archive-list
+{
+   list-style: none;
+}
+
+h1.notification-title{
+    font-size: 24px;
+    border-bottom: 2px solid #f5f5f5;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.notification_author{
+    font-size: 16px;
+    color: #666666;
+    font-weight: 400;
+}
+
+.notification-content{
+    margin: 10px 0px 0px 0px;
+}
+
+.notification-content, .notification-content p{
+    font-size: 15px;
+}
