@@ -72,7 +72,7 @@ if (isset($_POST['_wpnonce'])) {
     }
 
     if (current_user_can('coursepress_settings_shortcode_page_cap')) {
-        $menus['shortcodes'] = __('Shortcodes', 'cp');
+        //$menus['shortcodes'] = __('Shortcodes', 'cp');
     }
 
     $menus = apply_filters('coursepress_settings_new_menus', $menus);

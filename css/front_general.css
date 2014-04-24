@@ -465,7 +465,7 @@ span.percentage{
 .entry-content ul.notification-archive-list,
 .entry-content ul.discussion-archive-list
 {
-   list-style: none;
+    list-style: none;
 }
 
 h1.notification-title{
@@ -487,4 +487,11 @@ h1.notification-title{
 
 .notification-content, .notification-content p{
     font-size: 15px;
+}
+
+.unit_title h3 span {
+    font-size: 14px;
+    text-align: right;
+    float: right;
+    padding-top: 9px;
 }

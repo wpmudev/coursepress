@@ -147,7 +147,7 @@ if (!class_exists('Course')) {
                         
                         $image_size = $image->get_size();
 
-                        if ($image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height) {
+                        if (($image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height) || ($image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height)) {
                             update_post_meta($post_id, '_thumbnail_id', $_POST['meta_featured_url']);
                         } else {
                             $ext = pathinfo($fl, PATHINFO_EXTENSION);

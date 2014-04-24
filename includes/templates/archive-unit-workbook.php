@@ -26,7 +26,9 @@ if (have_posts()) {
         ?>
         <div class="workbook_units">
             <div class="unit_title">
-                <h3><?php the_title(); ?></h3>
+                <h3><?php the_title(); ?>
+                    <span><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]');?>% completed</span>
+                </h3>
             </div>
             <div class="accordion-inner">
                 <?php
@@ -223,7 +225,6 @@ if (have_posts()) {
                                     _e('Unit read - grade 100%', 'cp');
                                 }
                                 ?>
-
                             </td>
                         </tr>
             <?php

@@ -88,7 +88,7 @@ class text_module extends Unit_Module {
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
-
+                
             </div>
 
         </div>

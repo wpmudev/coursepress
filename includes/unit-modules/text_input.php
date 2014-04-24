@@ -85,7 +85,7 @@ class text_input_module extends Unit_Module {
                     <?php echo $response->post_content; ?>
                 </div>
             <?php } else { ?>
-                <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
+                <div class="module_textarea_input"><input type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
             <?php } ?>
 
 
@@ -132,8 +132,8 @@ class text_input_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
                 <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
-                    <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-                
+                <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
@@ -148,18 +148,33 @@ class text_input_module extends Unit_Module {
                 </label>
 
                 <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
-                
+
                 <div class="editor_in_place">
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /*'tinymce' =>
-                        array(
-                            'skin' => 'wordpress',
-                            'theme' => 'modern',
-                    )*/);
+                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
+                              array(
+                              'skin' => 'wordpress',
+                              'theme' => 'modern',
+                              ) */);
                     $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
+
+                <div class="placeholder_holder">
+                    <label><?php _e('Placeholder Text') ?>
+                        <a class="help-icon" href="javascript:;"></a>
+                        <div class="tooltip">
+                            <div class="tooltip-before"></div>
+                            <div class="tooltip-button">&times;</div>
+                            <div class="tooltip-content">
+                                <?php _e('Additional instructions visible in the input field as a placeholder', 'cp'); ?>
+                            </div>
+                        </div>
+                    </label>
+                    <input type="text" class="placeholder_text" name="<?php echo $this->name; ?>_placeholder_text[]" value="<?php echo esc_attr(isset($data->placeholder_text) ? $data->placeholder_text : ''); ?>" />
+                </div>
+
             </div>
 
         </div>
@@ -198,6 +213,7 @@ class text_input_module extends Unit_Module {
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
+                            $data->metas['placeholder_text'] = $_POST[$this->name . '_placeholder_text'][$key];
                             if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {

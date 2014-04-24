@@ -1313,6 +1313,10 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     width: 100% !important;
 }
 
+.placeholder_holder{
+    margin-top: 15px;
+}
+
 #modules_accordion.modules_accordion .module-holder-page_break_module h3{
     background: #fff;
 }
