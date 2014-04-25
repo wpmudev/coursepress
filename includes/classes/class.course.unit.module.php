@@ -41,7 +41,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function update_module($data) {
-            global $user_id, $wpdb;
+            global $user_id, $wpdb; //$last_inserted_module_id
 
             $post = array(
                 'post_author' => $user_id,
@@ -55,6 +55,9 @@ if (!class_exists('Unit_Module')) {
 
             if (isset($data->ID) && $data->ID != '' && $data->ID != 0) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+                //$update = true;
+            }else{
+                //$update = false;
             }
 
             //require(ABSPATH . WPINC . '/pluggable.php');
@@ -62,6 +65,9 @@ if (!class_exists('Unit_Module')) {
 
             //Update post meta
             if ($post_id != 0) {
+                /*if(!$update){
+                    $last_inserted_module_id = $post_id;
+                }*/
                 if (isset($data->metas)) {
                     foreach ($data->metas as $key => $value) {
                         update_post_meta($post_id, $key, $value);
@@ -282,6 +288,10 @@ if (!class_exists('Unit_Module')) {
             <label><?php _e('Comment', 'cp'); ?></label>
             <?php
             return wp_editor($post->response_comment, 'response_comment', $settings);
+        }
+        
+        function get_module_type($post_id){
+            return get_post_meta($post_id, 'module_type', true);
         }
 
         function additional_module_actions() {

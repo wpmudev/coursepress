@@ -66,7 +66,7 @@ if (!class_exists('CoursePress')) {
             //Install plugin
             register_activation_hook(__FILE__, array($this, 'install'));
 
-            global $last_inserted_unit_id;
+            global $last_inserted_unit_id; //$last_inserted_module_id
 
             add_theme_support('post-thumbnails');
 
@@ -123,7 +123,7 @@ if (!class_exists('CoursePress')) {
 
             //Load unit modules
             //$this->load_modules();
-            
+
             add_action('init', array(&$this, 'load_modules'), 11);
 
             // Shortcodes class
@@ -220,10 +220,19 @@ if (!class_exists('CoursePress')) {
             add_filter('element_content_filter', array(&$this, 'element_content_img_filter'), 10, 1);
 
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
+            
+            add_action('wp_logout', array(&$this, 'redirect_after_logout'));
         }
 
         /* Fix for the broken images in the Unit elements content */
 
+        function redirect_after_logout(){
+            if(get_option('use_custom_login_form', 1)){
+                wp_redirect(trailingslashit(site_url() . '/' . $this->get_login_slug()));
+                exit;
+            }
+        }
+        
         function element_content_img_filter($content) {
             return preg_replace_callback('#(<img\s[^>]*src)="([^"]+)"#', "callback_img", $content);
         }
@@ -466,7 +475,7 @@ if (!class_exists('CoursePress')) {
                 if (preg_match('/' . $this->get_grades_slug() . '/', $url)) {
                     $units_archive_grades_page = true;
                 }
-                
+
                 if (preg_match('/' . $this->get_workbook_slug() . '/', $url)) {
                     $units_workbook_page = true;
                 }
@@ -554,7 +563,7 @@ if (!class_exists('CoursePress')) {
                     }
                     $this->set_latest_activity(get_current_user_id());
                 }
-                
+
                 if ($units_workbook_page) {
 
                     $this->units_archive_subpage = 'workbook';
@@ -711,7 +720,7 @@ if (!class_exists('CoursePress')) {
                     } else {
 
                         wp_enqueue_style('front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version);
-                        
+
                         if (locate_template(array('single-course.php'))) {//add custom content in the single template ONLY if the post type doesn't already has its own template
                             //just output the content
                         } else {
@@ -848,7 +857,7 @@ if (!class_exists('CoursePress')) {
             $default_slug_value = 'grades';
             return get_option('coursepress_grades_slug', $default_slug_value);
         }
-        
+
         function get_workbook_slug() {
             $default_slug_value = 'workbook';
             return get_option('coursepress_workbook_slug', $default_slug_value);
@@ -889,6 +898,15 @@ if (!class_exists('CoursePress')) {
         function get_instructor_profile_slug() {
             $default_slug_value = 'instructor';
             return get_option('instructor_profile_slug', $default_slug_value);
+        }
+
+        function get_login_slug($url = false) {
+            $default_slug_value = 'student-login';
+            if (!$url) {
+                return get_option('student_login', $default_slug_value);
+            } else {
+                return site_url() . '/' . get_option('student_login', $default_slug_value);
+            }
         }
 
         function get_signup_slug($url = false) {
@@ -1649,6 +1667,29 @@ if (!class_exists('CoursePress')) {
                 $this->set_latest_activity(get_current_user_id());
             }
 
+
+            //Custom login page
+            if (preg_match('/' . $this->get_login_slug() . '/', $url)) {
+
+                $theme_file = locate_template(array('student-login.php'));
+
+                if ($theme_file != '') {
+                    require_once($theme_file);
+                    exit;
+                } else {
+
+                    $args = array(
+                        'slug' => $this->get_login_slug(),
+                        'title' => __('Login', 'cp'),
+                        'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-login.php'),
+                        'type' => 'virtual_page',
+                        'is_page' => TRUE,
+                    );
+                    $pg = new CoursePress_Virtual_Page($args);
+                }
+                $this->set_latest_activity(get_current_user_id());
+            }
+            
             //Custom signup page
             if (preg_match('/' . $this->get_signup_slug() . '/', $url)) {
 
@@ -1664,7 +1705,7 @@ if (!class_exists('CoursePress')) {
                         'title' => __('Sign Up', 'cp'),
                         'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/student-signup.php'),
                         'type' => 'virtual_page',
-                        'is_page' => FALSE,
+                        'is_page' => TRUE,
                     );
                     $pg = new CoursePress_Virtual_Page($args);
                 }
@@ -1805,7 +1846,7 @@ if (!class_exists('CoursePress')) {
                     $login->menu_item_parent = 0;
                     $login->ID = 'cp-logout';
                     $login->db_id = '';
-                    $login->url = $is_in ? wp_logout_url() : wp_login_url();
+                    $login->url = $is_in ? wp_logout_url() : (get_option('use_custom_login_form', 1) ? trailingslashit(site_url() . '/' . $this->get_login_slug()) : wp_login_url());
 
                     $sorted_menu_items[] = $login;
                 }

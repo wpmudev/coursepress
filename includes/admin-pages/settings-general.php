@@ -101,6 +101,16 @@
                         </tr>
 
                         <tr valign="top">
+                            <th scope="row"><?php _e('Login page', 'cp'); ?></th>
+                            <td>
+                                <?php
+                                esc_html_e(trailingslashit(site_url()));
+                                ?>&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php esc_attr_e($this->get_login_slug());
+                                ?>' />&nbsp;/
+                            </td>
+                        </tr>
+                        
+                        <tr valign="top">
                             <th scope="row"><?php _e('Sign Up page', 'cp'); ?></th>
                             <td>
                                 <?php
@@ -162,6 +172,30 @@
                                         </div>
                                     </div>
                                 <input type='checkbox' name='display_menu_items' <?php echo ((get_option('display_menu_items', 1)) ? 'checked' : ''); ?> />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('Login Form', 'cp'); ?></span></h3>
+            <div class="inside">
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Use Custom Login Form', 'cp'); ?></th>
+                            <td>
+                                <a class="help-icon" href="javascript:;"></a>
+                                    <div class="tooltip">
+                                        <div class="tooltip-before"></div>
+                                        <div class="tooltip-button">&times;</div>
+                                        <div class="tooltip-content">
+                                            <?php _e('Whether to use custom login form or default WordPress one', 'cp') ?>
+                                        </div>
+                                    </div>
+                                <input type='checkbox' name='use_custom_login_form' <?php echo ((get_option('use_custom_login_form', 1)) ? 'checked' : ''); ?> />
                             </td>
                         </tr>
                     </tbody>

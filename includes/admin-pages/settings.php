@@ -34,6 +34,13 @@ if (isset($_POST['_wpnonce'])) {
         } else {
             update_option('display_menu_items', 0);
         }
+        
+        if (isset($_POST['use_custom_login_form'])) {
+            update_option('use_custom_login_form', 1);
+        } else {
+            update_option('use_custom_login_form', 0);
+        }
+        
         flush_rewrite_rules();
     }
 }

@@ -14,7 +14,7 @@
         $student_data = array();
         $form_errors = 0;
 
-        do_action('before_signup_validation');
+        do_action('cp_before_signup_validation');
 
         if ($_POST['username'] != '' && $_POST['first_name'] != '' && $_POST['last_name'] != '' && $_POST['email'] != '' && $_POST['password'] != '' && $_POST['password_confirmation'] != '') {
 
@@ -58,7 +58,7 @@
 
                     if ($form_errors == 0) {
                         if ($student_id = $student->add_student($student_data) !== 0) {
-                            $form_message = __('Account created successfully! You may now <a href="' . wp_login_url() . '">log into your account</a>.', 'cp');
+                            $form_message = __('Account created successfully! You may now <a href="' . (get_option('use_custom_login_form', 1) ? trailingslashit(site_url() . '/' . $this->get_login_slug()) : wp_login_url()) . '">log into your account</a>.', 'cp');
                             $form_message_class = 'regular';
                             $email_args['email_type'] = 'student_registration';
                             $email_args['student_id'] = $student_id;
@@ -89,11 +89,11 @@
     ?>
     <p class="form-info-<?php echo apply_filters('signup_form_message_class', $form_message_class); ?>"><?php echo apply_filters('signup_form_message', $form_message); ?></p>
 
-    <?php do_action('before_signup_form'); ?>
+    <?php do_action('cp_before_signup_form'); ?>
 
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
 
-        <?php do_action('before_all_signup_fields'); ?>
+        <?php do_action('cp_before_all_signup_fields'); ?>
 
         <label>
             <?php _e('First Name', 'cp'); ?>:
@@ -138,19 +138,19 @@
         <?php do_action('after_all_signup_fields'); ?>
 
         <label class="full">
-            <a href="<?php echo wp_login_url(); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
+            <a href="<?php echo (get_option('use_custom_login_form', 1) ? trailingslashit(site_url() . '/' . $this->get_login_slug()) : wp_login_url()); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
         </label>
 
         <label class="full-right">
             <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e('Create an Account', 'cp'); ?>" />
         </label>
 
-        <?php do_action('after_submit'); ?>
+        <?php do_action('cp_after_submit'); ?>
 
         <?php wp_nonce_field('student_signup'); ?>
     </form>
 
-    <?php do_action('after_signup_form'); ?>
+    <?php do_action('cp_after_signup_form'); ?>
     <?php
 } else {
     if (isset($this)) {
