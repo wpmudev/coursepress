@@ -7,7 +7,7 @@ echo get_user_meta($user->ID, 'description', true);
 
 <?php
 $instructor = new Instructor($user->ID);
-$assigned_courses = $instructor->get_assigned_courses_ids();
+$assigned_courses = $instructor->get_assigned_courses_ids('publish');
 
 foreach ($assigned_courses as $course_id) {
 

@@ -1,5 +1,6 @@
 <?php if (current_user_can('student')) { ?>
     <?php
+    global $coursepress;
     $student = new Student(get_current_user_id());
     $student_courses = $student->get_enrolled_courses_ids();
     
@@ -50,7 +51,7 @@
         <?php
     }
     if (count($student_courses) == 0) {
-        _e('You have not yet enrolled in a course.', 'cp');
+        printf(__('You have not yet enrolled in a course. Browse courses %s', 'cp'), '<a target="_blank" href="'.trailingslashit(site_url() . '/' . $coursepress->get_course_slug()).'">'.__('here', 'cp').'</a>');
     }
     ?>
     <?php

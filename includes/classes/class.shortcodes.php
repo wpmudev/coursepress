@@ -275,7 +275,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                                 if ((strtotime($course->enrollment_end_date) <= time()) && $course->open_ended_course == 'off') {
                                     $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
                                 } else {
-                                    $course->button .= '<a href="' . $signup_url . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
+                                    $course->button .= '<a href="' . $signup_url . '?course_id='.$course->ID.'" class="apply-button">' . __('Signup', 'cp') . '</a>';
                                 }
                             }
                         } else {
