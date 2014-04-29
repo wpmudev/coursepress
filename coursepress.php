@@ -220,19 +220,19 @@ if (!class_exists('CoursePress')) {
             add_filter('element_content_filter', array(&$this, 'element_content_img_filter'), 10, 1);
 
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
-            
+
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
         }
 
         /* Fix for the broken images in the Unit elements content */
 
-        function redirect_after_logout(){
-            if(get_option('use_custom_login_form', 1)){
+        function redirect_after_logout() {
+            if (get_option('use_custom_login_form', 1)) {
                 wp_redirect(trailingslashit(site_url() . '/' . $this->get_login_slug()));
                 exit;
             }
         }
-        
+
         function element_content_img_filter($content) {
             return preg_replace_callback('#(<img\s[^>]*src)="([^"]+)"#', "callback_img", $content);
         }
@@ -334,13 +334,22 @@ if (!class_exists('CoursePress')) {
         /* Retrieve wp_editor dynamically (using in unit admin) */
 
         function dynamic_wp_editor() {
-            wp_editor('', $_GET['rand_id'], array(
-                'textarea_name' => $_GET['module_name'] . "_content[]",
-                'media_buttons' => true,
-                'textarea_rows' => 4,
-                'quicktags' => false,
-                "teeny" => true
-            ));
+
+            $args = array("textarea_name" => "text_module" . "_content[]", "textarea_rows" => 5, "teeny" => true, /*'tinymce' =>
+                        array(
+                            'skin' => 'wordpress',
+                            'theme' => 'modern',
+                    )*/);
+                    $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                    wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+            /*
+              wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
+              'textarea_name' => $_GET['module_name'] . "_content[]",
+              'media_buttons' => true,
+              'textarea_rows' => 4,
+              'quicktags' => false,
+              "teeny" => true
+              )); */
             exit;
         }
 
@@ -1689,7 +1698,7 @@ if (!class_exists('CoursePress')) {
                 }
                 $this->set_latest_activity(get_current_user_id());
             }
-            
+
             //Custom signup page
             if (preg_match('/' . $this->get_signup_slug() . '/', $url)) {
 

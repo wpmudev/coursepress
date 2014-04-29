@@ -292,6 +292,14 @@ function removeInstructor(instructor_id) {
     }
 }
 
+function get_tinymce_content(){
+    if (jQuery(".wp-editor-wrap").hasClass("tmce-active")){
+        return tinyMCE.activeEditor.getContent();
+    }else{
+        return jQuery('#html_text_area_id').val();
+    }
+}
+
 jQuery(document).ready(function() {
 
     jQuery('#enroll_type').change(function() {
@@ -306,6 +314,7 @@ jQuery(document).ready(function() {
             });
         }
     });
+
     jQuery('#enroll_type').change(function() {
         var enroll_type = jQuery("#enroll_type").val();
         if (enroll_type == 'prerequisite') {
@@ -318,6 +327,7 @@ jQuery(document).ready(function() {
             });
         }
     });
+
     jQuery('#add-instructor-trigger').click(function() {
         var instructor_id = jQuery('#instructors option:selected').val();
         if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
@@ -380,16 +390,22 @@ jQuery(document).ready(function() {
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {
-// IE doesn't register the blur when sorting
-// so trigger focusout handlers to remove .ui-state-focus
-//ui.item.children("h3").triggerHandler("focusout");
-            update_sortable_module_indexes();
+            //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
 
+            var nth_child_num = ui.item.index() + 1;
+
+            //var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
+
+            //editor_id = editor_id.replace("-wrap", "");
+
+            var editor_content = get_tinymce_content();
+
+            update_sortable_module_indexes();
 
             /* Dynamic WP Editor */
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
-            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
+            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving, editor_content: editor_content})
                     .success(function(editor) {
                         jQuery('#modules_accordion .editor_in_place').last().html(editor)
                         tinymce.execCommand('mceAddEditor', false, rand_id);
