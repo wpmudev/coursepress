@@ -1,9 +1,9 @@
-function unenroll_confirmed() {
-    return confirm(student.unenroll_alert);
+function disenroll_confirmed() {
+    return confirm(student.disenroll_alert);
 }
 
-function unenroll() {
-    if (unenroll_confirmed()) {
+function disenroll() {
+    if (disenroll_confirmed()) {
         return true;
     } else {
         return false;

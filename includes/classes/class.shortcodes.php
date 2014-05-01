@@ -79,7 +79,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         ?>
                         <li class="submenu-item submenu-workbook <?php echo(isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'coursepress'); ?></a></li>
             <?php } ?>
-                    <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Info', 'coursepress'); ?></a></li>
+                    <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Details', 'coursepress'); ?></a></li>
                 </ul><!--submenu-main-->
             </div><!--submenu-main-container-->
             <?php
@@ -136,18 +136,18 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if ($field == 'action_links') {
 
-                $unenroll_link_visible = false;
+                $disenroll_link_visible = false;
 
                 if ($student->user_enrolled_in_course($course_id)) {
                     if (((strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) || (strtotime($course->course_end_date) >= time())) || $course->open_ended_course == 'on') {//course is currently active or is not yet active (will be active in the future)
-                        $unenroll_link_visible = true;
+                        $disenroll_link_visible = true;
                     }
                 }
 
                 $course->action_links = '<div class="apply-links">';
 
-                if ($unenroll_link_visible === true) {
-                    $course->action_links .= '<a href="?unenroll=' . $course->ID . '" onClick="return unenroll();">' . __('Un-enroll', 'cp') . '</a> | ';
+                if ($disenroll_link_visible === true) {
+                    $course->action_links .= '<a href="?disenroll=' . $course->ID . '" onClick="return disenroll();">' . __('Disenroll', 'cp') . '</a> | ';
                 }
                 $course->action_links .= '<a href="' . get_permalink($course->ID) . '">' . __('Course Details', 'cp') . '</a></div>';
             }

@@ -31,7 +31,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     if (!isset($_POST['meta_allow_course_grades_page'])) {
         $_POST['meta_allow_course_grades_page'] = 'off';
     }
-    
+
     if (!isset($_POST['meta_allow_workbook_page'])) {
         $_POST['meta_allow_workbook_page'] = 'off';
     }
@@ -48,7 +48,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
             exit;
         }
     } else {
-        //an error occured
+//an error occured
     }
 }
 
@@ -380,7 +380,7 @@ if (isset($_GET['course_id'])) {
                                 </label>
 
                             </div>
-                            
+
                             <div class="full border-devider">
                                 <label><?php _e('Show Workbook Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
@@ -401,17 +401,29 @@ if (isset($_GET['course_id'])) {
 
                         </div>
 
-                        <div class="buttons">
+
+                        <div class="unit-control-buttons course-control-buttons">
+
                             <?php
                             if (($course_id == 0 && current_user_can('coursepress_create_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
                                 ?>
-                                <input type = "submit" value = "<?php ($course_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp')); ?>" class = "button-primary" />
-                                <?php
-                            } else {
-                                ?>
+                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="Save">
+                            <?php } ?>
 
-                                <?php
+                            <?php
+                            if (($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
+                                ?>
+                                <a class="button button-preview" href="http://localhost/wpmu/courses/unpublished-course/units/" target="_new">Preview</a>
+                                <?php if (current_user_can('coursepress_change_course_status_cap') || (current_user_can('coursepress_change_my_course_status_cap') && $course_details->post_author == get_current_user_id())) { ?>
+                                    <a href="?page=courses&course_id=<?php echo $course_details->ID; ?>&action=change_status&new_status=<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php ($course_details->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
+                                <?php }
                             }
+                            ?>
+                        </div>
+
+
+                        <div class="buttons course-add-units-button">
+                            <?php
                             if ($course_id !== 0) {
                                 ?>
                                 <a href="?page=<?php echo $page; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
@@ -496,7 +508,7 @@ if (isset($_GET['course_id'])) {
                                     <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
                                 </div>
                             </div>
-                            
+
                             <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
                                 <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
                                 <?php

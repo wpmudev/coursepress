@@ -1304,8 +1304,8 @@ if (!class_exists('CoursePress')) {
 
             //$role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
-            //$role->add_cap('coursepress_unenroll_students_cap'); //Unenroll students from classes
-            $role->add_cap('coursepress_unenroll_my_students_cap'); //Unenroll students from classes where the instructor is an author of the course
+            //$role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
+            $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
             //$role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
             //$role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
@@ -1389,8 +1389,8 @@ if (!class_exists('CoursePress')) {
 
             $role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
-            $role->add_cap('coursepress_unenroll_students_cap'); //Unenroll students from classes
-            $role->add_cap('coursepress_unenroll_my_students_cap'); //Unenroll students from classes where the instructor is an author of the course
+            $role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
+            $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
             $role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
             $role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
@@ -1500,7 +1500,7 @@ if (!class_exists('CoursePress')) {
         function header_actions() {//front
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
             wp_localize_script('coursepress_front', 'student', array(
-                'unenroll_alert' => __('Please confirm that you want to un-enroll from the course. If you un-enroll, you will no longer be able to see your records for this course.', 'cp'),
+                'disenroll_alert' => __('Please confirm that you want to disenroll from the course. If you disenroll, you will no longer be able to see your records for this course.', 'cp'),
             ));
 
             if (!is_admin()) {
@@ -1575,7 +1575,7 @@ if (!class_exists('CoursePress')) {
                     'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
                     'delete_notification_alert' => __('Please confirm that you want to permanently delete the notification?', 'cp'),
                     'delete_discussion_alert' => __('Please confirm that you want to permanently delete the discussion?', 'cp'),
-                    'unenroll_student_alert' => __('Please confirm that you want to un-enroll student from this course. If you un-enroll, you will no longer be able to see student\'s records for this course.', 'cp'),
+                    'disenroll_student_alert' => __('Please confirm that you want to disenroll student from this course. If you disenroll, you will no longer be able to see student\'s records for this course.', 'cp'),
                     'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp'),
                     'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),
                     'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
@@ -1591,7 +1591,7 @@ if (!class_exists('CoursePress')) {
 
 
             wp_localize_script('courses-units', 'coursepress_units', array(
-                'unenroll_class_alert' => __('Please confirm that you want to un-enroll all students from this class?', 'cp'),
+                'disenroll_class_alert' => __('Please confirm that you want to disenroll all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
             ));
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');
@@ -1767,9 +1767,9 @@ if (!class_exists('CoursePress')) {
 
         function check_for_get_actions() {
 
-            if (isset($_GET['unenroll']) && is_numeric($_GET['unenroll'])) {
+            if (isset($_GET['disenroll']) && is_numeric($_GET['disenroll'])) {
                 $student = new Student(get_current_user_id());
-                $student->unenroll_from_course($_GET['unenroll']);
+                $student->disenroll_from_course($_GET['disenroll']);
             }
         }
 

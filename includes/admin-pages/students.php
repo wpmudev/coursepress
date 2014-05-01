@@ -23,10 +23,10 @@ if (isset($_POST['action']) && isset($_POST['users'])) {
                     }
                     break;
 
-                case 'unenroll':
-                    if (current_user_can('coursepress_unenroll_students_cap')) {
-                        $student->unenroll_from_all_courses();
-                        $message = __('Selected students has been unenrolled from all courses successfully.', 'cp');
+                case 'disenroll':
+                    if (current_user_can('coursepress_disenroll_students_cap')) {
+                        $student->disenroll_from_all_courses();
+                        $message = __('Selected students has been disenrolled from all courses successfully.', 'cp');
                     }
                     break;
             }
@@ -92,14 +92,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 <?php wp_nonce_field('bulk-students'); ?>
 
                 <div class="alignleft actions">
-                    <?php if (current_user_can('coursepress_unenroll_students_cap') || current_user_can('coursepress_delete_students_cap')) { ?>
+                    <?php if (current_user_can('coursepress_disenroll_students_cap') || current_user_can('coursepress_delete_students_cap')) { ?>
                         <select name="action">
                             <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
                             <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
                                 <option value="delete"><?php _e('Delete', 'cp'); ?></option>
                             <?php } ?>
-                            <?php if (current_user_can('coursepress_unenroll_students_cap')) { ?>
-                                <option value="unenroll"><?php _e('Unenroll from all courses', 'cp'); ?></option>
+                            <?php if (current_user_can('coursepress_disenroll_students_cap')) { ?>
+                                <option value="disenroll"><?php _e('Disenroll from all courses', 'cp'); ?></option>
                             <?php } ?>
                         </select>
                         <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'cp'); ?>" />

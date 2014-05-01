@@ -261,6 +261,16 @@ input[type=text].course_video_url{
     margin: 10px 0px 10px 0px;
 }
 
+.course-control-buttons{
+    margin: 10px 0px 10px 10px;
+    display: inline-block;
+}
+
+.course-add-units-button{
+    display: inline-block;
+    float: right;
+}
+
 .unit-control-buttons a.button.button-settings{
     background: none repeat scroll 0 0 #05C8F2;
     text-shadow: none;

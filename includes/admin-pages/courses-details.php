@@ -17,6 +17,8 @@ $course = new Course($course_id);
 
 if (empty($course)) {
     $course = new StdClass;
+}else{
+    $course_object = $course->get_course();
 }
 
 $units = $course->get_units();
@@ -65,8 +67,8 @@ $students_count = $course->get_number_of_students();
     $message['as'] = __('Student added to the class successfully.', 'cp');
     $message['ac'] = __('New class has been added successfully.', 'cp');
     $message['dc'] = __('Selected class has been deleted successfully.', 'cp');
-    $message['us'] = __('Selected student has been unenrolled successfully from the course.', 'cp');
-    $message['usl'] = __('Selected students has been unenrolled successfully from the course.', 'cp');
+    $message['us'] = __('Selected student has been disenrolled successfully from the course.', 'cp');
+    $message['usl'] = __('Selected students has been disenrolled successfully from the course.', 'cp');
     $message['is'] = __('Invitation sent sucessfully.', 'cp');
 
     $error_message['wrong_email'] = __('Please enter valid e-mail address', 'cp');
@@ -117,23 +119,23 @@ $students_count = $course->get_number_of_students();
             if ($key == 'overview' || ($key != 'overview' && $course_id != '')) {
                 ?>
                 <a class="nav-tab<?php
-                   if ($tab == $key)
-                       echo ' nav-tab-active';
-                   ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
+                if ($tab == $key)
+                    echo ' nav-tab-active';
+                ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
                    <?php
                }
            }
-           ?>
-           <?php
-           /* if ($course_id != '') {
-             $course = new Course($course_id);
-             if ($course->can_show_permalink()) {
-             ?>
-             <a class="nav-tab view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('View Course', 'cp'); ?></a>
-             <?php
-             }
-             } */
-           ?>
+
+       
+        /* if ($course_id != '') {
+          $course = new Course($course_id);
+          if ($course->can_show_permalink()) {
+          ?>
+          <a class="nav-tab view-course-link" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('View Course', 'cp'); ?></a>
+          <?php
+          }
+          } */
+        ?>
 
         <?php
         /* if ($unit_id != '') {

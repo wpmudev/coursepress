@@ -187,12 +187,12 @@ jQuery(function() {
     });
 });
 
-function unenroll_student_confirmed() {
-    return confirm(coursepress.unenroll_student_alert);
+function disenroll_student_confirmed() {
+    return confirm(coursepress.disenroll_student_alert);
 }
 
-function unenrollStudent() {
-    if (unenroll_student_confirmed()) {
+function disenrollStudent() {
+    if (disenroll_student_confirmed()) {
         return true;
     } else {
         return false;
@@ -292,15 +292,28 @@ function removeInstructor(instructor_id) {
     }
 }
 
-function get_tinymce_content(){
-    if (jQuery(".wp-editor-wrap").hasClass("tmce-active")){
-        return tinyMCE.activeEditor.getContent();
-    }else{
-        return jQuery('#html_text_area_id').val();
-    }
-}
-
 jQuery(document).ready(function() {
+
+    function get_tinymce_content(id) {
+
+        tinyMCE.init({
+            // General options
+            mode: "specific_textareas",
+            editor_selector: "mceEditor"
+        });
+        
+        return tinyMCE.get(id).getContent();
+        //alert(id);
+        /*alert(tinyMCE.get("content").getContent());
+        if (jQuery(".wp-editor-wrap").hasClass("tmce-active")) {
+            //alert(tinyMCE.activeEditor.getContent());
+
+            return tinyMCE.activeEditor.getContent();
+        } else {
+            return jQuery('#html_text_area_id').val();
+
+        }*/
+    }
 
     jQuery('#enroll_type').change(function() {
         var enroll_type = jQuery("#enroll_type").val();
@@ -381,6 +394,8 @@ jQuery(document).ready(function() {
     jQuery("#modules_accordion").show();
     jQuery(".loading_elements").hide();
 
+    var editor_content = '';
+
     jQuery("#modules_accordion").accordion({
         heightStyle: "content",
         header: "> div > h3",
@@ -390,22 +405,25 @@ jQuery(document).ready(function() {
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {
+     
             //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
 
             var nth_child_num = ui.item.index() + 1;
 
-            //var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
+            var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
 
-            //editor_id = editor_id.replace("-wrap", "");
+            editor_id = editor_id.replace("-wrap", "");
+            editor_id = editor_id.replace("wp-", "");
 
-            var editor_content = get_tinymce_content();
+            editor_content = get_tinymce_content(editor_id);
 
+alert(editor_content);
             update_sortable_module_indexes();
 
             /* Dynamic WP Editor */
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
-            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving, editor_content: editor_content})
+            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, editor_content: editor_content})
                     .success(function(editor) {
                         jQuery('#modules_accordion .editor_in_place').last().html(editor)
                         tinymce.execCommand('mceAddEditor', false, rand_id);

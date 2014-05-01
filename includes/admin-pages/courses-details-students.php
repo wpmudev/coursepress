@@ -88,11 +88,11 @@ if (isset($_GET['delete_class'])) {
 $course_classes = get_post_meta($course_id, 'course_classes', true);
 
 
-/* Un-enroll all students in the Class */
-if (isset($_GET['unenroll_all'])) {
+/* Disenroll all students in the Class */
+if (isset($_GET['disenroll_all'])) {
 
-    if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
-        $old_class = urldecode($_GET['unenroll_all']);
+    if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
+        $old_class = urldecode($_GET['disenroll_all']);
 
         if ($old_class == 'Default') {
             $old_class = '';
@@ -111,7 +111,7 @@ if (isset($_GET['unenroll_all'])) {
         if ($wp_user_search->get_results()) {
             foreach ($wp_user_search->get_results() as $user) {
                 $student = new Student($user->ID);
-                $student->unenroll_from_course($course_id, '');
+                $student->disenroll_from_course($course_id, '');
             }
         }
     }
@@ -120,11 +120,11 @@ if (isset($_GET['unenroll_all'])) {
     exit;
 }
 
-/* Un-enroll a Student from class */
-if (isset($_GET['unenroll']) && is_numeric($_GET['unenroll'])) {
-    if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
-        $student = new Student($_GET['unenroll']);
-        $student->unenroll_from_course($course_id);
+/* Disenroll a Student from class */
+if (isset($_GET['disenroll']) && is_numeric($_GET['disenroll'])) {
+    if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
+        $student = new Student($_GET['disenroll']);
+        $student->disenroll_from_course($course_id);
     }
     //ob_start();
     wp_redirect('?page=course_details&tab=students&course_id=' . $course_id . '&ms=us');
@@ -143,8 +143,8 @@ $col_sizes = array(
     '8', '26', '26', '27', '6'
 );
 
-if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
-    $columns["delete"] = __('Un-enroll', 'cp');
+if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) {
+    $columns["delete"] = __('Disenroll', 'cp');
     $col_sizes[] = '12';
 }
 
@@ -211,10 +211,10 @@ $students = new Student_Search();
                                     <i class="fa fa-user cp-move-icon remove-btn"></i>
                                 </a>
                             </td>
-                            <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                            <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                 <td class="<?php echo $style . ' edit-button-student-td'; ?>">
-                                    <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                        <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
+                                    <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                                        <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&disenroll=<?php echo $user_object->ID; ?>" onclick="return disenrollStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a>
                                     <?php } ?>
@@ -229,8 +229,8 @@ $students = new Student_Search();
             </table>
 
             <div class="additional_class_actions">
-                <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                    <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
+                <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                    <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&disenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return disenrollAllFromClass();" title="<?php _e('Disenroll all students from the course', 'cp'); ?>"><?php _e('Disenroll all students', 'cp'); ?></a>
                 <?php } ?>
             </div>
 
@@ -341,10 +341,10 @@ $students = new Student_Search();
                                             <i class="fa fa-user cp-move-icon remove-btn"></i>
                                         </a>
                                     </td>
-                                    <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                                    <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                         <td class="<?php echo $style . ' edit-button-student-td'; ?>">
-                                            <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                                <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll=<?php echo $user_object->ID; ?>" onclick="return unenrollStudent();">
+                                            <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                                                <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&disenroll=<?php echo $user_object->ID; ?>" onclick="return disenrollStudent();">
                                                     <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                                 </a>
                                             <?php } ?>
@@ -363,11 +363,11 @@ $students = new Student_Search();
                         <?php if ((current_user_can('coursepress_delete_classes_cap')) || (current_user_can('coursepress_delete_my_classes_cap') && $course->details->post_author == get_current_user_id())) { ?>
                             <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return deleteClass();" title="<?php _e('Delete Class and move students to Default class', 'cp'); ?>"><?php _e('Delete Class', 'cp'); ?></a>
                         <?php } ?>
-                        <?php if (((current_user_can('coursepress_delete_classes_cap')) || (current_user_can('coursepress_delete_my_classes_cap') && $course->details->post_author == get_current_user_id())) && (((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())))) { ?>
+                        <?php if (((current_user_can('coursepress_delete_classes_cap')) || (current_user_can('coursepress_delete_my_classes_cap') && $course->details->post_author == get_current_user_id())) && (((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())))) { ?>
                             | 
                         <?php } ?>
-                        <?php if ((current_user_can('coursepress_unenroll_students_cap')) || (current_user_can('coursepress_unenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&unenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return unenrollAllFromClass();" title="<?php _e('Un-enroll all students from the course', 'cp'); ?>"><?php _e('Un-enroll all students', 'cp'); ?></a>
+                        <?php if ((current_user_can('coursepress_disenroll_students_cap')) || (current_user_can('coursepress_disenroll_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
+                            <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&disenroll_all=<?php echo urlencode((isset($class) ? $class : '')); ?>" onClick="return disenrollAllFromClass();" title="<?php _e('Disenroll all students from the course', 'cp'); ?>"><?php _e('Disenroll all students', 'cp'); ?></a>
                         <?php } ?>
                     </div>
 
