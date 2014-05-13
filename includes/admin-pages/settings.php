@@ -81,6 +81,7 @@ if (isset($_POST['_wpnonce'])) {
     if (current_user_can('coursepress_settings_shortcode_page_cap')) {
         //$menus['shortcodes'] = __('Shortcodes', 'cp');
     }
+    
 
     $menus = apply_filters('coursepress_settings_new_menus', $menus);
     ?>
@@ -96,7 +97,9 @@ if (isset($_POST['_wpnonce'])) {
                 <?php
             }
             ?>
-
+                <li class="mp-tab">
+                    <a class="mp-tab-link" href="admin.php?page=courses&quick_setup"><?php _e('View Setup Guide', 'cp');?></a>
+                </li>
         </ul>
     </div>
 

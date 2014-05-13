@@ -148,7 +148,7 @@ class video_module extends Unit_Module {
 
                 <div class="video_additional_controls">
 
-                    <label><?php _e('Player Width', 'cp'); ?></label>
+                    <label><?php _e('Player Width (pixels)', 'cp'); ?></label>
                     <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo (isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width)); ?>" />
 
                 </div>

@@ -361,8 +361,8 @@ if (!class_exists('Unit_Module')) {
                 $array_order_num = 0;
                 
                 //Count only ungraded responses from STUDENTS!
-                foreach($ungraded_responses as $ungraded_response){
-                    if(!user_has_role('student', $ungraded_response->post_author)){
+                foreach($ungraded_responses as $ungraded_response){                 
+                    if(get_user_meta($ungraded_response->post_author, 'role', true) !== 'student'){
                         unset($ungraded_responses[$array_order_num]);
                     }
                     $array_order_num++;
@@ -406,7 +406,7 @@ if (!class_exists('Unit_Module')) {
                 
                 //Count only ungraded responses from STUDENTS!
                 foreach($ungraded_responses as $ungraded_response){
-                    if(!user_has_role('student', $ungraded_response->post_author)){
+                    if(get_user_meta($ungraded_response->post_author, 'role', true) !== 'student'){
                         unset($ungraded_responses[$array_order_num]);
                     }
                     $array_order_num++;

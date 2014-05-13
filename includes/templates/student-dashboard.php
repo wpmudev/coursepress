@@ -1,4 +1,4 @@
-<?php if (current_user_can('student')) { ?>
+<?php if (is_user_logged_in()) { ?>
     <?php
     global $coursepress;
     $student = new Student(get_current_user_id());

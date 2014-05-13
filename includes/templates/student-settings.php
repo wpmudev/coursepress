@@ -1,4 +1,4 @@
-<?php if (current_user_can('student')) { ?>
+<?php if (is_user_logged_in()) { ?>
     <?php
     $form_message_class = '';
     $form_message = '';

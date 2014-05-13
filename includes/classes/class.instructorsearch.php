@@ -23,9 +23,9 @@ if (!class_exists('Instructor_Search')) {
 
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
-                'role' => 'instructor',
-                'meta_key' => '',
-                'meta_value' => '',
+                //'role' => 'instructor',
+                'meta_key' => 'role_ins',//just 'role' if the user may be instructor OR student, not both
+                'meta_value' => 'instructor',
                 'meta_compare' => '',
                 'include' => array(),
                 'exclude' => array(),

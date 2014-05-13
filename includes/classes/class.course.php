@@ -144,7 +144,7 @@ if (!class_exists('Course')) {
                     $image = wp_get_image_editor($fl); // Return an implementation that extends <tt>WP_Image_Editor</tt>
 
                     if (!is_wp_error($image)) {
-                        
+
                         $image_size = $image->get_size();
 
                         if (($image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height) || ($image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height)) {
@@ -236,7 +236,7 @@ if (!class_exists('Course')) {
             wp_update_post($post);
         }
 
-        function get_units($course_id = '', $status = 'any') {
+        function get_units($course_id = '', $status = 'any', $count = false) {
 
             if ($course_id == '') {
                 $course_id = $this->id;
@@ -261,8 +261,11 @@ if (!class_exists('Course')) {
             );
 
             $units = get_posts($args);
-
-            return $units;
+            if ($count) {
+                return count($units);
+            } else {
+                return $units;
+            }
         }
 
         function get_permalink($course_id = '') {

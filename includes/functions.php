@@ -319,7 +319,7 @@ function coursepress_get_number_of_instructors() {
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
-        'role' => 'instructor',
+        //'role' => 'instructor',
         'count_total' => false,
         'fields' => array('display_name', 'ID'),
         'who' => ''
@@ -339,7 +339,7 @@ function coursepress_instructors_avatars($course_id, $remove_buttons = true, $ju
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
-        'role' => 'instructor',
+        //'role' => 'instructor',
         'meta_key' => 'course_' . $course_id,
         'meta_value' => $course_id,
         'meta_compare' => '',
@@ -382,7 +382,7 @@ function coursepress_instructors_avatars_array($args = array()) {
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
-        'role' => 'instructor',
+        //'role' => 'instructor',
         'meta_key' => (isset($args['meta_key']) ? $args['meta_key'] : ''),
         'meta_value' => (isset($args['meta_value']) ? $args['meta_value'] : ''),
         'meta_compare' => '',
@@ -450,11 +450,11 @@ function coursepress_students_drop_down() {
 
 function coursepress_instructors_drop_down() {
     $content = '';
-    $content .= '<select name="instructors" id="instructors" data-placeholder="Choose a Course Instructor..." class="chosen-select">';
+    $content .= '<select name="instructors" id="instructors" data-placeholder="'.__('Choose a Course Instructor...', 'cp').'" class="chosen-select">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
-        'role' => 'instructor',
+        //'role' => 'instructor',
         'meta_key' => '',
         'meta_value' => '',
         'meta_compare' => '',

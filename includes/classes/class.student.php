@@ -81,6 +81,7 @@ if (!class_exists('Student')) {
             update_user_meta($this->ID, 'enrolled_course_date_' . $course_id, $current_time); //Link courses and student (in order to avoid custom tables) for easy MySql queries (get courses stats, student courses, etc.)
             update_user_meta($this->ID, 'enrolled_course_class_' . $course_id, $class);
             update_user_meta($this->ID, 'enrolled_course_group_' . $course_id, $group);
+            update_user_meta($this->ID, 'role', 'student');//alternative to roles used
 
             return true;
             //TO DO: add new payment status if it's paid
@@ -237,7 +238,7 @@ if (!class_exists('Student')) {
         }
 
         function add_student($student_data) {
-            $student_data['role'] = 'student';
+            //$student_data['role'] = 'student';
             return wp_insert_user($student_data);
         }
 

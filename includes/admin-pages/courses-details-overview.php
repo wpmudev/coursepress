@@ -2,6 +2,8 @@
 global $page, $user_id, $coursepress_admin_notice;
 global $coursepress;
 
+
+
 if (isset($_GET['course_id'])) {
     $course = new Course($_GET['course_id']);
     $course_details = $course->get_course();
@@ -36,7 +38,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
         $_POST['meta_allow_workbook_page'] = 'off';
     }
 
-    $new_post_id = $course->update_course();
+    if (isset($_POST['submit-unit'])) {
+        /* Save / Save Draft */
+        $new_post_id = $course->update_course();
+    }
+    
+    if (isset($_POST['submit-unit-publish'])) {
+        /* Save & Publish */
+        $new_post_id = $course->update_course();
+        $course = new Course($new_post_id);
+        $course->change_status('publish');
+    }
+    
+    if (isset($_POST['submit-unit-unpublish'])) {
+        /* Save & Unpublish */
+        $new_post_id = $course->update_course();
+        $course = new Course($new_post_id);
+        $course->change_status('private');
+    }
+
 
     if ($new_post_id != 0) {
         ob_start();
@@ -365,7 +385,7 @@ if (isset($_GET['course_id'])) {
 
                             </div>
 
-                            <div class="full border-devider">
+                            <!--<div class="full border-devider">
                                 <label><?php _e('Show Grades Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
                                     <div class="tooltip">
@@ -378,17 +398,16 @@ if (isset($_GET['course_id'])) {
 
                                     <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
                                 </label>
-
-                            </div>
+                            </div>-->
 
                             <div class="full border-devider">
-                                <label><?php _e('Show Workbook Page for Students', 'cp'); ?>
+                                <label><?php _e('Add Workbook Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
                                     <div class="tooltip">
                                         <div class="tooltip-before"></div>
                                         <div class="tooltip-button">&times;</div>
                                         <div class="tooltip-content">
-                                            <?php _e('If checked, students can see their course workbook in the course submenu.', 'cp') ?>
+                                            <?php _e('This is a page where students can see their progress and grades.', 'cp') ?>
                                         </div>
                                     </div>
 
@@ -405,22 +424,31 @@ if (isset($_GET['course_id'])) {
                         <div class="unit-control-buttons course-control-buttons">
 
                             <?php
-                            if (($course_id == 0 && current_user_can('coursepress_create_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
+                            if (($course_id == 0 && current_user_can('coursepress_create_course_cap'))) {//do not show anything
                                 ?>
-                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="Save">
+                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save Draft', 'cp'); ?>">
+                                <input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">
+
                             <?php } ?>
 
                             <?php
                             if (($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
                                 ?>
-                                <a class="button button-preview" href="http://localhost/wpmu/courses/unpublished-course/units/" target="_new">Preview</a>
+                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($course_details->post_status == 'unpublished') ? 'Save Draft' : 'Save'; ?>">
+                            <?php } ?>
+
+                            <?php
+                            if (($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
+                                ?>
+                                <a class="button button-preview" href="<?php echo get_permalink($course_id); ?>" target="_new">Preview</a>
+
                                 <?php if (current_user_can('coursepress_change_course_status_cap') || (current_user_can('coursepress_change_my_course_status_cap') && $course_details->post_author == get_current_user_id())) { ?>
-                                    <a href="?page=courses&course_id=<?php echo $course_details->ID; ?>&action=change_status&new_status=<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php ($course_details->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
-                                <?php }
+                                    <input type="submit" name="submit-unit-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($course_details->post_status == 'unpublished') ? 'Publish' : 'Unpublish'; ?>">
+                                    <?php
+                                }
                             }
                             ?>
                         </div>
-
 
                         <div class="buttons course-add-units-button">
                             <?php
@@ -464,14 +492,14 @@ if (isset($_GET['course_id'])) {
                             <div class="clearfix"></div>
                             <?php coursepress_instructors_drop_down(); ?>
 
-                            <?php if (coursepress_get_number_of_instructors() != 0) { ?>
+                            <?php// if (coursepress_get_number_of_instructors() != 0) { ?>
                                 <div class="inner-right inner-link">
                                     <input class="button-secondary" id="add-instructor-trigger" type="button" value="<?php _e('Assign Selected Instructor', 'cp'); ?>">
                                 </div>
                                 <?php
-                            } else {
+                            /*} else {
                                 _e('You do not have any available instructors yet. <a href="user-new.php" target="_new">Create one user with the Instructor role</a> in order to assign it to the courses.', 'cp');
-                            }
+                            }*/
                             ?>
 
                             <?php

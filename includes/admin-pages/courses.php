@@ -140,6 +140,7 @@ if (isset($_GET['quick_setup'])) {
 
                 $columns = array(
                     "course" => __('Course', 'cp'),
+                    "units" => __('Units', 'cp'),
                     "students" => __('Students', 'cp'),
                     "status" => __('Status', 'cp'),
                     "actions" => __('Actions', 'cp'),
@@ -147,7 +148,7 @@ if (isset($_GET['quick_setup'])) {
 
 
                 $col_sizes = array(
-                    '3', '65', '5', '10', '10'
+                    '3', '50', '5', '5', '10', '10'
                 );
 
                 if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap'))) {
@@ -159,7 +160,7 @@ if (isset($_GET['quick_setup'])) {
                 <table cellspacing="0" class="widefat shadow-table unit-control-buttons">
                     <thead>
                         <tr>
-                            <th style="" class="manage-column column-cb check-column" id="cb" scope="col" width="<?php echo $col_sizes[0] . '%'; ?>"><input type="checkbox"></th>
+                            <th style="width: 3%;" class="manage-column column-cb check-column" id="cb" scope="col" width="<?php echo $col_sizes[0] . '%'; ?>"><input type="checkbox"></th>
                             <?php
                             $n = 1;
                             foreach ($columns as $key => $col) {
@@ -207,6 +208,10 @@ if (isset($_GET['quick_setup'])) {
                                             <span class="units"><a href="<?php echo get_permalink($course->ID); ?>units/" rel="permalink"><?php _e('View Units', 'cp') ?></a></span>
                                         <?php } ?>
                                     </div>
+                                </td>
+                                <td <?php echo $style; ?>>
+                                <?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?><br />
+                                <?php echo $course_obj->get_units('', 'publish', true);?> Published
                                 </td>
                                 <td class="center" <?php echo $style; ?>><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a></td>
                                 <td <?php echo $style; ?>><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?></td>

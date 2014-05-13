@@ -70,11 +70,11 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         <li class="submenu-item submenu-discussions <?php echo(isset($subpage) && $subpage == 'discussions' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_discussion_slug(); ?>/"><?php _e('Discussions', 'coursepress'); ?></a></li>
                         <?php
                     }
-                    if ($course->allow_course_grades_page == 'on') {
+                    /*if ($course->allow_course_grades_page == 'on') {
                         ?>
                         <li class="submenu-item submenu-grades <?php echo(isset($subpage) && $subpage == 'grades' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_grades_slug(); ?>/"><?php _e('Grades', 'coursepress'); ?></a></li>
                     <?php
-                    }
+                    }*/
                     if ($course->allow_workbook_page == 'on') {
                         ?>
                         <li class="submenu-item submenu-workbook <?php echo(isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'coursepress'); ?></a></li>
@@ -215,7 +215,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
                 $course->button = '<form name="enrollment-process" method="post" action="' . do_shortcode("[courses_urls url='enrollment-process']") . '">';
 
-                if (current_user_can('student')) {
+                if (is_user_logged_in()) {
 
                     if (!$student->user_enrolled_in_course($course_id)) {
                         if (!$course_obj->is_populated()) {

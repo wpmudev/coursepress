@@ -2,6 +2,9 @@
 global $wp_roles;
 
 if (isset($_POST['submit'])) {
+    
+    /* Set capabilities for the instructor role */
+    
     $instructor_role = get_role('instructor');
     $instructor_capabilities = $instructor_role->capabilities;
 
@@ -19,6 +22,33 @@ if (isset($_POST['submit'])) {
         foreach ($instructor_capabilities as $key => $old_cap) {
             if ($key != 'read') {
                 $instructor_role->remove_cap($key);
+            }
+        }
+    }
+    
+    /* Set capabilities for each instructor user separately */
+    
+    $wp_user_search = new Instructor_Search($usersearch, $page_num);
+
+    foreach ($wp_user_search->get_results() as $user) {
+        $role = new WP_User($user->ID);
+        $user_capabilities = $role->wp_capabilities;
+
+        if (isset($_POST['instructor_capability'])) {
+            foreach ($user_capabilities as $key => $old_cap) {
+                if (!in_array($key, $_POST['instructor_capability']) && $key != 'read') {//making the operation less expensive
+                    $role->remove_cap($key);
+                }
+            }
+
+            foreach ($_POST['instructor_capability'] as $new_cap) {
+                $role->add_cap($new_cap);
+            }
+        } else {//all unchecked, remove all capabilities except read
+            foreach ($user_capabilities as $key => $old_cap) {
+                if ($key != 'read') {
+                    $role->remove_cap($key);
+                }
             }
         }
     }
@@ -99,7 +129,7 @@ $instructor_capabilities_students = array(
 
 $instructor_capabilities_groups = array(
     'coursepress_settings_groups_page_cap' => __('View Groups tab within the Settings page', 'cp'),
-    'coursepress_settings_shortcode_page_cap' => __('View Shortcode within the Settings page', 'cp')
+    //'coursepress_settings_shortcode_page_cap' => __('View Shortcode within the Settings page', 'cp')
 );
 
 $instructor_capabilities_notifications = array(

@@ -30,8 +30,8 @@ if (!class_exists('Student_Search')) {
                     /* 'fields' => 'all_with_meta' */
             );
 
-            $search_args['meta_key'] = (isset($search_args['meta_key']) ? $search_args['meta_key'] : '');
-            $search_args['meta_value'] = (isset($search_args['meta_value']) ? $search_args['meta_value'] : '');
+            $search_args['meta_key'] = 'role';//(isset($search_args['meta_key']) ? $search_args['meta_key'] : '');
+            $search_args['meta_value'] = 'student';//(isset($search_args['meta_value']) ? $search_args['meta_value'] : '');
 
             if (!empty($meta_args)) {
                 $meta_args['number'] = $this->users_per_page;
@@ -41,7 +41,7 @@ if (!class_exists('Student_Search')) {
 
             $this->query_vars = wp_parse_args($args, array(
                 'blog_id' => $GLOBALS['blog_id'],
-                'role' => 'student',
+                //'role' => 'student',
                 'meta_key' => $search_args['meta_key'],
                 'meta_value' => $search_args['meta_value'],
                 'meta_compare' => '',

@@ -301,18 +301,18 @@ jQuery(document).ready(function() {
             mode: "specific_textareas",
             editor_selector: "mceEditor"
         });
-        
+
         return tinyMCE.get(id).getContent();
         //alert(id);
         /*alert(tinyMCE.get("content").getContent());
-        if (jQuery(".wp-editor-wrap").hasClass("tmce-active")) {
-            //alert(tinyMCE.activeEditor.getContent());
-
-            return tinyMCE.activeEditor.getContent();
-        } else {
-            return jQuery('#html_text_area_id').val();
-
-        }*/
+         if (jQuery(".wp-editor-wrap").hasClass("tmce-active")) {
+         //alert(tinyMCE.activeEditor.getContent());
+         
+         return tinyMCE.activeEditor.getContent();
+         } else {
+         return jQuery('#html_text_area_id').val();
+         
+         }*/
     }
 
     jQuery('#enroll_type').change(function() {
@@ -346,6 +346,12 @@ jQuery(document).ready(function() {
         if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
             jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
         }
+
+        jQuery.get('admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id})
+                .success(function(data) {
+                    //alert(data);
+                });
+
     });
 
     var ct = 2;
@@ -405,7 +411,7 @@ jQuery(document).ready(function() {
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {
-     
+
             //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
 
             var nth_child_num = ui.item.index() + 1;
@@ -417,7 +423,7 @@ jQuery(document).ready(function() {
 
             editor_content = get_tinymce_content(editor_id);
 
-alert(editor_content);
+//alert(editor_content);
             update_sortable_module_indexes();
 
             /* Dynamic WP Editor */

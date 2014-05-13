@@ -95,6 +95,9 @@ if (!class_exists('CoursePress')) {
 
                 //Listen to dynamic editor requests (using on unit page in the admin)
                 add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));
+
+                //Assing instructor ajax call
+                add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
             }
 
             // Discusson class
@@ -335,13 +338,13 @@ if (!class_exists('CoursePress')) {
 
         function dynamic_wp_editor() {
 
-            $args = array("textarea_name" => "text_module" . "_content[]", "textarea_rows" => 5, "teeny" => true, /*'tinymce' =>
-                        array(
-                            'skin' => 'wordpress',
-                            'theme' => 'modern',
-                    )*/);
-                    $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
-                    wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+            $args = array("textarea_name" => "text_module" . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
+                      array(
+                      'skin' => 'wordpress',
+                      'theme' => 'modern',
+                      ) */);
+            $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+            wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
             /*
               wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
               'textarea_name' => $_GET['module_name'] . "_content[]",
@@ -1242,6 +1245,94 @@ if (!class_exists('CoursePress')) {
             register_post_type('discussions', $args);
 
             do_action('after_custom_post_types');
+        }
+
+        function assign_instructor_capabilities() {
+            
+            if (is_admin() && (current_user_can('administrator') || current_user_can('coursepress_assign_and_assign_instructor_my_course_cap'))) {
+
+                $role = new WP_User($_REQUEST['user_id']);
+                
+                //update_user_meta( $_REQUEST['user_id'], 'role', 'instructor' );
+                update_user_meta( $_REQUEST['user_id'], 'role_ins', 'instructor' );
+                
+                $role->add_cap('can_edit_posts');
+                $role->add_cap('read');
+
+                /* =============== General plugin menu capabilities ================ */
+
+                $role->add_cap('coursepress_dashboard_cap'); //access to plugin menu
+                $role->add_cap('coursepress_courses_cap'); //access to courses
+                $role->add_cap('coursepress_instructors_cap'); //access to instructors
+                $role->add_cap('coursepress_students_cap'); //access to students
+                $role->add_cap('coursepress_assessment_cap'); //access to assessment
+                $role->add_cap('coursepress_reports_cap'); //access to reports
+                $role->add_cap('coursepress_notifications_cap'); //access to notifications
+                $role->add_cap('coursepress_settings_cap'); //access to settings
+
+                /* =============== Action capabilities ============== */
+
+                /* - Courses capabilities */
+
+                $role->add_cap('coursepress_create_course_cap'); //create new courses
+                //$role->add_cap('coursepress_update_course_cap'); //update courses
+                $role->add_cap('coursepress_update_my_course_cap'); //update courses where the instructor is an author
+                //$role->add_cap('coursepress_delete_course_cap'); //delete courses
+                $role->add_cap('coursepress_delete_my_course_cap'); //delete courses where instructor is an author
+                //$role->add_cap('coursepress_change_course_status_cap'); //change course statuses
+                $role->add_cap('coursepress_change_my_course_status_cap'); //change course statuses where instructor is author
+
+                /* - Courses > Units capabilities */
+
+                $role->add_cap('coursepress_create_course_unit_cap'); //create new course units
+                //$role->add_cap('coursepress_update_course_unit_cap'); //update course units
+                $role->add_cap('coursepress_update_my_course_unit_cap'); //update course units where the instructor is an author (of the unit)
+                //$role->add_cap('coursepress_delete_course_units_cap'); //delete course units
+                $role->add_cap('coursepress_delete_my_course_units_cap'); //delete course units where instructor is an author (of a the unit)
+                //$role->add_cap('coursepress_change_course_unit_status_cap'); //change course unit statuses
+                $role->add_cap('coursepress_change_my_course_unit_status_cap'); //change course unit statuses where instructor is author
+
+                /* - Instructors capabilities */
+
+                //$role->add_cap('coursepress_assign_and_assign_instructor_course_cap'); //assign and unassign instructors to a course
+                $role->add_cap('coursepress_assign_and_assign_instructor_my_course_cap'); //assign and ununassign course instructors where the instructor is an author
+
+                /* - Course Classes capabilities */
+
+                //$role->add_cap('coursepress_add_new_classes_cap'); //Add new course classes
+                $role->add_cap('coursepress_add_new_my_classes_cap'); //Add new course classes to courses where the instructor is an author
+                //$role->add_cap('coursepress_delete_classes_cap'); //Delete course classes
+                $role->add_cap('coursepress_delete_my_classes_cap'); //Delete course classes where course author is the instructor
+
+                /* - Students capabilities */
+
+                //$role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
+                $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
+                //$role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
+                $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
+                //$role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
+                $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
+                //$role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
+                $role->add_cap('coursepress_change_my_students_group_class_cap'); //Change student's group and class where the instructor is an author of the course
+                $role->add_cap('coursepress_add_new_students_cap'); //Add new users with students role to blog
+                $role->add_cap('coursepress_delete_students_cap'); //Delete users with Student role
+
+                /* - Settings > Groups capabilities */
+                //$role->add_cap('coursepress_settings_groups_page_cap'); //Access to group settings page
+                $role->add_cap('coursepress_settings_shortcode_page_cap'); //View shortcode page
+                //$role->add_cap('coursepress_send_bulk_my_students_email_cap'); //Send bulk emails
+                $role->add_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
+
+                /* - Notifications capabilities */
+
+                $role->add_cap('coursepress_create_notification_cap'); //create new notifications
+                //$role->add_cap('coursepress_update_notification_cap'); //update courses
+                $role->add_cap('coursepress_update_my_notification_cap'); //update notifications where the instructor is an author
+                //$role->add_cap('coursepress_delete_notification_cap'); //delete courses
+                $role->add_cap('coursepress_delete_my_notification_cap'); //delete notifications where instructor is an author
+                //$role->add_cap('coursepress_change_notification_status_cap'); //change notification statuses
+                $role->add_cap('coursepress_change_my_notification_status_cap'); //change notification statuses where instructor is author
+            }
         }
 
         //Add new roles and user capabilities

@@ -4,7 +4,7 @@ $student = new Student(get_current_user_id());
 
 $course_price = 0;
 
-if (current_user_can('student')) {
+if (is_user_logged_in()) {
 
     if (isset($_POST['course_id']) && is_numeric($_POST['course_id'])) {
 
@@ -58,6 +58,6 @@ if (current_user_can('student')) {
         _e('Please select a course first you want to enroll in.', 'cp');
     }
 } else {
-    _e('You do not have required permission for this action', 'cp');
+    _e('You must be logged in in order to complete the action', 'cp');
 }
 ?>
