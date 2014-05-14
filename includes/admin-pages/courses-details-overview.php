@@ -17,10 +17,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     check_admin_referer('course_details_overview');
 
-    if ($_POST['meta_course_category'] != -1) {
+    /*if ($_POST['meta_course_category'] != -1) {
         $term = get_term_by('id', $_POST['meta_course_category'], 'course_category');
         wp_set_object_terms($course_id, $term->slug, 'course_category', false);
-    }
+    }*/
 
     if (!isset($_POST['meta_open_ended_course'])) {
         $_POST['meta_open_ended_course'] = 'off';
@@ -276,7 +276,7 @@ if (isset($_GET['course_id'])) {
                             <br clear="all" />
                             <br clear="all" />
 
-                            <div class="half">
+                            <!--<div class="half">
                                 <label><?php _e('Course Category', 'cp'); ?></label>
                                 <?php
                                 $tax_args = array(
@@ -304,7 +304,7 @@ if (isset($_GET['course_id'])) {
                                 ?>
                                 <a href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
 
-                            </div>
+                            </div>-->
 
                             <div class="half">
                                 <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
@@ -492,7 +492,7 @@ if (isset($_GET['course_id'])) {
                             <div class="clearfix"></div>
                             <?php coursepress_instructors_drop_down(); ?>
 
-                            <?php// if (coursepress_get_number_of_instructors() != 0) { ?>
+                            <?php // if (coursepress_get_number_of_instructors() != 0) { ?>
                                 <div class="inner-right inner-link">
                                     <input class="button-secondary" id="add-instructor-trigger" type="button" value="<?php _e('Assign Selected Instructor', 'cp'); ?>">
                                 </div>

@@ -69,13 +69,20 @@
         <?php do_action('after_settings_email');?>
         
         <label>
+            <?php _e('Username', 'cp'); ?>:
+            <input type="text" name="username" value="<?php esc_attr_e($student->user_login); ?>" disabled="disabled" />
+        </label>
+        
+        <?php do_action('after_settings_username');?>
+        
+        <label>
             <?php _e('Password (empty = don\'t change)', 'cp'); ?>:
             <input type="password" name="password" value="" />
         </label>
         
         <?php do_action('after_settings_passwordon');?>
         
-        <label class="right">
+        <label>
             <?php _e('Confirm Password', 'cp'); ?>:
             <input type="password" name="password_confirmation" value="" />
         </label>

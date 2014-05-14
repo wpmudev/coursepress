@@ -28,7 +28,7 @@ if (isset($_POST['submit'])) {
                     $form_errors++;
                 }
 
-                $student_data['role'] = 'student';
+                //$student_data['role'] = 'student';
                 $student_data['user_login'] = $_POST['username'];
                 $student_data['user_email'] = $_POST['email'];
                 $student_data['first_name'] = $_POST['first_name'];
@@ -42,6 +42,7 @@ if (isset($_POST['submit'])) {
 
                 if ($form_errors == 0) {
                     if ($student_id = $student->add_student($student_data) !== 0) {
+                        add_user_meta($student_id, 'role', 'student');
                         $form_message = __('Account created successfully!', 'cp');
                         $form_message_class = 'updated';
                         /* $email_args['email_type'] = 'student_registration';

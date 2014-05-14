@@ -1044,8 +1044,8 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array(&$this, 'coursepress_course_details_admin'));
             do_action('coursepress_add_menu_items_after_new_courses');
 
-            add_submenu_page('courses', __('Categories', 'cp'), __('Categories', 'cp'), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course');
-            do_action('coursepress_add_menu_items_after_course_categories');
+            //add_submenu_page('courses', __('Categories', 'cp'), __('Categories', 'cp'), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course');
+            //do_action('coursepress_add_menu_items_after_course_categories');
 
             add_submenu_page('courses', __('Instructors', 'cp'), __('Instructors', 'cp'), 'coursepress_instructors_cap', 'instructors', array(&$this, 'coursepress_instructors_admin'));
             do_action('coursepress_add_menu_items_after_instructors');
@@ -1160,7 +1160,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true

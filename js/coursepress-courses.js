@@ -1,5 +1,9 @@
 jQuery(document).ready(function() {
 
+    jQuery('#add_student_class').live('input', function() {
+        return false;
+    });
+
     jQuery('.element_title').live('input', function() {
         //jQuery(this).parent().parent().parent().find('.h3-label-left').html(jQuery(this).val());
         jQuery(this).parent().parent().find('.h3-label-left').html(jQuery(this).val());

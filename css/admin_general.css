@@ -403,3 +403,12 @@ td.label {
     margin-left: 65px;
     margin-bottom: 15px;
 }
+
+#settings-wrap .mp-tabs .mp-tab:last-child a {
+    color: #00bbff;
+    border-top: 1px solid #dadada;
+    padding-top: 16px;
+    margin-right: 18px;
+    margin-left: 15px;
+    padding-left: 0px;
+}

@@ -445,6 +445,7 @@ $students = new Student_Search();
             <label><?php _e('New Class name', 'cp'); ?>
                 <input type="text" name="course_classes[]" value="" />
             </label>
+            
             <?php submit_button(__('Add New Class', 'cp'), 'primary', 'add_student_class', ''); ?>
         </div>
     <?php } ?>

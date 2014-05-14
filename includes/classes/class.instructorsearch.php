@@ -59,9 +59,9 @@ if (!class_exists('Instructor_Search')) {
                     $args['s'] = urlencode($this->search_term);
                 }
 
-                if (!empty($this->role)) {
+                /*if (!empty($this->role)) {
                     $args['role'] = urlencode($this->role);
-                }
+                }*/
 
                 $this->paging_text = paginate_links(array(
                     'total' => ceil($this->total_users_for_query / $this->users_per_page),
@@ -192,7 +192,9 @@ if (!class_exists('Instructor_Search')) {
                 $qv['meta_value'] = 0;
                 $qv['meta_compare'] = '!=';
                 $qv['blog_id'] = $blog_id = 0; // Prevent extra meta query
+                
             }
+            $qv['role'] = '';
 
             $role = trim($qv['role']);
 
