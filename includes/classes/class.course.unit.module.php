@@ -56,7 +56,7 @@ if (!class_exists('Unit_Module')) {
             if (isset($data->ID) && $data->ID != '' && $data->ID != 0) {
                 $post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
                 //$update = true;
-            }else{
+            } else {
                 //$update = false;
             }
 
@@ -65,9 +65,9 @@ if (!class_exists('Unit_Module')) {
 
             //Update post meta
             if ($post_id != 0) {
-                /*if(!$update){
-                    $last_inserted_module_id = $post_id;
-                }*/
+                /* if(!$update){
+                  $last_inserted_module_id = $post_id;
+                  } */
                 if (isset($data->metas)) {
                     foreach ($data->metas as $key => $value) {
                         update_post_meta($post_id, $key, $value);
@@ -206,7 +206,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_modules_front($unit_id = 0) {
-            global $coursepress_modules, $wp, $paged;
+            global $coursepress, $coursepress_modules, $wp, $paged;
 
             $front_save = false;
             $responses = 0;
@@ -215,8 +215,31 @@ if (!class_exists('Unit_Module')) {
             $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
             $modules = $this->get_modules($unit_id);
+
+            $course_id = do_shortcode('[get_parent_course_id]');
+
+            if (isset($_POST['submit_modules_data_done']) || isset($_POST['submit_modules_data_no_save_done'])) {
+
+                if (isset($_POST['submit_modules_data_done'])) {
+                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
+                } else {
+                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                }
+
+                exit;
+            }
+
+            if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_no_save_save'])) {
+                wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1));
+                if (isset($_POST['submit_modules_data_save'])) {
+                    wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1) . '?saved=ok');
+                } else {
+                    wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1));
+                }
+                exit;
+            }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>#submit_bottom">
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"><!--#submit_bottom-->
                 <?php
                 $pages_num = 1;
 
@@ -253,7 +276,10 @@ if (!class_exists('Unit_Module')) {
 
                 wp_nonce_field('modules_nonce');
 
+                $is_last_page = coursepress_unit_module_pagination($unit_id, $pages_num, true); //check if current unit page is last page
+                
                 if ($front_save) {
+
                     if ($input_modules !== $responses) {
                         ?>
                         <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
@@ -267,9 +293,17 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled" name="submit_modules_data" value="<?php _e('Submit', 'cp'); ?>">
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Save & Next', 'cp')); ?>">
                         <?php
+                    } else {
+                        ?>
+                        <input type = "submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value = "<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>">
+                    <?php
                     }
+                } else {
+                    ?>
+                    <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_no_save_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>">
+                    <?php
                 }
                 ?>
             </form>
@@ -289,8 +323,8 @@ if (!class_exists('Unit_Module')) {
             <?php
             return wp_editor($post->response_comment, 'response_comment', $settings);
         }
-        
-        function get_module_type($post_id){
+
+        function get_module_type($post_id) {
             return get_post_meta($post_id, 'module_type', true);
         }
 
@@ -357,19 +391,19 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
-                
+
                 $array_order_num = 0;
-                
+
                 //Count only ungraded responses from STUDENTS!
-                foreach($ungraded_responses as $ungraded_response){                 
-                    if(get_user_meta($ungraded_response->post_author, 'role', true) !== 'student'){
+                foreach ($ungraded_responses as $ungraded_response) {
+                    if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
                     $array_order_num++;
                 }
 
-                
-                
+
+
                 /* $admins_responses = 0;
 
                   foreach ($ungraded_responses as $ungraded_responses) {
@@ -400,18 +434,18 @@ if (!class_exists('Unit_Module')) {
                 );
 
                 $ungraded_responses = get_posts($args);
-                
-                
+
+
                 $array_order_num = 0;
-                
+
                 //Count only ungraded responses from STUDENTS!
-                foreach($ungraded_responses as $ungraded_response){
-                    if(get_user_meta($ungraded_response->post_author, 'role', true) !== 'student'){
+                foreach ($ungraded_responses as $ungraded_response) {
+                    if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
                     $array_order_num++;
                 }
-                
+
                 var_dump($ungraded_responses);
 
                 return count($ungraded_responses);
@@ -421,12 +455,12 @@ if (!class_exists('Unit_Module')) {
         function get_module_delete_link($module_id) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                    jQuery(this).parent().parent().parent().remove();
-                                    jQuery(this).parent().parent().remove();
+                        jQuery(this).parent().parent().parent().remove();
+                        jQuery(this).parent().parent().remove();
 
-                                    update_sortable_module_indexes();
-                                }
-                                ;"><?php //_e('Delete'); ?><i class="fa fa-times-circle cp-move-icon"></i></a>
+                        update_sortable_module_indexes();
+                    }
+                    ;"><?php //_e('Delete');    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
             <?php
         }
@@ -434,45 +468,45 @@ if (!class_exists('Unit_Module')) {
         function get_module_remove_link() {
             ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                                    jQuery(this).parent().parent().parent().remove();
-                                    jQuery(this).parent().parent().remove();
+                        jQuery(this).parent().parent().parent().remove();
+                        jQuery(this).parent().parent().remove();
 
-                                    update_sortable_module_indexes();
-                                }"><?php //_e('Remove') ?><i class="fa fa-times-circle cp-move-icon"></i></a>
+                        update_sortable_module_indexes();
+                    }"><?php //_e('Remove')    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
-                                                       <?php
-                                                   }
+            <?php
+        }
 
-                                                   function display_title_on_front($data) {
-                                                       $to_display = isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? true : (!isset($data->show_title_on_front)) ? true : false;
-                                                       return $to_display;
-                                                   }
+        function display_title_on_front($data) {
+            $to_display = isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? true : (!isset($data->show_title_on_front)) ? true : false;
+            return $to_display;
+        }
 
-                                                   function get_response_comment($response_id, $count = false) {
-                                                       return get_post_meta($response_id, 'response_comment', true);
-                                                   }
+        function get_response_comment($response_id, $count = false) {
+            return get_post_meta($response_id, 'response_comment', true);
+        }
 
-                                                   function get_response_form($user_ID, $response_request_ID, $show_label = true) {
-                                                       //module does not overwrite this method message?
-                                                   }
+        function get_response_form($user_ID, $response_request_ID, $show_label = true) {
+            //module does not overwrite this method message?
+        }
 
-                                                   function get_response($user_ID, $response_request_ID) {
-                                                       
-                                                   }
+        function get_response($user_ID, $response_request_ID) {
+            
+        }
 
-                                                   function on_create() {
-                                                       
-                                                   }
+        function on_create() {
+            
+        }
 
-                                                   function save_module_data() {
-                                                       
-                                                   }
+        function save_module_data() {
+            
+        }
 
-                                                   function admin_main($data) {
-                                                       
-                                                   }
+        function admin_main($data) {
+            
+        }
 
-                                               }
+    }
 
-                                           }
-                                           ?>
+}
+?>

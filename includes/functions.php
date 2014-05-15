@@ -26,12 +26,13 @@ function is_chat_plugin_active() {
 /**
  * Unit unit module pagination
  */
-function coursepress_unit_module_pagination($unit_id, $pages_num) {
+function coursepress_unit_module_pagination($unit_id, $pages_num, $check_is_last_page = false) {
     global $wp, $wp_query, $paged, $coursepress_modules;
 
     $modules_class = new Unit_Module();
 
     if (!isset($unit_id)) {// || !is_singular()
+        echo '<br clear="all"><div class="navigation" id="navigation-pagination"></div>';
         return;
     }
 
@@ -41,8 +42,18 @@ function coursepress_unit_module_pagination($unit_id, $pages_num) {
 
     $wp_query->max_num_pages = $max;
 
-    if ($wp_query->max_num_pages <= 1)
+    if ($check_is_last_page) {
+        if ($max <= 1 || ($max == $paged)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if ($wp_query->max_num_pages <= 1) {
+        echo '<br clear="all"><div class="navigation" id="navigation-pagination"></div>';
         return;
+    }
 
     echo '<br clear="all"><div class="navigation" id="navigation-pagination"><ul>' . "\n";
 
@@ -450,7 +461,7 @@ function coursepress_students_drop_down() {
 
 function coursepress_instructors_drop_down() {
     $content = '';
-    $content .= '<select name="instructors" id="instructors" data-placeholder="'.__('Choose a Course Instructor...', 'cp').'" class="chosen-select">';
+    $content .= '<select name="instructors" id="instructors" data-placeholder="' . __('Choose a Course Instructor...', 'cp') . '" class="chosen-select">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
@@ -890,6 +901,7 @@ if (!function_exists('coursepress_numeric_posts_nav')) {
 
         echo '</ul></div>' . "\n";
     }
+
 }
 
 require_once('first-install.php');

@@ -495,3 +495,19 @@ h1.notification-title{
     float: right;
     padding-top: 9px;
 }
+
+.save_elements_message_ok{
+    position: fixed;
+    top: 0px;
+    background:red;
+    width:320px;
+    left:50%;
+    margin-left:-160px;
+    text-align: center;
+    background-color: #0facd9;
+    color: #fff;
+    padding: 5px 30px 9px 30px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    
+}

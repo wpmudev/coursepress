@@ -9,3 +9,6 @@ function disenroll() {
         return false;
     }
 }
+jQuery(document).ready(function() {
+    jQuery('.save_elements_message_ok').delay(2000).fadeOut('slow'); 
+});

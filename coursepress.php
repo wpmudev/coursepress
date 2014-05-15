@@ -170,6 +170,10 @@ if (!class_exists('CoursePress')) {
             //Custom header actions
             add_action('wp_enqueue_scripts', array(&$this, 'header_actions'));
 
+            //Custom footer actions
+
+            add_action('wp_footer', array(&$this, 'footer_actions'));
+
             //add_action('admin_enqueue_scripts', array(&$this, 'add_jquery_ui'));
             add_action('admin_enqueue_scripts', array(&$this, 'admin_header_actions'));
 
@@ -581,7 +585,7 @@ if (!class_exists('CoursePress')) {
                     $this->units_archive_subpage = 'workbook';
 
                     $theme_file = locate_template(array('archive-unit-workbook.php'));
-                    wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
+                    //wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
                     if ($theme_file != '') {
                         do_shortcode('[course_units_loop]');
                         require_once($theme_file);
@@ -1248,14 +1252,14 @@ if (!class_exists('CoursePress')) {
         }
 
         function assign_instructor_capabilities() {
-            
+
             if (is_admin() && (current_user_can('administrator') || current_user_can('coursepress_assign_and_assign_instructor_my_course_cap'))) {
 
                 $role = new WP_User($_REQUEST['user_id']);
-                
+
                 //update_user_meta( $_REQUEST['user_id'], 'role', 'instructor' );
-                update_user_meta( $_REQUEST['user_id'], 'role_ins', 'instructor' );
-                
+                update_user_meta($_REQUEST['user_id'], 'role_ins', 'instructor');
+
                 $role->add_cap('can_edit_posts');
                 $role->add_cap('read');
 
@@ -1589,6 +1593,7 @@ if (!class_exists('CoursePress')) {
         /* Custom header actions */
 
         function header_actions() {//front
+            wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
             wp_localize_script('coursepress_front', 'student', array(
                 'disenroll_alert' => __('Please confirm that you want to disenroll from the course. If you disenroll, you will no longer be able to see your records for this course.', 'cp'),
@@ -1596,6 +1601,18 @@ if (!class_exists('CoursePress')) {
 
             if (!is_admin()) {
                 wp_enqueue_style('front_general', $this->plugin_url . 'css/front_general.css', array(), $this->version);
+            }
+        }
+
+        /* Custom footer actions */
+
+        function footer_actions() {
+            if ((isset($_GET['saved']) && $_GET['saved'] == 'ok')) {
+                ?>
+                <div class="save_elements_message_ok">
+                    <?php _e('The data has been saved successfully.', 'cp'); ?>
+                </div>
+                <?php
             }
         }
 

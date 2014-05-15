@@ -339,7 +339,7 @@ class checkbox_input_module extends Unit_Module {
             }
         }
 
-        if (isset($_POST['submit_modules_data'])) {
+        if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done'])) {
 
             foreach ($_POST as $response_name => $response_value) {
 
