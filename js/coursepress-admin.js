@@ -1,4 +1,29 @@
+jQuery(document).ready(function() {
 
+    jQuery('#add_student_class').click(function() {
+
+        var class_input_errors = 0;
+
+        if (jQuery('.course_classes_input').val() == '') {
+            jQuery('.add_class_message').html(coursepress.empty_class_name);
+            class_input_errors++;
+        }
+
+        jQuery(".ui-accordion-header h3").each(function(index) {
+            if (jQuery(this).attr('data-title') == jQuery('.course_classes_input').val()) {
+                jQuery('.add_class_message').html(coursepress.duplicated_class_name);
+                class_input_errors++;
+            }
+        });
+
+        if (class_input_errors == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    });
+});
 
 
 jQuery(document).ready(function() {
@@ -411,7 +436,7 @@ jQuery(document).ready(function() {
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {
-            
+
             update_sortable_module_indexes();
 
             //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
@@ -426,7 +451,7 @@ jQuery(document).ready(function() {
             editor_content = get_tinymce_content(editor_id);
 
 //alert(editor_content);
-            
+
 
             /* Dynamic WP Editor */
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
@@ -448,7 +473,7 @@ jQuery(document).ready(function() {
     })
     /*});*/
     function update_sortable_module_indexes() {
-        
+
         jQuery('.module_order').each(function(i, obj) {
             jQuery(this).val(i + 1);
         });

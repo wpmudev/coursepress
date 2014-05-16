@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developer: Marko Miljus (https://twitter.com/markomiljus)
-  Version: 0.9.8.8 beta
+  Version: 0.9.8.9 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: N/A
@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8.7 beta';
+        var $version = '0.9.8.9 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -47,6 +47,7 @@ if (!class_exists('CoursePress')) {
           } */
 
         function __construct() {
+
             //setup our variables
             $this->init_vars();
 
@@ -100,6 +101,9 @@ if (!class_exists('CoursePress')) {
                 add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
             }
 
+            //Output buffer hack
+            add_action('init', array(&$this, 'output_buffer'), 0);
+            
             // Discusson class
             require_once( $this->plugin_dir . 'includes/classes/class.discussion.php' );
 
@@ -135,8 +139,6 @@ if (!class_exists('CoursePress')) {
             // Virtual page class
             require_once( $this->plugin_dir . 'includes/classes/class.virtualpage.php' );
 
-            //Output buffer hack
-            add_action('init', array(&$this, 'output_buffer'), 0);
 
             //Register custom post types
             add_action('init', array(&$this, 'register_custom_posts'), 1);
@@ -1689,6 +1691,8 @@ if (!class_exists('CoursePress')) {
                     'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
                     'remove_module_alert' => __('Please confirm that you want to remove selected module?', 'cp'),
                     'remove_row' => __('Remove', 'cp'),
+                    'empty_class_name' => __('Class name cannot be empty', 'cp'),
+                    'duplicated_class_name' => __('Class name already exists', 'cp'),
                     'course_taxonomy_screen' => (isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false)
                 ));
             }

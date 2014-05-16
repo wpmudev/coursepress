@@ -166,7 +166,7 @@ $students = new Student_Search();
     $wp_user_search = new WP_User_Query($args);
     ?>
     <div class="sidebar-name no-movecursor">
-        <h3><?php _e('Default', 'cp'); ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
+        <h3 data-title="<?php _e('Default', 'cp'); ?>"><?php _e('Default', 'cp'); ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
     </div>
 
     <?php
@@ -297,7 +297,7 @@ $students = new Student_Search();
             $wp_user_search = new WP_User_Query($args);
             ?>
             <div class="sidebar-name no-movecursor" area-selected="true">
-                <h3><?php echo (isset($class) ? $class : ''); ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
+                <h3 data-title="<?php echo (isset($class) ? $class : ''); ?>"><?php echo (isset($class) ? $class : ''); ?> <span><?php echo (count($wp_user_search->get_results()) >= 1) ? '(' . count($wp_user_search->get_results()) . ')' : ''; ?></span></h3>
             </div>
             <?php
             if ($wp_user_search->get_results()) {
@@ -443,10 +443,11 @@ $students = new Student_Search();
         <div class="add-student-class-area">
             <h2><?php _e('New Class', 'cp'); ?></h2>
             <label><?php _e('New Class name', 'cp'); ?>
-                <input type="text" name="course_classes[]" value="" />
+                <input type="text" name="course_classes[]" class="course_classes_input" value="" />
             </label>
             
             <?php submit_button(__('Add New Class', 'cp'), 'primary', 'add_student_class', ''); ?>
+            <div class="add_class_message"></div>
         </div>
     <?php } ?>
 

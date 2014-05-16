@@ -626,6 +626,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($field == 'is_unit_available') {
                 $unit->details->$field = $unit->is_unit_available();
             }
+            
             /* ------------ */
             $unit_module = new Unit_Module();
 

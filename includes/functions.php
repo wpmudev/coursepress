@@ -32,7 +32,7 @@ function coursepress_unit_module_pagination($unit_id, $pages_num, $check_is_last
     $modules_class = new Unit_Module();
 
     if (!isset($unit_id)) {// || !is_singular()
-        echo '<br clear="all"><div class="navigation" id="navigation-pagination"></div>';
+        echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"></div>';
         return;
     }
 
@@ -51,11 +51,11 @@ function coursepress_unit_module_pagination($unit_id, $pages_num, $check_is_last
     }
 
     if ($wp_query->max_num_pages <= 1) {
-        echo '<br clear="all"><div class="navigation" id="navigation-pagination"></div>';
+        echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"></div>';
         return;
     }
 
-    echo '<br clear="all"><div class="navigation" id="navigation-pagination"><ul>' . "\n";
+    echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
 
     for ($link_num = 1; $link_num <= $max; $link_num++) {
         $class = ($paged == $link_num ? ' class="active"' : '');

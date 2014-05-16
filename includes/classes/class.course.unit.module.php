@@ -206,7 +206,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_modules_front($unit_id = 0) {
-            global $coursepress, $coursepress_modules, $wp, $paged;
+            global $coursepress, $coursepress_modules, $wp, $paged, $_POST;
 
             $front_save = false;
             $responses = 0;
@@ -218,6 +218,8 @@ if (!class_exists('Unit_Module')) {
 
             $course_id = do_shortcode('[get_parent_course_id]');
 
+            //$unit_module_page_number = isset($_GET['to_elements_page']) ? $_GET['to_elements_page'] : 1;
+            
             if (isset($_POST['submit_modules_data_done']) || isset($_POST['submit_modules_data_no_save_done'])) {
 
                 if (isset($_POST['submit_modules_data_done'])) {
@@ -230,16 +232,17 @@ if (!class_exists('Unit_Module')) {
             }
 
             if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_no_save_save'])) {
-                wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1));
+                //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));
                 if (isset($_POST['submit_modules_data_save'])) {
-                    wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1) . '?saved=ok');
+                    wp_redirect($_SERVER['REQUEST_URI'] . '?saved=ok');
+                    exit;
                 } else {
-                    wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($paged + 1));
+                    //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));
                 }
-                exit;
+                
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id));//strtok($_SERVER["REQUEST_URI"], '?'); ?>"><!--#submit_bottom-->
                 <?php
                 $pages_num = 1;
 
@@ -273,11 +276,10 @@ if (!class_exists('Unit_Module')) {
                     }
                 }
 
-
                 wp_nonce_field('modules_nonce');
 
                 $is_last_page = coursepress_unit_module_pagination($unit_id, $pages_num, true); //check if current unit page is last page
-                
+
                 if ($front_save) {
 
                     if ($input_modules !== $responses) {
@@ -293,12 +295,12 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Save & Next', 'cp')); ?>">
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>"><?php //Save & Next ?>
                         <?php
                     } else {
                         ?>
-                        <input type = "submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value = "<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>">
-                    <?php
+                        <input type="submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value = "<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>">
+                        <?php
                     }
                 } else {
                     ?>

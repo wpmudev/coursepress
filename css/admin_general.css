@@ -1,3 +1,7 @@
+.add_class_message{
+    color: red;
+}
+
 .border-devider{
     border-top: 1px solid #dfdfdf;
     margin: 25px 10px 25px 0px;
