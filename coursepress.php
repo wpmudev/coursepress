@@ -344,15 +344,15 @@ if (!class_exists('CoursePress')) {
 
         function dynamic_wp_editor() {
 
-            $args = array("textarea_name" => "text_module" . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
+            $args = array("textarea_name" => $_GET['module_name'] . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
                       array(
                       'skin' => 'wordpress',
                       'theme' => 'modern',
                       ) */);
             $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
-            wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
-            /*
-              wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
+            wp_editor(htmlspecialchars_decode((isset($_GET['editor_content']) ? $_GET['editor_content'] : '')), $editor_id, $args);
+            echo 'whaaaa?';
+              /*wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
               'textarea_name' => $_GET['module_name'] . "_content[]",
               'media_buttons' => true,
               'textarea_rows' => 4,

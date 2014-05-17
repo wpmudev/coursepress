@@ -143,7 +143,7 @@ function coursepress_modules_ready() {
 
     /* Drag & Drop */
 
-    jQuery('.module-droppable').droppable({
+    /*jQuery('.module-droppable').droppable({
         hoverClass: 'hoveringover',
         drop: function(event, ui) {
             var stamp = new Date().getTime();
@@ -186,7 +186,7 @@ function coursepress_modules_ready() {
 
             jQuery('#modules_accordion').accordion("option", "active", 0);
 
-            /* Dynamic WP Editor */
+            // Dynamic WP Editor 
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
 
             jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
@@ -196,7 +196,7 @@ function coursepress_modules_ready() {
                         quicktags({id: rand_id});
                     });
         }
-    });
+    });*/
 
 }
 
