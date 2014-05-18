@@ -113,6 +113,7 @@ class audio_module extends Unit_Module {
                               'theme' => 'modern',
                               ) */
                     );
+                   
                     $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>

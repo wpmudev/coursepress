@@ -103,7 +103,7 @@ if (!class_exists('CoursePress')) {
 
             //Output buffer hack
             add_action('init', array(&$this, 'output_buffer'), 0);
-            
+
             // Discusson class
             require_once( $this->plugin_dir . 'includes/classes/class.discussion.php' );
 
@@ -231,6 +231,14 @@ if (!class_exists('CoursePress')) {
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
 
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
+            
+            add_filter( 'teeny_mce_buttons', array(&$this,'mytheme_teeny_mce_buttons'), 10, 2 );
+        }
+
+        function mytheme_teeny_mce_buttons($buttons, $editor_id) {
+
+                return array('bold', 'italic', 'underline');
+            return $buttons;
         }
 
         /* Fix for the broken images in the Unit elements content */
@@ -344,15 +352,24 @@ if (!class_exists('CoursePress')) {
 
         function dynamic_wp_editor() {
 
-            $args = array("textarea_name" => $_GET['module_name'] . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
+            $editor_id = ((isset($_GET['rand_id']) ? $_GET['rand_id'] : rand(1, 9999)));
+
+            $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true/* , "teeny" => false,
+                      'tinymce' =>
                       array(
+                      'mode' => "exact",
+                      'elements' => $editor_id,
                       'skin' => 'wordpress',
                       'theme' => 'modern',
-                      ) */);
-            $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
+                      //'document_base_url' => 'http://www.tinymce.com/tryit',
+                      'toolbar' => "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                      ) */
+            );
+
+
             wp_editor(htmlspecialchars_decode((isset($_GET['editor_content']) ? $_GET['editor_content'] : '')), $editor_id, $args);
-            echo 'whaaaa?';
-              /*wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
+
+            /* wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
               'textarea_name' => $_GET['module_name'] . "_content[]",
               'media_buttons' => true,
               'textarea_rows' => 4,
