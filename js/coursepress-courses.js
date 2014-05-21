@@ -35,12 +35,12 @@ function deleteClass() {
     }
 }
 
-function disenroll_all_from_class_confirmed() {
-    return confirm(coursepress_units.disenroll_class_alert);
+function withdraw_all_from_class_confirmed() {
+    return confirm(coursepress_units.withdraw_class_alert);
 }
 
-function disenrollAllFromClass() {
-    if (disenroll_all_from_class_confirmed()) {
+function withdrawAllFromClass() {
+    if (withdraw_all_from_class_confirmed()) {
         return true;
     } else {
         return false;
@@ -163,4 +163,38 @@ jQuery(document).ready(function()
         wp.media.editor.open(this);
         return false;
     });
+});
+
+
+jQuery(document).ready(function()
+{
+    jQuery('.insert-media-cp').live('click', function()
+    {
+
+        var rand_id = jQuery(this).attr("data-editor");
+
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            tinyMCE.execCommand('mceFocus', false, rand_id);
+            var ed = tinyMCE.get(rand_id);
+            var range = ed.selection.getRng();
+            var image = ed.getDoc().createElement("img");
+            
+            var image_width = eval('attachment.sizes'+'.'+props.size+'.'+'width');
+            var image_height = eval('attachment.sizes'+'.'+props.size+'.'+'height');
+            
+            image.setAttribute('class', 'align' + props.align + ' size-' + props.size + ' wp-image-' + rand_id);
+            image.src = attachment.url;
+            image.alt = attachment.alt;
+            image.width = image_width;
+            image.height = image_height;
+            range.insertNode(image);
+        };
+        
+        wp.media.editor.open(this);
+        
+        return false;
+    });
+
+    //tinyMCE.activeEditor.selection.moveToBookmark(bm);
 });

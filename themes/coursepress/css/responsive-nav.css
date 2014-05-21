@@ -1,0 +1,120 @@
+/*! responsive-nav.js 1.0.32 by @viljamis */
+
+.nav-collapse ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: block;
+    list-style: none;
+}
+
+.nav-collapse li {
+    display: block;
+}
+
+.js .nav-collapse {
+    clip: rect(0 0 0 0);
+    max-height: 0;
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    zoom: 1;
+}
+
+.nav-collapse.opened {
+    max-height: 9999px;
+}
+
+.disable-pointer-events {
+    pointer-events: none !important;
+}
+
+.main-navigation a.nav-toggle{
+    display: none;
+}
+
+#mobile_menu{
+    display: none;
+}
+
+.nav-toggle {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    width: 100%;
+    float: right;
+    overflow: hidden;
+    display: block;
+    font-size: 21px;
+}
+
+#mobile_menu{
+    margin-bottom: 10px;
+}
+
+#mobile_menu ul{
+    width: auto;
+}
+
+#mobile_menu li{
+    width: auto;
+    float: none;
+    text-align: left;
+}
+
+#mobile_menu li a:first-child{
+    border-top: 1px solid #c9ced2;
+}
+
+#mobile_menu li a{
+    background: none repeat scroll 0% 0% #f5f5f5;
+    border-bottom: 1px solid #c9ced2;
+    border-left: 1px solid #c9ced2;
+    border-right: 1px solid #c9ced2;
+    display: block;
+    line-height: 22px;
+    padding: 10px;
+    width: auto;
+    min-width: 150px;
+    max-width: 200px;
+    white-space: normal;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 790px) {
+    
+    .main-navigation a.nav-toggle{
+        display: block;
+    }
+    
+    #mobile_menu, .mobile_menu{
+        display: block;
+    }
+}
+
+@media screen and (min-width: 791px) {
+    
+    .js .nav-collapse {
+        position: relative;
+
+    }
+    .js .nav-collapse.closed {
+        max-height: none;
+    }
+    
+    .nav-toggle {
+        display: none;
+    }
+    
+    .main-navigation a.nav-toggle{
+        display: none;
+    }
+    
+    #mobile_menu, .mobile_menu{
+        display: none;
+    }
+}

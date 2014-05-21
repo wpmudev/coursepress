@@ -102,14 +102,38 @@ function coursepress_modules_ready() {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
         /* Dynamic WP Editor */
+        /*var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
+         jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
+         .success(function(editor) {
+         jQuery('#modules_accordion .editor_in_place').last().html(editor);
+         //tinymce.execCommand('mceAddControl', false, rand_id);
+         tinymce.execCommand('mceAddEditor', false, rand_id);
+         quicktags({id: rand_id});
+         });*/
+
+        /* Dynamic WP Editor */
+        moving = jQuery('input#beingdragged').val();
+
         var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
-        jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
-                .success(function(editor) {
-                    jQuery('#modules_accordion .editor_in_place').last().html(editor);
-                    //tinymce.execCommand('mceAddControl', false, rand_id);
-                    tinymce.execCommand('mceAddEditor', false, rand_id);
-                    quicktags({id: rand_id});
-                });
+        var text_editor = '<textarea name="' + moving + '_content[]" id="' + rand_id + '"></textarea>';
+
+        var text_editor_whole =
+                '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+                '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+                '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
+                '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                text_editor +
+                '</div></div></div>';
+
+        jQuery('#modules_accordion .editor_in_place').last().html(text_editor_whole);
+
+        tinyMCE.init({
+            mode: "exact",
+            elements: rand_id,
+            toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+            menubar: false
+        });
+
         jQuery('#modules_accordion').accordion("option", "active", module_count);
     });
     /* Drag & Drop */
@@ -182,12 +206,12 @@ jQuery(function() {
         dateFormat: 'yy-mm-dd'
     });
 });
-function disenroll_student_confirmed() {
-    return confirm(coursepress.disenroll_student_alert);
+function withdraw_student_confirmed() {
+    return confirm(coursepress.withdraw_student_alert);
 }
 
-function disenrollStudent() {
-    if (disenroll_student_confirmed()) {
+function withdrawStudent() {
+    if (withdraw_student_confirmed()) {
         return true;
     } else {
         return false;
@@ -401,18 +425,6 @@ jQuery(document).ready(function() {
             update_sortable_module_indexes();
             //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
 
-            var nth_child_num = ui.item.index() + 1;
-            var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
-            var initial_editor_id = editor_id;
-            editor_id = editor_id.replace("-wrap", "");
-            editor_id = editor_id.replace("wp-", "");
-            editor_content = get_tinymce_content(editor_id);
-            //tinymce.execCommand('mceRemoveControl', false, editor_id);
-            //set_tinymce_active_editor(editor_id);
-
-            //set_tinymce_content(editor_id, editor_content);
-
-
             /* Dynamic WP Editor */
             /*var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
              
@@ -428,47 +440,35 @@ jQuery(document).ready(function() {
 
 
             /* Dynamic WP Editor */
-            moving = jQuery('input#beingdragged').val();
+            var nth_child_num = ui.item.index() + 1;
+            var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
+            var initial_editor_id = editor_id;
+
+            editor_id = editor_id.replace("-wrap", "");
+            editor_id = editor_id.replace("wp-", "");
+            editor_content = get_tinymce_content(editor_id);
+
+            var textarea_name = (jQuery('#' + initial_editor_id + ' textarea').attr('name'));
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
-            var text_editor = '<textarea name="' + moving + '_content[]" id="' + rand_id + '">' + editor_content + '</textarea>';
-            //jQuery('#' + initial_editor_id).parent().html(text_editor);
+            var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-            /*tinyMCE.init({
-             mode: "none",
-             theme: "simple"
-             });*/
+            var text_editor_whole =
+                    '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+                    '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+                    '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
+                    '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                    text_editor +
+                    '</div></div></div>';
+            jQuery('#' + initial_editor_id).parent().html(text_editor_whole);
 
-
-            //tinyMCE.execCommand('mceAddControl', false, rand_id);
-            //tinymce.execCommand('mceFocus', true, rand_id); 
-
-
-
-            //tinyMCE.triggerSave();
-            jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving, editor_content: editor_content})
-                    .success(function(editor) {
-
-                        jQuery('#' + initial_editor_id).parent().html(text_editor);
-                        tinyMCE.init({
-                            mode: "exact",
-                            elements: rand_id,
-                           /* skin: 'wordpress',
-                            theme: 'modern',
-                            document_base_url: 'http://www.tinymce.com/tryit',
-                            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"*/
-                        });
-                        //tinyMCE.init();
-                        //tinymce.execCommand('mceAddControl', false, rand_id);
-
-                        //tinyMCE.execCommand('mceAddEditor', false, rand_id);
-                        //quicktags({id: rand_id});
-                        //});
+            tinyMCE.init({
+                mode: "exact",
+                elements: rand_id,
+                toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+                menubar: false
+            });
 
 
-                        //tinyMCE.execCommand('mceAddEditor', true, editor_id);
-                        //tinyMCE.activeEditor.execCommand('mceInsertContent', true, editor_content);
-
-                    });
         }
     }, function() {
         jQuery('a').click(function(e) {

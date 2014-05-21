@@ -206,6 +206,7 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_modules_front($unit_id = 0) {
+
             global $coursepress, $coursepress_modules, $wp, $paged, $_POST;
 
             $front_save = false;
@@ -219,7 +220,7 @@ if (!class_exists('Unit_Module')) {
             $course_id = do_shortcode('[get_parent_course_id]');
 
             //$unit_module_page_number = isset($_GET['to_elements_page']) ? $_GET['to_elements_page'] : 1;
-            
+
             if (isset($_POST['submit_modules_data_done']) || isset($_POST['submit_modules_data_no_save_done'])) {
 
                 if (isset($_POST['submit_modules_data_done'])) {
@@ -239,10 +240,10 @@ if (!class_exists('Unit_Module')) {
                 } else {
                     //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));
                 }
-                
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id));//strtok($_SERVER["REQUEST_URI"], '?'); ?>"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok($_SERVER["REQUEST_URI"], '?');  ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+                <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
 
@@ -284,6 +285,7 @@ if (!class_exists('Unit_Module')) {
 
                     if ($input_modules !== $responses) {
                         ?>
+                <div class="mandatory_message"><?php _e('All questions marked with "* Mandatory" require your input.', 'cp'); ?></div><div class="clearf"></div>
                         <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
                         <a id="submit_bottom"></a>
                         <?php
@@ -295,7 +297,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>"><?php //Save & Next ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>"><?php //Save & Next   ?>
                         <?php
                     } else {
                         ?>
@@ -398,13 +400,16 @@ if (!class_exists('Unit_Module')) {
 
                 //Count only ungraded responses from STUDENTS!
                 foreach ($ungraded_responses as $ungraded_response) {
+                    
+                    if(get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no'){
+                        unset($ungraded_responses[$array_order_num]);
+                    }
+                           
                     if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
                     $array_order_num++;
                 }
-
-
 
                 /* $admins_responses = 0;
 
@@ -442,14 +447,18 @@ if (!class_exists('Unit_Module')) {
 
                 //Count only ungraded responses from STUDENTS!
                 foreach ($ungraded_responses as $ungraded_response) {
+                    
+                    if(get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no'){
+                        unset($ungraded_responses[$array_order_num]);
+                    }
+                    
                     if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
+                    
                     $array_order_num++;
                 }
-
-                var_dump($ungraded_responses);
-
+                
                 return count($ungraded_responses);
             }
         }

@@ -242,9 +242,11 @@ if (isset($_POST['course_id'])) {
                                                                 if (count($response) >= 1) {
                                                                     $grade_data = $unit_module_main->get_response_grade($response->ID);
                                                                 }
-
+                                                                
+                                                                $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+                                                                
                                                                 if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
-                                                                    if (count($response) >= 1 && !$grade_data) {
+                                                                    if (count($response) >= 1 && !$grade_data && $assessable == 'yes') {
                                                                         $general_col_visibility = true;
                                                                     } else {
                                                                         $general_col_visibility = false;
@@ -256,8 +258,8 @@ if (isset($_POST['course_id'])) {
                                                                 $style = ( isset($style) && 'alternate' == $style ) ? '' : ' alternate';
                                                                 ?>
                                                                 <tr id='user-<?php echo $user_object->ID; ?>' class="<?php
-                                        echo $style;
-                                        echo 'row-' . $current_row;
+                                                                echo $style;
+                                                                echo 'row-' . $current_row;
                                                                 ?>">
 
                                                                     <?php
@@ -273,7 +275,7 @@ if (isset($_POST['course_id'])) {
                                                                         </td>
 
                                                                         <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                                            <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                                                            <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
                                                                         </td>
 
                                                                         <td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -292,30 +294,34 @@ if (isset($_POST['course_id'])) {
 
                                                                         <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php
-                                                                            if (isset($grade_data)) {
-                                                                                $grade = $grade_data['grade'];
-                                                                                $instructor_id = $grade_data['instructor'];
-                                                                                $instructor_name = get_userdata($instructor_id);
-                                                                                $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
-                                                                            }
-                                                                            if (count($response) >= 1) {
+                                                                            if ($assessable == 'yes') {
                                                                                 if (isset($grade_data)) {
-                                                                                    ?>
-                                                                                    <a class="response_grade" alt="<?php
-                                                _e('Grade by ');
-                                                echo $instructor_name->display_name;
-                                                _e(' on ' . $grade_time);
-                                                                                    ?>" title="<?php
-                                                                                       _e('Grade by ');
-                                                                                       echo $instructor_name->display_name;
-                                                                                       _e(' on ' . $grade_time);
-                                                                                       ?>"><?php echo $grade; ?>%</a>
-                                                                                       <?php
+                                                                                    $grade = $grade_data['grade'];
+                                                                                    $instructor_id = $grade_data['instructor'];
+                                                                                    $instructor_name = get_userdata($instructor_id);
+                                                                                    $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+                                                                                }
+                                                                                if (count($response) >= 1) {
+                                                                                    if (isset($grade_data)) {
+                                                                                        ?>
+                                                                                        <a class="response_grade" alt="<?php
+                                                                                        _e('Grade by ');
+                                                                                        echo $instructor_name->display_name;
+                                                                                        _e(' on ' . $grade_time);
+                                                                                        ?>" title="<?php
+                                                                                           _e('Grade by ');
+                                                                                           echo $instructor_name->display_name;
+                                                                                           _e(' on ' . $grade_time);
+                                                                                           ?>"><?php echo $grade; ?>%</a>
+                                                                                           <?php
+                                                                                       } else {
+                                                                                           _e('Pending grade', 'cp');
+                                                                                       }
                                                                                    } else {
-                                                                                       _e('Pending grade', 'cp');
+                                                                                       echo '-';
                                                                                    }
-                                                                               } else {
-                                                                                   echo '-';
+                                                                               }else{
+                                                                                   _e('Non-assessable', 'cp');
                                                                                }
                                                                                ?>
                                                                         </td>

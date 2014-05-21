@@ -60,8 +60,8 @@ class text_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
 
                 <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
-                    <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-                
+                <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
+
 
                 <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
                     <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
@@ -76,19 +76,21 @@ class text_module extends Unit_Module {
                 </label>
 
                 <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
-                
+
                 <div class="editor_in_place">
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /*'tinymce' =>
-                        array(
-                            'skin' => 'wordpress',
-                            'theme' => 'modern',
-                    )*/);
+                    $args = array(
+                        "textarea_name" => $this->name . "_content[]",
+                        "textarea_rows" => 5,
+                        "quicktags" => false,
+                        "teeny" => true,
+                    );
+
                     $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
-                
+
             </div>
 
         </div>

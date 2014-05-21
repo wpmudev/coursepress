@@ -87,8 +87,8 @@ if (!class_exists('Student')) {
             //TO DO: add new payment status if it's paid
         }
 
-        //Disenroll student from the course
-        function disenroll_from_course($course_id, $keep_disenrolled_record = true) {
+        //Withdraw student from the course
+        function withdraw_from_course($course_id, $keep_withdrawed_record = true) {
 
             $current_time = current_time('mysql');
 
@@ -96,18 +96,18 @@ if (!class_exists('Student')) {
             delete_user_meta($this->ID, 'enrolled_course_class_' . $course_id);
             delete_user_meta($this->ID, 'enrolled_course_group_' . $course_id);
 
-            if ($keep_disenrolled_record) {
-                update_user_meta($this->ID, 'disenrolled_course_date_' . $course_id, $current_time); //keep a record of all disenrolled students
+            if ($keep_withdrawed_record) {
+                update_user_meta($this->ID, 'withdrawed_course_date_' . $course_id, $current_time); //keep a record of all withdrawed students
             }
         }
 
-        //Disenroll from all courses
+        //Withdraw from all courses
 
-        function disenroll_from_all_courses() {
+        function withdraw_from_all_courses() {
             $courses = $this->get_enrolled_courses_ids();
 
             foreach ($courses as $course_id) {
-                $this->disenroll_from_course($course_id);
+                $this->withdraw_from_course($course_id);
             }
         }
 

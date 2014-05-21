@@ -79,24 +79,26 @@ class textarea_input_module extends Unit_Module {
                         <?php echo $response->post_content; ?>
                     </div>
                 <?php } else { ?>
-                    <textarea class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>"></textarea>
+                    <textarea <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"';?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>"></textarea>
                 <?php } ?>
             </div>
 
             <?php
-            $unit_module_main = new Unit_Module();
+            /* $unit_module_main = new Unit_Module();
 
-            if (is_object($response) && !empty($response)) {
+              if (is_object($response) && !empty($response)) {
 
-                $comment = $unit_module_main->get_response_comment($response->ID);
-                if (!empty($comment)) {
-                    ?>
-                    <div class="response_comment_front"><?php echo $comment; ?></div>
-                    <?php
-                }
-            }
+              $comment = $unit_module_main->get_response_comment($response->ID);
+              if (!empty($comment)) {
+              ?>
+              <div class="response_comment_front"><?php echo $comment; ?></div>
+              <?php
+              }
+              } */
             ?>
-
+            <?php if ($data->mandatory_answer == 'yes') { ?>
+                <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
+            <?php } ?>
         </div>
         <?php
     }
@@ -128,28 +130,55 @@ class textarea_input_module extends Unit_Module {
                 <label class="bold-label"><?php _e('Title', 'cp'); ?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
 
-
-                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
-                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
-                    <a class="help-icon" href="javascript:;"></a>
-                    <div class="tooltip">
-                        <div class="tooltip-before"></div>
-                        <div class="tooltip-button">&times;</div>
-                        <div class="tooltip-content">
-                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                <div class="group-check">
+                    <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
+                        <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo (isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front)) ? 'checked' : '') ?> />
+                        <a class="help-icon" href="javascript:;"></a>
+                        <div class="tooltip">
+                            <div class="tooltip-before"></div>
+                            <div class="tooltip-button">&times;</div>
+                            <div class="tooltip-content">
+                                <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                            </div>
                         </div>
-                    </div>
-                </label>
+                    </label>
+
+                    <label class="mandatory_answer"><?php _e('Mandatory Answer', 'cp'); ?>
+                        <input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo (isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset($data->mandatory_answer)) ? 'checked' : '') ?> />
+                        <a class="help-icon" href="javascript:;"></a>
+                        <div class="tooltip">
+                            <div class="tooltip-before"></div>
+                            <div class="tooltip-button">&times;</div>
+                            <div class="tooltip-content">
+                                <?php _e('Student will need to give the answer on the question in order to submit unit answers.', 'cp'); ?>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="mandatory_answer"><?php _e('Grade Answer', 'cp'); ?>
+                        <input type="checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer)) ? 'checked' : '') ?> />
+                        <a class="help-icon" href="javascript:;"></a>
+                        <div class="tooltip">
+                            <div class="tooltip-before"></div>
+                            <div class="tooltip-button">&times;</div>
+                            <div class="tooltip-content">
+                                <?php _e('If checked, the answer will be graded.', 'cp'); ?>
+                            </div>
+                        </div>
+                    </label>
+                </div>
 
                 <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
 
                 <div class="editor_in_place">
                     <?php
-                    $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true, /* 'tinymce' =>
-                              array(
-                              'skin' => 'wordpress',
-                              'theme' => 'modern',
-                              ) */);
+                    $args = array(
+                        "textarea_name" => $this->name . "_content[]",
+                        "textarea_rows" => 5,
+                        "quicktags" => false,
+                        "teeny" => true,
+                    );
+
                     $editor_id = (esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999)));
                     wp_editor(htmlspecialchars_decode((isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
@@ -208,11 +237,25 @@ class textarea_input_module extends Unit_Module {
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['placeholder_text'] = $_POST[$this->name . '_placeholder_text'][$key];
+
                             if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {
                                 $data->metas['show_title_on_front'] = 'no';
                             }
+
+                            if (isset($_POST[$this->name . '_mandatory_answer'][$key])) {
+                                $data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer'][$key];
+                            } else {
+                                $data->metas['mandatory_answer'] = 'no';
+                            }
+
+                            if (isset($_POST[$this->name . '_gradable_answer'][$key])) {
+                                $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
+                            } else {
+                                $data->metas['gradable_answer'] = 'no';
+                            }
+
                             parent::update_module($data);
                         }
                     }

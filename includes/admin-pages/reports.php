@@ -217,10 +217,10 @@ if (isset($_POST['action']) && isset($_POST['users'])) {
                     }
                     break;
 
-                case 'disenroll':
-                    if (current_user_can('coursepress_disenroll_students_cap')) {
-                        $student->disenroll_from_all_courses();
-                        $message = __('Selected students has been disenrolled from all courses successfully.', 'cp');
+                case 'withdraw':
+                    if (current_user_can('coursepress_withdraw_students_cap')) {
+                        $student->withdraw_from_all_courses();
+                        $message = __('Selected students has been withdrawed from all courses successfully.', 'cp');
                     }
                     break;
             }

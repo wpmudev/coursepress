@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developer: Marko Miljus (https://twitter.com/markomiljus)
-  Version: 0.9.8.9 beta
+  Version: 0.9.9.0 beta
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: N/A
@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.8.9 beta';
+        var $version = '0.9.9.0 beta';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -50,6 +50,9 @@ if (!class_exists('CoursePress')) {
 
             //setup our variables
             $this->init_vars();
+
+            //register themes directory
+            $this->register_theme_directory();
 
             //Register Globals
             $GLOBALS['plugin_dir'] = $this->plugin_dir;
@@ -231,14 +234,22 @@ if (!class_exists('CoursePress')) {
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
 
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
-            
-            add_filter( 'teeny_mce_buttons', array(&$this,'mytheme_teeny_mce_buttons'), 10, 2 );
+
+            //add_filter('teeny_mce_plugins', array(&$this, 'teeny_mce_plugins'), 20, 2);
+            //add_filter('teeny_mce_buttons', array(&$this, 'teeny_mce_buttons'), 21, 2);
         }
 
-        function mytheme_teeny_mce_buttons($buttons, $editor_id) {
+        function register_theme_directory() {
+            global $wp_theme_directories;
+            register_theme_directory($this->plugin_dir . '/themes/');
+        }
 
-                return array('bold', 'italic', 'underline');
-            return $buttons;
+        function teeny_mce_plugins($plugins) {
+            //return array('inlinepopups', 'spellchecker', 'paste', 'wordpress', 'fullscreen', 'wpeditimage', 'wpgallery', 'tabfocus', 'wplink', 'wpdialogs', 'link');
+        }
+
+        function teeny_mce_buttons($buttons, $editor_id) {
+            //return array('bold', 'italic', 'underline', 'blockquote', 'strikethrough', 'bullist', 'numlist', 'alignleft', 'aligncenter', 'alignright', 'link' , 'unlink');
         }
 
         /* Fix for the broken images in the Unit elements content */
@@ -354,28 +365,16 @@ if (!class_exists('CoursePress')) {
 
             $editor_id = ((isset($_GET['rand_id']) ? $_GET['rand_id'] : rand(1, 9999)));
 
-            $args = array("textarea_name" => $this->name . "_content[]", "textarea_rows" => 5, "teeny" => true/* , "teeny" => false,
-                      'tinymce' =>
-                      array(
-                      'mode' => "exact",
-                      'elements' => $editor_id,
-                      'skin' => 'wordpress',
-                      'theme' => 'modern',
-                      //'document_base_url' => 'http://www.tinymce.com/tryit',
-                      'toolbar' => "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-                      ) */
+            $args = array(
+                "textarea_name" => (isset($_GET['module_name']) ? $_GET['module_name'] : '') . "_content[]",
+                "textarea_rows" => 4,
+                "quicktags" => false,
+                "teeny" => true,
             );
 
 
             wp_editor(htmlspecialchars_decode((isset($_GET['editor_content']) ? $_GET['editor_content'] : '')), $editor_id, $args);
 
-            /* wp_editor((isset($_GET['editor_content']) ? htmlspecialchars_decode($_GET['editor_content']) : ''), $_GET['rand_id'], array(
-              'textarea_name' => $_GET['module_name'] . "_content[]",
-              'media_buttons' => true,
-              'textarea_rows' => 4,
-              'quicktags' => false,
-              "teeny" => true
-              )); */
             exit;
         }
 
@@ -1183,7 +1182,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1331,8 +1330,8 @@ if (!class_exists('CoursePress')) {
 
                 //$role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
                 $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
-                //$role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
-                $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
+                //$role->add_cap('coursepress_withdraw_students_cap'); //Withdraw students from classes
+                $role->add_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
                 //$role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
                 $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
                 //$role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
@@ -1418,8 +1417,8 @@ if (!class_exists('CoursePress')) {
 
             //$role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
-            //$role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
-            $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
+            //$role->add_cap('coursepress_withdraw_students_cap'); //Withdraw students from classes
+            $role->add_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
             //$role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
             //$role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
@@ -1503,8 +1502,8 @@ if (!class_exists('CoursePress')) {
 
             $role->add_cap('coursepress_invite_students_cap'); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author (of a course)
-            $role->add_cap('coursepress_disenroll_students_cap'); //Disenroll students from classes
-            $role->add_cap('coursepress_disenroll_my_students_cap'); //Disenroll students from classes where the instructor is an author of the course
+            $role->add_cap('coursepress_withdraw_students_cap'); //Withdraw students from classes
+            $role->add_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
             $role->add_cap('coursepress_add_move_students_cap'); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
             $role->add_cap('coursepress_change_students_group_class_cap'); //Change student's group and class
@@ -1615,7 +1614,7 @@ if (!class_exists('CoursePress')) {
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
             wp_localize_script('coursepress_front', 'student', array(
-                'disenroll_alert' => __('Please confirm that you want to disenroll from the course. If you disenroll, you will no longer be able to see your records for this course.', 'cp'),
+                'withdraw_alert' => __('Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'cp'),
             ));
 
             if (!is_admin()) {
@@ -1702,7 +1701,7 @@ if (!class_exists('CoursePress')) {
                     'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
                     'delete_notification_alert' => __('Please confirm that you want to permanently delete the notification?', 'cp'),
                     'delete_discussion_alert' => __('Please confirm that you want to permanently delete the discussion?', 'cp'),
-                    'disenroll_student_alert' => __('Please confirm that you want to disenroll student from this course. If you disenroll, you will no longer be able to see student\'s records for this course.', 'cp'),
+                    'withdraw_student_alert' => __('Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'cp'),
                     'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp'),
                     'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),
                     'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
@@ -1720,7 +1719,7 @@ if (!class_exists('CoursePress')) {
 
 
             wp_localize_script('courses-units', 'coursepress_units', array(
-                'disenroll_class_alert' => __('Please confirm that you want to disenroll all students from this class?', 'cp'),
+                'withdraw_class_alert' => __('Please confirm that you want to withdraw all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
             ));
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');
@@ -1896,9 +1895,9 @@ if (!class_exists('CoursePress')) {
 
         function check_for_get_actions() {
 
-            if (isset($_GET['disenroll']) && is_numeric($_GET['disenroll'])) {
+            if (isset($_GET['withdraw']) && is_numeric($_GET['withdraw'])) {
                 $student = new Student(get_current_user_id());
-                $student->disenroll_from_course($_GET['disenroll']);
+                $student->withdraw_from_course($_GET['withdraw']);
             }
         }
 

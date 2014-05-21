@@ -336,7 +336,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
                                                 if ($module->front_save) {
                                                     $response = $module->get_response($user_object->ID, $mod->ID);
-                                                    $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
+                                                    $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row_2');
 
                                                     if (count($response) >= 1) {
                                                         $grade_data = $unit_module_main->get_response_grade($response->ID);

@@ -136,18 +136,18 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
             if ($field == 'action_links') {
 
-                $disenroll_link_visible = false;
+                $withdraw_link_visible = false;
 
                 if ($student->user_enrolled_in_course($course_id)) {
                     if (((strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) || (strtotime($course->course_end_date) >= time())) || $course->open_ended_course == 'on') {//course is currently active or is not yet active (will be active in the future)
-                        $disenroll_link_visible = true;
+                        $withdraw_link_visible = true;
                     }
                 }
 
                 $course->action_links = '<div class="apply-links">';
 
-                if ($disenroll_link_visible === true) {
-                    $course->action_links .= '<a href="?disenroll=' . $course->ID . '" onClick="return disenroll();">' . __('Disenroll', 'cp') . '</a> | ';
+                if ($withdraw_link_visible === true) {
+                    $course->action_links .= '<a href="?withdraw=' . $course->ID . '" onClick="return withdraw();">' . __('Withdraw', 'cp') . '</a> | ';
                 }
                 $course->action_links .= '<a href="' . get_permalink($course->ID) . '">' . __('Course Details', 'cp') . '</a></div>';
             }
@@ -757,6 +757,33 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 }
 
                 $unit->details->$field = $front_save_count;
+            }
+            
+            if ($field == 'mandatory_input_modules_count') {
+                $unit_module = new Unit_Module();
+
+                $front_save_count = 0;
+                $mandatory_answers = 0;
+
+                $modules = $unit_module->get_modules($unit_id);
+
+                foreach ($modules as $mod) {
+                    $mandatory_answer = get_post_meta($mod->ID, 'mandatory_answer', true);
+                    
+                    $class_name = $mod->module_type;
+
+                    if (class_exists($class_name)) {
+                        $module = new $class_name();
+                        if ($module->front_save) {
+                            if($mandatory_answer == 'yes'){
+                                $mandatory_answers++;
+                            }
+                            //$front_save_count++;
+                        }
+                    }
+                }
+
+                $unit->details->$field = $mandatory_answers;
             }
 
             if ($field == 'student_module_responses') {

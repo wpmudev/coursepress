@@ -67,8 +67,8 @@ $students_count = $course->get_number_of_students();
     $message['as'] = __('Student added to the class successfully.', 'cp');
     $message['ac'] = __('New class has been added successfully.', 'cp');
     $message['dc'] = __('Selected class has been deleted successfully.', 'cp');
-    $message['us'] = __('Selected student has been disenrolled successfully from the course.', 'cp');
-    $message['usl'] = __('Selected students has been disenrolled successfully from the course.', 'cp');
+    $message['us'] = __('Selected student has been withdrawed successfully from the course.', 'cp');
+    $message['usl'] = __('Selected students has been withdrawed successfully from the course.', 'cp');
     $message['is'] = __('Invitation sent sucessfully.', 'cp');
 
     $error_message['wrong_email'] = __('Please enter valid e-mail address', 'cp');

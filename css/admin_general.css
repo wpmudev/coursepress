@@ -416,3 +416,17 @@ td.label {
     margin-left: 15px;
     padding-left: 0px;
 }
+
+.group-check{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.group-check label{
+    display: inline;
+    margin-left: 30px;
+}
+
+.group-check label:first-child{
+    margin-left: 0px;
+}
