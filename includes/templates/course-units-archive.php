@@ -25,7 +25,7 @@ do_shortcode('[course_unit_archive_submenu]');
                     <?php if (do_shortcode('[course_unit_details field="input_modules_count"]') > 0) { ?>
                         <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements completed', 'coursepress'); ?></span>
                     <?php } else { ?>
-                        <span class="unit-archive-single-module-status read-only-module"><?php _e('Read only'); ?></span>
+                        <span class="unit-archive-single-module-status read-only-module"><?php _e('Read-only'); ?></span>
                     <?php } ?>
                 </li>
                 <?php

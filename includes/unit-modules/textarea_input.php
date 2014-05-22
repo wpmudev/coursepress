@@ -155,14 +155,14 @@ class textarea_input_module extends Unit_Module {
                         </div>
                     </label>
 
-                    <label class="mandatory_answer"><?php _e('Grade Answer', 'cp'); ?>
+                    <label class="mandatory_answer"><?php _e('Assessable', 'cp'); ?>
                         <input type="checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer)) ? 'checked' : '') ?> />
                         <a class="help-icon" href="javascript:;"></a>
                         <div class="tooltip">
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-                                <?php _e('If checked, the answer will be graded.', 'cp'); ?>
+                                <?php _e('If checked, the answer can be assessed.', 'cp'); ?>
                             </div>
                         </div>
                     </label>

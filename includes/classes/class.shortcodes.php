@@ -70,15 +70,15 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         <li class="submenu-item submenu-discussions <?php echo(isset($subpage) && $subpage == 'discussions' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_discussion_slug(); ?>/"><?php _e('Discussions', 'coursepress'); ?></a></li>
                         <?php
                     }
-                    /*if ($course->allow_course_grades_page == 'on') {
-                        ?>
-                        <li class="submenu-item submenu-grades <?php echo(isset($subpage) && $subpage == 'grades' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_grades_slug(); ?>/"><?php _e('Grades', 'coursepress'); ?></a></li>
-                    <?php
-                    }*/
+                    /* if ($course->allow_course_grades_page == 'on') {
+                      ?>
+                      <li class="submenu-item submenu-grades <?php echo(isset($subpage) && $subpage == 'grades' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_grades_slug(); ?>/"><?php _e('Grades', 'coursepress'); ?></a></li>
+                      <?php
+                      } */
                     if ($course->allow_workbook_page == 'on') {
                         ?>
                         <li class="submenu-item submenu-workbook <?php echo(isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : ''); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'coursepress'); ?></a></li>
-            <?php } ?>
+                    <?php } ?>
                     <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Details', 'coursepress'); ?></a></li>
                 </ul><!--submenu-main-->
             </div><!--submenu-main-container-->
@@ -275,7 +275,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                                 if ((strtotime($course->enrollment_end_date) <= time()) && $course->open_ended_course == 'off') {
                                     $course->button .= '<span class="apply-button-finished">' . __('Not available any more', 'cp') . '</span>';
                                 } else {
-                                    $course->button .= '<a href="' . $signup_url . '?course_id='.$course->ID.'" class="apply-button">' . __('Signup', 'cp') . '</a>';
+                                    $course->button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . __('Signup', 'cp') . '</a>';
                                 }
                             }
                         } else {
@@ -611,6 +611,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 'unit_id' => 0,
                 'field' => 'post_title',
                 'format' => false,
+                'additional' => '2',
                 'student_id' => get_current_user_ID(),
                             ), $atts));
 
@@ -626,15 +627,24 @@ if (!class_exists('CoursePress_Shortcodes')) {
             if ($field == 'is_unit_available') {
                 $unit->details->$field = $unit->is_unit_available();
             }
-            
+
             /* ------------ */
             $unit_module = new Unit_Module();
 
             $front_save_count = 0;
 
             $modules = $unit_module->get_modules($unit_id);
+            $mandatory_answers = 0;
+            $mandatory = 'no';
 
             foreach ($modules as $mod) {
+
+
+                $mandatory = get_post_meta($mod->ID, 'mandatory_answer', true);
+
+                if ($mandatory == 'yes') {
+                    $mandatory_answers++;
+                }
 
                 $class_name = $mod->module_type;
 
@@ -664,7 +674,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
             //$student_modules_responses_count = do_shortcode('[course_unit_details field="student_module_responses" unit_id="' . $unit_id . '"]');
 
             if ($student_modules_responses_count > 0) {
-                $percent_value = round((100 / $input_modules_count) * $student_modules_responses_count, 0);
+                $percent_value = round((100 / $mandatory_answers) * $student_modules_responses_count, 0);
+                $percent_value = ($percent_value > 100 ? 100 : $percent_value); //in case that student gave answers on all mandatory plus optional questions
             } else {
                 $percent_value = 0;
             }
@@ -673,6 +684,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $unit_module = new Unit_Module();
                 $grade = 0;
                 $front_save_count = 0;
+                $assessable_answers = 0;
                 $responses = 0;
                 $graded = 0;
                 //$input_modules_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
@@ -683,10 +695,16 @@ if (!class_exists('CoursePress_Shortcodes')) {
                     foreach ($modules as $mod) {
 
                         $class_name = $mod->module_type;
+                        $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
 
                         if (class_exists($class_name)) {
                             $module = new $class_name();
                             if ($module->front_save) {
+
+                                if ($assessable == 'yes') {
+                                    $assessable_answers++;
+                                }
+
                                 $front_save_count++;
                                 $response = $module->get_response($student_id, $mod->ID);
 
@@ -705,7 +723,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                             }
                         }
                     }
-                    $percent_value = ($format == true ? ($responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">') . ($grade > 0 ? round(($grade / $front_save_count), 0) : 0) . '%</span>' : ($grade > 0 ? round(($grade / $front_save_count), 0) : 0));
+                    $percent_value = ($format == true ? ($responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">') . ($grade > 0 ? round(($grade / $assessable_answers), 0) : 0) . '%</span>' : ($grade > 0 ? round(($grade / $assessable_answers), 0) : 0));
                 } else {
                     $student = new Student($student_id);
                     if ($student->is_unit_visited($unit_id, $student_id)) {
@@ -758,7 +776,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
                 $unit->details->$field = $front_save_count;
             }
-            
+
             if ($field == 'mandatory_input_modules_count') {
                 $unit_module = new Unit_Module();
 
@@ -769,13 +787,13 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
                 foreach ($modules as $mod) {
                     $mandatory_answer = get_post_meta($mod->ID, 'mandatory_answer', true);
-                    
+
                     $class_name = $mod->module_type;
 
                     if (class_exists($class_name)) {
                         $module = new $class_name();
                         if ($module->front_save) {
-                            if($mandatory_answer == 'yes'){
+                            if ($mandatory_answer == 'yes') {
                                 $mandatory_answers++;
                             }
                             //$front_save_count++;
@@ -785,19 +803,63 @@ if (!class_exists('CoursePress_Shortcodes')) {
 
                 $unit->details->$field = $mandatory_answers;
             }
+            
+            if ($field == 'assessable_input_modules_count') {
+                $unit_module = new Unit_Module();
+
+                $front_save_count = 0;
+                $assessable_answers = 0;
+
+                $modules = $unit_module->get_modules($unit_id);
+
+                foreach ($modules as $mod) {
+                    $$assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+
+                    $class_name = $mod->module_type;
+
+                    if (class_exists($class_name)) {
+                        $module = new $class_name();
+                        if ($module->front_save) {
+                            if ($$assessable == 'yes') {
+                                $assessable_answers++;
+                            }
+                            //$front_save_count++;
+                        }
+                    }
+                }
+
+                $unit->details->$field = $assessable_answers;
+            }
 
             if ($field == 'student_module_responses') {
                 $unit_module = new Unit_Module();
                 $responses_count = 0;
-
+                $mandatory_answers = 0;
                 $modules = $unit_module->get_modules($unit_id);
                 foreach ($modules as $module) {
+
+                    $mandatory = get_post_meta($module->ID, 'mandatory_answer', true);
+
+                    if ($mandatory == 'yes') {
+                        $mandatory_answers++;
+                    }
+
                     $unit_module = new Unit_Module();
                     if ($unit_module->did_student_responed($module->ID, $student_id)) {
                         $responses_count++;
                     }
                 }
-                $unit->details->$field = $responses_count;
+
+                if ($additional == 'mandatory') {
+                    if ($responses_count > $mandatory_answers) {
+                        $unit->details->$field = $mandatory_answers;
+                    } else {
+                        $unit->details->$field = $responses_count;
+                    }
+                    //so we won't have 7 of 6 mandatory answered but mandatory number as a max number
+                } else {
+                    $unit->details->$field = $responses_count;
+                }
             }
 
             if ($field == 'student_unit_grade') {
@@ -808,7 +870,8 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $graded = 0;
                 $input_modules_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
                 $modules = $unit_module->get_modules($unit_id);
-
+                $mandatory_answers = 0;
+                $assessable_answers = 0;
 
                 if ($input_modules_count > 0) {
                     foreach ($modules as $mod) {
@@ -820,23 +883,35 @@ if (!class_exists('CoursePress_Shortcodes')) {
                             if ($module->front_save) {
                                 $front_save_count++;
                                 $response = $module->get_response($student_id, $mod->ID);
+                                $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+                                $mandatory = get_post_meta($mod->ID, 'mandatory_answer', true);
+
+
+                                if ($assessable == 'yes') {
+                                    $assessable_answers++;
+                                }
 
                                 if (isset($response->ID)) {
-                                    $grade_data = $unit_module->get_response_grade($response->ID);
-                                    $grade = $grade + $grade_data['grade'];
 
-                                    if (get_post_meta($response->ID, 'response_grade')) {
-                                        $graded++;
+                                    if ($assessable == 'yes') {
+
+                                        $grade_data = $unit_module->get_response_grade($response->ID);
+                                        $grade = $grade + $grade_data['grade'];
+
+                                        if (get_post_meta($response->ID, 'response_grade')) {
+                                            $graded++;
+                                        }
+
+                                        $responses++;
                                     }
-
-                                    $responses++;
                                 }
                             } else {
                                 //read only module
                             }
                         }
                     }
-                    $unit->details->$field = ($format == true ? ($responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">') . ($grade > 0 ? round(($grade / $front_save_count), 0) : 0) . '%</span>' : ($grade > 0 ? round(($grade / $front_save_count), 0) : 0));
+
+                    $unit->details->$field = ($format == true ? ($responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">') . ($grade > 0 ? round(($grade / $assessable_answers), 0) : 0) . '%</span>' : ($grade > 0 ? round(($grade / $assessable_answers), 0) : 0));
                 } else {
                     $student = new Student($student_id);
                     if ($student->is_unit_visited($unit_id, $student_id)) {

@@ -47,7 +47,7 @@ get_header();
                             <?php if (do_shortcode('[course_unit_details field="input_modules_count"]') > 0) { ?>
                                 <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('mandatory elements completed', 'coursepress'); ?> | <?php echo do_shortcode('[course_unit_details field="student_unit_modules_graded" unit_id="' . get_the_ID() . '"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('elements graded', 'coursepress'); ?></span>                    
                             <?php } else { ?>
-                                <span class="unit-archive-single-module-status read-only-module"><?php _e('Read only'); ?></span>
+                                <span class="unit-archive-single-module-status read-only-module"><?php _e('Read-only'); ?></span>
                             <?php } ?>
                         </div>
                     </li>

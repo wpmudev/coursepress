@@ -2213,7 +2213,7 @@ h1.discussion-title{
     bottom: 6px;
     color: #fff;
     content: attr(alt);
-    left: 1%;
+    right: 1%;
     padding: 5px 15px;
     position: absolute;
     z-index: 98;
@@ -2226,7 +2226,7 @@ h1.discussion-title{
     border-width: 6px 6px 0 6px;
     bottom: 0px;
     content: "";
-    left: 3.2%;
+    right: 3.8%;
     position: absolute;
     z-index: 99;
 }

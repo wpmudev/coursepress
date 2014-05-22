@@ -87,16 +87,23 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
                             <?php submit_button('Save Changes', 'primary', 'save-response-changes'); ?>
 
-                            <select name="response_grade" id="response_grade">
-                                <option value=""><?php _e('Choose Grade', 'cp'); ?></option>
-                                <?php
-                                for ($i = 0; $i <= 100; $i++) {
-                                    ?>
-                                    <option value="<?php echo $i; ?>" <?php selected($grade, $i, true); ?>><?php echo $i; ?>%</option>
-                                    <?php
-                                }
+                            <?php
+                            $assessable = get_post_meta($module_id, 'gradable_answer', true);
+                            if ($assessable == 'yes') {
                                 ?>
-                            </select>
+                                <select name="response_grade" id="response_grade">
+                                    <option value=""><?php _e('Choose Grade', 'cp'); ?></option>
+                                    <?php
+                                    for ($i = 0; $i <= 100; $i++) {
+                                        ?>
+                                        <option value="<?php echo $i; ?>" <?php selected($grade, $i, true); ?>><?php echo $i; ?>%</option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            <?php } else { ?>
+                                <input type="hidden" name="response_grade" value="" /> 
+                            <?php } ?>
                         </div>
 
                         <br clear="all" />
@@ -342,8 +349,10 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                                                         $grade_data = $unit_module_main->get_response_grade($response->ID);
                                                     }
 
+                                                    $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+
                                                     if (isset($_GET['ungraded']) && $_GET['ungraded'] == 'yes') {
-                                                        if (count($response) >= 1 && !$grade_data) {
+                                                        if (count($response) >= 1 && !$grade_data && $assessable == 'yes') {
                                                             $general_col_visibility = true;
                                                         } else {
                                                             $general_col_visibility = false;
@@ -396,30 +405,34 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
                                                             <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php
-                                                                if (isset($grade_data)) {
-                                                                    $grade = $grade_data['grade'];
-                                                                    $instructor_id = $grade_data['instructor'];
-                                                                    $instructor_name = get_userdata($instructor_id);
-                                                                    $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
-                                                                }
-                                                                if (count($response) >= 1) {
+                                                                if ($assessable == 'yes') {
                                                                     if (isset($grade_data)) {
-                                                                        ?>
-                                                                        <a class="response_grade" alt="<?php
-                                                                        _e('Grade by ');
-                                                                        echo $instructor_name->display_name;
-                                                                        _e(' on ' . $grade_time);
-                                                                        ?>" title="<?php
-                                                                           _e('Grade by ');
-                                                                           echo $instructor_name->display_name;
-                                                                           _e(' on ' . $grade_time);
-                                                                           ?>"><?php echo $grade; ?>%</a>
-                                                                           <?php
+                                                                        $grade = $grade_data['grade'];
+                                                                        $instructor_id = $grade_data['instructor'];
+                                                                        $instructor_name = get_userdata($instructor_id);
+                                                                        $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+                                                                    }
+                                                                    if (count($response) >= 1) {
+                                                                        if (isset($grade_data)) {
+                                                                            ?>
+                                                                            <a class="response_grade" alt="<?php
+                                                                            _e('Grade by ');
+                                                                            echo $instructor_name->display_name;
+                                                                            _e(' on ' . $grade_time);
+                                                                            ?>" title="<?php
+                                                                               _e('Grade by ');
+                                                                               echo $instructor_name->display_name;
+                                                                               _e(' on ' . $grade_time);
+                                                                               ?>"><?php echo $grade; ?>%</a>
+                                                                               <?php
+                                                                           } else {
+                                                                               _e('Pending grade', 'cp');
+                                                                           }
                                                                        } else {
-                                                                           _e('Pending grade', 'cp');
+                                                                           echo '-';
                                                                        }
                                                                    } else {
-                                                                       echo '-';
+                                                                       _e('Non-assessable', 'cp');
                                                                    }
                                                                    ?>
                                                             </td>

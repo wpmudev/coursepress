@@ -15,6 +15,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
     $course_units = $course->get_units();
     $course_details = $course->get_course();
     $units_filter = $_POST['units'];
+    $assessable_answers = 0;
 
     if (is_numeric($units_filter)) {
         $course_units = array();
@@ -61,7 +62,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             <?php
             $module = new Unit_Module();
             $modules = $module->get_modules($course_unit->ID);
-
+            
             $input_modules_count = 0;
 
             foreach ($modules as $mod) {
@@ -69,7 +70,6 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                 $module = new $class_name();
 
                 if ($module->front_save) {
-
                     $input_modules_count++;
                 }
             }
@@ -78,7 +78,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                 ?>
                 <table cellspacing="0" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="color:#ccc;"><?php _e('0 input elements in the selected unit.', 'cp'); ?></td>
+                        <td colspan="4" style="color:#ccc;"><?php _e('Read-only', 'cp'); ?></td>
                     </tr>
                 </table>
                 <?php
@@ -87,6 +87,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             foreach ($modules as $mod) {
                 $class_name = $mod->module_type;
                 $module = new $class_name();
+                $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
 
                 if ($module->front_save) {
                     $response = $module->get_response($user_object->ID, $mod->ID);
@@ -116,16 +117,22 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                                 $instructor_name = get_userdata($instructor_id);
                                 $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
 
-                                if (count($response) >= 1) {
-                                    if ($grade_data) {
-                                        echo $grade . '%';
-                                        $responses++;
-                                        $overall_grade = $overall_grade + $grade;
+                                if ($assessable == 'yes') {
+                                    if (count($response) >= 1) {
+                                        if ($grade_data) {
+                                            echo $grade . '%';
+                                            $responses++;
+                                            $overall_grade = $overall_grade + $grade;
+                                        } else {
+                                            _e('Pending grade', 'cp');
+                                        }
                                     } else {
-                                        _e('Pending grade', 'cp');
+                                        echo '0%';
                                     }
-                                } else {
-                                    echo '0%';
+                                    
+                                    $assessable_answers++;
+                                }else{
+                                    _e('Non-assessable', 'cp');
                                 }
                                 ?>
                             </td>
@@ -166,7 +173,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                         <?php _e('TOTAL:', 'cp'); ?>
                         <?php
                         if ($overall_grade > 0) {
-                            echo round(($overall_grade / $current_row), 2) . '%';
+                            echo round(($overall_grade / $assessable_answers), 2) . '%';
                         } else {
                             echo '0%';
                         }

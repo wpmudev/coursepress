@@ -81,7 +81,7 @@ if (!class_exists('Student')) {
             update_user_meta($this->ID, 'enrolled_course_date_' . $course_id, $current_time); //Link courses and student (in order to avoid custom tables) for easy MySql queries (get courses stats, student courses, etc.)
             update_user_meta($this->ID, 'enrolled_course_class_' . $course_id, $class);
             update_user_meta($this->ID, 'enrolled_course_group_' . $course_id, $group);
-            update_user_meta($this->ID, 'role', 'student');//alternative to roles used
+            update_user_meta($this->ID, 'role', 'student'); //alternative to roles used
 
             return true;
             //TO DO: add new payment status if it's paid
@@ -120,7 +120,7 @@ if (!class_exists('Student')) {
                 $course_id = str_replace('enrolled_course_date_', '', $course->meta_key);
                 $course = new Course($course_id);
                 //if (!empty($course->course)) {
-                    $enrolled_courses[] = $course_id;
+                $enrolled_courses[] = $course_id;
                 //}
             }
 
@@ -199,7 +199,10 @@ if (!class_exists('Student')) {
 
             foreach ($posts as $post) {
                 if (isset($post->response_grade['grade']) && is_numeric($post->response_grade['grade'])) {
-                    $total_grade = $total_grade + (int) $post->response_grade['grade'];
+                    $assessable = get_post_meta($post->post_parent, 'gradable_answer', true);
+                    if ($assessable == 'yes') {
+                        $total_grade = $total_grade + (int) $post->response_grade['grade'];
+                    }
                     $graded_responses++;
                 }
             }

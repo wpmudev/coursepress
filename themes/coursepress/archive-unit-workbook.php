@@ -36,7 +36,7 @@ add_thickbox();
                 <div class="workbook_units">
                     <div class="unit_title">
                         <h3><?php the_title(); ?>
-                            <span><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]'); ?>% completed</span>
+                            <span><?php if(do_shortcode('[course_unit_details field="assessable_input_modules_count"]') > 0){_e('Grade:', 'cp'); ?> <?php echo apply_filters('cp_grade', do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]')); ?>%<?php } ?></span>
                         </h3>
                     </div>
                     <div class="accordion-inner">
@@ -126,17 +126,17 @@ add_thickbox();
                                             <?php
                                             if ($general_col_visibility) {
                                                 ?>
-                                                <!--<td class = "<?php echo $style . ' ' . $visibility_class; ?>">
-                                                    <?php echo $module->label;
-                                                    ?>
-                                                </td>-->
+                                                                        <!--<td class = "<?php echo $style . ' ' . $visibility_class; ?>">
+                                                <?php echo $module->label;
+                                                ?>
+                                                                        </td>-->
 
                                                 <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                     <?php echo $mod->post_title; ?>
                                                 </td>
 
                                                 <td class="<?php echo $style . ' ' . $visibility_class; ?>">
-                                                    <?php echo (count($response) >= 1 ? date('M d, Y', strtotime($response->post_date)) : '<span class="not_submitted">'.__('Not submitted', 'cp').'</span>'); ?>
+                                                    <?php echo (count($response) >= 1 ? date('M d, Y', strtotime($response->post_date)) : '<span class="not_submitted">' . __('Not submitted', 'cp') . '</span>'); ?>
                                                 </td>
 
                                                 <td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -176,22 +176,28 @@ add_thickbox();
 
                                                 <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                                     <?php
-                                                    if (isset($grade_data)) {
-                                                        $grade = $grade_data['grade'];
-                                                        $instructor_id = $grade_data['instructor'];
-                                                        $instructor_name = get_userdata($instructor_id);
-                                                        $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
-                                                    }
-                                                    if (count($response) >= 1) {
+                                                    $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+
+                                                    if ($assessable == 'yes') {
                                                         if (isset($grade_data)) {
-                                                            ?>
-                                                            <?php echo $grade; ?>%
-                                                            <?php
-                                                        } else {
-                                                            _e('Pending', 'cp');
+                                                            $grade = $grade_data['grade'];
+                                                            $instructor_id = $grade_data['instructor'];
+                                                            $instructor_name = get_userdata($instructor_id);
+                                                            $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
                                                         }
-                                                    } else {
-                                                        echo '-';
+                                                        if (count($response) >= 1) {
+                                                            if (isset($grade_data)) {
+                                                                ?>
+                                                                <?php echo apply_filters('cp_grade', $grade); ?>%
+                                                                <?php
+                                                            } else {
+                                                                _e('Pending', 'cp');
+                                                            }
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                    }else{
+                                                        _e('Non-assessable', 'cp');
                                                     }
                                                     ?>
                                                 </td>
@@ -225,22 +231,22 @@ add_thickbox();
                                     <td colspan="7">
                                         <?php
                                         $unit_grade = do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]');
-                                        //_e('Read Only', 'cp');
-                                        _e('0 input elements in the selected unit.', 'cp');
+                                        _e('Read Only', 'cp');
+                                        //_e('0 input elements in the selected unit.', 'cp');
                                         ?>
                                         <?php
-                                        if ($unit_grade == 0) {
+                                        /*if ($unit_grade == 0) {
                                             _e('Unit unread', 'cp');
                                         } else {
                                             _e('Unit read - grade 100%', 'cp');
-                                        }
+                                        }*/
                                         ?>
 
                                     </td>
                                 </tr>
-            <?php
-        }
-        ?>
+                                <?php
+                            }
+                            ?>
 
                         </table>
                     </div>
@@ -250,9 +256,9 @@ add_thickbox();
         } else {
             ?>
             <div class="zero-courses"><?php _e('0 Units in the course', 'cp'); ?></div>
-    <?php
-}
-?>
+            <?php
+        }
+        ?>
 
         <!--<ul class="units-archive-list">
         <?php if (have_posts()) { ?>
@@ -263,29 +269,29 @@ add_thickbox();
                 the_post();
                 $grades = $grades + do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]');
                 ?>
-                                                                                                            <li>
-                                                                                                                <div class="unit-archive-single">
-                                                                                                                    <span class="grade-percentage"><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '" format="true"]'); ?></span>
-                                                                                                                    <a class="unit-archive-single-title" href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
+                                                                                                                    <li>
+                                                                                                                        <div class="unit-archive-single">
+                                                                                                                            <span class="grade-percentage"><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '" format="true"]'); ?></span>
+                                                                                                                            <a class="unit-archive-single-title" href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
                 <?php if (do_shortcode('[course_unit_details field="input_modules_count"]') > 0) { ?>
-                                                                                                                                                                    <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('mandatory elements completed', 'coursepress'); ?> | <?php echo do_shortcode('[course_unit_details field="student_unit_modules_graded" unit_id="' . get_the_ID() . '"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements graded', 'coursepress'); ?></span>                    
-        <?php } else { ?>
-                                                                                                                                                                    <span class="unit-archive-single-module-status read-only-module"><?php _e('Read only'); ?></span>
+                                                                                                                                                                                <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('mandatory elements completed', 'coursepress'); ?> | <?php echo do_shortcode('[course_unit_details field="student_unit_modules_graded" unit_id="' . get_the_ID() . '"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements graded', 'coursepress'); ?></span>                    
+                <?php } else { ?>
+                                                                                                                                                                                <span class="unit-archive-single-module-status read-only-module"><?php _e('Read only'); ?></span>
                 <?php } ?>
-                                                                                                                </div>
-                                                                                                            </li>
+                                                                                                                        </div>
+                                                                                                                    </li>
                 <?php
                 $units++;
             }
             ?>
-                                                            <div class="total_grade"><?php echo apply_filters('grade_caption', (__('TOTAL:', 'coursepress'))); ?> <?php echo apply_filters('grade_total', ($grades > 0 ? (round($grades / $units, 0)) : 0) . '%'); ?></div>
+                                                                <div class="total_grade"><?php echo apply_filters('grade_caption', (__('TOTAL:', 'coursepress'))); ?> <?php echo apply_filters('grade_total', ($grades > 0 ? (round($grades / $units, 0)) : 0) . '%'); ?></div>
             <?php
         } else {
             ?>
-                                                            <h1 class="zero-course-units"><?php _e("0 units in the course currently. Please check back later."); ?></h1>
-    <?php
-}
-?>
+                                                                <h1 class="zero-course-units"><?php _e("0 units in the course currently. Please check back later."); ?></h1>
+            <?php
+        }
+        ?>
         </ul>-->
     </main><!-- #main -->
 </div><!-- #primary -->
