@@ -1,8 +1,5 @@
 <?php
-global $page, $user_id, $coursepress_admin_notice;
-global $coursepress;
-
-
+global $page, $user_id, $coursepress_admin_notice, $coursepress;
 
 if (isset($_GET['course_id'])) {
     $course = new Course($_GET['course_id']);
@@ -17,10 +14,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     check_admin_referer('course_details_overview');
 
-    /*if ($_POST['meta_course_category'] != -1) {
-        $term = get_term_by('id', $_POST['meta_course_category'], 'course_category');
-        wp_set_object_terms($course_id, $term->slug, 'course_category', false);
-    }*/
+    /* if ($_POST['meta_course_category'] != -1) {
+      $term = get_term_by('id', $_POST['meta_course_category'], 'course_category');
+      wp_set_object_terms($course_id, $term->slug, 'course_category', false);
+      } */
 
     if (!isset($_POST['meta_open_ended_course'])) {
         $_POST['meta_open_ended_course'] = 'off';
@@ -42,14 +39,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
         /* Save / Save Draft */
         $new_post_id = $course->update_course();
     }
-    
+
     if (isset($_POST['submit-unit-publish'])) {
         /* Save & Publish */
         $new_post_id = $course->update_course();
         $course = new Course($new_post_id);
         $course->change_status('publish');
     }
-    
+
     if (isset($_POST['submit-unit-unpublish'])) {
         /* Save & Unpublish */
         $new_post_id = $course->update_course();
@@ -114,7 +111,7 @@ if (isset($_GET['course_id'])) {
 
         <div class='course-liquid-left'>
 
-            <div id='course-left'>
+            <div id='course'>
 
                 <?php wp_nonce_field('course_details_overview'); ?>
 
@@ -190,7 +187,112 @@ if (isset($_GET['course_id'])) {
                             $desc = '';
                             wp_editor(htmlspecialchars_decode($course_details->post_content), "course_description", $args);
                             ?>
-                            <br/>
+                            <br />
+
+                            <div class="half">
+                                <div class="course-holder-wrap">
+
+                                    <h3><?php _e('Course Instructor(s)', 'cp'); ?></h3>
+
+                                    <div>
+
+                                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id()) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']))) { ?>
+                                            <?php coursepress_instructors_avatars_array(); ?>
+
+                                            <div class="clearfix"></div>
+                                            <p><?php _e('Select one or more instructors to facilitate this course', 'cp'); ?></p>
+                                            <?php coursepress_instructors_drop_down(); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
+                                            <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p>
+
+
+                                            <?php
+                                        } else {
+                                            if (coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                                                _e('You do not have required permissions to assign instructors to a course.', 'cp');
+                                            }
+                                        }
+                                        ?>
+
+                                    </div>
+                                </div> <!-- course-holder-wrap -->
+                            </div>
+
+                            <div class="half">
+                                <h3><?php _e('Assigned Instructor(s)', 'cp'); ?></h3>
+
+                                <div class="instructors-info" id="instructors-info">
+                                    <?php
+                                    if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) {
+                                        $remove_button = true;
+                                    } else {
+                                        $remove_button = false;
+                                    }
+                                    ?>
+
+                                    <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
+                                </div>
+                            </div>
+
+                            <br clear="all" />
+                            <div class="full border-devider"></div>
+
+                            <div class="half">
+                                <h3><?php _e('Listing Image', 'cp'); ?></h3>
+                                <p><?php _e('The image is used on the "Courses" listing (archive) page along with the course excerpt.') ?></p>
+                                <div class="featured_url_holder">
+                                    <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
+                                    if ($course_id !== 0) {
+                                        echo esc_attr($course->details->featured_url);
+                                    }
+                                    ?>" placeholder="<?php _e('Add Image URL of Browse for Image', 'cp'); ?>" />
+                                    <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                                    <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
+                                    if ($course_id !== 0) {
+                                        echo get_post_meta($course_id, '_thumbnail_id', true);
+                                    }
+                                    ?>" />
+                                           <?php
+                                           //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
+                                           //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+                                           //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
+                                           ?>
+                                </div>
+                            </div>
+
+                            <div class="half">
+                                <?php
+                                global $content_width;
+
+                                wp_enqueue_style('thickbox');
+                                wp_enqueue_script('thickbox');
+                                wp_enqueue_media();
+                                wp_enqueue_script('media-upload');
+
+                                $supported_video_extensions = implode(", ", wp_get_video_extensions());
+
+                                if (!empty($data)) {
+                                    if (!isset($data->player_width) or empty($data->player_width)) {
+                                        $data->player_width = empty($content_width) ? 640 : $content_width;
+                                    }
+                                }
+                                ?>
+
+                                <div class="video_url_holder mp-wrap">
+                                    <h3><?php _e('Featured Video', 'cp'); ?></h3>
+                                    <p><?php _e('This is used on the Course Overview page and will be displayed with the course description.', 'cp'); ?></p>
+
+                                    <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" placeholder="<?php
+                                    _e('Add URL or Browse', 'cp');
+                                    echo ' (' . $supported_video_extensions . ')';
+                                    ?>" />
+
+                                    <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
+
+                                </div>
+                            </div>
+
+                            <br clear="all" />
+                            <div class="full border-devider"></div>
 
                             <div class="half">
                                 <label for='meta_class-size'><?php _e('Class size', 'cp'); ?>
@@ -207,8 +309,6 @@ if (isset($_GET['course_id'])) {
                                 <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
                             </div>
 
-                            <!--<br clear="all" />-->
-
                             <div class="half">
                                 <label for='meta_enroll_type'><?php _e('How & Who can Enroll?', 'cp'); ?></label>
 
@@ -219,6 +319,11 @@ if (isset($_GET['course_id'])) {
                                     <option value="manually" <?php echo ($enroll_type == 'manually' ? 'selected=""' : '') ?>><?php _e('Manually added only', 'cp'); ?></option>
                                 </select>
 
+                            </div>
+
+                            <div class="half">
+                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
+                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
                             </div>
 
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
@@ -257,6 +362,7 @@ if (isset($_GET['course_id'])) {
 
                             </div>
 
+
                             <div class="half" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
@@ -273,42 +379,77 @@ if (isset($_GET['course_id'])) {
 
                             </div>
 
-                            <br clear="all" />
-                            <br clear="all" />
-
                             <!--<div class="half">
                                 <label><?php _e('Course Category', 'cp'); ?></label>
-                                <?php
-                                $tax_args = array(
-                                    'show_option_all' => '',
-                                    'show_option_none' => __('-- None --', 'cp'),
-                                    'orderby' => 'ID',
-                                    'order' => 'ASC',
-                                    'show_count' => 0,
-                                    'hide_empty' => 0,
-                                    'echo' => 1,
-                                    'selected' => $course_category,
-                                    'hierarchical' => 0,
-                                    'name' => 'meta_course_category',
-                                    'id' => '',
-                                    'class' => 'postform chosen-select',
-                                    'depth' => 0,
-                                    'tab_index' => -1,
-                                    'taxonomy' => 'course_category',
-                                    'hide_if_empty' => false,
-                                    'walker' => ''
-                                );
+                            <?php
+                            $tax_args = array(
+                                'show_option_all' => '',
+                                'show_option_none' => __('-- None --', 'cp'),
+                                'orderby' => 'ID',
+                                'order' => 'ASC',
+                                'show_count' => 0,
+                                'hide_empty' => 0,
+                                'echo' => 1,
+                                'selected' => $course_category,
+                                'hierarchical' => 0,
+                                'name' => 'meta_course_category',
+                                'id' => '',
+                                'class' => 'postform chosen-select',
+                                'depth' => 0,
+                                'tab_index' => -1,
+                                'taxonomy' => 'course_category',
+                                'hide_if_empty' => false,
+                                'walker' => ''
+                            );
 
-                                $taxonomies = array('course_category');
-                                wp_dropdown_categories($tax_args);
-                                ?>
+                            $taxonomies = array('course_category');
+                            wp_dropdown_categories($tax_args);
+                            ?>
                                 <a href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
 
                             </div>-->
+                            <br clear="all" />
 
-                            <div class="half">
-                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
-                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
+                            <div class="full border-devider">
+                                <div class="half">
+                                    <h3><?php _e('Cost to participate in the course', 'cp'); ?></h3>
+                                    <?php
+                                    if ($coursepress->is_marketpress_active()) {
+                                        ?>
+
+
+                                        <?php _e('MarketPress product'); ?>
+
+                                        <a class="help-icon" href="javascript:;"></a>
+                                        <div class="tooltip">
+                                            <div class="tooltip-before"></div>
+                                            <div class="tooltip-button">&times;</div>
+                                            <div class="tooltip-content">
+                                                <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
+                                            </div>
+                                        </div>
+
+                                        <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
+                                            <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
+                                            <?php
+                                            global $post;
+                                            $args = array(
+                                                'numberposts' => -1,
+                                                'post_type' => 'product'
+                                            );
+                                            $posts = get_posts($args);
+                                            foreach ($posts as $post) {
+                                                setup_postdata($post);
+                                                ?>
+                                                <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
+                                            <?php } ?>
+                                        </select>
+
+                                    <?php } else { ?>
+                                        <p><?php printf(__('%s integrates with <a href="http://wordpress.org/plugins/wordpress-ecommerce/">MarketPress</a> plugin. Install it and start selling courses.', 'cp'), $coursepress->name); ?></p>
+                                    <?php } ?>
+
+                                </div>
                             </div>
 
                             <br clear="all" />
@@ -392,7 +533,7 @@ if (isset($_GET['course_id'])) {
                                         <div class="tooltip-before"></div>
                                         <div class="tooltip-button">&times;</div>
                                         <div class="tooltip-content">
-                                            <?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?>
+                            <?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?>
                                         </div>
                                     </div>
 
@@ -464,190 +605,6 @@ if (isset($_GET['course_id'])) {
             </div>
         </div> <!-- course-liquid-left -->
 
-        <div class='course-liquid-right'>
-
-            <div class="course-holder-wrap">
-
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php _e('Course Instructor(s)', 'cp'); ?></h3>
-                </div>
-
-                <div class="level-holder" id="sidebar-levels">
-                    <div class='sidebar-inner'>
-                        <div class="instructors-info" id="instructors-info">
-                            <?php
-                            if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) {
-                                $remove_button = true;
-                            } else {
-                                $remove_button = false;
-                            }
-                            ?>
-
-                            <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
-                        </div>
-
-                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id()) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']))) { ?>
-                            <?php coursepress_instructors_avatars_array(); ?>
-
-                            <div class="clearfix"></div>
-                            <?php coursepress_instructors_drop_down(); ?>
-
-                            <?php // if (coursepress_get_number_of_instructors() != 0) { ?>
-                                <div class="inner-right inner-link">
-                                    <input class="button-secondary" id="add-instructor-trigger" type="button" value="<?php _e('Assign Selected Instructor', 'cp'); ?>">
-                                </div>
-                                <?php
-                            /*} else {
-                                _e('You do not have any available instructors yet. <a href="user-new.php" target="_new">Create one user with the Instructor role</a> in order to assign it to the courses.', 'cp');
-                            }*/
-                            ?>
-
-                            <?php
-                        } else {
-                            if (coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
-                                _e('You do not have required permissions to assign instructors to a course.', 'cp');
-                            }
-                        }
-                        ?>
-
-                    </div>
-                </div>
-            </div> <!-- course-holder-wrap -->
-
-            <?php
-            if ($coursepress->is_marketpress_active()) {
-                ?>
-                <div class="course-holder-wrap mp-wrap">
-
-                    <div class="sidebar-name no-movecursor">
-                        <h3><?php _e('MarketPress Integration', 'cp'); ?></h3>
-                    </div>
-
-                    <div class="level-holder" id="sidebar-levels">
-                        <div class='sidebar-inner'>
-
-                            <?php _e('MarketPress product'); ?>
-
-                            <a class="help-icon" href="javascript:;"></a>
-                            <div class="tooltip">
-                                <div class="tooltip-before"></div>
-                                <div class="tooltip-button">&times;</div>
-                                <div class="tooltip-content">
-                                    <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
-                                </div>
-                            </div>
-
-                            <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
-                                <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
-                                <?php
-                                global $post;
-                                $args = array(
-                                    'numberposts' => -1,
-                                    'post_type' => 'product'
-                                );
-                                $posts = get_posts($args);
-                                foreach ($posts as $post) {
-                                    setup_postdata($post);
-                                    ?>
-                                    <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
-                                <?php } ?>
-                            </select>
-
-
-                        </div>
-                    </div>
-                </div> <!-- course-holder-wrap -->
-            <?php } ?>
-
-
-            <div class="course-holder-wrap">
-
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php _e('Course Image', 'cp'); ?></h3>
-                </div>
-
-                <div class="level-holder" id="sidebar-levels">
-                    <div class='sidebar-inner'>
-                        <div class="featured_url_holder">
-                            <?php _e('Browse for an image.', 'cp'); ?>
-                            <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
-                            if ($course_id !== 0) {
-                                echo esc_attr($course->details->featured_url);
-                            }
-                            ?>" />
-                            <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                            <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
-                            if ($course_id !== 0) {
-                                echo get_post_meta($course_id, '_thumbnail_id', true);
-                            }
-                            ?>" />
-                                   <?php
-                                   //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
-                                   //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                                   //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
-                                   ?>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- course-holder-wrap -->
-
-            <?php
-            global $content_width;
-
-            wp_enqueue_style('thickbox');
-            wp_enqueue_script('thickbox');
-            wp_enqueue_media();
-            wp_enqueue_script('media-upload');
-
-            $supported_video_extensions = implode(",", wp_get_video_extensions());
-
-            if (!empty($data)) {
-                if (!isset($data->player_width) or empty($data->player_width)) {
-                    $data->player_width = empty($content_width) ? 640 : $content_width;
-                }
-            }
-            ?>
-
-            <div class="course-holder-wrap">
-
-                <div class="sidebar-name no-movecursor">
-                    <h3><?php _e('Featured Course Video', 'cp'); ?></h3>
-                </div>
-
-                <div class="level-holder" id="sidebar-levels">
-                    <div class='sidebar-inner'>
-
-                        <div class="video_url_holder mp-wrap">
-
-                            <?php _e('Put a URL or Browse for a video file.', 'cp'); ?>
-
-                            <a class="help-icon" href="javascript:;"></a>
-                            <div class="tooltip">
-                                <div class="tooltip-before"></div>
-                                <div class="tooltip-button">&times;</div>
-                                <div class="tooltip-content">
-                                    <?php printf(__('Below you can enter a Youtube or Vimeo link e.g. %s  (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
-                                </div>
-                            </div>
-
-                            <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" />
-
-
-                            <?php
-//echo '(' . $supported_video_extensions . ')';
-                            ?>
-
-                            <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div> <!-- course-liquid-right -->
     </form>
 
 </div> <!-- wrap -->

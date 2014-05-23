@@ -1180,11 +1180,22 @@ div.levelinformation {
 }
 
 .featured_url_holder input.featured_url{
-    width: 70%;
+    width: 80%;
 }
 
+input[type=text].course_video_url{
+    width: 80%;
+}
+
+.course_video_url_button{
+    /*float: right;*/
+    margin-top: 13px;
+}
+
+
+
 .featured_url_holder input.featured_url_button{
-    width: 25%;
+    width: auto;
 }
 
 .file_additional_controls label{
@@ -1418,4 +1429,8 @@ label.bold-label{
     width: 100%;
     font-weight: bold;
     color: #444;
+}
+
+#ui-accordion-students_accordion-header-0{
+    display: none;
 }

@@ -2,7 +2,7 @@
 /*
   Plugin Name: CoursePress
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
-  Description: CoursePress turns WordPress into a powerful learning management system. Set up online courses, create learning units and modules, create quizzes, invite/enroll students to a course. More coming soon!
+  Description: CoursePress turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also asses student work, sell your courses and much much more.
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developer: Marko Miljus (https://twitter.com/markomiljus)
@@ -838,11 +838,9 @@ if (!class_exists('CoursePress')) {
             $this->plugin_activation();
         }
 
-        /* TEMPORARY: Redirect user to the welcome screen after activation */
-
         function coursepress_plugin_do_activation_redirect() {
             if (get_option('coursepress_plugin_do_first_activation_redirect', false)) {
-                delete_option('coursepress_plugin_do_first_activation_redirect');
+                //delete_option('coursepress_plugin_do_first_activation_redirect');
                 wp_redirect(trailingslashit(site_url()) . 'wp-admin/admin.php?page=courses&quick_setup');
                 exit;
             }
@@ -2099,16 +2097,20 @@ if (!class_exists('CoursePress')) {
         function login_redirect($redirect_to, $request, $user) {
             global $user;
 
-            if (isset($user->roles) && is_array($user->roles)) {
-                //check for students
-                if (in_array("student", $user->roles)) {
-                    // redirect them to the default place
-                    return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
-                } else {
-                    return $redirect_to;
-                }
+            if (current_user_can('administrator')) {
+                return admin_url();
             } else {
-                return $redirect_to;
+
+                $role_s = get_user_meta($user->ID, 'role', true);
+                $role_i = get_user_meta($user->ID, 'role_ins', true);
+
+                if ($role_i == 'instructor') {
+                    return admin_url();
+                } else if ($role_s == 'student' || $role_s == false || $role_s == '') {
+                    return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
+                } else {//unknown case
+                    return admin_url();
+                }
             }
         }
 

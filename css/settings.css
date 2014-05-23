@@ -497,6 +497,12 @@ x:-o-prefocus,
     -moz-user-select: none;
     user-select: none;
 }
+
+.course-holder-wrap .chosen-container{
+    width: 80% !important;
+    margin-right: 2%;
+}
+
 #enroll_type_prerequisite_holder .chosen-container{
     min-width: 290px;
 }
