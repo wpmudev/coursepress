@@ -153,7 +153,7 @@ if (isset($_POST['course_id'])) {
 
                                             </div><!--student-course-right-->
 
-                                            <?php if ((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) { ?>
+                                            <?php if (((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) && 1==0 /* moving for the next release */) { ?>
                                                 <div class="course-controls alternate">
 
                                                     <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->ID; ?>">

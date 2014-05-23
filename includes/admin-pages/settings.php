@@ -66,7 +66,7 @@ if (isset($_POST['_wpnonce'])) {
     }
 
     if (current_user_can('coursepress_settings_groups_page_cap')) {
-        $menus['groups'] = __('Class Groups', 'cp');
+        //$menus['groups'] = __('Class Groups', 'cp'); //to do in the next release
     }
 
     if (current_user_can('administrator')) {

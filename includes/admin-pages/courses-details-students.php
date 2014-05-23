@@ -135,7 +135,7 @@ $columns = array(
     "ID" => __('Student ID', 'cp'),
     "user_firstname" => __('First Name', 'cp'),
     "user_lastname" => __('Surname', 'cp'),
-    "group" => __('Group', 'cp'),
+    //"group" => __('Group', 'cp'),
     "edit" => __('Profile', 'cp'),
 );
 
@@ -150,6 +150,21 @@ if ((current_user_can('coursepress_withdraw_students_cap')) || (current_user_can
 
 $students = new Student_Search();
 ?>
+<?php
+$search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
+$search_args['meta_value'] = (isset($class) ? $class : '');
+
+$args = array(
+    'meta_query' => array(
+        array(
+            'key' => 'enrolled_course_class_' . $course_id,
+            'value' => '',
+        ))
+);
+
+$wp_user_search = new WP_User_Query($args);
+?>
+
 <div id="students_accordion">
     <?php
     $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
@@ -205,7 +220,7 @@ $students = new Student_Search();
                             <td class="<?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
-                            <td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>
+                            <!--<td class="<?php echo $style; ?>"><?php echo ($user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id}); ?></td>-->
                             <td class="<?php echo $style . ' edit-button-student-td'; ?>">
                                 <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                     <i class="fa fa-user cp-move-icon remove-btn"></i>
@@ -280,7 +295,7 @@ $students = new Student_Search();
         </div>
     <?php } ?>
     <?php
-    if (!empty($course_classes)) {
+    /*if (!empty($course_classes)) {
         $course_num = 1;
         foreach ($course_classes as $class) {
             $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
@@ -422,7 +437,7 @@ $students = new Student_Search();
             }
             $course_num++;
         }
-    }
+    }*/
     ?>
 </div>
 
@@ -439,13 +454,13 @@ $students = new Student_Search();
     wp_nonce_field('add_student_class');
     ?>
 
-    <?php if ((current_user_can('coursepress_add_new_classes_cap')) || (current_user_can('coursepress_add_new_my_classes_cap') && $course->details->post_author == get_current_user_id())) { ?>
+    <?php if (((current_user_can('coursepress_add_new_classes_cap')) || (current_user_can('coursepress_add_new_my_classes_cap') && $course->details->post_author == get_current_user_id())) && 1 == 0 /* moving class feature for the next release */) { ?>
         <div class="add-student-class-area">
             <h2><?php _e('New Class', 'cp'); ?></h2>
             <label><?php _e('New Class name', 'cp'); ?>
                 <input type="text" name="course_classes[]" class="course_classes_input" value="" />
             </label>
-            
+
             <?php submit_button(__('Add New Class', 'cp'), 'primary', 'add_student_class', ''); ?>
             <div class="add_class_message"></div>
         </div>

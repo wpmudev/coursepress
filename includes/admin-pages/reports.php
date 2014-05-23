@@ -330,7 +330,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             $classes = 'all';
                         }
                         ?>
-                        <select name="classes" id="dynamic_classes" name="dynamic_classes">
+                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
                             <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
                             <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
                             <?php
@@ -341,7 +341,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                                 <?php
                             }
                             ?>
-                        </select>
+                        </select>-->
 
                         <?php
                     }

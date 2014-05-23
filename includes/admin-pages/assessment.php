@@ -191,7 +191,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                                 $classes = 'all';
                             }
                             ?>
-                            <select name="classes" id="dynamic_classes" name="dynamic_classes">
+                            <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
                                 <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
                                 <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
                                 <?php
@@ -202,7 +202,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                                     <?php
                                 }
                                 ?>
-                            </select>
+                            </select>-->
 
                             <label class="ungraded"><?php _e('Ungraded Elements Only', 'cp'); ?>
                                 <?php
