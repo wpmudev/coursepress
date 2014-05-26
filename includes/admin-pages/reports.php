@@ -62,7 +62,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             <?php
             $module = new Unit_Module();
             $modules = $module->get_modules($course_unit->ID);
-            
+
             $input_modules_count = 0;
 
             foreach ($modules as $mod) {
@@ -93,7 +93,9 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                     $response = $module->get_response($user_object->ID, $mod->ID);
                     $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
 
-                    $grade_data = $unit_module_main->get_response_grade($response->ID);
+                    $id = isset($response->ID) ? $response->ID : 0;
+                    
+                    $grade_data = $unit_module_main->get_response_grade($id);
                     ?>
                     <table cellspacing="0" cellpadding="5">
                         <tr>
@@ -129,16 +131,16 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                                     } else {
                                         echo '0%';
                                     }
-                                    
+
                                     $assessable_answers++;
-                                }else{
+                                } else {
                                     _e('Non-assessable', 'cp');
                                 }
                                 ?>
                             </td>
                         </tr>
                         <?php
-                        $comment = $unit_module_main->get_response_comment($response->ID);
+                        $comment = $unit_module_main->get_response_comment($id);
                         if (!empty($comment)) {
                             ?>
                             <tr>
@@ -160,7 +162,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             <table cellspacing="0" cellpadding="10">
                 <tr>
                     <td colspan="2" style="background-color: #2396A0; color:#fff;">
-                        <?php _e('Avarage response grade: ', 'cp'); ?>
+                        <?php _e('Average response grade: ', 'cp'); ?>
                         <?php
                         if ($overall_grade > 0) {
                             echo round(($overall_grade / $responses), 2) . '%';
@@ -289,12 +291,14 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
 
                         $course_obj = new Course($course->ID);
                         $course_object = $course_obj->get_course();
+
                         if ($course_obj->get_number_of_students() >= 1) {
                             $courses_with_students++;
                             ?>
                             <option value="<?php echo $course->ID; ?>" <?php echo ((isset($_GET['course_id']) && $_GET['course_id'] == $course->ID) ? 'selected="selected"' : ''); ?>><?php echo $course->post_title; ?></option>
                             <?php
                         }
+
                         $course_num++;
                     }
 
@@ -330,18 +334,18 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             $classes = 'all';
                         }
                         ?>
-                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
-                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
-                            <?php
-                            $course_classes = get_post_meta($current_course_id, 'course_classes', true);
-                            foreach ($course_classes as $course_class) {
-                                ?>
-                                <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
-                                <?php
-                            }
+                                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
+                                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
+                                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
+                        <?php
+                        $course_classes = get_post_meta($current_course_id, 'course_classes', true);
+                        foreach ($course_classes as $course_class) {
                             ?>
-                        </select>-->
+                                                        <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
+                            <?php
+                        }
+                        ?>
+                                        </select>-->
 
                         <?php
                     }
@@ -358,7 +362,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
         "responses" => __('Responses', 'cp'),
-        "avarage_grade" => __('Avarage Grade', 'cp'),
+        "avarage_grade" => __('Average Grade', 'cp'),
         "report" => __('Report', 'cp'),
     );
 

@@ -168,7 +168,7 @@ class file_input_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-                                <?php _e('Student will need to give the answer on the question in order to submit unit answers.', 'cp'); ?>
+                                <?php _e('Student will need to provide a response on this question in order to continue the unit.', 'cp'); ?>
                             </div>
                         </div>
                     </label>
@@ -180,7 +180,7 @@ class file_input_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-                                <?php _e('If checked, the answer can be assessed.', 'cp'); ?>
+                                <?php _e('If checked, this question will be graded. If not checked, the response can still be viewed within the Assessment section but listed as Non-assessable.', 'cp'); ?>
                             </div>
                         </div>
                     </label>

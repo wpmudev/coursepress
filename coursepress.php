@@ -195,7 +195,7 @@ if (!class_exists('CoursePress')) {
             // Load payment gateways (to do)
             //$this->load_payment_gateways();
             //Load add-ons (for future us, to do)
-            $this->load_addons();
+            //$this->load_addons();
 
             //update install script if necessary
 
@@ -1656,7 +1656,7 @@ if (!class_exists('CoursePress')) {
             //add_action('wp_enqueue_scripts', array(&$this, 'add_jquery_ui'));
             wp_enqueue_script('jquery');
             //wp_enqueue_script('jquery-ui-core');
-            wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
+            //wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
             wp_enqueue_script('jquery-ui-spinner');
 
             if (isset($_GET['page'])) {
@@ -1665,7 +1665,7 @@ if (!class_exists('CoursePress')) {
                 $page = '';
             }
 
-            //$this->add_jquery_ui();
+            $this->add_jquery_ui();
 
             if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
@@ -2204,7 +2204,7 @@ if (!class_exists('CoursePress')) {
         /* Make PDF report */
 
         function pdf_report($report = '', $report_name = '', $report_title = 'Student Report', $preview = false) {
-            ob_end_clean();
+            //ob_end_clean();
             ob_start();
 
             include_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php');
@@ -2253,7 +2253,7 @@ if (!class_exists('CoursePress')) {
             if ($preview) {
                 $pdf->Output($report_name, 'I');
             } else {
-                $pdf->Output($report_name, 'D');
+                $pdf->Output($report_name, 'I');//D
             }
 
             exit;
