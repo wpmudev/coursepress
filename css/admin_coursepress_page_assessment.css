@@ -99,15 +99,6 @@
     border-right: 1px solid #dfdfdf !important;
 }
 
-/*
-.assessment .widefat td{
-    padding: 4px 0px 2px;
-}
-
-.assessment .widefat td:first-child{
-    padding: 4px 7px 2px;
-}*/
-
 .assessment-holder{
     position: relative;
     background-color: #fff;

@@ -224,18 +224,20 @@ if (!class_exists('Unit_Module')) {
             if (isset($_POST['submit_modules_data_done']) || isset($_POST['submit_modules_data_no_save_done'])) {
 
                 if (isset($_POST['submit_modules_data_done'])) {
-                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
+                    wp_redirect(full_url($_SERVER). '?saved=ok');
+                    //wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                 } else {
-                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                    wp_redirect(full_url($_SERVER));
+                    //wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
                 }
 
                 exit;
             }
 
             if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_no_save_save'])) {
-                //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));
                 if (isset($_POST['submit_modules_data_save'])) {
-                    wp_redirect($_SERVER['REQUEST_URI'] . '?saved=ok');
+                    //wp_redirect($_SERVER['REQUEST_URI'] . '?saved=ok');
+                    wp_redirect(full_url($_SERVER). '?saved=ok');
                     exit;
                 } else {
                     //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));

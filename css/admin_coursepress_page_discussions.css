@@ -12,7 +12,6 @@
     margin: 0px auto;
 }
 
-
 .shadow-table:before, .shadow-table:after 
 {
     z-index: -1; 

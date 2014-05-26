@@ -315,7 +315,7 @@ if (isset($_GET['course_id'])) {
                                 <select class="wide" name="meta_enroll_type" id="enroll_type">
                                     <option value="anyone" <?php echo ($enroll_type == 'anyone' ? 'selected=""' : '') ?>><?php _e(' Anyone ', 'cp'); ?></option>
                                     <option value="passcode" <?php echo ($enroll_type == 'passcode' ? 'selected=""' : '') ?>><?php _e('Anyone with a pass code', 'cp'); ?></option>
-                                    <option value="prerequisite" <?php echo ($enroll_type == 'prerequisite' ? 'selected=""' : '') ?>><?php _e('Anyone who fulfil prerequisite (course)', 'cp'); ?></option>
+                                    <option value="prerequisite" <?php echo ($enroll_type == 'prerequisite' ? 'selected=""' : '') ?>><?php _e('Anyone who completed the prerequisite course', 'cp'); ?></option>
                                     <option value="manually" <?php echo ($enroll_type == 'manually' ? 'selected=""' : '') ?>><?php _e('Manually added only', 'cp'); ?></option>
                                 </select>
 
@@ -326,6 +326,9 @@ if (isset($_GET['course_id'])) {
                                 <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
                             </div>
 
+                            <div class='half' id='manually_added_holder'>
+                                <p><?php _e('NOTE: If you need to manually add a student, students must be registered on your site first. To do this for a student, you can do this yourself by going to Users in WordPress where you can add the students manually. You can then select them from this list.', 'cp'); ?></p>
+                            </div>
                             <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
                                 <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
@@ -412,11 +415,12 @@ if (isset($_GET['course_id'])) {
 
                             <div class="full border-devider">
                                 <div class="half">
-                                    <h3><?php _e('Cost to participate in the course', 'cp'); ?></h3>
+                                    <h3><?php _e('Cost to enroll in the course', 'cp'); ?></h3>
+                                    
                                     <?php
+                                    
                                     if ($coursepress->is_marketpress_active()) {
                                         ?>
-
 
                                         <?php _e('MarketPress product'); ?>
 
@@ -428,7 +432,7 @@ if (isset($_GET['course_id'])) {
                                                 <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
                                             </div>
                                         </div>
-
+                                        
                                         <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
                                             <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
                                             <?php
@@ -444,9 +448,11 @@ if (isset($_GET['course_id'])) {
                                                 <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
                                             <?php } ?>
                                         </select>
+                                        
+                                        <p><?php _e('NOTE: If you wish to sell a course and have not set up a product in MarketPress, please finish creating your course and save it. Once you have saved your course, you can create a product in MarketPress to sell this course, then come back to this "Course Overview" page and select the product you have created. Click <a href="post-new.php?post_type=product" target="_blank">here</a> to open a new window that takes you to the "MarketPress Product page"', 'cp');?></p>
 
                                     <?php } else { ?>
-                                        <p><?php printf(__('%s integrates with <a href="http://wordpress.org/plugins/wordpress-ecommerce/">MarketPress</a> plugin. Install it and start selling courses.', 'cp'), $coursepress->name); ?></p>
+                                        <p><?php printf(__('%s integrates with the <a href="https://premium.wpmudev.org/project/e-commerce/?ref=wordpress.org">MarketPress</a> plugin. Install it it to sell this course online.', 'cp'), $coursepress->name); ?></p>
                                     <?php } ?>
 
                                 </div>
@@ -595,7 +601,7 @@ if (isset($_GET['course_id'])) {
                             <?php
                             if ($course_id !== 0) {
                                 ?>
-                                <a href="?page=<?php echo $page; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
+                                <a href="?page=<?php echo $_GET['page']; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
                             <?php } ?>
                         </div>
 

@@ -102,10 +102,10 @@ jQuery(document).ready(function() {
         var action = jQuery("#modules_form").attr("action");
         
         if (e.originalEvent) {//clicked button directly, not pagination
+
             var active_page = jQuery('#navigation-pagination .active a').html();
             var last_page = jQuery('#navigation-pagination li:last-child a').html();
             
-
             if (active_page != last_page) {
                 next_page = parseInt(active_page) + 1;
             } else {
@@ -114,7 +114,7 @@ jQuery(document).ready(function() {
         } else {
             next_page = jQuery('#go_to_page').val();
         }
-        
+          
         jQuery("#modules_form").attr("action", action + 'page/' + parseInt(next_page) + '/');
         //return false;
     });

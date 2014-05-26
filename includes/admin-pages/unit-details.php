@@ -269,18 +269,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 ?>
                             </select>
 
-                            <!--<select name="unit-module-list" id="unit-module-list">
-                                <option value="audio_module">Audio</option>
-                                <option value="file_module">File Download</option>
-                                <option value="text_module">Text</option>
-                                <option value="video_module">Video</option>
-                                <option value="checkbox_input_module">Check Box Input</option>
-                                <option value="file_input_module">File Upload</option>
-                                <option value="radio_input_module">Radio Box Input</option>
-                                <option value="text_input_module">Text Input</option>
-                                <option value="textarea_input_module">Text Area Input</option>
-                            </select>-->
-
                             <input type='button' name='unit-module-add' id='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary" />
 
                             <span class="module_description" id="module_description"></span>

@@ -2,6 +2,7 @@
 $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
 $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 ?>
+
 <div class="wrap nosubsub">
     <?php if ($user_id !== '' && $course_id !== '') { ?>
         <a href="admin.php?action=workbook&student_id=<?php echo $user_id; ?>&page=students&course_id=<?php echo $course_id; ?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>

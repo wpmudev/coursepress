@@ -91,7 +91,11 @@ class file_input_module extends Unit_Module {
             <?php } ?>
 
             <div class="module_file_input">     
-                <input type="file" <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"';?> name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
+                <?php if (count($response) == 0) { ?>
+                    <input type="file" <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
+                <?php }else{
+                    _e('File uploaded.', 'cp');
+                } ?>
             </div>
 
             <?php if ($data->mandatory_answer == 'yes') { ?>
@@ -101,17 +105,17 @@ class file_input_module extends Unit_Module {
         </div>
 
         <?php
-        /*$unit_module_main = new Unit_Module();
+        /* $unit_module_main = new Unit_Module();
 
-        if (is_object($response) && !empty($response)) {
+          if (is_object($response) && !empty($response)) {
 
-            $comment = $unit_module_main->get_response_comment($response->ID);
-            if (!empty($comment)) {
-                ?>
-                <div class="response_comment_front"><?php echo $comment; ?></div>
-                <?php
-            }
-        }*/
+          $comment = $unit_module_main->get_response_comment($response->ID);
+          if (!empty($comment)) {
+          ?>
+          <div class="response_comment_front"><?php echo $comment; ?></div>
+          <?php
+          }
+          } */
         ?>
 
         <?php

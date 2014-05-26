@@ -39,7 +39,6 @@ div.modules_accordion .sidebar-name{
     border-color:#ddd;
 }
 
-
 div.level-liquid-left {
     float: left;
     clear: left;
@@ -51,14 +50,17 @@ div.level-liquid-right {
     clear: right;
     width: 300px;
 }
+
 #level-left {
     margin-left: 5px;
     margin-right: 325px;
 }
+
 #level-left #edit-level {
     background-color: transparent;
     border: 0 none;
 }
+
 div.level-holder-wrap {
     padding: 0;
     margin: 10px 0 20px;
@@ -1432,5 +1434,9 @@ label.bold-label{
 }
 
 #ui-accordion-students_accordion-header-0{
+    display: none;
+}
+
+#manually_added_holder{
     display: none;
 }

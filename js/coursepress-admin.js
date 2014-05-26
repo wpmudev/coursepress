@@ -366,6 +366,16 @@ jQuery(document).ready(function() {
                 'display': 'none'
             });
         }
+        
+        if (enroll_type == 'manually') {
+            jQuery("#manually_added_holder").css({
+                'display': 'block'
+            });
+        } else {
+            jQuery("#manually_added_holder").css({
+                'display': 'none'
+            });
+        }
     });
     jQuery('#add-instructor-trigger').click(function() {
         var instructor_id = jQuery('#instructors option:selected').val();

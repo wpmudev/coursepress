@@ -5,7 +5,7 @@
     <div class="about-text">
         <?php
         printf(__('In four steps, %s turns WordPress into a powerful learning management system. Set up 
-online courses, create learning units, invite/enrol students to a course, publish the course and you 
+online courses, create learning units, invite/enroll students to a course, publish the course and you 
 are away!', 'cp'), $this->name);
         ?>
         <br /><br />
@@ -42,7 +42,7 @@ and much more.
     </div>
 
     <div class="changelog">
-        <h3><?php _e('Step 3. Have students enrol in your course', 'cp'); ?></h3>
+        <h3><?php _e('Step 3. Have students enroll in your course', 'cp'); ?></h3>
 
         <div class="about-text">
             <?php
