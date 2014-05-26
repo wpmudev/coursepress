@@ -674,7 +674,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
             //$student_modules_responses_count = do_shortcode('[course_unit_details field="student_module_responses" unit_id="' . $unit_id . '"]');
 
             if ($student_modules_responses_count > 0) {
-                $percent_value = round((100 / $mandatory_answers) * $student_modules_responses_count, 0);
+                $percent_value = $mandatory_answers > 0 ? (round((100 / $mandatory_answers) * $student_modules_responses_count, 0)) : 0;
                 $percent_value = ($percent_value > 100 ? 100 : $percent_value); //in case that student gave answers on all mandatory plus optional questions
             } else {
                 $percent_value = 0;
@@ -813,14 +813,14 @@ if (!class_exists('CoursePress_Shortcodes')) {
                 $modules = $unit_module->get_modules($unit_id);
 
                 foreach ($modules as $mod) {
-                    $$assessable = get_post_meta($mod->ID, 'gradable_answer', true);
+                    $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
 
                     $class_name = $mod->module_type;
 
                     if (class_exists($class_name)) {
                         $module = new $class_name();
                         if ($module->front_save) {
-                            if ($$assessable == 'yes') {
+                            if ($assessable == 'yes') {
                                 $assessable_answers++;
                             }
                             //$front_save_count++;

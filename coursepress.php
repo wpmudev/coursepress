@@ -2097,19 +2097,22 @@ if (!class_exists('CoursePress')) {
         function login_redirect($redirect_to, $request, $user) {
             global $user;
 
-            if (current_user_can('administrator')) {
-                return admin_url();
-            } else {
+            if (isset($user->ID)) {
 
-                $role_s = get_user_meta($user->ID, 'role', true);
-                $role_i = get_user_meta($user->ID, 'role_ins', true);
+                if (current_user_can('administrator')) {
+                    return admin_url();
+                } else {
 
-                if ($role_i == 'instructor') {
-                    return admin_url();
-                } else if ($role_s == 'student' || $role_s == false || $role_s == '') {
-                    return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
-                } else {//unknown case
-                    return admin_url();
+                    $role_s = get_user_meta($user->ID, 'role', true);
+                    $role_i = get_user_meta($user->ID, 'role_ins', true);
+
+                    if ($role_i == 'instructor') {
+                        return admin_url();
+                    } else if ($role_s == 'student' || $role_s == false || $role_s == '') {
+                        return trailingslashit(site_url()) . trailingslashit($this->get_student_dashboard_slug());
+                    } else {//unknown case
+                        return admin_url();
+                    }
                 }
             }
         }
