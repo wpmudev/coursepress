@@ -227,8 +227,8 @@ if (!class_exists('Unit_Module')) {
                     //wp_redirect(full_url($_SERVER). '?saved=ok');
                     wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                 } else {
-                    wp_redirect(full_url($_SERVER));
-                    //wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                    //wp_redirect(full_url($_SERVER));
+                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
                 }
 
                 exit;
