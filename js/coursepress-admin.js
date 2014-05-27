@@ -578,3 +578,17 @@ function radio_addRow(identifier) {
 jQuery('a').on('click', function(e) {
     e.stopPropagation();
 });
+
+jQuery(function() {
+   if (jQuery(window).width() < 783) {
+
+       jQuery('.wp-editor-wrap .switch-tmce').click(function( ) {
+           jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').toggle();
+           jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').hide();
+       });
+       jQuery('.wp-editor-wrap .switch-html').click(function( ) {
+           jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').toggle();
+           jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').hide();
+       });
+   }
+});
