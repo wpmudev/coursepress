@@ -1,5 +1,5 @@
 function withdraw_confirmed() {
-    return confirm(student.withdraw_alert);
+    return confirm(front_vars.withdraw_alert);
 }
 
 function withdraw() {
@@ -82,9 +82,9 @@ jQuery(document).ready(function() {
     /* Submit data on pagination */
     jQuery('.module-pagination a').click(function(e) {
         e.preventDefault();
-        
+
         //if(check_for_mandatory_answers()){
-        
+
         //var action = jQuery("#modules_form").attr("action");
         jQuery('#go_to_page').val(jQuery(this).html());
 
@@ -97,25 +97,35 @@ jQuery(document).ready(function() {
 
     jQuery('.submit-elements-data-button').click(function(e) {
         //e.preventDefault();
-      
+
         var next_page = 0;
         var action = jQuery("#modules_form").attr("action");
+        var direct_url = '';
         
         if (e.originalEvent) {//clicked button directly, not pagination
 
             var active_page = jQuery('#navigation-pagination .active a').html();
             var last_page = jQuery('#navigation-pagination li:last-child a').html();
             
+
             if (active_page != last_page) {
                 next_page = parseInt(active_page) + 1;
             } else {
-                next_page = parseInt(last_page) + 1;
+                direct_url = front_vars.units_archive_url;
+                next_page = parseInt(last_page);// done button + 1;
             }
         } else {
             next_page = jQuery('#go_to_page').val();
         }
-          
-        jQuery("#modules_form").attr("action", action + 'page/' + parseInt(next_page) + '/');
+
+        //if (!isNaN(active_page)) {}
+        if (direct_url != '') {
+            //jQuery("#modules_form").attr("action", direct_url);
+            jQuery("#modules_form").attr("action", action);
+        } else {
+            jQuery("#modules_form").attr("action", action + 'page/' + parseInt(next_page) + '/');
+        }
+
         //return false;
     });
 

@@ -1600,8 +1600,13 @@ if (!class_exists('CoursePress')) {
         function header_actions() {//front
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
-            wp_localize_script('coursepress_front', 'student', array(
+            
+            $course_id = do_shortcode('[get_parent_course_id]');
+            $units_archive_url = is_numeric($course_id) ? get_permalink($course_id) . trailingslashit($this->get_units_slug()) : '';
+            
+            wp_localize_script('coursepress_front', 'front_vars', array(
                 'withdraw_alert' => __('Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'cp'),
+                'units_archive_url' => $units_archive_url
             ));
 
             if (!is_admin()) {
