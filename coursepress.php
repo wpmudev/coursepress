@@ -229,6 +229,21 @@ if (!class_exists('CoursePress')) {
             add_filter('element_content_filter', array(&$this, 'element_content_link_filter'), 11, 1);
 
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
+
+            add_action('template_redirect', array(&$this, 'virtual_page_template'));
+        }
+
+        function virtual_page_template() {
+            global $post;
+
+            if (isset($post) && $post->post_type == 'virtual_page') {
+                //$theme_file = locate_template(array('page.php'));
+
+                //if ($theme_file != '') {
+                    include(TEMPLATEPATH . "/page.php");
+                    exit;
+                //}
+            }
         }
 
         function register_theme_directory() {
@@ -726,6 +741,11 @@ if (!class_exists('CoursePress')) {
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
 
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
+
+            //Remove potential conflicts between single and virtual page on single site
+            /* if (!is_multisite()){
+              unset($rules['([^/]+)(/[0-9]+)?/?$']);
+              } */
 
             return array_merge($new_rules, $rules);
         }
@@ -1600,10 +1620,10 @@ if (!class_exists('CoursePress')) {
         function header_actions() {//front
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
-            
+
             $course_id = do_shortcode('[get_parent_course_id]');
             $units_archive_url = is_numeric($course_id) ? get_permalink($course_id) . trailingslashit($this->get_units_slug()) : '';
-            
+
             wp_localize_script('coursepress_front', 'front_vars', array(
                 'withdraw_alert' => __('Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'cp'),
                 'units_archive_url' => $units_archive_url
