@@ -86,7 +86,10 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
     $course_show_grade_page = 'off';
 
     //If there isn't any course, create one
-    if (wp_count_posts('course') == 0) {
+    
+    $_courses_count = (wp_count_posts('course')->publish) + (wp_count_posts('course')->private);
+    
+    if ($_courses_count == 0) {
         $new_course = array(
             'post_author' => $course_author,
             'post_excerpt' => $course_excerpt,

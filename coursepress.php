@@ -196,7 +196,6 @@ if (!class_exists('CoursePress')) {
             //$this->load_payment_gateways();
             //Load add-ons (for future us, to do)
             //$this->load_addons();
-
             //update install script if necessary
 
             /* if (get_option('coursepress_version') != $this->version) {
@@ -210,7 +209,7 @@ if (!class_exists('CoursePress')) {
             add_filter('query_vars', array($this, 'filter_query_vars'));
             add_filter('get_edit_post_link', array($this, 'courses_edit_post_link'), 10, 3);
             add_action('parse_request', array($this, 'action_parse_request'));
-            add_action('admin_init', array(&$this, 'coursepress_plugin_do_activation_redirect'));
+            add_action('admin_init', array(&$this, 'coursepress_plugin_do_activation_redirect'), 0);
             add_action('wp_login', array(&$this, 'set_latest_student_activity_upon_login'), 10, 2);
             add_action('mp_order_paid', array(&$this, 'listen_for_paid_status_for_courses'));
             add_action('parent_file', array(&$this, 'parent_file_correction'));
@@ -802,6 +801,9 @@ if (!class_exists('CoursePress')) {
 
             //First install
             first_install();
+
+            //Welcome Screen
+            //$this->coursepress_plugin_do_activation_redirect();
         }
 
         function install() {
@@ -818,15 +820,18 @@ if (!class_exists('CoursePress')) {
             //Redirect to Create New Course page
             require(ABSPATH . WPINC . '/pluggable.php');
 
-            add_action('admin_init', 'my_plugin_redirect');
+            //add_action('admin_init', 'my_plugin_redirect');
+
 
             $this->plugin_activation();
         }
 
         function coursepress_plugin_do_activation_redirect() {
             if (get_option('coursepress_plugin_do_first_activation_redirect', false)) {
-                //delete_option('coursepress_plugin_do_first_activation_redirect');
-                wp_redirect(trailingslashit(get_admin_url()) . '/admin.php?page=courses&quick_setup');
+                ob_start();
+                delete_option('coursepress_plugin_do_first_activation_redirect');
+                wp_redirect(admin_url('admin.php?page=courses&quick_setup'));
+                ob_end_clean();
                 exit;
             }
         }
@@ -1647,7 +1652,7 @@ if (!class_exists('CoursePress')) {
 
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
-			wp_enqueue_style('admin_general_responsive', $this->plugin_url . 'css/admin_general_responsive.css', array(), $this->version);
+            wp_enqueue_style('admin_general_responsive', $this->plugin_url . 'css/admin_general_responsive.css', array(), $this->version);
             /* wp_enqueue_script('jquery-ui-datepicker');
               wp_enqueue_script('jquery-ui-accordion');
               wp_enqueue_script('jquery-ui-sortable');
@@ -1670,7 +1675,7 @@ if (!class_exists('CoursePress')) {
 
             if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
-				wp_enqueue_style('cp_settings_responsive', $this->plugin_url . 'css/settings_responsive.css', array(), $this->version);
+                wp_enqueue_style('cp_settings_responsive', $this->plugin_url . 'css/settings_responsive.css', array(), $this->version);
                 wp_enqueue_style('cp_tooltips', $this->plugin_url . 'css/tooltips.css', array(), $this->version);
                 wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
                 wp_enqueue_script('cp-tooltips', $this->plugin_url . 'js/tooltips.js', array('jquery'), $this->version);
@@ -2263,7 +2268,7 @@ if (!class_exists('CoursePress')) {
             if ($preview) {
                 $pdf->Output($report_name, 'I');
             } else {
-                $pdf->Output($report_name, 'I');//D
+                $pdf->Output($report_name, 'I'); //D
             }
 
             exit;
