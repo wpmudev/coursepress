@@ -19,7 +19,7 @@
 	}
 	.sticky-wrapper {
 	    width: 220px;
-	    position: relative;
+	    position: absolute;
 		left: -235px;
 		background: #0088A5;
 		padding-right: 42px;
