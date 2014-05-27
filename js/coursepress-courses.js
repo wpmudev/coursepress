@@ -10,15 +10,28 @@ jQuery(document).ready(function() {
     });
 
     function submit_elements() {
+               
         jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
             var vl = jQuery(this).parent().find('.radio_answer').val();
             jQuery(this).closest(".module-content").find('.checked_index').val(vl);
+        });
+        
+        jQuery("input[name*='radio_answers']").each(function(i, obj) {
+            jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+        
+        jQuery("input[name*='radio_check']").each(function(i, obj) {
+            jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
 
         jQuery("#unit-add").submit();
     }
 
-    jQuery(".save-unit-button").click(function() {
+    jQuery(".unit-control-buttons .save-unit-button").click(function() {
+        submit_elements();
+    });
+    
+    jQuery(".unit-control-buttons .button-publish").click(function() {
         submit_elements();
     });
 });
