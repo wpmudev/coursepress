@@ -4,11 +4,50 @@
 
 /* Menu bar goes responsive */
 @media only screen and (max-width: 782px) {
+	.mp-wrap .mp-tabs {
+	    width: 220px;
+	}	
+	
+	.sticky-slider {
+		float:right;
+		font-size:22px;
+		position: relative;
+		top: 28px;
+		left:32px;
+		z-index: 20;
+		color: #ffffff;
+	}
+	.sticky-wrapper {
+	    width: 220px;
+	    position: relative;
+		left: -235px;
+		background: #0088A5;
+		padding-right: 42px;
+	}
+	
+	.sticky-wrapper + .mp-settings,	
+	.mp-wrap .mp-settings {
+	    background: none repeat scroll 0 0 #FFFFFF;
+	    border: 1px solid #CCCCCC;
+	    left: 32px;
+	    overflow: visible;
+	    padding: 20px;
+	    position: relative;
+		margin: 0 15px 0 0 !important;
+	}	
+	
+	.course-holder label { 
+		display: inline;
+	}
+	.course-holder .sidebar-name {
+		margin-left: 0 !important;
+	}
+
 }
 
 /* List table anomalies */
 @media (max-width: 555px) {
-
+	
 }
 
 /* For extra small devices */

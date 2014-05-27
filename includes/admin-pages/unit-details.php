@@ -80,6 +80,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 <div class='wrap mp-wrap nocoursesub'>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
+        <div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>
         <ul id="sortable-units" class="mp-tabs" style="">
             <?php
             $units = $course->get_units();

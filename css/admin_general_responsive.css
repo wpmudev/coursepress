@@ -43,6 +43,29 @@
 	    position: relative;
 	    top: 1px;
 	}
+	
+	.nav-tab {
+		font-size:0.9em;
+	}
+	
+	.quicktags-toolbar, div.mce-toolbar-grp  {
+		display: none;
+	}
+
+	/* Fix button heights. */
+	.unit-control-buttons .wp-core-ui input.button-units[type="submit"],
+	.course-control-buttons	.wp-core-ui input.button-units[type="submit"],
+	.unit-control-buttons a.button.button-units,
+	.unit-control-buttons input[type="submit"].button.button-units{
+		height: 30px;
+		padding: 4px 14px 6px 14px;
+	}	
+	
+	.unit-control-buttons a.button.button-preview {
+		height: 31px;
+	    margin: 3px 0 4px;
+	}	
+	
 }
 
 /* List table anomalies */
@@ -56,6 +79,9 @@
 	.column-units {
 		display:none;
 	}
+	
+	.unit-control-buttons .wp-core-ui input.button-units[type="submit"],
+	.course-control-buttons	.wp-core-ui input.button-units[type="submit"],
 	.unit-control-buttons a.button.button-units,
 	.unit-control-buttons input[type="submit"].button.button-units,
 	.unit-control-buttons a.button.button-publish,

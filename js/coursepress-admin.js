@@ -581,7 +581,6 @@ jQuery('a').on('click', function(e) {
 
 jQuery(function() {
    if (jQuery(window).width() < 783) {
-
        jQuery('.wp-editor-wrap .switch-tmce').click(function( ) {
            jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').toggle();
            jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').hide();
@@ -591,4 +590,21 @@ jQuery(function() {
            jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').hide();
        });
    }
+
+   if (jQuery(window).width() < 783) {
+		jQuery('.sticky-slider').click( function() {
+			if ( jQuery(this).hasClass('slider-open') ) {
+				jQuery(this).parent().animate({left: "-235px"}, 500);
+				jQuery(this).parent().siblings('.mp-settings').animate({left: "32px"}, 500);
+				jQuery(this).removeClass('slider-open');				
+			} else {
+				jQuery(this).parent().animate({left: "-11px"}, 500);
+				jQuery(this).parent().siblings('.mp-settings').animate({left: "258px"}, 500);
+				jQuery(this).addClass('slider-open');				
+			}
+		} );
+	
+	}
+
 });
+
