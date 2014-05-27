@@ -366,7 +366,7 @@ jQuery(document).ready(function() {
                 'display': 'none'
             });
         }
-        
+
         if (enroll_type == 'manually') {
             jQuery("#manually_added_holder").css({
                 'display': 'block'

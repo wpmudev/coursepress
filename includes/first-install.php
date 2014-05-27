@@ -1,7 +1,7 @@
 <?php
 
 function first_install() {
-
+    
     /*
      *
      * Insert a course
