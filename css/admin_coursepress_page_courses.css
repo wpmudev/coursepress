@@ -76,3 +76,33 @@ a .remove-btn{
     margin-top: 34px;
     font-size: 22px;
 }
+
+/* Column Widths */
+.column-course { 
+	width: 50%; 
+}
+
+.column-units { 
+	width: 5%; 
+}
+
+.column-students { 
+	width: 5%; 
+}
+
+.column-status { 
+	width: 10%;
+}
+
+.column-actions { 
+	width: 10%;
+}
+
+.column-remove { 
+	width: 5%; 
+}
+
+.column-course .course-thumbnail img{
+	width:100%;
+	height:auto;
+}

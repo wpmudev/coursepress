@@ -1,0 +1,82 @@
+/* Left side navifation (Admin Menu) is collapsed */
+@media only screen and (max-width: 900px) {
+}
+
+/* Menu bar goes responsive */
+@media only screen and (max-width: 782px) {
+	/* Hide from smaller displays. */
+	.hide-small {
+		display:none;
+	}
+	.visible-small {
+		display:block;
+	}
+
+	.check-column,
+	.column-status,
+	.column-units,
+	.column-students,
+	#posts-filter { 
+		display: none; 
+	}
+	
+	.tablenav-top .actions { 
+		float: none; 
+		width: 100%; 
+	}
+	
+	.tablenav-top .actions .search-form .search-box { 
+		position:relative; 
+		width: 100%; 
+		margin:0; 
+		padding: 0; 
+		height: auto; 
+	}
+	
+	.tablenav-top .actions .search-form .search-box input[name="s"] { 
+		width: auto; 
+		margin: 0 6px 0 0;
+	}
+	
+	p.search-box input[type="submit"] {
+	    margin-bottom: 0;
+	    position: relative;
+	    top: 1px;
+	}
+}
+
+/* List table anomalies */
+@media (max-width: 555px) {
+	.hide-extra-small {
+		display:none;
+	}
+	.visible-extra-small {
+		display:block;
+	}
+	.column-units {
+		display:none;
+	}
+	.unit-control-buttons a.button.button-units,
+	.unit-control-buttons input[type="submit"].button.button-units,
+	.unit-control-buttons a.button.button-publish,
+	.unit-control-buttons a.button.button-unpublish,
+	.unit-control-buttons a.button.button-preview,
+	.unit-control-buttons a.button.button-settings{
+	    width: 100px;
+	}
+
+}
+
+/* For extra small devices */
+@media (max-width: 480px) {
+
+	.column-units {
+		display:none;
+	}
+
+	.column-actions { 
+		width: 5%;
+	}
+	
+
+}

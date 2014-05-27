@@ -98,7 +98,7 @@ if (isset($_GET['quick_setup'])) {
             <?php
         }
         ?>
-        <div class="tablenav">
+        <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
                 <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
@@ -165,7 +165,7 @@ if (isset($_GET['quick_setup'])) {
                             $n = 1;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -182,15 +182,25 @@ if (isset($_GET['quick_setup'])) {
                             $course_obj = new Course($course->ID);
                             $course_object = $course_obj->get_course();
 
-                            $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                            $style = ( 'alternate' == $style ) ? '' : 'alternate';
 
                             ?>
-                            <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
+                            <tr id='user-<?php echo $course_object->ID; ?>' class="<?php echo $style; ?>">
                                 <th scope='row' class='check-column'>
                                     <input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
                                 </th>
-                                <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
+                                <td class="column-course <?php echo $style; ?>"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
+									<!-- <div class="course-thumbnail"><img src="<?php echo $course_obj->get_course_thumbnail(); ?>" alt="<?php echo $course_object->post_title; ?>" /></div> -->
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
+									<div class="column-course-units visible-small visible-extra-small">
+									    <strong><?php _e('Units', 'cp');?>:</strong>
+										<?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?>,
+		                                <?php echo $course_obj->get_units('', 'publish', true);?> Published
+									</div>
+									<div class="column-course-students visible-small visible-extra-small">
+									    <strong><?php _e('Students', 'cp');?>:</strong>
+										<a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a>
+									</div>									
                                     <div class="row-actions">
                                         <span class="edit_course"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>
@@ -209,13 +219,13 @@ if (isset($_GET['quick_setup'])) {
                                         <?php } ?>
                                     </div>
                                 </td>
-                                <td <?php echo $style; ?>>
+                                <td class="column-units <?php echo $style; ?>">
                                 <?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?><br />
                                 <?php echo $course_obj->get_units('', 'publish', true);?> Published
                                 </td>
-                                <td class="center" <?php echo $style; ?>><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a></td>
-                                <td <?php echo $style; ?>><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?></td>
-                                <td <?php echo $style; ?>>
+                                <td class="center column-students <?php echo $style; ?>"><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a></td>
+                                <td class="column-status <?php echo $style; ?>"><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?></td>
+                                <td class="column-actions <?php echo $style; ?>">
                                     <a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" class="button button-settings"><?php _e('Settings', 'cp'); ?></a>
 
                                     <?php if (current_user_can('coursepress_view_all_units_cap') || $course_object->post_author == get_current_user_id()) { ?>
@@ -225,7 +235,7 @@ if (isset($_GET['quick_setup'])) {
                                         <a href="?page=courses&course_id=<?php echo $course_object->ID; ?>&action=change_status&new_status=<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($course_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php ($course_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>
                                 <?php } ?>
                                 <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap'))) { ?>
-                                    <td <?php echo $style; ?>>
+                                    <td class="column-remove <?php echo $style; ?>">
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>
                                             <a href="?page=courses&action=delete&course_id=<?php echo $course_object->ID; ?>" onClick="return removeCourse();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>

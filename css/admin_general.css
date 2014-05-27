@@ -420,3 +420,9 @@ td.label {
 .group-check label:first-child{
     margin-left: 0px;
 }
+
+/* Hide from larger displays. */
+.visible-small,
+.visible-extra-small {
+	display:none;
+}
