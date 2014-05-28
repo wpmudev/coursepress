@@ -1440,3 +1440,5 @@ label.bold-label{
 #manually_added_holder{
     display: none;
 }
+
+.additional_class_actions_add_student form { width: 100%; }

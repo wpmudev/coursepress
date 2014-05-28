@@ -204,7 +204,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     </a>
                                 </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
-                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
+                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>
