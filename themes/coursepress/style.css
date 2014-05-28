@@ -4,7 +4,7 @@ Theme URI: http://premium.wpmudev.org/
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Description: Specialized theme for CoursePress
-Version: 1.0
+Version: 1.0b
 License: GNU General Public License
 License URI: license.txt
 Text Domain: coursepress
@@ -1633,12 +1633,7 @@ li.submenu-active{
     font-size: 12px;
 }
 
-.mandatory_message{
-    padding: 10px;
-    background-color: #ff6600;
-    color: #fff;
-    display: none;
-}
+
 
 .grade-percentage{
     float: left;

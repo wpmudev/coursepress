@@ -137,6 +137,7 @@ if (!class_exists('Unit')) {
                 'post_status' => $post_status, //$post_status
                 'post_title' => $_POST['unit_name'],
                 'post_type' => 'unit',
+                'post_parent' => $_POST['course_id']
             );
 
             if (isset($_POST['unit_id'])) {

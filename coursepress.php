@@ -5,8 +5,8 @@
   Description: CoursePress turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
-  Developer: Marko Miljus (https://twitter.com/markomiljus)
-  Version: 1.0 beta
+  Developers: Marko Miljus (https://twitter.com/markomiljus), Rheinard Korf (https://twitter.com/rheinardkorf)
+  Version: 1.0b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: N/A
@@ -35,7 +35,7 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
-        var $version = '0.9.9.0 beta';
+        var $version = '1.0b';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
@@ -1619,7 +1619,7 @@ if (!class_exists('CoursePress')) {
 
         function header_actions() {//front
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
-            wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js');
+            wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array('jquery'));
 
             $course_id = do_shortcode('[get_parent_course_id]');
             $units_archive_url = is_numeric($course_id) ? get_permalink($course_id) . trailingslashit($this->get_units_slug()) : '';

@@ -194,6 +194,8 @@ if (!class_exists('Course')) {
             delete_user_meta_by_key('enrolled_course_date_' . $this->id);
             delete_user_meta_by_key('enrolled_course_class_' . $this->id);
             delete_user_meta_by_key('enrolled_course_group_' . $this->id);
+            
+            //delete all course units
         }
 
         function can_show_permalink() {

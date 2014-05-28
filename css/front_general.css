@@ -511,3 +511,10 @@ h1.notification-title{
     border-bottom-right-radius: 10px;
     
 }
+
+.mandatory_message{
+    padding: 10px;
+    background-color: #ff6600;
+    color: #fff;
+    display: none;
+}
