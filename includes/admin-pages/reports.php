@@ -66,11 +66,13 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             $input_modules_count = 0;
 
             foreach ($modules as $mod) {
-                $class_name = $mod->module_type;
-                $module = new $class_name();
+                if (isset($mod->module_type) && $mod->module_type == '') {
+                    $class_name = $mod->module_type;
+                    $module = new $class_name();
 
-                if ($module->front_save) {
-                    $input_modules_count++;
+                    if ($module->front_save) {
+                        $input_modules_count++;
+                    }
                 }
             }
 
@@ -94,7 +96,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
                     $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
 
                     $id = isset($response->ID) ? $response->ID : 0;
-                    
+
                     $grade_data = $unit_module_main->get_response_grade($id);
                     ?>
                     <table cellspacing="0" cellpadding="5">
@@ -334,18 +336,18 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             $classes = 'all';
                         }
                         ?>
-                                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
-                                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
+                                                <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
+                                                    <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
+                                                    <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
                         <?php
                         $course_classes = get_post_meta($current_course_id, 'course_classes', true);
                         foreach ($course_classes as $course_class) {
                             ?>
-                                                        <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
+                                                                    <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
                             <?php
                         }
                         ?>
-                                        </select>-->
+                                                </select>-->
 
                         <?php
                     }
