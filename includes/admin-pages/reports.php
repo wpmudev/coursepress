@@ -66,12 +66,16 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
             $input_modules_count = 0;
 
             foreach ($modules as $mod) {
-                if (isset($mod->module_type) && $mod->module_type == '') {
+                if (isset($mod->module_type) && $mod->module_type !== '') {
                     $class_name = $mod->module_type;
-                    $module = new $class_name();
 
-                    if ($module->front_save) {
-                        $input_modules_count++;
+                    if (class_exists($class_name)) {
+
+                        $module = new $class_name();
+
+                        if ($module->front_save) {
+                            $input_modules_count++;
+                        }
                     }
                 }
             }
@@ -88,76 +92,82 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
 
             foreach ($modules as $mod) {
 
-                if (isset($mod->module_type) && $mod->module_type == '') {
+                if (isset($mod->module_type) && $mod->module_type !== '') {
                     $class_name = $mod->module_type;
-                    $module = new $class_name();
-                    $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
 
-                    if ($module->front_save) {
-                        $response = $module->get_response($user_object->ID, $mod->ID);
-                        $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
+                    $class_name = $mod->module_type;
 
-                        $id = isset($response->ID) ? $response->ID : 0;
+                    if (class_exists($class_name)) {
 
-                        $grade_data = $unit_module_main->get_response_grade($id);
-                        ?>
-                        <table cellspacing="0" cellpadding="5">
-                            <tr>
-                                <td style="border-bottom: 1px solid #cccccc;">
-                                    <?php echo $module->label;
-                                    ?>
-                                </td>
+                        $module = new $class_name();
+                        $assessable = get_post_meta($mod->ID, 'gradable_answer', true);
 
-                                <td style="border-bottom: 1px solid #cccccc;">
-                                    <?php echo $mod->post_title; ?>
-                                </td>
+                        if ($module->front_save) {
+                            $response = $module->get_response($user_object->ID, $mod->ID);
+                            $visibility_class = (count($response) >= 1 ? '' : 'less_visible_row');
 
-                                <td style="border-bottom: 1px solid #cccccc;">
-                                    <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
-                                </td>
+                            $id = isset($response->ID) ? $response->ID : 0;
 
-                                <td style="border-bottom: 1px solid #cccccc;">
-                                    <?php
-                                    $grade = $grade_data['grade'];
-                                    $instructor_id = $grade_data['instructor'];
-                                    $instructor_name = get_userdata($instructor_id);
-                                    $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
-
-                                    if ($assessable == 'yes') {
-                                        if (count($response) >= 1) {
-                                            if ($grade_data) {
-                                                echo $grade . '%';
-                                                $responses++;
-                                                $overall_grade = $overall_grade + $grade;
-                                            } else {
-                                                _e('Pending grade', 'cp');
-                                            }
-                                        } else {
-                                            echo '0%';
-                                        }
-
-                                        $assessable_answers++;
-                                    } else {
-                                        _e('Non-assessable', 'cp');
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php
-                            $comment = $unit_module_main->get_response_comment($id);
-                            if (!empty($comment)) {
-                                ?>
+                            $grade_data = $unit_module_main->get_response_grade($id);
+                            ?>
+                            <table cellspacing="0" cellpadding="5">
                                 <tr>
-                                    <td colspan="4" style="background-color:#FF6600; color:#fff; margin-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $comment; ?></td>
+                                    <td style="border-bottom: 1px solid #cccccc;">
+                                        <?php echo $module->label;
+                                        ?>
+                                    </td>
+
+                                    <td style="border-bottom: 1px solid #cccccc;">
+                                        <?php echo $mod->post_title; ?>
+                                    </td>
+
+                                    <td style="border-bottom: 1px solid #cccccc;">
+                                        <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted yet', 'cp')); ?>
+                                    </td>
+
+                                    <td style="border-bottom: 1px solid #cccccc;">
+                                        <?php
+                                        $grade = $grade_data['grade'];
+                                        $instructor_id = $grade_data['instructor'];
+                                        $instructor_name = get_userdata($instructor_id);
+                                        $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
+
+                                        if ($assessable == 'yes') {
+                                            if (count($response) >= 1) {
+                                                if ($grade_data) {
+                                                    echo $grade . '%';
+                                                    $responses++;
+                                                    $overall_grade = $overall_grade + $grade;
+                                                } else {
+                                                    _e('Pending grade', 'cp');
+                                                }
+                                            } else {
+                                                echo '0%';
+                                            }
+
+                                            $assessable_answers++;
+                                        } else {
+                                            _e('Non-assessable', 'cp');
+                                        }
+                                        ?>
+                                    </td>
                                 </tr>
                                 <?php
-                            }
-                            ?>
+                                $comment = $unit_module_main->get_response_comment($id);
+                                if (!empty($comment)) {
+                                    ?>
+                                    <tr>
+                                        <td colspan="4" style="background-color:#FF6600; color:#fff; margin-left:30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $comment; ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
 
-                        </table>
-                        <?php
-                        $current_row++;
-                    }//end front save
+                            </table>
+                            <?php
+                            $current_row++;
+                        }//end front save
+                    }
                 }
             }//end modules
         }//course units
@@ -339,18 +349,18 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             $classes = 'all';
                         }
                         ?>
-                                                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
-                                                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
+                                                                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
+                                                                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
+                                                                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
                         <?php
                         $course_classes = get_post_meta($current_course_id, 'course_classes', true);
                         foreach ($course_classes as $course_class) {
                             ?>
-                                                                                <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
+                                                                                                        <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
                             <?php
                         }
                         ?>
-                                                        </select>-->
+                                                                        </select>-->
 
                         <?php
                     }
