@@ -1,4 +1,10 @@
 /* Left side navifation (Admin Menu) is collapsed */
+@media only screen and (min-width: 2000px) {
+	
+}
+
+
+/* Left side navifation (Admin Menu) is collapsed */
 @media only screen and (max-width: 900px) {
 }
 
