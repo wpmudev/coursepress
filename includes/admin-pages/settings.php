@@ -87,6 +87,7 @@ if (isset($_POST['_wpnonce'])) {
     ?>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
+		<div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>
         <ul class="mp-tabs" style="">
             <?php
             foreach ($menus as $key => $menu) {

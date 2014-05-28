@@ -36,10 +36,12 @@
 		margin: 0 15px 0 0 !important;
 	}	
 	
+	#settings-wrap .mp-tabs .mp-tab:last-child a,
 	.mp-wrap .mp-tab-link {
 		padding: 20px 15px;
 		color: #ffffff;
 	}
+	
 	
 	.course-holder label { 
 		display: inline;
