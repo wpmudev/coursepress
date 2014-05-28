@@ -74,7 +74,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
         }
         ?>
 
-        <div class="tablenav">
+        <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
                 <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
@@ -116,6 +116,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 <?php
                 $columns = array(
                     "ID" => __('Student ID', 'cp'),
+					"user_fullname" => __('Full Name', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),
                     "user_lastname" => __('Surname', 'cp'),
                     "registration_date" => __('Registered', 'cp'),
@@ -143,7 +144,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             $n = 0;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -161,38 +162,49 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             $roles = $user_object->roles;
                             $role = array_shift($roles);
 
-                            $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                            $style = ( 'alternate' == $style ) ? '' : 'alternate';
                             ?>
-                            <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
+                            <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; ?>">
                                 <th scope='row' class='check-column'>
                                     <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                                 </th>
-                                <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
-                                <td <?php echo $style; ?>>
+                                <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
+								<td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
+									<a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                        <?php echo $user_object->first_name; ?>
+                                    </a>
+                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                        <?php echo $user_object->last_name; ?>
+                                    </a>
+									<div class="visible-extra-small">
+										Latest Activity: <span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?>
+									</div>
+								</td>
+                                <td class="column-user-firstname <?php echo $style; ?>">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <?php echo $user_object->first_name; ?>
                                     </a>
                                 </td>
-                                <td <?php echo $style; ?>>
+                                <td class="column-user-lastname <?php echo $style; ?>">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <?php echo $user_object->last_name; ?>
                                     </a>
                                 </td>
-                                <td <?php echo $style; ?>><?php echo $user_object->user_registered; ?></td>
-                                <td <?php echo $style; ?>><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?> </td>
-                                <td <?php echo $style; ?> style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
-                                <td <?php echo $style; ?> style="padding-top:13px;">
+                                <td class="column-registration-date <?php echo $style; ?>"><?php echo $user_object->user_registered; ?></td>
+                                <td class="column-latest-activity <?php echo $style; ?>"><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?> </td>
+                                <td class="column-courses <?php echo $style; ?>" style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
+                                <td class="column-workbook <?php echo $style; ?>" style="padding-top:13px;">
                                     <a href="?page=students&action=workbook&student_id=<?php echo $user_object->ID; ?>">
                                         <i class="fa fa-book cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
-                                <td <?php echo $style; ?> style="padding-top:13px;">
+                                <td class="column-edit <?php echo $style; ?>" style="padding-top:13px;">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
-                                    <td <?php echo $style; ?> style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
+                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>

@@ -1595,6 +1595,67 @@ a .remove-btn:hover{
 
 /* -------------------------------------------------------------------------- */
 
+.coursepress_page_students .column-user-fullname {
+	display: none;
+}
+
+.coursepress_page_students th {
+	text-overflow:ellipsis;
+}
+
+/* Column Widths */
+.coursepress_page_students .column-ID { 
+	width: 6%; 
+}
+
+.coursepress_page_students .column-user-firstname { 
+	width: 10%; 
+}
+
+.coursepress_page_students .column-user-lastname { 
+	width: 10%; 
+}
+
+.coursepress_page_students .column-registration-date { 
+	width: 9%;
+	text-align:left;	
+	padding: 8px 5px 10px;	
+}
+.coursepress_page_students td.column-registration-date{
+	padding: 5px 5px 10px;	
+}
+
+.coursepress_page_students .column-latest-activity { 
+	width: 9%;
+	text-align:left;
+	padding: 8px 5px 10px;		
+}
+.coursepress_page_students td.column-latest-activity { 
+	padding: 5px 5px 10px;		
+}
+
+.coursepress_page_students .column-courses { 
+	width: 7%; 
+}
+
+.coursepress_page_students .column-workbook {
+	width: 8%; 	
+}
+
+/* profile */
+.coursepress_page_students .column-edit {
+	width: 5% 	
+}
+
+.coursepress_page_students .column-remove {
+	width: 5%; 	
+}
+
+
+/* -------------------------------------------------------------------------- */
+
+
+
 #units_accordion .widefat td{
     padding: 14px 7px 12px;
 }

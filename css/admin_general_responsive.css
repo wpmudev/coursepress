@@ -11,14 +11,6 @@
 	.visible-small {
 		display:block;
 	}
-
-	.check-column,
-	.column-status,
-	.column-units,
-	.column-students,
-	#posts-filter { 
-		display: none; 
-	}
 	
 	.tablenav-top .actions { 
 		float: none; 
@@ -65,6 +57,45 @@
 		height: 31px;
 	    margin: 3px 0 4px;
 	}	
+	
+	.responsive-reset,
+	.responsive-reset *,
+	.responsive-reset a:hover,
+	.responsive-reset a:visited,
+	.responsive-reset a:active{
+		background:none;
+		border:none;
+		bottom:auto;
+		clear:none;
+		cursor:default;
+		/* didn't really know what the default for display should be*/
+		/*display:inline;*/
+		float:none;
+		font-family:Arial, Helvetica, sans-serif;
+		font-size:medium;
+		font-style:normal;
+		font-weight:normal;
+		height:auto;
+		left:auto;
+		letter-spacing:normal;
+		line-height:normal;
+		max-height:none;
+		max-width:none;
+		min-height:0;
+		min-width:0;
+		overflow:visible;
+		position:static;
+		right:auto;
+		text-align:left;
+		text-decoration:none;
+		text-indent:0;
+		text-transform:none;
+		top:auto;
+		visibility:visible;
+		white-space:normal;
+		width:auto;
+		z-index:auto;
+	}
 	
 }
 

@@ -4,6 +4,9 @@
 
 /* Menu bar goes responsive */
 @media only screen and (max-width: 782px) {
+	.sidebar-name{
+		/*clear: both;*/
+	}
 }
 
 /* List table anomalies */
@@ -12,4 +15,19 @@
 
 /* For extra small devices */
 @media (max-width: 480px) {
+	
+	.student-invitation fieldset label,
+	.student-invitation label {
+		display: block;
+		margin-bottom: 10px;
+	}
+	.student-invitation fieldset label span,
+	.student-invitation label span {
+		display: block;
+		min-width: 200px;
+	}
+	.student-invitation fieldset label input,
+	.student-invitation label input {
+		width: 100%;
+	}	
 }

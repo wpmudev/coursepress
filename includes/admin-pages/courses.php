@@ -201,7 +201,7 @@ if (isset($_GET['quick_setup'])) {
 									    <strong><?php _e('Students', 'cp');?>:</strong>
 										<a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a>
 									</div>									
-                                    <div class="row-actions">
+                                    <div class="row-actions hide-small hide-extra-small">
                                         <span class="edit_course"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>
                                             <span class="course_units"><a href="?page=course_details&tab=units&course_id=<?php echo $course_object->ID; ?>"><?php _e('Units', 'cp'); ?></a> | </span>

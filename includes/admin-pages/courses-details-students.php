@@ -473,18 +473,18 @@ if ($course->details->enroll_type != 'manually') {//There shouldn't be invitatio
     ?>
     <?php if ((current_user_can('coursepress_invite_students_cap')) || (current_user_can('coursepress_invite_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
         <div class="invite_student_area">
-            <form name="student_invitation" method="post">
+            <form name="student_invitation" method="post" class='student-invitation'>
                 <?php wp_nonce_field('student_invitation'); ?>
                 <h2><?php _e('Invite a Student', 'cp'); ?></h2>
-                <label><?php _e('First Name', 'cp'); ?>
+                <label><span><?php _e('First Name', 'cp'); ?></span>
                     <input type="text" name="first_name" value="" />
                 </label>
 
-                <label><?php _e('Last Name', 'cp'); ?>
+                <label><span><?php _e('Last Name', 'cp'); ?></span>
                     <input type="text" name="last_name" value="" />
                 </label>
 
-                <label><?php _e('E-Mail', 'cp'); ?>
+                <label><span><?php _e('E-Mail', 'cp'); ?></span>
                     <input type="text" name="email" value="" />
                 </label>
                 <?php submit_button(__('Invite', 'cp'), 'primary', 'invite_student', ''); ?>

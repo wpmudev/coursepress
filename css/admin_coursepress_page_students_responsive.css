@@ -4,11 +4,33 @@
 
 /* Menu bar goes responsive */
 @media only screen and (max-width: 782px) {
+	.check-column,
+	.column-registration-date,
+	.column-user-firstname,
+	.column-user-lastname,
+	.coursepress_page_students #posts-filter { 
+		display: none; 
+	}
+	
+	.coursepress_page_students .column-user-fullname {
+		display: table-cell;
+	}
+	
+	.coursepress_page_students th {
+		text-overflow:ellipsis;
+	}
 }
 
 /* List table anomalies */
 @media (max-width: 555px) {
-
+	.column-latest-activity {
+		display: none;
+	}
+	.coursepress_page_students .column-edit,
+	.coursepress_page_students .column-workbook,
+	.coursepress_page_students .column-courses {
+		width: 10%;
+	}
 }
 
 /* For extra small devices */
