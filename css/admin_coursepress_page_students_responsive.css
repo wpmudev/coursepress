@@ -19,6 +19,33 @@
 	.coursepress_page_students th {
 		text-overflow:ellipsis;
 	}
+	
+	/* Workbook view */
+	.coursepress_page_students .course-holder .sidebar-name{
+		clear: both;
+	}
+	.coursepress_page_students #units-wrap .border-devider {
+		margin-bottom: 0px;
+	}
+	.coursepress_page_students #units-wrap .tablenav {
+		height: 25px;
+	}
+	.coursepress_page_students #units-wrap .tablenav .chosen-select {
+		position: relative;
+		top: -8px;
+		width: 200px;
+		margin-right: 20px;
+	}
+	.coursepress_page_students #units-wrap .column-title {
+		width: 30%;
+	}
+	.coursepress_page_students #units-wrap .column-response {
+		width: 14%;
+	}
+	.coursepress_page_students #units-wrap #units_accordion a.button-units {
+		width: 75%;
+	}
+	
 }
 
 /* List table anomalies */
@@ -31,6 +58,25 @@
 	.coursepress_page_students .column-courses {
 		width: 10%;
 	}
+	.coursepress_page_students #units-wrap #units_accordion a.button-units {
+		width: 85%;
+	}
+
+	/* Wordkbook view */
+	.coursepress_page_students #units-wrap .column-module,
+	.coursepress_page_students #units-wrap #submission_date,
+	.coursepress_page_students #units-wrap .coloumn-submission-date {
+		display: none;
+	}
+	
+	.coursepress_page_students #units-wrap .column-title {
+		font-size: 1.1em;
+	}
+	.coursepress_page_students #units-wrap .column-title .extra-information {
+		font-size: 0.9em;
+	}
+/*	extra-information*/
+	
 }
 
 /* For extra small devices */

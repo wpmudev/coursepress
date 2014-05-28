@@ -201,7 +201,7 @@ if (isset($_POST['course_id'])) {
                                                             $n = 0;
                                                             foreach ($columns as $key => $col) {
                                                                 ?>
-                                                                <th class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                                                <th class="manage-column column-<?php echo str_replace( '_', '-', $key); ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                                                 <?php
                                                                 $n++;
                                                             }
@@ -265,20 +265,23 @@ if (isset($_POST['course_id'])) {
                                                                     <?php
                                                                     if ($general_col_visibility) {
                                                                         ?>
-                                                                        <td class = "<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class = "column-module <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php echo $module->label;
                                                                             ?>
                                                                         </td>
 
-                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php echo $mod->post_title; ?>
+																			<div class="extra-information visible-extra-small">
+																			  Submitted:<br /> <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
+																			</div>
                                                                         </td>
 
-                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class="coloumn-submission-date <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
                                                                         </td>
 
-                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class="column-response <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php
                                                                             if (count($response) >= 1) {
                                                                                 ?>
@@ -292,7 +295,7 @@ if (isset($_POST['course_id'])) {
                                                                             ?>
                                                                         </td>
 
-                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class="column-grade <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php
                                                                             if ($assessable == 'yes') {
                                                                                 if (isset($grade_data)) {
@@ -326,7 +329,7 @@ if (isset($_POST['course_id'])) {
                                                                                ?>
                                                                         </td>
 
-                                                                        <td class="<?php echo $style . ' ' . $visibility_class; ?>">
+                                                                        <td class="column-comment <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php
                                                                             if (count($response) >= 1) {
                                                                                 $comment = $unit_module_main->get_response_comment($response->ID);
