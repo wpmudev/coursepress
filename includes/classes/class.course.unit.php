@@ -164,6 +164,22 @@ if (!class_exists('Unit')) {
         function delete_unit($force_delete) {
             $wpdb;
             wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
+            
+            //Delete unit modules
+            
+            $args = array(
+                'posts_per_page' => -1,
+                'post_parent' => $this->id,
+                'post_type' => 'module',
+                'post_status' => 'any',
+                );
+
+            $units_modules = get_posts($args);
+
+            foreach ($units_modules as $units_module) {
+                $module = new Unit_Module($units_module->ID);
+                $module->delete_module(true);
+            }
         }
 
         function change_status($post_status) {

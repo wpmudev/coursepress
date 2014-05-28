@@ -1165,7 +1165,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Unit', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1189,7 +1189,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1213,7 +1213,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Response', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1238,7 +1238,7 @@ if (!class_exists('CoursePress')) {
                 ),
                 'public' => false,
                 'has_archive' => true,
-                'show_ui' => false,
+                'show_ui' => true,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'query_var' => true,
@@ -1712,14 +1712,14 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js');
                 wp_localize_script('courses_bulk', 'coursepress', array(
                     'delete_instructor_alert' => __('Please confirm that you want to remove the instructor from this course?', 'cp'),
-                    'delete_course_alert' => __('Please confirm that you want to permanently delete the course?', 'cp'),
+                    'delete_course_alert' => __('Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'cp'),
                     'delete_notification_alert' => __('Please confirm that you want to permanently delete the notification?', 'cp'),
                     'delete_discussion_alert' => __('Please confirm that you want to permanently delete the discussion?', 'cp'),
                     'withdraw_student_alert' => __('Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'cp'),
-                    'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit?', 'cp'),
+                    'delete_unit_alert' => __('Please confirm that you want to permanently delete the unit, its elements and responses?', 'cp'),
                     'active_student_tab' => (isset($_REQUEST['active_student_tab']) ? $_REQUEST['active_student_tab'] : 0),
-                    'delete_module_alert' => __('Please confirm that you want to permanently delete selected module?', 'cp'),
-                    'remove_module_alert' => __('Please confirm that you want to remove selected module?', 'cp'),
+                    'delete_module_alert' => __('Please confirm that you want to permanently delete selected element and its responses?', 'cp'),
+                    'remove_module_alert' => __('Please confirm that you want to remove selected element?', 'cp'),
                     'remove_row' => __('Remove', 'cp'),
                     'empty_class_name' => __('Class name cannot be empty', 'cp'),
                     'duplicated_class_name' => __('Class name already exists', 'cp'),

@@ -2,7 +2,6 @@
 if (!class_exists('Unit_Module')) {
 
     class Unit_Module {
-
         var $data;
         var $name = 'none';
         var $label = 'None Set';
@@ -78,6 +77,26 @@ if (!class_exists('Unit_Module')) {
             return $post_id;
         }
 
+        function delete_module($id, $force_delete = true) {
+            global $wpdb;
+            wp_delete_post($id, $force_delete); //Whether to bypass trash and force deletion
+            
+            //Delete unit module responses
+            
+            $args = array(
+                'posts_per_page' => -1,
+                'post_parent' => $id,
+                'post_type' => array('module_response', 'attachment'),
+                'post_status' => 'any',
+                );
+
+            $units_module_responses = get_posts($args);
+
+            foreach ($units_module_responses as $units_module_response) {
+                wp_delete_post($units_module_response->ID, true);
+            }
+        }
+
         function check_for_modules_to_delete() {
 
             if (is_admin()) {
@@ -85,7 +104,8 @@ if (!class_exists('Unit_Module')) {
                     $modules_to_delete = $_POST['modules_to_execute'];
                     foreach ($modules_to_delete as $module_to_delete) {
                         //echo 'Module to delete:' . $module_to_delete . '<br />';
-                        wp_delete_post($module_to_delete, true);
+                        $this->delete_module($module_to_delete, true);
+                        //wp_delete_post($module_to_delete, true);
                     }
                 }
             }
@@ -237,14 +257,14 @@ if (!class_exists('Unit_Module')) {
             if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_no_save_save'])) {
                 if (isset($_POST['submit_modules_data_save'])) {
                     //wp_redirect($_SERVER['REQUEST_URI'] . '?saved=ok');
-                    wp_redirect(full_url($_SERVER). '?saved=ok');
+                    wp_redirect(full_url($_SERVER) . '?saved=ok');
                     //exit;
                 } else {
                     //wp_redirect(get_permalink($unit_id) . trailingslashit('page') . trailingslashit($unit_module_page_number));
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok($_SERVER["REQUEST_URI"], '?');  ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok($_SERVER["REQUEST_URI"], '?');   ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -287,7 +307,7 @@ if (!class_exists('Unit_Module')) {
 
                     if ($input_modules !== $responses) {
                         ?>
-                <div class="mandatory_message"><?php _e('All questions marked with "* Mandatory" require your input.', 'cp'); ?></div><div class="clearf"></div>
+                        <div class="mandatory_message"><?php _e('All questions marked with "* Mandatory" require your input.', 'cp'); ?></div><div class="clearf"></div>
                         <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
                         <a id="submit_bottom"></a>
                         <?php
@@ -299,7 +319,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>"><?php //Save & Next   ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ($is_last_page ? 'done' : 'save'); ?>" value="<?php echo ($is_last_page ? __('Done', 'cp') : __('Next', 'cp')); ?>"><?php //Save & Next    ?>
                         <?php
                     } else {
                         ?>
@@ -402,11 +422,11 @@ if (!class_exists('Unit_Module')) {
 
                 //Count only ungraded responses from STUDENTS!
                 foreach ($ungraded_responses as $ungraded_response) {
-                    
-                    if(get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no'){
+
+                    if (get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no') {
                         unset($ungraded_responses[$array_order_num]);
                     }
-                           
+
                     if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
@@ -449,18 +469,18 @@ if (!class_exists('Unit_Module')) {
 
                 //Count only ungraded responses from STUDENTS!
                 foreach ($ungraded_responses as $ungraded_response) {
-                    
-                    if(get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no'){
+
+                    if (get_post_meta($ungraded_response->post_parent, 'gradable_answer', true) == 'no') {
                         unset($ungraded_responses[$array_order_num]);
                     }
-                    
+
                     if (get_user_meta($ungraded_response->post_author, 'role', true) !== 'student') {
                         unset($ungraded_responses[$array_order_num]);
                     }
-                    
+
                     $array_order_num++;
                 }
-                
+
                 return count($ungraded_responses);
             }
         }

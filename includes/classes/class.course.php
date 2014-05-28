@@ -194,8 +194,27 @@ if (!class_exists('Course')) {
             delete_user_meta_by_key('enrolled_course_date_' . $this->id);
             delete_user_meta_by_key('enrolled_course_class_' . $this->id);
             delete_user_meta_by_key('enrolled_course_group_' . $this->id);
-            
+
             //delete all course units
+
+            $args = array(
+                'posts_per_page' => -1,
+                'meta_key' => 'course_id',
+                'meta_value' => $this->id,
+                'post_status' => 'any', 
+                'post_type' => 'unit');
+
+            $course_units = get_posts($args);
+
+            //cp_write_log($course_units);
+            
+            foreach ($course_units as $course_unit) {
+                $unit = new Unit($course_unit->ID);
+                $unit->delete_unit(true);
+                //cp_write_log('Deleted unit :'.$course_unit->ID.' from course: '.$this->id);
+            }
+            
+            //cp_write_log('done deletion');
         }
 
         function can_show_permalink() {
