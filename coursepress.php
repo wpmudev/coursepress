@@ -1165,7 +1165,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Unit', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1189,7 +1189,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Module', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1213,7 +1213,7 @@ if (!class_exists('CoursePress')) {
                     'view' => __('View Response', 'cp')
                 ),
                 'public' => false,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true
@@ -1238,7 +1238,7 @@ if (!class_exists('CoursePress')) {
                 ),
                 'public' => false,
                 'has_archive' => true,
-                'show_ui' => true,
+                'show_ui' => false,
                 'publicly_queryable' => true,
                 'capability_type' => 'post',
                 'query_var' => true,
