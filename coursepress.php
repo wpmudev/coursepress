@@ -2293,7 +2293,7 @@ if (!class_exists('CoursePress')) {
             if ($preview) {
                 $pdf->Output($report_name, 'I');
             } else {
-                $pdf->Output($report_name, 'I'); //D
+                $pdf->Output($report_name, 'D');
             }
 
             exit;
