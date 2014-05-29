@@ -79,3 +79,32 @@
 .button-settings{
     margin-bottom: 10px;
 }
+
+/* Column Widths */
+.coursepress_page_reports .column-ID {
+	width: 8%;
+}
+.coursepress_page_reports .column-user-fullname{
+	width: 20%;
+}
+.coursepress_page_reports .column-user-firstname
+{
+	width: 10%;
+}
+.coursepress_page_reports .column-user-lastname
+{
+	width: 10%;
+}
+.coursepress_page_reports .column-responses{
+	width: 10%;
+}
+.coursepress_page_reports .column-average-grade{
+	width: 10%;
+}
+.coursepress_page_reports .column-report{
+	width: 5%;
+}
+
+.coursepress_page_reports .column-user-fullname {
+	display: none;
+}

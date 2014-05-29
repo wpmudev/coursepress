@@ -280,7 +280,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     }
     ?>
 
-    <div class="tablenav">
+    <div class="tablenav tablenav-top">
         <form method="get" id="course-filter">
             <input type="hidden" name="page" value="<?php echo esc_attr($_GET['page']); ?>" />
             <input type="hidden" name="page_num" value="<?php echo esc_attr($page_num); ?>" />
@@ -374,10 +374,11 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     <?php
     $columns = array(
         "ID" => __('Student ID', 'cp'),
+		"user_fullname" => __('Full Name', 'cp'),
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
         "responses" => __('Responses', 'cp'),
-        "avarage_grade" => __('Average Grade', 'cp'),
+        "average_grade" => __('Average Grade', 'cp'),
         "report" => __('Report', 'cp'),
     );
 
@@ -395,7 +396,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                     $n = 0;
                     foreach ($columns as $key => $col) {
                         ?>
-                        <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                        <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                         <?php
                         $n++;
                     }
@@ -443,19 +444,28 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                     $roles = $user_object->roles;
                     $role = array_shift($roles);
 
-                    $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                    $style = ( ' alternate' == $style ) ? '' : ' alternate';
                     ?>
-                    <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
+                    <tr id='user-<?php echo $user_object->ID; ?>' class="<?php echo $style; ?>">
                         <th scope='row' class='check-column'>
                             <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                         </th>
-                        <td <?php echo $style; ?>><?php echo $user_object->ID; ?></td>
-                        <td <?php echo $style; ?>><?php echo $user_object->first_name; ?></td>
-                        <td <?php echo $style; ?>><?php echo $user_object->last_name; ?></td>
+                        <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
+						<td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
+							<span class="user-fullname"><?php echo $user_object->first_name; ?>
+							<?php echo $user_object->last_name; ?></span>
+							<div class="visible-extra-small">
+								Responses: <?php echo $user_object->get_number_of_responses($current_course_id); ?>
+							</div>
+							
+							
+						</td>
+                        <td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
+                        <td class="column-user-lastname <?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
 
-                        <td <?php echo $style; ?>><?php echo $user_object->get_number_of_responses($current_course_id); ?></td>
-                        <td <?php echo $style; ?>><?php echo $user_object->get_avarage_response_grade($current_course_id) . '%'; ?></td>
-                        <td <?php echo $style; ?>><a class="pdf">&nbsp;</a></td>
+                        <td class="column-responses <?php echo $style; ?>"><?php echo $user_object->get_number_of_responses($current_course_id); ?></td>
+                        <td class="column-average-grade <?php echo $style; ?>"><?php echo $user_object->get_avarage_response_grade($current_course_id) . '%'; ?></td>
+                        <td class="column-report <?php echo $style; ?>"><a class="pdf">&nbsp;</a></td>
                     </tr>
 
                     <?php
