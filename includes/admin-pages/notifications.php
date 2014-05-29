@@ -98,7 +98,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
             <?php
         }
         ?>
-        <div class="tablenav">
+        <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
                 <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
@@ -163,7 +163,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                             $n = 1;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo $key; ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" width="<?php echo $col_sizes[$n] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -179,13 +179,23 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
 
                             $notification_obj = new Notification($notification->ID);
                             $notification_object = $notification_obj->get_notification();
-                            $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
+                            $style = ( ' alternate' == $style ) ? '' : ' alternate';
                             ?>
-                            <tr id='user-<?php echo $notification_object->ID; ?>' <?php echo $style; ?>>
+                            <?php
+                            if (isset($notification_object->course_id) && $notification_object->course_id !== '') {
+                                $course = new Course($notification_object->course_id);
+                                $course_name = $course->details->post_title;
+                            } else {
+                                $course_name = __('All Courses', 'cp');
+                            }
+                            ?>
+                            <tr id='user-<?php echo $notification_object->ID; ?>' class="<?php echo $style; ?>">
                                 <th scope='row' class='check-column'>
                                     <input type='checkbox' name='notifications[]' id='user_<?php echo $notification_object->ID; ?>' class='' value='<?php echo $notification_object->ID; ?>' />
                                 </th>
-                                <td <?php echo $style; ?>><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><strong><?php echo $notification_object->post_title; ?></strong></a><br />
+                                <td class="column-notification-title <?php echo $style; ?>"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
+									<div class="visible-small visible-extra-small"><strong>Course:</strong> <?php echo $course_name; ?></div>
+									<div class="visible-small visible-extra-small"><strong>Status:</strong> <?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></div>
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($notification_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_notification"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
@@ -197,18 +207,10 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                         <?php } ?>
                                     </div>
                                 </td>
-                                <?php
-                                if (isset($notification_object->course_id) && $notification_object->course_id !== '') {
-                                    $course = new Course($notification_object->course_id);
-                                    $course_name = $course->details->post_title;
-                                } else {
-                                    $course_name = __('All Courses', 'cp');
-                                }
-                                ?>
-                                <td <?php echo $style; ?>> <?php echo $course_name; ?> </td>
-                                <td <?php echo $style; ?>><?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></td>
+                                <td class="column-course <?php echo $style; ?>"> <?php echo $course_name; ?> </td>
+                                <td class="column-status <?php echo $style; ?>"><?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></td>
                                 <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap'))) { ?>
-                                    <td <?php echo $style; ?>>
+                                    <td class="<?php echo $style; ?>">
                                         <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id())) { ?>
                                             <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeNotification();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>

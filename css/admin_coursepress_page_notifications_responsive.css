@@ -4,6 +4,21 @@
 
 /* Menu bar goes responsive */
 @media only screen and (max-width: 782px) {
+	.check-column,
+	.coursepress_page_notifications .column-course,
+	.coursepress_page_notifications .column-status,
+	.coursepress_page_notifications #posts-filter { 
+		display: none; 
+	}
+	
+	.coursepress_page_notifications .column-notification-title .row-actions {
+		visibility: visible;
+	}
+	
+	.coursepress_page_notifications .column-notification-title .row-actions .course_remove {
+		display: none;
+	}
+	
 }
 
 /* List table anomalies */
