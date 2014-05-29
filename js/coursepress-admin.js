@@ -603,16 +603,16 @@ jQuery(function() {
 				jQuery(this).addClass('slider-open');				
 			}
 		} );
-		/* Remove sidebar-name class to fix formatting. */
-//		jQuery('.sidebar-name').removeClass('sidebar-name').removeClass('no-movecursor').addClass('sidebar-restore').addClass('responsive-reset');
 	}
 	
-   /* Restore changed classes */	
-   if (jQuery(window).width() >= 783) {	
-		/* Restore sidebar-name class to fix formatting. */
-//		jQuery('.sidebar-restore').removeClass('sidebar-restore').removeClass('responsive-reset').addClass('sidebar-name').addClass('no-movecursor');
-	
+   if (jQuery(window).width() < 556) {	
+		jQuery('.coursepress_page_instructors div.course-liquid-right').after(jQuery('.coursepress_page_instructors div.course-liquid-left'));	
 	}
+	
+   if (jQuery(window).width() >= 556) {	
+		jQuery('.coursepress_page_instructors div.course-liquid-left').after(jQuery('.coursepress_page_instructors div.course-liquid-right'));	
+	}
+
 
 });
 

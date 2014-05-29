@@ -938,4 +938,35 @@ a .remove-btn{
     font-size: 22px;
 }
 
+/* Column Widths */
+.coursepress_page_instructors .column-ID{
+	width: 5%;
+}
+.coursepress_page_instructors .column-user-fullname{
+	width: 30%;
+}
+.coursepress_page_instructors .column-user-firstname{
+	width: 15%;
+}
+.coursepress_page_instructors .column-user-lastname{
+	width: 15%;
+}
+.coursepress_page_instructors .column-registration-date{
+	width: 20%;
+}
+.coursepress_page_instructors .column-courses{
+	width: 15%;
+}
+.coursepress_page_instructors .column-edit{
+	width: 15%;
+}
+.coursepress_page_instructors .column-delete{
+	width: 15%;
+}
+
+.coursepress_page_instructors .column-user-fullname {
+	display: none;
+}	
+
+
 /* Instructor profile */
