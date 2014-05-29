@@ -33,7 +33,7 @@ if (!class_exists('Instructor')) {
             global $wpdb;
 
             $assigned_courses = array();
-            $courses = $wpdb->get_results("SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'course_%' AND user_id = " . $this->ID, OBJECT);
+            $courses = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'course_%%' AND user_id = %d", $this->ID ), OBJECT);
 
             foreach ($courses as $course) {
                 $course_id = str_replace('course_', '', $course->meta_key);
@@ -66,7 +66,7 @@ if (!class_exists('Instructor')) {
         //Get number of instructor's assigned courses
         function get_courses_number() {
             global $wpdb;
-            $courses_count = $wpdb->get_var("SELECT COUNT(*) as cnt FROM $wpdb->usermeta um, $wpdb->posts p WHERE (um.user_id = " . $this->ID . " AND um.meta_key LIKE 'course_%') AND (p.ID = um.meta_value)");
+            $courses_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) as cnt FROM $wpdb->usermeta um, $wpdb->posts p WHERE (um.user_id = %d AND um.meta_key LIKE 'course_%%') AND (p.ID = um.meta_value)", $this->ID) );
             return $courses_count;
         }
 

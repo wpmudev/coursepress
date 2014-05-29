@@ -632,11 +632,11 @@ if (!function_exists('get_userdatabynicename')) :
         if (empty($user_nicename))
             return false;
 
-        if (!$user = $wpdb->get_row("SELECT * FROM $wpdb->users WHERE user_nicename = '$user_nicename' LIMIT 1"))
+        if (!$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename ) ) )
             return false;
 
         $wpdb->hide_errors();
-        $metavalues = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = '$user->ID'");
+        $metavalues = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = %d", $user->ID ) );
         $wpdb->show_errors();
 
         if ($metavalues) {

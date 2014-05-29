@@ -114,7 +114,7 @@ if (!class_exists('Student')) {
         function get_enrolled_courses_ids() {
             global $wpdb;
             $enrolled_courses = array();
-            $courses = $wpdb->get_results("SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'enrolled_course_date_%' AND user_id = " . $this->ID, OBJECT);
+            $courses = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'enrolled_course_date_%%' AND user_id = %d", $this->ID ), OBJECT);
 
             foreach ($courses as $course) {
                 $course_id = str_replace('enrolled_course_date_', '', $course->meta_key);
@@ -130,7 +130,7 @@ if (!class_exists('Student')) {
         //Get number of courses student enrolled in
         function get_courses_number() {
             global $wpdb;
-            $courses_count = $wpdb->get_var("SELECT COUNT(*) as cnt FROM $wpdb->usermeta WHERE user_id = " . $this->ID . " AND meta_key LIKE 'enrolled_course_date_%'");
+            $courses_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'enrolled_course_date_%%'", $this->ID) );
             return $courses_count;
         }
 
@@ -149,7 +149,7 @@ if (!class_exists('Student')) {
                 return false;
             }
 
-            $courses_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key = '%s'", $user_id, 'enrolled_course_date_' . $course_id));
+            $courses_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key = %s", $user_id, 'enrolled_course_date_' . $course_id));
 
             if ($courses_count >= 1) {
                 return true;

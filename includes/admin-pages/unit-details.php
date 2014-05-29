@@ -180,16 +180,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <?php
                                 if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? 'Save Draft' : 'Save'; ?>">
+                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Save Draft', 'cp') : __('Save', 'cp'); ?>">
                                 <?php } ?>
 
                                 <?php
                                 if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new">Preview</a>
+                                    <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
                                     <?php if (current_user_can('coursepress_change_course_unit_status_cap') || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                                        <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? 'Publish' : 'Unpublish'; ?>">
+                                        <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
                                         <?php
                                     }
                                 }
@@ -214,7 +214,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                         <!--<div class="mp-wrap mp-postbox mp-default-margin"></div>-->
 
-                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit bellow', 'cp'); ?></h3>
+                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit below', 'cp'); ?></h3>
 
                         <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
                             <?php _e('Drag & Drop unit elements here', 'cp'); ?>
@@ -290,7 +290,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <?php
                                 if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
                                     ?>
-                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? 'Save Draft' : 'Save'; ?>">
+                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Save Draft', 'cp') : __('Save', 'cp'); ?>">
                                 <?php } ?>
 
                                 <?php
@@ -299,7 +299,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new">Preview</a>
 
                                     <?php if (current_user_can('coursepress_change_course_unit_status_cap') || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                                        <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? 'Publish' : 'Unpublish'; ?>">
+                                        <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
                                         <?php
                                     }
                                 }

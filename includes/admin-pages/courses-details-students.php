@@ -1,5 +1,5 @@
 <?php
-$course_id = $_GET['course_id'];
+$course_id = (int)$_GET['course_id'];
 $course = new Course($course_id);
 
 /* Invite a Student */

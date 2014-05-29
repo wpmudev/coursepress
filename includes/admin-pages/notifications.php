@@ -55,7 +55,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
 
 // Query the notifications
     if (isset($_GET['page_num'])) {
-        $page_num = $_GET['page_num'];
+        $page_num = (int)$_GET['page_num'];
     } else {
         $page_num = 1;
     }
@@ -194,8 +194,8 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                     <input type='checkbox' name='notifications[]' id='user_<?php echo $notification_object->ID; ?>' class='' value='<?php echo $notification_object->ID; ?>' />
                                 </th>
                                 <td class="column-notification-title <?php echo $style; ?>"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
-									<div class="visible-small visible-extra-small"><strong>Course:</strong> <?php echo $course_name; ?></div>
-									<div class="visible-small visible-extra-small"><strong>Status:</strong> <?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></div>
+                                    <div class="visible-small visible-extra-small"><strong><?php _e('Course:', 'cp'); ?></strong> <?php echo $course_name; ?></div>
+                                    <div class="visible-small visible-extra-small"><strong><?php _e('Status:', 'cp'); ?></strong> <?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></div>
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($notification_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_notification"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>

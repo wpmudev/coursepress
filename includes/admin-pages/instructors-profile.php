@@ -144,7 +144,7 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                                 </table>
                                 <!--PROFILE END-->
 
-                                <div class="edit-profile-link"><a href="user-edit.php?user_id=<?php echo $instructor->ID; ?>">Edit Profile</a></div>
+                                <div class="edit-profile-link"><a href="user-edit.php?user_id=<?php echo $instructor->ID; ?>"><?php _e('Edit Profile', 'cp'); ?></a></div>
                             </div>
 
                             <div class="clearfix"></div>

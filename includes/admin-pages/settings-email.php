@@ -3,7 +3,7 @@
 <div id="poststuff" class="metabox-holder m-settings email-settings">
     <form action='' method='post'>
 
-        <input type='hidden' name='page' value='<?php echo $page; ?>' />
+        <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
         <input type='hidden' name='action' value='updateoptions' />
 
         <?php
@@ -18,21 +18,21 @@
                         <tr>
                             <th><?php _e('From Name', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_registration_from_name" value="<?php esc_attr_e(coursepress_get_registration_from_name()); ?>" />
+                                <input type="text" name="option_registration_from_name" value="<?php echo esc_attr(coursepress_get_registration_from_name()); ?>" />
                             </td>
                         </tr>
 
                         <tr>
                             <th><?php _e('From E-mail', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_registration_from_email" value="<?php esc_attr_e(coursepress_get_registration_from_email()); ?>" />
+                                <input type="text" name="option_registration_from_email" value="<?php echo esc_attr(coursepress_get_registration_from_email()); ?>" />
                             </td>
                         </tr>
                         
                         <tr>
                             <th><?php _e('E-mail Subject', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_registration_email_subject" value="<?php esc_attr_e(coursepress_get_registration_email_subject()); ?>" />
+                                <input type="text" name="option_registration_email_subject" value="<?php echo esc_attr(coursepress_get_registration_email_subject()); ?>" />
                             </td>
                         </tr>
 
@@ -63,21 +63,21 @@
                         <tr>
                             <th><?php _e('From Name', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_from_name" value="<?php esc_attr_e(coursepress_get_invitation_from_name()); ?>" />
+                                <input type="text" name="option_invitation_from_name" value="<?php echo esc_attr(coursepress_get_invitation_from_name()); ?>" />
                             </td>
                         </tr>
 
                         <tr>
                             <th><?php _e('From E-mail', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_from_email" value="<?php esc_attr_e(coursepress_get_invitation_from_email()); ?>" />
+                                <input type="text" name="option_invitation_from_email" value="<?php echo esc_attr(coursepress_get_invitation_from_email()); ?>" />
                             </td>
                         </tr>
 
                         <tr>
                             <th><?php _e('E-mail Subject', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_email_subject" value="<?php esc_attr_e(coursepress_get_invitation_email_subject()); ?>" />
+                                <input type="text" name="option_invitation_email_subject" value="<?php echo esc_attr(coursepress_get_invitation_email_subject()); ?>" />
                             </td>
                         </tr>
                         
@@ -108,21 +108,21 @@
                         <tr>
                             <th><?php _e('From Name', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_passcode_from_name" value="<?php esc_attr_e(coursepress_get_invitation_passcode_from_name()); ?>" />
+                                <input type="text" name="option_invitation_passcode_from_name" value="<?php echo esc_attr(coursepress_get_invitation_passcode_from_name()); ?>" />
                             </td>
                         </tr>
 
                         <tr>
                             <th><?php _e('From E-mail', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_passcode_from_email" value="<?php esc_attr_e(coursepress_get_invitation_passcode_from_email()); ?>" />
+                                <input type="text" name="option_invitation_passcode_from_email" value="<?php echo esc_attr(coursepress_get_invitation_passcode_from_email()); ?>" />
                             </td>
                         </tr>
 
                         <tr>
                             <th><?php _e('E-mail Subject', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_invitation_passcode_email_subject" value="<?php esc_attr_e(coursepress_get_invitation_passcode_email_subject()); ?>" />
+                                <input type="text" name="option_invitation_passcode_email_subject" value="<?php echo esc_attr(coursepress_get_invitation_passcode_email_subject()); ?>" />
                             </td>
                         </tr>
                         

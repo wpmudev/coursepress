@@ -93,7 +93,7 @@ if (isset($_POST['_wpnonce'])) {
             foreach ($menus as $key => $menu) {
                 ?>
                 <li class="mp-tab <?php echo ($tab == $key ? 'mp-tab active' : ''); ?>">
-                    <a class="mp-tab-link" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
+                    <a class="mp-tab-link" href="admin.php?page=<?php echo esc_attr($page); ?>&amp;tab=<?php echo $key; ?>"><?php echo $menu; ?></a>
                 </li>
                 <?php
             }

@@ -55,7 +55,7 @@ if (isset($_GET['quick_setup'])) {
 
 // Query the courses
     if (isset($_GET['page_num'])) {
-        $page_num = $_GET['page_num'];
+        $page_num = (int)$_GET['page_num'];
     } else {
         $page_num = 1;
     }
@@ -190,17 +190,17 @@ if (isset($_GET['quick_setup'])) {
                                     <input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
                                 </th>
                                 <td class="column-course <?php echo $style; ?>"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
-									<!-- <div class="course-thumbnail"><img src="<?php echo $course_obj->get_course_thumbnail(); ?>" alt="<?php echo $course_object->post_title; ?>" /></div> -->
-                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
-									<div class="column-course-units visible-small visible-extra-small">
-									    <strong><?php _e('Units', 'cp');?>:</strong>
-										<?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?>,
-		                                <?php echo $course_obj->get_units('', 'publish', true);?> Published
-									</div>
-									<div class="column-course-students visible-small visible-extra-small">
-									    <strong><?php _e('Students', 'cp');?>:</strong>
-										<a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a>
-									</div>									
+                                    <!-- <div class="course-thumbnail"><img src="<?php echo $course_obj->get_course_thumbnail(); ?>" alt="<?php echo esc_attr($course_object->post_title); ?>" /></div> -->
+                                                      <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
+                                    <div class="column-course-units visible-small visible-extra-small">
+                                        <strong><?php _e('Units', 'cp');?>:</strong>
+                                      <?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?>,
+                                                      <?php echo $course_obj->get_units('', 'publish', true);?> Published
+                                    </div>
+                                    <div class="column-course-students visible-small visible-extra-small">
+                                        <strong><?php _e('Students', 'cp');?>:</strong>
+                                      <a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a>
+                                    </div>									
                                     <div class="row-actions hide-small hide-extra-small">
                                         <span class="edit_course"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if (current_user_can('coursepress_delete_course_cap') || (current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id())) { ?>
@@ -221,7 +221,7 @@ if (isset($_GET['quick_setup'])) {
                                 </td>
                                 <td class="column-units <?php echo $style; ?>">
                                 <?php echo $course_obj->get_units('', 'any', true);?> <?php _e('Units', 'cp');?><br />
-                                <?php echo $course_obj->get_units('', 'publish', true);?> Published
+                                <?php echo $course_obj->get_units('', 'publish', true);?> <?php _e('Published', 'cp');?>
                                 </td>
                                 <td class="center column-students <?php echo $style; ?>"><a href="?page=course_details&tab=students&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_obj->get_number_of_students(); ?></a></td>
                                 <td class="column-status <?php echo $style; ?>"><?php echo ($course_object->post_status == 'publish') ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?></td>

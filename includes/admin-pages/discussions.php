@@ -37,7 +37,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
 
 // Query the discussions
     if (isset($_GET['page_num'])) {
-        $page_num = $_GET['page_num'];
+        $page_num = (int)$_GET['page_num'];
     } else {
         $page_num = 1;
     }

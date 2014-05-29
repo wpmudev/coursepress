@@ -29,7 +29,7 @@ if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('admin
 }
 
 if (isset($_GET['page_num'])) {
-    $page_num = $_GET['page_num'];
+    $page_num = (int)$_GET['page_num'];
 } else {
     $page_num = 1;
 }
@@ -107,7 +107,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
 
                 $columns = array(
                     "ID" => __('ID', 'cp'),
-					"user_fullname" => __('Full Name', 'cp'),
+                    "user_fullname" => __('Full Name', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),
                     "user_lastname" => __('Surname', 'cp'),
                     "registration_date" => __('Registered', 'cp'),
@@ -161,10 +161,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                                 </th>
                                 <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
-								<td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
-									<?php echo $user_object->first_name; ?>
-									<?php echo $user_object->last_name; ?>
-								</td>
+                                <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
+                                  <?php echo $user_object->first_name; ?>
+                                  <?php echo $user_object->last_name; ?>
+                                </td>
                                 <td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                                 <td class="column-user-lastname <?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                                 <td class="column-registration-date <?php echo $style; ?>"><?php echo $user_object->user_registered; ?></td>

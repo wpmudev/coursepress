@@ -1,6 +1,6 @@
 <?php
-$user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
-$course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
+$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : '';
+$course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : '';
 ?>
 
 <div class="wrap nosubsub">
@@ -12,7 +12,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
     <?php
     if (isset($_GET['page_num'])) {
-        $page_num = $_GET['page_num'];
+        $page_num = (int)$_GET['page_num'];
     } else {
         $page_num = 1;
     }
@@ -20,9 +20,9 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
     $unit_module_main = new Unit_Module();
 
     if (isset($_GET['response_id'])) {
-        $response_id = $_GET['response_id'];
-        $module_id = $_GET['module_id'];
-        $unit_id = $_GET['unit_id'];
+        $response_id = (int)$_GET['response_id'];
+        $module_id = (int)$_GET['module_id'];
+        $unit_id = (int)$_GET['unit_id'];
         ?>
         <div class="assessment-response-wrap">
             <form action="" name="assessment-response" method="post">
@@ -39,7 +39,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                     ?>
 
                     <div class="sidebar-name no-movecursor">
-                        <h3><span class="response-response-name"><?php echo $unit_module->post_title; ?></span><span class="response-student-info"><a href="admin.php?page=students&action=view&student_id=<?php echo $user_id; ?>"><?php echo $student->display_name; ?></a></span></h3>
+                        <h3><span class="response-response-name"><?php echo esc_html($unit_module->post_title); ?></span><span class="response-student-info"><a href="admin.php?page=students&action=view&student_id=<?php echo $user_id; ?>"><?php echo esc_html($student->display_name); ?></a></span></h3>
                     </div>
 
                     <div class="assessment-holder">
@@ -48,7 +48,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                             <?php if (isset($unit_module->post_content) && !empty($unit_module->post_content)) { ?>
                                 <div class="module_response_description">
                                     <label><?php _e('Description', 'cp'); ?></label>
-                                    <?php echo $unit_module->post_content; ?>
+                                    <?php echo $unit_module->post_content; //may contain prefiltered html ?>
                                 </div>
 
                                 <div class="full regular-border-devider"></div>
@@ -78,7 +78,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                                 if (!empty($grade)) {
                                     _e('Grade by ');
                                     ?>
-                                    <a href="admin.php?page=instructors&action=view&instructor_id=<?php echo $instructor_id; ?>"><?php echo $instructor_name->display_name; ?></a>
+                                    <a href="admin.php?page=instructors&action=view&instructor_id=<?php echo $instructor_id; ?>"><?php echo esc_html($instructor_name->display_name); ?></a>
                                     <?php
                                     _e(' on ' . $grade_time);
                                 }
@@ -86,7 +86,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
                             </div>
 
-                            <?php submit_button('Save Changes', 'primary', 'save-response-changes'); ?>
+                            <?php submit_button(__('Save Changes', 'cp'), 'primary', 'save-response-changes'); ?>
 
                             <?php
                             $assessable = get_post_meta($module_id, 'gradable_answer', true);
@@ -172,7 +172,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                     <?php
                     $current_course_id = 0;
                     if (isset($_GET['course_id'])) {
-                        $current_course_id = $_GET['course_id'];
+                        $current_course_id = (int)$_GET['course_id'];
                     } else {
                         $current_course_id = $first_course_id;
                     }
@@ -385,9 +385,9 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
 
                                                             <td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
                                                                 <?php echo $mod->post_title; ?>
-																<div class="extra-information visible-extra-small">
-																  Submitted:<br /> <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
-																</div>
+                                                                <div class="extra-information visible-extra-small">
+                                                                  <?php _e('Submitted:', 'cp'); ?><br /> <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
+                                                                </div>
                                                             </td>
 
                                                             <td class="column-submission-date <?php echo $style . ' ' . $visibility_class; ?>">
@@ -448,7 +448,7 @@ $course_id = isset($_GET['course_id']) ? $_GET['course_id'] : '';
                                                                 }
                                                                 if (isset($comment)) {
                                                                     ?>
-                                                                    <a class="response_comment" alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>">✓</a>
+                                                                    <a class="response_comment" alt="<?php echo esc_attr($comment); ?>" title="<?php echo esc_attr($comment); ?>">✓</a>
                                                                     <?php
                                                                 } else {
                                                                     echo '-';

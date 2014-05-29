@@ -218,7 +218,7 @@ if (!class_exists('Unit')) {
 
         function get_unit_id_by_name($slug) {
             global $wpdb;
-            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $slug));
+            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s", $slug));
             return $id;
         }
 

@@ -11,7 +11,7 @@ if (isset($_POST['item_title'])) {
 <div id="poststuff" class="metabox-holder m-settings">
     <form action='' method='post'>
 
-        <input type='hidden' name='page' value='<?php echo $page; ?>' />
+        <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
         <input type='hidden' name='action' value='updateoptions' />
 
         <?php

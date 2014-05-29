@@ -6,11 +6,11 @@ $unit_id = '';
 $course_id = '';
 
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
-    $course_id = $_GET['course_id'];
+    $course_id = (int)$_GET['course_id'];
 }
 
 if (isset($_GET['unit_id']) && is_numeric($_GET['unit_id'])) {
-    $unit_id = $_GET['unit_id'];
+    $unit_id = (int)$_GET['unit_id'];
 }
 
 $course = new Course($course_id);
@@ -49,9 +49,9 @@ $students_count = $course->get_number_of_students();
 
         if ($course_id != '') {
             if ($tab != 'overview') {
-                echo ' » ' . $course->details->post_title . ' » ' . ucfirst($tab);
+                echo ' &raquo; ' . $course->details->post_title . ' &raquo; ' . esc_html( ucfirst($tab) );
             } else {
-                echo ' » ' . $course->details->post_title;
+                echo ' &raquo; ' . $course->details->post_title;
             }
         }
         ?>
@@ -121,7 +121,7 @@ $students_count = $course->get_number_of_students();
                 <a class="nav-tab<?php
                 if ($tab == $key)
                     echo ' nav-tab-active';
-                ?>" href="admin.php?page=<?php echo $page; ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
+                ?>" href="admin.php?page=<?php echo esc_attr($page); ?>&amp;tab=<?php echo $key; ?>&amp;course_id=<?php echo $course_id; ?>"><?php echo $menu; ?></a>
                    <?php
                }
            }

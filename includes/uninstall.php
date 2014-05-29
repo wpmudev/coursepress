@@ -1,5 +1,5 @@
 <?php
-/*
+/* NEVER LOOP THROUGH BLOGS!
 register_activation_hook( __FILE__, 'coursepress_activate' );
 register_deactivation_hook( __FILE__, 'coursepress_deactivate' );
      

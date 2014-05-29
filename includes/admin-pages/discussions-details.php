@@ -8,7 +8,7 @@ $discussion_id = '';
 if (isset($_GET['discussion_id'])) {
     $discussion = new Discussion($_GET['discussion_id']);
     $discussion_details = $discussion->get_discussion();
-    $discussion_id = $_GET['discussion_id'];
+    $discussion_id = (int)$_GET['discussion_id'];
 } else {
     $discussion = new Discussion();
     $discussion_id = 0;
@@ -49,7 +49,7 @@ if (isset($_GET['discussion_id'])) {
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '' ?><?php echo '&action=' . $action; ?><?php echo ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='discussion-add' method='post'>
+        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '' ?><?php echo '&action=' . esc_attr($action); ?><?php echo ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='discussion-add' method='post'>
 
             <div class='course-liquid-left'>
 

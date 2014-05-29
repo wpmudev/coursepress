@@ -17,7 +17,7 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-    <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp'); ?></a>
+    <a href="admin.php?page=students" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Profile', 'cp'); ?></h2>
 
     <form action="" name="course-add" method="post">
@@ -184,7 +184,7 @@ if (isset($_POST['course_id'])) {
 
                                                             <label class="group-label">
                                                                 <?php _e('Group', 'cp'); ?>
-                                                                <select name="course_group" id="course_group_<?php echo $course_object->ID; ?>" data-placeholder="'.__('Choose a Group...', 'cp').'">
+                                                                <select name="course_group" id="course_group_<?php echo $course_object->ID; ?>" data-placeholder="<?php esc_attr_e('Choose a Group...', 'cp'); ?>">
                                                                     <option value=""<?php echo ($student->{'enrolled_course_group_' . $course_object->ID} == '' ? ' selected="selected"' : ''); ?>><?php _e('Default', 'cp'); ?></option>
                                                                     <?php
                                                                     $groups = get_option('course_groups');
@@ -199,7 +199,7 @@ if (isset($_POST['course_id'])) {
                                                                 </select>
                                                             </label>
 
-                                                            <?php submit_button('Save Changes', 'secondary', 'save-group-class-changes', '') ?>
+                                                            <?php submit_button(__('Save Changes', 'cp'), 'secondary', 'save-group-class-changes', '') ?>
 
                                                         </div>
 

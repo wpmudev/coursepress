@@ -17,7 +17,7 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-    <a href="admin.php?page=students" class="back_link">« <?php _e('Back to Students', 'cp'); ?></a>
+    <a href="admin.php?page=students" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Workbook', 'cp'); ?></h2>
 
     <div class="course">
@@ -135,7 +135,7 @@ if (isset($_POST['course_id'])) {
                                             $current_course_id = 0;
 
                                             if (isset($_GET['course_id'])) {
-                                                $current_course_id = $_GET['course_id'];
+                                                $current_course_id = (int)$_GET['course_id'];
                                             } else {
                                                 $current_course_id = $first_course_id;
                                             }
@@ -272,9 +272,9 @@ if (isset($_POST['course_id'])) {
 
                                                                         <td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
                                                                             <?php echo $mod->post_title; ?>
-																			<div class="extra-information visible-extra-small">
-																			  Submitted:<br /> <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
-																			</div>
+                                                                            <div class="extra-information visible-extra-small">
+                                                                              <?php _e('Submitted:', 'cp'); ?><br /> <?php echo (count($response) >= 1 ? $response->post_date : __('Not submitted', 'cp')); ?>
+                                                                            </div>
                                                                         </td>
 
                                                                         <td class="coloumn-submission-date <?php echo $style . ' ' . $visibility_class; ?>">

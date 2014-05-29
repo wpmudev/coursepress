@@ -1,6 +1,6 @@
 <?php
 if (!current_user_can('coursepress_add_new_students_cap')) {
-    die('You do not have required persmissions to access this page.');
+    die('You do not have required permissions to access this page.');
 }
 ?>
 
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
         <div id="edit-sub" class="course-holder-wrap">
 
             <div class="sidebar-name no-movecursor">
-                <h3>Course Details</h3>
+                <h3><?php _e('Course Details', 'cp'); ?></h3>
             </div>
 
             <div class="course-holder">

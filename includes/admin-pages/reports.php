@@ -10,7 +10,7 @@ if (isset($_POST['units']) && isset($_POST['users'])) {
     //cp_suppress_errors();
     ob_end_clean();
     ob_start();
-    $course_id = $_POST['course_id'];
+    $course_id = (int)$_POST['course_id'];
     $course = new Course($course_id);
     $course_units = $course->get_units();
     $course_details = $course->get_course();
@@ -253,7 +253,7 @@ if (isset($_POST['action']) && isset($_POST['users'])) {
 }
 
 if (isset($_GET['page_num'])) {
-    $page_num = $_GET['page_num'];
+    $page_num = (int)$_GET['page_num'];
 } else {
     $page_num = 1;
 }
@@ -329,7 +329,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                 <?php
                 $current_course_id = 0;
                 if (isset($_GET['course_id'])) {
-                    $current_course_id = $_GET['course_id'];
+                    $current_course_id = (int)$_GET['course_id'];
                 } else {
                     $current_course_id = $first_course_id;
                 }
@@ -349,18 +349,18 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             $classes = 'all';
                         }
                         ?>
-                                                                        <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                                                            <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
-                                                                            <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
+                    <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
+                        <option value="all" <?php selected($classes, 'all', true); ?>><?php _e('All Classes', 'cp'); ?></option>
+                        <option value="" <?php selected($classes, '', true); ?>><?php _e('Default', 'cp'); ?></option>
                         <?php
                         $course_classes = get_post_meta($current_course_id, 'course_classes', true);
                         foreach ($course_classes as $course_class) {
                             ?>
-                                                                                                        <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
+                            <option value="<?php echo $course_class; ?>" <?php selected($classes, $course_class, true); ?>><?php echo $course_class; ?></option>
                             <?php
                         }
                         ?>
-                                                                        </select>-->
+                        </select>-->
 
                         <?php
                     }
@@ -374,7 +374,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     <?php
     $columns = array(
         "ID" => __('Student ID', 'cp'),
-		"user_fullname" => __('Full Name', 'cp'),
+        "user_fullname" => __('Full Name', 'cp'),
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
         "responses" => __('Responses', 'cp'),
@@ -451,15 +451,13 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                             <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                         </th>
                         <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
-						<td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
-							<span class="user-fullname"><?php echo $user_object->first_name; ?>
-							<?php echo $user_object->last_name; ?></span>
-							<div class="visible-extra-small">
-								Responses: <?php echo $user_object->get_number_of_responses($current_course_id); ?>
-							</div>
-							
-							
-						</td>
+                        <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
+                          <span class="user-fullname"><?php echo $user_object->first_name; ?>
+                          <?php echo $user_object->last_name; ?></span>
+                          <div class="visible-extra-small">
+                            <?php _e('Responses:', 'cp'); ?> <?php echo $user_object->get_number_of_responses($current_course_id); ?>
+                          </div>
+                        </td>
                         <td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                         <td class="column-user-lastname <?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
 
@@ -496,7 +494,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                     ?>
 
                 </select>
-                <?php submit_button('Generate Report', 'primary', 'generate_report_button', false); ?>
+                <?php submit_button(__('Generate Report', 'cp'), 'primary', 'generate_report_button', false); ?>
             </div>
 
             <div class="tablenav-pages"><?php $student_search->page_links(); ?></div>

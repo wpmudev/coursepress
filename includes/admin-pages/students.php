@@ -35,7 +35,7 @@ if (isset($_POST['action']) && isset($_POST['users'])) {
 }
 
 if (isset($_GET['page_num'])) {
-    $page_num = $_GET['page_num'];
+    $page_num = (int)$_GET['page_num'];
 } else {
     $page_num = 1;
 }
@@ -116,7 +116,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 <?php
                 $columns = array(
                     "ID" => __('Student ID', 'cp'),
-					"user_fullname" => __('Full Name', 'cp'),
+                    "user_fullname" => __('Full Name', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),
                     "user_lastname" => __('Surname', 'cp'),
                     "registration_date" => __('Registered', 'cp'),
@@ -169,17 +169,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                                 </th>
                                 <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
-								<td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
-									<a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
+                                  <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <?php echo $user_object->first_name; ?>
                                     </a>
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <?php echo $user_object->last_name; ?>
                                     </a>
-									<div class="visible-extra-small">
-										Latest Activity: <span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?>
-									</div>
-								</td>
+                                    <div class="visible-extra-small">
+                                      <?php _e('Latest Activity:', 'cp'); ?> <span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?>
+                                    </div>
+                                </td>
                                 <td class="column-user-firstname <?php echo $style; ?>">
                                     <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
                                         <?php echo $user_object->first_name; ?>

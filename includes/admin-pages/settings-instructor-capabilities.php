@@ -148,7 +148,7 @@ $instructor_capabilities_notifications = array(
         <?php
         wp_nonce_field('update-coursepress-options');
         ?>
-        <p class='description'><?php _e('Instructor capabilities define what the Instructors can or cannot do within the ' . $this->name . '.', 'cp'); ?></p>
+        <p class='description'><?php printf( __('Instructor capabilities define what the Instructors can or cannot do within the %s.', 'cp'), $this->name); ?></p>
         <?php
         foreach ($capability_boxes as $box_key => $group_name) {
             ?>

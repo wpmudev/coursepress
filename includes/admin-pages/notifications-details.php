@@ -8,7 +8,7 @@ $notification_id = '';
 if (isset($_GET['notification_id'])) {
     $notification = new Notification($_GET['notification_id']);
     $notification_details = $notification->get_notification();
-    $notification_id = $_GET['notification_id'];
+    $notification_id = (int)$_GET['notification_id'];
 } else {
     $notification = new Notification();
     $notification_id = 0;
@@ -49,7 +49,7 @@ if (isset($_GET['notification_id'])) {
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($notification_id !== 0) ? '&notification_id=' . $notification_id : '' ?><?php echo '&action=' . $action; ?><?php echo ($notification_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='notification-add' method='post'>
+        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($notification_id !== 0) ? '&notification_id=' . $notification_id : '' ?><?php echo '&action=' . esc_attr($action); ?><?php echo ($notification_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='notification-add' method='post'>
 
             <div class='course-liquid-left'>
 
@@ -68,7 +68,7 @@ if (isset($_GET['notification_id'])) {
                         <div class='course-holder'>
                             <div class='course-details'>
                                 <label for='notification_name'><?php _e('Notify Students in selected courses', 'cp'); ?></label>
-                                <p>Notifications are shown to end users in their Notifications menu item</p>
+                                <p><?php _e('Notifications are shown to end users in their Notifications menu item', 'cp'); ?></p>
 
                                 <div class="full">
                                     <label><?php _e('Course', 'cp'); ?></label>

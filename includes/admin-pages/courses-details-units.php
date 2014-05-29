@@ -2,7 +2,7 @@
 $course_id = '';
 
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
-    $course_id = $_GET['course_id'];
+    $course_id = (int)$_GET['course_id'];
     $course = new Course($course_id);
     $units = $course->get_units();
 }
@@ -65,9 +65,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || (isset($_GET[
                         </a></div>
         <?php } ?>
 
-                <div class="unit-buttons unit-control-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-units save-unit-button">Settings</a>
+                <div class="unit-buttons unit-control-buttons"><a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit" class="button button-units save-unit-button"><?php _e('Settings', 'cp'); ?></a>
                 <?php if ((current_user_can('coursepress_change_course_unit_status_cap')) || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-                        <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php ($unit_object->post_status == 'unpublished') ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a>
+                        <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=change_status&new_status=<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'private'; ?>" class="button button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>"><?php echo ($unit_object->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?></a>
                     <?php } ?>
                 </div>
 

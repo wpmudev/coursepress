@@ -2,9 +2,9 @@
 global $page, $user_id, $coursepress_admin_notice, $coursepress;
 
 if (isset($_GET['course_id'])) {
-    $course = new Course($_GET['course_id']);
+    $course = new Course((int)$_GET['course_id']);
     $course_details = $course->get_course();
-    $course_id = $_GET['course_id'];
+    $course_id = (int)$_GET['course_id'];
 } else {
     $course = new course();
     $course_id = 0;
@@ -581,7 +581,7 @@ if (isset($_GET['course_id'])) {
                             <?php
                             if (($course_id != 0 && current_user_can('coursepress_update_course_cap')) || ($course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id())) {//do not show anything
                                 ?>
-                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($course_details->post_status == 'unpublished') ? 'Save Draft' : 'Save'; ?>">
+                                <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($course_details->post_status == 'unpublished') ? __('Save Draft', 'cp') : __('Publish', 'cp'); ?>">
                             <?php } ?>
 
                             <?php
@@ -590,7 +590,7 @@ if (isset($_GET['course_id'])) {
                                 <a class="button button-preview" href="<?php echo get_permalink($course_id); ?>" target="_new">Preview</a>
 
                                 <?php if (current_user_can('coursepress_change_course_status_cap') || (current_user_can('coursepress_change_my_course_status_cap') && $course_details->post_author == get_current_user_id())) { ?>
-                                    <input type="submit" name="submit-unit-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($course_details->post_status == 'unpublished') ? 'Publish' : 'Unpublish'; ?>">
+                                    <input type="submit" name="submit-unit-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($course_details->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($course_details->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
                                     <?php
                                 }
                             }
@@ -601,7 +601,7 @@ if (isset($_GET['course_id'])) {
                             <?php
                             if ($course_id !== 0) {
                                 ?>
-                                <a href="?page=<?php echo $_GET['page']; ?>&tab=units&course_id=<?php echo $_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units »', 'cp'); ?></a> 
+                                <a href="?page=<?php echo (int)$_GET['page']; ?>&tab=units&course_id=<?php echo (int)$_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
                             <?php } ?>
                         </div>
 
