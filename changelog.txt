@@ -3,6 +3,7 @@ Author: Marko Miljus (Incsub)
 
 1.0.2b - 29/MAY/2014
 - Security fortification
+- Resolved admin url issues
 
 1.0.1b - 29/MAY/2014
 - Resolved issue with adding student manually to a course
