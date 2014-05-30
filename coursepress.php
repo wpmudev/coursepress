@@ -269,7 +269,7 @@ if (!class_exists('CoursePress')) {
         }
 
         function check_access($course_id) {
-            if (!current_user_can('administrator')) {
+            if (!current_user_can('manage_options')) {
                 $student = new Student(get_current_user_id());
                 if (!$student->has_access_to_course($course_id)) {
                     wp_redirect(get_permalink($course_id));
@@ -1278,7 +1278,7 @@ if (!class_exists('CoursePress')) {
 
         function assign_instructor_capabilities() {
 
-            if (is_admin() && (current_user_can('administrator') || current_user_can('coursepress_assign_and_assign_instructor_my_course_cap'))) {
+            if (is_admin() && (current_user_can('manage_options') || current_user_can('coursepress_assign_and_assign_instructor_my_course_cap'))) {
 
                 $role = new WP_User($_REQUEST['user_id']);
 
@@ -2120,7 +2120,7 @@ if (!class_exists('CoursePress')) {
 
             if (isset($user->ID)) {
 
-                if (current_user_can('administrator')) {
+                if (current_user_can('manage_options')) {
                     return admin_url();
                 } else {
                     $role_s = get_user_meta($user->ID, 'role', true);

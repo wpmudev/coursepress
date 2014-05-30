@@ -6,7 +6,7 @@ $page = $_GET['page'];
 
 $tab = (isset($_GET['tab'])) ? $_GET['tab'] : '';
 if (empty($tab)) {
-    if (current_user_can('administrator')) {
+    if (current_user_can('manage_options')) {
         $tab = 'general';
     } else if (current_user_can('coursepress_settings_groups_page_cap')) {
         $tab = 'groups';
@@ -61,7 +61,7 @@ if (isset($_POST['_wpnonce'])) {
 
     <?php
     $menus = array();
-    if (current_user_can('administrator')) {
+    if (current_user_can('manage_options')) {
         $menus['general'] = __('General', 'cp');
     }
 
@@ -69,12 +69,12 @@ if (isset($_POST['_wpnonce'])) {
         //$menus['groups'] = __('Class Groups', 'cp'); //to do in the next release
     }
 
-    if (current_user_can('administrator')) {
+    if (current_user_can('manage_options')) {
         /* $menus['payment'] = __('Payment Settings', 'cp'); */
         $menus['email'] = __('E-mail Settings', 'cp');
     }
 
-    if (current_user_can('administrator')) {
+    if (current_user_can('manage_options')) {
         $menus['instructor_capabilities'] = __('Instructor Capabilities', 'cp');
     }
 
@@ -110,7 +110,7 @@ if (isset($_POST['_wpnonce'])) {
 
 
             case 'general':
-                if (current_user_can('administrator')) {
+                if (current_user_can('manage_options')) {
                     $this->show_settings_general();
                 }
                 break;
@@ -123,7 +123,7 @@ if (isset($_POST['_wpnonce'])) {
                 break;
 
             /* case 'payment':
-              if (current_user_can('administrator')) {
+              if (current_user_can('manage_options')) {
               $this->show_settings_payment();
               }
               break; */
@@ -135,14 +135,14 @@ if (isset($_POST['_wpnonce'])) {
                 break;
 
             case 'instructor_capabilities':
-                if (current_user_can('administrator')) {
+                if (current_user_can('manage_options')) {
                     //$this->add_user_roles_and_caps();
                     $this->show_settings_instructor_capabilities();
                 }
                 break;
 
             case 'email':
-                if (current_user_can('administrator')) {
+                if (current_user_can('manage_options')) {
                     $this->show_settings_email();
                 }
                 break;

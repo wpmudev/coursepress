@@ -2,7 +2,7 @@
 $page = $_GET['page'];
 $s = (isset($_GET['s']) ? $_GET['s'] : '');
 
-if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('administrator')) {
+if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('manage_options')) {
     check_admin_referer('bulk-instructors');
 
     $action = $_POST['action'];
@@ -60,7 +60,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
     <div class="wrap nosubsub">
 
         <div class="icon32 " id="icon-users"><br></div>
-        <h2><?php _e('Instructors', 'cp'); ?><?php if (current_user_can('administrator')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Instructors', 'cp'); ?><?php if (current_user_can('manage_options')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         if (isset($message)) {
@@ -86,7 +86,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
             <form method="post" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
 
                 <div class="alignleft actions">
-                    <?php if (current_user_can('administrator')) { ?>
+                    <?php if (current_user_can('manage_options')) { ?>
                         <select name="action">
                             <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
                             <option value="delete"><?php _e('Delete', 'cp'); ?></option>
@@ -120,7 +120,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     '5', '15', '15', '20', '15', '15'
                 );
 
-                if (current_user_can('administrator')) {
+                if (current_user_can('manage_options')) {
                     $columns["delete"] = __('Delete', 'cp');
                     $col_sizes[] = '6';
                 }
@@ -173,7 +173,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
-                                <?php if (current_user_can('administrator')) { ?>
+                                <?php if (current_user_can('manage_options')) { ?>
                                     <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=instructors&action=delete&instructor_id=<?php echo $user_object->ID; ?>" onclick="return removeInstructors();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>

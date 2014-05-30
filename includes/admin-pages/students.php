@@ -64,7 +64,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
     ?>
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-users"><br></div>
-        <h2><?php _e('Students', 'cp'); ?><?php if (current_user_can('administrator')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?><?php if (current_user_can('coursepress_add_new_students_cap') && !current_user_can('administrator')) { ?><a class="add-new-h2" href="?page=students&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Students', 'cp'); ?><?php if (current_user_can('manage_options')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?><?php if (current_user_can('coursepress_add_new_students_cap') && !current_user_can('manage_options')) { ?><a class="add-new-h2" href="?page=students&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         if (isset($message)) {
