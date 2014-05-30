@@ -443,7 +443,7 @@ function coursepress_students_drop_down() {
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
-        'role' => 'student',
+        'role' => '',
         'meta_key' => '',
         'meta_value' => '',
         'meta_compare' => '',

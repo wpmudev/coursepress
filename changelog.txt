@@ -1,6 +1,13 @@
 Plugin Name: CoursePress
 Author: Marko Miljus (Incsub)
 
+1.0.2b - 29/MAY/2014
+- Security fortification
+
+1.0.1b - 29/MAY/2014
+- Resolved issue with adding student manually to a course
+- Adding search on each drop down
+
 1.0b - 28/MAY/2014
 ----------------------------------------------------------------------
 - First Beta Release.

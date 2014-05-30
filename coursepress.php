@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus (https://twitter.com/markomiljus), Rheinard Korf (https://twitter.com/rheinardkorf)
-  Version: 1.0b
+  Version: 1.0.2b
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: N/A
@@ -1687,7 +1687,7 @@ if (!class_exists('CoursePress')) {
             //add_action('wp_enqueue_scripts', array(&$this, 'add_jquery_ui'));
             wp_enqueue_script('jquery');
             //wp_enqueue_script('jquery-ui-core');
-            //wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
+            wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array('jquery'), '1.10.3'); //need to change this to built-in 
             wp_enqueue_script('jquery-ui-spinner');
 
             if (isset($_GET['page'])) {
