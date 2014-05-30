@@ -24,7 +24,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
 
     if ($new_post_id !== 0) {
         ob_start();
-        wp_redirect('?page=' . $page . '&discussion_id=' . $new_post_id . '&action=edit');
+        wp_redirect(admin_url('admin.php?page=' . $page . '&discussion_id=' . $new_post_id . '&action=edit'));
         exit;
     } else {
         //an error occured
@@ -41,7 +41,7 @@ if (isset($_GET['discussion_id'])) {
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-themes"><br></div>
 
-    <h2><?php _e('Discussion', 'cp'); ?><?php if (current_user_can('coursepress_create_discussion_cap')) { ?><a class="add-new-h2" href="admin.php?page=discussions&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+    <h2><?php _e('Discussion', 'cp'); ?><?php if (current_user_can('coursepress_create_discussion_cap')) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new');?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
     <?php
     $message['ca'] = __('New Discussion added successfully!', 'cp');
@@ -49,7 +49,7 @@ if (isset($_GET['discussion_id'])) {
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='?page=<?php echo esc_attr($page); ?><?php echo ($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '' ?><?php echo '&action=' . esc_attr($action); ?><?php echo ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='discussion-add' method='post'>
+        <form action='<?php echo admin_url('admin.php?page='.esc_attr($page).''.(($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '') . '&action=' . esc_attr($action). ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca');?>' name='discussion-add' method='post'>
 
             <div class='course-liquid-left'>
 

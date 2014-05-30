@@ -37,7 +37,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
 
 // Query the discussions
     if (isset($_GET['page_num'])) {
-        $page_num = (int)$_GET['page_num'];
+        $page_num = (int) $_GET['page_num'];
     } else {
         $page_num = 1;
     }
@@ -66,7 +66,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
     ?>
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-themes"><br></div>
-        <h2><?php _e('Discussions', 'cp'); ?><?php if (current_user_can('coursepress_create_discussion_cap')) { ?><a class="add-new-h2" href="admin.php?page=discussions&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Discussions', 'cp'); ?><?php if (current_user_can('coursepress_create_discussion_cap')) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         if (isset($message)) {
@@ -78,7 +78,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
         <div class="tablenav">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
+                <form method="get" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" class="search-form">
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Discussions', 'cp'); ?>:</label>
@@ -88,7 +88,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                 </form>
             </div><!--/alignright-->
 
-            <form method="post" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
+            <form method="post" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" id="posts-filter">
 
                 <?php if (current_user_can('coursepress_delete_discussion_cap')) { ?>
                     <div class="alignleft actions">
@@ -155,13 +155,13 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <th scope='row' class='check-column'>
                                     <input type='checkbox' name='discussions[]' id='user_<?php echo $discussion_object->ID; ?>' class='' value='<?php echo $discussion_object->ID; ?>' />
                                 </th>
-                                <td <?php echo $style; ?>><a href="?page=discussions&action=edit&discussion_id=<?php echo $discussion_object->ID; ?>"><strong><?php echo $discussion_object->post_title; ?></strong></a><br />
+                                <td <?php echo $style; ?>><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID); ?>"><strong><?php echo $discussion_object->post_title; ?></strong></a><br />
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($discussion_object->ID); ?></div>
                                     <div class="row-actions">
-                                        <span class="edit_discussion"><a href="?page=discussions&action=edit&discussion_id=<?php echo $discussion_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
+                                        <span class="edit_discussion"><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id='.$discussion_object->ID);?>"><?php _e('Edit', 'cp'); ?></a> | </span>
 
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <span class="course_remove"><a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a></span>
+                                            <span class="course_remove"><a href="<?php echo admin_url('admin.php?page=discussions&action=delete&discussion_id='.$discussion_object->ID)?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a></span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -174,11 +174,11 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 }
                                 ?>
                                 <td <?php echo $style; ?>> <?php echo $course_name; ?> </td>
-                               
+
                                 <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=discussions&action=delete&discussion_id=<?php echo $discussion_object->ID; ?>" onClick="return removeDiscussion();">
+                                            <a href="<?php echo admin_url('admin.php?page=discussions&action=delete&discussion_id='.$discussion_object->ID);?>" onClick="return removeDiscussion();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>

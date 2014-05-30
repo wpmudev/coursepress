@@ -1,5 +1,9 @@
 <?php
 
+function non_nonce_url(){
+    
+}
+
 function url_origin($s, $use_forwarded_host=false)
 {
     $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on') ? true:false;

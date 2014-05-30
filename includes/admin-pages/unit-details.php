@@ -52,10 +52,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add_unit' || $_POST['action
         if ($new_post_id != 0) {
             ob_start();
             if (isset($_GET['ms'])) {
-                wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']));
                 //exit;
             } else {
-                wp_redirect('?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id);
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
                 //exit;
             }
         } else {
@@ -93,7 +93,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 $unit_object = $unit_object->get_unit();
                 ?>
                 <li class="mp-tab <?php echo (isset($_GET['unit_id']) && $unit->ID == $_GET['unit_id'] ? 'active' : ''); ?>">
-                    <a class="mp-tab-link" href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_object->ID; ?>&action=edit"><?php echo $unit_object->post_title; ?></a>
+                    <a class="mp-tab-link" href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_object->ID.'&action=edit');?>"><?php echo $unit_object->post_title; ?></a>
                     <i class="fa fa-arrows-v cp-move-icon"></i>
 
                     <input type="hidden" class="unit_order" value="<?php echo $list_order; ?>" name="unit_order_<?php echo $unit_object->ID; ?>" />
@@ -105,7 +105,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
             ?>
             <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
                 <li class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : ''); ?> static">
-                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>                                                                    
+                    <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id='.$course_id.'&action=add_new_unit');?>" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary'); ?>"><?php _e('Add new Unit', 'cp'); ?></a>                                                                    
                 </li>
             <?php } ?>
         </ul>
@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     </div>
 
     <div class='mp-settings'><!--course-liquid-left-->
-        <form action="?page=<?php echo esc_attr($page); ?>&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit<?php echo ($unit_id !== 0) ? '&ms=uu' : '&ms=ua'; ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
+        <form action="<?php echo admin_url('admin.php?page='.esc_attr($page).'&tab=units&course_id='.$course_id.'&action=add_new_unit'.(($unit_id !== 0) ? '&ms=uu' : '&ms=ua')); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
             <input type="hidden" name="beingdragged" id="beingdragged" value="" />
             <div id='course'>
 
@@ -141,7 +141,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                         <h3><?php _e('Unit Details', 'cp'); ?>
                             <?php if ($unit_id != 0) { ?>
                                 <span class="delete_unit">
-                                    <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&unit_id=<?php echo $unit_id; ?>&action=delete_unit" onclick="return removeUnit();">
+                                    <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_id.'&action=delete_unit');?>" onclick="return removeUnit();">
                                         <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                     </a>
                                 </span>

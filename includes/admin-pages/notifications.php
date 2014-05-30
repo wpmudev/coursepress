@@ -89,7 +89,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
     ?>
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-themes"><br></div>
-        <h2><?php _e('Notifications', 'cp'); ?><?php if (current_user_can('coursepress_create_notification_cap')) { ?><a class="add-new-h2" href="admin.php?page=notifications&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Notifications', 'cp'); ?><?php if (current_user_can('coursepress_create_notification_cap')) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new');?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         if (isset($message)) {
@@ -101,7 +101,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
         <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
+                <form method="get" action="<?php echo admin_url('admin.php?page='.esc_attr($page));?>" class="search-form">
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Notifications', 'cp'); ?>:</label>
@@ -111,7 +111,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                 </form>
             </div><!--/alignright-->
 
-            <form method="post" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
+            <form method="post" action="<?php echo admin_url('admin.php?page='.esc_attr($page));?>" id="posts-filter">
 
                 <?php if (current_user_can('coursepress_change_notification_status_cap') || current_user_can('coursepress_delete_notification_cap')) { ?>
                     <div class="alignleft actions">
@@ -193,17 +193,17 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <th scope='row' class='check-column'>
                                     <input type='checkbox' name='notifications[]' id='user_<?php echo $notification_object->ID; ?>' class='' value='<?php echo $notification_object->ID; ?>' />
                                 </th>
-                                <td class="column-notification-title <?php echo $style; ?>"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
+                                <td class="column-notification-title <?php echo $style; ?>"><a href="<?php echo admin_url('admin.php?page=notifications&action=edit&notification_id='.$notification_object->ID);?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
                                     <div class="visible-small visible-extra-small"><strong><?php _e('Course:', 'cp'); ?></strong> <?php echo $course_name; ?></div>
                                     <div class="visible-small visible-extra-small"><strong><?php _e('Status:', 'cp'); ?></strong> <?php echo ($notification_object->post_status == 'publish') ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></div>
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($notification_object->ID); ?></div>
                                     <div class="row-actions">
-                                        <span class="edit_notification"><a href="?page=notifications&action=edit&notification_id=<?php echo $notification_object->ID; ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
+                                        <span class="edit_notification"><a href="<?php echo admin_url('admin.php?page=notifications&action=edit&notification_id='.$notification_object->ID);?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if (current_user_can('coursepress_change_notification_status_cap') || (current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id())) { ?>
-                                            <span class="notification_publish_unpublish"><a href="?page=notifications&notification_id=<?php echo $notification_object->ID; ?>&action=change_status&new_status=<?php echo ($notification_object->post_status == 'private') ? 'publish' : 'private'; ?>"><?php ($notification_object->post_status == 'private') ? _e('Publish', 'cp') : _e('Private', 'cp'); ?></a> | </span>
+                                            <span class="notification_publish_unpublish"><a href="<?php echo admin_url('admin.php?page=notifications&notification_id='.$notification_object->ID.'&action=change_status&new_status='.(($notification_object->post_status == 'private') ? 'publish' : 'private'));?>"><?php ($notification_object->post_status == 'private') ? _e('Publish', 'cp') : _e('Private', 'cp'); ?></a> | </span>
                                         <?php } ?>
                                         <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id())) { ?>
-                                            <span class="course_remove"><a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeNotification();"><?php _e('Delete', 'cp'); ?></a> | </span>
+                                            <span class="course_remove"><a href="<?php echo admin_url('admin.php?page=notifications&action=delete&notification_id='.$notification_object->ID);?>" onClick="return removeNotification();"><?php _e('Delete', 'cp'); ?></a> | </span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -212,7 +212,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap'))) { ?>
                                     <td class="<?php echo $style; ?>">
                                         <?php if (current_user_can('coursepress_delete_notification_cap') || (current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id())) { ?>
-                                            <a href="?page=notifications&action=delete&notification_id=<?php echo $notification_object->ID; ?>" onClick="return removeNotification();">
+                                            <a href="<?php echo admin_url('admin.php?page=notifications&action=delete&notification_id='.$notification_object->ID);?>" onClick="return removeNotification();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>

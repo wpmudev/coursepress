@@ -35,7 +35,7 @@ if (isset($_POST['action']) && isset($_POST['users'])) {
 }
 
 if (isset($_GET['page_num'])) {
-    $page_num = (int)$_GET['page_num'];
+    $page_num = (int) $_GET['page_num'];
 } else {
     $page_num = 1;
 }
@@ -47,6 +47,9 @@ if (isset($_GET['s'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
+    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_student')) {
+        die(__('Cheating huh?', 'cp'));
+    }
     $student = new Student($_GET['student_id']);
     $student->delete_student();
     $message = __('Selected student has been removed successfully.', 'cp');
@@ -64,7 +67,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
     ?>
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-users"><br></div>
-        <h2><?php _e('Students', 'cp'); ?><?php if (current_user_can('manage_options')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?><?php if (current_user_can('coursepress_add_new_students_cap') && !current_user_can('manage_options')) { ?><a class="add-new-h2" href="?page=students&action=add_new"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Students', 'cp'); ?><?php if (current_user_can('manage_options')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?><?php if (current_user_can('coursepress_add_new_students_cap') && !current_user_can('manage_options')) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=students&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         if (isset($message)) {
@@ -77,7 +80,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
         <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
+                <form method="get" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" class="search-form">
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Students', 'cp'); ?>:</label>
@@ -87,7 +90,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 </form>
             </div>
 
-            <form method="post" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
+            <form method="post" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" id="posts-filter">
 
                 <?php wp_nonce_field('bulk-students'); ?>
 
@@ -144,7 +147,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             $n = 0;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo str_replace('_', '-', $key); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -170,23 +173,23 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 </th>
                                 <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
                                 <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
-                                  <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
                                         <?php echo $user_object->first_name; ?>
                                     </a>
-                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
                                         <?php echo $user_object->last_name; ?>
                                     </a>
                                     <div class="visible-extra-small">
-                                      <?php _e('Latest Activity:', 'cp'); ?> <span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?>
+                                        <?php _e('Latest Activity:', 'cp'); ?> <span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?>
                                     </div>
                                 </td>
                                 <td class="column-user-firstname <?php echo $style; ?>">
-                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
                                         <?php echo $user_object->first_name; ?>
                                     </a>
                                 </td>
                                 <td class="column-user-lastname <?php echo $style; ?>">
-                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
                                         <?php echo $user_object->last_name; ?>
                                     </a>
                                 </td>
@@ -194,17 +197,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <td class="column-latest-activity <?php echo $style; ?>"><span class="latest_activity"><?php echo (isset($user_object->latest_activity) && $user_object->latest_activity !== '' ? date_i18n('Y-m-d h:i:s', $user_object->latest_activity) : __('N/A', 'cp')); ?></span> <?php if ($coursepress->user_is_currently_active($user_object->ID)) { ?><a class="activity_circle" alt="<?php _e('User is currently active on the website', 'cp'); ?>"  title="<?php _e('User is currently active on the website', 'cp'); ?>"></a><?php } ?> </td>
                                 <td class="column-courses <?php echo $style; ?>" style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
                                 <td class="column-workbook <?php echo $style; ?>" style="padding-top:13px;">
-                                    <a href="?page=students&action=workbook&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=workbook&student_id=' . $user_object->ID); ?>">
                                         <i class="fa fa-book cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <td class="column-edit <?php echo $style; ?>" style="padding-top:13px;">
-                                    <a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
+                                    <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
-                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=students&action=delete&student_id=<?php echo $user_object->ID; ?>" onclick="return removeStudent();">
+                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=students&action=delete&student_id=' . $user_object->ID), 'delete_student', 'cp_nonce'); ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>

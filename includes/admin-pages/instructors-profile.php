@@ -62,7 +62,7 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
                                     $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
                                     ?>
                                     <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
-                                        <td <?php echo $style; ?>><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>" width="75%">
+                                        <td <?php echo $style; ?>><a href="<?php echo admin_url('admin.php?page=course_details&course_id='.$course_object->ID);?>" width="75%">
                                                 <div class="course_title"><?php echo $course_object->post_title; ?></a></div>
                                             <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID); ?></div>
                                         </td>

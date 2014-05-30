@@ -5,7 +5,7 @@ $course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : '';
 
 <div class="wrap nosubsub">
     <?php if ($user_id !== '' && $course_id !== '') { ?>
-        <a href="admin.php?action=workbook&student_id=<?php echo $user_id; ?>&page=students&course_id=<?php echo $course_id; ?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>
+        <a href="<?php echo admin_url('admin.php?action=workbook&student_id='.$user_id.'&page=students&course_id='.$course_id); ?>');?>" class="back_link">« <?php _e('Back to Workbook', 'cp'); ?></a>
     <?php } ?>
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e('Assessment', 'cp'); ?></h2>
@@ -39,7 +39,7 @@ $course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : '';
                     ?>
 
                     <div class="sidebar-name no-movecursor">
-                        <h3><span class="response-response-name"><?php echo esc_html($unit_module->post_title); ?></span><span class="response-student-info"><a href="admin.php?page=students&action=view&student_id=<?php echo $user_id; ?>"><?php echo esc_html($student->display_name); ?></a></span></h3>
+                        <h3><span class="response-response-name"><?php echo esc_html($unit_module->post_title); ?></span><span class="response-student-info"><a href="<?php echo admin_url('admin.php?page=students&action=view&student_id='.$user_id);?>"><?php echo esc_html($student->display_name); ?></a></span></h3>
                     </div>
 
                     <div class="assessment-holder">
@@ -78,7 +78,7 @@ $course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : '';
                                 if (!empty($grade)) {
                                     _e('Grade by ');
                                     ?>
-                                    <a href="admin.php?page=instructors&action=view&instructor_id=<?php echo $instructor_id; ?>"><?php echo esc_html($instructor_name->display_name); ?></a>
+                                    <a href="<?php echo admin_url('admin.php?page=instructors&action=view&instructor_id='.$instructor_id);?>"><?php echo esc_html($instructor_name->display_name); ?></a>
                                     <?php
                                     _e(' on ' . $grade_time);
                                 }
@@ -398,8 +398,7 @@ $course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : '';
                                                                 <?php
                                                                 if (count($response) >= 1) {
                                                                     ?>
-                                                                    <a class="assessment-view-response-link" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $current_unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
-
+                                                                    <a class="assessment-view-response-link" href="<?php echo admin_url('admin.php?page=assessment&course_id='.$current_course_id.'&unit_id='.$current_unit->ID.'&user_id='.$user_object->ID.'&module_id='.$mod->ID.'&response_id='.$response->ID.'&assessment_page='.$assessment_page);?>"><?php _e('View', 'cp'); ?></a>
                                                                     <?php
                                                                 } else {
                                                                     echo '-';

@@ -58,10 +58,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
     if ($new_post_id != 0) {
         ob_start();
         if (isset($_GET['ms'])) {
-            wp_redirect('?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms']);
+            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms']));
             exit;
         } else {
-            wp_redirect('?page=' . $page . '&course_id=' . $new_post_id);
+            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . $new_post_id));
             exit;
         }
     } else {
@@ -107,7 +107,7 @@ if (isset($_GET['course_id'])) {
 ?>
 
 <div class='wrap nocoursesub'>
-    <form action='?page=<?php echo esc_attr($page); ?><?php echo ($course_id !== 0) ? '&course_id=' . $course_id : '' ?><?php echo ($course_id !== 0) ? '&ms=cu' : '&ms=ca'; ?>' name='course-add' method='post'>
+    <form action='<?php esc_attr_e(admin_url('admin.php?page='.$page.(($course_id !== 0) ? '&course_id=' . $course_id : '') . ($course_id !== 0) ? '&ms=cu' : '&ms=ca'));?>' name='course-add' method='post'>
 
         <div class='course-liquid-left'>
 
@@ -601,7 +601,7 @@ if (isset($_GET['course_id'])) {
                             <?php
                             if ($course_id !== 0) {
                                 ?>
-                                <a href="?page=<?php echo (int)$_GET['page']; ?>&tab=units&course_id=<?php echo (int)$_GET['course_id']; ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
+                                <a href="<?php echo admin_url('admin.php?page='.(int)$_GET['page'].'&tab=units&course_id='.(int)$_GET['course_id']);?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
                             <?php } ?>
                         </div>
 

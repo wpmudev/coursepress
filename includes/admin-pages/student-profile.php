@@ -17,7 +17,7 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-    <a href="admin.php?page=students" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
+    <a href="<?php echo admin_url('admin.php?page=students');?>" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Profile', 'cp'); ?></h2>
 
     <form action="" name="course-add" method="post">
@@ -100,9 +100,9 @@ if (isset($_POST['course_id'])) {
                                         <div class="student-course">
 
                                             <div class="student-course-top">
-                                                <a href="admin.php?page=students&action=workbook&student_id=<?php echo $student->ID; ?>&course_id=<?php echo $course_object->ID; ?>" class="button button-units workbook-button"><?php _e('View Workbook', 'cp'); ?> <i class="fa fa-book cp-move-icon"></i></a>
-                                                <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a>
-                                                    <a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><i class="fa fa-pencil"></i></a>
+                                                <a href="<?php echo admin_url('admin.php?page=students&action=workbook&student_id='.$student->ID.'&course_id='.$course_object->ID);?>" class="button button-units workbook-button"><?php _e('View Workbook', 'cp'); ?> <i class="fa fa-book cp-move-icon"></i></a>
+                                                <div class="course-title"><a href="<?php echo admin_url('admin.php?page=course_details&course_id='.$course_object->ID);?>"><?php echo $course_object->post_title; ?></a>
+                                                    <a href="<?php echo admin_url('admin.php?page=course_details&course_id='.$course_object->ID);?>"><i class="fa fa-pencil"></i></a>
                                                     <a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a>
                                                 </div>
                                             </div>
@@ -151,7 +151,7 @@ if (isset($_POST['course_id'])) {
                                             <?php if (((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) && 1 == 0 /* moving for the next release */) { ?>
                                                 <div class="course-controls alternate">
 
-                                                    <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->ID; ?>">
+                                                    <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="<?php echo admin_url('admin.php?page=students&action=view&student_id='.$student->ID);?>">
                                                         <?php wp_nonce_field('save_class_and_group_changes', 'save_class_and_group_changes'); ?>
 
                                                         <input type="hidden" name="course_id" value="<?php echo $course_object->ID; ?>" />

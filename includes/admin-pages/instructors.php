@@ -29,7 +29,7 @@ if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('manag
 }
 
 if (isset($_GET['page_num'])) {
-    $page_num = (int)$_GET['page_num'];
+    $page_num = (int) $_GET['page_num'];
 } else {
     $page_num = 1;
 }
@@ -45,6 +45,9 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
+    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_instructor')) {
+        die(__('Cheating huh?', 'cp'));
+    }
     $instructor->delete_instructor();
     $message = __('Selected instructor has been removed successfully.', 'cp');
 }
@@ -73,7 +76,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
         <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="?page=<?php echo esc_attr($page); ?>" class="search-form">
+                <form method="get" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" class="search-form">
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Instructors', 'cp'); ?>:</label>
@@ -83,7 +86,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 </form>
             </div>
 
-            <form method="post" action="?page=<?php echo esc_attr($page); ?>" id="posts-filter">
+            <form method="post" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" id="posts-filter">
 
                 <div class="alignleft actions">
                     <?php if (current_user_can('manage_options')) { ?>
@@ -136,7 +139,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             $n = 0;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo str_replace('_', '-', $key); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -162,19 +165,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 </th>
                                 <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
                                 <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
-                                  <?php echo $user_object->first_name; ?>
-                                  <?php echo $user_object->last_name; ?>
+                                    <?php echo $user_object->first_name; ?>
+                                    <?php echo $user_object->last_name; ?>
                                 </td>
                                 <td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                                 <td class="column-user-lastname <?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                                 <td class="column-registration-date <?php echo $style; ?>"><?php echo $user_object->user_registered; ?></td>
                                 <td class="column-courses <?php echo $style; ?>"><?php echo $user_object->courses_number; ?></td>
-                                <td class="column-edit <?php echo $style; ?>" style="padding-top:9px; padding-right:15px;"><a href="?page=instructors&action=view&instructor_id=<?php echo $user_object->ID; ?>">
+                                <td class="column-edit <?php echo $style; ?>" style="padding-top:9px; padding-right:15px;"><a href="<?php echo admin_url('admin.php?page=instructors&action=view&instructor_id=' . $user_object->ID); ?>">
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
                                 <?php if (current_user_can('manage_options')) { ?>
-                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="?page=instructors&action=delete&instructor_id=<?php echo $user_object->ID; ?>" onclick="return removeInstructors();">
+                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID), 'delete_instructor', 'cp_nonce'); ?>" onclick="return removeInstructors();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>

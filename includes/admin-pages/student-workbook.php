@@ -17,7 +17,7 @@ if (isset($_POST['course_id'])) {
 }
 ?>
 <div class="wrap nocoursesub">
-    <a href="admin.php?page=students" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
+    <a href="<?php echo admin_url('admin.php?page=students');?>" class="back_link">&laquo; <?php _e('Back to Students', 'cp'); ?></a>
     <h2><?php _e('Student Workbook', 'cp'); ?></h2>
 
     <div class="course">
@@ -66,7 +66,7 @@ if (isset($_POST['course_id'])) {
                             </div>
                             <div>
                                 <span class="info_caption"><?php _e('Profile', 'cp'); ?></span>
-                                <span class="info"><a href="admin.php?page=students&action=view&student_id=<?php echo $student->ID; ?>"><i class="fa fa-user"></i></a></span>
+                                <span class="info"><a href="<?php echo admin_url('admin.php?page=students&action=view&student_id='.$student->ID);?>"><i class="fa fa-user"></i></a></span>
                             </div>
                         </div>
                         <div class="full border-devider"></div>
@@ -286,7 +286,7 @@ if (isset($_POST['course_id'])) {
                                                                             if (count($response) >= 1) {
                                                                                 ?>
 
-                                                                                <a class="assessment-view-response-link button button-units" href="admin.php?page=assessment&course_id=<?php echo $current_course_id; ?>&unit_id=<?php echo $unit->ID; ?>&user_id=<?php echo $user_object->ID; ?>&module_id=<?php echo $mod->ID; ?>&response_id=<?php echo $response->ID; ?>&assessment_page=<?php echo $assessment_page; ?>"><?php _e('View', 'cp'); ?></a>
+                                                                                <a class="assessment-view-response-link button button-units" href="<?php echo admin_url('admin.php?page=assessment&course_id='.$current_course_id.'&unit_id='.$unit->ID.'&user_id='.$user_object->ID.'&module_id='.$mod->ID.'&response_id='.$response->ID.'&assessment_page='.$assessment_page);?>"><?php _e('View', 'cp'); ?></a>
 
                                                                                 <?php
                                                                             } else {
