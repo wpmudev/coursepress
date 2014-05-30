@@ -121,7 +121,7 @@ if (isset($_GET['withdraw_all'])) {
 
 /* Withdraw a Student from class */
 if (isset($_GET['withdraw']) && is_numeric($_GET['withdraw'])) {
-    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'withdraw_student')) {
+    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'withdraw_student_'.$_GET['withdraw'])) {
         die(__('Cheating huh?', 'cp'));
     }
     if ((current_user_can('coursepress_withdraw_students_cap')) || (current_user_can('coursepress_withdraw_my_students_cap') && $course->details->post_author == get_current_user_id())) {
@@ -230,7 +230,7 @@ $wp_user_search = new WP_User_Query($args);
                             <?php if ((current_user_can('coursepress_withdraw_students_cap')) || (current_user_can('coursepress_withdraw_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
                                 <td class="<?php echo $style . ' edit-button-student-td'; ?>">
                                     <?php if ((current_user_can('coursepress_withdraw_students_cap')) || (current_user_can('coursepress_withdraw_my_students_cap') && $course->details->post_author == get_current_user_id())) { ?>
-                                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw=' . $user_object->ID), 'withdraw_student', 'cp_nonce'); ?>" onclick="return withdrawStudent();">
+                                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw=' . $user_object->ID), 'withdraw_student_'.$user_object->ID, 'cp_nonce'); ?>" onclick="return withdrawStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a>
                                     <?php } ?>

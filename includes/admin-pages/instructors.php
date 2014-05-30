@@ -45,7 +45,7 @@ if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
-    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_instructor')) {
+    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_instructor_'.$_GET['instructor_id'])) {
         die(__('Cheating huh?', 'cp'));
     }
     $instructor->delete_instructor();
@@ -177,7 +177,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     </a>
                                 </td>
                                 <?php if (current_user_can('manage_options')) { ?>
-                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID), 'delete_instructor', 'cp_nonce'); ?>" onclick="return removeInstructors();">
+                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID), 'delete_instructor_'.$user_object->ID, 'cp_nonce'); ?>" onclick="return removeInstructors();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>

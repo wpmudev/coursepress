@@ -47,7 +47,7 @@ if (isset($_GET['s'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['student_id']) && is_numeric($_GET['student_id'])) {
-    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_student')) {
+    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_student_'.$_GET['student_id'])) {
         die(__('Cheating huh?', 'cp'));
     }
     $student = new Student($_GET['student_id']);
@@ -207,7 +207,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                     </a>
                                 </td>
                                 <?php if (current_user_can('coursepress_delete_students_cap')) { ?>
-                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=students&action=delete&student_id=' . $user_object->ID), 'delete_student', 'cp_nonce'); ?>" onclick="return removeStudent();">
+                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=students&action=delete&student_id=' . $user_object->ID), 'delete_student_'.$user_object->ID, 'cp_nonce'); ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>

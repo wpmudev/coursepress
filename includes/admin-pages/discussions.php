@@ -55,6 +55,11 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
     }
 
     if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['discussion_id']) && is_numeric($_GET['discussion_id'])) {
+
+        if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_discussion_'.$_GET['discussion_id'])) {
+            die(__('Cheating huh?', 'cp'));
+        }
+
         $discussion_object = $discussion->get_discussion();
         if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) {
             $discussion->delete_discussion($force_delete = true);
@@ -158,10 +163,10 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <td <?php echo $style; ?>><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID); ?>"><strong><?php echo $discussion_object->post_title; ?></strong></a><br />
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($discussion_object->ID); ?></div>
                                     <div class="row-actions">
-                                        <span class="edit_discussion"><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id='.$discussion_object->ID);?>"><?php _e('Edit', 'cp'); ?></a> | </span>
+                                        <span class="edit_discussion"><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID); ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
 
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <span class="course_remove"><a href="<?php echo admin_url('admin.php?page=discussions&action=delete&discussion_id='.$discussion_object->ID)?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a></span>
+                                            <span class="course_remove"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce'); ?>" onClick="return removeDiscussion();"><?php _e('Delete', 'cp'); ?></a></span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -178,7 +183,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                                 <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap'))) { ?>
                                     <td <?php echo $style; ?>>
                                         <?php if (current_user_can('coursepress_delete_discussion_cap') || (current_user_can('coursepress_delete_my_course_discussion_cap') && $discussion_object->post_author == get_current_user_id())) { ?>
-                                            <a href="<?php echo admin_url('admin.php?page=discussions&action=delete&discussion_id='.$discussion_object->ID);?>" onClick="return removeDiscussion();">
+                                            <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce'); ?>" onClick="return removeDiscussion();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>
