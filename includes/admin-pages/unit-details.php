@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     </div>
 
     <div class='mp-settings'><!--course-liquid-left-->
-        <form action="<?php echo admin_url('admin.php?page='.esc_attr($page).'&tab=units&course_id='.$course_id.'&action=add_new_unit'.(($unit_id !== 0) ? '&ms=uu' : '&ms=ua')); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
+        <form action="<?php echo esc_attr(admin_url('admin.php?page='.$page.'&tab=units&course_id='.$course_id.'&action=add_new_unit'.(($unit_id !== 0) ? '&ms=uu' : '&ms=ua'))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
             <input type="hidden" name="beingdragged" id="beingdragged" value="" />
             <div id='course'>
 

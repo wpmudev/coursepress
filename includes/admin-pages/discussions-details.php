@@ -49,7 +49,7 @@ if (isset($_GET['discussion_id'])) {
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='<?php echo admin_url('admin.php?page='.esc_attr($page).''.(($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '') . '&action=' . esc_attr($action). ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca');?>' name='discussion-add' method='post'>
+        <form action='<?php echo esc_attr(admin_url('admin.php?page='.$page.''.(($discussion_id !== 0) ? '&discussion_id=' . $discussion_id : '') . '&action=' . $action. ($discussion_id !== 0) ? '&ms=cu' : '&ms=ca'));?>' name='discussion-add' method='post'>
 
             <div class='course-liquid-left'>
 

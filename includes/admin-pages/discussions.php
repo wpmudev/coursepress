@@ -83,7 +83,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
         <div class="tablenav">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" class="search-form">
+                <form method="get" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" class="search-form">
                     <p class="search-box">
                         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
                         <label class="screen-reader-text"><?php _e('Search Discussions', 'cp'); ?>:</label>
@@ -93,7 +93,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['page
                 </form>
             </div><!--/alignright-->
 
-            <form method="post" action="<?php echo admin_url('admin.php?page=' . esc_attr($page)); ?>" id="posts-filter">
+            <form method="post" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" id="posts-filter">
 
                 <?php if (current_user_can('coursepress_delete_discussion_cap')) { ?>
                     <div class="alignleft actions">

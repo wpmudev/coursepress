@@ -121,7 +121,7 @@ $students_count = $course->get_number_of_students();
                 <a class="nav-tab<?php
                 if ($tab == $key)
                     echo ' nav-tab-active';
-                ?>" href="<?php echo admin_url('admin.php?page='.esc_attr($page).'&amp;tab='.$key.'&amp;course_id='.$course_id);?>"><?php echo $menu; ?></a>
+                ?>" href="<?php echo esc_attr(admin_url('admin.php?page='.$page.'&amp;tab='.$key.'&amp;course_id='.$course_id));?>"><?php echo $menu; ?></a>
                    <?php
                }
            }

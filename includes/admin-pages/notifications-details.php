@@ -49,7 +49,7 @@ if (isset($_GET['notification_id'])) {
     ?>
 
     <div class='wrap nocoursesub'>
-        <form action='<?php echo admin_url('admin.php?page='.esc_attr($page).(($notification_id !== 0) ? '&notification_id=' . $notification_id : '') . '&action=' . esc_attr($action). (($notification_id !== 0) ? '&ms=cu' : '&ms=ca'));?>' name='notification-add' method='post'>
+        <form action='<?php echo esc_attr(admin_url('admin.php?page='.$page.(($notification_id !== 0) ? '&notification_id=' . $notification_id : '') . '&action=' . $action. (($notification_id !== 0) ? '&ms=cu' : '&ms=ca')));?>' name='notification-add' method='post'>
 
             <div class='course-liquid-left'>
 
