@@ -34,10 +34,6 @@ if (isset($_POST['course_id'])) {
 
             <div id="course">
 
-                <input type="hidden" id="_wpnonce" name="_wpnonce" value="1e1904a7ac"><input type="hidden" name="_wp_http_referer" value="/wpmu/wp-admin/admin.php?page=course_details&amp;course_id=1046">
-                <input type="hidden" name="course_id" value="1046">
-                <input type="hidden" name="action" value="update">
-
                 <div id="edit-sub" class="course-holder-wrap mp-wrap">
 
                     <div class="course-holder">
@@ -108,7 +104,6 @@ if (isset($_POST['course_id'])) {
                                                 <div class="course-title"><a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><?php echo $course_object->post_title; ?></a>
                                                     <a href="?page=course_details&course_id=<?php echo $course_object->ID; ?>"><i class="fa fa-pencil"></i></a>
                                                     <a href="<?php echo get_permalink($course_object->ID); ?>" target="_blank"><i class="fa fa-external-link"></i></a>
-                                                    
                                                 </div>
                                             </div>
 
@@ -153,7 +148,7 @@ if (isset($_POST['course_id'])) {
 
                                             </div><!--student-course-right-->
 
-                                            <?php if (((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) && 1==0 /* moving for the next release */) { ?>
+                                            <?php if (((current_user_can('coursepress_change_students_group_class_cap')) || (current_user_can('coursepress_change_my_students_group_class_cap') && $course_object->post_author == get_current_user_id())) && 1 == 0 /* moving for the next release */) { ?>
                                                 <div class="course-controls alternate">
 
                                                     <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="?page=students&action=view&student_id=<?php echo $student->ID; ?>">
