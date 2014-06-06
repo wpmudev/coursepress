@@ -1,7 +1,7 @@
 Plugin Name: CoursePress
 Author: Marko Miljus (Incsub)
 
-1.0.2b - 29/MAY/2014
+1.0.2b - 30/MAY/2014
 - Security fortification
 - Resolved admin url issues
 

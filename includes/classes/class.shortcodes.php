@@ -248,6 +248,7 @@ if (!class_exists('CoursePress_Shortcodes')) {
                         if (($course->course_start_date !== '' && $course->course_end_date !== '') || $course->open_ended_course == 'on') {//Course is currently active
                             if ((strtotime($course->course_start_date) <= time() && strtotime($course->course_end_date) >= time()) || $course->open_ended_course == 'on') {//Course is currently active
                                 $course->button .= '<a href="' . get_permalink($course->ID) . 'units/" class="apply-button-enrolled">' . __('Go to Class', 'cp') . '</a>';
+                                //$course->button .= '<input type="button" data-url="' . get_permalink($course->ID) . 'units/" class="apply-button-enrolled">' . __('Go to Class', 'cp') . '</a>';
                             } else {
 
                                 if (strtotime($course->course_start_date) >= time()) {//Waiting for a course to start

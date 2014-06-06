@@ -142,10 +142,12 @@ html[xmlns] .clearfix {
     text-align: right;
 }
 
-.apply-button-finished{
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    border-radius:3px;
+.apply-button-finished,
+input[type="submit"].apply-button-finished, 
+input[type="button"].apply-button-finished{
+    -moz-border-radius:0px;
+    -webkit-border-radius:0px;
+    border-radius:0px;
 
     background:#CCC;
 
@@ -154,18 +156,20 @@ html[xmlns] .clearfix {
     float:right;
     font-family:arial,helvetica,sans-serif;
     font-size:14px;
-    font-weight:bold;
+    font-weight:normal;
     padding:10px 50px;
-    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
     border: 1px solid #CCC;
     text-align: center;
     text-decoration: none;
 }
 
-.apply-button-pending{
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    border-radius:3px;
+.apply-button-pending,
+input[type="submit"].apply-button-pending, 
+input[type="button"].apply-button-pending{
+    -moz-border-radius:0px;
+    -webkit-border-radius:0px;
+    border-radius:0px;
 
     background:#60c160;
 
@@ -174,18 +178,20 @@ html[xmlns] .clearfix {
     float:right;
     font-family:arial,helvetica,sans-serif;
     font-size:14px;
-    font-weight:bold;
+    font-weight:normal;
     padding:10px 50px;
-    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
     border: 1px solid #CCC;
     text-align: center;
     text-decoration: none;
 }
 
-a.apply-button-enrolled, input[type="submit"].apply-button-enrolled{
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    border-radius:3px;
+a.apply-button-enrolled, 
+input[type="submit"].apply-button-enrolled, 
+input[type="button"].apply-button-enrolled{
+    -moz-border-radius:0px;
+    -webkit-border-radius:0px;
+    border-radius:0px;
 
     background: #60c160;
 
@@ -193,23 +199,27 @@ a.apply-button-enrolled, input[type="submit"].apply-button-enrolled{
     float:right;
     font-family:arial,helvetica,sans-serif;
     font-size:14px;
-    font-weight:bold;
+    font-weight:normal;
     padding:10px 50px;
-    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
     border: 1px solid #458b45;
     text-align: center;
     text-decoration: none;
 }
 
-a.apply-button-enrolled:hover, input[type="submit"].apply-button-enrolled:hover{
+a.apply-button-enrolled:hover, 
+input[type="submit"].apply-button-enrolled:hover,
+input[type="button"].apply-button-enrolled:hover{
     background: #60b160;
     color: #f1f1f1;
 }
 
-a.apply-button, input[type="submit"].apply-button{
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    border-radius:3px;
+a.apply-button, 
+input[type="submit"].apply-button, 
+input[type="button"].apply-button{
+    -moz-border-radius:0px;
+    -webkit-border-radius:0px;
+    border-radius:0px;
 
     background: #0099CC;
 
@@ -217,15 +227,17 @@ a.apply-button, input[type="submit"].apply-button{
     float:right;
     font-family:arial,helvetica,sans-serif;
     font-size:14px;
-    font-weight:bold;
+    font-weight:normal;
     padding:10px 50px;
-    text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
     border: 1px solid #0099CC;
     text-align: center;
     text-decoration: none;
 }
 
-a.apply-button:hover, input[type="submit"].apply-button:hover{
+a.apply-button:hover, 
+input[type="submit"].apply-button:hover,
+input[type="button"].apply-button:hover{
     background: #0088CC;
     color: #f1f1f1;
 }
@@ -509,7 +521,7 @@ h1.notification-title{
     padding: 5px 30px 9px 30px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    
+    z-index: 999999;
 }
 
 .mandatory_message{
