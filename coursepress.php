@@ -238,10 +238,9 @@ if (!class_exists('CoursePress')) {
 
             if (isset($post) && $post->post_type == 'virtual_page') {
                 //$theme_file = locate_template(array('page.php'));
-
                 //if ($theme_file != '') {
-                    include(TEMPLATEPATH . "/page.php");
-                    exit;
+                include(TEMPLATEPATH . "/page.php");
+                exit;
                 //}
             }
         }
@@ -774,10 +773,12 @@ if (!class_exists('CoursePress')) {
 
         function courses_archive_custom_content($content) {
             global $post;
+            /* if (locate_template(array('archive-course.php'))) {
+              return $post->post_excerpt;
+              } else {
 
-            $content = $post->post_excerpt;
-
-            return $content;
+              } */
+            include($this->plugin_dir . 'includes/templates/archive-courses-single.php');
         }
 
         function get_template_details($template, $args = array()) {
