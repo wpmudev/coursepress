@@ -1,23 +1,21 @@
 <?php
 
-function non_nonce_url(){
+function non_nonce_url() {
     
 }
 
-function url_origin($s, $use_forwarded_host=false)
-{
-    $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on') ? true:false;
+function url_origin($s, $use_forwarded_host = false) {
+    $ssl = (!empty($s['HTTPS']) && $s['HTTPS'] == 'on') ? true : false;
     $sp = strtolower($s['SERVER_PROTOCOL']);
     $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
     $port = $s['SERVER_PORT'];
-    $port = ((!$ssl && $port=='80') || ($ssl && $port=='443')) ? '' : ':'.$port;
+    $port = ((!$ssl && $port == '80') || ($ssl && $port == '443')) ? '' : ':' . $port;
     $host = ($use_forwarded_host && isset($s['HTTP_X_FORWARDED_HOST'])) ? $s['HTTP_X_FORWARDED_HOST'] : (isset($s['HTTP_HOST']) ? $s['HTTP_HOST'] : null);
     $host = isset($host) ? $host : $s['SERVER_NAME'] . $port;
     return $protocol . '://' . $host;
 }
 
-function full_url($s, $use_forwarded_host=false)
-{
+function full_url($s, $use_forwarded_host = false) {
     return url_origin($s, $use_forwarded_host) . $s['REQUEST_URI'];
 }
 
@@ -165,6 +163,21 @@ function coursepress_unit_module_pagination_ellipsis($unit_id, $pages_num) {
     }
 
     echo '</ul></div>' . "\n";
+}
+
+function coursepress_unit_pages($unit_id) {
+    $pages_num = 1;
+
+    $module = new Unit_Module;
+    $modules = $module->get_modules($unit_id);
+    
+    foreach ($modules as $mod){
+        if($module->get_module_type($mod->ID) == 'page_break_module'){
+            $pages_num++;
+        }
+    }
+        
+    return $pages_num;
 }
 
 //get_site_option instead of get_option
@@ -636,11 +649,11 @@ if (!function_exists('get_userdatabynicename')) :
         if (empty($user_nicename))
             return false;
 
-        if (!$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename ) ) )
+        if (!$user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename)))
             return false;
 
         $wpdb->hide_errors();
-        $metavalues = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = %d", $user->ID ) );
+        $metavalues = $wpdb->get_results($wpdb->prepare("SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = %d", $user->ID));
         $wpdb->show_errors();
 
         if ($metavalues) {

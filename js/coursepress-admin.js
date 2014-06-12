@@ -1,3 +1,41 @@
+jQuery(document).ready(function($) {
+    jQuery('#unit-pages').tabs({});
+
+    jQuery('#add_new_unit_page').live("click", function(event) {
+        event.preventDefault();
+        add_new_unit_page();
+    });
+
+    function add_new_unit_page() {
+        var tabs = jQuery("#unit-pages").tabs();
+        var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 1;
+        var next_page = (unit_pages + 1);
+        var id = "unit-page-" + next_page;
+        var li = '<li><a href="#' + id + '">' + next_page + '</a></li>';
+        var tabs_html = jQuery('.ui-tabs-nav').html();
+        var add_page_plus = '<li><a id="add_new_unit_page">+</a></li>';
+
+        tabs_html = tabs_html.replace(add_page_plus, '');
+
+        jQuery('.ui-tabs-nav').html(tabs_html + li + add_page_plus);
+
+        jQuery('#unit-pages').append('<div id="unit-page-' + next_page + '"><div class="course-details new-unit-element-holder">' + jQuery('.new-unit-element-holder').html() + '</div><div class="modules_accordion"></div></div>');
+
+        tabs.tabs("refresh");
+
+        jQuery('#unit-pages').tabs({active: unit_pages});
+
+        jQuery('#unit-page-' + next_page + ' .modules_accordion').accordion({
+            heightStyle: "content",
+            header: "> div > h3",
+            collapsible: true,
+            //active: ".remove_module_link"
+        });
+        jQuery('#unit-page-' + next_page + ' .modules_accordion').accordion("refresh");
+
+    }
+});
+
 jQuery(document).ready(function() {
 
     jQuery('#add_student_class').click(function() {
@@ -68,18 +106,29 @@ function coursepress_modules_ready() {
 
         }
     });
-    jQuery('#unit-module-add').live('click', function() {
-//jQuery('#unit-module-add').click(function() {
+    jQuery('.unit-module-add').live('click', function() {
+
+        var current_unit_page = 0;//current selected unit page
+
+        current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+
         var stamp = new Date().getTime();
         var module_count = 0;
-        jQuery('input#beingdragged').val(jQuery("#unit-module-list option:selected").val());
+
+        jQuery('input#beingdragged').val(jQuery("#unit-page-"+current_unit_page+" .unit-module-list option:selected").val());
+
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
+
         cloned = '<div class="module-holder-' + jQuery('input#beingdragged').val() + ' module-holder-title">' + cloned + '</div>';
-        jQuery('.modules_accordion').append(cloned);
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').append(cloned);
+
         var data = '';
-        jQuery('#modules_accordion').accordion();
-        jQuery('#modules_accordion').accordion("refresh");
+
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion();
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("refresh");
+
         moving = jQuery('input#beingdragged').val();
+
         if (moving != '') {
 
         }
@@ -88,7 +137,9 @@ function coursepress_modules_ready() {
             jQuery(this).val(i + 1);
             module_count = i;
         });
-        module_count = module_count - jQuery("#unit-module-list option").size();
+
+        module_count = module_count - jQuery(".unit-module-list option").size();
+
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
@@ -101,15 +152,6 @@ function coursepress_modules_ready() {
         jQuery("input[name*='checkbox_check']").each(function(i, obj) {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
-        /* Dynamic WP Editor */
-        /*var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
-         jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving})
-         .success(function(editor) {
-         jQuery('#modules_accordion .editor_in_place').last().html(editor);
-         //tinymce.execCommand('mceAddControl', false, rand_id);
-         tinymce.execCommand('mceAddEditor', false, rand_id);
-         quicktags({id: rand_id});
-         });*/
 
         /* Dynamic WP Editor */
         moving = jQuery('input#beingdragged').val();
@@ -125,7 +167,7 @@ function coursepress_modules_ready() {
                 text_editor +
                 '</div></div></div>';
 
-        jQuery('#modules_accordion .editor_in_place').last().html(text_editor_whole);
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion .editor_in_place').last().html(text_editor_whole);
 
         tinyMCE.init({
             mode: "exact",
@@ -134,7 +176,7 @@ function coursepress_modules_ready() {
             menubar: false
         });
 
-        jQuery('#modules_accordion').accordion("option", "active", module_count);
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", module_count);
     });
     /* Drag & Drop */
 
@@ -415,14 +457,21 @@ jQuery(document).ready(function() {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
     });
+
     jQuery("#students_accordion").accordion({
         heightStyle: "content",
         active: parseInt(coursepress.active_student_tab)
     });
-    jQuery("#modules_accordion").show();
+
+    var current_unit_page = 0;
+    current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+
+    jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').show();
     jQuery(".loading_elements").hide();
+
     var editor_content = '';
-    jQuery("#modules_accordion").accordion({
+
+    jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion({
         heightStyle: "content",
         header: "> div > h3",
         collapsible: true,
@@ -434,20 +483,6 @@ jQuery(document).ready(function() {
 
             update_sortable_module_indexes();
             //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
-
-            /* Dynamic WP Editor */
-            /*var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
-             
-             jQuery.get('admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, editor_content: editor_content})
-             .success(function(editor) {
-             jQuery('#modules_accordion .editor_in_place').last().html(editor);
-             tinymce.execCommand('mceAddEditor', false, rand_id);
-             tinyMCE.execCommand('mceFocus',false, rand_id);
-             quicktags({id: rand_id});
-             });*/
-
-
-
 
             /* Dynamic WP Editor */
             var nth_child_num = ui.item.index() + 1;
@@ -580,38 +615,38 @@ jQuery('a').on('click', function(e) {
 });
 
 jQuery(function() {
-   if (jQuery(window).width() < 783) {
-       jQuery('.wp-editor-wrap .switch-tmce').click(function( ) {
-           jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').toggle();
-           jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').hide();
-       });
-       jQuery('.wp-editor-wrap .switch-html').click(function( ) {
-           jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').toggle();
-           jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').hide();
-       });
-   }
+    if (jQuery(window).width() < 783) {
+        jQuery('.wp-editor-wrap .switch-tmce').click(function( ) {
+            jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').toggle();
+            jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').hide();
+        });
+        jQuery('.wp-editor-wrap .switch-html').click(function( ) {
+            jQuery(this).parents('.wp-editor-wrap').find('.quicktags-toolbar').toggle();
+            jQuery(this).parents('.wp-editor-wrap').find('.mce-toolbar-grp').hide();
+        });
+    }
 
-   if (jQuery(window).width() < 783) {
-		jQuery('.sticky-slider').click( function() {
-			if ( jQuery(this).hasClass('slider-open') ) {
-				jQuery(this).parent().animate({left: "-235px"}, 500);
-				jQuery(this).parent().siblings('.mp-settings').animate({left: "32px"}, 500);
-				jQuery(this).removeClass('slider-open');				
-			} else {
-				jQuery(this).parent().animate({left: "-11px"}, 500);
-				jQuery(this).parent().siblings('.mp-settings').animate({left: "258px"}, 500);
-				jQuery(this).addClass('slider-open');				
-			}
-		} );
-	}
-	
-   if (jQuery(window).width() < 556) {	
-		jQuery('.coursepress_page_instructors div.course-liquid-right').after(jQuery('.coursepress_page_instructors div.course-liquid-left'));	
-	}
-	
-   if (jQuery(window).width() >= 556) {	
-		jQuery('.coursepress_page_instructors div.course-liquid-left').after(jQuery('.coursepress_page_instructors div.course-liquid-right'));	
-	}
+    if (jQuery(window).width() < 783) {
+        jQuery('.sticky-slider').click(function() {
+            if (jQuery(this).hasClass('slider-open')) {
+                jQuery(this).parent().animate({left: "-235px"}, 500);
+                jQuery(this).parent().siblings('.mp-settings').animate({left: "32px"}, 500);
+                jQuery(this).removeClass('slider-open');
+            } else {
+                jQuery(this).parent().animate({left: "-11px"}, 500);
+                jQuery(this).parent().siblings('.mp-settings').animate({left: "258px"}, 500);
+                jQuery(this).addClass('slider-open');
+            }
+        });
+    }
+
+    if (jQuery(window).width() < 556) {
+        jQuery('.coursepress_page_instructors div.course-liquid-right').after(jQuery('.coursepress_page_instructors div.course-liquid-left'));
+    }
+
+    if (jQuery(window).width() >= 556) {
+        jQuery('.coursepress_page_instructors div.course-liquid-left').after(jQuery('.coursepress_page_instructors div.course-liquid-right'));
+    }
 
 
 });

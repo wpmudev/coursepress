@@ -127,7 +127,7 @@ a .remove-btn{
     padding-bottom: 5px;
 }
 
-#modules_accordion.ui-accordion .ui-accordion-content{
+.modules_accordion.ui-accordion .ui-accordion-content{
     padding: 10px;
 
 }
@@ -578,20 +578,20 @@ div.buttons a.cancellink {
     color: #F27405;
 }
 
-#modules_accordion{
+.modules_accordion{
     display: none;
 }
 
-#students_accordion .ui-widget-content, #modules_accordion .ui-widget-content{
+#students_accordion .ui-widget-content, .modules_accordion .ui-widget-content{
     border: 1px solid #ddd;
 }
 
-#students_accordion.ui-accordion .ui-accordion-header, #modules_accordion.ui-accordion .ui-accordion-header{
+#students_accordion.ui-accordion .ui-accordion-header, .modules_accordion.ui-accordion .ui-accordion-header{
     padding: 0px;
     padding-left: 16px;
 }
 
-#modules_accordion.ui-accordion .ui-accordion-header{
+.modules_accordion.ui-accordion .ui-accordion-header{
     padding: 10px;
     padding-left:25px;
     border: 1px solid #dfdfdf;
@@ -606,12 +606,12 @@ div.buttons a.cancellink {
     width: 99.9%;
 }
 
-#students_accordion .widefat, #modules_accordion .widefat{
+#students_accordion .widefat, .modules_accordion .widefat{
     border-width: 0px;
     border-radius: 0px;
 }
 
-#students_accordion .widefat td, .widefat th, #modules_accordion .widefat td, .widefat th{
+#students_accordion .widefat td, .widefat th, .modules_accordion .widefat td, .widefat th{
     border:none;
 }
 
@@ -1360,7 +1360,7 @@ div.modules_accordion .module-holder-page_break_module h3{
     background: #f5f5f5;
 }
 
-#modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
+.modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
     border: 1px dashed;
 }
 
