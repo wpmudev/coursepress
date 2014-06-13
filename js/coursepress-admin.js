@@ -6,6 +6,19 @@ jQuery(document).ready(function($) {
         add_new_unit_page();
     });
 
+
+    jQuery('.ui-tabs-anchor').live("click", function(event) {
+        var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+
+        if (jQuery('#unit-page-' + current_unit_page + ' .modules_accordion div').first().attr('class') == 'module-holder-page_break_module module-holder-title') {
+            jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", 1);
+        } else {
+            jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", 0);
+        }
+
+    });
+
+
     function add_new_unit_page() {
         var tabs = jQuery("#unit-pages").tabs();
         var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 1;
@@ -23,15 +36,77 @@ jQuery(document).ready(function($) {
 
         tabs.tabs("refresh");
 
-        jQuery('#unit-pages').tabs({active: unit_pages});
+        /*jQuery('#unit-page-' + next_page + ' .modules_accordion').accordion({
+         heightStyle: "content",
+         header: "> div > h3",
+         collapsible: true,
+         });*/
 
         jQuery('#unit-page-' + next_page + ' .modules_accordion').accordion({
             heightStyle: "content",
             header: "> div > h3",
             collapsible: true,
             //active: ".remove_module_link"
+        }).sortable({
+            items: "div:not(.module-holder-page_break_module)",
+            handle: "h3",
+            axis: "y",
+            stop: function(event, ui) {
+
+                update_sortable_module_indexes();
+                //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
+
+                /* Dynamic WP Editor */
+                var nth_child_num = ui.item.index() + 1;
+                var editor_id = jQuery(".module-holder-title:nth-child(" + nth_child_num + ") .wp-editor-wrap").attr('id');
+                var initial_editor_id = editor_id;
+
+                editor_id = editor_id.replace("-wrap", "");
+                editor_id = editor_id.replace("wp-", "");
+                editor_content = get_tinymce_content(editor_id);
+
+                var textarea_name = (jQuery('#' + initial_editor_id + ' textarea').attr('name'));
+                var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
+                var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
+
+                var text_editor_whole =
+                        '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+                        '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+                        '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
+                        '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                        text_editor +
+                        '</div></div></div>';
+                jQuery('#' + initial_editor_id).parent().html(text_editor_whole);
+
+                tinyMCE.init({
+                    mode: "exact",
+                    elements: rand_id,
+                    toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+                    menubar: false
+                });
+
+
+            }
+        }, function() {
+            jQuery('a').click(function(e) {
+//e.stopPropagation();
+            })
+        }).on('click', 'a', function(e) {
+//e.stopPropagation();
         });
+
+        var cloned = jQuery('.draggable-module-holder-page_break_module').html();
+        cloned = '<div class="module-holder-page_break_module module-holder-title">' + cloned + '</div>';
+
+        jQuery('#unit-page-' + next_page + ' .modules_accordion').append(cloned);
+
         jQuery('#unit-page-' + next_page + ' .modules_accordion').accordion("refresh");
+
+        jQuery("#unit-pages li").each(function(index) {
+            jQuery(this).removeClass('ui-tabs-active ui-state-active'); //fix for active unit page state
+        });
+
+        jQuery('#unit-pages').tabs({active: unit_pages}); //set last added page active
 
     }
 });
@@ -115,7 +190,8 @@ function coursepress_modules_ready() {
         var stamp = new Date().getTime();
         var module_count = 0;
 
-        jQuery('input#beingdragged').val(jQuery("#unit-page-"+current_unit_page+" .unit-module-list option:selected").val());
+
+        jQuery('input#beingdragged').val(jQuery("#unit-page-" + current_unit_page + " .unit-module-list option:selected").val());
 
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
 
@@ -126,6 +202,7 @@ function coursepress_modules_ready() {
 
         jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion();
         jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("refresh");
+        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", -1);
 
         moving = jQuery('input#beingdragged').val();
 
@@ -176,7 +253,7 @@ function coursepress_modules_ready() {
             menubar: false
         });
 
-        jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", module_count);
+        //jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", module_count);
     });
     /* Drag & Drop */
 
@@ -471,12 +548,14 @@ jQuery(document).ready(function() {
 
     var editor_content = '';
 
-    jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion({
+//#unit-page-' + current_unit_page + ' .modules_accordion'
+    jQuery('.modules_accordion').accordion({
         heightStyle: "content",
         header: "> div > h3",
         collapsible: true,
         //active: ".remove_module_link"
     }).sortable({
+        items: "div:not(.module-holder-page_break_module)",
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {

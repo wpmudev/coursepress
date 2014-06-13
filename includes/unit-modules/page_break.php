@@ -8,6 +8,7 @@ class page_break_module extends Unit_Module {
     var $description = '';
     var $front_save = false;
     var $response_type = '';
+    var $visible = false;
 
     function __construct() {
         $this->on_create();

@@ -120,7 +120,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
     </div>
     <div class='mp-settings'><!--course-liquid-left-->
-		
+
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . (($unit_id !== 0) ? '&ms=uu' : '&ms=ua'))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
@@ -134,25 +134,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
             <?php } ?>
 
             <?php
-	            $unit = new Unit($unit_id);
-	            $unit_object = $unit->get_unit();
+            $unit = new Unit($unit_id);
+            $unit_object = $unit->get_unit();
             ?>
-		
-			<div class='section static'>
+
+            <div class='section static'>
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?></h3>
 
-					<div class='mp-settings-label'><label for='unit_name'><?php _e('Unit Title', 'cp'); ?></label></div>
-					<div class='mp-settings-field'>
-	                    <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr(stripslashes(isset($unit_details->post_title) ? $unit_details->post_title : '')); ?>' />					
-					</div>
-					<div class='mp-settings-label'><label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label></div>
-					<div class='mp-settings-field'>
+                    <div class='mp-settings-label'><label for='unit_name'><?php _e('Unit Title', 'cp'); ?></label></div>
+                    <div class='mp-settings-field'>
+                        <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr(stripslashes(isset($unit_details->post_title) ? $unit_details->post_title : '')); ?>' />					
+                    </div>
+                    <div class='mp-settings-label'><label for='unit_availability'><?php _e('Unit Availability', 'cp'); ?></label></div>
+                    <div class='mp-settings-field'>
                         <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : (date('Y-m-d', current_time('timestamp', 0))))); ?>" />
                         <div class="force_unit_completion">
                             <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ($force_current_unit_completion == 'on') ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order to access the next one', 'cp'); ?>
                         </div>						
-					</div>					
+                    </div>					
                 </div>
                 <div class="unit-control-buttons">
 
@@ -181,7 +181,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                         }
                     }
                     ?>
-					
+
                     <?php if ($unit_id != 0) { ?>
                         <span class="delete_unit">							
                             <a class="button button-units button-delete-unit" href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_id . '&action=delete_unit'); ?>" onclick="return removeUnit();">
@@ -189,162 +189,166 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                             </a>
                         </span>
                     <?php } ?>
-					
+
                 </div>
-			</div>
-			<div class='section'>
-	            <input type="hidden" name="beingdragged" id="beingdragged" value="" />
-	            <div id='course'>
+            </div>
+            <div class='section'>
+                <input type="hidden" name="beingdragged" id="beingdragged" value="" />
+                <div id='course'>
 
 
-	                <div id='edit-sub' class='course-holder-wrap'>
+                    <div id='edit-sub' class='course-holder-wrap'>
 
-	                    <div class='course-holder'>
-	                        <div class='course-details'>
+                        <div class='course-holder'>
+                            <div class='course-details'>
 
-	                            <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
-	                            <?php
-	                            $args = array("textarea_name" => "unit_description", "textarea_rows" => 10);
+                                <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
+                                <?php
+                                $args = array("textarea_name" => "unit_description", "textarea_rows" => 10);
 
-	                            if (!isset($unit_details->post_content)) {
-	                                $unit_details = new StdClass;
-	                                $unit_details->post_content = '';
-	                            }
+                                if (!isset($unit_details->post_content)) {
+                                    $unit_details = new StdClass;
+                                    $unit_details->post_content = '';
+                                }
 
-	                            $desc = '';
-	                            wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
-	                            ?>
-	                            <br/>
+                                $desc = '';
+                                wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
+                                ?>
+                                <br/>
 
-	                        </div>
+                            </div>
 
-	                        <!--<div class="mp-wrap mp-postbox mp-default-margin"></div>-->
+                            <!--<div class="mp-wrap mp-postbox mp-default-margin"></div>-->
 
-	                        <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit below', 'cp'); ?></h3>
+                            <h3 class="unit-elements-message"><?php _e('Add Elements and Pages to this Unit below', 'cp'); ?></h3>
 
-	                        <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
-	                            <?php _e('Drag & Drop unit elements here', 'cp'); ?>
-	                        </div>
+                            <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
+                                <?php _e('Drag & Drop unit elements here', 'cp'); ?>
+                            </div>
 
-	                        <div id="unit-pages">
-	                            <ul class="sidebar-name">
-	                                <?php
-	                                $unit_pages = coursepress_unit_pages($unit_id);
-	                                if ($unit_id == 0) {
-	                                    $unit_pages = 1;
-	                                }
-	                                for ($i = 1; $i <= $unit_pages; $i++) {
-	                                    ?>
-	                                    <li><a href="#unit-page-<?php echo $i; ?>"><?php echo $i; ?></a></li>
-	                                    <li><a id="add_new_unit_page">+</a></li>
-	                                <?php } ?>
-	                            </ul>
+                            <div id="unit-pages">
+                                <ul class="sidebar-name">
+                                    <?php
+                                    $unit_pages = coursepress_unit_pages($unit_id);
+                                    if ($unit_id == 0) {
+                                        $unit_pages = 1;
+                                    }
+                                    for ($i = 1; $i <= $unit_pages; $i++) {
+                                        ?>
+                                        <li><a href="#unit-page-<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                                    <?php } ?>
+                                    <li><a id="add_new_unit_page">+</a></li>
+                                </ul>
 
-	                            <?php
-	                            $pages_num = 1;
+                                <?php
+                                //$pages_num = 1;
 
-	                            $module = new Unit_Module();
-	                            $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id);
+                                $module = new Unit_Module();
+                                $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id);
 
-	                            for ($i = 1; $i <= $unit_pages; $i++) {
-	                                ?>
-	                                <div id="unit-page-<?php echo $i; ?>">
+                                for ($i = 1; $i <= $unit_pages; $i++) {
+                                    ?>
+                                    <div id="unit-page-<?php echo $i; ?>">
 
-	                                    <div class='course-details new-unit-element-holder'>
+                                        <div class='course-details new-unit-element-holder'>
 
-	                                        <label><?php _e('New Unit Element', 'cp'); ?></label>
+                                            <label><?php _e('New Unit Element', 'cp'); ?></label>
 
-	                                        <select name='unit-module-list' id='unit-module-list'>
-	                                            <?php
-	                                            $sections = array("instructors" => __('Read-only elements', 'cp'), "students" => __('Student Input Elements', 'cp'));
+                                            <select name='unit-module-list' class='unit-module-list'>
+                                                <?php
+                                                $sections = array("instructors" => __('Read-only elements', 'cp'), "students" => __('Student Input Elements', 'cp'));
 
-	                                            ksort($coursepress_modules_ordered);
+                                                ksort($coursepress_modules_ordered);
 
-	                                            foreach ($coursepress_modules_ordered as $coursepress_module) {
-	                                                ?>
-	                                                <option value='<?php echo $coursepress_module; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$coursepress_module]; ?>"><?php echo $coursepress_modules_labels[$coursepress_module]; ?></option>
-	                                                <?php
-	                                            }
-	                                            ?>
-	                                        </select>
+                                                foreach ($coursepress_modules_ordered as $coursepress_module) {
+                                                    ?>
+                                                    <option value='<?php echo $coursepress_module; ?>' data-module-description="<?php echo $coursepress_modules_descriptions[$coursepress_module]; ?>"><?php echo $coursepress_modules_labels[$coursepress_module]; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
 
-	                                        <input type='button' name='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary unit-module-add" />
+                                            <input type='button' name='unit-module-add' value='<?php _e('Add Selected Element', 'cp'); ?>' class="button-secondary unit-module-add" />
 
-	                                        <span class="module_description" id="module_description"></span>
+                                            <span class="module_description"></span>
 
-	                                    </div>
+                                        </div>
 
-	                                    <?php /* if (is_array($modules) && count($modules) >= 1) {
-	                                      ?>
-	                                      <div class="loading_elements"><?php _e('Loading Unit elements, please wait...', 'cp'); ?></div>
-	                                      <?php } */ ?>
+                                        <?php /* if (is_array($modules) && count($modules) >= 1) {
+                                          ?>
+                                          <div class="loading_elements"><?php _e('Loading Unit elements, please wait...', 'cp'); ?></div>
+                                          <?php } */ ?>
 
-	                                    <div class="modules_accordion">
-	                                        <!--modules will appear here-->
-	                                        <?php
-	                                        foreach ($modules as $mod) {
-	                                            $class_name = $mod->module_type;
+                                        <div class="modules_accordion">
+                                            <!--modules will appear here-->
+                                            <?php
+                                            $pages_num = 1;
+                                            foreach ($modules as $mod) {
+                                                $class_name = $mod->module_type;
 
-	                                            if (class_exists($class_name)) {
-	                                                $module = new $class_name();
+                                                if (class_exists($class_name)) {
+                                                    $module = new $class_name();
 
-	                                                if ($module->name == 'page_break_module') {
-	                                                    $module->admin_main($mod);
-	                                                    //echo 'page break at tab '.$i.'!<br />';
-	                                                    $pages_num = (int) $i + 1;
-	                                                } else {
-	                                                    if ($pages_num == $i) {
-	                                                        $module->admin_main($mod);
-	                                                        //print_r($mod);
-	                                                    }
-	                                                }
-	                                            }
-	                                        }
-	                                        //$module->get_modules_admin_forms(isset($_GET['unit_id']) ? $_GET['unit_id'] : '-1');
-	                                        ?>
-	                                    </div>
+                                                    if ($module->name == 'page_break_module') {
+                                                        //echo 'page break at tab '.$i.'!<br />';
+                                                        $pages_num++;
+                                                        if ($pages_num == $i) {
+                                                            $module->admin_main($mod);
+                                                        }
+                                                    } else {
+                                                        //echo 'i:'.$i.', pages_num:'.$pages_num.'<br />';
+                                                        if ($pages_num == $i) {
+                                                            $module->admin_main($mod);
+                                                            //print_r($mod);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            //$module->get_modules_admin_forms(isset($_GET['unit_id']) ? $_GET['unit_id'] : '-1');
+                                            ?>
+                                        </div>
 
-	                                </div>
-	                                <?php
-	                            }
-	                            ?>
-	                        </div>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
 
-	                        <div class="course-details">
-	                            <div class="unit-control-buttons">
+                            <div class="course-details">
+                                <div class="unit-control-buttons">
 
-	                                <?php
-	                                if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap'))) {//do not show anything
-	                                    ?>
-	                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save Draft', 'cp'); ?>">
-	                                    <input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">
+                                    <?php
+                                    if (($unit_id == 0 && current_user_can('coursepress_create_course_unit_cap'))) {//do not show anything
+                                        ?>
+                                        <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save Draft', 'cp'); ?>">
+                                        <input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">
 
-	                                <?php } ?>
+                                    <?php } ?>
 
-	                                <?php
-	                                if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
-	                                    ?>
-	                                    <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Save Draft', 'cp') : __('Save', 'cp'); ?>">
-	                                <?php } ?>
+                                    <?php
+                                    if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
+                                        ?>
+                                        <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Save Draft', 'cp') : __('Save', 'cp'); ?>">
+                                    <?php } ?>
 
-	                                <?php
-	                                if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
-	                                    ?>
-	                                    <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new">Preview</a>
+                                    <?php
+                                    if (($unit_id != 0 && current_user_can('coursepress_update_course_unit_cap')) || ($unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id())) {//do not show anything
+                                        ?>
+                                        <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new">Preview</a>
 
-	                                    <?php if (current_user_can('coursepress_change_course_unit_status_cap') || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
-	                                        <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
-	                                        <?php
-	                                    }
-	                                }
-	                                ?>
-	                            </div>
-	                        </div>
+                                        <?php if (current_user_can('coursepress_change_course_unit_status_cap') || (current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id())) { ?>
+                                            <input type="submit" name="submit-unit-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ($unit_object->post_status == 'unpublished') ? 'publish' : 'unpublish'; ?>" value="<?php echo ($unit_object->post_status == 'unpublished') ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
 
-	                    </div><!--/course-holder-->
-	                </div><!--/course-holder-wrap-->
-	            </div><!--/course-->
-			</div> <!-- /section -->
+                        </div><!--/course-holder-->
+                    </div><!--/course-holder-wrap-->
+                </div><!--/course-->
+            </div> <!-- /section -->
         </form>			
     </div> <!-- course-liquid-left -->
 
