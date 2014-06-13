@@ -2545,44 +2545,81 @@ label.error:before {
 .mp-wrap .form-table th {
     vertical-align: top;
 }
+
 .mp-wrap .mp-tabs {
     float: left;
     margin: 0;
     padding: 0;
     width: 200px;
+	min-height: 45px;
 }
+
 .mp-wrap .mp-tab {
     position: relative;
-    z-index: 10;
+	/* compensate for mp-settings border */
+	left:1px;
+	top:1px;
+    z-index: 100;
     border: 1px solid transparent;
     border-radius: 4px 0 0 4px;
     border-width: 1px 0 1px 1px;
     font-weight: 700;
     text-transform: uppercase;
 }
+
 .mp-wrap .mp-tab.active {
     background: #fff;
-    border-color: #ccc;
+    border-color: #ccc #0074A2 #ccc #ccc;
+/*    border-width: 1px 2px 1px 1px;	*/
+/*	border-right: 2px solid #0074A2;*/
+/*	border-radius: 4px 0 0 4px;*/
 }
+
 .mp-wrap .mp-tab.active:after {
     position: absolute;
-    top: 0;
+    top: 0px;
     right: -1px;
-    bottom: 0;
-    background: #fff;
-    content: "";
+    bottom: 0px;
+    background: #0074A2;
+    content: "a";
     display: block;
     font-size: 0;
     line-height: 0;
-    width: 1px;
+    width: 2px;
+/*	border:none;*/
+
 }
+
+/*.mp-wrap .mp-tab a.mp-tab-link:hover,*/
 .mp-wrap .mp-tab.active .mp-tab-link {
     color: #222;
+	position:relative;
+
 }
+
+/* Tab Triangle */
+
+/*.mp-wrap .mp-tab a.mp-tab-link:hover:after,*/
+.mp-wrap .mp-tab.active .mp-tab-link:after {
+	right: 0px;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(0, 144, 207, 0);
+	border-right-color: #0074A2;
+	border-width: 15px;
+	margin-top: -15px;
+}
+
 .mp-wrap .mp-tab-link {
     display: block;
     padding: 8px 15px;
     text-decoration: none;
+	min-height: 25px;
 }
 .mp-wrap .mp-settings {
     background: #fff;
@@ -2590,6 +2627,11 @@ label.error:before {
     overflow: hidden;
     padding: 20px;
 }
+
+.mp-wrap .mp-settings .section.static {
+	background: #0074A2;
+}
+
 .mp-wrap .mp-postbox {
     border-top: 2px dotted #ccc;
     margin-top: 20px;

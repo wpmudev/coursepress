@@ -369,6 +369,40 @@ div.buttons a.cancellink {
     cursor: auto !Important;
 }
 
+.coursepress_page_course_details .unit-control-buttons a.button.button-preview {
+	position:relative;
+}
+.coursepress_page_course_details .unit-control-buttons a.button.button-preview:after {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	background: #fff;
+	content: "";
+	height:1px;
+}
+
+.coursepress_page_course_details .section.static .unit-control-buttons a.button.button-preview:after {
+	background: #0074A2;	
+}
+
+.coursepress_page_course_details .section.static .unit-control-buttons .button.save-unit-button {
+	background: #00B0D6;	
+}
+
+.coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit {
+	background: #0074A2;	
+	border: 1px solid #0093CD;
+	position: relative;
+	top: 5px;
+	right:35px;
+}
+.coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit:hover {
+	background: #E65C52;
+	color: #fff;
+}
+
+
 /* Level tabs */
 
 #edit-level div.level-holder ul.leveltabs {
@@ -1442,3 +1476,25 @@ label.bold-label{
 }
 
 .additional_class_actions_add_student form { width: 100%; }
+
+.unit-detail-settings h3,
+.unit-detail-settings {
+	color: #fff;
+}
+
+
+
+/* SETTINGS PAGE OVERRIDES */
+.coursepress_page_course_details .mp-wrap .mp-settings {
+	padding:0;
+}
+
+.coursepress_page_course_details .mp-wrap .mp-settings .section.static,
+.coursepress_page_course_details .mp-wrap .mp-settings .section{
+	padding: 20px;
+}
+
+.coursepress_page_course_details .mp-wrap .mp-settings .section.static {
+	padding-top: 1px;
+	background: #0074A2;
+}
