@@ -24,6 +24,107 @@
     padding-bottom: 5px;
 }
 
+.elements-holder .input-element,
+.elements-holder .output-element{
+    display: inline-block;
+    /*width: 92px;*/
+    width: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+    height: 49px;
+    background: transparent url(../images/Assets.svg) no-repeat;
+    text-align: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #fff;
+    cursor: pointer;
+    position: relative;
+}
+
+.elements-holder .input-element:hover,
+.elements-holder .output-element:hover{
+    border: 1px solid #dddddd;
+    -moz-box-shadow:    1px 1px 1px 1px #f3f3f3;
+    -webkit-box-shadow: 1px 1px 1px 1px #f3f3f3;
+    box-shadow:         1px 1px 1px 1px #f3f3f3;
+}
+
+.elements-holder .element-label{
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    color: #959595;
+    width: 100%;
+    margin-top: 25px;
+    display: block;
+}
+
+.elements-holder .input-element .element-label{
+    color: #008dc8;
+}
+
+.elements-holder .input-element .add-element,
+.elements-holder .output-element .add-element{
+    position: absolute;
+    display: block;
+    background: transparent url(../images/Assets.svg) no-repeat;
+    background-position: -714px -234px;
+    width: 13px;
+    height: 13px;
+    top: -7px;
+    right: -7px;
+    display: none;
+}
+
+.elements-holder .input-element:hover > .add-element,
+.elements-holder .output-element:hover > .add-element{
+    display: block;
+}
+
+.elements-holder .text_module{
+    background-position: -56px -58px;
+}
+
+.elements-holder .image_module{
+    background-position: -190px -58px;
+}
+
+.elements-holder .video_module{
+    background-position: -374px -58px;
+}
+
+.elements-holder .audio_module{
+    background-position: -533px -58px;
+}
+
+.elements-holder .file_module{
+    background-position: -668px -58px;
+}
+
+.elements-holder .file_input_module{
+    background-position: -517px -227px;
+}
+
+.elements-holder .chat_module{
+    background-position: -844px -62px;
+}
+
+.elements-holder .section_break_module{
+    background-position: -988px -65px;
+}
+
+.elements-holder .text_input_module{
+    background-position: -32px -226px;
+}
+
+.elements-holder .radio_input_module{
+    background-position: -191px -227px;
+}
+
+.elements-holder .checkbox_input_module{
+    background-position: -344px -227px;
+}
+
 .modules_accordion.ui-accordion .ui-accordion-content{
     padding: 10px;
 
@@ -370,36 +471,36 @@ div.buttons a.cancellink {
 }
 
 .coursepress_page_course_details .unit-control-buttons a.button.button-preview {
-	position:relative;
+    position:relative;
 }
 .coursepress_page_course_details .unit-control-buttons a.button.button-preview:after {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	background: #fff;
-	content: "";
-	height:1px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    background: #fff;
+    content: "";
+    height:1px;
 }
 
 .coursepress_page_course_details .section.static .unit-control-buttons a.button.button-preview:after {
-	background: #0074A2;	
+    background: #0074A2;	
 }
 
 .coursepress_page_course_details .section.static .unit-control-buttons .button.save-unit-button {
-	background: #00B0D6;	
+    background: #00B0D6;	
 }
 
 .coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit {
-	background: #0074A2;	
-	border: 1px solid #0093CD;
-	position: relative;
-	top: 5px;
-	right:35px;
+    background: #0074A2;	
+    border: 1px solid #0093CD;
+    position: relative;
+    top: 5px;
+    right:35px;
 }
 .coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit:hover {
-	background: #E65C52;
-	color: #fff;
+    background: #E65C52;
+    color: #fff;
 }
 
 
@@ -1255,6 +1356,12 @@ a.delete_module_link, a.remove_module_link {
     padding-left: 18px;
 }
 
+.module-holder-section_break_module .h3-label-right, 
+.module-holder-section_break_module .h3-label-right{
+    background: #fff;
+    padding-left: 18px;
+}
+
 .module-holder-page_break_module{
     background-color: #fff;
     padding-left: 3px;
@@ -1369,11 +1476,23 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     background: #fff;
 }
 
+.modules_accordion.modules_accordion .module-holder-section_break_module h3{
+    background: #fff;
+}
+
 .modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
     border: 0px dashed;
 }
 
+.modules_accordion.ui-accordion .module-holder-section_break_module .ui-accordion-header{
+    border: 0px dashed;
+}
+
 .modules_accordion.ui-accordion .module-holder-page_break_module .ui-state-active{
+    color: #000;
+}
+
+.modules_accordion.ui-accordion .module-holder-section_break_module .ui-state-active{
     color: #000;
 }
 
@@ -1385,11 +1504,23 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     color: #000;
 }
 
+.modules_accordion .module-holder-section_break_module .module-holder-title .ui-state-active.sidebar-name:hover{
+    color: #000;
+}
+
 div.modules_accordion .module-holder-page_break_module .ui-accordion-header-icon{
     display: none;
 }
 
+div.modules_accordion .module-holder-section_break_module .ui-accordion-header-icon{
+    display: none;
+}
+
 div.modules_accordion .module-holder-page_break_module .module-content{
+    display: none;
+}
+
+div.modules_accordion .module-holder-section_break_module .module-content{
     display: none;
 }
 
@@ -1480,22 +1611,22 @@ label.bold-label{
 
 .unit-detail-settings h3,
 .unit-detail-settings {
-	color: #fff;
+    color: #fff;
 }
 
 
 
 /* SETTINGS PAGE OVERRIDES */
 .coursepress_page_course_details .mp-wrap .mp-settings {
-	padding:0;
+    padding:0;
 }
 
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static,
 .coursepress_page_course_details .mp-wrap .mp-settings .section{
-	padding: 20px;
+    padding: 20px;
 }
 
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static {
-	padding-top: 1px;
-	background: #0074A2;
+    padding-top: 1px;
+    background: #0074A2;
 }

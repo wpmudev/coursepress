@@ -1,10 +1,10 @@
 <?php
 
-class page_break_module extends Unit_Module {
+class section_break_module extends Unit_Module {
 
     var $order = 1;
-    var $name = 'page_break_module';
-    var $label = 'Page Break';
+    var $name = 'section_break_module';
+    var $label = 'Section Break';
     var $description = '';
     var $front_save = false;
     var $response_type = '';
@@ -20,9 +20,7 @@ class page_break_module extends Unit_Module {
 
     function front_main($data) {
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            <!--BREAK HERE-->
-        </div>
+        <hr class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>" />
         <?php
     }
 
@@ -33,7 +31,7 @@ class page_break_module extends Unit_Module {
 
             <h3 class="module-title sidebar-name">
                 <span class="h3-label">
-                    
+
                     <span class="h3-label-left"><?php echo (isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label); ?></span>
                     <span class="page-break-dashed"></span>
                     <span class="page-break-right-fix">...</span>
@@ -48,16 +46,10 @@ class page_break_module extends Unit_Module {
                 </span>
             </h3>
 
-            <!--<div class="module-content">-->
-                <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
-                <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-                <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
-
-                <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
-
-                <!--<p><?php echo $this->description;?></p>-->
-
-            <!--</div>-->
+            <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo (isset($data->module_order) ? $data->module_order : 999); ?>" />
+            <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
+            <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo (isset($data->ID) ? $data->ID : ''); ?>" />
+            <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : ''); ?>" />
 
         </div>
 
@@ -65,7 +57,7 @@ class page_break_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->description = __('Breaks the Unit into more pages', 'cp');
+        $this->description = __('Inserts section break (<hr> element)', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -93,7 +85,7 @@ class page_break_module extends Unit_Module {
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ((isset($_POST['unit_id']) and (isset($_POST['unit']) && $_POST['unit'] != '')) ? $_POST['unit_id'] : $last_inserted_unit_id);
                             $data->title = $_POST[$this->name . '_title'][$key];
-                            $data->content = '';//$_POST[$this->name . '_content'][$key];
+                            $data->content = '';
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             parent::update_module($data);
                         }
@@ -105,5 +97,5 @@ class page_break_module extends Unit_Module {
 
 }
 
-coursepress_register_module('page_break_module', 'page_break_module', 'invisible');
+coursepress_register_module('section_break_module', 'section_break_module', 'output');
 ?>

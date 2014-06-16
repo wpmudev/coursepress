@@ -143,6 +143,6 @@ if (is_chat_plugin_active()) {
 
     }
 
-    coursepress_register_module('chat_module', 'chat_module', 'instructors');
+    coursepress_register_module('chat_module', 'chat_module', 'output');
 }
 ?>

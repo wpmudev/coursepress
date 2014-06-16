@@ -4,7 +4,7 @@ class checkbox_input_module extends Unit_Module {
 
     var $order = 7;
     var $name = 'checkbox_input_module';
-    var $label = 'Check Box Input';
+    var $label = 'Multiple Choice';
     var $description = '';
     var $front_save = true;
     var $response_type = 'view';
@@ -446,5 +446,5 @@ class checkbox_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('checkbox_input_module', 'checkbox_input_module', 'students');
+coursepress_register_module('checkbox_input_module', 'checkbox_input_module', 'input');
 ?>

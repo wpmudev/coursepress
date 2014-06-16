@@ -320,5 +320,5 @@ class file_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('file_input_module', 'file_input_module', 'students');
+coursepress_register_module('file_input_module', 'file_input_module', 'input');
 ?>

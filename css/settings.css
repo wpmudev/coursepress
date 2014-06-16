@@ -1768,6 +1768,12 @@ body .ui-tooltip {
     color: #000;
 }
 
+.modules_accordion .module-holder-section_break_module.module-holder-title .ui-state-active.sidebar-name:hover,
+.modules_accordion .module-holder-section_break_module.module-holder-title .ui-state-active a:hover,
+.modules_accordion .module-holder-section_break_module.module-holder-title .ui-state-active a{
+    color: #000;
+}
+
 .modules_accordion .ui-state-active,
 .modules_accordion .ui-widget-content .ui-state-active,
 .modules_accordion .ui-widget-header .ui-state-active {

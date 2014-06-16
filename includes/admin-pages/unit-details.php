@@ -274,6 +274,41 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                                         </div>
 
+                                        <div class='course-details elements-holder'>
+                                            <?php
+                                            foreach ($coursepress_modules_ordered['output'] as $element) {
+                                                ?>
+                                                <div class="output-element <?php echo $element; ?>">
+                                                    <span class="element-label">
+                                                        <?php
+                                                        $module = new $element;
+                                                        echo $module->label;
+                                                        ?>
+                                                    </span>
+                                                    <a class="add-element" id="<?php echo $element; ?>"></a>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                            |
+                                            <?php
+                                            foreach ($coursepress_modules_ordered['input'] as $element) {
+                                                ?>
+                                                <div class="input-element <?php echo $element; ?>">
+                                                    <span class="element-label">
+                                                        <?php
+                                                        $module = new $element;
+                                                        echo $module->label;
+                                                        ?>
+                                                    </span>
+                                                    <a class="add-element" id="<?php echo $element; ?>"></a>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                            
+                                        </div>
+
                                         <?php /* if (is_array($modules) && count($modules) >= 1) {
                                           ?>
                                           <div class="loading_elements"><?php _e('Loading Unit elements, please wait...', 'cp'); ?></div>
@@ -355,7 +390,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     <div class='level-liquid-right' style="display:none;">
         <div class="level-holder-wrap">
             <?php
-            $sections = array("instructors" => __('Read-only elements', 'cp'), "students" => __('Student Input Elements', 'cp'));
+            $sections = array("input" => __('Input Elements', 'cp'), "output" => __('Output Elements', 'cp'), "invisible" => __('Invisible Elements', 'cp'));
 
             foreach ($sections as $key => $section) {
                 ?>

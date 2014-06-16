@@ -181,7 +181,7 @@ function coursepress_modules_ready() {
 
         }
     });
-    jQuery('.unit-module-add').live('click', function() {
+    jQuery('.elements-holder div').live('click', function() {//.unit-module-add, 
 
         var current_unit_page = 0;//current selected unit page
 
@@ -191,7 +191,7 @@ function coursepress_modules_ready() {
         var module_count = 0;
 
 
-        jQuery('input#beingdragged').val(jQuery("#unit-page-" + current_unit_page + " .unit-module-list option:selected").val());
+        jQuery('input#beingdragged').val(jQuery(this).find('.add-element').attr('id'));//jQuery("#unit-page-" + current_unit_page + " .unit-module-list option:selected").val()
 
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
 

@@ -4,7 +4,7 @@ class radio_input_module extends Unit_Module {
 
     var $order = 8;
     var $name = 'radio_input_module';
-    var $label = 'Radio Box Input';
+    var $label = 'Single Choice';
     var $description = '';
     var $front_save = true;
     var $response_type = 'view';
@@ -405,5 +405,5 @@ class radio_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('radio_input_module', 'radio_input_module', 'students');
+coursepress_register_module('radio_input_module', 'radio_input_module', 'input');
 ?>

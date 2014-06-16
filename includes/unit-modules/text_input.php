@@ -4,7 +4,7 @@ class text_input_module extends Unit_Module {
 
     var $order = 5;
     var $name = 'text_input_module';
-    var $label = 'Text Input';
+    var $label = 'Answer Field';
     var $description = '';
     var $front_save = true;
     var $response_type = 'view';
@@ -300,5 +300,5 @@ class text_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_input_module', 'text_input_module', 'students');
+coursepress_register_module('text_input_module', 'text_input_module', 'input');
 ?>

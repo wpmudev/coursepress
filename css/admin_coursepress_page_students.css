@@ -1360,7 +1360,15 @@ div.modules_accordion .module-holder-page_break_module h3{
     background: #f5f5f5;
 }
 
+div.modules_accordion .module-holder-section_break_module h3{
+    background: #f5f5f5;
+}
+
 .modules_accordion.ui-accordion .module-holder-page_break_module .ui-accordion-header{
+    border: 1px dashed;
+}
+
+.modules_accordion.ui-accordion .module-holder-section_break_module .ui-accordion-header{
     border: 1px dashed;
 }
 
@@ -1368,7 +1376,15 @@ div.modules_accordion .module-holder-page_break_module .ui-accordion-header-icon
     display: none;
 }
 
+div.modules_accordion .module-holder-section_break_module .ui-accordion-header-icon{
+    display: none;
+}
+
 div.modules_accordion .module-holder-page_break_module .module-content{
+    display: none;
+}
+
+div.modules_accordion .module-holder-section_break_module .module-content{
     display: none;
 }
 
