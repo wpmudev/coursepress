@@ -1236,7 +1236,7 @@ div.levelinformation {
 }
 
 #wp-course_description-wrap, #wp-course_excerpt-wrap {
-    width: 99%;
+/*    width: 99%;*/
 }
 
 .sidebar-inner{
@@ -1629,4 +1629,162 @@ label.bold-label{
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static {
     padding-top: 1px;
     background: #0074A2;
+}
+
+/* COURSE SETUP PAGE */
+.course-section.step input.button {
+	height: 26px;
+	line-height: 0;
+}
+
+.course-section.step .course-form {
+	display: none;
+}
+
+.course-section.step.save-marker .course-form {
+	display: block;
+}
+
+.course-section.step {
+	padding: 0 20px 0 10px;
+}
+
+/* HEADINGS */
+.course-section.step .course-section-title {
+	position: relative;
+	background: #F1F1F1;
+	min-height: 50px;
+	padding: 0 20px;
+}
+
+.course-section.step .course-section-title .status {
+	content: " ";
+/*	background: #ffcccc;*/
+	height: 17px;
+	width: 17px;	
+	position: absolute;
+	top: 17px;
+	right: 20px;
+	line-height: 48px;
+	background: url(../images/course-setup.png) 0 0;
+}
+
+.course-section.step .course-section-title .status.saved {
+	background: url(../images/course-setup.png) -17px 0;
+}
+
+.course-section.step .course-section-title .status.invalid {
+	background: url(../images/course-setup.png) -34px 0;
+}
+
+.course-section.step .course-section-title .status.attention {
+	background: url(../images/course-setup.png) -51px 0;
+}
+
+.course-section.step .course-section-title .status.progress:before {
+	content: "SAVING";
+	position: absolute;
+	top: -17px;
+	right: 34px;
+	color: #3D8ECF;
+}
+.course-section.step .course-section-title .status.progress {
+	background: url(../images/ajax-loader.gif) no-repeat;
+}
+
+.course-section.step .course-section-title h3 {
+	line-height: 48px;
+	font-weight: normal;
+}
+
+.course-section.step.active .course-section-title {
+	background: #3D8ECF;	
+}
+
+.course-section.step.active .course-section-title h3 {
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.course-section .course-form {
+	padding: 50px 50px 20px;
+}
+
+.course-section .course-form div.narrow, .course-section .course-form div.wide {
+	margin-bottom: 30px;
+}
+
+.course-section .course-form div.wide input[type="email"],
+.course-section .course-form div.wide input[type="number"],
+.course-section .course-form div.wide input[type="password"],
+.course-section .course-form div.wide input[type="search"],
+.course-section .course-form div.wide input[type="tel"],
+.course-section .course-form div.wide input[type="text"],
+.course-section .course-form div.wide input[type="url"], 
+.course-section .course-form div.wide select,
+.course-section .course-form div.wide textarea,
+.course-section .course-form div.wide label {
+	width: 100%;
+}
+
+.course-section .course-form div.narrow input[type="email"],
+.course-section .course-form div.narrow input[type="number"],
+.course-section .course-form div.narrow input[type="password"],
+.course-section .course-form div.narrow input[type="search"],
+.course-section .course-form div.narrow input[type="tel"],
+.course-section .course-form div.narrow input[type="text"],
+.course-section .course-form div.narrow input[type="url"], 
+.course-section .course-form div.narrow select,
+.course-section .course-form div.narrow textarea,
+.course-section .course-form div.narrow label {
+	width: 61.25%;
+}
+.course-section .course-form div.narrow .course-holder-wrap .chosen-container {
+	width: 61.25%;
+}
+.course-section .course-form div.narrow .chosen-search input {
+	width: 100%;
+}
+
+.course-section .course-form input {
+	line-height: inherit;
+}
+
+.course-section .course-form label {
+	font-size: 1.1em;
+}
+
+.course-section .course-form label span {
+	font-size: 0.9em;
+	font-weight: normal;
+}
+
+.course-section .course-form label a.context-link {
+	font-size: 0.9em;
+	font-weight: normal;
+	text-decoration: underline;
+	float: right;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    font-size:0.9em;
+	color: #909090;
+    font-style: oblique;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    font-size:0.9em;
+	color: #909090;
+    font-style: oblique;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    font-size:0.9em;
+	color: #909090;	
+    font-style: oblique;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    font-size:0.9em;
+	color: #909090;	
+    font-style: oblique;
 }

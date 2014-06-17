@@ -92,6 +92,9 @@ if (!class_exists('CoursePress')) {
 
                 //Pagination Class
                 require_once( $this->plugin_dir . 'includes/classes/class.pagination.php');
+				
+				//Tooltip Helper
+				require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php');
 
                 //Listen to dynamic editor requests (using on unit page in the admin)
                 add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));

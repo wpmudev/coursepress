@@ -226,7 +226,7 @@ jQuery(document).ready(function( $ ){
 
 
 	/** Proceed to next step. */
-	$( '.course-section.step h3' ).click( function( e ) {
+	$( '.course-section.step input.next' ).click( function( e ) {
 
 		/**
 		 * Get the current step we're on. 
@@ -244,15 +244,26 @@ jQuery(document).ready(function( $ ){
 		// If next section exists
 		if ( nextSection ) {
 			// There is a 'next section'. What do you want to do with it?
-			alert('Next:' + nextStep);
+			var newTop = $('.step-'+step).offset().top + 20;	
+			// Jump first, then animate		
+			$( document ).scrollTop( newTop );
+			$( nextSection ).children('.course-form').slideDown( 500 );
+			$( nextSection ).children('.course-section-title').animate( { backgroundColor: '#3D8ECF' }, 500);
+			$( nextSection ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
+			$( this ).parents('.course-form').slideUp( 500 );
+			$( this ).parents('.course-section').children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);
+			$( this ).parents('.course-section').children('.course-section-title').animate( { color: '#222' }, 500);
+			
+
+			$( nextSection ).addClass('active');
+			$( this ).parents('.course-section').removeClass('active');
 		} else {
 			// There is no 'next sections'. Now what?
-			alert('No next.');
 		}
 	});
 	
 	/** Return to previous step. */
-	$( '.course-section.step h3' ).click( function( e ) {
+	$( '.course-section.step input.prev' ).click( function( e ) {
 
 		/**
 		 * Get the current step we're on. 
@@ -270,14 +281,21 @@ jQuery(document).ready(function( $ ){
 		// If previous section exists
 		if ( prevSection ) {
 			// There is a 'previous section'. What do you want to do with it?
-			alert('Previous:' + prevStep);
+			var newTop = $('.step-'+prevStep).offset().top - 50;			
+			$( prevSection ).children('.course-form').slideDown( 500 );
+			$( prevSection ).children('.course-section-title').animate( { backgroundColor: '#3D8ECF' }, 500);
+			$( prevSection ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
+			$( this ).parents('.course-form').slideUp( 500 );
+			$( this ).parents('.course-section').children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);
+			$( this ).parents('.course-section').children('.course-section-title').animate( { color: '#222' }, 500);
+			
+			// Animate first then jump
+			$( document ).scrollTop( newTop );			
+			$( prevSection ).addClass('active');			
+			$( this ).parents('.course-section').removeClass('active');						
 		} else {
 			// There is no 'previous sections'. Now what?
-			alert('No prev.');			
 		}
 	});
-	
-	
-	
-		
+			
 });

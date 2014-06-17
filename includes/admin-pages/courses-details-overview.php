@@ -164,59 +164,197 @@ if (isset($_GET['course_id'])) {
 						<!-- COURSE DETAILS -->
                         <div class='course-details'>
 							
-							<div class='course-section step step-1'>
-								<div class='course-section-toggle'>
+							
+							<!-- Course Overview -->
+							<div class='course-section step step-1 save-marker active'>
+								<div class='course-section-title'>
+									<div class="status"></div>									
 									<h3><?php _e( 'Step 1 - Course Overview', 'cp' )?></h3>
 								</div>
 								<div class='course-form'>
-									This is just stuff...
-									<input type="button" class="next" value="Next" />
+									
+									<div class="wide">
+		                            <label for='course_name'>
+		                                <?php _e('Course Name', 'cp'); ?>
+		                            </label>
+		                            <input class='wide' type='text' name='course_name' id='course_name' value='<?php
+		                            if (isset($_GET['course_id'])) {
+		                                echo esc_attr(stripslashes($course->details->post_title));
+		                            }
+		                            ?>' />
+									</div>
+									
+									<div class="wide">
+		                            <label for='course_excerpt'>
+		                                <?php _e('Course Excerpt / Short Overview', 'cp'); ?>
+										<?php CP_Helper_Tooltip::tooltip( __('Provide a few short sentences to describe the course', 'cp') ); ?>
+		                            </label>
+		                            <?php
+		                            $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3, "media_buttons" => false, "quicktags" => false);
+
+		                            if (!isset($course_excerpt->post_excerpt)) {
+		                                $course_excerpt = new StdClass;
+		                                $course_excerpt->post_excerpt = '';
+		                            }
+
+		                            $desc = '';
+		                            wp_editor(htmlspecialchars_decode((isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
+		                            ?>
+									</div>
+									
+									<div class="narrow">
+		                            <label for='featured_url'>
+		                                <?php _e('Listing Image', 'cp'); ?><br />
+										<span><?php _e('The image is used on the "Courses" listing (archive) page along with the course excerpt.') ?></span>
+		                            </label>
+	                                <div class="featured_url_holder">
+	                                    <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
+	                                    if ($course_id !== 0) {
+	                                        echo esc_attr($course->details->featured_url);
+	                                    }
+	                                    ?>" placeholder="<?php _e('Add Image URL or Browse for Image', 'cp'); ?>" />
+	                                    <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'cp'); ?>" />
+	                                    <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
+	                                    if ($course_id !== 0) {
+	                                        echo get_post_meta($course_id, '_thumbnail_id', true);
+	                                    }
+	                                    ?>" />
+	                                           <?php
+	                                           //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
+	                                           //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
+	                                           //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
+	                                           ?>
+	                                </div>
+									</div>
+									
+									<div class="narrow">
+	                                <label>
+										<?php _e('Course Category', 'cp'); ?>
+										<a class="context-link" href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
+									</label>
+		                            <?php
+		                            $tax_args = array(
+		                                'show_option_all' => '',
+		                                'show_option_none' => __('-- None --', 'cp'),
+		                                'orderby' => 'ID',
+		                                'order' => 'ASC',
+		                                'show_count' => 0,
+		                                'hide_empty' => 0,
+		                                'echo' => 1,
+		                                'selected' => $course_category,
+		                                'hierarchical' => 0,
+		                                'name' => 'meta_course_category',
+		                                'id' => '',
+		                                'class' => 'postform chosen-select',
+		                                'depth' => 0,
+		                                'tab_index' => -1,
+		                                'taxonomy' => 'course_category',
+		                                'hide_if_empty' => false,
+		                                'walker' => ''
+		                            );
+
+		                            $taxonomies = array('course_category');
+		                            wp_dropdown_categories($tax_args);
+		                            ?>
+	                                									
+									</div>
+									
+									<div class="narrow">
+	                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
+	                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
+									</div>
+																		
+									
+									
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
+									</div>
 								</div>
 							</div>
+							<!-- /Course Overview -->
 
+							<!-- Course Description -->
 							<div class='course-section step step-2'>
-								<div class='course-section-toggle'>
-									<h3><?php _e( 'Step 1 - Course Overview', 'cp' )?></h3>
+								<div class='course-section-title'>
+									<div class="status saved"></div>
+									<h3><?php _e( 'Step 2 - Course Description', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
 									This is more stuff...
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
+										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
+									</div>
 								</div>
 							</div>
+							<!-- /Course Description -->							
 
+							<!-- Instructors -->
+							<div class='course-section step step-3'>
+								<div class='course-section-title'>
+									<div class="status invalid"></div>									
+									<h3><?php _e( 'Step 3 - Instructors', 'cp' )?></h3>									
+								</div>
+								<div class='course-form'>
+									This is just stuff...
+									
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
+										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
+									</div>
+								</div>
+							</div>
+							<!-- /Instructors -->
 							
+							<!-- Course Dates -->							
+							<div class='course-section step step-4'>
+								<div class='course-section-title'>
+									<div class="status progress"></div>									
+									<h3><?php _e( 'Step 4 - Course Dates', 'cp' )?></h3>									
+								</div>
+								<div class='course-form'>
+									This is more stuff...
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
+										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
+									</div>
+								</div>
+							</div>
+							<!-- /Course Dates -->
+
+							<!-- Classes, Discussions & Workbook -->
+							<div class='course-section step step-5'>
+								<div class='course-section-title'>
+									<div class="status attention"></div>									
+									<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' )?></h3>						
+								</div>
+								<div class='course-form'>
+									This is just stuff...
+									
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
+										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
+									</div>
+								</div>
+							</div>
+							<!-- /Classes, Discussions & Workbook -->							
+
+							<!-- Enrollment & Course Cost -->
+							<div class='course-section step step-6'>
+								<div class='course-section-title'>
+									<div class="status"></div>									
+									<h3><?php _e( 'Step 6 - Enrollment & Course Cost', 'cp' )?></h3>						
+								</div>
+								<div class='course-form'>
+									This is more stuff...
+									<div class="course-step-buttons">
+										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
+										<input type="button" class="button button-units done" value="<?php _e( 'Done', 'cp' ); ?>" />
+									</div>
+								</div>
+							</div>							
+							<!-- /Enrollment & Course Cost -->
 							
-                            <label for='course_name'>
-                                <?php _e('Course Name', 'cp'); ?>
-                            </label>
-                            <input class='wide' type='text' name='course_name' id='course_name' value='<?php
-                            if (isset($_GET['course_id'])) {
-                                echo esc_attr(stripslashes($course->details->post_title));
-                            }
-                            ?>' />
-
-                            <br/><br/>
-                            <label for='course_excerpt'>
-                                <?php _e('Course Excerpt', 'cp'); ?>
-                                <a class="help-icon" href="javascript:;"></a>
-                                <div class="tooltip">
-                                    <div class="tooltip-before"></div>
-                                    <div class="tooltip-button">&times;</div>
-                                    <div class="tooltip-content">
-                                        <?php _e('Provide a few short sentences to describe the course', 'cp'); ?>
-                                    </div>
-                                </div>
-                            </label>
-                            <?php
-                            $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3);
-
-                            if (!isset($course_excerpt->post_excerpt)) {
-                                $course_excerpt = new StdClass;
-                                $course_excerpt->post_excerpt = '';
-                            }
-
-                            $desc = '';
-                            wp_editor(htmlspecialchars_decode((isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
-                            ?>
 
                             <br/><br/>
                             <label for='course_name'>
