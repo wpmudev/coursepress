@@ -218,3 +218,66 @@ jQuery(document).ready(function()
 
     //tinyMCE.activeEditor.selection.moveToBookmark(bm);
 });
+
+
+
+/** Handle Course Setup Wizard */
+jQuery(document).ready(function( $ ){
+
+
+	/** Proceed to next step. */
+	$( '.course-section.step h3' ).click( function( e ) {
+
+		/**
+		 * Get the current step we're on. 
+		 *
+		 * Looks for <div class="course-section step step-[x]"> and extracts the number.
+		 **/
+		var step = $( $( this ).parents( '.course-section.step' )[0] ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
+		
+		// Next section
+		var nextStep = parseInt( step ) + 1;
+		
+		// Attempt to get the next section.
+		var nextSection = $( this ).parents('.course-details .course-section').siblings('.step-' + nextStep)[0];
+		
+		// If next section exists
+		if ( nextSection ) {
+			// There is a 'next section'. What do you want to do with it?
+			alert('Next:' + nextStep);
+		} else {
+			// There is no 'next sections'. Now what?
+			alert('No next.');
+		}
+	});
+	
+	/** Return to previous step. */
+	$( '.course-section.step h3' ).click( function( e ) {
+
+		/**
+		 * Get the current step we're on. 
+		 *
+		 * Looks for <div class="course-section step step-[x]"> and extracts the number.
+		 **/
+		var step = $( $( this ).parents( '.course-section.step' )[0] ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
+		
+		// Previous section
+		var prevStep = parseInt( step ) -1;
+		
+		// Attempt to get the previous section.
+		var prevSection = $( this ).parents('.course-details .course-section').siblings('.step-' + prevStep)[0];
+
+		// If previous section exists
+		if ( prevSection ) {
+			// There is a 'previous section'. What do you want to do with it?
+			alert('Previous:' + prevStep);
+		} else {
+			// There is no 'previous sections'. Now what?
+			alert('No prev.');			
+		}
+	});
+	
+	
+	
+		
+});
