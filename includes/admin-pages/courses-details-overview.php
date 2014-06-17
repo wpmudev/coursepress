@@ -245,7 +245,7 @@ if (isset($_GET['course_id'])) {
 		                                'hierarchical' => 0,
 		                                'name' => 'meta_course_category',
 		                                'id' => '',
-		                                'class' => 'postform chosen-select',
+		                                'class' => 'postform chosen-select-course',
 		                                'depth' => 0,
 		                                'tab_index' => -1,
 		                                'taxonomy' => 'course_category',
@@ -387,7 +387,47 @@ if (isset($_GET['course_id'])) {
 									<h3><?php _e( 'Step 3 - Instructors', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-									This is just stuff...
+
+									<div class="wide narrow">
+			                            <label>
+			                                <?php _e( 'Course Instructor(s)', 'cp' ); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Select one or more instructor to facilitate this course.', 'cp') ); ?>
+											<br />
+											<span><?php _e('Select one or more instructor to facilitate this course', 'cp'); ?></span>
+			                            </label>
+										
+                                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id()) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']))) { ?>
+                                            <?php coursepress_instructors_avatars_array(); ?>
+
+                                            <div class="clearfix"></div>
+                                            <?php coursepress_instructors_drop_down( 'postform chosen-select-course course-instructors' ); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
+                                            <!-- <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p> -->
+
+
+                                            <?php
+                                        } else {
+                                            if (coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                                                _e('You do not have required permissions to assign instructors to a course.', 'cp');
+                                            }
+                                        }
+                                        ?>
+										
+										<p>Assigned Instructors:</p>
+		                                <div class="instructors-info" id="instructors-info">
+		                                    <?php
+		                                    if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) {
+		                                        $remove_button = true;
+		                                    } else {
+		                                        $remove_button = false;
+		                                    }
+		                                    ?>
+
+		                                    <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
+		                                </div>						
+										<hr clear="all" />
+										
+									</div>
+
 									
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
@@ -448,48 +488,12 @@ if (isset($_GET['course_id'])) {
 							
                             <br />
 
-                            <div class="half">
-                                <div class="course-holder-wrap">
-
-                                    <h3><?php _e('Course Instructor(s)', 'cp'); ?></h3>
-
-                                    <div>
-
-                                        <?php if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id()) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']))) { ?>
-                                            <?php coursepress_instructors_avatars_array(); ?>
-
-                                            <div class="clearfix"></div>
-                                            <p><?php _e('Select one or more instructors to facilitate this course', 'cp'); ?></p>
-                                            <?php coursepress_instructors_drop_down(); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
-                                            <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p>
-
-
-                                            <?php
-                                        } else {
-                                            if (coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
-                                                _e('You do not have required permissions to assign instructors to a course.', 'cp');
-                                            }
-                                        }
-                                        ?>
-
-                                    </div>
-                                </div> <!-- course-holder-wrap -->
-                            </div>
+                            
 
                             <div class="half">
                                 <h3><?php _e('Assigned Instructor(s)', 'cp'); ?></h3>
 
-                                <div class="instructors-info" id="instructors-info">
-                                    <?php
-                                    if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) {
-                                        $remove_button = true;
-                                    } else {
-                                        $remove_button = false;
-                                    }
-                                    ?>
 
-                                    <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
-                                </div>
                             </div>
 
                             <br clear="all" />

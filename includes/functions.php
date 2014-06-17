@@ -493,9 +493,9 @@ function coursepress_students_drop_down() {
     echo $content;
 }
 
-function coursepress_instructors_drop_down() {
+function coursepress_instructors_drop_down( $class = '' ) {
     $content = '';
-    $content .= '<select name="instructors" id="instructors" data-placeholder="' . __('Choose a Course Instructor...', 'cp') . '" class="chosen-select">';
+    $content .= '<select name="instructors" id="instructors" data-placeholder="' . __('Choose a Course Instructor...', 'cp') . '" class="' . $class . '">';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
@@ -510,6 +510,7 @@ function coursepress_instructors_drop_down() {
         'order' => 'ASC',
         'offset' => '',
         'search' => '',
+		'class' => $class,
         'number' => '',
         'count_total' => false,
         'fields' => array('display_name', 'ID'),

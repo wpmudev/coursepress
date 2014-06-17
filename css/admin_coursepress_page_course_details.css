@@ -1715,6 +1715,9 @@ label.bold-label{
 	padding: 50px 50px 20px;
 }
 
+.course-section .course-form div.narrow {
+	width: 61.25%;
+}
 .course-section .course-form div.narrow, .course-section .course-form div.wide {
 	margin-bottom: 40px;
 }
@@ -1763,10 +1766,14 @@ label.bold-label{
 .course-section .course-form div.wide.narrow textarea {
 	width: 61.25%;
 }
+
+.course-section .course-form .course-instructors
 .course-section .course-form div.wide.narrow .course-holder-wrap .chosen-container {
 	width: 61.25%;
 }
+
 .course-section .course-form div.wide.narrow label,
+.course-section .course-form div.wide.narrow .chosen-search input,
 .course-section .course-form div.narrow .chosen-search input {
 	width: 100%;
 }
