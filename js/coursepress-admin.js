@@ -24,15 +24,15 @@ jQuery(document).ready(function($) {
         var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 1;
         var next_page = (unit_pages + 1);
         var id = "unit-page-" + next_page;
-        var li = '<li><a href="#' + id + '">' + next_page + '</a></li>';
+        var li = '<li><a href="#' + id + '">' + next_page + '</a><span class="arrow-down"></span></li>';
         var tabs_html = jQuery('.ui-tabs-nav').html();
-        var add_page_plus = '<li><a id="add_new_unit_page">+</a></li>';
+        var add_page_plus = '<li class="ui-state-default ui-corner-top"><a id="add_new_unit_page" class="ui-tabs-anchor">+</a></li>';
 
         tabs_html = tabs_html.replace(add_page_plus, '');
 
         jQuery('.ui-tabs-nav').html(tabs_html + li + add_page_plus);
 
-        jQuery('#unit-pages').append('<div id="unit-page-' + next_page + '"><div class="course-details new-unit-element-holder">' + jQuery('.new-unit-element-holder').html() + '</div><div class="modules_accordion"></div></div>');
+        jQuery('#unit-pages').append('<div id="unit-page-' + next_page + '"><div class="course-details elements-holder">' + jQuery('.elements-holder').html() + '</div><div class="modules_accordion"></div></div>');
 
         tabs.tabs("refresh");
 
