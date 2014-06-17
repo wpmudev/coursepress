@@ -980,7 +980,7 @@ p.description {
 }
 
 div.course-details {
-    padding-top: 10px;
+/*    padding-top: 10px;*/
     padding-left: 10px;
 }
 
@@ -1631,6 +1631,11 @@ label.bold-label{
     background: #0074A2;
 }
 
+.coursepress_page_course_details .course-control-buttons {
+    display: inline-block;
+    margin: 20px 0 0px 20px;
+}
+
 /* COURSE SETUP PAGE */
 .course-section.step input.button {
 	height: 26px;
@@ -1711,7 +1716,7 @@ label.bold-label{
 }
 
 .course-section .course-form div.narrow, .course-section .course-form div.wide {
-	margin-bottom: 30px;
+	margin-bottom: 40px;
 }
 
 .course-section .course-form div.wide input[type="email"],
@@ -1746,6 +1751,27 @@ label.bold-label{
 	width: 100%;
 }
 
+/* Wide/Narrow combo */
+.course-section .course-form div.wide.narrow input[type="email"],
+.course-section .course-form div.wide.narrow input[type="number"],
+.course-section .course-form div.wide.narrow input[type="password"],
+.course-section .course-form div.wide.narrow input[type="search"],
+.course-section .course-form div.wide.narrow input[type="tel"],
+.course-section .course-form div.wide.narrow input[type="text"],
+.course-section .course-form div.wide.narrow input[type="url"], 
+.course-section .course-form div.wide.narrow select,
+.course-section .course-form div.wide.narrow textarea {
+	width: 61.25%;
+}
+.course-section .course-form div.wide.narrow .course-holder-wrap .chosen-container {
+	width: 61.25%;
+}
+.course-section .course-form div.wide.narrow label,
+.course-section .course-form div.narrow .chosen-search input {
+	width: 100%;
+}
+
+
 .course-section .course-form input {
 	line-height: inherit;
 }
@@ -1757,6 +1783,8 @@ label.bold-label{
 .course-section .course-form label span {
 	font-size: 0.9em;
 	font-weight: normal;
+	display: block;
+	margin: 15px 0;
 }
 
 .course-section .course-form label a.context-link {
@@ -1764,6 +1792,43 @@ label.bold-label{
 	font-weight: normal;
 	text-decoration: underline;
 	float: right;
+}
+
+.course-section .course-form .course-structure label {
+	display: inline;
+	font-size: 1em;
+	font-weight: normal;
+}
+.course-section .course-form .course-structure input[type="checkbox"] {
+	margin-left: 20px;
+}
+
+.course-section .course-form .course-structure table {
+	margin: 20px 0 20px 20px;
+	border-bottom: 1px solid #DFDFDF;
+}
+.course-section .course-form .course-structure tr.break td {
+	border-bottom: 1px solid #DFDFDF;
+}
+
+
+/* Course Structure Columns */
+.course-section .course-structure .column-course-structure {
+	width: 320px;
+}
+
+.course-section .course-form .course-structure table td,
+.course-section .course-form .course-structure table th {
+	text-align: left;
+	padding: 3px 20px 3px 0;
+}
+
+.course-section .course-structure .column-course-structure
+.course-section .course-structure .column-show,
+.course-section .course-structure .column-free-preview,
+.course-section .course-structure .column-time {
+
+	
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */

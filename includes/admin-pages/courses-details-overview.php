@@ -187,7 +187,7 @@ if (isset($_GET['course_id'])) {
 									<div class="wide">
 		                            <label for='course_excerpt'>
 		                                <?php _e('Course Excerpt / Short Overview', 'cp'); ?>
-										<?php CP_Helper_Tooltip::tooltip( __('Provide a few short sentences to describe the course', 'cp') ); ?>
+										<?php //CP_Helper_Tooltip::tooltip( __('Provide a few short sentences to describe the course', 'cp') ); ?>
 		                            </label>
 		                            <?php
 		                            $args = array("textarea_name" => "course_excerpt", "textarea_rows" => 3, "media_buttons" => false, "quicktags" => false);
@@ -202,7 +202,7 @@ if (isset($_GET['course_id'])) {
 		                            ?>
 									</div>
 									
-									<div class="narrow">
+									<div class="wide narrow">
 		                            <label for='featured_url'>
 		                                <?php _e('Listing Image', 'cp'); ?><br />
 										<span><?php _e('The image is used on the "Courses" listing (archive) page along with the course excerpt.') ?></span>
@@ -263,8 +263,6 @@ if (isset($_GET['course_id'])) {
 	                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
 	                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
 									</div>
-																		
-									
 									
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
@@ -280,7 +278,100 @@ if (isset($_GET['course_id'])) {
 									<h3><?php _e( 'Step 2 - Course Description', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-									This is more stuff...
+									
+		                            <div class="wide narrow">
+		                                <?php
+		                                global $content_width;
+
+		                                wp_enqueue_style('thickbox');
+		                                wp_enqueue_script('thickbox');
+		                                wp_enqueue_media();
+		                                wp_enqueue_script('media-upload');
+
+		                                $supported_video_extensions = implode(", ", wp_get_video_extensions());
+
+		                                if (!empty($data)) {
+		                                    if (!isset($data->player_width) or empty($data->player_width)) {
+		                                        $data->player_width = empty($content_width) ? 640 : $content_width;
+		                                    }
+		                                }
+		                                ?>
+
+		                                <div class="video_url_holder mp-wrap">
+				                            <label for='featured_url'>
+				                                <?php _e('Featured Video', 'cp'); ?><br />
+												<span><?php _e('This is used on the Course Overview page and will be displayed with the course description.', 'cp'); ?></span>
+				                            </label>
+		                                    <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" placeholder="<?php
+		                                    _e('Add URL or Browse', 'cp');
+		                                    echo ' (' . $supported_video_extensions . ')';
+		                                    ?>" />
+
+		                                    <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
+
+		                                </div>
+		                            </div>									
+
+									<div class="wide">
+		                            <label for='course_description'>
+		                                <?php _e('Course Description', 'cp'); ?>
+										<?php // CP_Helper_Tooltip::tooltip( __('Provide a detailed description of the course', 'cp') ); ?>
+										<br />
+										<span><?php _e('This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp'); ?></span>
+		                            </label>
+		                            <?php
+		                            $args = array("textarea_name" => "course_description", "textarea_rows" => 10 );
+
+		                            if (!isset($course_details->post_content)) {
+		                                $course_details = new StdClass;
+		                                $course_details->post_content = '';
+		                            }
+
+		                            $desc = '';
+		                            wp_editor(htmlspecialchars_decode($course_details->post_content), "course_description", $args);
+		                            ?>
+									</div>
+									
+									<!-- PLACEHOLDER -->
+									<div class="wide">
+			                            <label>
+			                                <?php _e('Course Structure', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Provide a detailed description of the course', 'cp') ); ?>
+											<br />
+											<span><?php _e('This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'cp'); ?></span>
+			                            </label>
+										<div class="course-structure">
+											<input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked />
+											<label for="**PLACEHOLDER**"><?php _e('Show the Course Overview stucture and Preview Options', 'cp' ); ?></label><br />
+											<input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked />
+											<label for="**PLACEHOLDER**"><?php _e('Display Tome Estimates for Units and Lessons', 'cp' ); ?></label>
+											<table>
+												<thead>
+													<tr>
+														<th class="column-course-structure"><?php _e('Course Structure', 'cp' ); ?></th>
+														<th class="column-show"><?php _e('Show', 'cp' ); ?></th>
+														<th class="column-free-preview"><?php _e('Free Preview', 'cp' ); ?></th>
+														<th class="column-time"><?php _e('Time', 'cp' ); ?></th>
+													</tr>
+													<tr class="break"><td colspan="4"></td></tr>
+												</thead>
+												<tbody>	
+													<tr>
+														<th colspan="4"><?php _e( 'There are currently no Units to Display', 'cp'); ?></th>
+													</tr>
+													<tr>
+														<td>Unit...</td>
+														<td><input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked /></td>
+														<td><input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked /></td>
+														<td>10 min</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									
+									
+									
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
@@ -355,31 +446,6 @@ if (isset($_GET['course_id'])) {
 							</div>							
 							<!-- /Enrollment & Course Cost -->
 							
-
-                            <br/><br/>
-                            <label for='course_name'>
-                                <?php _e('Course Description', 'cp'); ?>
-                                <a class="help-icon" href="javascript:;"></a>
-                                <div class="tooltip">
-                                    <div class="tooltip-before"></div>
-                                    <div class="tooltip-button">&times;</div>
-                                    <div class="tooltip-content">
-                                        <?php _e('Provide a detailed description of the course', 'cp'); ?>
-                                    </div>
-                                </div>
-
-                            </label>
-                            <?php
-                            $args = array("textarea_name" => "course_description", "textarea_rows" => 10);
-
-                            if (!isset($course_details->post_content)) {
-                                $course_details = new StdClass;
-                                $course_details->post_content = '';
-                            }
-
-                            $desc = '';
-                            wp_editor(htmlspecialchars_decode($course_details->post_content), "course_description", $args);
-                            ?>
                             <br />
 
                             <div class="half">

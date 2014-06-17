@@ -247,6 +247,7 @@ jQuery(document).ready(function( $ ){
 			var newTop = $('.step-'+step).offset().top + 20;	
 			// Jump first, then animate		
 			$( document ).scrollTop( newTop );
+
 			$( nextSection ).children('.course-form').slideDown( 500 );
 			$( nextSection ).children('.course-section-title').animate( { backgroundColor: '#3D8ECF' }, 500);
 			$( nextSection ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
@@ -254,11 +255,11 @@ jQuery(document).ready(function( $ ){
 			$( this ).parents('.course-section').children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);
 			$( this ).parents('.course-section').children('.course-section-title').animate( { color: '#222' }, 500);
 			
-
 			$( nextSection ).addClass('active');
 			$( this ).parents('.course-section').removeClass('active');
 		} else {
 			// There is no 'next sections'. Now what?
+			alert ("meh");
 		}
 	});
 	

@@ -33,12 +33,16 @@
     font: normal normal 24px/1 dashicons;
     margin: -2px 2px 0 0;
     outline: 0;
+	outline: none;
     text-decoration: none;
     vertical-align: top;
 }
 
 .help-icon:before {
     content: "\f223";
+    outline: 0;
+	outline: none;
+	border: 0;
 }
 
 .help-text {
