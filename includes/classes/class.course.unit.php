@@ -133,7 +133,7 @@ if (!class_exists('Unit')) {
 
             $post = array(
                 'post_author' => $user_id,
-                'post_content' => $_POST['unit_description'],
+                'post_content' => '',//$_POST['unit_description']
                 'post_status' => $post_status, //$post_status
                 'post_title' => $_POST['unit_name'],
                 'post_type' => 'unit',

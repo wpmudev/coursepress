@@ -24,6 +24,31 @@
     padding-bottom: 5px;
 }
 
+#unit-pages{
+    border: 0px;
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #0074a2;
+    position: absolute;
+    bottom: -6px;
+    left: 7px;
+    display: none;
+}
+
+.elements-separator{
+    width: 1px;
+    height: 44px;
+    display: inline-block;
+    border-left: 1px solid #f3f3f3;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
 .elements-holder .input-element,
 .elements-holder .output-element{
     display: inline-block;
@@ -980,7 +1005,7 @@ p.description {
 }
 
 div.course-details {
-/*    padding-top: 10px;*/
+    /*    padding-top: 10px;*/
     padding-left: 10px;
 }
 
@@ -1236,7 +1261,7 @@ div.levelinformation {
 }
 
 #wp-course_description-wrap, #wp-course_excerpt-wrap {
-/*    width: 99%;*/
+    /*    width: 99%;*/
 }
 
 .sidebar-inner{
@@ -1638,85 +1663,85 @@ label.bold-label{
 
 /* COURSE SETUP PAGE */
 .course-section.step input.button {
-	height: 26px;
-	line-height: 0;
+    height: 26px;
+    line-height: 0;
 }
 
 .course-section.step .course-form {
-	display: none;
+    display: none;
 }
 
 .course-section.step.save-marker .course-form {
-	display: block;
+    display: block;
 }
 
 .course-section.step {
-	padding: 0 20px 0 10px;
+    padding: 0 20px 0 10px;
 }
 
 /* HEADINGS */
 .course-section.step .course-section-title {
-	position: relative;
-	background: #F1F1F1;
-	min-height: 50px;
-	padding: 0 20px;
+    position: relative;
+    background: #F1F1F1;
+    min-height: 50px;
+    padding: 0 20px;
 }
 
 .course-section.step .course-section-title .status {
-	content: " ";
-/*	background: #ffcccc;*/
-	height: 17px;
-	width: 17px;	
-	position: absolute;
-	top: 17px;
-	right: 20px;
-	line-height: 48px;
-	background: url(../images/course-setup.png) 0 0;
+    content: " ";
+    /*	background: #ffcccc;*/
+    height: 17px;
+    width: 17px;	
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    line-height: 48px;
+    background: url(../images/course-setup.png) 0 0;
 }
 
 .course-section.step .course-section-title .status.saved {
-	background: url(../images/course-setup.png) -17px 0;
+    background: url(../images/course-setup.png) -17px 0;
 }
 
 .course-section.step .course-section-title .status.invalid {
-	background: url(../images/course-setup.png) -34px 0;
+    background: url(../images/course-setup.png) -34px 0;
 }
 
 .course-section.step .course-section-title .status.attention {
-	background: url(../images/course-setup.png) -51px 0;
+    background: url(../images/course-setup.png) -51px 0;
 }
 
 .course-section.step .course-section-title .status.progress:before {
-	content: "SAVING";
-	position: absolute;
-	top: -17px;
-	right: 34px;
-	color: #3D8ECF;
+    content: "SAVING";
+    position: absolute;
+    top: -17px;
+    right: 34px;
+    color: #3D8ECF;
 }
 .course-section.step .course-section-title .status.progress {
-	background: url(../images/ajax-loader.gif) no-repeat;
+    background: url(../images/ajax-loader.gif) no-repeat;
 }
 
 .course-section.step .course-section-title h3 {
-	line-height: 48px;
-	font-weight: normal;
+    line-height: 48px;
+    font-weight: normal;
 }
 
 .course-section.step.active .course-section-title {
-	background: #3D8ECF;	
+    background: #3D8ECF;	
 }
 
 .course-section.step.active .course-section-title h3 {
-	font-weight: bold;
-	color: #ffffff;
+    font-weight: bold;
+    color: #ffffff;
 }
 
 .course-section .course-form {
-	padding: 50px 50px 20px;
+    padding: 50px 50px 20px;
 }
 
 .course-section .course-form div.narrow, .course-section .course-form div.wide {
-	margin-bottom: 40px;
+    margin-bottom: 40px;
 }
 
 .course-section .course-form div.wide input[type="email"],
@@ -1729,7 +1754,7 @@ label.bold-label{
 .course-section .course-form div.wide select,
 .course-section .course-form div.wide textarea,
 .course-section .course-form div.wide label {
-	width: 100%;
+    width: 100%;
 }
 
 .course-section .course-form div.narrow input[type="email"],
@@ -1742,13 +1767,13 @@ label.bold-label{
 .course-section .course-form div.narrow select,
 .course-section .course-form div.narrow textarea,
 .course-section .course-form div.narrow label {
-	width: 61.25%;
+    width: 61.25%;
 }
 .course-section .course-form div.narrow .course-holder-wrap .chosen-container {
-	width: 61.25%;
+    width: 61.25%;
 }
 .course-section .course-form div.narrow .chosen-search input {
-	width: 100%;
+    width: 100%;
 }
 
 /* Wide/Narrow combo */
@@ -1761,66 +1786,66 @@ label.bold-label{
 .course-section .course-form div.wide.narrow input[type="url"], 
 .course-section .course-form div.wide.narrow select,
 .course-section .course-form div.wide.narrow textarea {
-	width: 61.25%;
+    width: 61.25%;
 }
 .course-section .course-form div.wide.narrow .course-holder-wrap .chosen-container {
-	width: 61.25%;
+    width: 61.25%;
 }
 .course-section .course-form div.wide.narrow label,
 .course-section .course-form div.narrow .chosen-search input {
-	width: 100%;
+    width: 100%;
 }
 
 
 .course-section .course-form input {
-	line-height: inherit;
+    line-height: inherit;
 }
 
 .course-section .course-form label {
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 .course-section .course-form label span {
-	font-size: 0.9em;
-	font-weight: normal;
-	display: block;
-	margin: 15px 0;
+    font-size: 0.9em;
+    font-weight: normal;
+    display: block;
+    margin: 15px 0;
 }
 
 .course-section .course-form label a.context-link {
-	font-size: 0.9em;
-	font-weight: normal;
-	text-decoration: underline;
-	float: right;
+    font-size: 0.9em;
+    font-weight: normal;
+    text-decoration: underline;
+    float: right;
 }
 
 .course-section .course-form .course-structure label {
-	display: inline;
-	font-size: 1em;
-	font-weight: normal;
+    display: inline;
+    font-size: 1em;
+    font-weight: normal;
 }
 .course-section .course-form .course-structure input[type="checkbox"] {
-	margin-left: 20px;
+    margin-left: 20px;
 }
 
 .course-section .course-form .course-structure table {
-	margin: 20px 0 20px 20px;
-	border-bottom: 1px solid #DFDFDF;
+    margin: 20px 0 20px 20px;
+    border-bottom: 1px solid #DFDFDF;
 }
 .course-section .course-form .course-structure tr.break td {
-	border-bottom: 1px solid #DFDFDF;
+    border-bottom: 1px solid #DFDFDF;
 }
 
 
 /* Course Structure Columns */
 .course-section .course-structure .column-course-structure {
-	width: 320px;
+    width: 320px;
 }
 
 .course-section .course-form .course-structure table td,
 .course-section .course-form .course-structure table th {
-	text-align: left;
-	padding: 3px 20px 3px 0;
+    text-align: left;
+    padding: 3px 20px 3px 0;
 }
 
 .course-section .course-structure .column-course-structure
@@ -1828,28 +1853,28 @@ label.bold-label{
 .course-section .course-structure .column-free-preview,
 .course-section .course-structure .column-time {
 
-	
+
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
     font-size:0.9em;
-	color: #909090;
+    color: #909090;
     font-style: oblique;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     font-size:0.9em;
-	color: #909090;
+    color: #909090;
     font-style: oblique;
     opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
     font-size:0.9em;
-	color: #909090;	
+    color: #909090;	
     font-style: oblique;
     opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
     font-size:0.9em;
-	color: #909090;	
+    color: #909090;	
     font-style: oblique;
 }
