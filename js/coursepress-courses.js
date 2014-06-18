@@ -249,7 +249,7 @@ jQuery(document).ready(function( $ ){
 			$( document ).scrollTop( newTop );
 
 			$( nextSection ).children('.course-form').slideDown( 500 );
-			$( nextSection ).children('.course-section-title').animate( { backgroundColor: '#3D8ECF' }, 500);
+			$( nextSection ).children('.course-section-title').animate( { backgroundColor: '#0091cd' }, 500);
 			$( nextSection ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
 			$( this ).parents('.course-form').slideUp( 500 );
 			$( this ).parents('.course-section').children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);
@@ -284,7 +284,7 @@ jQuery(document).ready(function( $ ){
 			// There is a 'previous section'. What do you want to do with it?
 			var newTop = $('.step-'+prevStep).offset().top - 50;			
 			$( prevSection ).children('.course-form').slideDown( 500 );
-			$( prevSection ).children('.course-section-title').animate( { backgroundColor: '#3D8ECF' }, 500);
+			$( prevSection ).children('.course-section-title').animate( { backgroundColor: '#0091cd' }, 500);
 			$( prevSection ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
 			$( this ).parents('.course-form').slideUp( 500 );
 			$( this ).parents('.course-section').children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);

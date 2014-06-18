@@ -427,6 +427,9 @@ function removeInstructor(instructor_id) {
     if (delete_instructor_confirmed()) {
         jQuery("#instructor_holder_" + instructor_id).remove();
         jQuery("#instructor_" + instructor_id).remove();
+		if ( 1 == jQuery( '.instructor-avatar-holder' ).length ) {
+			jQuery('.instructor-avatar-holder.empty').show();			
+		}		
     }
 }
 
@@ -501,8 +504,9 @@ jQuery(document).ready(function() {
         var instructor_id = jQuery('#instructors option:selected').val();
 
         if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
-            jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
-        }
+			jQuery('.instructor-avatar-holder.empty').hide();
+            jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor(' + instructor_id + ');"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+        } 
 
         jQuery.get('admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id})
                 .success(function(data) {
@@ -625,13 +629,36 @@ jQuery(document).ready(function() {
 
 
 
-    jQuery('#open_ended_course').change(function() {
+    jQuery('#open_ended_enrollment').change(function() {
         if (this.checked) {
-            jQuery('#all_course_dates').hide(500);
+            //jQuery('#all_course_dates').hide(500);
+			jQuery( this ).parents('.enrollment-dates').find('.start-date').addClass('disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.start-date input').attr('disabled', 'disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.end-date').addClass('disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.end-date input').attr('disabled', 'disabled');			
         } else {
-            jQuery('#all_course_dates').show(500);
+            //jQuery('#all_course_dates').show(500);
+			jQuery( this ).parents('.enrollment-dates').find('.start-date').removeClass('disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.start-date input').removeAttr('disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.end-date').removeClass('disabled');
+			jQuery( this ).parents('.enrollment-dates').find('.end-date input').removeAttr('disabled');						
         }
     });
+
+    jQuery('#open_ended_course').change(function() {
+        if (this.checked) {
+			jQuery( this ).parents('.course-dates').find('.end-date').addClass('disabled');
+			jQuery( this ).parents('.course-dates').find('.end-date input').attr('disabled', 'disabled');			
+        } else {
+			jQuery( this ).parents('.course-dates').find('.end-date').removeClass('disabled');
+			jQuery( this ).parents('.course-dates').find('.end-date input').removeAttr('disabled');						
+        }
+    });
+	
+	
+	
+	
+	
 });
 jQuery(document).ready(function()
 {

@@ -166,7 +166,7 @@ if (isset($_GET['course_id'])) {
 							
 							
 							<!-- Course Overview -->
-							<div class='course-section step step-1 save-marker active'>
+							<div class='course-section step step-1'>
 								<div class='course-section-title'>
 									<div class="status"></div>									
 									<h3><?php _e( 'Step 1 - Course Overview', 'cp' )?></h3>
@@ -414,6 +414,14 @@ if (isset($_GET['course_id'])) {
 										
 										<p>Assigned Instructors:</p>
 		                                <div class="instructors-info" id="instructors-info">
+											<div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e( 'Please Assign Instructor', 'cp' ); ?></span></div>
+											<div id="instructor_holder_DEMO" class="instructor-avatar-holder pending demo">
+												<div class="instructor-status">PENDING</div>
+												<div class="instructor-remove"></div>
+												<img class="avatar avatar-80 photo" width="80" height="80" src="http://1.gravatar.com/avatar/9d2f55a32acd04fbfe7c00cc75d9d8e8?s=80&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D80&r=G" alt="admin">
+												<span class="instructor-name">DEMO IN CODE</span>
+											</div>
+											
 		                                    <?php
 		                                    if ((current_user_can('coursepress_assign_and_assign_instructor_course_cap')) || (current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id())) {
 		                                        $remove_button = true;
@@ -424,7 +432,27 @@ if (isset($_GET['course_id'])) {
 
 		                                    <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
 		                                </div>						
-										<hr clear="all" />
+										<div class="clearfix"></div>
+										<hr />
+
+										<!-- INVITE INSTRUCTOR -->
+										
+			                            <label>
+			                                <?php _e( 'Invite New Instructor', 'cp' ); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('If the instructor can not be found in the list above, you will need to invite them via email.', 'cp') ); ?>
+											<br />
+											<span><?php _e('If the instructor can not be found in the list above, you will need to invite them via email.', 'cp'); ?></span>
+			                            </label>										
+										<div class="instructor-invite">
+											<label for="**PLACEHOLDER**"><?php _e( 'First Name', 'cp' ); ?></label>
+											<input type="text" name="**PLACEHOLDER**" placeholder="First Name" />
+											<label for="**PLACEHOLDER**"><?php _e( 'Last Name', 'cp' ); ?></label>
+											<input type="text" name="**PLACEHOLDER**" placeholder="Last Name" />
+											<label for="**PLACEHOLDER**"><?php _e( 'E-Mail', 'cp' ); ?></label>
+											<input type="text" name="**PLACEHOLDER**" placeholder="instructor@email.com" />
+											<input class="button-primary" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
+										</div>
+
 										
 									</div>
 
@@ -444,7 +472,61 @@ if (isset($_GET['course_id'])) {
 									<h3><?php _e( 'Step 4 - Course Dates', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-									This is more stuff...
+
+		                            <div class="wide course-dates"> 
+		                                <label>
+											<?php _e('Course Dates', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('This is the duration the course will be open to the students.', 'cp') ); ?>
+										</label>	
+				                        
+										<div class="course-date-override">    
+												<!-- <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> /> -->
+												<input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />
+				                                <label><?php _e('This course has no end date', 'cp'); ?></label>
+										</div>
+										
+										<p><?php _e('This is the duration the course will be open to the students', 'cp'); ?></p>
+
+										<div class="date-range">
+											<div class="start-date">
+				                                <label for="meta_course_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
+				                                <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /></div>
+											</div>
+											<div class="end-date">
+												<label for="meta_course_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
+												<div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" /></div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+							
+		                            <div class="wide enrollment-dates">                             
+		                                <label>
+											<?php _e('Enrollment Dates', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('These are the dates that students can enroll.', 'cp') ); ?>
+										</label>	
+				                        
+										<div class="enrollment-date-override">    
+												<input type="checkbox" name="meta_open_ended_enrollment" id="open_ended_enrollment" <?php echo ($open_ended_enrollment == 'on') ? 'checked' : ''; ?> />
+				                                <label><?php _e('Users can enroll at any time', 'cp'); ?></label>
+										</div>
+										
+										<p><?php _e('These are the dates that students can enroll', 'cp'); ?></p>
+
+										<div class="date-range">
+											<div class="start-date">
+				                                <label for="meta_enrollment_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
+				                                <div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" /></div>
+											</div>
+											<div class="end-date">
+												<label for="meta_enrollment_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
+												<div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" /></div>
+											</div>
+										</div>
+
+										<div class="clearfix"></div>								
+		                            </div><!--/all-course-dates-->
+
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 										<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
@@ -460,7 +542,36 @@ if (isset($_GET['course_id'])) {
 									<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
-									This is just stuff...
+
+		                            <div class="wide narrow">
+			                            <label for='meta_class-size'>
+											<input type="checkbox" />
+											<?php _e('Limit class size', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'cp') ); ?>
+											<br />
+											<span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'cp'); ?></span>
+			                            </label>
+		                                <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
+										
+										<hr />
+										
+			                            <label for='meta_allow_course_discussion'>
+											<input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
+											<?php _e('Allow Course Discussion', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp') ); ?>
+											<br />
+											<span><?php _e('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp'); ?></span>
+			                            </label>
+										
+			                            <label for='meta_class-size'>
+		                                    <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ($allow_workbook_page == 'on') ? 'checked' : ''; ?> />
+											<?php _e('Show student Workbook', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('If checked, students can see their progress and grades.', 'cp') ); ?>
+											<br />
+											<span><?php _e('If checked, students can see their progress and grades.', 'cp'); ?></span>
+			                            </label>										
+										
+		                            </div>
 									
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
@@ -471,13 +582,128 @@ if (isset($_GET['course_id'])) {
 							<!-- /Classes, Discussions & Workbook -->							
 
 							<!-- Enrollment & Course Cost -->
-							<div class='course-section step step-6'>
+							<div class='course-section step step-6 save-marker active'>
 								<div class='course-section-title'>
 									<div class="status"></div>									
 									<h3><?php _e( 'Step 6 - Enrollment & Course Cost', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
-									This is more stuff...
+									
+									<div class="narrow">
+			                            <label for='meta_enroll_type'>
+											<?php _e('Who can Enroll in this course', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Select the limitations on accessing and enrolling in this course.', 'cp') ); ?>
+											<br />
+											<span><?php _e('Select the limitations on accessing and enrolling in this course.', 'cp'); ?></span>
+			                            </label>
+										
+		                                <select class="wide" name="meta_enroll_type" id="enroll_type">
+		                                    <option value="anyone" <?php echo ($enroll_type == 'anyone' ? 'selected=""' : '') ?>><?php _e(' Anyone ', 'cp'); ?></option>
+		                                    <option value="passcode" <?php echo ($enroll_type == 'passcode' ? 'selected=""' : '') ?>><?php _e('Anyone with a pass code', 'cp'); ?></option>
+		                                    <option value="prerequisite" <?php echo ($enroll_type == 'prerequisite' ? 'selected=""' : '') ?>><?php _e('Anyone who completed the prerequisite course', 'cp'); ?></option>
+		                                    <option value="manually" <?php echo ($enroll_type == 'manually' ? 'selected=""' : '') ?>><?php _e('Manually added only', 'cp'); ?></option>
+		                                </select>
+									</div>
+									
+		                            <div class='wide' id='manually_added_holder'>
+		                                <p><?php _e('NOTE: If you need to manually add a student, students must be registered on your site first. To do this for a student, you can do this yourself by going to Users in WordPress where you can add the students manually. You can then select them from this list.', 'cp'); ?></p>
+		                            </div>
+									
+		                            <div class="wide" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
+		                                <label for='meta_enroll_type'>
+											<?php _e('Prerequisite Course', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Students will need to fulfil prerequisite in order to enroll.', 'cp') ); ?>
+		                                </label>
+										<p><?php _e('Students will need to complete the following prerequisite course in order to enroll.', 'cp'); ?></p>
+		                                <select name="meta_prerequisite" class="chosen-select">
+		                                    <?php
+		                                    $args = array(
+		                                        'post_type' => 'course',
+		                                        'post_status' => 'any',
+		                                        'posts_per_page' => -1,
+		                                        'exclude' => $course_id
+		                                    );
+
+		                                    $pre_courses = get_posts($args);
+
+		                                    foreach ($pre_courses as $pre_course) {
+
+		                                        $pre_course_obj = new Course($pre_course->ID);
+		                                        $pre_course_object = $pre_course_obj->get_course();
+		                                        ?>
+		                                        <option value="<?php echo $pre_course->ID; ?>" <?php selected($prerequisite, $pre_course->ID, true); ?>><?php echo $pre_course->post_title; ?></option>
+		                                        <?php
+		                                    }
+		                                    ?>
+		                                </select>
+
+		                            </div>
+									
+		                            <div class="narrow" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
+		                                <label for='meta_enroll_type'>
+											<?php _e('Pass Code', 'cp'); ?>
+											<?php // CP_Helper_Tooltip::tooltip( __('Students will need to enter this pass code in order to enroll.', 'cp') ); ?>
+		                                </label>
+										<p><?php _e('Students will need to enter this pass code in order to enroll.', 'cp'); ?></p>
+
+		                                <input type="text" name="meta_passcode" value="<?php echo esc_attr(stripslashes($passcode)); ?>" />
+
+		                            </div>
+									
+									<hr />
+
+									<div class="narrow product">
+										
+										<?php if ($coursepress->is_marketpress_active()) : ?>
+											<label>
+												<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
+											</label>
+
+											<?php _e(
+												  '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
+												  '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
+												  '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp' ); ?>
+
+										<?php else: ?>
+											<label>
+												<?php _e( 'Cost to participate in this course', 'cp' ); ?>
+											</label>
+											
+											<div class="course-paid">
+												<p><input type="checkbox" />
+												<?php _e( 'This is a Paid Course', 'cp' ); ?></p>
+											</div>
+											
+											<div class="course-sku">
+												<p><input type="checkbox" />
+												<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?></p>
+												<input type="text" placeholder="CP-000001" />
+											</div>
+											
+											<div class="course-price">
+												<div><span><?php _e( 'Price', 'cp' ); ?></span>
+												<input type="text" /></div>
+											</div>
+											<div class="clearfix"></div>
+											<div class="course-sale-price">
+												<p><input type="checkbox" />
+												<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
+												<p><span><?php _e( 'Sale Price', 'cp' ); ?></span><input type="text" /></p>
+											</div>
+											<div class="clearfix"></div>
+											<div class="course-enable-gateways">											
+												<?php if ( ! $gateways ) : ?>
+													<a href="#" class="button button-incomplete-gateways"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
+												<?php else: ?>
+													<a href="#" class="button button-edit-gateways"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>												
+												<?php endif; ?>
+											</div>
+											
+											
+										<?php endif; ?>
+									</div>
+									
+									
 									<div class="course-step-buttons">
 										<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 										<input type="button" class="button button-units done" value="<?php _e( 'Done', 'cp' ); ?>" />
@@ -486,195 +712,10 @@ if (isset($_GET['course_id'])) {
 							</div>							
 							<!-- /Enrollment & Course Cost -->
 							
-                            <br />
-
-                            
-
-                            <div class="half">
-                                <h3><?php _e('Assigned Instructor(s)', 'cp'); ?></h3>
+                           
+                                                       <br clear="all" />
 
 
-                            </div>
-
-                            <br clear="all" />
-                            <div class="full border-devider"></div>
-
-                            <div class="half">
-                                <h3><?php _e('Listing Image', 'cp'); ?></h3>
-                                <p><?php _e('The image is used on the "Courses" listing (archive) page along with the course excerpt.') ?></p>
-                                <div class="featured_url_holder">
-                                    <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
-                                    if ($course_id !== 0) {
-                                        echo esc_attr($course->details->featured_url);
-                                    }
-                                    ?>" placeholder="<?php _e('Add Image URL of Browse for Image', 'cp'); ?>" />
-                                    <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                                    <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
-                                    if ($course_id !== 0) {
-                                        echo get_post_meta($course_id, '_thumbnail_id', true);
-                                    }
-                                    ?>" />
-                                           <?php
-                                           //get_the_post_thumbnail($course_id, 'course_thumb', array(100, 100));
-                                           //echo wp_get_attachment_image(get_post_meta($course_id, '_thumbnail_id', true), array(100, 100));
-                                           //echo 'asdads'.get_post_meta($course_id, '_thumbnail_id', true);
-                                           ?>
-                                </div>
-                            </div>
-
-                            <div class="half">
-                                <?php
-                                global $content_width;
-
-                                wp_enqueue_style('thickbox');
-                                wp_enqueue_script('thickbox');
-                                wp_enqueue_media();
-                                wp_enqueue_script('media-upload');
-
-                                $supported_video_extensions = implode(", ", wp_get_video_extensions());
-
-                                if (!empty($data)) {
-                                    if (!isset($data->player_width) or empty($data->player_width)) {
-                                        $data->player_width = empty($content_width) ? 640 : $content_width;
-                                    }
-                                }
-                                ?>
-
-                                <div class="video_url_holder mp-wrap">
-                                    <h3><?php _e('Featured Video', 'cp'); ?></h3>
-                                    <p><?php _e('This is used on the Course Overview page and will be displayed with the course description.', 'cp'); ?></p>
-
-                                    <input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr($course_video_url); ?>" placeholder="<?php
-                                    _e('Add URL or Browse', 'cp');
-                                    echo ' (' . $supported_video_extensions . ')';
-                                    ?>" />
-
-                                    <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
-
-                                </div>
-                            </div>
-
-                            <br clear="all" />
-                            <div class="full border-devider"></div>
-
-                            <div class="half">
-                                <label for='meta_class-size'><?php _e('Class size', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('Select 0 for infinite', 'cp'); ?>
-                                        </div>
-                                    </div>
-
-                                </label>
-                                <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
-                            </div>
-
-                            <div class="half">
-                                <label for='meta_enroll_type'><?php _e('How & Who can Enroll?', 'cp'); ?></label>
-
-                                <select class="wide" name="meta_enroll_type" id="enroll_type">
-                                    <option value="anyone" <?php echo ($enroll_type == 'anyone' ? 'selected=""' : '') ?>><?php _e(' Anyone ', 'cp'); ?></option>
-                                    <option value="passcode" <?php echo ($enroll_type == 'passcode' ? 'selected=""' : '') ?>><?php _e('Anyone with a pass code', 'cp'); ?></option>
-                                    <option value="prerequisite" <?php echo ($enroll_type == 'prerequisite' ? 'selected=""' : '') ?>><?php _e('Anyone who completed the prerequisite course', 'cp'); ?></option>
-                                    <option value="manually" <?php echo ($enroll_type == 'manually' ? 'selected=""' : '') ?>><?php _e('Manually added only', 'cp'); ?></option>
-                                </select>
-
-                            </div>
-
-                            <div class="half">
-                                <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>
-                                <input type="text" name="meta_course_language" value="<?php echo esc_attr(stripslashes($language)); ?>" />
-                            </div>
-
-                            <div class='half' id='manually_added_holder'>
-                                <p><?php _e('NOTE: If you need to manually add a student, students must be registered on your site first. To do this for a student, you can do this yourself by going to Users in WordPress where you can add the students manually. You can then select them from this list.', 'cp'); ?></p>
-                            </div>
-                            <div class="half" id="enroll_type_prerequisite_holder" <?php echo ($enroll_type <> 'prerequisite' ? 'style="display:none"' : '') ?>>
-                                <label for='meta_enroll_type'><?php _e('Prerequisite Course', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('Students will need to fulfil prerequisite in order to enroll', 'cp'); ?>
-                                        </div>
-                                    </div>
-
-                                </label>
-                                <select name="meta_prerequisite" class="chosen-select">
-                                    <?php
-                                    $args = array(
-                                        'post_type' => 'course',
-                                        'post_status' => 'any',
-                                        'posts_per_page' => -1,
-                                        'exclude' => $course_id
-                                    );
-
-                                    $pre_courses = get_posts($args);
-
-                                    foreach ($pre_courses as $pre_course) {
-
-                                        $pre_course_obj = new Course($pre_course->ID);
-                                        $pre_course_object = $pre_course_obj->get_course();
-                                        ?>
-                                        <option value="<?php echo $pre_course->ID; ?>" <?php selected($prerequisite, $pre_course->ID, true); ?>><?php echo $pre_course->post_title; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
-
-                            </div>
-
-
-                            <div class="half" id="enroll_type_holder" <?php echo ($enroll_type <> 'passcode' ? 'style="display:none"' : '') ?>>
-                                <label for='meta_enroll_type'><?php _e('Pass Code', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('Students will need to enter the pass code in order to enroll', 'cp'); ?>
-                                        </div>
-                                    </div>
-
-                                </label>
-                                <input type="text" name="meta_passcode" value="<?php echo esc_attr(stripslashes($passcode)); ?>" />
-
-                            </div>
-
-                            <!--<div class="half">
-                                <label><?php _e('Course Category', 'cp'); ?></label>
-                            <?php
-                            $tax_args = array(
-                                'show_option_all' => '',
-                                'show_option_none' => __('-- None --', 'cp'),
-                                'orderby' => 'ID',
-                                'order' => 'ASC',
-                                'show_count' => 0,
-                                'hide_empty' => 0,
-                                'echo' => 1,
-                                'selected' => $course_category,
-                                'hierarchical' => 0,
-                                'name' => 'meta_course_category',
-                                'id' => '',
-                                'class' => 'postform chosen-select',
-                                'depth' => 0,
-                                'tab_index' => -1,
-                                'taxonomy' => 'course_category',
-                                'hide_if_empty' => false,
-                                'walker' => ''
-                            );
-
-                            $taxonomies = array('course_category');
-                            wp_dropdown_categories($tax_args);
-                            ?>
-                                <a href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
-
-                            </div>-->
-                            <br clear="all" />
 
                             <div class="full border-devider">
                                 <div class="half">
@@ -682,7 +723,7 @@ if (isset($_GET['course_id'])) {
                                     
                                     <?php
                                     
-                                    if ($coursepress->is_marketpress_active()) {
+                                    if (!$coursepress->is_marketpress_active()) {
                                         ?>
 
                                         <?php _e('MarketPress product'); ?>
@@ -723,78 +764,6 @@ if (isset($_GET['course_id'])) {
 
                             <br clear="all" />
 
-                            <div class="full border-devider">
-                                <label><?php _e('Course can be done at any time', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('The first or last course or enrollment date having no upper or lower limit.', 'cp') ?>
-                                        </div>
-                                    </div>
-
-                                    <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />
-                                </label>
-                            </div>
-
-                            <div id="all_course_dates" class="border-devider" <?php echo ($open_ended_course == 'on') ? 'style="display:none;"' : ''; ?>>
-
-                                <label><?php _e('Course Dates:', 'cp'); ?></label>
-
-                                <p class="description"></p>
-
-                                <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                    <input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" />
-                                </div>
-
-                                <div class="half"><?php _e('End Date', 'cp'); ?> 
-                                    <input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" />
-                                </div>
-
-                                <br clear="all" />
-                                <br clear="all" />
-
-                                <label><?php _e('Enrollment Dates:', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('Student may enroll only during selected date range', 'cp'); ?>
-                                        </div>
-                                    </div>
-
-                                </label>
-
-                                <div class="half"><?php _e('Start Date', 'cp'); ?>
-                                    <input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" />
-                                </div>
-
-                                <div class="half"><?php _e('End Date', 'cp'); ?>
-                                    <input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" />
-                                </div>
-                            </div><!--/all-course-dates-->
-
-                            <br clear="all" />
-
-                            <div class="full border-devider">
-                                <label><?php _e('Allow Course Discussion', 'cp'); ?>
-
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('If checked, students can post questions and get answers.', 'cp') ?>
-                                        </div>
-                                    </div>
-
-                                    <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ($allow_course_discussion == 'on') ? 'checked' : ''; ?> />
-                                </label>
-
-                            </div>
-
                             <!--<div class="full border-devider">
                                 <label><?php _e('Show Grades Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
@@ -810,21 +779,6 @@ if (isset($_GET['course_id'])) {
                                 </label>
                             </div>-->
 
-                            <div class="full border-devider">
-                                <label><?php _e('Add Workbook Page for Students', 'cp'); ?>
-                                    <a class="help-icon" href="javascript:;"></a>
-                                    <div class="tooltip">
-                                        <div class="tooltip-before"></div>
-                                        <div class="tooltip-button">&times;</div>
-                                        <div class="tooltip-content">
-                                            <?php _e('This is a page where students can see their progress and grades.', 'cp') ?>
-                                        </div>
-                                    </div>
-
-                                    <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ($allow_workbook_page == 'on') ? 'checked' : ''; ?> />
-                                </label>
-
-                            </div>
 
                             <br clear="all" />
                         </div>

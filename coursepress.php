@@ -1679,6 +1679,7 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_style('cp-38');
             }
 
+			//wp_enqueue_style('open_sans', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,700');
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             wp_enqueue_style('admin_general_responsive', $this->plugin_url . 'css/admin_general_responsive.css', array(), $this->version);
