@@ -1,6 +1,6 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice;
-global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered;
+global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered, $save_elements;
 
 $course_id = '';
 
@@ -192,28 +192,28 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                 </div>
             </div>
-            <div class='section'>
+            <div class='section elements-section'>
                 <input type="hidden" name="beingdragged" id="beingdragged" value="" />
                 <div id='course'>
 
 
-                    <div id='edit-sub' class='course-holder-wrap'>
+                    <div id='edit-sub' class='course-holder-wrap elements-wrap'>
 
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
                                 <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
-                                <?php
-                                $args = array("textarea_name" => "unit_description", "textarea_rows" => 10);
+                            <?php
+                            $args = array("textarea_name" => "unit_description", "textarea_rows" => 10);
 
-                                if (!isset($unit_details->post_content)) {
-                                    $unit_details = new StdClass;
-                                    $unit_details->post_content = '';
-                                }
+                            if (!isset($unit_details->post_content)) {
+                                $unit_details = new StdClass;
+                                $unit_details->post_content = '';
+                            }
 
-                                $desc = '';
-                                wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
-                                ?>
+                            $desc = '';
+                            wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
+                            ?>
                                 <br/>
 
                             </div>-->
@@ -225,7 +225,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                             <div id="unit-pages">
                                 <ul class="sidebar-name unit-pages-navigation">
-                                    <li class="unit-pages-title"><span><?php _e('Unit Page(s)', 'cp');?></span></li>
+                                    <li class="unit-pages-title"><span><?php _e('Unit Page(s)', 'cp'); ?></span></li>
                                     <?php
                                     $unit_pages = coursepress_unit_pages($unit_id);
                                     if ($unit_id == 0) {
@@ -240,6 +240,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                                 <?php
                                 //$pages_num = 1;
+
+                                $save_elements = true;
 
                                 $module = new Unit_Module();
                                 $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id);
@@ -278,6 +280,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                                 </div>
                                                 <?php
                                             }
+                                            $save_elements = false;
                                             ?>
 
                                         </div>

@@ -19,18 +19,34 @@ class text_input_module extends Unit_Module {
 
     function get_response_form($user_ID, $response_request_ID, $show_label = true) {
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count((array) $response >= 1)) {
-            ?>
-            <div class="module_text_response_answer">
-                <?php if ($show_label) { ?>
-                    <label><?php _e('Response', 'cp'); ?></label>
-                <?php } ?>
-                <div class="front_response_content">
-                    <?php echo nl2br($response->post_content); ?>
-                </div>
-            </div>
 
-            <?php
+        $answer_length = get_post_meta($response_request_ID, 'answer_length', false);
+
+        if (count((array) $response >= 1)) {
+            if ((isset($answer_length) && $answer_length == 'single') || !isset($answer_length)) {
+                ?>
+                <div class="module_text_response_answer">
+                    <?php if ($show_label) { ?>
+                        <label><?php _e('Response', 'cp'); ?></label>
+                    <?php } ?>
+                    <div class="front_response_content">
+                        <?php echo nl2br($response->post_content); ?>
+                    </div>               
+                </div>
+
+                <?php
+            } else {
+                ?>
+                <div class="module_textarea_response_answer">
+                    <?php if ($show_label) { ?>
+                        <label><?php _e('Response', 'cp'); ?></label>
+                    <?php } ?>
+                    <div class="front_response_content">
+                        <?php echo nl2br($response->post_content); ?>
+                    </div>
+                </div>
+                <?php
+            }
         } else {
             _e('No answer / response', 'cp');
         }
@@ -71,42 +87,58 @@ class text_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
-            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
-                <h2 class="module_title"><?php echo $data->post_title; ?></h2>
-            <?php } ?>
 
-            <?php if ($data->post_content != '') { ?>  
-                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
-            <?php } ?>
+        <?php if ((isset($data->answer_length) && $data->answer_length == 'single') || (!isset($data->answer_length))) { ?>
 
-            <?php if (is_object($response) && count($response) >= 1 && trim($response->post_content) !== '') { ?>
-                <div class="front_response_content">
-                    <?php echo $response->post_content; ?>
-                </div>
-            <?php } else { ?>
-                <div class="module_textarea_input"><input <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"';?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
-            <?php } ?>
+            <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
+                <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+                    <h2 class="module_title"><?php echo $data->post_title; ?></h2>
+                <?php } ?>
 
+                <?php if ($data->post_content != '') { ?>  
+                    <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+                <?php } ?>
 
+                <?php if (is_object($response) && count($response) >= 1 && trim($response->post_content) !== '') { ?>
+                    <div class="front_response_content">
+                        <?php echo $response->post_content; ?>
+                    </div>
+                <?php } else { ?>
+                    <div class="module_textarea_input"><input <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>" value="<?php echo (is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ''); ?>" <?php echo $enabled; ?> /></div>
+                <?php } ?>
+
+                <?php if ($data->mandatory_answer == 'yes') { ?>
+                    <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
+                <?php } ?>
+            </div>
             <?php
-            /* $unit_module_main = new Unit_Module();
-
-              if (is_object($response) && !empty($response)) {
-
-              $comment = $unit_module_main->get_response_comment($response->ID);
-              if (!empty($comment)) {
-              ?>
-              <div class="response_comment_front"><?php echo $comment; ?></div>
-              <?php
-              }
-              } */
+        } else {
             ?>
-            <?php if ($data->mandatory_answer == 'yes') { ?>
-                <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
-            <?php } ?>
-        </div>
-        <?php
+            <div class="<?php echo $this->name; ?> front-single-module<?php echo ($this->front_save == true ? '-save' : ''); ?>">
+                <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+                    <h2 class="module_title"><?php echo $data->post_title; ?></h2>
+                <?php } ?>
+
+                <?php if ($data->post_content != '') { ?>  
+                    <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+                <?php } ?>
+
+                <div class="module_textarea_input">
+                    <?php if (count($response) >= 1 && trim($response->post_content) !== '') { ?>
+                        <div class="front_response_content">
+                            <?php echo $response->post_content; ?>
+                        </div>
+                    <?php } else { ?>
+                        <textarea <?php echo ($data->mandatory_answer == 'yes') ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : ''); ?>"></textarea>
+                    <?php } ?>
+                </div>
+
+                <?php if ($data->mandatory_answer == 'yes') { ?>
+                    <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
+                <?php } ?>
+            </div>
+            <?php
+        }
     }
 
     function admin_main($data) {
@@ -190,6 +222,12 @@ class text_input_module extends Unit_Module {
                     ?>
                 </div>
 
+                <div class="answer_length">  
+                    <label class="bold-label"><?php _e('Answer Length', 'cp'); ?></label>
+                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="single" <?php ?> <?php echo (isset($data->answer_length) && $data->answer_length == 'single' ? 'checked' : (!isset($data->answer_length)) ? 'checked' : '') ?> /> <?php _e('Single Line', 'tc'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="multi" <?php echo (isset($data->answer_length) && $data->answer_length == 'multi' ? 'checked' : ''); ?> /> <?php _e('Multiple Lines', 'tc'); ?>
+                </div>
+
                 <div class="placeholder_holder">
                     <label><?php _e('Placeholder Text') ?>
                         <a class="help-icon" href="javascript:;"></a>
@@ -218,10 +256,10 @@ class text_input_module extends Unit_Module {
     }
 
     function save_module_data() {
-        global $wpdb, $last_inserted_unit_id;
+        global $wpdb, $last_inserted_unit_id, $save_elements;
 
-        if (isset($_POST['module_type'])) {
-
+        if (isset($_POST['module_type']) && ($save_elements == true)) {
+            
             foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
 
                 if ($module_value == $this->name) {
@@ -243,6 +281,7 @@ class text_input_module extends Unit_Module {
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['placeholder_text'] = $_POST[$this->name . '_placeholder_text'][$key];
+                            $data->metas['answer_length'] = $_POST[$this->name . '_answer_length'][$key];
 
                             if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];

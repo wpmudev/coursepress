@@ -1735,6 +1735,10 @@ li.unit-pages-title span {
     padding-left: 10px;
 }
 
+.unit-pages-navigation{
+    display: none;
+}
+
 .unit-pages-navigation .ui-state-default a, 
 .unit-pages-navigation .ui-state-default a:link, 
 .unit-pages-navigation .ui-state-default a:visited{

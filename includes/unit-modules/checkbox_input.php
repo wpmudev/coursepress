@@ -313,9 +313,9 @@ class checkbox_input_module extends Unit_Module {
     }
 
     function save_module_data() {
-        global $wpdb, $last_inserted_unit_id;
+        global $wpdb, $last_inserted_unit_id, $save_elements;
 
-        if (isset($_POST['module_type'])) {
+        if (isset($_POST['module_type']) && ($save_elements == true)) {
 
             $answers = array();
             $checked_answers = array();

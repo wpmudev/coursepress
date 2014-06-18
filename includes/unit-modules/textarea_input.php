@@ -83,19 +83,6 @@ class textarea_input_module extends Unit_Module {
                 <?php } ?>
             </div>
 
-            <?php
-            /* $unit_module_main = new Unit_Module();
-
-              if (is_object($response) && !empty($response)) {
-
-              $comment = $unit_module_main->get_response_comment($response->ID);
-              if (!empty($comment)) {
-              ?>
-              <div class="response_comment_front"><?php echo $comment; ?></div>
-              <?php
-              }
-              } */
-            ?>
             <?php if ($data->mandatory_answer == 'yes') { ?>
                 <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
             <?php } ?>
@@ -212,9 +199,9 @@ class textarea_input_module extends Unit_Module {
     }
 
     function save_module_data() {
-        global $wpdb, $last_inserted_unit_id;
+        global $wpdb, $last_inserted_unit_id, $save_elements;
 
-        if (isset($_POST['module_type'])) {
+        if (isset($_POST['module_type']) && ($save_elements == true)) {
 
             foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
 

@@ -47,6 +47,8 @@
     border-left: 1px solid #f3f3f3;
     margin-left: 15px;
     margin-right: 15px;
+    margin-top: 5px;
+    margin-bottom: -5px;
 }
 
 .elements-holder .input-element,
@@ -965,6 +967,10 @@ div.course-holder-wrap {
     margin: 10px 0 20px;
 }
 
+div.course-holder-wrap.elements-wrap {
+    margin: 0px;
+}
+
 .sidebar-name {
     border-color: #dfdfdf;
 }
@@ -1297,6 +1303,11 @@ div.levelinformation {
 }
 
 .audio_additional_controls label{
+    margin-top:10px;    
+    padding-bottom:5px;    
+}
+
+.answer_length label{
     margin-top:10px;    
     padding-bottom:5px;    
 }
@@ -1649,6 +1660,14 @@ label.bold-label{
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static,
 .coursepress_page_course_details .mp-wrap .mp-settings .section{
     padding: 20px;
+}
+
+.coursepress_page_course_details .mp-wrap .mp-settings .section.elements-section{
+    padding: 0px;
+}
+
+.elements-wrap .course-holder{
+    border-width: 0px;
 }
 
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static {

@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 
     function add_new_unit_page() {
         var tabs = jQuery("#unit-pages").tabs();
-        var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 1;
+        var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;
         var next_page = (unit_pages + 1);
         var id = "unit-page-" + next_page;
         var li = '<li><a href="#' + id + '">' + next_page + '</a><span class="arrow-down"></span></li>';
@@ -551,6 +551,7 @@ jQuery(document).ready(function() {
 
     jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').show();
     jQuery(".loading_elements").hide();
+    jQuery(".unit-pages-navigation").show();
 
     var editor_content = '';
 
