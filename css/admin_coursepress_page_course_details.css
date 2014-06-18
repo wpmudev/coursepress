@@ -2028,6 +2028,38 @@ label.bold-label{
 	width: 80px;
 }
 
+
+.course-section .course-form .button-edit-gateways,
+.course-section .course-form .button-incomplete-gateways {
+	padding-left: 24px;
+	position: relative;
+}
+
+.course-section .course-form .button-incomplete-gateways {
+	border-color: #cc712e;
+	color: #ffffff;
+	box-shadow: 0 1px 0 #fdc575 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+	background-color: #f5a00c;
+}
+
+
+.course-section .course-form .button-edit-gateways:before,
+.course-section .course-form .button-incomplete-gateways:before {
+    font: normal normal 17px/17px dashicons;
+	font-weight: normal;
+	content: "\f111";
+	position: absolute;
+	top: 5px;
+	left: 4px;
+	z-index: 9999;
+	color: #ffffff;
+}
+
+.course-section .course-form .button-edit-gateways:before {
+	color: #444;	
+}
+
+
 ::-webkit-input-placeholder { /* WebKit browsers */
     font-size:0.9em;
     color: #909090;

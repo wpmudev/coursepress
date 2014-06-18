@@ -692,7 +692,7 @@ if (isset($_GET['course_id'])) {
 											</div>
 											<div class="clearfix"></div>
 											<div class="course-enable-gateways">											
-												<?php if ( ! $gateways ) : ?>
+												<?php if (  $gateways ) : ?>
 													<a href="#" class="button button-incomplete-gateways"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
 												<?php else: ?>
 													<a href="#" class="button button-edit-gateways"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>												
@@ -723,7 +723,7 @@ if (isset($_GET['course_id'])) {
                                     
                                     <?php
                                     
-                                    if (!$coursepress->is_marketpress_active()) {
+                                    if ($coursepress->is_marketpress_active()) {
                                         ?>
 
                                         <?php _e('MarketPress product'); ?>
