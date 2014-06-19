@@ -98,10 +98,10 @@ if (!class_exists('Course')) {
             global $user_id, $wpdb;
 
             $course = get_post($this->id, $this->output);
-
+			
             $post_status = 'publish';
 
-            if ($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') && $_POST['course_description'] != '') {
+            if ($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') ) {
                 if ($course->post_status != 'publish') {
                     $post_status = 'private';
                 }
@@ -111,12 +111,23 @@ if (!class_exists('Course')) {
 
             $post = array(
                 'post_author' => $user_id,
-                'post_excerpt' => $_POST['course_excerpt'],
-                'post_content' => $_POST['course_description'],
+                // 'post_excerpt' => $_POST['course_excerpt'],
+                // 'post_content' => $_POST['course_description'],
                 'post_status' => $post_status,
-                'post_title' => $_POST['course_name'],
+                // 'post_title' => $_POST['course_name'],
                 'post_type' => 'course',
             );
+			
+			// If the course already exsists, avoid accidentally wiping out important fields.
+			if ( $course ) {
+				$post['post_excerpt'] = empty( $_POST['course_excerpt'] ) ? $course->post_excerpt : $_POST['course_excerpt'];
+				$post['post_content'] = empty( $_POST['course_description'] ) ? $course->post_content : $_POST['course_description'];
+				$post['post_title'] = empty( $_POST['course_name'] ) ? $course->post_title : $_POST['course_name'];
+			} else {
+				$post['post_excerpt'] = $_POST['course_excerpt'];
+				$post['post_content'] = $_POST['course_description'];
+				$post['post_title'] = $_POST['course_name'];
+			}			
 
             if (isset($_POST['course_id'])) {
                 $post['ID'] = $_POST['course_id']; //If ID is set, wp_insert_post will do the UPDATE instead of insert
@@ -164,20 +175,25 @@ if (!class_exists('Course')) {
                     }
                 }
 
-                $old_post_meta = get_post_meta($post_id, 'instructors', false); //Get last instructor ID array in order to compare with posted one
+				//Add instructors
+                if (isset($_POST['instructor'])) {				
+					
+					//Get last instructor ID array in order to compare with posted one
+	                $old_post_meta = get_post_meta($post_id, 'instructors', false);
+					
+	                if (serialize(array($_POST['instructor'])) !== serialize($old_post_meta)) {//If instructors IDs don't match
+	                    delete_post_meta($post_id, 'instructors');
+	                    delete_user_meta_by_key('course_' . $post_id);
+	                }
 
-                if (serialize(array($_POST['instructor'])) !== serialize($old_post_meta)) {//If instructors IDs don't match
-                    delete_post_meta($post_id, 'instructors');
-                    delete_user_meta_by_key('course_' . $post_id);
-                }
+	                update_post_meta($post_id, 'instructors', $_POST['instructor']); //Save instructors for the Course
 
-                update_post_meta($post_id, 'instructors', $_POST['instructor']); //Save instructors for the Course
 
-                if (isset($_POST['instructor'])) {
                     foreach ($_POST['instructor'] as $instructor_id) {
                         update_user_meta($instructor_id, 'course_' . $post_id, $post_id); //Link courses and instructors (in order to avoid custom tables) for easy MySql queries (get instructor stats, his courses, etc.)
                     }
                 }
+				
             }
 
             return $post_id;

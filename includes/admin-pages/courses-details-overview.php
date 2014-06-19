@@ -188,7 +188,6 @@ if (isset($_GET['course_id'])) {
 									<h3><?php _e( 'Step 1 - Course Overview', 'cp' )?></h3>
 								</div>
 								<div class='course-form'>
-									
 									<div class="wide">
 		                            <label for='course_name'>
 		                                <?php _e('Course Name', 'cp'); ?>

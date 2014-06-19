@@ -230,6 +230,24 @@ jQuery.urlParam = function(name){
     }
 }
 
+// Detect key changes in the wp_editor
+var active_editor;
+function cp_editor_key_down( ed, page, tab ) {
+	$ = jQuery;
+
+	if ( tab == 'overview' ) {
+		// Mark as dirty
+		$( '#' + ed.id ).parents('.course-section').addClass('dirty');
+		active_editor = ed.id;
+	}
+	
+}
+
+// Detect mouse movement in the wp_editor
+function cp_editor_mouse_move( ed, event ) {
+}
+
+
 /** AJAX UPDATES */
 function step_1_update( attr ) {	
 	var theStatus = attr['status'];
@@ -241,15 +259,31 @@ function step_1_update( attr ) {
 		if ( $.urlParam('course_id') != 0 ) {
 			course_id = $.urlParam('course_id');
 		}
-		var course_name = $( '#course_name' ).val();
 
+		var mce_id = $( $( '[name=course_name]' ).parents('.step-1')[0] ).find('[mce]').val();
+		var content = '';
+		if ( tinyMCE.get('course_excerpt') ){
+			content = tinyMCE.get('course_excerpt').getContent();
+		} else {
+			content = $( '[name=course_excerpt]' ).val();
+		}
+		
+		var _thumbnail_id = '';
+		if ( $( '[name=_thumbnail_id]' ) ) {
+			_thumbnail_id = $( '[name=_thumbnail_id]' ).val()
+		}
+		
         jQuery.post(
 			'admin-ajax.php', 
 			{	
 				action: 'autoupdate_course_settings', 
 				course_id: course_id,
-				course_name: course_name,
-				// data: 'boo'
+				course_name: $( '[name=course_name]' ).val(),
+				course_excerpt: content,
+				meta_featured_url: $( '[name=meta_featured_url]' ).val(),
+				_thumbnail_id: _thumbnail_id,
+				meta_course_category: $( '[name=meta_course_category]' ).val(),
+				meta_course_language: $( '[name=meta_course_language]' ).val(),
 			}
 		).done(function( data, status ) {
 			if ( status == 'success' ) {
@@ -491,5 +525,17 @@ jQuery(document).ready(function( $ ){
 			$( $( this ).parents( '.course-section.step' )[0] ).addClass( 'dirty' );
 		}
 	});
+	$( '.course-form textarea' ).change(function() {
+		if ( ! $( $( this ).parents( '.course-section.step' )[0] ).hasClass( 'dirty' ) ) {
+			$( $( this ).parents( '.course-section.step' )[0] ).addClass( 'dirty' );
+		}
+	});
+	$( '.course-form select' ).change(function() {
+		if ( ! $( $( this ).parents( '.course-section.step' )[0] ).hasClass( 'dirty' ) ) {
+			$( $( this ).parents( '.course-section.step' )[0] ).addClass( 'dirty' );
+		}
+	});
+	
+	
 			
 });

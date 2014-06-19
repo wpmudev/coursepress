@@ -238,6 +238,11 @@ if (!class_exists('CoursePress')) {
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
 
             add_action('template_redirect', array(&$this, 'virtual_page_template'));
+			
+			// Setup TinyMCE callback
+			add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
+			
+			
         }
 
         function virtual_page_template() {
@@ -1296,10 +1301,20 @@ if (!class_exists('CoursePress')) {
 			
 				cp_write_log( $_POST );
 
-				/** DISABLED BECAUSE IT NEEDS MORE LOGIC */
-				/** WARNING: IT WILL BLANK YOUR FIELDS */
-				// $course = new Course( $_POST['course_id' ] );
-				// $course->update_course();
+				/*
+				http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
+				http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
+				*/
+				
+				/** 
+				 *	WARNING: IN PROGRESS, COULD POTENTIALLY REMOVE ALL COURSE FIELDS
+				 *
+				 *  ONLY UPDATES STEP 1 AT THE MOMENT
+				 *
+				 */
+
+				$course = new Course( $_POST['course_id' ] );
+				$course->update_course();
 
 				$response = array(
 				   'what'=>'course_settings',
@@ -1313,8 +1328,35 @@ if (!class_exists('CoursePress')) {
 			}
 
 		}
-		
-		
+
+		/**
+		 * Create a listener for TinyMCE change event 
+		 *
+		 */
+		function init_tiny_mce_listeners( $initArray ) {
+			
+			$detect_pages = array(
+								'coursepress_page_course_details',
+							);
+							
+			$page = get_current_screen()->id;
+			$tab = empty( $_GET['tab' ] ) ? '' : $_GET['tab'];
+
+			if ( in_array( $page, $detect_pages ) ) {
+				$initArray['setup'] = 'function(ed) {
+							ed.on( \'init\', function( args ) {
+								jQuery(\'#\' + ed.id + \'_parent\').bind(\'mousemove\',function (evt){
+																		cp_editor_mouse_move( ed, evt);
+																	});
+							});
+							ed.on( \'keydown\', function( args ) {
+								cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
+							});
+						}';
+			}
+
+			return $initArray;
+		}
 
         function assign_instructor_capabilities() {
 
