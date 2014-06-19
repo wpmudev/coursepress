@@ -24,6 +24,11 @@ function preg_array_key_exists($pattern, $array) {
     return (int) preg_grep($pattern, $keys);
 }
 
+function cp_get_fragment() {
+    $url = parse_url($_SERVER["REQUEST_URI"]);
+    return $url["fragment"];
+}
+
 function is_chat_plugin_active() {
     $plugins = get_option('active_plugins');
 
@@ -170,13 +175,13 @@ function coursepress_unit_pages($unit_id) {
 
     $module = new Unit_Module;
     $modules = $module->get_modules($unit_id);
-    
-    foreach ($modules as $mod){
-        if($module->get_module_type($mod->ID) == 'page_break_module'){
+
+    foreach ($modules as $mod) {
+        if ($module->get_module_type($mod->ID) == 'page_break_module') {
             $pages_num++;
         }
     }
-        
+
     return $pages_num;
 }
 
@@ -493,7 +498,7 @@ function coursepress_students_drop_down() {
     echo $content;
 }
 
-function coursepress_instructors_drop_down( $class = '' ) {
+function coursepress_instructors_drop_down($class = '') {
     $content = '';
     $content .= '<select name="instructors" id="instructors" data-placeholder="' . __('Choose a Course Instructor...', 'cp') . '" class="' . $class . '">';
 
@@ -510,7 +515,7 @@ function coursepress_instructors_drop_down( $class = '' ) {
         'order' => 'ASC',
         'offset' => '',
         'search' => '',
-		'class' => $class,
+        'class' => $class,
         'number' => '',
         'count_total' => false,
         'fields' => array('display_name', 'ID'),
@@ -751,19 +756,19 @@ if (!function_exists('cp_write_log')) {
 
     function cp_write_log($message) {
         //if ( true === WP_DEBUG ) {
-		$trace = debug_backtrace();
-		$debug = array_shift($trace);
-		$caller = array_shift($trace);
-	
-		if ( true === WP_DEBUG ) {
-			if ( is_array( $message ) || is_object( $message ) ) {
-				$class = isset( $caller['class'] ) ? '[' . $caller['class'] . ']\n' : '';
-				error_log( $class . print_r( $message, true ) );
-			} else {
-				$class = isset( $caller['class'] ) ? $caller['class'] . ': ' : '';
-				error_log( $class . $message );
-			}
-		}
+        $trace = debug_backtrace();
+        $debug = array_shift($trace);
+        $caller = array_shift($trace);
+
+        if (true === WP_DEBUG) {
+            if (is_array($message) || is_object($message)) {
+                $class = isset($caller['class']) ? '[' . $caller['class'] . ']\n' : '';
+                error_log($class . print_r($message, true));
+            } else {
+                $class = isset($caller['class']) ? $caller['class'] . ': ' : '';
+                error_log($class . $message);
+            }
+        }
         //}
     }
 

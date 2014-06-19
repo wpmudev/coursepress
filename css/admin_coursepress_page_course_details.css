@@ -113,7 +113,7 @@
 }
 
 .elements-holder .image_module{
-    background-position: -190px -58px;
+    background-position: -211px -58px;
 }
 
 .elements-holder .video_module{
@@ -1401,6 +1401,10 @@ a.delete_module_link, a.remove_module_link {
 .module-holder-page_break_module{
     background-color: #fff;
     padding-left: 3px;
+    display: none;
+}
+
+.elements-holder .input-element.page_break_module{
     display: none;
 }
 

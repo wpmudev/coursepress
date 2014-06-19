@@ -281,5 +281,5 @@ class textarea_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('textarea_input_module', 'textarea_input_module', 'invisible'); //have to merge with text input module
+coursepress_register_module('textarea_input_module', 'textarea_input_module', 'unused'); //have to merge with text input module
 ?>

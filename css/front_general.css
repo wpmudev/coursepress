@@ -587,3 +587,7 @@ h1.notification-title{
     margin-bottom: 25px;
     margin-top: 25px;
 }
+
+.image_holder img{
+    width: 100%;
+}

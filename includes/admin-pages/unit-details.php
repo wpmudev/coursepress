@@ -120,8 +120,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
     </div>
     <div class='mp-settings'><!--course-liquid-left-->
-
-        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . (($unit_id !== 0) ? '&ms=uu' : '&ms=ua'))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
+        <?php
+        $fragment = cp_get_fragment();
+        ?>
+        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . (($unit_id !== 0) ? '&ms=uu' : '&ms=ua'))); ?>#unit-page-<?php echo (isset($fragment) && $fragment !== '' ? $fragment : '1'); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
 
@@ -268,6 +270,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                             <div class="elements-separator"></div>
                                             <?php
                                             foreach ($coursepress_modules_ordered['input'] as $element) {
+                                                ?>
+                                                <div class="input-element <?php echo $element; ?>">
+                                                    <span class="element-label">
+                                                        <?php
+                                                        $module = new $element;
+                                                        echo $module->label;
+                                                        ?>
+                                                    </span>
+                                                    <a class="add-element" id="<?php echo $element; ?>"></a>
+                                                </div>
+                                                <?php
+                                            }
+                                            foreach ($coursepress_modules_ordered['invisible'] as $element) {
                                                 ?>
                                                 <div class="input-element <?php echo $element; ?>">
                                                     <span class="element-label">

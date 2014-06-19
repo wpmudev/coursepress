@@ -9,7 +9,12 @@ jQuery(document).ready(function($) {
 
     jQuery('.ui-tabs-anchor').live("click", function(event) {
         var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+        
+        var form_action = jQuery("#unit-add").attr("action");
 
+        //var match = form_action.match(/unit-page-\[(\d+)\]/);
+        //alert(match[1]);
+        
         if (jQuery('#unit-page-' + current_unit_page + ' .modules_accordion div').first().attr('class') == 'module-holder-page_break_module module-holder-title') {
             jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", 1);
         } else {
