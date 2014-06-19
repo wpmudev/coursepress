@@ -101,6 +101,10 @@ if (!class_exists('CoursePress')) {
 
                 //Assing instructor ajax call
                 add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
+				
+				//Assign Course Setup auto-update ajax call
+				add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
+				
             }
 
             //Output buffer hack
@@ -1279,11 +1283,42 @@ if (!class_exists('CoursePress')) {
 
             do_action('after_custom_post_types');
         }
+		
+		
+		/**
+		 * Handles AJAX call for Course Settings auto-update.
+		 *
+		 * ::RK::
+		 */
+		function autoupdate_course_settings() {
+			
+			if ( is_admin() && ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_cap' ) || current_user_can( 'coursepress_update_my_course_cap' ) ) ) {
+			
+				cp_write_log( $_POST );
+
+				/** DISABLED BECAUSE IT NEEDS MORE LOGIC */
+				/** WARNING: IT WILL BLANK YOUR FIELDS */
+				// $course = new Course( $_POST['course_id' ] );
+				// $course->update_course();
+
+				$response = array(
+				   'what'=>'course_settings',
+				   'action'=>'autoupdate_course_settings',
+				   'id'=>$_POST['course_id' ],
+				   'data'=>'Success.'
+				);
+				$xmlResponse = new WP_Ajax_Response($response);
+				$xmlResponse->send();
+				
+			}
+
+		}
+		
+		
 
         function assign_instructor_capabilities() {
 
             if (is_admin() && (current_user_can('manage_options') || current_user_can('coursepress_assign_and_assign_instructor_my_course_cap'))) {
-
                 $role = new WP_User($_REQUEST['user_id']);
 
                 //update_user_meta( $_REQUEST['user_id'], 'role', 'instructor' );

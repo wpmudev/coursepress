@@ -220,46 +220,148 @@ jQuery(document).ready(function()
 });
 
 
+jQuery.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
 
 /** AJAX UPDATES */
-function step_1_update() {
-	alert('1 hello');
+function step_1_update( attr ) {	
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+		var course_id = 0;
+		if ( $.urlParam('course_id') != 0 ) {
+			course_id = $.urlParam('course_id');
+		}
+		var course_name = $( '#course_name' ).val();
+
+        jQuery.post(
+			'admin-ajax.php', 
+			{	
+				action: 'autoupdate_course_settings', 
+				course_id: course_id,
+				course_name: course_name,
+				// data: 'boo'
+			}
+		).done(function( data, status ) {
+			if ( status == 'success' ) {
+				$( theStatus ).removeClass( 'progress' );
+				$( theStatus ).addClass( 'saved' );
+			}
+		}).fail( function( data ) {
+		});
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
-function step_2_update() {
-	alert('2 hello');
+function step_2_update( attr ) {
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+
+
+
+
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
-function step_3_update() {
-	alert('3 hello');
+function step_3_update( attr ) {
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+
+
+
+
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
-function step_4_update() {
-	alert('4 hello');
+function step_4_update( attr ) {
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+
+
+
+
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
-function step_5_update() {
-	alert('5 hello');
+function step_5_update( attr ) {
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+
+
+
+
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
-function step_6_update() {
-	alert('6 hello');
+function step_6_update( attr ) {
+	var theStatus = attr['status'];
+	
+	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
+		$( theStatus ).addClass( 'progress' );
+
+
+
+
+
+
+	} else {
+		$( theStatus ).addClass( attr['niceStatus'] );
+	}
 }
 
 function courseAutoUpdate( step ) {
 	$ = jQuery;
-	var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' );
+	var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' )[0];
+	
+	var statusNice = 'z';
+	if( $( theStatus ).hasClass( 'saved' ) ) { statusNice = 'saved'; }
+	if( $( theStatus ).hasClass( 'invalid' ) ) { statusNice = 'invalid'; }
+	if( $( theStatus ).hasClass( 'attention' ) ) { statusNice = 'attention'; }
 	$( theStatus ).removeClass( 'saved' );
 	$( theStatus ).removeClass( 'invalid' );
 	$( theStatus ).removeClass( 'attention' );
-	$( theStatus ).addClass( 'progress' );
-	var fn = 'step_' + step + '_update';
-	window[fn]();
+	
+	var func = 'step_' + step + '_update';
+	window[func]( { status: theStatus, niceStatus: statusNice } );
 }
 
 /** Handle Course Setup Wizard */
 jQuery(document).ready(function( $ ){
-
 
 	/** Proceed to next step. */
 	$( '.course-section.step input.next' ).click( function( e ) {
@@ -335,6 +437,10 @@ jQuery(document).ready(function( $ ){
 			$( document ).scrollTop( newTop );			
 			$( prevSection ).addClass('active');			
 			$( this ).parents('.course-section').removeClass('active');						
+			
+			/* Time to call some Ajax */
+			courseAutoUpdate( step );
+			
 		} else {
 			// There is no 'previous sections'. Now what?
 		}
@@ -378,6 +484,12 @@ jQuery(document).ready(function( $ ){
 			$( $( this ).parent() ).effect( 'shake', { distance: 10 }, 100 );
 		}
 	});	
-	
+
+	/** Mark "dirty" content */
+	$( '.course-form input' ).change(function() {
+		if ( ! $( $( this ).parents( '.course-section.step' )[0] ).hasClass( 'dirty' ) ) {
+			$( $( this ).parents( '.course-section.step' )[0] ).addClass( 'dirty' );
+		}
+	});
 			
 });

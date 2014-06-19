@@ -749,13 +749,21 @@ if (!function_exists('coursepress_register_module')) {
 
 if (!function_exists('cp_write_log')) {
 
-    function cp_write_log($log) {
+    function cp_write_log($message) {
         //if ( true === WP_DEBUG ) {
-        if (is_array($log) || is_object($log)) {
-            error_log(print_r($log, true));
-        } else {
-            error_log($log);
-        }
+		$trace = debug_backtrace();
+		$debug = array_shift($trace);
+		$caller = array_shift($trace);
+	
+		if ( true === WP_DEBUG ) {
+			if ( is_array( $message ) || is_object( $message ) ) {
+				$class = isset( $caller['class'] ) ? '[' . $caller['class'] . ']\n' : '';
+				error_log( $class . print_r( $message, true ) );
+			} else {
+				$class = isset( $caller['class'] ) ? $caller['class'] . ': ' : '';
+				error_log( $class . $message );
+			}
+		}
         //}
     }
 
