@@ -221,6 +221,42 @@ jQuery(document).ready(function()
 
 
 
+/** AJAX UPDATES */
+function step_1_update() {
+	alert('1 hello');
+}
+
+function step_2_update() {
+	alert('2 hello');
+}
+
+function step_3_update() {
+	alert('3 hello');
+}
+
+function step_4_update() {
+	alert('4 hello');
+}
+
+function step_5_update() {
+	alert('5 hello');
+}
+
+function step_6_update() {
+	alert('6 hello');
+}
+
+function courseAutoUpdate( step ) {
+	$ = jQuery;
+	var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' );
+	$( theStatus ).removeClass( 'saved' );
+	$( theStatus ).removeClass( 'invalid' );
+	$( theStatus ).removeClass( 'attention' );
+	$( theStatus ).addClass( 'progress' );
+	var fn = 'step_' + step + '_update';
+	window[fn]();
+}
+
 /** Handle Course Setup Wizard */
 jQuery(document).ready(function( $ ){
 
@@ -233,7 +269,8 @@ jQuery(document).ready(function( $ ){
 		 *
 		 * Looks for <div class="course-section step step-[x]"> and extracts the number.
 		 **/
-		var step = $( $( this ).parents( '.course-section.step' )[0] ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
+		var course_section = $( this ).parents( '.course-section.step' )[0];
+		var step = $( course_section ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
 		
 		// Next section
 		var nextStep = parseInt( step ) + 1;
@@ -244,7 +281,8 @@ jQuery(document).ready(function( $ ){
 		// If next section exists
 		if ( nextSection ) {
 			// There is a 'next section'. What do you want to do with it?
-			var newTop = $('.step-'+step).offset().top + 20;	
+			var newTop = $('.step-'+step).position().top + 130;
+			
 			// Jump first, then animate		
 			$( document ).scrollTop( newTop );
 
@@ -257,9 +295,12 @@ jQuery(document).ready(function( $ ){
 			
 			$( nextSection ).addClass('active');
 			$( this ).parents('.course-section').removeClass('active');
+			
+			/* Time to call some Ajax */
+			courseAutoUpdate( step );
+			
 		} else {
 			// There is no 'next sections'. Now what?
-			alert ("meh");
 		}
 	});
 	
@@ -298,5 +339,45 @@ jQuery(document).ready(function( $ ){
 			// There is no 'previous sections'. Now what?
 		}
 	});
+	
+	$( '.course-section.step .course-section-title h3' ).click( function( e ) {
+		
+		// Get current "active" step
+		var activeElement = $( '.course-section.step.active' )[0];
+		var activeStep = $( activeElement ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
+
+		var thisElement = $( this ).parents( '.course-section.step' )[0];
+		var thisStep = $( thisElement ).attr( 'class' ).match(/step-\d+/)[0].replace( /^\D+/g, '');
+				
+		var thisStatus = $( this ).siblings( '.status' )[0];
+		
+		// Only move to a saved step or a previous step (asuming that it has to be saved)
+		if ( $( thisStatus ).hasClass( 'saved' ) || $( thisStatus ).hasClass( 'attention' ) || thisStep < activeStep ) {
+
+			// There is a 'previous section'. What do you want to do with it?
+			if ( thisStep < activeStep ) {
+				var newTop = $( thisElement ).position().top + 130;							
+			} else {
+				var step = thisStep + 1;
+				var newTop = $( thisElement ).prev( '.step' ).offset().top + 20;	
+			}
+
+			$( thisElement ).children('.course-form').slideDown( 500 );
+			$( thisElement ).children('.course-section-title').animate( { backgroundColor: '#0091cd' }, 500);
+			$( thisElement ).children('.course-section-title').animate( { color: '#FFFFFF' }, 500);
+			$( activeElement ).children('.course-form').slideUp( 500 );
+			$( activeElement ).children('.course-section-title').animate( { backgroundColor: '#F1F1F1' }, 500);
+			$( activeElement ).children('.course-section-title').animate( { color: '#222' }, 500);
+			
+			// Animate first then jump
+			$( document ).scrollTop( newTop );			
+			$( thisElement ).addClass('active');			
+			$( activeElement ).removeClass('active');						
+
+		} else {
+			$( $( this ).parent() ).effect( 'shake', { distance: 10 }, 100 );
+		}
+	});	
+	
 			
 });

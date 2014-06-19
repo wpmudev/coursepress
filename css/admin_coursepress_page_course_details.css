@@ -1681,6 +1681,11 @@ label.bold-label{
 }
 
 /* COURSE SETUP PAGE */
+
+.coursepress_page_course_details .course-details {
+	padding-bottom: 30px;
+}
+
 .course-section.step input.button {
     height: 26px;
     line-height: 0;
@@ -2078,6 +2083,10 @@ label.bold-label{
 	color: #444;	
 }
 
+.course-section .course-form input.class_size.disabled + a + a,
+.course-section .course-form input.class_size.disabled + a {
+	display:none;
+}
 
 ::-webkit-input-placeholder { /* WebKit browsers */
     font-size:0.9em;

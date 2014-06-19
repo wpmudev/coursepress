@@ -82,6 +82,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
     $course_who_can_enroll = 'anyone';
     $course_language = 'English';
     $course_open_ended = 'on';
+    $course_open_ended_enrollment = 'on';	
     $course_allow_discussion = 'on';
     $course_show_grade_page = 'off';
 
@@ -117,8 +118,11 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             //Set course language
             update_post_meta($course_id, 'course_language', $course_language);
 
-            //Course is open-ended?
+            //Course is open-ended? Start date, but no end date.
             update_post_meta($course_id, 'open_ended_course', $course_open_ended);
+			
+			//Students can enroll anytime?
+			update_post_meta($course_id, 'open_ended_enrollment', $course_open_ended_enrollment);
 
             //Allow course discussion?
             update_post_meta($course_id, 'allow_course_discussion', $course_allow_discussion);

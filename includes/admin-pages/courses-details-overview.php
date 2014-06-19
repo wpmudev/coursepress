@@ -6,7 +6,7 @@ if (isset($_GET['course_id'])) {
     $course_details = $course->get_course();
     $course_id = (int)$_GET['course_id'];
 } else {
-    $course = new course();
+    $course = new Course();
     $course_id = 0;
 }
 
@@ -19,8 +19,19 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
       wp_set_object_terms($course_id, $term->slug, 'course_category', false);
       } */
 
+	// Course has a start date, but no end date
     if (!isset($_POST['meta_open_ended_course'])) {
         $_POST['meta_open_ended_course'] = 'off';
+    }
+	
+	// Users can enroll anytime
+    if (!isset($_POST['meta_open_ended_enrollment'])) {
+        $_POST['meta_open_ended_enrollment'] = 'off';
+    }
+
+	// Limit class size?
+    if (!isset($_POST['meta_limit_class_size'])) {
+        $_POST['meta_limit_class_size'] = 'off';
     }
 
     if (!isset($_POST['meta_allow_course_discussion'])) {
@@ -79,6 +90,8 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = $course->details->enrollment_start_date;
     $enrollment_end_date = $course->details->enrollment_end_date;
     $open_ended_course = $course->details->open_ended_course;
+    $open_ended_enrollment = $course->details->open_ended_enrollment;	
+	$limit_class_size = $course->details->limit_class_size;
     $marketpress_product = $course->details->marketpress_product;
     $allow_course_discussion = $course->details->allow_course_discussion;
     $allow_course_grades_page = $course->details->allow_course_grades_page;
@@ -96,6 +109,8 @@ if (isset($_GET['course_id'])) {
     $enrollment_start_date = '';
     $enrollment_end_date = '';
     $open_ended_course = 'off';
+    $open_ended_enrollment = 'off';	
+	$limit_class_size = 'off';
     $marketpress_product = '';
     $allow_course_discussion = 'off';
     $allow_course_grades_page = 'off';
@@ -104,10 +119,11 @@ if (isset($_GET['course_id'])) {
     $language = __('English', 'cp');
     $course_video_url = '';
 }
+
 ?>
 
 <div class='wrap nocoursesub'>
-    <form action='<?php esc_attr_e(admin_url('admin.php?page='.$page.(($course_id !== 0) ? '&course_id=' . $course_id : '') . ($course_id !== 0) ? '&ms=cu' : '&ms=ca'));?>' name='course-add' method='post'>
+    <form action='<?php esc_attr_e( admin_url( 'admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ($course_id !== 0) ? '&ms=cu' : '&ms=ca' ) ) );?>' name='course-add' method='post'>
 
         <div class='course-liquid-left'>
 
@@ -466,7 +482,7 @@ if (isset($_GET['course_id'])) {
 							<!-- /Instructors -->
 							
 							<!-- Course Dates -->							
-							<div class='course-section step step-4'>
+							<div class='course-section step step-4 save-marker active'>
 								<div class='course-section-title'>
 									<div class="status progress"></div>									
 									<h3><?php _e( 'Step 4 - Course Dates', 'cp' )?></h3>									
@@ -480,7 +496,6 @@ if (isset($_GET['course_id'])) {
 										</label>	
 				                        
 										<div class="course-date-override">    
-												<!-- <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> /> -->
 												<input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ($open_ended_course == 'on') ? 'checked' : ''; ?> />
 				                                <label><?php _e('This course has no end date', 'cp'); ?></label>
 										</div>
@@ -492,9 +507,9 @@ if (isset($_GET['course_id'])) {
 				                                <label for="meta_course_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
 				                                <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /></div>
 											</div>
-											<div class="end-date">
+											<div class="end-date <?php echo ( $open_ended_course == 'on' ) ? 'disabled' : ''; ?>">
 												<label for="meta_course_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
-												<div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" /></div>
+												<div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" <?php echo ( $open_ended_course == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -514,13 +529,13 @@ if (isset($_GET['course_id'])) {
 										<p><?php _e('These are the dates that students can enroll', 'cp'); ?></p>
 
 										<div class="date-range">
-											<div class="start-date">
+											<div class="start-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
 				                                <label for="meta_enrollment_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
-				                                <div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" /></div>
+				                                <div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
 											</div>
-											<div class="end-date">
+											<div class="end-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
 												<label for="meta_enrollment_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
-												<div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" /></div>
+												<div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
 											</div>
 										</div>
 
@@ -538,20 +553,20 @@ if (isset($_GET['course_id'])) {
 							<!-- Classes, Discussions & Workbook -->
 							<div class='course-section step step-5'>
 								<div class='course-section-title'>
-									<div class="status attention"></div>									
+									<div class="status"></div>									
 									<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
 
 		                            <div class="wide narrow">
 			                            <label for='meta_class-size'>
-											<input type="checkbox" />
+											<input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ($limit_class_size == 'on') ? 'checked' : ''; ?> />
 											<?php _e('Limit class size', 'cp'); ?>
 											<?php // CP_Helper_Tooltip::tooltip( __('Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'cp') ); ?>
 											<br />
 											<span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'cp'); ?></span>
 			                            </label>
-		                                <input class='spinners' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' />
+		                                <input class='spinners <?php echo ($limit_class_size == 'on') ? '' : 'disabled'; ?> class_size' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes((is_numeric($class_size) ? $class_size : 0))); ?>' <?php echo ($limit_class_size == 'on') ? '' : 'disabled="disabled"'; ?> />
 										
 										<hr />
 										
@@ -582,9 +597,9 @@ if (isset($_GET['course_id'])) {
 							<!-- /Classes, Discussions & Workbook -->							
 
 							<!-- Enrollment & Course Cost -->
-							<div class='course-section step step-6 save-marker active'>
+							<div class='course-section step step-6'>
 								<div class='course-section-title'>
-									<div class="status"></div>									
+									<div class="status attention"></div>									
 									<h3><?php _e( 'Step 6 - Enrollment & Course Cost', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
@@ -654,7 +669,7 @@ if (isset($_GET['course_id'])) {
 
 									<div class="narrow product">
 										
-										<?php if ($coursepress->is_marketpress_active()) : ?>
+										<?php if ( ! $coursepress->is_marketpress_active()) : ?>
 											<label>
 												<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
 											</label>
@@ -692,7 +707,7 @@ if (isset($_GET['course_id'])) {
 											</div>
 											<div class="clearfix"></div>
 											<div class="course-enable-gateways">											
-												<?php if (  $gateways ) : ?>
+												<?php if ( ! $gateways ) : ?>
 													<a href="#" class="button button-incomplete-gateways"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
 												<?php else: ?>
 													<a href="#" class="button button-edit-gateways"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>												
@@ -711,12 +726,9 @@ if (isset($_GET['course_id'])) {
 								</div>
 							</div>							
 							<!-- /Enrollment & Course Cost -->
-							
-                           
-                                                       <br clear="all" />
 
 
-
+<!-- OLD MARKETPRESS INTEGRATION
                             <div class="full border-devider">
                                 <div class="half">
                                     <h3><?php _e('Cost to enroll in the course', 'cp'); ?></h3>
@@ -761,10 +773,10 @@ if (isset($_GET['course_id'])) {
 
                                 </div>
                             </div>
+     // OLD MARKETPRESS INTEGRATION -->
 
-                            <br clear="all" />
-
-                            <!--<div class="full border-devider">
+<!-- OLD GRADEBOOK INTEGRATION
+								<div class="full border-devider">
                                 <label><?php _e('Show Grades Page for Students', 'cp'); ?>
                                     <a class="help-icon" href="javascript:;"></a>
                                     <div class="tooltip">
@@ -777,10 +789,10 @@ if (isset($_GET['course_id'])) {
 
                                     <input type="checkbox" name="meta_allow_course_grades_page" id="allow_course_grades_page" <?php echo ($allow_course_grades_page == 'on') ? 'checked' : ''; ?> />
                                 </label>
-                            </div>-->
+                            </div>
+// OLD GRADEBOOK INTEGRATION -->
 
 
-                            <br clear="all" />
                         </div>
 
 						<!-- /COURSE DETAILS -->

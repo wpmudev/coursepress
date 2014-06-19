@@ -655,7 +655,16 @@ jQuery(document).ready(function() {
 			jQuery( this ).parents('.course-dates').find('.end-date input').removeAttr('disabled');						
         }
     });
-	
+
+    jQuery('#limit_class_size').change(function() {
+        if (this.checked) {
+			jQuery( 'input.class_size' ).removeClass('disabled');
+			jQuery( 'input.class_size' ).removeAttr('disabled');									
+        } else {
+			jQuery( 'input.class_size' ).addClass('disabled');
+			jQuery( 'input.class_size' ).attr('disabled', 'disabled');			
+        }
+    });	
 	
 	
 	
