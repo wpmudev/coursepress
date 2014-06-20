@@ -92,19 +92,20 @@ if (!class_exists('CoursePress')) {
 
                 //Pagination Class
                 require_once( $this->plugin_dir . 'includes/classes/class.pagination.php');
-				
-				//Tooltip Helper
-				require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php');
+
+                //Tooltip Helper
+                require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php');
 
                 //Listen to dynamic editor requests (using on unit page in the admin)
                 add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));
 
                 //Assing instructor ajax call
                 add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
-				
-				//Assign Course Setup auto-update ajax call
-				add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
-				
+
+                //Assign Course Setup auto-update ajax call
+                add_action('wp_ajax_autoupdate_course_settings', array(&$this, 'autoupdate_course_settings'));
+
+                add_action('mp_gateway_settings', array(&$this, 'cp_marketpress_popup'));
             }
 
             //Output buffer hack
@@ -238,11 +239,33 @@ if (!class_exists('CoursePress')) {
             add_action('wp_logout', array(&$this, 'redirect_after_logout'));
 
             add_action('template_redirect', array(&$this, 'virtual_page_template'));
-			
-			// Setup TinyMCE callback
-			add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
-			
-			
+
+            // Setup TinyMCE callback
+            add_filter('tiny_mce_before_init', array(&$this, 'init_tiny_mce_listeners'));
+        }
+
+        function cp_marketpress_popup() {
+            if ((isset($_GET['cp_admin_ref']) && $_GET['cp_admin_ref'] == 'cp_course_creation_page') || (isset($_POST['cp_admin_ref']) && $_POST['cp_admin_ref'] == 'cp_course_creation_page')) {
+                ?>
+                <input type="hidden" name="cp_admin_ref" value="cp_course_creation_page" />
+                <?php
+            }
+        }
+
+        function install_and_activate_plugin($plugin) {
+            $current = get_option('active_plugins');
+            $plugin = plugin_basename(trim($plugin));
+
+            if (!in_array($plugin, $current)) {
+                $current[] = $plugin;
+                sort($current);
+                do_action('activate_plugin', trim($plugin));
+                update_option('active_plugins', $current);
+                do_action('activate_' . trim($plugin));
+                do_action('activated_plugin', trim($plugin));
+            }
+
+            return null;
         }
 
         function virtual_page_template() {
@@ -1003,45 +1026,7 @@ if (!class_exists('CoursePress')) {
             }
         }
 
-        //Load payment gateways
-        /* function load_payment_gateways() {
-          if (is_dir($this->plugin_dir . 'includes/gateways')) {
-          if ($dh = opendir($this->plugin_dir . 'includes/gateways')) {
-          $mem_gateways = array();
-          while (( $gateway = readdir($dh) ) !== false)
-          if (substr($gateway, -4) == '.php')
-          $mem_gateways[] = $gateway;
-          closedir($dh);
-          sort($mem_gateways);
-
-          foreach ($mem_gateways as $mem_gateway)
-          include_once( $this->plugin_dir . 'includes/gateways/' . $mem_gateway );
-          }
-          }
-
-          do_action('coursepress_gateways_loaded');
-          } */
-
-        //Load plugin add-ons
-        /* function load_addons() {
-          if (is_dir($this->plugin_dir . 'includes/add-ons')) {
-          if ($dh = opendir($this->plugin_dir . 'includes/add-ons')) {
-          $mem_addons = array();
-          while (( $addon = readdir($dh) ) !== false)
-          if (substr($addon, -4) == '.php')
-          $mem_addons[] = $addon;
-          closedir($dh);
-          sort($mem_addons);
-
-          foreach ($mem_addons as $mem_addon)
-          include_once( $this->plugin_dir . 'includes/add-ons/' . $mem_addon );
-          }
-          }
-
-          do_action('coursepress_addons_loaded');
-          } */
-
-        //Load unit elements / modules / building blocks
+        //Load unit elements / modules / building blocks and other add-ons and plugins
         function load_modules() {
             global $mem_modules;
 
@@ -1058,6 +1043,11 @@ if (!class_exists('CoursePress')) {
                         include_once( $this->plugin_dir . 'includes/unit-modules/' . $mem_module );
                 }
             }
+
+            if (!$this->is_marketpress_active() && !$this->is_marketpress_lite_active() && $this->is_marketpress_lite_active()) {
+                $this->install_and_activate_plugin('/' . $this->dir_name . '/marketpress.php');
+            }
+
 
             do_action('coursepress_modules_loaded');
         }
@@ -1288,62 +1278,58 @@ if (!class_exists('CoursePress')) {
 
             do_action('after_custom_post_types');
         }
-		
-		
-		/**
-		 * Handles AJAX call for Course Settings auto-update.
-		 *
-		 * ::RK::
-		 */
-		function autoupdate_course_settings() {
-			
-			if ( is_admin() && ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_cap' ) || current_user_can( 'coursepress_update_my_course_cap' ) ) ) {
-			
-				cp_write_log( $_POST );
 
-				/*
-				http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
-				http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
-				*/
-				
-				/** 
-				 *	WARNING: IN PROGRESS, COULD POTENTIALLY REMOVE ALL COURSE FIELDS
-				 *
-				 *  ONLY UPDATES STEP 1 AT THE MOMENT
-				 *
-				 */
+        /**
+         * Handles AJAX call for Course Settings auto-update.
+         *
+         * ::RK::
+         */
+        function autoupdate_course_settings() {
 
-				$course = new Course( $_POST['course_id' ] );
-				$course->update_course();
+            if (is_admin() && ( current_user_can('manage_options') || current_user_can('coursepress_create_course_cap') || current_user_can('coursepress_update_my_course_cap') )) {
 
-				$response = array(
-				   'what'=>'course_settings',
-				   'action'=>'autoupdate_course_settings',
-				   'id'=>$_POST['course_id' ],
-				   'data'=>'Success.'
-				);
-				$xmlResponse = new WP_Ajax_Response($response);
-				$xmlResponse->send();
-				
-			}
+                cp_write_log($_POST);
 
-		}
+                /*
+                  http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
+                  http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
+                 */
 
-		/**
-		 * Create a listener for TinyMCE change event 
-		 *
-		 */
-		function init_tiny_mce_listeners( $initArray ) {
-			
-			$detect_pages = array(
-								'coursepress_page_course_details',
-							);
-							
-			$page = get_current_screen()->id;
-			$tab = empty( $_GET['tab' ] ) ? '' : $_GET['tab'];
+                /**
+                 * 	WARNING: IN PROGRESS, COULD POTENTIALLY REMOVE ALL COURSE FIELDS
+                 *
+                 *  ONLY UPDATES STEP 1 AT THE MOMENT
+                 *
+                 */
+                $course = new Course($_POST['course_id']);
+                $course->update_course();
 
-			if ( in_array( $page, $detect_pages ) ) {
-				$initArray['setup'] = 'function(ed) {
+                $response = array(
+                    'what' => 'course_settings',
+                    'action' => 'autoupdate_course_settings',
+                    'id' => $_POST['course_id'],
+                    'data' => 'Success.'
+                );
+                $xmlResponse = new WP_Ajax_Response($response);
+                $xmlResponse->send();
+            }
+        }
+
+        /**
+         * Create a listener for TinyMCE change event 
+         *
+         */
+        function init_tiny_mce_listeners($initArray) {
+
+            $detect_pages = array(
+                'coursepress_page_course_details',
+            );
+
+            $page = get_current_screen()->id;
+            $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
+
+            if (in_array($page, $detect_pages)) {
+                $initArray['setup'] = 'function(ed) {
 							ed.on( \'init\', function( args ) {
 								jQuery(\'#\' + ed.id + \'_parent\').bind(\'mousemove\',function (evt){
 																		cp_editor_mouse_move( ed, evt);
@@ -1353,10 +1339,10 @@ if (!class_exists('CoursePress')) {
 								cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
 							});
 						}';
-			}
+            }
 
-			return $initArray;
-		}
+            return $initArray;
+        }
 
         function assign_instructor_capabilities() {
 
@@ -1756,7 +1742,13 @@ if (!class_exists('CoursePress')) {
                 wp_enqueue_style('cp-38');
             }
 
-			//wp_enqueue_style('open_sans', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,700');
+            if (is_admin()) {
+                if ((isset($_GET['cp_admin_ref']) && $_GET['cp_admin_ref'] == 'cp_course_creation_page') || (isset($_POST['cp_admin_ref']) && $_POST['cp_admin_ref'] == 'cp_course_creation_page')) {
+                    wp_enqueue_style('admin_coursepress_marketpress_popup', $this->plugin_url . 'css/admin_marketpress_popup.css', array(), $this->version);
+                }
+            }
+
+            //wp_enqueue_style('open_sans', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,700');
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             wp_enqueue_style('admin_general_responsive', $this->plugin_url . 'css/admin_general_responsive.css', array(), $this->version);
@@ -1779,6 +1771,7 @@ if (!class_exists('CoursePress')) {
             }
 
             $this->add_jquery_ui();
+
 
             if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
@@ -2278,6 +2271,46 @@ if (!class_exists('CoursePress')) {
             }
 
             $required_plugin = 'marketpress/marketpress.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins) || preg_array_key_exists('/^marketpress.*/', $active_sitewide_plugins)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /* Check if MarketPress Lite plugin is installed and active */
+
+        function is_marketpress_lite_active() {
+            $plugins = get_option('active_plugins');
+
+            if (is_multisite()) {
+                $active_sitewide_plugins = get_site_option("active_sitewide_plugins");
+            } else {
+                $active_sitewide_plugins = array();
+            }
+
+            $required_plugin = 'wordpress-ecommerce/marketpress.php';
+
+            if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins) || preg_array_key_exists('/^marketpress.*/', $active_sitewide_plugins)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /* Check if MarketPress Lite (included in CoursePress) plugin is installed and active */
+
+        function is_cp_marketpress_lite_active() {
+            $plugins = get_option('active_plugins');
+
+            if (is_multisite()) {
+                $active_sitewide_plugins = get_site_option("active_sitewide_plugins");
+            } else {
+                $active_sitewide_plugins = array();
+            }
+
+            $required_plugin = 'coursepress/marketpress.php';
 
             if (in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins) || preg_array_key_exists('/^marketpress.*/', $active_sitewide_plugins)) {
                 return true;

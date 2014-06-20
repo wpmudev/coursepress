@@ -1,0 +1,249 @@
+/* layout/default styles for public views (non-admin) */
+.clear{
+clear:both;
+}
+
+/* products grid view */
+.mp_grid .mp_one_tile{
+position:relative;
+float:left;
+width:240px;
+margin:10px;
+}
+.mp_one_tile{
+height:94px;
+}
+.mp_one_tile.mp_excerpt{
+height:143px;
+}
+.mp_one_tile.mp_thumbnail{
+height:183px;
+}
+.mp_one_tile.mp_thumbnail.mp_excerpt{
+height:246px;
+}
+#mp_product_list .mp_one_tile{
+height:155px;
+}
+
+
+.mp_grid .mp_one_product{
+width:220px;
+}
+
+
+.mp_grid .mp_one_tile:hover{
+outline:none;
+}
+
+.mp_grid .mp_one_product{
+position:absolute;
+padding:10px;
+background:white;
+border:1px solid transparent;
+
+transition: all 0.25s linear;
+-moz-transition: all 0.25s linear;
+-webkit-transition: all 0.25s linear;
+-o-transition: all 0.25s linear;
+}
+
+.mp_grid .mp_one_product:hover{
+border:1px solid #cccccc;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+
+-webkit-box-shadow: 0 .0625em .25em rgba(51, 65, 80, .35);
+-moz-box-shadow: 0 .0625em .25em rgba(51,65,80,.35);
+box-shadow: 0 .0625em .25em rgba(51, 65, 80, .35);
+
+z-index:3;
+}
+
+.mp_grid .mp_img_link img{
+display:block;
+float:none;
+
+max-width:100%;
+width: auto;
+max-height: 100%;
+height: 100%;
+
+margin:auto;
+
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+border: none;
+}
+
+#mp_product_list.mp_grid .mp_img_link img{
+padding: 1px;
+border: 1px solid #CCC;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+
+
+.mp_grid a.mp_img_link{
+display:block;
+
+height:100px;
+min-height:100px;
+margin:0px;
+
+background-size:100% auto;
+background-repeat:no-repeat;
+background-position:center;
+
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+.mp_grid .mp_one_product:hover a.mp_img_link{
+height:auto;
+}
+
+
+
+.mp_grid h3.mp_product_name{
+width:100%;
+min-height:25px;
+margin-top:5px;
+
+}
+.mp_grid h3.mp_product_name{
+white-space:nowrap;
+text-align: center;
+}
+
+.mp_grid h3.mp_product_name,
+.mp_grid p.mp_excerpt{
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.mp_grid .mp_one_product:hover h3.mp_product_name,
+.mp_grid .mp_one_product:hover p.mp_excerpt{
+height:auto;
+white-space:normal;
+overflow:auto;
+text-align: left;
+}
+
+.mp_grid p.mp_excerpt{
+height:50px;
+min-height: 50px;
+margin-bottom:0px;
+}
+
+
+.mp_grid .mp_price_buy{
+position:relative;
+width:100%;
+height:40px;
+}
+.mp_grid .mp_price_buy .mp_product_price{
+position:absolute;
+left:0px;
+top:0px;
+}
+.mp_grid .mp_price_buy .mp_buy_form{
+position:absolute;
+right:0px;
+top:0px;
+}
+.mp_grid .mp_price_buy .mp_buy_form input[type="submit"]{
+cursor:pointer;
+}
+/* end products grid view */
+
+
+/* Ajax for products view*/
+.mp_product_list_refine{
+display: none;
+}
+.mp_list_filter{
+
+}
+.mp_list_filter .one_filter{
+display:inline-block;
+margin-right:20px;
+}
+.mp_list_filter .one_filter span{
+color: grey;
+}
+.mp_list_filter .one_filter select{
+padding: 1px 0px 1px 2px;
+border:1px solid #cccccc;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+
+#mp_product_list{
+position: relative;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+.mp_ajax_loading{
+position: absolute;
+top:0px;
+bottom:0px;
+left:0px;
+right:0px;
+background:rgba(201,201,201,.2) url('../images/ajax-loader.gif') no-repeat 5px 5px;
+z-index: 1;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+}
+.mp_list .mp_ajax_loading{
+background:rgba(201,201,201,.2) url('../images/ajax-loader.gif') no-repeat 99% 5px;
+}
+
+
+/* cart breadcrumbs */
+.mp_cart_breadcrumbs{
+margin-bottom:20px;
+}
+
+.mp_cart_breadcrumbs span,
+.mp_cart_breadcrumbs a{
+margin-right:20px;
+}
+
+.mp_cart_breadcrumbs a{
+opacity: .6;
+}
+.mp_cart_breadcrumbs a:hover{
+opacity: 1;
+}
+.mp_cart_breadcrumbs .current{
+font-weight: bold;
+}
+
+.mp_cart_breadcrumbs .sep,
+.mp_cart_breadcrumbs .incomplete:not(.current){
+color:#cccccc;
+}
+.mp_cart_breadcrumbs .current + .sep{
+color:black;
+}
+
+
+.mp_one_tile .mp_excerpt,
+.mp_one_tile .mp_price_buy{
+/*display:none;*/
+}
+
+.mp_one_tile:hover .mp_excerpt,
+.mp_one_tile:hover .mp_price_buy{
+display:block;
+}
+
+.mp_price_variations span.mp_product_price{
+/*display:none;*/
+}

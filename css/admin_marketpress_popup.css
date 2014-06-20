@@ -1,0 +1,13 @@
+html #wpadminbar,
+#update-nag, .update-nag,
+h2.nav-tab-wrapper, h3.nav-tab-wrapper{
+    display: none;
+}
+
+html.wp-toolbar{
+    padding-top: 0px;
+}
+
+#wpbody-content{
+    padding-bottom: 0px;
+}
