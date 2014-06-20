@@ -101,7 +101,7 @@ if (!class_exists('Course')) {
 			
             $post_status = 'publish';
 
-            if ($_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') ) {
+            if ( $_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') ) {
                 if ($course->post_status != 'publish') {
                     $post_status = 'private';
                 }

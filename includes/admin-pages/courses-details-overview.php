@@ -34,6 +34,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'add' || $_POST['action'] ==
         $_POST['meta_limit_class_size'] = 'off';
     }
 
+	// Enable/disable course structure preview options
+    if (!isset($_POST['meta_course_structure_options'])) {
+        $_POST['meta_course_structure_options'] = 'off';
+    }
+	
+	// Enable/disable course time preview
+    if (!isset($_POST['meta_course_structure_time_display'])) {
+        $_POST['meta_course_structure_time_display'] = 'off';
+    }
+
     if (!isset($_POST['meta_allow_course_discussion'])) {
         $_POST['meta_allow_course_discussion'] = 'off';
     }
@@ -109,6 +119,8 @@ if (isset($_GET['course_id'])) {
 	) : $course->details->course_setup_progress;
 	$course_setup_marker = empty ( $course->details->course_setup_marker ) ? 'step-1' : $course->details->course_setup_marker;	
 	$gateways = false;
+	$course_structure_options = $course->details->course_structure_options;
+	$course_structure_time_display = $course->details->course_structure_time_display;
 
 } else {
     $class_size = 0;
@@ -138,6 +150,9 @@ if (isset($_GET['course_id'])) {
 		'step-6' => 'incomplete',
 	);
 	$course_setup_marker = 'step-1';
+	$course_structure_options = 'off';
+	$course_structure_time_display = 'off';
+	
 	$gateways = false;
 }
 
@@ -341,7 +356,7 @@ if (isset($_GET['course_id'])) {
 		                                ?>
 
 		                                <div class="video_url_holder mp-wrap">
-				                            <label for='featured_url'>
+				                            <label for='meta_course_video_url'>
 				                                <?php _e('Featured Video', 'cp'); ?><br />
 												<span><?php _e('This is used on the Course Overview page and will be displayed with the course description.', 'cp'); ?></span>
 				                            </label>
@@ -384,10 +399,10 @@ if (isset($_GET['course_id'])) {
 											<span><?php _e('This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'cp'); ?></span>
 			                            </label>
 										<div class="course-structure">
-											<input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked />
-											<label for="**PLACEHOLDER**"><?php _e('Show the Course Overview stucture and Preview Options', 'cp' ); ?></label><br />
-											<input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked />
-											<label for="**PLACEHOLDER**"><?php _e('Display Tome Estimates for Units and Lessons', 'cp' ); ?></label>
+											<input type='checkbox' id='meta_course_structure_options' name='meta_course_structure_options' <?php echo ($course_structure_options == 'on') ? 'checked' : ''; ?> />
+											<label for="meta_course_structure_options"><?php _e('Show the Course Overview stucture and Preview Options', 'cp' ); ?></label><br />
+											<input type='checkbox' id='meta_course_structure_time_display' name='meta_course_structure_time_display' <?php echo ($course_structure_time_display == 'on') ? 'checked' : ''; ?> />
+											<label for="meta_course_structure_time_display"><?php _e('Display Time Estimates for Units and Lessons', 'cp' ); ?></label>
 											<table>
 												<thead>
 													<tr>

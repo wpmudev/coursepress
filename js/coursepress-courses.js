@@ -287,7 +287,7 @@ function autosave_course_setup_done( data, status, step, statusElement ) {
 function step_1_update( attr ) {	
 	var theStatus = attr['status'];
 	var initialVars = attr['initialVars'];
-
+	
 	var content = '';
 	if ( tinyMCE.get('course_excerpt') ){
 		content = tinyMCE.get('course_excerpt').getContent();
@@ -304,9 +304,9 @@ function step_1_update( attr ) {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+
 		// Alter as required
-		course_name: $( '[name=course_name]' ).val(),
 		course_excerpt: content,
 		meta_featured_url: $( '[name=meta_featured_url]' ).val(),
 		_thumbnail_id: _thumbnail_id,
@@ -323,12 +323,24 @@ function step_2_update( attr ) {
 	var theStatus = attr['status'];
 	var initialVars = attr['initialVars'];
 	
+	var content = '';
+	if ( tinyMCE.get('course_description') ){
+		content = tinyMCE.get('course_description').getContent();
+	} else {
+		content = $( '[name=course_description]' ).val();
+	}
+	
 	return {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+				
 		// Alter as required
+		meta_course_video_url: $( '[name=meta_course_video_url]' ).val(),
+		course_description: content,
+		meta_course_structure_options: $( '[name=meta_course_structure_options]' ).is( ':checked' ) ? 'on' : 'off',
+		meta_course_structure_time_display: $( '[name=meta_course_structure_time_display]' ).is( ':checked' ) ? 'on' : 'off',
 		
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
@@ -344,7 +356,8 @@ function step_3_update( attr ) {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+				
 		// Alter as required
 		
 		// Don't remove
@@ -361,8 +374,15 @@ function step_4_update( attr ) {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+				
 		// Alter as required
+		meta_open_ended_course: $( '[name=meta_open_ended_course]' ).is( ':checked' ) ? 'on' : 'off',
+		meta_course_start_date: $( '[name=meta_course_start_date]' ).val(),
+		meta_course_end_date: $( '[name=meta_course_end_date]' ).val(),
+		meta_open_ended_enrollment: $( '[name=meta_open_ended_enrollment]' ).is( ':checked' ) ? 'on' : 'off',
+		meta_enrollment_start_date: $( '[name=meta_enrollment_start_date]' ).val(),
+		meta_enrollment_end_date: $( '[name=meta_enrollment_end_date]' ).val(),
 		
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
@@ -378,8 +398,13 @@ function step_5_update( attr ) {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+				
 		// Alter as required
+		meta_limit_class_size: $( '[name=meta_limit_class_size]' ).is( ':checked' ) ? 'on' : 'off',
+		meta_class_size: $( '[name=meta_class_size]' ).val(),
+		meta_allow_course_discussion: $( '[name=meta_allow_course_discussion]' ).is( ':checked' ) ? 'on' : 'off',
+		meta_allow_workbook_page: $( '[name=meta_allow_workbook_page]' ).is( ':checked' ) ? 'on' : 'off',
 		
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
@@ -395,7 +420,8 @@ function step_6_update( attr ) {
 		// Don't remove
 		action: initialVars['action'],
 		course_id: initialVars['course_id'],
-		
+		course_name: initialVars['course_name'],
+				
 		// Alter as required
 		
 		// Don't remove
@@ -407,8 +433,8 @@ function step_6_update( attr ) {
 function courseAutoUpdate( step ) {
 	$ = jQuery;
 	var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' )[0];
-	
-	// var statusNice = 'z';
+
+	var statusNice = '';
 	if( $( theStatus ).hasClass( 'saved' ) ) { statusNice = 'saved'; }
 	if( $( theStatus ).hasClass( 'invalid' ) ) { statusNice = 'invalid'; }
 	if( $( theStatus ).hasClass( 'attention' ) ) { statusNice = 'attention'; }
@@ -428,10 +454,11 @@ function courseAutoUpdate( step ) {
 		// Setup course progress markers and statuses		
 		set_update_progress( 'step-' + step, 'saved' );
 		var meta_course_setup_progress = get_meta_course_setup_progress();
-		
+
 	    var initial_vars = {
 	   		action: 'autoupdate_course_settings',
 	   		course_id: course_id,
+			course_name: $( '[name=course_name]' ).val(),
 	   		meta_course_setup_progress: meta_course_setup_progress,
 	   		meta_course_setup_marker: 'step-' + step,
 	   	}
