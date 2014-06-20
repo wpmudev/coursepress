@@ -99,6 +99,17 @@ if (isset($_GET['course_id'])) {
     $course_category = $course->details->course_category;
     $language = $course->details->course_language;
     $course_video_url = $course->details->course_video_url;
+	$course_setup_progress = empty ( $course->details->course_setup_progress ) ? array( 
+		'step-1' => 'incomplete',
+		'step-2' => 'incomplete',
+		'step-3' => 'incomplete',
+		'step-4' => 'incomplete',
+		'step-5' => 'incomplete',
+		'step-6' => 'incomplete',
+	) : $course->details->course_setup_progress;
+	$course_setup_marker = empty ( $course->details->course_setup_marker ) ? 'step-1' : $course->details->course_setup_marker;	
+	$gateways = false;
+
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -118,6 +129,16 @@ if (isset($_GET['course_id'])) {
     $course_category = 0;
     $language = __('English', 'cp');
     $course_video_url = '';
+	$course_setup_progress = array( 
+		'step-1' => 'incomplete',
+		'step-2' => 'incomplete',
+		'step-3' => 'incomplete',
+		'step-4' => 'incomplete',
+		'step-5' => 'incomplete',
+		'step-6' => 'incomplete',
+	);
+	$course_setup_marker = 'step-1';
+	$gateways = false;
 }
 
 ?>
@@ -182,12 +203,16 @@ if (isset($_GET['course_id'])) {
 							
 							
 							<!-- Course Overview -->
-							<div class='course-section step step-1'>
+							<div class="course-section step step-1 <?php echo 'step-1' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status"></div>									
+									<div class="status <?php echo empty( $course_setup_progress['step-1'] ) ? '' : $course_setup_progress['step-1']; ?> "></div>									
 									<h3><?php _e( 'Step 1 - Course Overview', 'cp' )?></h3>
 								</div>
 								<div class='course-form'>
+									<?php
+										$set_status = $course_setup_progress['step-1'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 									<div class="wide">
 		                            <label for='course_name'>
 		                                <?php _e('Course Name', 'cp'); ?>
@@ -287,13 +312,16 @@ if (isset($_GET['course_id'])) {
 							<!-- /Course Overview -->
 
 							<!-- Course Description -->
-							<div class='course-section step step-2'>
+							<div class="course-section step step-2 <?php echo 'step-2' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status saved"></div>
+									<div class="status <?php echo empty( $course_setup_progress['step-2'] ) ? '' : $course_setup_progress['step-2']; ?> "></div>									
 									<h3><?php _e( 'Step 2 - Course Description', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-									
+									<?php
+										$set_status = $course_setup_progress['step-2'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-2]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 		                            <div class="wide narrow">
 		                                <?php
 		                                global $content_width;
@@ -396,13 +424,16 @@ if (isset($_GET['course_id'])) {
 							<!-- /Course Description -->							
 
 							<!-- Instructors -->
-							<div class='course-section step step-3'>
+							<div class="course-section step step-3 <?php echo 'step-3' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status invalid"></div>									
+									<div class="status <?php echo empty( $course_setup_progress['step-3'] ) ? '' : $course_setup_progress['step-3']; ?> "></div>									
 									<h3><?php _e( 'Step 3 - Instructors', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-
+									<?php
+										$set_status = $course_setup_progress['step-3'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 									<div class="wide narrow">
 			                            <label>
 			                                <?php _e( 'Course Instructor(s)', 'cp' ); ?>
@@ -481,13 +512,16 @@ if (isset($_GET['course_id'])) {
 							<!-- /Instructors -->
 							
 							<!-- Course Dates -->							
-							<div class='course-section step step-4 save-marker active'>
+							<div class="course-section step step-4 <?php echo 'step-4' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status progress"></div>									
+									<div class="status <?php echo empty( $course_setup_progress['step-4'] ) ? '' : $course_setup_progress['step-4']; ?> "></div>																		
 									<h3><?php _e( 'Step 4 - Course Dates', 'cp' )?></h3>									
 								</div>
 								<div class='course-form'>
-
+									<?php
+										$set_status = $course_setup_progress['step-4'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 		                            <div class="wide course-dates"> 
 		                                <label>
 											<?php _e('Course Dates', 'cp'); ?>
@@ -550,13 +584,16 @@ if (isset($_GET['course_id'])) {
 							<!-- /Course Dates -->
 
 							<!-- Classes, Discussions & Workbook -->
-							<div class='course-section step step-5'>
+							<div class="course-section step step-5 <?php echo 'step-5' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status"></div>									
+									<div class="status <?php echo empty( $course_setup_progress['step-5'] ) ? '' : $course_setup_progress['step-5']; ?> "></div>																	
 									<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
-
+									<?php
+										$set_status = $course_setup_progress['step-5'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-5]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 		                            <div class="wide narrow">
 			                            <label for='meta_class-size'>
 											<input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ($limit_class_size == 'on') ? 'checked' : ''; ?> />
@@ -596,13 +633,21 @@ if (isset($_GET['course_id'])) {
 							<!-- /Classes, Discussions & Workbook -->							
 
 							<!-- Enrollment & Course Cost -->
-							<div class='course-section step step-6'>
+							<div class="course-section step step-6 <?php echo 'step-6' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 								<div class='course-section-title'>
-									<div class="status attention"></div>									
+									<?php
+										$step_6_status = empty( $course_setup_progress['step-6'] ) ? '' : $course_setup_progress['step-6'];
+										$step_6_status = ! $gateways ? 'attention' : $step_6_status;
+								    ?>
+									<div class="status <?php echo $step_6_status; ?> "></div>									
 									<h3><?php _e( 'Step 6 - Enrollment & Course Cost', 'cp' )?></h3>						
 								</div>
 								<div class='course-form'>
-									
+									<?php
+										$set_status = $course_setup_progress['step-6'];
+									?>
+									<input type='hidden' name='meta_course_setup_progress[step-6]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+
 									<div class="narrow">
 			                            <label for='meta_enroll_type'>
 											<?php _e('Who can Enroll in this course', 'cp'); ?>

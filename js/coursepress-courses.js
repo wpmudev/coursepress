@@ -235,10 +235,14 @@ var active_editor;
 function cp_editor_key_down( ed, page, tab ) {
 	$ = jQuery;
 
-	if ( tab == 'overview' ) {
-		// Mark as dirty
-		$( '#' + ed.id ).parents('.course-section').addClass('dirty');
-		active_editor = ed.id;
+	if ( page == 'coursepress_page_course_details' ) {
+		if ( tab == '' || tab == 'overview' ){
+
+			// Mark as dirty when wp_editor content changes on 'Course Setup' page.
+			$( '#' + ed.id ).parents('.course-section').addClass('dirty');
+			active_editor = ed.id;
+			
+		}
 	}
 	
 }
@@ -248,133 +252,155 @@ function cp_editor_mouse_move( ed, event ) {
 }
 
 
-/** AJAX UPDATES */
+function set_update_progress( step , value  ) {
+	
+	$('input[name="meta_course_setup_progress[' + step + ']"]').val( value );
+	
+}
+
+function get_meta_course_setup_progress() {
+	var meta_course_setup_progress = {
+		'step-1': $('input[name="meta_course_setup_progress[step-1]"]').val(),
+		'step-2': $('input[name="meta_course_setup_progress[step-2]"]').val(),
+		'step-3': $('input[name="meta_course_setup_progress[step-3]"]').val(),
+		'step-4': $('input[name="meta_course_setup_progress[step-4]"]').val(),
+		'step-5': $('input[name="meta_course_setup_progress[step-5]"]').val(),	
+		'step-6': $('input[name="meta_course_setup_progress[step-6]"]').val(),														
+	}
+	
+	return meta_course_setup_progress;
+}
+
+function autosave_course_setup_done( data, status, step, statusElement ) {
+	if ( status == 'success' ) {
+		$( $( '.' + step + '.dirty' )[0] ).removeClass( 'dirty' )
+		$( statusElement ).removeClass( 'progress' );
+		$( statusElement ).addClass( 'saved' );
+	} else {
+		$( statusElement ).removeClass( 'progress' );
+		$( statusElement ).addClass( 'invalid' );				
+		set_update_progress( step, 'invalid' );
+	}	
+};
+
+/** Prepare AJAX post vars */
 function step_1_update( attr ) {	
 	var theStatus = attr['status'];
-	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
+	var initialVars = attr['initialVars'];
 
-		var course_id = 0;
-		if ( $.urlParam('course_id') != 0 ) {
-			course_id = $.urlParam('course_id');
-		}
-
-		var mce_id = $( $( '[name=course_name]' ).parents('.step-1')[0] ).find('[mce]').val();
-		var content = '';
-		if ( tinyMCE.get('course_excerpt') ){
-			content = tinyMCE.get('course_excerpt').getContent();
-		} else {
-			content = $( '[name=course_excerpt]' ).val();
-		}
-		
-		var _thumbnail_id = '';
-		if ( $( '[name=_thumbnail_id]' ) ) {
-			_thumbnail_id = $( '[name=_thumbnail_id]' ).val()
-		}
-		
-        jQuery.post(
-			'admin-ajax.php', 
-			{	
-				action: 'autoupdate_course_settings', 
-				course_id: course_id,
-				course_name: $( '[name=course_name]' ).val(),
-				course_excerpt: content,
-				meta_featured_url: $( '[name=meta_featured_url]' ).val(),
-				_thumbnail_id: _thumbnail_id,
-				meta_course_category: $( '[name=meta_course_category]' ).val(),
-				meta_course_language: $( '[name=meta_course_language]' ).val(),
-			}
-		).done(function( data, status ) {
-			if ( status == 'success' ) {
-				$( theStatus ).removeClass( 'progress' );
-				$( theStatus ).addClass( 'saved' );
-			}
-		}).fail( function( data ) {
-		});
-
+	var content = '';
+	if ( tinyMCE.get('course_excerpt') ){
+		content = tinyMCE.get('course_excerpt').getContent();
 	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+		content = $( '[name=course_excerpt]' ).val();
+	}
+	
+	var _thumbnail_id = '';
+	if ( $( '[name=_thumbnail_id]' ) ) {
+		_thumbnail_id = $( '[name=_thumbnail_id]' ).val()
+	}
+	
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		course_name: $( '[name=course_name]' ).val(),
+		course_excerpt: content,
+		meta_featured_url: $( '[name=meta_featured_url]' ).val(),
+		_thumbnail_id: _thumbnail_id,
+		meta_course_category: $( '[name=meta_course_category]' ).val(),
+		meta_course_language: $( '[name=meta_course_language]' ).val(),
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: 'step-2',
 	}
 }
 
 function step_2_update( attr ) {
 	var theStatus = attr['status'];
+	var initialVars = attr['initialVars'];
 	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
-
-
-
-
-
-
-	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: 'step-3',
 	}
 }
 
 function step_3_update( attr ) {
 	var theStatus = attr['status'];
+	var initialVars = attr['initialVars'];
 	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
-
-
-
-
-
-
-	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: 'step-4',
 	}
 }
 
 function step_4_update( attr ) {
 	var theStatus = attr['status'];
+	var initialVars = attr['initialVars'];
 	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
-
-
-
-
-
-
-	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: 'step-5',
 	}
 }
 
 function step_5_update( attr ) {
 	var theStatus = attr['status'];
+	var initialVars = attr['initialVars'];
 	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
-
-
-
-
-
-
-	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: 'step-6',
 	}
 }
 
 function step_6_update( attr ) {
 	var theStatus = attr['status'];
+	var initialVars = attr['initialVars'];
 	
-	if ( $( $( '.step-1.dirty' )[0] ).hasClass( 'dirty' ) ) {
-		$( theStatus ).addClass( 'progress' );
-
-
-
-
-
-
-	} else {
-		$( theStatus ).addClass( attr['niceStatus'] );
+	return {
+		// Don't remove
+		action: initialVars['action'],
+		course_id: initialVars['course_id'],
+		
+		// Alter as required
+		
+		// Don't remove
+		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+		meta_course_setup_marker: initialVars['meta_course_setup_marker'],
 	}
 }
 
@@ -382,7 +408,7 @@ function courseAutoUpdate( step ) {
 	$ = jQuery;
 	var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' )[0];
 	
-	var statusNice = 'z';
+	// var statusNice = 'z';
 	if( $( theStatus ).hasClass( 'saved' ) ) { statusNice = 'saved'; }
 	if( $( theStatus ).hasClass( 'invalid' ) ) { statusNice = 'invalid'; }
 	if( $( theStatus ).hasClass( 'attention' ) ) { statusNice = 'attention'; }
@@ -390,8 +416,42 @@ function courseAutoUpdate( step ) {
 	$( theStatus ).removeClass( 'invalid' );
 	$( theStatus ).removeClass( 'attention' );
 	
-	var func = 'step_' + step + '_update';
-	window[func]( { status: theStatus, niceStatus: statusNice } );
+	if ( $( '.step-' + step + '.dirty' )[0] ) {
+		$( theStatus ).addClass( 'progress' );
+		
+		// Course ID
+		var course_id = 0;
+		if ( $.urlParam('course_id') != 0 ) {
+			course_id = $.urlParam('course_id');
+		}
+		
+		// Setup course progress markers and statuses		
+		set_update_progress( 'step-' + step, 'saved' );
+		var meta_course_setup_progress = get_meta_course_setup_progress();
+		
+	    var initial_vars = {
+	   		action: 'autoupdate_course_settings',
+	   		course_id: course_id,
+	   		meta_course_setup_progress: meta_course_setup_progress,
+	   		meta_course_setup_marker: 'step-' + step,
+	   	}
+
+		var func = 'step_' + step + '_update';
+		// Get the AJAX post vars from step_[x]_update();
+		var post_vars = window[func]( { status: theStatus, initialVars: initial_vars } );
+		
+		// AJAX CALL
+        $.post(
+			'admin-ajax.php', post_vars
+		).done( function( data, status ) {
+			// Handle return
+			autosave_course_setup_done( data, status, 'step-' + step, theStatus );
+		}).fail( function( data ) {
+		});
+		
+	} else {
+		$( theStatus ).addClass( statusNice );
+	}
 }
 
 /** Handle Course Setup Wizard */

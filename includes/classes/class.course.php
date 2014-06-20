@@ -170,7 +170,7 @@ if (!class_exists('Course')) {
                         update_post_meta($post_id, '_thumbnail_id', $_POST['meta_featured_url']);
                     }
                 } else {
-                    if (isset($_POST['meta_featured_url']) || $_POST['meta_featured_url'] == '') {
+                    if ( isset( $_POST['meta_featured_url'] ) && $_POST['meta_featured_url'] == '' ) {
                         update_post_meta($post_id, '_thumbnail_id', '');
                     }
                 }
