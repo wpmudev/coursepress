@@ -909,7 +909,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .instructor-remove a:hover{
-    /*background-image: url( "../images/delete.png" );*/
+/*    background-image: url( "../images/delete.png" );*/
     background-position: 30px 31px;
     background-repeat: no-repeat;
     height: 80px;

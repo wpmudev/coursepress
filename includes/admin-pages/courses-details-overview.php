@@ -177,7 +177,7 @@ if ( isset( $_GET['course_id'] ) ) {
                 <div id='edit-sub' class='course-holder-wrap mp-wrap'>
 
                     <div class='sidebar-name no-movecursor'>
-                        <h3><?php _e( 'Course Setup', 'cp' ); ?></h3>
+                        <h3><?php _e( 'Course Setup', 'cp' ); ?><i class="fa fa-group"></i></h3>
                     </div>
 
                     <div class='course-holder'>

@@ -359,6 +359,7 @@ function step_3_update( attr ) {
 		course_name: initialVars['course_name'],
 				
 		// Alter as required
+		instructor: $("input[name^=instructor]").map(function(){return $(this).val();}).get(),
 		
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
