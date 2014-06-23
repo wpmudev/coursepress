@@ -447,9 +447,10 @@ function courseAutoUpdate( step ) {
 		$( theStatus ).addClass( 'progress' );
 		
 		// Course ID
-		var course_id = 0;
-		if ( $.urlParam('course_id') != 0 ) {
+		var course_id = $( '[name=course_id]' ).val();
+		if ( ! course_id ) {
 			course_id = $.urlParam('course_id');
+			$( '[name=course_id]' ).val( course_id );
 		}
 		
 		// Setup course progress markers and statuses		
@@ -472,6 +473,12 @@ function courseAutoUpdate( step ) {
         $.post(
 			'admin-ajax.php', post_vars
 		).done( function( data, status ) {
+			// Set a course_id if its still empty
+			course_id = $( data ).find('response_data').text();
+			console.log( course_id );
+			if ( $( '[name=course_id]' ).val() == 0 && course_id ) {
+				$( '[name=course_id]' ).val( course_id );
+			}
 			// Handle return
 			autosave_course_setup_done( data, status, 'step-' + step, theStatus );
 		}).fail( function( data ) {
@@ -480,6 +487,13 @@ function courseAutoUpdate( step ) {
 	} else {
 		$( theStatus ).addClass( statusNice );
 	}
+}
+
+function sendInstructotInvitation() {
+	
+	
+	
+	
 }
 
 /** Handle Course Setup Wizard */
@@ -606,6 +620,54 @@ jQuery(document).ready(function( $ ){
 			$( $( this ).parent() ).effect( 'shake', { distance: 10 }, 100 );
 		}
 	});	
+	
+    $( '#invite-instructor-trigger' ).click( function() {
+		
+        // var instructor_id = jQuery( '#instructors option:selected' ).val();
+		
+		// Mark as dirty
+		// var parent_section = jQuery( this ).parents( '.course-section.step' )[0];
+		// if ( parent_section ) {
+		// 	if ( ! jQuery( parent_section ).hasClass( 'dirty' ) ) {
+		// 		jQuery( parent_section ).addClass( 'dirty' );
+		// 	}
+		// }
+
+        // if ( jQuery( "#instructor_holder_" + instructor_id ).length == 0 ) {
+// 			jQuery( '.instructor-avatar-holder.empty' ).hide();
+//             jQuery( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery( '#instructors option:selected' ).text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
+//         }
+
+		// Course ID
+		var course_id = $( '[name=course_id]' ).val();
+		if ( ! course_id ) {
+			course_id = $.urlParam('course_id');
+			$( '[name=course_id]' ).val( course_id );
+		}
+		
+	
+		$.post(
+			'admin-ajax.php', {
+				action: 'send_instructor_invite',
+				first_name: $( '[name=invite_instructor_first_name]' ).val(),
+				last_name: $( '[name=invite_instructor_last_name]' ).val(),
+				email: $( '[name=invite_instructor_email]' ).val(),
+				course_id: course_id,
+			}
+		).done( function( data, status ) {
+			// Handle return
+			if ( status == 'success' ) {
+			} else {
+			}	
+		}).fail( function( data ) {
+		});
+		
+        // jQuery.get( 'admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id} )
+        //         .success( function( data ) {
+        //             //alert( data );
+        //         } );
+    } );
+	
 
 	/** Mark "dirty" content */
 	$( '.course-form input' ).change(function() {

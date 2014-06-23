@@ -104,6 +104,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
                 //Assign Course Setup auto-update ajax call
                 add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
+				
+				//Invite instructor ajax call
+				add_action( 'wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ) );
 
                 add_action( 'mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ) );
             }
@@ -1295,13 +1298,13 @@ if ( !class_exists( 'CoursePress' ) ) {
                   http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
                  */
                 $course = new Course( $_POST['course_id'] );
-                $course->update_course();
+                $course_id = $course->update_course();
 
                 $response = array(
                     'what' => 'course_settings',
                     'action' => 'autoupdate_course_settings',
-                    'id' => $_POST['course_id'],
-                    'data' => 'Success.'
+                    'id' => 1,
+                    'data' => $course_id,
                 );
                 $xmlResponse = new WP_Ajax_Response( $response );
                 $xmlResponse->send();
@@ -1314,13 +1317,66 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * ::RK::
 		 */
 		function send_instructor_invite() {
+		
+            $email_args['email_type'] = 'instructor_invitation';
+			$email_args['first_name'] = sanitize_text_field( $_POST['first_name'] );
+			$email_args['last_name'] = sanitize_text_field( $_POST['last_name'] );			
+			$email_args['instructor_email'] = sanitize_email( $_POST['email'] );
 			
-            // $email_args['email_type'] = 'student_registration';
-            // $email_args['student_id'] = $student_id;
-            // $email_args['student_email'] = $student_data['user_email'];
-            // $email_args['student_first_name'] = $student_data['first_name'];
-            // $email_args['student_last_name'] = $student_data['last_name'];
-            // coursepress_send_email( $email_args );
+			$user = get_user_by( 'email', $email_args['instructor_email'] );
+			if ( $user ) {
+				$email_args['user'] = $user;
+			}
+			if ( !empty( $_POST['course_id'] ) ) {
+				$email_args['course_id'] = (int) $_POST['course_id'];			
+				
+				// Save the invite in the course meta. Hash the invite code.
+				$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			    $invite_code = '';
+			    for ($i = 0; $i < 20; $i++) {
+			        $invite_code .= $characters[rand(0, strlen($characters) - 1)];
+			    }
+				$email_args['invite_code'] = $invite_code;
+				
+				coursepress_send_email( $email_args );
+				
+				$invite_hash = sha1( $email_args['instructor_email'] . $email_args['invite_code'] );
+				
+				$invite = array(
+					'first_name' => $email_args['first_name'],
+					'last_name'  => $email_args['last_name'],
+					'email'      => $email_args['instructor_email'],
+					'invite'     => $invite_hash,
+				);
+				
+				// Get the invite meta for this course and add the new invite
+				$invite_exists = false;
+				if ( $instructor_invites = get_post_meta( $email_args['course_id'], 'instructor_invites', true ) ) {
+					foreach ( $instructor_invites as $i => $v ) $instructor_invites[$i] = $v['email'];
+					$invite_exists = array_search( $email_args['instructor_email'], $instructor_invites );
+				} else {
+					$instructor_invites = array();					
+				}
+				
+				$ajax_response = '';
+				if ( ! $invite_exists ) {
+					$instructor_invites[] = $invite;
+					update_post_meta( $email_args['course_id'], 'instructor_invites', $instructor_invites );
+					$ajax_response = 1;
+				} else {
+					$ajax_response = 0;
+				}
+				
+                $response = array(
+                    'what' => 'instructor_invite',
+                    'action' => 'instructor_invite',
+                    'id' => 1,
+                    'data' => $ajax_response,
+                );
+                $xmlResponse = new WP_Ajax_Response( $response );
+                $xmlResponse->send();
+				
+			}
 			
 		}
 		

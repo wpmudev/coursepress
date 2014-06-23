@@ -102,7 +102,7 @@ if ( !class_exists( 'Course' ) ) {
             $post_status = 'publish';
 
             if ( $_POST['course_name'] != '' && $_POST['course_name'] != __( 'Untitled', 'cp' ) ) {
-                if ( $course->post_status != 'publish' ) {
+                if ( !empty ( $course->post_status ) && $course->post_status != 'publish' ) {
                     $post_status = 'private';
                 }
             } else {
@@ -125,7 +125,9 @@ if ( !class_exists( 'Course' ) ) {
 				$post['post_title'] = empty( $_POST['course_name'] ) ? $course->post_title : $_POST['course_name'];
 			} else {
 				$post['post_excerpt'] = $_POST['course_excerpt'];
-				$post['post_content'] = $_POST['course_description'];
+				if ( isset( $_POST['course_description'] ) ) {
+					$post['post_content'] = $_POST['course_description'];					
+				}
 				$post['post_title'] = $_POST['course_name'];
 			}			
 

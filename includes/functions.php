@@ -253,30 +253,48 @@ function coursepress_send_email( $email_args = array() ) {
     }
 	
 	if ( 'instructor_invitation' == $email_args['email_type'] ) {		
+		global $course_slug;
+		
 		cp_write_log('TESTING: Instructor email.');
-        // global $course_slug;
-        // $student_email = $email_args['student_email'];
-        // $subject = coursepress_get_registration_email_subject();
-        // $courses_address = trailingslashit( site_url() ) . trailingslashit( $course_slug );
-        //
-        // $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
-        // $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url() );
-        //
-        // $message = coursepress_get_registration_content_email();
-        //
-        // $message = str_replace( $tags, $tags_replaces, $message );
-        //
-        // add_filter( 'wp_mail_from', 'my_mail_from_function' );
-        //
-        // function my_mail_from_function( $email ) {
-        //     return coursepress_get_registration_from_email();
-        // }
-        //
-        // add_filter( 'wp_mail_from_name', 'my_mail_from_name_function' );
-        //
-        // function my_mail_from_name_function( $name ) {
-        //     return coursepress_get_registration_from_name();
-        // }
+		cp_write_log( $email_args );
+		
+		$course = '';
+		$course_summary = '';
+		$course_name = '';
+		$courses_address = trailingslashit( site_url() ) . trailingslashit( $course_slug );
+				
+        if ( isset( $email_args['course_id'] ) ) {
+            $course = new Course( $email_args['course_id'] );
+			
+			$course_name = $course->details->post_title;
+			$course_summary = $course->details->post_excerpt;
+			$course_address = $course->get_permalink();
+        }
+		
+		$instructor_email = $email_args['instructor_email'];
+		$subject = coursepress_get_instructor_invitation_email_subject();
+
+		$tags = 			array( 'INSTRUCTOR_FIRST_NAME', 'INSTRUCTOR_LAST_NAME', 'INSTRUCTOR_EMAIL', 'CONFIRMATION_LINK', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'WEBSITE_NAME' );
+		
+		$tags_replaces =	array( $email_args['first_name'], $email_args['last_name'], $instructor_email, 'TODO: Confirmation', $course_name, $course_summary, $course_address, site_url(), get_bloginfo() );
+		
+        $message = coursepress_get_instructor_invitation_email();
+
+        $message = str_replace( $tags, $tags_replaces, $message );
+
+        add_filter( 'wp_mail_from', 'my_mail_from_function' );
+
+        function my_mail_from_function( $email ) {
+            return coursepress_get_instructor_invitation_from_email();
+        }
+
+        add_filter( 'wp_mail_from_name', 'my_mail_from_name_function' );
+
+        function my_mail_from_name_function( $name ) {
+            return coursepress_get_instructor_invitation_from_name();
+        }
+		
+		cp_write_log( $message );
 		exit;
 	}
 
@@ -392,12 +410,15 @@ Yours sincerely,
 function coursepress_get_instructor_invitation_from_name() {
 	return get_option( 'instructor_invitation_from_name', get_option( 'blogname' ) );
 }
+
 function coursepress_get_instructor_invitation_from_email() {
     return get_option( 'instructor_invitation_from_email', get_option( 'admin_email' ) );
 }
+
 function coursepress_get_instructor_invitation_email_subject() {
     return get_option( 'instructor_invitation_email_subject', sprintf( __('Invitation to be an instructor at %s', 'cp'), get_option( 'blogname' ) ) );	
 }
+
 function coursepress_get_instructor_invitation_email() {
 	
 	$default_instructor_invitation_email = sprintf( __(
@@ -418,15 +439,6 @@ If you haven\'t yet got a username you will need to create one.
 	
 	return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
 }
-
-
-
-
-
-
-
-
-
 
 
 function coursepress_admin_notice( $notice, $type = 'updated' ) {
@@ -527,6 +539,13 @@ function coursepress_instructors_avatars_array( $args = array() ) {
 
     $content .= '</script>';
     echo $content;
+}
+
+function coursepress_instructors_pending( $course_id, $has_capability ) {
+	
+	
+	
+	
 }
 
 function coursepress_students_drop_down() {

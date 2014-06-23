@@ -492,6 +492,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                             ?>
 
                                             <?php coursepress_instructors_avatars( $course_id, $remove_button ); ?>
+											<?php coursepress_instructors_pending( $course_id, $remove_button ); ?>
                                         </div>						
                                         <div class="clearfix"></div>
                                         <hr />
@@ -508,7 +509,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                             <label for="invite_instructor_first_name"><?php _e( 'First Name', 'cp' ); ?></label>
                                             <input type="text" name="invite_instructor_first_name" placeholder="First Name" />
                                             <label for="invite_instructor_last_name"><?php _e( 'Last Name', 'cp' ); ?></label>
-                                            <input type="text" name="invite_instructor_first_name" placeholder="Last Name" />
+                                            <input type="text" name="invite_instructor_last_name" placeholder="Last Name" />
                                             <label for="invite_instructor_email"><?php _e( 'E-Mail', 'cp' ); ?></label>
                                             <input type="text" name="invite_instructor_email" placeholder="instructor@email.com" />
                                             <input class="button-primary" id="invite-instructor-trigger" type="button" value="<?php _e( 'Send Invite', 'cp' ); ?>">
