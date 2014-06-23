@@ -310,7 +310,7 @@ function coursepress_send_email( $email_args = array() ) {
         return get_option( 'blog_charset' );
     }
 
-    wp_mail( $student_email, stripslashes( $subject ), stripslashes( nl2br( $message ) ) );
+    return wp_mail( $student_email, stripslashes( $subject ), stripslashes( nl2br( $message ) ) );
 }
 
 /* Get Student Invitation with Passcode to a Course E-mail data */
