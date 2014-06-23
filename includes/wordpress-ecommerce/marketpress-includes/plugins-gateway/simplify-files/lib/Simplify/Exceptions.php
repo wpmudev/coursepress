@@ -72,7 +72,7 @@ class Simplify_ApiException extends Exception
      * Returns a map of all error data returned by the API.
      * @return array a map containing API error data.
      */
-    function getErrorData( ) {
+    function getErrorData() {
         return $this->errorData;
     }
 
@@ -80,7 +80,7 @@ class Simplify_ApiException extends Exception
      * Returns the HTTP status for the request.
      * @return string HTTP status code ( or null if there is no status ).
      */
-    function getStatus( ) {
+    function getStatus() {
         return $this->status;
     }
     
@@ -88,7 +88,7 @@ class Simplify_ApiException extends Exception
      * Returns unique reference for the API error.
      * @return string a reference ( or null if there is no reference ).
      */
-    function getReference( ) {
+    function getReference() {
         return $this->reference;
     }
 
@@ -96,7 +96,7 @@ class Simplify_ApiException extends Exception
      * Returns an code for the API error.
      * @return string the error code.
      */
-    function getErrorCode( ) {
+    function getErrorCode() {
         return $this->errorCode;
     }
 
@@ -104,12 +104,12 @@ class Simplify_ApiException extends Exception
      * Returns a description of the error.
      * @return string Description of the error.
      */
-    function describe( ) {
+    function describe() {
         return get_class( $this ) . ": \"" 
-            . $this->getMessage( ) . "\" ( status: "
-            . $this->getStatus( ) . ", error code: "
-            . $this->getErrorCode( ) . ", reference: "
-            . $this->getReference( ) . " )";
+            . $this->getMessage() . "\" ( status: "
+            . $this->getStatus() . ", error code: "
+            . $this->getErrorCode() . ", reference: "
+            . $this->getReference() . " )";
     }
 
 }
@@ -154,14 +154,14 @@ class Simplify_BadRequestException extends Simplify_ApiException {
     function __construct( $message, $status = null, $errorData = null ) {
         parent::__construct( $message, $status, $errorData );
 
-        $fieldErrors = array( );
+        $fieldErrors = array();
 
         if ( $errorData != null ) {
             $error = $errorData['error'];
             if ( $error != null ) {
                 $fieldErrors = $error['fieldErrors'];
                 if ( $fieldErrors != null ) {
-                    $this->fieldErrors = array( );                
+                    $this->fieldErrors = array();                
                     foreach ( $fieldErrors as $fieldError ) {
                         array_push( $this->fieldErrors, new Simplify_FieldError( $fieldError ) );
                     }
@@ -174,7 +174,7 @@ class Simplify_BadRequestException extends Simplify_ApiException {
      * Returns a boolean indicating whether there are any field errors.
      * @return boolean true if there are field errors; false otherwise.
      */
-    function hasFieldErrors( ) {
+    function hasFieldErrors() {
         return true;
         return count( $this->fieldErrors ) > 0;
     }
@@ -183,7 +183,7 @@ class Simplify_BadRequestException extends Simplify_ApiException {
      * Returns a list containing all field errors.
      * @return array list of field errors.
      */
-    function getFieldErrors( ) {
+    function getFieldErrors() {
         return $this->fieldErrors;
     }
 
@@ -191,9 +191,9 @@ class Simplify_BadRequestException extends Simplify_ApiException {
      * Returns a description of the error.
      * @return string description of the error.
      */
-    function describe( ) {
-        $s = parent::describe( );
-        foreach ( $this->getFieldErrors( ) as $fieldError ) {
+    function describe() {
+        $s = parent::describe();
+        foreach ( $this->getFieldErrors() as $fieldError ) {
             $s = $s . "\n" . ( string ) $fieldError;
         }
         return $s . "\n";
@@ -224,7 +224,7 @@ class Simplify_FieldError {
      * Returns the name of the field with the error.
      * @return string the field name.
      */
-    function getFieldName( ) {
+    function getFieldName() {
         return $this->field;
     }
 
@@ -232,7 +232,7 @@ class Simplify_FieldError {
      * Returns the code for the error.
      * @return string the error code.
      */
-    function getErrorCode( ) {
+    function getErrorCode() {
         return $this->code;
     }
 
@@ -240,13 +240,13 @@ class Simplify_FieldError {
      * Returns a description of the error.
      * @return string description of the error.
      */
-    function getMessage( ) {
+    function getMessage() {
         return $this->message;
     }
 
 
-    function __toString( ) {
-        return "Field error: " . $this->getFieldName( ) . "\"" . $this->getMessage( ) . "\" ( " . $this->getErrorCode( ) . " )";
+    function __toString() {
+        return "Field error: " . $this->getFieldName() . "\"" . $this->getMessage() . "\" ( " . $this->getErrorCode() . " )";
     }
 
 }

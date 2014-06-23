@@ -10,7 +10,7 @@ if ( !class_exists( 'Student' ) ) {
         var $first_name = '';
         var $last_name = '';
         var $courses_number = 0;
-        var $details = array( );
+        var $details = array();
 
         function __construct( $ID, $name = '' ) {
             global $wpdb;
@@ -23,7 +23,7 @@ if ( !class_exists( 'Student' ) ) {
 
             $this->first_name = get_user_meta( $ID, 'first_name', true );
             $this->last_name = get_user_meta( $ID, 'last_name', true );
-            $this->courses_number = $this->get_courses_number( );
+            $this->courses_number = $this->get_courses_number();
         }
 
         function Student( $ID, $name = '' ) {
@@ -48,7 +48,7 @@ if ( !class_exists( 'Student' ) ) {
             $get_old_values = get_user_meta( $user_ID, 'visited_courses', false );
 
             if ( $get_old_values == false ) {
-                $get_old_values = array( );
+                $get_old_values = array();
             }
 
             if ( cp_in_array_r( $course_ID, $get_old_values ) ) {
@@ -103,17 +103,17 @@ if ( !class_exists( 'Student' ) ) {
 
         //Withdraw from all courses
 
-        function withdraw_from_all_courses( ) {
-            $courses = $this->get_enrolled_courses_ids( );
+        function withdraw_from_all_courses() {
+            $courses = $this->get_enrolled_courses_ids();
 
             foreach ( $courses as $course_id ) {
                 $this->withdraw_from_course( $course_id );
             }
         }
 
-        function get_enrolled_courses_ids( ) {
+        function get_enrolled_courses_ids() {
             global $wpdb;
-            $enrolled_courses = array( );
+            $enrolled_courses = array();
             $courses = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'enrolled_course_date_%%' AND user_id = %d", $this->ID ), OBJECT );
 
             foreach ( $courses as $course ) {
@@ -128,13 +128,13 @@ if ( !class_exists( 'Student' ) ) {
         }
 
         //Get number of courses student enrolled in
-        function get_courses_number( ) {
+        function get_courses_number() {
             global $wpdb;
             $courses_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( * ) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'enrolled_course_date_%%'", $this->ID ) );
             return $courses_count;
         }
 
-        function delete_student( ) {
+        function delete_student() {
             wp_delete_user( $this->ID ); //without reassign
         }
 
@@ -142,7 +142,7 @@ if ( !class_exists( 'Student' ) ) {
             global $wpdb;
 
             if ( $user_id == '' ) {
-                $user_id = get_current_user_id( );
+                $user_id = get_current_user_id();
             }
 
             if ( $course_id == '' ) {

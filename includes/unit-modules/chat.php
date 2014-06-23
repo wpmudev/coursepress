@@ -1,5 +1,5 @@
 <?php
-if ( is_chat_plugin_active( ) ) {
+if ( is_chat_plugin_active() ) {
 
     class chat_module extends Unit_Module {
 
@@ -10,12 +10,12 @@ if ( is_chat_plugin_active( ) ) {
         var $front_save = false;
         var $response_type = '';
 
-        function __construct( ) {
-            $this->on_create( );
+        function __construct() {
+            $this->on_create();
         }
 
-        function chat_module( ) {
-            $this->__construct( );
+        function chat_module() {
+            $this->__construct();
         }
 
         function front_main( $data ) {
@@ -45,7 +45,7 @@ if ( is_chat_plugin_active( ) ) {
                         if ( isset( $data->ID ) ) {
                             parent::get_module_delete_link( $data->ID );
                         } else {
-                            parent::get_module_remove_link( );
+                            parent::get_module_remove_link();
                         }
                         ?>
                     </span>
@@ -97,13 +97,13 @@ if ( is_chat_plugin_active( ) ) {
             <?php
         }
 
-        function on_create( ) {
+        function on_create() {
             $this->description = __( 'Add a chat box from the Wordpress Chat plugin', 'cp' );
-            $this->save_module_data( );
-            parent::additional_module_actions( );
+            $this->save_module_data();
+            parent::additional_module_actions();
         }
 
-        function save_module_data( ) {
+        function save_module_data() {
             global $wpdb, $last_inserted_unit_id, $save_elements;
 
             if ( isset( $_POST['module_type'] ) && ( $save_elements == true ) ) {
@@ -111,13 +111,13 @@ if ( is_chat_plugin_active( ) ) {
                 foreach ( array_keys( $_POST['module_type'] ) as $module_type => $module_value ) {
 
                     if ( $module_value == $this->name ) {
-                        $data = new stdClass( );
+                        $data = new stdClass();
                         $data->ID = '';
                         $data->unit_id = '';
                         $data->title = '';
                         $data->excerpt = '';
                         $data->content = '';
-                        $data->metas = array( );
+                        $data->metas = array();
                         $data->metas['module_type'] = $this->name;
                         $data->post_type = 'module';
 

@@ -9,7 +9,7 @@ if ( !class_exists( 'Discussion' ) ) {
 
         var $id = '';
         var $output = 'OBJECT';
-        var $discussion = array( );
+        var $discussion = array();
         var $details;
 
         function __construct( $id = '', $output = 'OBJECT' ) {
@@ -22,23 +22,23 @@ if ( !class_exists( 'Discussion' ) ) {
             $this->__construct( $id, $output );
         }
 
-        function get_discussion( ) {
+        function get_discussion() {
 
             $discussion = get_post( $this->id, $this->output );
 
             if ( !empty( $discussion ) ) {
                 return $discussion;
             } else {
-                return new stdClass( );
+                return new stdClass();
             }
         }
 
-        function get_unit_name( ) {
+        function get_unit_name() {
             if( !isset( $this->details->unit_id ) || $this->details->unit_id == '' ) {
                 return __( 'General', 'coursepress' );
             }else{
                 $unit_obj = new Unit( $this->details->unit_id );
-                $unit = $unit_obj->get_unit( );
+                $unit = $unit_obj->get_unit();
                 return $unit->post_title;
             }
         }

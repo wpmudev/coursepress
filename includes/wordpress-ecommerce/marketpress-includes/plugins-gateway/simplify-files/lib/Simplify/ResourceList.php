@@ -28,14 +28,14 @@
 
 
 /**
- * Class Simplify_ResourceList represents a collection of domain objects returned by one of the list<Domain>( ) methods.
+ * Class Simplify_ResourceList represents a collection of domain objects returned by one of the list<Domain>() methods.
  */
 class Simplify_ResourceList {
 
     /**
      * @var array $list the list of domain objects.
      */
-    public $list = array( );
+    public $list = array();
 
     /**
      * @var int $total the total number of object available.

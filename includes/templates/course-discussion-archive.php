@@ -14,7 +14,7 @@ do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 
 <div class="discussion-controls">
-    <a class="button_submit" href="<?php echo get_permalink( $course_id ); ?><?php echo $coursepress->get_discussion_slug( ) . '/' . $coursepress->get_discussion_slug_new( ); ?>/"><?php _e( 'Ask a Question', 'coursepress' ); ?></a>
+    <a class="button_submit" href="<?php echo get_permalink( $course_id ); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e( 'Ask a Question', 'coursepress' ); ?></a>
 </div>
 
 <div class="clearfix"></div>
@@ -36,34 +36,34 @@ do_shortcode( '[course_unit_archive_submenu]' );
 
     query_posts( $query_args );
 
-    if ( have_posts( ) ) {
+    if ( have_posts() ) {
         ?>
         <?php
-        while ( have_posts( ) ) : the_post( );
-            $discussion = new Discussion( get_the_ID( ) );
+        while ( have_posts() ) : the_post();
+            $discussion = new Discussion( get_the_ID() );
             ?>
             <li>
                 <div class="discussion-archive-single-meta">
                     <div class="<?php
-        if ( get_comments_number( ) > 0 ) {
+        if ( get_comments_number() > 0 ) {
             echo 'discussion-answer-circle';
         } else {
             echo 'discussion-comments-circle';
         }
-            ?>"><span class="comments-count"><?php echo get_comments_number( ); ?> <?php _e( 'Comments', 'cp' );?></span></div>
+            ?>"><span class="comments-count"><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'cp' );?></span></div>
                 </div>
                 <div class="discussion-archive-single">
-                    <h1 class="discussion-title"><a href="<?php the_permalink( ); ?>"><?php the_title( ); ?></a></h1>
+                    <h1 class="discussion-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
                     <div class="discussion-meta">
         <?php
         if ( $discussion->details->unit_id == '' ) {
-            $discussion_unit = $discussion->get_unit_name( );
+            $discussion_unit = $discussion->get_unit_name();
         } else {
             $unit = new Unit( $discussion->details->unit_id );
-            $discussion_unit = '<a href="' . $unit->get_permalink( ) . '">' . $discussion->get_unit_name( ) . '</a>';
+            $discussion_unit = '<a href="' . $unit->get_permalink() . '">' . $discussion->get_unit_name() . '</a>';
         }
         ?>
-                        <span><?php echo get_the_date( ); ?></span> | <span><?php the_author( ); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number( ); ?> <?php _e( 'Comments', 'coursepress' ); ?></span>
+                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress' ); ?></span>
                     </div>
                     <div class="clearfix"></div>
                 </div>

@@ -7,7 +7,7 @@
  * @package CoursePress
  */
 ?><!DOCTYPE html>
-<html <?php language_attributes( ); ?>>
+<html <?php language_attributes(); ?>>
     <head>
         <meta charset="<?php bloginfo( 'charset' ); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,18 +15,18 @@
         <link rel="profile" href="http://gmpg.org/xfn/11">
         <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
-        <?php wp_head( ); ?>
-        <?php include( get_template_directory( ) . '/inc/custom-colors.php' ); ?>
+        <?php wp_head(); ?>
+        <?php include( get_template_directory() . '/inc/custom-colors.php' ); ?>
     </head>
 
-    <body <?php body_class( ); ?>>
+    <body <?php body_class(); ?>>
         <div id="page" class="hfeed site">
             <?php do_action( 'before' ); ?>
             <header id="masthead" class="site-header" role="banner">
                 <div class='wrap'>
                     <div class="site-branding">
                         <?php
-                        $logo_image_url = get_theme_mod( 'coursepress_logo' ); //get_stylesheet_directory_uri( ) . '/images/logo-default.png'
+                        $logo_image_url = get_theme_mod( 'coursepress_logo' ); //get_stylesheet_directory_uri() . '/images/logo-default.png'
                         ?>
                         <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php if( isset( $logo_image_url ) && $logo_image_url != '' ) {?><img id="coursepress_logo" src='<?php echo $logo_image_url; ?>' alt='<?php bloginfo( 'name' ); ?>' border='0' /><?php }else{ echo get_bloginfo( 'name' );;} ?></a></h1>
                         <!--<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>-->
@@ -41,7 +41,7 @@
                                 'menu_class' => 'mobile_menu',
                                 'menu_id' => 'mobile_menu',
                                 //'items_wrap' => '<select id="drop-mobile-nav"><option value="">' . __( 'Select a page...', 'coursepress' ) . '</option>%3$s</select>',
-                                'walker' => new Walker_Nav_Menu_Dropdown( ) ) );
+                                'walker' => new Walker_Nav_Menu_Dropdown() ) );
                         }
                         ?>
 

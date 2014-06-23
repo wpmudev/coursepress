@@ -6,7 +6,7 @@ if ( isset( $_GET['student_id'] ) && is_numeric( $_GET['student_id'] ) ) {
 if ( isset( $_POST['course_id'] ) ) {
     if ( wp_verify_nonce( $_POST['save_class_and_group_changes'], 'save_class_and_group_changes' ) ) {
         $course = new Course( $_POST['course_id'] );
-        if ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+        if ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
             $student->update_student_group( $_POST['course_id'], $_POST['course_group'] );
             $student->update_student_class( $_POST['course_id'], $_POST['course_class'] );
             $message = __( 'Group and Class for the student has been updated successfully.', 'cp' );
@@ -58,7 +58,7 @@ if ( isset( $_POST['course_id'] ) ) {
                             </div>
                             <div>
                                 <span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
-                                <span class="info"><?php echo $student->get_courses_number( ); ?></span>
+                                <span class="info"><?php echo $student->get_courses_number(); ?></span>
                             </div>
                             <div>
                                 <span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
@@ -76,7 +76,7 @@ if ( isset( $_POST['course_id'] ) ) {
                         <div class="sidebar-name no-movecursor">
 
                             <?php
-                            $enrolled_courses = $student->get_enrolled_courses_ids( );
+                            $enrolled_courses = $student->get_enrolled_courses_ids();
 
                             if ( count( $enrolled_courses ) == 0 ) {
                                 ?>
@@ -109,11 +109,11 @@ if ( isset( $_POST['course_id'] ) ) {
                                                     }
 
                                                     $course_obj = new Course( $course_id );
-                                                    $course_object = $course_obj->get_course( );
+                                                    $course_object = $course_obj->get_course();
 
                                                     //$count = $unit_module_main->get_ungraded_response_count( $course->ID );
 
-                                                    if ( $course_obj->get_number_of_students( ) >= 1 ) {
+                                                    if ( $course_obj->get_number_of_students() >= 1 ) {
                                                         $courses_with_students++;
                                                         if ( isset( $course_object->ID ) ) {
                                                             ?>
@@ -144,7 +144,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                             <?php
                                             if ( $current_course_id !== 0 ) {//courses exists, at least one 
                                                 $course = new Course( $current_course_id );
-                                                $course_units = $course->get_units( );
+                                                $course_units = $course->get_units();
 
                                                 if ( count( $course_units ) >= 1 ) {
                                                     ?>
@@ -192,7 +192,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                     '12', '36', '15', '10', '10', '5'
                                                 );
 
-                                                $unit_module_main = new Unit_Module( );
+                                                $unit_module_main = new Unit_Module();
                                                 ?>
                                                 <table cellspacing="0" class="widefat shadow-table assessment-archive-table">
                                                     <thead>
@@ -212,7 +212,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                     <?php
                                                     $user_object = new Student( $_GET['student_id'] );
 
-                                                    $module = new Unit_Module( );
+                                                    $module = new Unit_Module();
                                                     $modules = $module->get_modules( $unit->ID );
 
                                                     $input_modules_count = 0;
@@ -220,7 +220,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                     foreach ( $modules as $mod ) {
                                                         $class_name = $mod->module_type;
                                                         if ( class_exists( $class_name ) ) {
-                                                            $module = new $class_name( );
+                                                            $module = new $class_name();
                                                             if ( $module->front_save ) {
                                                                 $input_modules_count++;
                                                             }
@@ -233,7 +233,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                         $class_name = $mod->module_type;
 
                                                         if ( class_exists( $class_name ) ) {
-                                                            $module = new $class_name( );
+                                                            $module = new $class_name();
 
                                                             if ( $module->front_save ) {
                                                                 $response = $module->get_response( $user_object->ID, $mod->ID );

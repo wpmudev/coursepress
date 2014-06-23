@@ -6,13 +6,13 @@
  *
  * @package CoursePress
  */
-get_header( );
+get_header();
 ?>
 
 <section id="primary" class="content-area content-side-area">
     <main id="main" class="site-main" role="main">
 
-        <?php if ( have_posts( ) ) : ?>
+        <?php if ( have_posts() ) : ?>
 
             <header class="page-header">
                 <!--<h1 class="page-title">
@@ -20,7 +20,7 @@ get_header( );
                 </h1>-->
                 <?php
                 // Show an optional term description.
-                $term_description = term_description( );
+                $term_description = term_description();
 
                 if ( !empty( $term_description ) ) :
                     printf( '<div class="taxonomy-description">%s</div>', $term_description );
@@ -29,7 +29,7 @@ get_header( );
             </header><!-- .page-header -->
 
             <?php /* Start the Loop */ ?>
-            <?php while ( have_posts( ) ) : the_post( ); ?>
+            <?php while ( have_posts() ) : the_post(); ?>
 
                 <?php
                 get_template_part( 'content-course' );
@@ -48,5 +48,5 @@ get_header( );
     </main><!-- #main -->
 </section><!-- #primary -->
 
-<?php get_sidebar( ); ?>
-<?php get_footer( ); ?>
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

@@ -17,7 +17,7 @@ class MP_Oembed {
 	/**
 	 * Construct
 	 */
-	function __construct( ) {
+	function __construct() {
 		//
 		add_filter( 'rewrite_rules_array', array( &$this, 'add_oembed_rewrite_filter' ) );
 		add_filter( 'query_vars', array( &$this, 'add_oembed_queryvars_filter' ) );
@@ -37,7 +37,7 @@ class MP_Oembed {
 	 * filter the rules to create the endpoint
 	 */
 	function add_oembed_rewrite_filter( $rules ) {
-    	$oembed_rules = array( );
+    	$oembed_rules = array();
 		
 		$oembed_rules['services/( [^/]+ )/?$'] = 'index.php?service=$matches[1]';
 		return array_merge( $oembed_rules, $rules );
@@ -60,13 +60,13 @@ class MP_Oembed {
 	 * parses the request to look for the service type and act accordingly
 	 * @todo take the concept below and allow for other kinds of services
 	 */
-	function process_oembed_request_action( ) {
+	function process_oembed_request_action() {
 		global $wp_query;
 		if( array_key_exists( 'service', $wp_query->query_vars ) ) {
 			
 			switch( $wp_query->query_vars['service'] ) {
 				case 'oembed':
-					$results = $this->process( );
+					$results = $this->process();
 					echo $results->package;
 					exit;
 				break;
@@ -90,8 +90,8 @@ class MP_Oembed {
 			return $post_id;
 		}
 		$this->_cache_identifier = $post_id;
-		if( $cache = $this->checkForCache( ) ) {
-			$this->removeCache( );
+		if( $cache = $this->checkForCache() ) {
+			$this->removeCache();
 		}
 	}
 	
@@ -99,7 +99,7 @@ class MP_Oembed {
 	/**
 	 * Injects the pinterest js into the footer if enabled
 	 */
-	function inject_pinterest_js_action( ) {
+	function inject_pinterest_js_action() {
 		global $post_type, $mp;
 		
 		$show_pinit_button = ( $show = $mp->get_setting( 'show_pinit_button' ) ) ? $show : 'off';
@@ -125,7 +125,7 @@ class MP_Oembed {
 	 * Process the product and create the JSON packages
 	 *
 	 */
-	private function process( ) {
+	private function process() {
 		global $mp;
 		//no get - get out, get it?
 		if( !isset( $_GET['url'] ) ) {
@@ -141,7 +141,7 @@ class MP_Oembed {
 				//look for the transient first
 				$this->_cache_identifier = $ID;
 				
-				if( $cache = $this->checkForCache( ) ) {
+				if( $cache = $this->checkForCache() ) {
 					$this->_package = $cache;
 					
 				}else{
@@ -181,7 +181,7 @@ class MP_Oembed {
 					
 					//check for cache
 					$this->_cache_identifier = ( strpos( $this->_passed_url, $cats_url )  ) ? 'category_'. $matches[1] : 'tag_'. $matches[1];
-					if( $cache = $this->checkForCache( ) ) {
+					if( $cache = $this->checkForCache() ) {
 						$this->_package = $cache;
 					}else{
 						//no cache - build it
@@ -205,7 +205,7 @@ class MP_Oembed {
 			}
 		}
 		//return the final data
-		return $this->_getPackage( );
+		return $this->_getPackage();
 	}
 	
 	
@@ -217,7 +217,7 @@ class MP_Oembed {
 	 * @param array  Elements that are common to all formats
 	 */
 	private function processProductNoVariations( $post_meta, $common ) {
-		$specific_items = array( );
+		$specific_items = array();
 		
 		//get the product_id
 		if( isset( $post_meta['mp_sku'][0] ) && !empty( $post_meta['mp_sku'][0] )  ) {
@@ -270,7 +270,7 @@ class MP_Oembed {
 		$package = array(
 					'provider_name' => get_bloginfo( 'title' ),
 					'url' => $this->_passed_url,
-					'products' => array( )
+					'products' => array()
 				);
 		//loop the products
 		foreach( $posts as $post ) {
@@ -284,14 +284,14 @@ class MP_Oembed {
 	/**
 	 * Generate the package
 	 */
-	private function _getPackage( ) {
+	private function _getPackage() {
 		
 		//create the cache
-		$this->createCache( );
+		$this->createCache();
 		
 		
 		//return the data
-		$rtn = new stdClass( );
+		$rtn = new stdClass();
 		$rtn->package = $this->_package;
 		return $rtn;
 	}
@@ -333,7 +333,7 @@ class MP_Oembed {
 	private function _processOffersForProductNode( $post_meta ) {
 		global $mp;
 		//build the offers list
-		$offers = array( );
+		$offers = array();
 		
 		for( $i = 0; $i < count( $post_meta['mp_var_name'] ) ; $i++ ) {
 			$offers[] = array(
@@ -354,7 +354,7 @@ class MP_Oembed {
 	 * Check for the cache
 	 * @return bool | json object The cache or false if no data is found
 	 */
-	private function checkForCache( ) {
+	private function checkForCache() {
 		
 		$rtn = false;
 		$transient_title = self::TRANSIENT_TITLE_BASE . $this->_cache_identifier;
@@ -368,7 +368,7 @@ class MP_Oembed {
 	/**
 	 * Create Cache
 	 */
-	private function createCache( ) {	
+	private function createCache() {	
 		$transient_title = self::TRANSIENT_TITLE_BASE . $this->_cache_identifier;
 		set_transient( $transient_title, $this->_package, self::CACHE_TIMEOUT );
 	}
@@ -376,11 +376,11 @@ class MP_Oembed {
 	/**
 	 * Remove transient
 	 */
-	private function removeCache( ) {
+	private function removeCache() {
 		$transient_title = self::TRANSIENT_TITLE_BASE . $this->_cache_identifier;
 		delete_transient( $transient_title );
 	}
 	
 }
 endif;
-$mp_ombed = new MP_Oembed( );
+$mp_ombed = new MP_Oembed();

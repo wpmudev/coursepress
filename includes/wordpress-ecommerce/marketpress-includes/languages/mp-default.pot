@@ -2888,7 +2888,7 @@ msgid "\"as_list\" - Whether to show as an unordered list. Default: 0"
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:731
-msgid "You may also use the mp_list_global_products( ) template function in your theme with the same arguments."
+msgid "You may also use the mp_list_global_products() template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:735
@@ -2913,7 +2913,7 @@ msgid "\"include\" - What to show, \"tags\", \"categories\", or \"both\". Defaul
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:747
-msgid "You may also use the mp_global_tag_cloud( ) template function in your theme with the same arguments."
+msgid "You may also use the mp_global_tag_cloud() template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:751
@@ -2941,7 +2941,7 @@ msgid "\"include\" - What to show, \"tags\", \"categories\", or \"both\"."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:765
-msgid "You may also use the mp_global_categories_list( ) template function in your theme with the same arguments."
+msgid "You may also use the mp_global_categories_list() template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:1125

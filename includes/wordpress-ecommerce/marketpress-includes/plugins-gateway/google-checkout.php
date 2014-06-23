@@ -33,7 +33,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 	var $response;
 	
 	//Response array
-	var $results  = array( );
+	var $results  = array();
 	var $approved;
 	var $declined;
 	var $error;
@@ -44,10 +44,10 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 	
 	
 	/**
-	* Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+	* Runs when your class is instantiated. Use to setup your plugin instead of __construct()
 	* Sets up the google cart
 	*/
-	function on_creation( ) {
+	function on_creation() {
 		global $mp;
 		$settings = get_option( 'mp_settings' );
 		
@@ -121,13 +121,13 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 	   */
 	function process_payment( $cart, $shipping_info ) {
 		global $mp, $current_user;
-		$timestamp = time( );
+		$timestamp = time();
 		$settings = get_option( 'mp_settings' );
 		
 		$url = $this->API_URL . "api/checkout/v2/merchantCheckoutForm/Merchant/" . $this->API_Merchant_id;
-		$order_id = $mp->generate_order_id( );
+		$order_id = $mp->generate_order_id();
 		
-		$params = array( );
+		$params = array();
 		$params['_type'] = 'checkout-shopping-cart';
 		$params['shopping-cart.merchant-private-data'] = $order_id;
 		$params['checkout-flow-support.merchant-checkout-flow-support.edit-cart-url'] = mp_cart_link( false, true );
@@ -136,8 +136,8 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
     $params["checkout-flow-support.merchant-checkout-flow-support.tax-tables.default-tax-table.tax-rules.default-tax-rule-1.shipping-taxed"] = ( $settings['tax']['tax_shipping'] ) ? 'true' : 'false';
     $params["checkout-flow-support.merchant-checkout-flow-support.tax-tables.default-tax-table.tax-rules.default-tax-rule-1.tax-areas.world-area-1"] = '';
 
-		$totals = array( );
-		$item_params = array( );
+		$totals = array();
+		$item_params = array();
 		$i = 1;
 		$items = 0;
 		foreach ( $cart as $product_id => $variations ) {
@@ -156,7 +156,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 		
 		$total = array_sum( $totals );
 		
-		if ( $coupon = $mp->coupon_value( $mp->get_coupon_code( ), $total ) ) {
+		if ( $coupon = $mp->coupon_value( $mp->get_coupon_code(), $total ) ) {
 		  $total = $coupon['new_total'];
 		  $params["shopping-cart.items.item-1.item-name"] = __( 'Order ID: ', 'mp' ) . $order_id;
 			$params["shopping-cart.items.item-1.item-description"] = sprintf( __( 'Cart Subtotal for %d Items', 'mp' ), $items );
@@ -169,7 +169,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 		}
 
 		//shipping line
-		if ( ( $shipping_price = $mp->shipping_price( ) ) !== false ) {
+		if ( ( $shipping_price = $mp->shipping_price() ) !== false ) {
 			$total = $total + $shipping_price;
 			$params["checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-1.price"] = $shipping_price;
 			$params["checkout-flow-support.merchant-checkout-flow-support.shipping-methods.flat-rate-shipping-1.price.currency"] = $this->currencyCode;
@@ -177,14 +177,14 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 		}
 		
 		//tax line
-		if ( $tax_price = $mp->tax_price( ) ) {
+		if ( $tax_price = $mp->tax_price() ) {
 			$total = $total + $tax_price;
 			$params["checkout-flow-support.merchant-checkout-flow-support.tax-tables.default-tax-table.tax-rules.default-tax-rule-1.rate"] = $settings['tax']['rate'];
 		} else {
       $params["checkout-flow-support.merchant-checkout-flow-support.tax-tables.default-tax-table.tax-rules.default-tax-rule-1.rate"] = '0.00';
 		}
 
-		$param_list = array( );
+		$param_list = array();
 		foreach ( $params as $k => $v ) {
 			$param_list[] = "{$k}=".rawurlencode( $v );
 		}
@@ -361,7 +361,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
   /**
    * IPN and payment return
    */
-  function process_ipn_return( ) {
+  function process_ipn_return() {
     global $mp;
     $settings = get_option( 'mp_settings' );
 
@@ -376,7 +376,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 				exit( 'We were unable to authenticate the request' );
       }
 
-		  $timestamp = time( );
+		  $timestamp = time();
       $order_id = $response['google-order-number'];
 			$payment_status = ( isset( $response['financial-order-state'] ) ) ? $response['financial-order-state'] : $response['new-financial-order-state'];
 

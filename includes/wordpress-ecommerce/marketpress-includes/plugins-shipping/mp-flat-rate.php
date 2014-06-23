@@ -11,16 +11,16 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
   //public name of your method, for lists and such.
   var $public_name = '';
 
-  //set to true if you need to use the shipping_metabox( ) method to add per-product shipping options
+  //set to true if you need to use the shipping_metabox() method to add per-product shipping options
   var $use_metabox = false;
 
 	//set to true if you want to add per-product weight shipping field
 	var $use_weight = false;
 
   /**
-   * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+   * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
    */
-  function on_creation( ) {
+  function on_creation() {
     //set name here to be able to translate
     $this->public_name = __( 'Flat Rate', 'mp' );
 	}
@@ -50,7 +50,7 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
    * Use this to process any additional field you may add. Use the $_POST global,
    *  and be sure to save it to both the cookie and usermeta if logged in.
    */
-	function process_shipping_form( ) {
+	function process_shipping_form() {
 
   }
 
@@ -74,25 +74,25 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
           <tr>
   				<th scope="row"><?php _e( 'Lower 48 States', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][lower_48]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->lower_48' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][lower_48]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->lower_48' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'Hawaii and Alaska', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][hi_ak]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->hi_ak' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][hi_ak]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->hi_ak' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'Canada', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][canada]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->canada' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][canada]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->canada' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'International', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
         <?php
@@ -103,19 +103,19 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
           <tr>
   				<th scope="row"><?php _e( 'In Country', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'United States', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][usa]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->usa' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][usa]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->usa' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'International', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
         <?php
@@ -128,19 +128,19 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
           <tr>
   				<th scope="row"><?php _e( 'In Country', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'European Union', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][eu]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->eu' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][eu]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->eu' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'International', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <?php
@@ -149,13 +149,13 @@ class MP_Shipping_Flat_Rate extends MP_Shipping_API {
           <tr>
   				<th scope="row"><?php _e( 'In Country', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][in_country]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->in_country' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <tr>
   				<th scope="row"><?php _e( 'International', 'mp' ) ?></th>
   				<td>
-  				<?php echo $mp->format_currency( ); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
+  				<?php echo $mp->format_currency(); ?><input type="text" name="mp[shipping][flat-rate][international]" value="<?php echo esc_attr( $mp->get_setting( 'shipping->flat-rate->international' ) ); ?>" size="5" maxlength="10" />
     			</td>
           </tr>
           <?php

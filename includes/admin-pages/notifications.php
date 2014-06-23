@@ -19,11 +19,11 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             if ( is_numeric( $notification_value ) ) {
                 $notification_id = ( int ) $notification_value;
                 $notification = new Notification( $notification_id );
-                $notification_object = $notification->get_notification( );
+                $notification_object = $notification->get_notification();
 
                 switch ( addslashes( $action ) ) {
                     case 'publish':
-                        if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_course_notification_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) {
+                        if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_course_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
                             $notification->change_status( 'publish' );
                             $message = __( 'Selected notifications have been published successfully.', 'cp' );
                         } else {
@@ -32,7 +32,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         break;
 
                     case 'unpublish':
-                        if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) {
+                        if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
                             $notification->change_status( 'private' );
                             $message = __( 'Selected notifications have been set to private successfully.', 'cp' );
                         } else {
@@ -41,8 +41,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         break;
 
                     case 'delete':
-                        if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) {
-                            $notification->delete_notification( );
+                        if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
+                            $notification->delete_notification();
                             $message = __( 'Selected notifications have been deleted successfully.', 'cp' );
                         } else {
                             $message = __( "You don't have right persmissions to delete the notification.", 'cp' );
@@ -78,9 +78,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             die( __( 'Cheating huh?', 'cp' ) );
         }
 
-        $notification_object = $notification->get_notification( );
+        $notification_object = $notification->get_notification();
 
-        if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) {
+        if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
             $notification->delete_notification( $force_delete = true );
             $message = __( 'Selected notification has been deleted successfully.', 'cp' );
         } else {
@@ -186,10 +186,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         <?php
                         $style = '';
 
-                        foreach ( $wp_notification_search->get_results( ) as $notification ) {
+                        foreach ( $wp_notification_search->get_results() as $notification ) {
 
                             $notification_obj = new Notification( $notification->ID );
-                            $notification_object = $notification_obj->get_notification( );
+                            $notification_object = $notification_obj->get_notification();
                             $style = ( ' alternate' == $style ) ? '' : ' alternate';
                             ?>
                             <?php
@@ -210,11 +210,11 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt( $notification_object->ID ); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_notification"><a href="<?php echo admin_url( 'admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID ); ?>"><?php _e( 'Edit', 'cp' ); ?></a> | </span>
-                                        <?php if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) { ?>
+                                        <?php if ( current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id() ) ) { ?>
                                             <span class="notification_publish_unpublish"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&notification_id=' . $notification_object->ID . '&action=change_status&new_status=' . ( ( $notification_object->post_status == 'private' ) ? 'publish' : 'private' ) ), 'change_status_'.$notification_object->ID, 'cp_nonce' ); ?>"><?php ( $notification_object->post_status == 'private' ) ? _e( 'Publish', 'cp' ) : _e( 'Private', 'cp' ); ?></a> | </span>
                                         <?php } ?>
-                                        <?php if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) { ?>
-                                            <span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_'.$notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification( );"><?php _e( 'Delete', 'cp' ); ?></a> | </span>
+                                        <?php if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) { ?>
+                                            <span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_'.$notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification();"><?php _e( 'Delete', 'cp' ); ?></a> | </span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -222,8 +222,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                                 <td class="column-status <?php echo $style; ?>"><?php echo ( $notification_object->post_status == 'publish' ) ? ucfirst( $notification_object->post_status ) . 'ed' : ucfirst( $notification_object->post_status ); ?></td>
                                 <?php if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) ) ) { ?>
                                     <td class="<?php echo $style; ?>">
-                                        <?php if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id( ) ) ) { ?>
-                                            <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_'.$notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification( );">
+                                        <?php if ( current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) { ?>
+                                            <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_'.$notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>
@@ -235,7 +235,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         ?>
 
                         <?php
-                        if ( count( $wp_notification_search->get_results( ) ) == 0 ) {
+                        if ( count( $wp_notification_search->get_results() ) == 0 ) {
                             ?>
                             <tr>
                                 <td colspan="6"><div class="zero-courses"><?php _e( 'No notifications found.', 'cp' ) ?></div></td>
@@ -247,7 +247,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                 </table><!--/widefat shadow-table-->
 
                 <div class="tablenav">
-                    <div class="tablenav-pages"><?php $wp_notification_search->page_links( ); ?></div>
+                    <div class="tablenav-pages"><?php $wp_notification_search->page_links(); ?></div>
                 </div><!--/tablenav-->
 
             </form>

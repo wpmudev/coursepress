@@ -9,11 +9,11 @@ class MarketPress_MS {
   var $tag_template;
   var $category_template;
   
-	function MarketPress_MS( ) {
-		$this->__construct( );
+	function MarketPress_MS() {
+		$this->__construct();
 	}
 	
-  function __construct( ) {
+  function __construct() {
     global $mp;
     
     // Plug admin pages
@@ -23,16 +23,16 @@ class MarketPress_MS {
 	}
 
   //wrapper function for checking if global marketpress blog. Define MP_ROOT_BLOG with a blog_id to override
-  function is_main_site( ) {
+  function is_main_site() {
     global $wpdb;
     if ( defined( 'MP_ROOT_BLOG' ) ) {
       return $wpdb->blogid == MP_ROOT_BLOG;
     } else {
-      return is_main_site( );
+      return is_main_site();
     }
   }
 
-  function add_menu_items( ) {
+  function add_menu_items() {
     global $mp, $wp_version;
     
     if ( version_compare( $wp_version, '3.0.9', '>' ) ) {
@@ -45,11 +45,11 @@ class MarketPress_MS {
   }
 
 
-  function super_admin_page( ) {
+  function super_admin_page() {
     global $mp, $mp_gateway_plugins;
     
     //double-check rights
-    if( !is_super_admin( ) ) {
+    if( !is_super_admin() ) {
   		echo "<p>" . __( 'Nice Try...', 'mp' ) . "</p>";  //If accessed properly, this message doesn't appear.
   		return;
   	}
@@ -124,7 +124,7 @@ class MarketPress_MS {
               $theme_dir = $mp->plugin_dir . 'themes/';
 
               //scan directory for theme css files
-              $theme_list = array( );
+              $theme_list = array();
               if ( $handle = @opendir( $theme_dir ) ) {
                 while ( false !== ( $file = readdir( $handle ) ) ) {
                   if ( ( $pos = strrpos( $file, '.css' ) ) !== false ) {
@@ -216,7 +216,7 @@ class MarketPress_MS {
                   <li><?php _e( '"as_list" - Whether to show as an unordered list. Default: 0', 'mp' ) ?></li>
                   <li><?php _e( 'Example:', 'mp' ) ?> <em>[mp_list_global_products paginate="1" page="0" per_page="10" order_by="price" order="DESC" category="downloads"]</em></li>
                 </ul></p>
-                <span class="description"><?php _e( 'You may also use the mp_list_global_products( ) template function in your theme with the same arguments.', 'mp' ) ?></span>
+                <span class="description"><?php _e( 'You may also use the mp_list_global_products() template function in your theme with the same arguments.', 'mp' ) ?></span>
               </td>
               </tr>
               <tr>
@@ -231,7 +231,7 @@ class MarketPress_MS {
                   <li><?php _e( '"seperator" - String to seperate tags by, like a comma, etc.', 'mp' ) ?></li>
                   <li><?php _e( 'Example:', 'mp' ) ?> <em>[mp_global_tag_cloud limit="55" seperator=", "]</em></li>
                 </ul></p>
-                <span class="description"><?php _e( 'You may also use the mp_global_tag_cloud( ) template function in your theme with the same arguments.', 'mp' ) ?></span>
+                <span class="description"><?php _e( 'You may also use the mp_global_tag_cloud() template function in your theme with the same arguments.', 'mp' ) ?></span>
               </td>
               </tr>
               <tr>
@@ -249,7 +249,7 @@ class MarketPress_MS {
                   <li><?php _e( '"include" - What to show, "tags", "categories", or "both".', 'mp' ) ?></li>
                   <li><?php _e( 'Example:', 'mp' ) ?> <em>[mp_global_categories_list limit="30" order_by="name" order="ASC" show_count="1" include="both"]</em></li>
                 </ul></p>
-                <span class="description"><?php _e( 'You may also use the mp_global_categories_list( ) template function in your theme with the same arguments.', 'mp' ) ?></span>
+                <span class="description"><?php _e( 'You may also use the mp_global_categories_list() template function in your theme with the same arguments.', 'mp' ) ?></span>
               </td>
               </tr>
             </table>
@@ -265,9 +265,9 @@ class MarketPress_MS {
     <?php
   }
 }
-$mp_wpmu = new MarketPress_MS( );
+$mp_wpmu = new MarketPress_MS();
 
-function mp_main_site_id( ) {
+function mp_main_site_id() {
   global $current_site;
   if ( defined( 'MP_ROOT_BLOG' ) ) {
     return MP_ROOT_BLOG;

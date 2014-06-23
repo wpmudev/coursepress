@@ -1,10 +1,10 @@
 <?php
-the_excerpt( );
+the_excerpt();
 ?>
 
 <div class="instructors-box">
     <?php
-    $course = new Course( get_the_ID( ) );
+    $course = new Course( get_the_ID() );
     //Get instructors count for this course
     $instructors = do_shortcode( '[course_instructors count="true"]' );
 

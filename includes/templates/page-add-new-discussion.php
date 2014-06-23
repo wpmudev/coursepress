@@ -17,9 +17,9 @@ if ( isset( $_POST['new_question_submit'] ) ) {
 
     if ( $_POST['question_title'] !== '' ) {
         if ( $_POST['question_description'] !== '' ) {
-            $discussion = new Discussion( );
+            $discussion = new Discussion();
             $discussion->update_discussion( $_POST['question_title'], $_POST['question_description'], $course_id );
-            wp_redirect( get_permalink( $course_id ) . $coursepress->get_discussion_slug( ) );
+            wp_redirect( get_permalink( $course_id ) . $coursepress->get_discussion_slug() );
             exit;
         } else {
             $form_message = __( 'Question description is required.' );
@@ -45,7 +45,7 @@ do_shortcode( '[course_unit_archive_submenu]' );
             <textarea name="question_description" placeholder="<?php _e( 'Question description...', 'coursepress' ); ?>"></textarea>
 
             <input type="submit" class="button_submit" name="new_question_submit" value="<?php _e( 'Ask this Question', 'coursepress' ); ?>">
-            <a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug( ); ?>/" class="button_cancel"><?php _e( 'Cancel', 'coursepress' ); ?></a>
+            <a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/" class="button_cancel"><?php _e( 'Cancel', 'coursepress' ); ?></a>
 
             <?php wp_nonce_field( 'new_question' ); ?>
         </div>

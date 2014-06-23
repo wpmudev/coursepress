@@ -41,7 +41,7 @@ class Simplify_Plan extends Simplify_Object {
      */
     static public function createPlan( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Plan( );
+        $instance = new Simplify_Plan();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -78,7 +78,7 @@ class Simplify_Plan extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listPlan( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Plan( );
+            $val = new Simplify_Plan();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -94,7 +94,7 @@ class Simplify_Plan extends Simplify_Object {
          * @return    Plan a Plan object
          */
         static public function findPlan( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Plan( );
+            $val = new Simplify_Plan();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -124,7 +124,7 @@ class Simplify_Plan extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Plan";
     }
 }

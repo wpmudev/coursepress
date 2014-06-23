@@ -14,7 +14,7 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
   //public name of your method, for lists and such.
   var $public_name = '';
 
-  //set to true if you need to use the shipping_metabox( ) method to add per-product shipping options
+  //set to true if you need to use the shipping_metabox() method to add per-product shipping options
   var $use_metabox = false;
 	
 	//set to true if you want to add per-product extra shipping cost field
@@ -24,9 +24,9 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
 	var $use_weight = false;
 
   /**
-   * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+   * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
    */
-  function on_creation( ) {
+  function on_creation() {
     //declare here for translation
     $this->public_name = __( 'Table Quantity', 'mp' );
 	}
@@ -34,21 +34,21 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
   /**
    * Echo anything you want to add to the top of the shipping screen
    */
-	function before_shipping_form( ) {
+	function before_shipping_form() {
 
   }
 
   /**
    * Echo anything you want to add to the bottom of the shipping screen
    */
-	function after_shipping_form( ) {
+	function after_shipping_form() {
 
   }
 
   /**
    * Echo a table row with any extra shipping fields you need to add to the form
    */
-	function extra_shipping_field( ) {
+	function extra_shipping_field() {
 
   }
 
@@ -56,7 +56,7 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
    * Use this to process any additional field you may add. Use the $_POST global,
    *  and be sure to save it to both the cookie and usermeta if logged in.
    */
-	function process_shipping_form( ) {
+	function process_shipping_form() {
 
   }
 
@@ -70,8 +70,8 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
     ?>
     <script type="text/javascript">
 			jQuery( document ).ready( function ( $ ) {
-				$( "#mp-table-quantity-rows" ).change( function( ) {
-					$( "#mp-shipping-form" ).submit( );
+				$( "#mp-table-quantity-rows" ).change( function() {
+					$( "#mp-shipping-form" ).submit();
 				} );
 			} );
     </script>
@@ -96,13 +96,13 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
 					</tr>
 					<tr>
 						<td scope="row"><?php _e( 'If quantity is greater than:', 'mp' ); ?> <input type="text" name="mp[shipping][table-quantity][0][minqty]" value="1" size="5" maxlength="10" disabled="disabled" />
-								<?php _e( 'Shipping Cost: ', 'mp' ); echo $mp->format_currency( ); ?><input on type="text" name="mp[shipping][table-quantity][0][shipping]" value="<?php echo ( $settings['shipping']['table-quantity']['0']['shipping'] ) ? $mp->display_currency( $settings['shipping']['table-quantity']['0']['shipping'] ) : '0.00'; ?>" size="5" maxlength="10" />
+								<?php _e( 'Shipping Cost: ', 'mp' ); echo $mp->format_currency(); ?><input on type="text" name="mp[shipping][table-quantity][0][shipping]" value="<?php echo ( $settings['shipping']['table-quantity']['0']['shipping'] ) ? $mp->display_currency( $settings['shipping']['table-quantity']['0']['shipping'] ) : '0.00'; ?>" size="5" maxlength="10" />
 						</td>
 					</tr>
 					<?php for ( $i = 1; $i < $settings['shipping']['table-quantity']['rowcount']; $i++ ) { ?>
 					<tr>
 						<td scope="row"><?php _e( 'If quantity is greater than:', 'mp' ); ?> <input type="text" name="mp[shipping][table-quantity][<?php echo $i; ?>][minqty]" value="<?php echo ( $settings['shipping']['table-quantity'][$i]['minqty'] ) ? $mp->display_currency( $settings['shipping']['table-quantity'][$i]['minqty'] ) : ( $settings['shipping']['table-quantity'][$i-1]['minqty'] + 1 ); ?>" size="5" maxlength="10" />
-								<?php _e( 'Shipping Cost: ', 'mp' ); echo $mp->format_currency( ); ?><input on type="text" name="mp[shipping][table-quantity][<?php echo $i; ?>][shipping]" value="<?php echo ( $settings['shipping']['table-quantity'][$i]['shipping'] ) ? $mp->display_currency( $settings['shipping']['table-quantity'][$i]['shipping'] ) : '0.00'; ?>" size="5" maxlength="10" />
+								<?php _e( 'Shipping Cost: ', 'mp' ); echo $mp->format_currency(); ?><input on type="text" name="mp[shipping][table-quantity][<?php echo $i; ?>][shipping]" value="<?php echo ( $settings['shipping']['table-quantity'][$i]['shipping'] ) ? $mp->display_currency( $settings['shipping']['table-quantity'][$i]['shipping'] ) : '0.00'; ?>" size="5" maxlength="10" />
 						</td>
 					</tr>
 					<?php } ?>
@@ -177,7 +177,7 @@ class MP_Shipping_Table_Quantity extends MP_Shipping_API {
 		}
 
     //calculate extra shipping
-    $extras = array( );
+    $extras = array();
     foreach ( $cart as $product_id => $variations ) {
 	    $shipping_meta = get_post_meta( $product_id, 'mp_shipping', true );
 			foreach ( $variations as $variation => $data ) {

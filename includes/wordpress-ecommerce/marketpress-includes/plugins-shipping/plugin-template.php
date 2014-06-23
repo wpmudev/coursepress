@@ -11,7 +11,7 @@ class My_Plugin_Name extends MP_Shipping_API {
   //public name of your method, for lists and such.
   var $public_name = '';
   
-  //set to true if you need to use the shipping_metabox( ) method to add per-product shipping options
+  //set to true if you need to use the shipping_metabox() method to add per-product shipping options
   var $use_metabox = false;
 	
 	//set to true if you want to add per-product weight shipping field
@@ -19,9 +19,9 @@ class My_Plugin_Name extends MP_Shipping_API {
 
 
   /**
-   * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+   * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
    */
-  function on_creation( ) {
+  function on_creation() {
     //declare here for translation
     $this->public_name = __( 'My Plugin', 'mp' );
 	}
@@ -51,7 +51,7 @@ class My_Plugin_Name extends MP_Shipping_API {
    * Use this to process any additional field you may add. Use the $_POST global,
    *  and be sure to save it to both the cookie and usermeta if logged in.
    */
-	function process_shipping_form( ) {
+	function process_shipping_form() {
 
   }
 	
@@ -130,7 +130,7 @@ class My_Plugin_Name extends MP_Shipping_API {
 		*/
 	function shipping_options( $cart, $address1, $address2, $city, $state, $zip, $country ) {
 		
-		$shipping_options = array( );
+		$shipping_options = array();
 		
 		return $shipping_options;
 	}

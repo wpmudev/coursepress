@@ -32,7 +32,7 @@ Advanced Themes:
 
   1. Make a copy of the page.php template file in your theme directory and rename it mp_product.php
 
-  2. mp_product.php must use the mp_* functions instead of the_content( ), see template-functions.php for a list of functions relevant to products.
+  2. mp_product.php must use the mp_* functions instead of the_content(), see template-functions.php for a list of functions relevant to products.
 
 
   MarketPress searches your current theme folder for template files specific to store pages. If

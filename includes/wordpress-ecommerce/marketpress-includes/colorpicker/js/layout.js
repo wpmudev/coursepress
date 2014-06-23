@@ -1,10 +1,10 @@
 ( function( $ ) {
-	var initLayout = function( ) {
+	var initLayout = function() {
 		var hash = window.location.hash.replace( '#', '' );
 		var currentTab = $( 'ul.navigationTabs a' )
 							.bind( 'click', showTab )
 							.filter( 'a[rel=' + hash + ']' );
-		if ( currentTab.size( ) == 0 ) {
+		if ( currentTab.size() == 0 ) {
 			currentTab = $( 'ul.navigationTabs a:first' );
 		}
 		showTab.apply( currentTab.get( 0 ) );
@@ -18,20 +18,20 @@
 		} );
 		$( '#colorpickerHolder2>div' ).css( 'position', 'absolute' );
 		var widt = false;
-		$( '#colorSelector2' ).bind( 'click', function( ) {
-			$( '#colorpickerHolder2' ).stop( ).animate( {height: widt ? 0 : 173}, 500 );
+		$( '#colorSelector2' ).bind( 'click', function() {
+			$( '#colorpickerHolder2' ).stop().animate( {height: widt ? 0 : 173}, 500 );
 			widt = !widt;
 		} );
 		$( '#colorpickerField1, #colorpickerField2, #colorpickerField3' ).ColorPicker( {
 			onSubmit: function( hsb, hex, rgb, el ) {
 				$( el ).val( hex );
-				$( el ).ColorPickerHide( );
+				$( el ).ColorPickerHide();
 			},
-			onBeforeShow: function ( ) {
+			onBeforeShow: function () {
 				$( this ).ColorPickerSetColor( this.value );
 			}
 		} )
-		.bind( 'keyup', function( ) {
+		.bind( 'keyup', function() {
 			$( this ).ColorPickerSetColor( this.value );
 		} );
 		$( '#colorSelector' ).ColorPicker( {
@@ -56,11 +56,11 @@
 							.index( this );
 		$( this )
 			.addClass( 'active' )
-			.blur( );
+			.blur();
 		$( 'div.tab' )
-			.hide( )
+			.hide()
 				.eq( tabIndex )
-				.show( );
+				.show();
 	};
 	
 	EYE.register( initLayout, 'init' );

@@ -45,7 +45,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 		$private_key,
 		$currency;
 
-	function on_creation( ) {
+	function on_creation() {
 		global $mp;
 		$settings = get_option( 'mp_settings' );
 		$this->admin_name = __( 'Simplify', 'mp' );
@@ -59,9 +59,9 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_scripts' ) );
 	}
 
-	function enqueue_scripts( ) {
+	function enqueue_scripts() {
 		global $mp;
-		if( !is_admin( ) && get_query_var( 'pagename' ) == 'cart' && get_query_var( 'checkoutstep' ) == 'checkout' ) {
+		if( !is_admin() && get_query_var( 'pagename' ) == 'cart' && get_query_var( 'checkoutstep' ) == 'checkout' ) {
 			wp_enqueue_script( 'js-simplify', 'https://www.simplify.com/commerce/v1/simplify.js', array( 'jquery' ) );
 			wp_enqueue_script( 'simplify-token', $mp->plugin_url . 'plugins-gateway/simplify-files/simplify_token.js', array( 'js-simplify', 'jquery' ) );
 			wp_localize_script( 'simplify-token', 'simplify', array( 'publicKey' => $this->publishable_key ) );
@@ -83,7 +83,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 				$content .= '<label for="cc-number">' . __( 'Credit Card Number', 'mp' ) . ': </label><input class="input-block-level" id="cc-number" type="text" maxlength="20" autocomplete="off" value="" placeholder="' . __( 'Card Number', 'mp' ) . '" autofocus />';
 				$content .= '<div class="row-fluid">';
 					$content .= '<div class="span4"><label for="cc-cvc">' . __( 'CVC', 'mp' ) . ': </label><input class="input-block-level" id="cc-cvc" type="text" maxlength="3" autocomplete="off" value="" placeholder="' . __( 'CVC', 'mp' ) . '" /></div>';
-					$content .= '<div class="span4"><label>' . __( 'Expiry Date', 'mp' ) . ': </label><select class="input-block-level" id="cc-exp-month">' . $this->_print_month_dropdown( ) . '</select> - <select class="input-block-level" id="cc-exp-year">' . $this->_print_year_dropdown( ) . '</select></div>';
+					$content .= '<div class="span4"><label>' . __( 'Expiry Date', 'mp' ) . ': </label><select class="input-block-level" id="cc-exp-month">' . $this->_print_month_dropdown() . '</select> - <select class="input-block-level" id="cc-exp-year">' . $this->_print_year_dropdown() . '</select></div>';
 				$content .= '</div>';
 			$content .= '</div>';
 		$content .= '</div>';
@@ -116,7 +116,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 		try {
 			$token  = Simplify_CardToken::findCardToken( $_SESSION['simplifyToken'] );
 		} catch ( Exception $e ) {
-			$mp->cart_checkout_error( sprintf( __( '%s. Please go back and try again.', 'mp' ), $e->getMessage( ) ) );
+			$mp->cart_checkout_error( sprintf( __( '%s. Please go back and try again.', 'mp' ), $e->getMessage() ) );
 			return false;
 		}
 
@@ -155,7 +155,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 	* Print the years
 	*/
 	function _print_year_dropdown( $sel = '', $pfp = false ) {
-		$localDate = getdate( );
+		$localDate = getdate();
 		$minYear = $localDate["year"];
 		$maxYear = $minYear + 15;
 		$output = "<option value=''>--</option>";
@@ -309,7 +309,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 		Simplify::$publicKey = $this->publishable_key;
 		Simplify::$privateKey = $this->private_key;
 
-		$totals = array( );
+		$totals = array();
 		foreach ( $cart as $product_id => $variations ) {
 			foreach ( $variations as $variation => $data ) {
 				$totals[] = $mp->before_tax_price( $data['price'], $product_id ) * $data['quantity'];
@@ -317,19 +317,19 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 		}
 		$total = array_sum( $totals );
 
-		if( $coupon = $mp->coupon_value( $mp->get_coupon_code( ), $total ) ) {
+		if( $coupon = $mp->coupon_value( $mp->get_coupon_code(), $total ) ) {
 			$total = $coupon['new_total'];
 		}
 
-		if( $shipping_price = $mp->shipping_price( ) ) {
+		if( $shipping_price = $mp->shipping_price() ) {
 			$total += $shipping_price;
 		}
 
-		if( $tax_price = $mp->tax_price( ) ) {
+		if( $tax_price = $mp->tax_price() ) {
 			$total += $tax_price;
 		}
 
-		$order_id = $mp->generate_order_id( );
+		$order_id = $mp->generate_order_id();
 
 		try {
 			$token = $SESSION['simplifyToken'];
@@ -341,12 +341,12 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 				) );
 
 			if( $charge->paymentStatus == 'APPROVED' ) {
-				$payment_info = array( );
+				$payment_info = array();
 				$payment_info['gateway_public_name'] = $this->public_name;
 				$payment_info['gateway_private_name'] = $this->admin_name;
 				$payment_info['method'] = sprintf( __( '%1$s Card ending in %2$s - Expires %3$s', 'mp' ), $charge->card->type, $charge->card->last4, $charge->card->expMonth . '/' . $charge->card->expYear );
 				$payment_info['transaction_id'] = $charge->id;
-				$timestamp = time( );
+				$timestamp = time();
 				$payment_info['status'][$timestamp] = __( 'Paid', 'mp' );
 				$payment_info['total'] = $total;
 				$payment_info['currency'] = $this->currency;
@@ -358,11 +358,11 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 					true
 					);
 				unset( $_SESSION['simplifyToken'] );
-				$mp->set_cart_cookie( Array( ) );
+				$mp->set_cart_cookie( Array() );
 			}
 		} catch ( Exception $e ) {
 			unset( $_SESSION['simplifyToken'] );
-			$mp->cart_checkout_error( sprintf( __( 'There was an error processing your card: "%s". Please <a href="%s">go back and try again</a>.', 'mp' ), $e->getMessage( ), mp_checkout_step_url( 'checkout' ) ) );
+			$mp->cart_checkout_error( sprintf( __( 'There was an error processing your card: "%s". Please <a href="%s">go back and try again</a>.', 'mp' ), $e->getMessage(), mp_checkout_step_url( 'checkout' ) ) );
 			return false;
 		}
 	}
@@ -370,7 +370,7 @@ class MP_Gateway_Simplify extends MP_Gateway_API {
 	/**
 	* INS and payment return
 	*/
-	function process_ipn_return( ) {
+	function process_ipn_return() {
 		global $mp;
 		$settings = get_option( 'mp_settings' );
 	}

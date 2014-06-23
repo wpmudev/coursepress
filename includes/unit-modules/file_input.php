@@ -9,12 +9,12 @@ class file_input_module extends Unit_Module {
     var $front_save = true;
     var $response_type = 'file';
 
-    function __construct( ) {
-        $this->on_create( );
+    function __construct() {
+        $this->on_create();
     }
 
-    function text_input_module( ) {
-        $this->__construct( );
+    function text_input_module() {
+        $this->__construct();
     }
 
     function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
@@ -23,7 +23,7 @@ class file_input_module extends Unit_Module {
         $response = $this->get_response( $user_ID, $response_request_ID );
         if ( count( ( array ) $response >= 1 ) ) {
             require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
-            $encryption = new CP_Encryption( );
+            $encryption = new CP_Encryption();
 
             $file_extension = strtoupper( pathinfo( $response->guid, PATHINFO_EXTENSION ) );
 
@@ -34,7 +34,7 @@ class file_input_module extends Unit_Module {
                     <label><?php _e( 'Uploaded File', 'cp' ); ?></label>
                 <?php } ?>
                 <div class="front_response_content">
-                    <a href="<?php echo trailingslashit( site_url( ) ) . '?fdcpf=' . $response->guid; ?>"><?php
+                    <a href="<?php echo trailingslashit( site_url() ) . '?fdcpf=' . $response->guid; ?>"><?php
                         _e( 'Download file ', 'cp' );
                         echo ' ( ' . $file_extension . ' )';
                         ?></a>
@@ -73,7 +73,7 @@ class file_input_module extends Unit_Module {
 
     function front_main( $data ) {
 
-        $response = $this->get_response( get_current_user_id( ), $data->ID );
+        $response = $this->get_response( get_current_user_id(), $data->ID );
 
         if ( count( $response ) == 0 ) {
             $enabled = 'enabled';
@@ -105,7 +105,7 @@ class file_input_module extends Unit_Module {
         </div>
 
         <?php
-        /* $unit_module_main = new Unit_Module( );
+        /* $unit_module_main = new Unit_Module();
 
           if ( is_object( $response ) && !empty( $response ) ) {
 
@@ -134,7 +134,7 @@ class file_input_module extends Unit_Module {
                     if ( isset( $data->ID ) ) {
                         parent::get_module_delete_link( $data->ID );
                     } else {
-                        parent::get_module_remove_link( );
+                        parent::get_module_remove_link();
                     }
                     ?>
                 </span>
@@ -207,13 +207,13 @@ class file_input_module extends Unit_Module {
         <?php
     }
 
-    function on_create( ) {
+    function on_create() {
         $this->description = __( 'Add file upload blocks to the unit. Useful if students need to send you various files like essay, homework etc.', 'cp' );
-        $this->save_module_data( );
-        parent::additional_module_actions( );
+        $this->save_module_data();
+        parent::additional_module_actions();
     }
 
-    function save_module_data( ) {
+    function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
         if ( isset( $_POST['module_type'] ) && ( $save_elements == true ) ) {
@@ -221,13 +221,13 @@ class file_input_module extends Unit_Module {
             foreach ( array_keys( $_POST['module_type'] ) as $module_type => $module_value ) {
 
                 if ( $module_value == $this->name ) {
-                    $data = new stdClass( );
+                    $data = new stdClass();
                     $data->ID = '';
                     $data->unit_id = '';
                     $data->title = '';
                     $data->excerpt = '';
                     $data->content = '';
-                    $data->metas = array( );
+                    $data->metas = array();
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
@@ -288,7 +288,7 @@ class file_input_module extends Unit_Module {
 
                             $filename = $movefile['file'];
 
-                            $wp_upload_dir = wp_upload_dir( );
+                            $wp_upload_dir = wp_upload_dir();
 
                             $attachment = array(
                                 'guid' => $movefile['url'],
@@ -303,7 +303,7 @@ class file_input_module extends Unit_Module {
                             $unit_id = get_post_ancestors( $response_id );
                             $course_id = get_post_meta( $unit_id[0], 'course_id', true );
 
-                            update_post_meta( $attach_id, 'user_ID', get_current_user_ID( ) );
+                            update_post_meta( $attach_id, 'user_ID', get_current_user_ID() );
                             update_post_meta( $attach_id, 'course_id', $course_id );
                         } else {
                             ?>

@@ -73,9 +73,9 @@ class Simplify_HTTP
 
         $method = self::$_validMethods[strtolower( $method )];
 
-        $curl = curl_init( );
+        $curl = curl_init();
 
-        $options = array( );
+        $options = array();
 
         $options[CURLOPT_URL] = $url;
         $options[CURLOPT_CUSTOMREQUEST] = $method;
@@ -202,7 +202,7 @@ class Simplify_HTTP
                           'kid' => $publicKey,
                           self::JWS_HDR_URI => $url,
                           self::JWS_HDR_TIMESTAMP => sprintf( "%u000", round( microtime( true ) ) ),
-                          self::JWS_HDR_NONCE => sprintf( "%u", mt_rand( ) ),
+                          self::JWS_HDR_NONCE => sprintf( "%u", mt_rand() ),
     	);
 
         $header = $this->jwsUrlSafeEncode64( json_encode( $jws_hdr ) );

@@ -5,7 +5,7 @@ MarketPress Shortcode Support
 
 class MarketPress_Shortcodes {
 
-  function __construct( ) {
+  function __construct() {
 
     //register our shortcodes
     add_shortcode( 'mp_tag_cloud', array( &$this, 'mp_tag_cloud_sc' ) );
@@ -50,7 +50,7 @@ class MarketPress_Shortcodes {
    * The 'topic_count_text_callback' argument is a function, which, given the count
    * of the posts  with that tag, returns a text for the tooltip of the tag link.
    *
-   * The 'exclude' and 'include' arguments are used for the {@link get_tags( )}
+   * The 'exclude' and 'include' arguments are used for the {@link get_tags()}
    * function. Only one should be used, because only one will be used and the
    * other ignored, if they are both set.
    *
@@ -68,22 +68,22 @@ class MarketPress_Shortcodes {
    * categories.
    *     "order" ( string ) default is "ASC" - What direction to order categories.
    *     "show_last_update" ( bool|int ) default is 0 - See {@link
-   * walk_category_dropdown_tree( )}
+   * walk_category_dropdown_tree()}
    *     "show_count" ( bool|int ) default is 0 - Whether to show how many posts are
    * in the category.
    *     "hide_empty" ( bool|int ) default is 1 - Whether to hide categories that
    * don"t have any posts attached to them.
    *     "use_desc_for_title" ( bool|int ) default is 1 - Whether to use the
    * description instead of the category title.
-   *     "feed" - See {@link get_categories( )}.
-   *     "feed_type" - See {@link get_categories( )}.
-   *     "feed_image" - See {@link get_categories( )}.
-   *     "child_of" ( int ) default is 0 - See {@link get_categories( )}.
-   *     "exclude" ( string ) - See {@link get_categories( )}.
-   *     "exclude_tree" ( string ) - See {@link get_categories( )}.
-   *     "current_category" ( int ) - See {@link get_categories( )}.
-   *     "hierarchical" ( bool ) - See {@link get_categories( )}.
-   *     "title_li" ( string ) - See {@link get_categories( )}.
+   *     "feed" - See {@link get_categories()}.
+   *     "feed_type" - See {@link get_categories()}.
+   *     "feed_image" - See {@link get_categories()}.
+   *     "child_of" ( int ) default is 0 - See {@link get_categories()}.
+   *     "exclude" ( string ) - See {@link get_categories()}.
+   *     "exclude_tree" ( string ) - See {@link get_categories()}.
+   *     "current_category" ( int ) - See {@link get_categories()}.
+   *     "hierarchical" ( bool ) - See {@link get_categories()}.
+   *     "title_li" ( string ) - See {@link get_categories()}.
    *     "depth" ( int ) - The max depth.
    *
    */
@@ -100,13 +100,13 @@ class MarketPress_Shortcodes {
    *     "orderby" ( string ) default is "ID" - What column to use for ordering the
    * categories.
    *     "order" ( string ) default is "ASC" - What direction to order categories.
-   *     "show_last_update" ( bool|int ) default is 0 - See {@link get_categories( )}
+   *     "show_last_update" ( bool|int ) default is 0 - See {@link get_categories()}
    *     "show_count" ( bool|int ) default is 0 - Whether to show how many posts are
    * in the category.
    *     "hide_empty" ( bool|int ) default is 1 - Whether to hide categories that
    * don"t have any posts attached to them.
-   *     "child_of" ( int ) default is 0 - See {@link get_categories( )}.
-   *     "exclude" ( string ) - See {@link get_categories( )}.
+   *     "child_of" ( int ) default is 0 - See {@link get_categories()}.
+   *     "exclude" ( string ) - See {@link get_categories()}.
    *     "depth" ( int ) - The max depth.
    *     "tab_index" ( int ) - Tab index for select element.
    *     "name" ( string ) - The name attribute value for select element.
@@ -346,4 +346,4 @@ class MarketPress_Shortcodes {
   }
 
 }
-$mp_shortcodes = new MarketPress_Shortcodes( );
+$mp_shortcodes = new MarketPress_Shortcodes();

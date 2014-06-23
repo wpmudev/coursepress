@@ -31,7 +31,7 @@ if ( !function_exists( 'coursepress_setup' ) ) :
      * runs before the init hook. The init hook is too late for some features, such
      * as indicating support for post thumbnails.
      */
-    function coursepress_setup( ) {
+    function coursepress_setup() {
 
         /*
          * Make theme available for translation.
@@ -39,7 +39,7 @@ if ( !function_exists( 'coursepress_setup' ) ) :
          * If you're building a theme based on CoursePress, use a find and replace
          * to change 'coursepress' to the name of your theme in all the template files
          */
-        load_theme_textdomain( 'coursepress', get_template_directory( ) . '/languages' );
+        load_theme_textdomain( 'coursepress', get_template_directory() . '/languages' );
 
         // Add default posts and comments RSS feed links to head.
         add_theme_support( 'automatic-feed-links' );
@@ -50,7 +50,7 @@ if ( !function_exists( 'coursepress_setup' ) ) :
          * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
          */
         //add_theme_support( 'post-thumbnails' );
-        // This theme uses wp_nav_menu( ) in one location.
+        // This theme uses wp_nav_menu() in one location.
         register_nav_menus( array(
             'primary' => __( 'Primary Menu', 'coursepress' ),
         ) );
@@ -68,7 +68,7 @@ if ( !function_exists( 'coursepress_setup' ) ) :
         ) ) );
 
         /* add_theme_support( 'custom-header', apply_filters( 'coursepress_custom_header_args', array(
-          'default-image' => get_template_directory_uri( ) . '/images/logo-default.png',
+          'default-image' => get_template_directory_uri() . '/images/logo-default.png',
           'uploads' => true,
           'header-text' => true,
           ) ) ); */
@@ -80,7 +80,7 @@ add_action( 'after_setup_theme', 'coursepress_setup' );
 /**
  * Register widgetized area and update sidebar with default widgets.
  */
-function coursepress_widgets_init( ) {
+function coursepress_widgets_init() {
     register_sidebar( array(
         'name' => __( 'Sidebar', 'coursepress' ),
         'id' => 'sidebar-1',
@@ -105,31 +105,31 @@ add_action( 'widgets_init', 'coursepress_widgets_init' );
 /**
  * Enqueue scripts and styles.
  */
-function coursepress_scripts( ) {
+function coursepress_scripts() {
     global $post;
 
-    wp_enqueue_style( 'coursepress-style', get_stylesheet_uri( ) );
+    wp_enqueue_style( 'coursepress-style', get_stylesheet_uri() );
 
-    wp_enqueue_style( 'coursepress-responsive-navigation', get_template_directory_uri( ) . '/css/responsive-nav.css' );
+    wp_enqueue_style( 'coursepress-responsive-navigation', get_template_directory_uri() . '/css/responsive-nav.css' );
 
-    wp_enqueue_script( 'coursepress-navigation', get_template_directory_uri( ) . '/js/navigation.js', array( ), '20120206', true );
+    wp_enqueue_script( 'coursepress-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20120206', true );
 
-    wp_enqueue_script( 'coursepress-responsive-navigation', get_template_directory_uri( ) . '/js/responsive-nav.min.js', array( ), '20120206', true );
+    wp_enqueue_script( 'coursepress-responsive-navigation', get_template_directory_uri() . '/js/responsive-nav.min.js', array(), '20120206', true );
 
-    wp_enqueue_script( 'coursepress-general', get_template_directory_uri( ) . '/js/script.js', array( ), '20120207', true );
+    wp_enqueue_script( 'coursepress-general', get_template_directory_uri() . '/js/script.js', array(), '20120207', true );
 
-    wp_enqueue_script( 'coursepress-skip-link-focus-fix', get_template_directory_uri( ) . '/js/skip-link-focus-fix.js', array( ), '20130115', true );
+    wp_enqueue_script( 'coursepress-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
 
-    if ( is_singular( ) && comments_open( ) && get_option( 'thread_comments' ) ) {
+    if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
 
     // Add FitVids to allow for responsive sizing of videos
-    /* wp_register_script( 'fitvids', get_template_directory_uri( ) . '/js/jquery.fitvids.js', array( 'jquery' ), '20120207', true );
+    /* wp_register_script( 'fitvids', get_template_directory_uri() . '/js/jquery.fitvids.js', array( 'jquery' ), '20120207', true );
       wp_enqueue_script( 'fitvids' ); */
 
     //if ( get_post_type( $post ) == 'unit' ) {
-    wp_enqueue_script( 'coursepress-knob', get_template_directory_uri( ) . '/js/jquery.knob.js', array( ), '20120207', true );
+    wp_enqueue_script( 'coursepress-knob', get_template_directory_uri() . '/js/jquery.knob.js', array(), '20120207', true );
     //}
 
     wp_register_style( 'google_fonts_lato', 'http://fonts.googleapis.com/css?family=Lato:300,400' );
@@ -141,7 +141,7 @@ function coursepress_scripts( ) {
 
 add_action( 'wp_enqueue_scripts', 'coursepress_scripts' );
 
-function load_all_jquery( ) {
+function load_all_jquery() {
     wp_enqueue_script( "jquery" );
     $jquery_ui = array(
         "jquery-ui-core",
@@ -171,22 +171,22 @@ add_action( 'wp_enqueue_scripts', 'load_all_jquery' );
 /**
  * Implement the Custom Header feature.
  */
-//require get_template_directory( ) . '/inc/custom-header.php';
+//require get_template_directory() . '/inc/custom-header.php';
 
 /**
  * Custom template tags for this theme.
  */
-require get_template_directory( ) . '/inc/template-tags.php';
+require get_template_directory() . '/inc/template-tags.php';
 
 /**
  * Custom functions that act independently of the theme templates.
  */
-require get_template_directory( ) . '/inc/extras.php';
+require get_template_directory() . '/inc/extras.php';
 
 /**
  * Customizer additions.
  */
-require get_template_directory( ) . '/inc/customizer.php';
+require get_template_directory() . '/inc/customizer.php';
 
 function author_description_excerptOLD( $user_id ) {
     $word_limit = 100; // Limit the number of words
@@ -234,26 +234,26 @@ add_filter( 'pre_get_posts', 'cp_filter_search' );
 
 add_shortcode( 'contact_form', 'coursepress_contact_form' );
 
-function coursepress_contact_form( ) {
-    ob_start( );
+function coursepress_contact_form() {
+    ob_start();
     get_template_part( 'part-contact' );
-    $var = ob_get_contents( );
-    ob_end_clean( );
+    $var = ob_get_contents();
+    ob_end_clean();
     return $var;
 }
 
 //Walker for mobile menu
 class Walker_Nav_Menu_Dropdown extends Walker_Nav_Menu {
 
-    function start_lvl( &$output, $depth = 0, $args = Array( ) ) {
+    function start_lvl( &$output, $depth = 0, $args = Array() ) {
         
     }
 
-    function end_lvl( &$output, $depth = 0, $args = Array( ) ) {
+    function end_lvl( &$output, $depth = 0, $args = Array() ) {
         
     }
 
-    function start_el( &$output, $item, $depth = 0, $args = Array( ), $current_object_id = 0 ) {
+    function start_el( &$output, $item, $depth = 0, $args = Array(), $current_object_id = 0 ) {
         // Here is where we create each option.
         $item_output = '';
 
@@ -276,13 +276,13 @@ class Walker_Nav_Menu_Dropdown extends Walker_Nav_Menu {
         $output .= $item_output;
     }
 
-    function end_el( &$output, $object, $depth = 0, $args = Array( ) ) {
+    function end_el( &$output, $object, $depth = 0, $args = Array() ) {
         // Close the item.
         $output .= "</li>\n";
     }
 
     /*
-      function start_el( &$output, $item, $depth = 0, $args = Array( ), $current_object_id = 0 ) {
+      function start_el( &$output, $item, $depth = 0, $args = Array(), $current_object_id = 0 ) {
       // Here is where we create each option.
       $item_output = '';
 
@@ -306,7 +306,7 @@ class Walker_Nav_Menu_Dropdown extends Walker_Nav_Menu {
       $output .= $item_output;
       }
 
-      function end_el( &$output, $object, $depth = 0, $args = Array( ) ) {
+      function end_el( &$output, $object, $depth = 0, $args = Array() ) {
       // Close the item.
       $output .= "</option>\n";
       } */
@@ -314,12 +314,12 @@ class Walker_Nav_Menu_Dropdown extends Walker_Nav_Menu {
 
 add_action( 'wp_footer', 'dropdown_menu_scripts' );
 
-function dropdown_menu_scripts( ) {
+function dropdown_menu_scripts() {
     ?>
     <!--<script>
          jQuery( document ).ready( function( $ ) {
-             $( "#drop-mobile-nav" ).change( function( ) {
-                 document.location.href = $( this ).val( );
+             $( "#drop-mobile-nav" ).change( function() {
+                 document.location.href = $( this ).val();
              } );
          } );
      </script>-->
@@ -359,7 +359,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
 
     function coursepress_numeric_posts_nav( $navigation_id = '' ) {
 
-        if ( is_singular( ) )
+        if ( is_singular() )
             return;
 
         global $wp_query, $paged;
@@ -395,7 +395,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
         echo '<div class="navigation" ' . $id . '><ul>' . "\n";
 
         /** 	Previous Post Link */
-        if ( get_previous_posts_link( ) )
+        if ( get_previous_posts_link() )
             printf( '<li>%s</li>' . "\n", get_previous_posts_link( '<span class="meta-nav">&larr;</span>' ) );
 
         /** 	Link to first page, plus ellipses if necessary */
@@ -425,7 +425,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
         }
 
         /** 	Next Post Link */
-        if ( get_next_posts_link( ) )
+        if ( get_next_posts_link() )
             printf( '<li>%s</li>' . "\n", get_next_posts_link( '<span class="meta-nav">&rarr;</span>' ) );
 
         echo '</ul></div>' . "\n";

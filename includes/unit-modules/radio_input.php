@@ -9,12 +9,12 @@ class radio_input_module extends Unit_Module {
     var $front_save = true;
     var $response_type = 'view';
 
-    function __construct( ) {
-        $this->on_create( );
+    function __construct() {
+        $this->on_create();
     }
 
-    function radio_input_module( ) {
-        $this->__construct( );
+    function radio_input_module() {
+        $this->__construct();
     }
 
     function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
@@ -80,7 +80,7 @@ class radio_input_module extends Unit_Module {
 
     function front_main( $data ) {
 
-        $response = $this->get_response( get_current_user_id( ), $data->ID );
+        $response = $this->get_response( get_current_user_id(), $data->ID );
 
         if ( count( $response ) == 0 ) {
             $enabled = 'enabled';
@@ -110,7 +110,7 @@ class radio_input_module extends Unit_Module {
             </ul>
 
             <?php
-            /* $unit_module_main = new Unit_Module( );
+            /* $unit_module_main = new Unit_Module();
 
               if ( is_object( $response ) && !empty( $response ) ) {
 
@@ -142,7 +142,7 @@ class radio_input_module extends Unit_Module {
                     if ( isset( $data->ID ) ) {
                         parent::get_module_delete_link( $data->ID );
                     } else {
-                        parent::get_module_remove_link( );
+                        parent::get_module_remove_link();
                     }
                     ?>
                 </span>
@@ -251,7 +251,7 @@ class radio_input_module extends Unit_Module {
                                     </td>
                                     <?php if ( $answer_cnt >= 2 ) { ?>
                                         <td width="10%">    
-                                            <a class="radio_remove" onclick="jQuery( this ).parent( ).parent( ).remove( );">Remove</a>
+                                            <a class="radio_remove" onclick="jQuery( this ).parent().parent().remove();">Remove</a>
                                         </td>
                                     <?php } else { ?>
                                         <td width="10%">&nbsp;</td>
@@ -297,18 +297,18 @@ class radio_input_module extends Unit_Module {
         <?php
     }
 
-    function on_create( ) {
+    function on_create() {
         $this->description = __( 'Multiple choice question where only one option can be selected', 'cp' );
-        $this->save_module_data( );
-        parent::additional_module_actions( );
+        $this->save_module_data();
+        parent::additional_module_actions();
     }
 
-    function save_module_data( ) {
+    function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
         if ( isset( $_POST['module_type'] ) && ( $save_elements == true ) ) {
 
-            $answers = array( );
+            $answers = array();
 
             if ( isset( $_POST[$this->name . '_radio_answers'] ) ) {
                 foreach ( $_POST[$this->name . '_radio_answers'] as $post_answers ) {
@@ -318,13 +318,13 @@ class radio_input_module extends Unit_Module {
 
                 foreach ( array_keys( $_POST['module_type'] ) as $module_type => $module_value ) {
                     if ( $module_value == $this->name ) {
-                        $data = new stdClass( );
+                        $data = new stdClass();
                         $data->ID = '';
                         $data->unit_id = '';
                         $data->title = '';
                         $data->excerpt = '';
                         $data->content = '';
-                        $data->metas = array( );
+                        $data->metas = array();
                         $data->metas['module_type'] = $this->name;
                         $data->post_type = 'module';
 
@@ -372,13 +372,13 @@ class radio_input_module extends Unit_Module {
                     $response_id = intval( str_replace( $this->name . '_front_', '', $response_name ) );
 
                     if ( $response_value != '' ) {
-                        $data = new stdClass( );
+                        $data = new stdClass();
                         $data->ID = '';
                         $data->title = '';
                         $data->excerpt = '';
                         $data->content = '';
-                        $data->metas = array( );
-                        $data->metas['user_ID'] = get_current_user_id( );
+                        $data->metas = array();
+                        $data->metas['user_ID'] = get_current_user_id();
                         $data->post_type = 'module_response';
                         $data->response_id = $response_id;
                         $data->title = ''; //__( 'Response to '.$response_id.' module ( Unit '.$_POST['unit_id'].' )' );

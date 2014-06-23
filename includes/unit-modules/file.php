@@ -9,12 +9,12 @@ class file_module extends Unit_Module {
     var $front_save = false;
     var $response_type = '';
 
-    function __construct( ) {
-        $this->on_create( );
+    function __construct() {
+        $this->on_create();
     }
 
-    function file_module( ) {
-        $this->__construct( );
+    function file_module() {
+        $this->__construct();
     }
 
     function front_main( $data ) {
@@ -29,12 +29,12 @@ class file_module extends Unit_Module {
                 global $coursepress;
 
                 require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
-                $encryption = new CP_Encryption( );
+                $encryption = new CP_Encryption();
 
                 $data->file_url = $encryption->encode( $data->file_url );
                 ?>  
                 <div class="file_holder">
-                    <a href="<?php echo trailingslashit( site_url( ) ) . '?fdcpf=' . $data->file_url; ?>" /><?php echo ( isset( $data->link_text ) ? $data->link_text : $data->post_title ); ?></a> 
+                    <a href="<?php echo trailingslashit( site_url() ) . '?fdcpf=' . $data->file_url; ?>" /><?php echo ( isset( $data->link_text ) ? $data->link_text : $data->post_title ); ?></a> 
                 </div>
             <?php } ?>
         </div>
@@ -44,7 +44,7 @@ class file_module extends Unit_Module {
     function admin_main( $data ) {
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_script( 'thickbox' );
-        wp_enqueue_media( );
+        wp_enqueue_media();
         wp_enqueue_script( 'media-upload' );
         ?>
 
@@ -58,7 +58,7 @@ class file_module extends Unit_Module {
                     if ( isset( $data->ID ) ) {
                         parent::get_module_delete_link( $data->ID );
                     } else {
-                        parent::get_module_remove_link( );
+                        parent::get_module_remove_link();
                     }
                     ?>
                 </span>
@@ -103,13 +103,13 @@ class file_module extends Unit_Module {
         <?php
     }
 
-    function on_create( ) {
+    function on_create() {
         $this->description = __( 'Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp' );
-        $this->save_module_data( );
-        parent::additional_module_actions( );
+        $this->save_module_data();
+        parent::additional_module_actions();
     }
 
-    function save_module_data( ) {
+    function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
         if ( isset( $_POST['module_type'] ) && ( $save_elements == true ) ) {
@@ -117,13 +117,13 @@ class file_module extends Unit_Module {
             foreach ( array_keys( $_POST['module_type'] ) as $module_type => $module_value ) {
 
                 if ( $module_value == $this->name ) {
-                    $data = new stdClass( );
+                    $data = new stdClass();
                     $data->ID = '';
                     $data->unit_id = '';
                     $data->title = '';
                     $data->excerpt = '';
                     $data->content = '';
-                    $data->metas = array( );
+                    $data->metas = array();
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 

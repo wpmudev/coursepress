@@ -13,6 +13,6 @@ if ( $paged == 1 ) {
 ?>
 <?php
 
-$module = new Unit_Module( );
+$module = new Unit_Module();
 $module->get_modules_front( $unit_id );
 ?>

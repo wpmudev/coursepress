@@ -4,16 +4,16 @@
  */
 ?>
 <?php
-$course = new Course( get_the_ID( ) );
+$course = new Course( get_the_ID() );
 
 $course_category_id = $course->details->course_category;
 $course_category = get_term_by( 'ID', $course_category_id, 'course_category' );
 
 $course_language = $course->details->course_language;
 ?>
-<article id="post-<?php the_ID( ); ?>" <?php post_class( ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <header class="entry-header">
-        <h1 class="entry-title"><?php the_title( ); ?></h1>
+        <h1 class="entry-title"><?php the_title(); ?></h1>
         <div class="instructors-content">
             <?php echo do_shortcode( '[course_instructors list="true" link="true"]' ); ?>
         </div>
@@ -47,7 +47,7 @@ $course_language = $course->details->course_language;
             <?php } ?>
 
         <div class="entry-content-excerpt <?php echo ( !isset( $course->details->course_video_url ) || $course->details->course_video_url == '' ? 'entry-content-excerpt-right' : '' );?>">
-            <?php //the_excerpt( ); ?>
+            <?php //the_excerpt(); ?>
             <div class="course-box">
                 <span class="strong"><?php _e( 'Course Dates: ', 'cp' ); ?></span><?php
                 if ( do_shortcode( '[course_details field="course_start_date"]' ) == 'Open-ended' ) {
@@ -83,21 +83,21 @@ $course_language = $course->details->course_language;
     <section id="additional-summary">
         <div class="social-shares">
             <span><?php _e( 'SHARE', 'coursepress' ); ?></span>
-            <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=<?php the_permalink( ); ?>&p[images][0]=&p[title]=<?php the_title( ); ?>&p[summary]=<?php echo urlencode( strip_tags( get_the_excerpt( ) ) ); ?>" class="facebook-share" target="_blank"></a>
-            <a href="http://twitter.com/home?status=<?php the_title( ); ?> <?php the_permalink( ); ?>" class="twitter-share" target="_blank"></a>
-            <a href="https://plus.google.com/share?url=<?php the_permalink( ); ?>" class="google-share" target="_blank"></a>
-            <a href="mailto:?subject=<?php the_title( ); ?>&body=<?php echo strip_tags( get_the_excerpt( ) ); ?>" target="_top" class="email-share"></a>
+            <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=<?php the_permalink(); ?>&p[images][0]=&p[title]=<?php the_title(); ?>&p[summary]=<?php echo urlencode( strip_tags( get_the_excerpt() ) ); ?>" class="facebook-share" target="_blank"></a>
+            <a href="http://twitter.com/home?status=<?php the_title(); ?> <?php the_permalink(); ?>" class="twitter-share" target="_blank"></a>
+            <a href="https://plus.google.com/share?url=<?php the_permalink(); ?>" class="google-share" target="_blank"></a>
+            <a href="mailto:?subject=<?php the_title(); ?>&body=<?php echo strip_tags( get_the_excerpt() ); ?>" target="_top" class="email-share"></a>
         </div><!--social shares-->
     </section>
 
     <br clear="all" />
 
     <?php
-    $instructors = $course->get_course_instructors( );
+    $instructors = $course->get_course_instructors();
     ?>
     <div class="entry-content <?php echo( count( $instructors ) > 0 ? 'left-content' : '' ); ?>">
         <h1 class="h1-about-course"><?php _e( 'About the Course', 'coursepress' ); ?></h1>
-        <?php the_content( ); ?>
+        <?php the_content(); ?>
         <?php
         wp_link_pages( array(
             'before' => '<div class="page-links">' . __( 'Pages:', 'coursepress' ),
@@ -110,7 +110,7 @@ $course_language = $course->details->course_language;
         <div class="course-instructors right-content">
             <h1 class="h1-instructors"><?php _e( 'Instructors', 'coursepress' ); ?></h1>
             <script>
-                jQuery( function( ) {
+                jQuery( function() {
                     jQuery( "#instructor-profiles" ).accordion( {
                         heightStyle: "content"
                     } );
@@ -126,7 +126,7 @@ $course_language = $course->details->course_language;
                     <h3><?php echo $instructor->display_name; ?></h3>
 
                     <?php
-                    $doc = new DOMDocument( );
+                    $doc = new DOMDocument();
                     $doc->loadHTML( get_avatar( $instructor->ID, 235 ) );
                     $imageTags = $doc->getElementsByTagName( 'img' );
 
@@ -136,7 +136,7 @@ $course_language = $course->details->course_language;
                     ?>
 
                     <?php
-                    /* $content .= '<div class="instructor"><a href="' . trailingslashit( site_url( ) ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
+                    /* $content .= '<div class="instructor"><a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
                       $content .= '<div class="small-circle-profile-image" style="background: url( ' . $avatar_url . ' );"></div>';
                       $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
                       $content .= '</a></div>';
@@ -165,7 +165,7 @@ $course_language = $course->details->course_language;
         /* translators: used between list items, there is a space after the comma */
         $tag_list = get_the_tag_list( '', __( ', ', 'coursepress' ) );
 
-        if ( !coursepress_categorized_blog( ) ) {
+        if ( !coursepress_categorized_blog() ) {
             // This blog only has 1 category so we just need to worry about tags in the meta text
             if ( '' != $tag_list ) {
                 $meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress' );
@@ -183,7 +183,7 @@ $course_language = $course->details->course_language;
         } // end check for categories on this blog
 
         printf(
-                $meta_text, $category_list, $tag_list, get_permalink( )
+                $meta_text, $category_list, $tag_list, get_permalink()
         );
         ?>
 

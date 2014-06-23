@@ -27,7 +27,7 @@
 ( function( $ ) {
 
 	function simplifyResponseHandler( data ) {
-		$( ".error" ).remove( );
+		$( ".error" ).remove();
 		if( data.error ) {
 			if( data.error.code == "validation" ) {
 				var fieldErrors = data.error.fieldErrors,
@@ -49,26 +49,26 @@
 		} else {
 			var token = data["id"];
 			$( "#mp_payment_form" ).append( "<input type='hidden' name='simplifyToken' value='" + token + "' />" );
-			$( "#mp_payment_form" ).get( 0 ).submit( );
+			$( "#mp_payment_form" ).get( 0 ).submit();
 		}
 	}
 	
-	$( document ).ready( function( ) {
+	$( document ).ready( function() {
 		$( "#mp_payment_form" ).on( "submit", function( event ) {
-			if ( $( this ).find( '.mp_choose_gateway' ).filter( ':checked' ).val( ) != 'simplify' )
+			if ( $( this ).find( '.mp_choose_gateway' ).filter( ':checked' ).val() != 'simplify' )
 				//simplify gateway is not checked so let's bail to prevent conflicts with other gateways
 				return;
 			
-			event.preventDefault( );
+			event.preventDefault();
 			
 			$( "#mp_payment_confirm" ).attr( "disabled", "disabled" );
 			SimplifyCommerce.generateToken( {
 				"key" : simplify.publicKey,
 				"card" : {
-					"number" : $( "#cc-number" ).val( ),
-					"cvc" : $( "#cc-cvc" ).val( ),
-					"expMonth" : $( "#cc-exp-month" ).val( ),
-					"expYear" : $( "#cc-exp-year" ).val( )
+					"number" : $( "#cc-number" ).val(),
+					"cvc" : $( "#cc-cvc" ).val(),
+					"expMonth" : $( "#cc-exp-month" ).val(),
+					"expYear" : $( "#cc-exp-year" ).val()
 				}
 			}, simplifyResponseHandler );
 		} );

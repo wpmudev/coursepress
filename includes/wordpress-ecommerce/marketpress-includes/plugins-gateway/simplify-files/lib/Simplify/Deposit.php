@@ -43,7 +43,7 @@ class Simplify_Deposit extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listDeposit( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Deposit( );
+            $val = new Simplify_Deposit();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -59,7 +59,7 @@ class Simplify_Deposit extends Simplify_Object {
          * @return    Deposit a Deposit object
          */
         static public function findDeposit( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Deposit( );
+            $val = new Simplify_Deposit();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -70,7 +70,7 @@ class Simplify_Deposit extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Deposit";
     }
 }

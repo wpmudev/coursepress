@@ -7,7 +7,7 @@ class MarketPress_Stats {
 	
 	var $mp;
 	
-  function __construct( ) {
+  function __construct() {
 		global $mp;
 
 		add_action( 'wp_dashboard_setup', array( &$this, 'register_dashboard_widget' ) );
@@ -15,19 +15,19 @@ class MarketPress_Stats {
 		
 	}
 
-  function install( ) {
+  function install() {
 
   }
 	
-	function register_dashboard_widget( ) {
+	function register_dashboard_widget() {
 		if ( !current_user_can( 'manage_options' ) )
 			return;
 		
-		$screen = get_current_screen( );
-		add_meta_box( 'mp_stats_widget', ( is_multisite( ) ? __( 'Store Statistics', 'mp' ) : __( 'MarketPress Statistics', 'mp' ) ), array( &$this, 'dashboard_widget' ), $screen->id, 'normal', 'core' );
+		$screen = get_current_screen();
+		add_meta_box( 'mp_stats_widget', ( is_multisite() ? __( 'Store Statistics', 'mp' ) : __( 'MarketPress Statistics', 'mp' ) ), array( &$this, 'dashboard_widget' ), $screen->id, 'normal', 'core' );
 	}
 	
-	function dashboard_widget( ) {
+	function dashboard_widget() {
 		global $wpdb, $mp;
 		$year = date( 'Y' );
 		$month = date( 'm' );
@@ -83,7 +83,7 @@ class MarketPress_Stats {
 		<?php
 	}
 	
-	function rightnow_dashboard_widget( ) {
+	function rightnow_dashboard_widget() {
 		echo "\n\t</table>\n\t</div><br class='clear' /><br /><br />";
 		
 		echo "\n\t".'<div class="table table_content">';
@@ -182,4 +182,4 @@ class MarketPress_Stats {
 		echo "</tr>";
 	}
 }
-$mp_stats = new MarketPress_Stats( );
+$mp_stats = new MarketPress_Stats();

@@ -9,7 +9,7 @@ if ( !class_exists( 'Course' ) ) {
 
         var $id = '';
         var $output = 'OBJECT';
-        var $course = array( );
+        var $course = array();
         var $details;
 
         function __construct( $id = '', $output = 'OBJECT' ) {
@@ -22,7 +22,7 @@ if ( !class_exists( 'Course' ) ) {
             $this->__construct( $id, $output );
         }
 
-        function get_course( ) {
+        function get_course() {
 
             $course = get_post( $this->id, $this->output );
 
@@ -40,11 +40,11 @@ if ( !class_exists( 'Course' ) ) {
 
                 return $course;
             } else {
-                return new stdClass( );
+                return new stdClass();
             }
         }
 
-        function get_course_thumbnail( ) {
+        function get_course_thumbnail() {
             $thumb = get_post_thumbnail_id( $this->id );
             if ( $thumb !== '' ) {
                 return $thumb;
@@ -94,7 +94,7 @@ if ( !class_exists( 'Course' ) ) {
             }
         }
 
-        function update_course( ) {
+        function update_course() {
             global $user_id, $wpdb;
 
             $course = get_post( $this->id, $this->output );
@@ -149,14 +149,14 @@ if ( !class_exists( 'Course' ) ) {
                     $course_image_width = get_option( 'course_image_width', 235 );
                     $course_image_height = get_option( 'course_image_height', 225 );
 
-                    $upload_dir_info = wp_upload_dir( );
+                    $upload_dir_info = wp_upload_dir();
                     $fl = trailingslashit( $upload_dir_info['path'] ) . basename( $_POST['meta_featured_url'] );
 
                     $image = wp_get_image_editor( $fl ); // Return an implementation that extends <tt>WP_Image_Editor</tt>
 
                     if ( !is_wp_error( $image ) ) {
 
-                        $image_size = $image->get_size( );
+                        $image_size = $image->get_size();
 
                         if ( ( $image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height ) || ( $image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height ) ) {
                             update_post_meta( $post_id, '_thumbnail_id', $_POST['meta_featured_url'] );
@@ -233,8 +233,8 @@ if ( !class_exists( 'Course' ) ) {
             //cp_write_log( 'done deletion' );
         }
 
-        function can_show_permalink( ) {
-            $course = $this->get_course( );
+        function can_show_permalink() {
+            $course = $this->get_course();
             if ( $course->post_status !== 'draft' ) {
                 return true;
             } else {
@@ -242,16 +242,16 @@ if ( !class_exists( 'Course' ) ) {
             }
         }
 
-        function get_course_instructors( ) {
+        function get_course_instructors() {
             $args = array(
                 'blog_id' => $GLOBALS['blog_id'],
                 'role' => 'instructor',
                 'meta_key' => 'course_' . $this->id,
                 'meta_value' => $this->id,
                 'meta_compare' => '',
-                'meta_query' => array( ),
-                'include' => array( ),
-                'exclude' => array( ),
+                'meta_query' => array(),
+                'include' => array(),
+                'exclude' => array(),
                 'orderby' => 'display_name',
                 'order' => 'ASC',
                 'offset' => '',
@@ -321,9 +321,9 @@ if ( !class_exists( 'Course' ) ) {
             }
 
             $course = new Course( $course_id );
-            $course = $course->get_course( );
+            $course = $course->get_course();
 
-            $unit_permalink = site_url( ) . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name . '/';
+            $unit_permalink = site_url() . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name . '/';
             return $unit_permalink;
         }
 
@@ -338,7 +338,7 @@ if ( !class_exists( 'Course' ) ) {
             );
 
             $wp_user_search = new WP_User_Query( $args );
-            return count( $wp_user_search->get_results( ) );
+            return count( $wp_user_search->get_results() );
         }
 
         function is_populated( $course_id = '' ) {
@@ -346,7 +346,7 @@ if ( !class_exists( 'Course' ) ) {
                 $course_id = $this->id;
             }
 
-            $class_size = $this->get_course( )->class_size;
+            $class_size = $this->get_course()->class_size;
 
             $number_of_enrolled_students = $this->get_number_of_students( $course_id );
 

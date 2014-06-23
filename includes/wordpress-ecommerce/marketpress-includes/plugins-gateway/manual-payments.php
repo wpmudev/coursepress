@@ -33,9 +33,9 @@ class MP_Gateway_ManualPayments extends MP_Gateway_API {
   /****** Below are the public methods you may overwrite via a plugin ******/
 
   /**
-   * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+   * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
    */
-  function on_creation( ) {
+  function on_creation() {
 		global $mp;
 
 		//set names here to be able to translate
@@ -93,9 +93,9 @@ class MP_Gateway_ManualPayments extends MP_Gateway_API {
    */
 	function process_payment( $cart, $shipping_info ) {
 	  global $mp;
-	  $timestamp = time( );
+	  $timestamp = time();
 	  
-    $totals = array( );
+    $totals = array();
     foreach ( $cart as $product_id => $variations ) {
 			foreach ( $variations as $data ) {
       	$totals[] = $mp->before_tax_price( $data['price'], $product_id ) * $data['quantity'];
@@ -103,21 +103,21 @@ class MP_Gateway_ManualPayments extends MP_Gateway_API {
     }
     $total = array_sum( $totals );
 
-	  if ( $coupon = $mp->coupon_value( $mp->get_coupon_code( ), $total ) ) {
+	  if ( $coupon = $mp->coupon_value( $mp->get_coupon_code(), $total ) ) {
 	    $total = $coupon['new_total'];
 	  }
 
 	  //shipping line
-	  if ( ( $shipping_price = $mp->shipping_price( ) ) !== false ) {
+	  if ( ( $shipping_price = $mp->shipping_price() ) !== false ) {
 	    $total = $total + $shipping_price;
 	  }
 
 	  //tax line
-	  if ( ( $tax_price = $mp->tax_price( ) ) !== false ) {
+	  if ( ( $tax_price = $mp->tax_price() ) !== false ) {
 	    $total = $total + $tax_price;
 	  }
 
-		$order_id = $mp->generate_order_id( );
+		$order_id = $mp->generate_order_id();
 
     $payment_info['gateway_public_name'] = $this->public_name;
     $payment_info['gateway_private_name'] = $this->admin_name;
@@ -252,7 +252,7 @@ class MP_Gateway_ManualPayments extends MP_Gateway_API {
    * Use to handle any payment returns to the ipn_url. Do not display anything here. If you encounter errors
    *  return the proper headers. Exits after.
    */
-	function process_ipn_return( ) {
+	function process_ipn_return() {
 
   }
 }

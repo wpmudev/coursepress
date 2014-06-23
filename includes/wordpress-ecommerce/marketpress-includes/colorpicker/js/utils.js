@@ -22,7 +22,7 @@ EYE.extend( {
 		}
 		var el = e;
 		if ( el.getBoundingClientRect ) { // IE
-			var box = el.getBoundingClientRect( );
+			var box = el.getBoundingClientRect();
 			x = box.left + Math.max( document.documentElement.scrollLeft, document.body.scrollLeft ) - 2;
 			y = box.top + Math.max( document.documentElement.scrollTop, document.body.scrollTop ) - 2;
 		} else {
@@ -41,7 +41,7 @@ EYE.extend( {
 				y -= document.body.offsetTop;
 			}
 			el = e.parentNode;
-			while ( el && el.tagName.toUpperCase( ) != 'BODY' && el.tagName.toUpperCase( ) != 'HTML' ) 
+			while ( el && el.tagName.toUpperCase() != 'BODY' && el.tagName.toUpperCase() != 'HTML' ) 
 			{
 				if ( jQuery.curCSS( el, 'display' ) != 'inline' ) {
 					x -= el.scrollLeft;
@@ -97,7 +97,7 @@ EYE.extend( {
 	getScroll : function ( e )
 	{
 		var t=0, l=0, w=0, h=0, iw=0, ih=0;
-		if ( e && e.nodeName.toLowerCase( ) != 'body' ) {
+		if ( e && e.nodeName.toLowerCase() != 'body' ) {
 			t = e.scrollTop;
 			l = e.scrollLeft;
 			w = e.scrollWidth;
@@ -227,7 +227,7 @@ EYE.extend( {
 	},
 	centerEl : function( el, axis )
 	{
-		var clientScroll = EYE.getScroll( );
+		var clientScroll = EYE.getScroll();
 		var size = EYE.getSize( el );
 		if ( !axis || axis == 'vertically' )
 			$( el ).css(

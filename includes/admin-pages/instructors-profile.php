@@ -41,7 +41,7 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                             <?php
                             $style = '';
 
-                            $assigned_courses = $instructor->get_assigned_courses_ids( );
+                            $assigned_courses = $instructor->get_assigned_courses_ids();
 
                             if ( count( $assigned_courses ) == 0 ) {
                                 ?>
@@ -55,7 +55,7 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                             foreach ( $assigned_courses as $course_id ) {
 
                                 $course_object = new Course( $course_id );
-                                $course_object = $course_object->get_course( );
+                                $course_object = $course_object->get_course();
 
                                 if ( $course_object ) {
 
@@ -116,7 +116,7 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                                                         <div><span class="info_caption"><?php _e( 'First Name', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->user_firstname; ?></span></div>
                                                         <div><span class="info_caption"><?php _e( 'Last Name', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->user_lastname; ?></span></div>
                                                         <div><span class="info_caption"><?php _e( 'Email', 'cp' ); ?>:</span> <span class="info"><a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a></span></div>
-                                                        <div><span class="info_caption"><?php _e( 'Courses', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->get_courses_number( ); ?></span></div>
+                                                        <div><span class="info_caption"><?php _e( 'Courses', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->get_courses_number(); ?></span></div>
                                                     </div>
                                                 </td>
                                             <?php } else { ?>

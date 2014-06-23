@@ -5,7 +5,7 @@ $course = new Course( $course_id );
 /* Invite a Student */
 if ( isset( $_POST['invite_student'] ) ) {
     check_admin_referer( 'student_invitation' );
-    if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+    if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $email_args['email_type'] = 'student_invitation';
         $email_args['course_id'] = $course_id;
         $email_args['student_first_name'] = $_POST['first_name'];
@@ -14,11 +14,11 @@ if ( isset( $_POST['invite_student'] ) ) {
         $email_args['enroll_type'] = $course->details->enroll_type;
         if ( is_email( $_POST['email'] ) ) {
             coursepress_send_email( $email_args );
-            //ob_start( );
+            //ob_start();
             wp_redirect( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=is' ) );
             exit;
         } else {
-            //ob_start( );
+            //ob_start();
             wp_redirect( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ems=wrong_email' ) );
             exit;
         }
@@ -37,7 +37,7 @@ if ( isset( $_POST['students'] ) && is_numeric( $_POST['students'] ) ) {
 /* Add new course class */
 if ( isset( $_POST['add_student_class'] ) ) {
     check_admin_referer( 'add_student_class' );
-    if ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+    if ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         sort( $_POST['course_classes'] );
         $groups = $_POST['course_classes'];
         update_post_meta( $course_id, 'course_classes', $groups );
@@ -47,7 +47,7 @@ if ( isset( $_POST['add_student_class'] ) ) {
 /* Delete a Class and Change student's group to Default */
 if ( isset( $_GET['delete_class'] ) ) {
 
-    if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+    if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $old_class = urldecode( $_GET['delete_class'] );
         if ( $old_class == 'Default' ) {
             $old_class = '';
@@ -63,8 +63,8 @@ if ( isset( $_GET['delete_class'] ) ) {
 
         $wp_user_search = new WP_User_Query( $args );
 
-        if ( $wp_user_search->get_results( ) ) {
-            foreach ( $wp_user_search->get_results( ) as $user ) {
+        if ( $wp_user_search->get_results() ) {
+            foreach ( $wp_user_search->get_results() as $user ) {
                 $student = new Student( $user->ID );
                 $student->update_student_class( $course_id, '' );
             }
@@ -91,7 +91,7 @@ if ( isset( $_GET['withdraw_all'] ) ) {
         die( __( 'Cheating huh?', 'cp' ) );
     }
 
-    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $old_class = urldecode( $_GET['withdraw_all'] );
 
         if ( $old_class == 'Default' ) {
@@ -108,8 +108,8 @@ if ( isset( $_GET['withdraw_all'] ) ) {
 
         $wp_user_search = new WP_User_Query( $args );
 
-        if ( $wp_user_search->get_results( ) ) {
-            foreach ( $wp_user_search->get_results( ) as $user ) {
+        if ( $wp_user_search->get_results() ) {
+            foreach ( $wp_user_search->get_results() as $user ) {
                 $student = new Student( $user->ID );
                 $student->withdraw_from_course( $course_id, '' );
             }
@@ -124,7 +124,7 @@ if ( isset( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) ) {
     if ( !isset( $_GET['cp_nonce'] ) || !wp_verify_nonce( $_GET['cp_nonce'], 'withdraw_student_'.$_GET['withdraw'] ) ) {
         die( __( 'Cheating huh?', 'cp' ) );
     }
-    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $student = new Student( $_GET['withdraw'] );
         $student->withdraw_from_course( $course_id );
     }
@@ -144,12 +144,12 @@ $col_sizes = array(
     '8', '26', '26', '27', '6'
 );
 
-if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
     $columns["delete"] = __( 'Withdraw', 'cp' );
     $col_sizes[] = '12';
 }
 
-$students = new Student_Search( );
+$students = new Student_Search();
 ?>
 <?php
 $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
@@ -182,11 +182,11 @@ $wp_user_search = new WP_User_Query( $args );
     $wp_user_search = new WP_User_Query( $args );
     ?>
     <div class="sidebar-name no-movecursor">
-        <h3 data-title="<?php _e( 'Default', 'cp' ); ?>"><?php _e( 'Default', 'cp' ); ?> <span><?php echo ( count( $wp_user_search->get_results( ) ) >= 1 ) ? '( ' . count( $wp_user_search->get_results( ) ) . ' )' : ''; ?></span></h3>
+        <h3 data-title="<?php _e( 'Default', 'cp' ); ?>"><?php _e( 'Default', 'cp' ); ?> <span><?php echo ( count( $wp_user_search->get_results() ) >= 1 ) ? '( ' . count( $wp_user_search->get_results() ) . ' )' : ''; ?></span></h3>
     </div>
 
     <?php
-    if ( $wp_user_search->get_results( ) ) {
+    if ( $wp_user_search->get_results() ) {
         ?>
         <div>
             <table cellspacing="0" class="widefat">
@@ -208,7 +208,7 @@ $wp_user_search = new WP_User_Query( $args );
                     <?php
                     $style = '';
 
-                    foreach ( $wp_user_search->get_results( ) as $user ) {
+                    foreach ( $wp_user_search->get_results() as $user ) {
 
                         $user_object = new Student( $user->ID );
                         $roles = $user_object->roles;
@@ -227,10 +227,10 @@ $wp_user_search = new WP_User_Query( $args );
                                     <i class="fa fa-user cp-move-icon remove-btn"></i>
                                 </a>
                             </td>
-                            <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+                            <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                                 <td class="<?php echo $style . ' edit-button-student-td'; ?>">
-                                    <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-                                        <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw=' . $user_object->ID ), 'withdraw_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return withdrawStudent( );">
+                                    <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+                                        <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw=' . $user_object->ID ), 'withdraw_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return withdrawStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a>
                                     <?php } ?>
@@ -245,13 +245,13 @@ $wp_user_search = new WP_User_Query( $args );
             </table>
 
             <div class="additional_class_actions">
-                <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-                    <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw_all=' . urlencode( ( isset( $class ) ? $class : '' ) ) ), 'withdraw_students', 'cp_nonce' ); ?>" onClick="return withdrawAllFromClass( );" title="<?php _e( 'Withdraw all students from the course', 'cp' ); ?>"><?php _e( 'Withdraw all students', 'cp' ); ?></a>
+                <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+                    <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw_all=' . urlencode( ( isset( $class ) ? $class : '' ) ) ), 'withdraw_students', 'cp_nonce' ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', 'cp' ); ?>"><?php _e( 'Withdraw all students', 'cp' ); ?></a>
                 <?php } ?>
             </div>
 
             <div class="additional_class_actions_add_student">
-                <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+                <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                     <form name="add_new_student_to_class_<?php
                     echo ( isset( $class ) ? $class : '' );
                     ;
@@ -259,7 +259,7 @@ $wp_user_search = new WP_User_Query( $args );
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php if ( $students->total_users > 0 ) { ?>
-                            <?php coursepress_students_drop_down( ); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+                            <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
                         <?php } ?>
                         <?php wp_nonce_field( 'student_details' ); ?>
                     </form>
@@ -281,12 +281,12 @@ $wp_user_search = new WP_User_Query( $args );
             <div class="additional_class_actions"></div>
 
             <div class="additional_class_actions_add_student">
-                <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+                <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                     <form name="add_new_student_to_class_<?php echo ( isset( $class ) ? $class : '' ); ?>" action="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=as' ) ?>" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php if ( $students->total_users > 0 ) { ?>
-                            <?php coursepress_students_drop_down( ); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+                            <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
                         <?php } ?>
                         <?php wp_nonce_field( 'student_details' ); ?>
                     </form>
@@ -313,10 +313,10 @@ $wp_user_search = new WP_User_Query( $args );
       $wp_user_search = new WP_User_Query( $args );
       ?>
       <div class="sidebar-name no-movecursor" area-selected="true">
-      <h3 data-title="<?php echo ( isset( $class ) ? $class : '' ); ?>"><?php echo ( isset( $class ) ? $class : '' ); ?> <span><?php echo ( count( $wp_user_search->get_results( ) ) >= 1 ) ? '( ' . count( $wp_user_search->get_results( ) ) . ' )' : ''; ?></span></h3>
+      <h3 data-title="<?php echo ( isset( $class ) ? $class : '' ); ?>"><?php echo ( isset( $class ) ? $class : '' ); ?> <span><?php echo ( count( $wp_user_search->get_results() ) >= 1 ) ? '( ' . count( $wp_user_search->get_results() ) . ' )' : ''; ?></span></h3>
       </div>
       <?php
-      if ( $wp_user_search->get_results( ) ) {
+      if ( $wp_user_search->get_results() ) {
       ?>
 
       <div>
@@ -339,7 +339,7 @@ $wp_user_search = new WP_User_Query( $args );
       <?php
       $style = '';
 
-      foreach ( $wp_user_search->get_results( ) as $user ) {
+      foreach ( $wp_user_search->get_results() as $user ) {
 
       $user_object = new Student( $user->ID );
       $roles = $user_object->roles;
@@ -357,10 +357,10 @@ $wp_user_search = new WP_User_Query( $args );
       <i class="fa fa-user cp-move-icon remove-btn"></i>
       </a>
       </td>
-      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
       <td class="<?php echo $style . ' edit-button-student-td'; ?>">
-      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw=<?php echo $user_object->ID; ?>" onclick="return withdrawStudent( );">
+      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw=<?php echo $user_object->ID; ?>" onclick="return withdrawStudent();">
       <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
       </a>
       <?php } ?>
@@ -376,25 +376,25 @@ $wp_user_search = new WP_User_Query( $args );
 
 
       <div class="additional_class_actions">
-      <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return deleteClass( );" title="<?php _e( 'Delete Class and move students to Default class', 'cp' ); ?>"><?php _e( 'Delete Class', 'cp' ); ?></a>
+      <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class and move students to Default class', 'cp' ); ?>"><?php _e( 'Delete Class', 'cp' ); ?></a>
       <?php } ?>
-      <?php if ( ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) && ( ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) ) ) { ?>
+      <?php if ( ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) && ( ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) ) ) { ?>
       |
       <?php } ?>
-      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw_all=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return withdrawAllFromClass( );" title="<?php _e( 'Withdraw all students from the course', 'cp' ); ?>"><?php _e( 'Withdraw all students', 'cp' ); ?></a>
+      <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw_all=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', 'cp' ); ?>"><?php _e( 'Withdraw all students', 'cp' ); ?></a>
       <?php } ?>
       </div>
 
 
       <div class="additional_class_actions_add_student">
-      <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+      <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
       <form name="add_new_student_to_class_<?php echo ( isset( $class ) ? $class : '' ); ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
       <input type="hidden" name="class_name" value="<?php echo ( isset( $class ) ? $class : '' ); ?>" />
       <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
       <?php if ( $students->total_users > 0 ) { ?>
-      <?php coursepress_students_drop_down( ); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+      <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
       <?php } ?>
       <?php wp_nonce_field( 'student_details' ); ?>
       <?php } ?>
@@ -416,18 +416,18 @@ $wp_user_search = new WP_User_Query( $args );
 
 
       <div class="additional_class_actions">
-      <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
-      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( $class ); ?>" onClick="return deleteClass( );" title="<?php _e( 'Delete Class', 'cp' ); ?>"><?php _e( 'Delete Class', 'cp' ); ?></a>
+      <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+      <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( $class ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class', 'cp' ); ?>"><?php _e( 'Delete Class', 'cp' ); ?></a>
       <?php } ?>
       </div>
 
 
       <div class="additional_class_actions_add_student">
-      <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+      <?php if ( ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
       <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
       <input type="hidden" name="class_name" value="<?php echo $class; ?>" />
       <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
-      <?php coursepress_students_drop_down( ); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+      <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
       <?php wp_nonce_field( 'student_details' ); ?>
       </form>
       <?php } ?>
@@ -455,7 +455,7 @@ $wp_user_search = new WP_User_Query( $args );
     wp_nonce_field( 'add_student_class' );
     ?>
 
-    <?php if ( ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) && 1 == 0 /* moving class feature for the next release */ ) { ?>
+    <?php if ( ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) && 1 == 0 /* moving class feature for the next release */ ) { ?>
         <div class="add-student-class-area">
             <h2><?php _e( 'New Class', 'cp' ); ?></h2>
             <label><?php _e( 'New Class name', 'cp' ); ?>
@@ -472,7 +472,7 @@ $wp_user_search = new WP_User_Query( $args );
 <?php
 if ( $course->details->enroll_type != 'manually' ) {//There shouldn't be invitations functionality if enrollment type is only Manually
     ?>
-    <?php if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+    <?php if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
         <div class="invite_student_area">
             <form name="student_invitation" method="post" class='student-invitation'>
                 <?php wp_nonce_field( 'student_invitation' ); ?>
@@ -496,7 +496,7 @@ if ( $course->details->enroll_type != 'manually' ) {//There shouldn't be invitat
 
 
 <?php /*
-  if ( ( current_user_can( 'coursepress_send_bulk_students_email_cap' ) ) || ( current_user_can( 'coursepress_send_bulk_my_students_email_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) { ?>
+  if ( ( current_user_can( 'coursepress_send_bulk_students_email_cap' ) ) || ( current_user_can( 'coursepress_send_bulk_my_students_email_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
   <div class="students_bulk_email_area">
   <form name="students_bulk_email" method="post">
   <?php wp_nonce_field( 'students_bulk_email' ); ?>

@@ -1,6 +1,6 @@
 <?php
 
-function first_install( ) {
+function first_install() {
     
     /*
      *
@@ -8,7 +8,7 @@ function first_install( ) {
      *  
      */
 
-    $course_author = get_current_user_ID( );
+    $course_author = get_current_user_ID();
     $course_title = 'Aenean auctor nec magna sed mattis';
     $course_excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius enim hendrerit tincidunt hendrerit. Duis sem justo, eleifend vel pellentesque ut, tristique eu quam.';
     $course_content = 'Fusce non consectetur magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse potenti. Curabitur placerat dolor cursus imperdiet tincidunt. Quisque velit lacus, egestas id velit iaculis, hendrerit accumsan lectus. Curabitur hendrerit ut dolor quis scelerisque. Mauris at diam eu ipsum consequat malesuada. Pellentesque nulla nisi, hendrerit id luctus quis, dignissim sit amet ipsum. Nam aliquam odio nibh, non accumsan metus tincidunt nec.
@@ -249,7 +249,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
              */
 
 
-            $unit_element = new Unit_Module( );
+            $unit_element = new Unit_Module();
 
             //Add an audio element
 
@@ -261,7 +261,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['loop'] = 'No';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'audio_module';
-            $data->metas = array( );
+            $data->metas = array();
             $data->metas['module_order'] = 1;
 
             $unit_element->update_module( $data );

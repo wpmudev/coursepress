@@ -10,7 +10,7 @@ $course_id = do_shortcode( '[get_parent_course_id]' );
 //redirect to the parent course page if not enrolled
 $coursepress->check_access( $course_id );
 
-add_thickbox( );
+add_thickbox();
 ?>
 
 <?php
@@ -20,14 +20,14 @@ do_shortcode( '[course_unit_archive_submenu]' );
 <div class="clearfix"></div>
 
 <?php
-if ( have_posts( ) ) {
-    while ( have_posts( ) ) {
-        the_post( );
+if ( have_posts() ) {
+    while ( have_posts() ) {
+        the_post();
         ?>
         <div class="workbook_units">
             <div class="unit_title">
-                <h3><?php the_title( ); ?>
-                    <span><?php echo do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID( ) . '"]' );?>% completed</span>
+                <h3><?php the_title(); ?>
+                    <span><?php echo do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]' );?>% completed</span>
                 </h3>
             </div>
             <div class="accordion-inner">
@@ -46,7 +46,7 @@ if ( have_posts( ) ) {
                     '15', '30', '15', '10', '13', '5'
                 );
 
-                $unit_module_main = new Unit_Module( );
+                $unit_module_main = new Unit_Module();
                 ?>
                 <table cellspacing="0" class="widefat shadow-table assessment-archive-table">
                     <thead>
@@ -64,17 +64,17 @@ if ( have_posts( ) ) {
                     </thead>
 
                     <?php
-                    $user_object = new Student( get_current_user_ID( ) );
+                    $user_object = new Student( get_current_user_ID() );
 
-                    $module = new Unit_Module( );
-                    $modules = $module->get_modules( get_the_ID( ) );
+                    $module = new Unit_Module();
+                    $modules = $module->get_modules( get_the_ID() );
 
                     $input_modules_count = 0;
 
                     foreach ( $modules as $mod ) {
                         $class_name = $mod->module_type;
                         if ( class_exists( $class_name ) ) {
-                            $module = new $class_name( );
+                            $module = new $class_name();
                             if ( $module->front_save ) {
                                 $input_modules_count++;
                             }
@@ -87,7 +87,7 @@ if ( have_posts( ) ) {
                         $class_name = $mod->module_type;
 
                         if ( class_exists( $class_name ) ) {
-                            $module = new $class_name( );
+                            $module = new $class_name();
 
                             if ( $module->front_save ) {
                                 $response = $module->get_response( $user_object->ID, $mod->ID );
@@ -141,7 +141,7 @@ if ( have_posts( ) ) {
                                                             <?php echo $mod->post_content; ?>
                                                         </div>
                                                     <?php } ?>
-                                                    <?php echo $module->get_response_form( get_current_user_ID( ), $mod->ID ); ?>
+                                                    <?php echo $module->get_response_form( get_current_user_ID(), $mod->ID ); ?>
 
                                                     <?php
                                                     if ( is_object( $response ) && !empty( $response ) ) {
@@ -215,7 +215,7 @@ if ( have_posts( ) ) {
                         <tr>
                             <td colspan="7">
                                 <?php
-                                $unit_grade = do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID( ) . '"]' );
+                                $unit_grade = do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]' );
                                 _e( '0 input elements in the selected unit.', 'cp' );
                                 ?>
                                 <?php

@@ -17,7 +17,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
         $page_num = 1;
     }
 
-    $unit_module_main = new Unit_Module( );
+    $unit_module_main = new Unit_Module();
 
     if ( isset( $_GET['response_id'] ) ) {
         $response_id = ( int )$_GET['response_id'];
@@ -56,7 +56,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
 
                             <?php
                             $mclass = $unit_module->module_type;
-                            $response = new $mclass( );
+                            $response = new $mclass();
 
                             echo $response->get_response_form( $user_id, $module_id );
                             echo $unit_module_main->get_module_response_comment_form( $response_id );
@@ -151,8 +151,8 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                             $count = $unit_module_main->get_ungraded_response_count( $course->ID );
 
                             $course_obj = new Course( $course->ID );
-                            $course_object = $course_obj->get_course( );
-                            if ( $course_obj->get_number_of_students( ) >= 1 ) {
+                            $course_object = $course_obj->get_course();
+                            if ( $course_obj->get_number_of_students() >= 1 ) {
                                 $courses_with_students++;
                                 ?>
                                 <option value="<?php echo $course->ID; ?>" <?php echo ( ( isset( $_GET['course_id'] ) && $_GET['course_id'] == $course->ID ) ? 'selected="selected"' : '' ); ?>><?php echo $course->post_title . ' ( ' . $count . ' )'; ?></option>
@@ -181,7 +181,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                     <?php
                     if ( $current_course_id !== 0 ) {//courses exists, at least one 
                         $course = new Course( $current_course_id );
-                        $course_units = $course->get_units( );
+                        $course_units = $course->get_units();
 
                         if ( count( $course_units ) >= 1 ) {
 
@@ -273,12 +273,12 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
 
                             //$student_search = new WP_User_Query( $args );
 
-                            $additional_url_args = array( );
+                            $additional_url_args = array();
                             $additional_url_args['course_id'] = $current_course_id;
                             $additional_url_args['classes'] = urlencode( $classes );
                             $additional_url_args['ungraded'] = ( isset( $_GET['ungraded'] ) ? $_GET['ungraded'] : 'no' );
 
-                            $student_search = new Student_Search( '', $page_num, array( ), $args, $additional_url_args );
+                            $student_search = new Student_Search( '', $page_num, array(), $args, $additional_url_args );
                             ?>
                             <div id="tabs-<?php echo $i; ?>">
                                 <h2><?php echo $current_unit->post_title; ?></h2>
@@ -315,11 +315,11 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                     </thead>
 
                                     <?php
-                                    foreach ( $student_search->get_results( ) as $user ) {
+                                    foreach ( $student_search->get_results() as $user ) {
                                         $style = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
                                         $user_object = new Student( $user->ID );
 
-                                        $module = new Unit_Module( );
+                                        $module = new Unit_Module();
                                         $modules = $module->get_modules( $current_unit->ID );
 
                                         $input_modules_count = 0;
@@ -327,7 +327,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                         foreach ( $modules as $mod ) {
                                             $class_name = $mod->module_type;
                                             if ( class_exists( $class_name ) ) {
-                                                $module = new $class_name( );
+                                                $module = new $class_name();
                                                 if ( $module->front_save ) {
                                                     $input_modules_count++;
                                                 }
@@ -340,7 +340,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                             $class_name = $mod->module_type;
 
                                             if ( class_exists( $class_name ) ) {
-                                                $module = new $class_name( );
+                                                $module = new $class_name();
 
                                                 if ( $module->front_save ) {
                                                     $response = $module->get_response( $user_object->ID, $mod->ID );
@@ -475,7 +475,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                 </table>
 
                                 <div class="tablenav">
-                                    <div class="tablenav-pages"><?php $student_search->page_links( ); ?></div>
+                                    <div class="tablenav-pages"><?php $student_search->page_links(); ?></div>
                                 </div><!--/tablenav-->
 
                             </div><!--a tab-->

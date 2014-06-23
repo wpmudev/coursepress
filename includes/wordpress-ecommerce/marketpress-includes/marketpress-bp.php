@@ -5,14 +5,14 @@ MarketPress BP Features
 
 class MarketPress_BP {
 
-  function __construct( ) {
+  function __construct() {
 
 
 	}
 
-  function install( ) {
+  function install() {
 
   }
 
 }
-$mp_bp = &new MarketPress_BP( );
+$mp_bp = &new MarketPress_BP();

@@ -30,7 +30,7 @@ if ( isset( $_POST['submit'] ) ) {
     
     $wp_user_search = new Instructor_Search( $usersearch, $page_num );
 
-    foreach ( $wp_user_search->get_results( ) as $user ) {
+    foreach ( $wp_user_search->get_results() as $user ) {
         $role = new WP_User( $user->ID );
         $user_capabilities = $role->wp_capabilities;
 

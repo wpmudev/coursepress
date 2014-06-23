@@ -36,9 +36,9 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
     /****** Below are the public methods you may overwrite via a plugin ******/
 
     /**
-     * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+     * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
      */
-    function on_creation( ) {
+    function on_creation() {
     }
 
     /**
@@ -63,7 +63,7 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
      * @param array $shipping_info. Contains shipping info and email in case you need it
      */
 		function process_payment_form( $cart, $shipping_info ) {
-      wp_die( __( "You must override the process_payment_form( ) method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
+      wp_die( __( "You must override the process_payment_form() method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
     }
     
     /**
@@ -74,7 +74,7 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
      * @param array $shipping_info. Contains shipping info and email in case you need it
      */
 		function confirm_payment_form( $cart, $shipping_info ) {
-      wp_die( __( "You must override the confirm_payment_form( ) method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
+      wp_die( __( "You must override the confirm_payment_form() method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
     }
 
     /**
@@ -88,14 +88,14 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
      * @param array $shipping_info. Contains shipping info and email in case you need it
      */
 		function process_payment( $cart, $shipping_info ) {
-      wp_die( __( "You must override the process_payment( ) method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
+      wp_die( __( "You must override the process_payment() method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
     }
 
     /**
      * Runs before page load incase you need to run any scripts before loading the success message page
      */
 		function order_confirmation( $order ) {
-      wp_die( __( "You must override the order_confirmation( ) method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
+      wp_die( __( "You must override the order_confirmation() method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
     }
 
 		/**
@@ -115,7 +115,7 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
 	   * Don't forget to return!
 	   */
 		function order_confirmation_msg( $content, $order ) {
-      wp_die( __( "You must override the order_confirmation_msg( ) method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
+      wp_die( __( "You must override the order_confirmation_msg() method in your {$this->admin_name} payment gateway plugin!", 'mp' ) );
     }
 		
 		/**
@@ -140,14 +140,14 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
      * Use to handle any payment returns to the ipn_url. Do not display anything here. If you encounter errors
      *  return the proper headers. Exits after.
      */
-		function process_ipn_return( ) {
+		function process_ipn_return() {
 
     }
 		
 		/****** Do not override any of these private methods please! ******/
 		
 		//populates ipn_url var
-		function _generate_ipn_url( ) {
+		function _generate_ipn_url() {
 			global $mp;
       $this->ipn_url = home_url( $mp->get_setting( 'slugs->store' ) . '/payment-return/' . $this->plugin_name );
     }
@@ -173,8 +173,8 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
       return $content;
     }
     
-    //calls the order_confirmation( ) method on the correct page
-    function _checkout_confirmation_hook( ) {
+    //calls the order_confirmation() method on the correct page
+    function _checkout_confirmation_hook() {
       global $wp_query, $mp;
 
       if ( $wp_query->query_vars['pagename'] == 'cart' ) {
@@ -183,13 +183,13 @@ if( !class_exists( 'MP_Gateway_API' ) ) {
       }
     }
     
-    //DO NOT override the construct! instead use the on_creation( ) method.
-    function __construct( ) {
+    //DO NOT override the construct! instead use the on_creation() method.
+    function __construct() {
     
-      $this->_generate_ipn_url( );
+      $this->_generate_ipn_url();
       
       //run plugin construct
-      $this->on_creation( );
+      $this->on_creation();
       
       //check required vars
       if ( empty( $this->plugin_name ) || empty( $this->admin_name ) || empty( $this->public_name ) )
@@ -224,7 +224,7 @@ function mp_register_gateway_plugin( $class_name, $plugin_name, $admin_name, $gl
   global $mp_gateway_plugins;
   
   if ( !is_array( $mp_gateway_plugins ) ) {
-		$mp_gateway_plugins = array( );
+		$mp_gateway_plugins = array();
 	}
 	
 	if ( class_exists( $class_name ) ) {

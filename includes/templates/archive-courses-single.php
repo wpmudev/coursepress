@@ -1,12 +1,12 @@
 <?php
 global $post;
 
-$course = new Course( get_the_ID( ) );
+$course = new Course( get_the_ID() );
 $course_language = $course->details->course_language;
 ?>
 
 <?php
-$course_thumbnail = $course->get_course_thumbnail( );
+$course_thumbnail = $course->get_course_thumbnail();
 if ( $course_thumbnail ) {
     ?>
     <figure>
@@ -31,5 +31,5 @@ if ( $course_thumbnail ) {
     <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
         <span class="course-lang"><?php echo $course_language; ?></span>
     <?php } ?>
-    <a class="go-to-course-button" href="<?php the_permalink( ); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></a>
+    <a class="go-to-course-button" href="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></a>
 </div>

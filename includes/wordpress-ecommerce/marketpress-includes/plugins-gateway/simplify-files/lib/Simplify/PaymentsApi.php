@@ -46,11 +46,11 @@ class Simplify_PaymentsApi
      */
     static public function createObject( $object, $publicKey = null, $privateKey = null )
     {
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute( "create", $object, $publicKey, $privateKey );
 
-        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz( ) );
+        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz() );
 
         return $o;
     }
@@ -60,10 +60,10 @@ class Simplify_PaymentsApi
      */
     static public function findObject( $object, $publicKey = null, $privateKey = null )
     {
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute( "show", $object, $publicKey, $privateKey );
-        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz( ) );
+        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz() );
 
         return $o;
     }
@@ -72,10 +72,10 @@ class Simplify_PaymentsApi
      * @ignore
      */
     static public function updateObject( $object, $publicKey = null, $privateKey = null ) {
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute( "update", $object, $publicKey, $privateKey );
-        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz( ) );
+        $o = $paymentsApi->convertFromHashToObject( $jsonObject, $object->getClazz() );
 
         return $o;
     }
@@ -84,7 +84,7 @@ class Simplify_PaymentsApi
      * @ignore
      */
     static public function deleteObject( $object, $publicKey = null, $privateKey = null ) {
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->execute( "delete", $object, $publicKey, $privateKey );
 
@@ -110,13 +110,13 @@ class Simplify_PaymentsApi
             }
         }
 
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
         $jsonObject = $paymentsApi->execute( "list", $object, $publicKey, $privateKey );
 
-        $ret = new Simplify_ResourceList( );
+        $ret = new Simplify_ResourceList();
         if ( array_key_exists( 'list', $jsonObject ) & is_array( $jsonObject['list'] ) ) {
             foreach ( $jsonObject['list'] as $obj ) {
-                array_push( $ret->list, $paymentsApi->convertFromHashToObject( $obj, $object->getClazz( ) ) );
+                array_push( $ret->list, $paymentsApi->convertFromHashToObject( $obj, $object->getClazz() ) );
             }
             $ret->total = $jsonObject['total'];
         }
@@ -134,7 +134,7 @@ class Simplify_PaymentsApi
         if ( "stdClass" != $toClazz && class_exists( "{$toClazz}", false ) ) {
             $clazz = "{$toClazz}";
         }
-        $object = new $clazz( );
+        $object = new $clazz();
 
         foreach ( $from as $key => $value ) {
             if ( is_array( $value ) && count( array_keys( $value ) ) ) {
@@ -161,9 +161,9 @@ class Simplify_PaymentsApi
         if ( $this->isLiveKey( $publicKey ) ) {
             $url = $this->fixUrl( Simplify::$apiBaseLiveUrl );
         }
-        $url = $this->fixUrl( $url ) . urlencode( lcfirst( $object->getClazz( ) ) ) . '/';
+        $url = $this->fixUrl( $url ) . urlencode( lcfirst( $object->getClazz() ) ) . '/';
 
-        $queryParams = array( );
+        $queryParams = array();
         if ( $action == "show" ) {
             $url .= urlencode( $object->id );
         } elseif ( $action == "list" ) {
@@ -209,7 +209,7 @@ class Simplify_PaymentsApi
      */
     public function execute( $action, $object, $publicKey = null, $privateKey = null )
     {
-        $http = new Simplify_HTTP( );
+        $http = new Simplify_HTTP();
 
         if ( $publicKey == null ) {
             $publicKey = Simplify::$publicKey;
@@ -220,7 +220,7 @@ class Simplify_PaymentsApi
         }
 
         return $http->request( $this->getUrl( $publicKey, $action, $object ), $this->getMethod( $action ),
-                              $publicKey, $privateKey, json_encode( $object->getProperties( ) ) );
+                              $publicKey, $privateKey, json_encode( $object->getProperties() ) );
     }
 
     /**
@@ -228,7 +228,7 @@ class Simplify_PaymentsApi
      */
     public function jwsDecode( $hash, $publicKey = null, $privateKey = null )
     {
-        $http = new Simplify_HTTP( );
+        $http = new Simplify_HTTP();
 
         if ( $publicKey == null ) {
             $publicKey = Simplify::$publicKey;

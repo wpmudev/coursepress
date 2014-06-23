@@ -7,10 +7,10 @@ $discussion_id = '';
 
 if ( isset( $_GET['discussion_id'] ) ) {
     $discussion = new Discussion( $_GET['discussion_id'] );
-    $discussion_details = $discussion->get_discussion( );
+    $discussion_details = $discussion->get_discussion();
     $discussion_id = ( int )$_GET['discussion_id'];
 } else {
-    $discussion = new Discussion( );
+    $discussion = new Discussion();
     $discussion_id = 0;
 }
 
@@ -20,10 +20,10 @@ if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'
 
     check_admin_referer( 'discussion_details' );
 
-    $new_post_id = $discussion->update_discussion( );
+    $new_post_id = $discussion->update_discussion();
 
     if ( $new_post_id !== 0 ) {
-        ob_start( );
+        ob_start();
         wp_redirect( admin_url( 'admin.php?page=' . $page . '&discussion_id=' . $new_post_id . '&action=edit' ) );
         exit;
     } else {
@@ -110,7 +110,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 
                                 <div class="buttons">
                                     <?php
-                                    if ( ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id( ) ) ) {//do not show anything
+                                    if ( ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id() ) ) {//do not show anything
                                         ?>
                                         <input type="submit" value = "<?php ( $discussion_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class = "button-primary" />
                                         <?php

@@ -45,7 +45,7 @@ class Simplify_Subscription extends Simplify_Object {
      */
     static public function createSubscription( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Subscription( );
+        $instance = new Simplify_Subscription();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -82,7 +82,7 @@ class Simplify_Subscription extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listSubscription( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Subscription( );
+            $val = new Simplify_Subscription();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -98,7 +98,7 @@ class Simplify_Subscription extends Simplify_Object {
          * @return    Subscription a Subscription object
          */
         static public function findSubscription( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Subscription( );
+            $val = new Simplify_Subscription();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -142,7 +142,7 @@ class Simplify_Subscription extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Subscription";
     }
 }

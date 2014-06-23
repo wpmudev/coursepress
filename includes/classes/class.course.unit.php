@@ -9,7 +9,7 @@ if ( !class_exists( 'Unit' ) ) {
 
         var $id = '';
         var $output = 'OBJECT';
-        var $unit = array( );
+        var $unit = array();
         var $details;
         var $course_id = '';
 
@@ -18,14 +18,14 @@ if ( !class_exists( 'Unit' ) ) {
             $this->output = $output;
             $this->details = get_post( $this->id, $this->output );
 
-            $this->course_id = $this->get_parent_course_id( );
+            $this->course_id = $this->get_parent_course_id();
         }
 
         function Unit( $id = '', $output = 'OBJECT' ) {
             $this->__construct( $id, $output );
         }
 
-        function get_unit( ) {
+        function get_unit() {
 
             $unit = get_post( $this->id, $this->output );
 
@@ -109,7 +109,7 @@ if ( !class_exists( 'Unit' ) ) {
             return $previous_unit;
         }
 
-        function update_unit( ) {
+        function update_unit() {
             global $user_id, $last_inserted_unit_id;
 
             $post_status = 'private';
@@ -192,8 +192,8 @@ if ( !class_exists( 'Unit' ) ) {
             wp_update_post( $post );
         }
 
-        function can_show_permalink( ) {
-            $unit = $this->get_unit( );
+        function can_show_permalink() {
+            $unit = $this->get_unit();
             if ( $unit->post_status !== 'draft' ) {
                 return true;
             } else {
@@ -210,9 +210,9 @@ if ( !class_exists( 'Unit' ) ) {
             }
 
             $course = new Course( $course_id );
-            $course = $course->get_course( );
+            $course = $course->get_course();
 
-            $unit_permalink = trailingslashit( site_url( ) . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name );
+            $unit_permalink = trailingslashit( site_url() . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name );
             return $unit_permalink;
         }
 

@@ -12,7 +12,7 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
     //public name of your method, for lists and such.
     var $public_name = '';
 
-    //set to true if you need to use the shipping_metabox( ) method to add per-product shipping options
+    //set to true if you need to use the shipping_metabox() method to add per-product shipping options
     var $use_metabox = false;
 
 		//set to true if you want to add per-product weight shipping field
@@ -22,9 +22,9 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
     /****** Below are the public methods you may overwrite via a plugin ******/
 
     /**
-     * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+     * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
      */
-    function on_creation( ) {
+    function on_creation() {
 
 		}
 
@@ -53,7 +53,7 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
      * Use this to process any additional field you may add. Use the $_POST global,
      *  and be sure to save it to both the cookie and usermeta if logged in.
      */
-		function process_shipping_form( ) {
+		function process_shipping_form() {
 
     }
 
@@ -84,7 +84,7 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
 		function shipping_metabox( $shipping_meta, $settings ) {
       //it is required to override this method if $use_metabox is set to true
       if ( $this->use_metabox )
-        wp_die( __( "You must override the shipping_metabox( ) method in your {$this->public_name} shipping plugin if \$use_metabox is set to true!", 'mp' ) );
+        wp_die( __( "You must override the shipping_metabox() method in your {$this->public_name} shipping plugin if \$use_metabox is set to true!", 'mp' ) );
     }
 
     /**
@@ -116,7 +116,7 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
      */
 		function calculate_shipping( $price, $total, $cart, $address1, $address2, $city, $state, $zip, $country, $selected_option ) {
       //it is required to override this method
-      wp_die( __( "You must override the calculate_shipping( ) method in your {$this->public_name} shipping plugin!", 'mp' ) );
+      wp_die( __( "You must override the calculate_shipping() method in your {$this->public_name} shipping plugin!", 'mp' ) );
     }
 
 		/**
@@ -135,7 +135,7 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
 			*/
 		function shipping_options( $cart, $address1, $address2, $city, $state, $zip, $country ) {
 
-			$shipping_options = array( );
+			$shipping_options = array();
 
       return $shipping_options;
     }
@@ -185,11 +185,11 @@ if ( !class_exists( 'MP_Shipping_API' ) ) {
 			return $shipping_meta;
     }
 
-    //DO NOT override the construct! instead use the on_creation( ) method.
-    function __construct( ) {
+    //DO NOT override the construct! instead use the on_creation() method.
+    function __construct() {
       global $mp;
 
-			$this->on_creation( );
+			$this->on_creation();
 
       add_filter( 'mp_checkout_before_shipping', array( &$this, 'before_shipping_form' ) );
       add_filter( 'mp_checkout_after_shipping', array( &$this, 'after_shipping_form' ) );
@@ -231,7 +231,7 @@ function mp_register_shipping_plugin( $class_name, $plugin_name, $public_name, $
   global $mp_shipping_plugins;
 
   if( !is_array( $mp_shipping_plugins ) ) {
-		$mp_shipping_plugins = array( );
+		$mp_shipping_plugins = array();
 	}
 
 	if( class_exists( $class_name ) ) {
@@ -246,7 +246,7 @@ function mp_register_shipping_plugin( $class_name, $plugin_name, $public_name, $
  */
 class MP_Shipping_Handler {
 
-	function __construct( ) {
+	function __construct() {
 		add_filter( 'mp_checkout_shipping_field', array( &$this, 'extra_shipping_box' ), 99 ); //run last
 		add_filter( 'mp_checkout_shipping_field_readonly', array( &$this, 'extra_shipping_box_label' ), 99 ); //run last
 		add_action( 'mp_shipping_process', array( &$this, 'process_shipping_form' ) );
@@ -273,7 +273,7 @@ class MP_Shipping_Handler {
 				$content .= '<option value="' . $plugin->plugin_name . '"'.selected( $shipping_option, $plugin->plugin_name, false ).'>' . esc_attr( $plugin->public_name ) . '</option>';
 			}
 			$content .= '</select>';
-			$content .= ' <span id="mp-shipping-select-holder">' . $this->shipping_sub_options( ).'</span>';
+			$content .= ' <span id="mp-shipping-select-holder">' . $this->shipping_sub_options().'</span>';
 			$content .= '</td></tr>';
 		}
 		return $content;
@@ -296,21 +296,21 @@ class MP_Shipping_Handler {
 		return $content;
 	}
 
-	function process_shipping_form( ) {
+	function process_shipping_form() {
 		if ( isset( $_POST['shipping_option'] ) )
 			$_SESSION['mp_shipping_info']['shipping_option'] = trim( $_POST['shipping_option'] );
 		if ( isset( $_POST['shipping_sub_option'] ) )
 			$_SESSION['mp_shipping_info']['shipping_sub_option'] = trim( $_POST['shipping_sub_option'] );
 	}
 
-	function shipping_sub_options( ) {
+	function shipping_sub_options() {
 		global $mp_shipping_active_plugins, $mp;
 
 		$first = reset( $mp_shipping_active_plugins );
 		$selected = isset( $_POST['shipping_option'] ) ? $_POST['shipping_option'] : ( isset( $_SESSION['mp_shipping_info']['shipping_option'] ) ? $_SESSION['mp_shipping_info']['shipping_option'] : $first->plugin_name );
 
 		//get address
-    $meta = get_user_meta( get_current_user_id( ), 'mp_shipping_info', true );
+    $meta = get_user_meta( get_current_user_id(), 'mp_shipping_info', true );
 		$address1 = isset( $_POST['address1'] ) ? trim( stripslashes( $_POST['address1'] ) ) : ( isset( $_SESSION['mp_shipping_info']['address1'] ) ? $_SESSION['mp_shipping_info']['address1'] : $meta['address1'] );
 		$address2 = isset( $_POST['address2'] ) ? trim( stripslashes( $_POST['address2'] ) ) : ( isset( $_SESSION['mp_shipping_info']['address2'] ) ? $_SESSION['mp_shipping_info']['address2'] : $meta['address2'] );
 		$city = isset( $_POST['city'] ) ? trim( stripslashes( $_POST['city'] ) ) : ( isset( $_SESSION['mp_shipping_info']['city'] ) ? $_SESSION['mp_shipping_info']['city'] : $meta['city'] );
@@ -321,7 +321,7 @@ class MP_Shipping_Handler {
 		//Pick up any service specific fields
 		do_action( 'mp_shipping_process' );
 
-		$options = apply_filters( "mp_shipping_options_$selected", $mp->get_cart_contents( ), $address1, $address2, $city, $state, $zip, $country );
+		$options = apply_filters( "mp_shipping_options_$selected", $mp->get_cart_contents(), $address1, $address2, $city, $state, $zip, $country );
 
 		$content = '';
 		if ( count( $options ) && ! array_key_exists( 'error', $options ) ) {  //If one of the keys is 'error' then it contains an error message from calculated rates.
@@ -361,7 +361,7 @@ class MP_Shipping_Handler {
 			return $content;
 	}
 
-	function filter_method_lbl( ) {
+	function filter_method_lbl() {
 		global $mp_shipping_active_plugins;
 
 		if ( isset( $_SESSION['mp_shipping_info']['shipping_option'] ) && isset( $mp_shipping_active_plugins[$_SESSION['mp_shipping_info']['shipping_option']] ) ) {
@@ -374,7 +374,7 @@ class MP_Shipping_Handler {
 		?>
 		<p>
 		<label><?php _e( 'Extra Shipping Cost', 'mp' ); ?>:<br />
-		<?php echo $mp->format_currency( ); ?><input type="text" size="6" id="mp_extra_shipping_cost" name="mp_extra_shipping_cost" value="<?php echo !empty( $shipping_meta['extra_cost'] ) ? $mp->display_currency( $shipping_meta['extra_cost'] ) : '0.00'; ?>" />
+		<?php echo $mp->format_currency(); ?><input type="text" size="6" id="mp_extra_shipping_cost" name="mp_extra_shipping_cost" value="<?php echo !empty( $shipping_meta['extra_cost'] ) ? $mp->display_currency( $shipping_meta['extra_cost'] ) : '0.00'; ?>" />
 		</label>
 		</p>
 		<?php
@@ -386,4 +386,4 @@ class MP_Shipping_Handler {
 		return $shipping_meta;
 	}
 }
-$mpsh = new MP_Shipping_Handler( );
+$mpsh = new MP_Shipping_Handler();

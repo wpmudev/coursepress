@@ -9,9 +9,9 @@ if ( !class_exists( 'Student_Search' ) ) {
 
         var $users_per_page = 25;
         var $search_errors = false;
-        var $additional_url_args = array( );
+        var $additional_url_args = array();
 
-        function __construct( $search_term = '', $page_num = '', $search_args = array( ), $meta_args = array( ), $additional_url_args = array( ) ) {
+        function __construct( $search_term = '', $page_num = '', $search_args = array(), $meta_args = array(), $additional_url_args = array() ) {
 
             $this->additional_url_args = $additional_url_args;
 
@@ -45,10 +45,10 @@ if ( !class_exists( 'Student_Search' ) ) {
                 'meta_key' => $search_args['meta_key'],
                 'meta_value' => $search_args['meta_value'],
                 'meta_compare' => '',
-                'include' => array( ),
-                'exclude' => array( ),
+                'include' => array(),
+                'exclude' => array(),
                 'search' => '',
-                'search_columns' => array( ),
+                'search_columns' => array(),
                 'orderby' => 'ID',
                 'order' => 'ASC',
                 'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
@@ -58,18 +58,18 @@ if ( !class_exists( 'Student_Search' ) ) {
                 'who' => ''
             ) );
 
-            $this->prepare_query( );
-            $this->query( );
-            $this->do_paging( );
+            $this->prepare_query();
+            $this->query();
+            $this->do_paging();
         }
 
         function Student_Search( $search_term = '', $page_num = '' ) {
             $this->__construct( $search_term, $page_num );
         }
 
-        function do_paging( ) {
+        function do_paging() {
 
-            $this->total_users_for_query = $this->get_total( );
+            $this->total_users_for_query = $this->get_total();
 
             if ( $this->total_users_for_query > $this->users_per_page ) { // pagination required
                 if ( !empty( $this->search_term ) ) {
@@ -95,9 +95,9 @@ if ( !class_exists( 'Student_Search' ) ) {
             }
         }
 
-        function page_links( ) {
-            $pagination = new CoursePress_Pagination( );
-            $pagination->Items( $this->get_total( ) );
+        function page_links() {
+            $pagination = new CoursePress_Pagination();
+            $pagination->Items( $this->get_total() );
             $pagination->limit( $this->users_per_page );
             $pagination->parameterName = 'page_num';
             $pagination->target( "admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) );
@@ -105,10 +105,10 @@ if ( !class_exists( 'Student_Search' ) ) {
             $pagination->nextIcon( '&#9658;' );
             $pagination->prevIcon( '&#9668;' );
             $pagination->items_title = __( 'students', 'cp' );
-            $pagination->show( );
+            $pagination->show();
         }
 
-        function prepare_query( $query = Array( ) ) {
+        function prepare_query( $query = Array() ) {
             global $wpdb;
 
             $qv = & $this->query_vars;
@@ -116,7 +116,7 @@ if ( !class_exists( 'Student_Search' ) ) {
             if ( is_array( $qv['fields'] ) ) {
                 $qv['fields'] = array_unique( $qv['fields'] );
 
-                $this->query_fields = array( );
+                $this->query_fields = array();
                 foreach ( $qv['fields'] as $field )
                     $this->query_fields[] = $wpdb->users . '.' . esc_sql( $field );
                 $this->query_fields = implode( ',', $this->query_fields );
@@ -186,7 +186,7 @@ if ( !class_exists( 'Student_Search' ) ) {
                 if ( $wild )
                     $search = trim( $search, '*' );
 
-                $search_columns = array( );
+                $search_columns = array();
                 if ( $qv['search_columns'] )
                     $search_columns = array_intersect( $qv['search_columns'], array( 'ID', 'user_login', 'user_email', 'user_url', 'user_nicename', 'display_name' ) );
                 if ( !$search_columns ) {
@@ -216,8 +216,8 @@ if ( !class_exists( 'Student_Search' ) ) {
             
             $role = trim( $qv['role'] );
 
-            if ( $blog_id && ( $role || is_multisite( ) ) ) {
-                $cap_meta_query = array( );
+            if ( $blog_id && ( $role || is_multisite() ) ) {
+                $cap_meta_query = array();
                 $cap_meta_query['key'] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
 
                 if ( $role ) {
@@ -228,7 +228,7 @@ if ( !class_exists( 'Student_Search' ) ) {
                 $qv['meta_query'][] = $cap_meta_query;
             }
 
-            $meta_query = new WP_Meta_Query( );
+            $meta_query = new WP_Meta_Query();
             $meta_query->parse_query_vars( $qv );
 
             if ( !empty( $meta_query->queries ) ) {

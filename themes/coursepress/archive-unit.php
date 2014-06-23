@@ -10,11 +10,11 @@ $course_id = do_shortcode( '[get_parent_course_id]' );
 //redirect to the parent course page if not enrolled
 $coursepress->check_access( $course_id );
 
-get_header( );
+get_header();
 ?>
 <script>
     jQuery( function( $ ) {
-        jQuery( ".knob" ).knob( );
+        jQuery( ".knob" ).knob();
     } );
 </script>
 <div id="primary" class="content-area">
@@ -32,10 +32,10 @@ get_header( );
         <div class="clearfix"></div>
 
         <ul class="units-archive-list">
-            <?php if ( have_posts( ) ) { ?>
+            <?php if ( have_posts() ) { ?>
                 <?php
-                while ( have_posts( ) ) {
-                    the_post( );
+                while ( have_posts() ) {
+                    the_post();
 
                     $additional_class = '';
                     $additional_li_class = '';
@@ -59,7 +59,7 @@ get_header( );
                                     <input class="knob" data-fgColor="#24bde6" data-bgColor="#e0e6eb" data-thickness=".35" data-width="70" data-height="70" data-readOnly=true value="<?php echo do_shortcode( '[course_unit_details field="percent"]' ); ?>">
                                 </a>
                             <?php } ?>
-                            <a class="unit-archive-single-title" href="<?php the_permalink( ); ?>" rel="bookmark"><?php the_title( ); ?></a>
+                            <a class="unit-archive-single-title" href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
                             <?php if ( $input_modules_count > 0 ) { ?>
                                 <span class="unit-archive-single-module-status"><?php if ( $is_unit_available ) {
                         echo do_shortcode( '[course_unit_details field="student_module_responses" additional="mandatory"]' ); ?> <?php _e( 'of', 'coursepress' ); ?> <?php echo do_shortcode( '[course_unit_details field="mandatory_input_modules_count"]' ); ?> <?php _e( 'mandatory elements completed', 'coursepress' );
@@ -87,4 +87,4 @@ get_header( );
     </main><!-- #main -->
 </div><!-- #primary -->
 <?php get_sidebar( 'footer' ); ?>
-<?php get_footer( ); ?>
+<?php get_footer(); ?>

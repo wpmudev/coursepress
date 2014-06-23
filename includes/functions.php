@@ -1,6 +1,6 @@
 <?php
 
-function non_nonce_url( ) {
+function non_nonce_url() {
     
 }
 
@@ -24,18 +24,18 @@ function preg_array_key_exists( $pattern, $array ) {
     return ( int ) preg_grep( $pattern, $keys );
 }
 
-function cp_get_fragment( ) {
+function cp_get_fragment() {
     $url = parse_url( $_SERVER["REQUEST_URI"] );
     return $url["fragment"];
 }
 
-function is_chat_plugin_active( ) {
+function is_chat_plugin_active() {
     $plugins = get_option( 'active_plugins' );
 
-    if ( is_multisite( ) ) {
+    if ( is_multisite() ) {
         $active_sitewide_plugins = get_site_option( "active_sitewide_plugins" );
     } else {
-        $active_sitewide_plugins = array( );
+        $active_sitewide_plugins = array();
     }
 
     $required_plugin = 'wordpress-chat/wordpress-chat.php';
@@ -53,9 +53,9 @@ function is_chat_plugin_active( ) {
 function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_last_page = false ) {
     global $wp, $wp_query, $paged, $coursepress_modules;
 
-    $modules_class = new Unit_Module( );
+    $modules_class = new Unit_Module();
 
-    if ( !isset( $unit_id ) ) {// || !is_singular( )
+    if ( !isset( $unit_id ) ) {// || !is_singular()
         echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"></div>';
         return;
     }
@@ -93,9 +93,9 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
 function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
     global $wp, $wp_query, $paged, $coursepress_modules;
 
-    $modules_class = new Unit_Module( );
+    $modules_class = new Unit_Module();
 
-    if ( !isset( $unit_id ) || !is_singular( ) ) {
+    if ( !isset( $unit_id ) || !is_singular() ) {
         return;
     }
 
@@ -128,7 +128,7 @@ function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
     echo '<br clear="all"><div class="navigation"><ul>' . "\n";
 
     /** 	Previous Post Link */
-    if ( get_previous_posts_link( ) )
+    if ( get_previous_posts_link() )
         printf( '<li>%s</li>' . "\n", get_previous_posts_link( '<span class="meta-nav">&larr;</span>' ) );
 
     /** 	Link to first page, plus ellipses if necessary */
@@ -187,31 +187,31 @@ function coursepress_unit_pages( $unit_id ) {
 
 //get_site_option instead of get_option
 
-function coursepress_send_email( $email_args = array( ) ) {
+function coursepress_send_email( $email_args = array() ) {
 
     if ( $email_args['email_type'] == 'student_registration' ) {
         global $course_slug;
         $student_email = $email_args['student_email'];
-        $subject = coursepress_get_registration_email_subject( );
-        $courses_address = trailingslashit( site_url( ) ) . trailingslashit( $course_slug );
+        $subject = coursepress_get_registration_email_subject();
+        $courses_address = trailingslashit( site_url() ) . trailingslashit( $course_slug );
 
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
-        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo( ), wp_login_url( ), $courses_address, site_url( ) );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url() );
 
-        $message = coursepress_get_registration_content_email( );
+        $message = coursepress_get_registration_content_email();
 
         $message = str_replace( $tags, $tags_replaces, $message );
 
         add_filter( 'wp_mail_from', 'my_mail_from_function' );
 
         function my_mail_from_function( $email ) {
-            return coursepress_get_registration_from_email( );
+            return coursepress_get_registration_from_email();
         }
 
         add_filter( 'wp_mail_from_name', 'my_mail_from_name_function' );
 
         function my_mail_from_name_function( $name ) {
-            return coursepress_get_registration_from_name( );
+            return coursepress_get_registration_from_name();
         }
 
     }
@@ -226,14 +226,14 @@ function coursepress_send_email( $email_args = array( ) ) {
         }
 
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE' );
-        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], $course->details->post_title, $course->details->post_excerpt, $course->get_permalink( ), site_url( ), $course->details->passcode );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], $course->details->post_title, $course->details->post_excerpt, $course->get_permalink(), site_url(), $course->details->passcode );
 
         if ( $email_args['enroll_type'] == 'passcode' ) {
-            $message = coursepress_get_invitation_content_passcode_email( );
-            $subject = coursepress_get_invitation_passcode_email_subject( );
+            $message = coursepress_get_invitation_content_passcode_email();
+            $subject = coursepress_get_invitation_passcode_email_subject();
         } else {
-            $message = coursepress_get_invitation_content_email( );
-            $subject = coursepress_get_invitation_email_subject( );
+            $message = coursepress_get_invitation_content_email();
+            $subject = coursepress_get_invitation_email_subject();
         }
 
         $message = str_replace( $tags, $tags_replaces, $message );
@@ -241,16 +241,44 @@ function coursepress_send_email( $email_args = array( ) ) {
         add_filter( 'wp_mail_from', 'my_mail_from_function' );
 
         function my_mail_from_function( $email ) {
-            return coursepress_get_invitation_passcode_from_email( );
+            return coursepress_get_invitation_passcode_from_email();
         }
 
         add_filter( 'wp_mail_from_name', 'my_mail_from_name_function' );
 
         function my_mail_from_name_function( $name ) {
-            return coursepress_get_invitation_passcode_from_name( );
+            return coursepress_get_invitation_passcode_from_name();
         }
 
     }
+	
+	if ( 'instructor_invitation' == $email_args['email_type'] ) {		
+		cp_write_log('TESTING: Instructor email.');
+        // global $course_slug;
+        // $student_email = $email_args['student_email'];
+        // $subject = coursepress_get_registration_email_subject();
+        // $courses_address = trailingslashit( site_url() ) . trailingslashit( $course_slug );
+        //
+        // $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
+        // $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url() );
+        //
+        // $message = coursepress_get_registration_content_email();
+        //
+        // $message = str_replace( $tags, $tags_replaces, $message );
+        //
+        // add_filter( 'wp_mail_from', 'my_mail_from_function' );
+        //
+        // function my_mail_from_function( $email ) {
+        //     return coursepress_get_registration_from_email();
+        // }
+        //
+        // add_filter( 'wp_mail_from_name', 'my_mail_from_name_function' );
+        //
+        // function my_mail_from_name_function( $name ) {
+        //     return coursepress_get_registration_from_name();
+        // }
+		exit;
+	}
 
     add_filter( 'wp_mail_content_type', 'set_content_type' );
 
@@ -269,19 +297,19 @@ function coursepress_send_email( $email_args = array( ) ) {
 
 /* Get Student Invitation with Passcode to a Course E-mail data */
 
-function coursepress_get_invitation_passcode_from_name( ) {
+function coursepress_get_invitation_passcode_from_name() {
     return get_option( 'invitation_passcode_from_name', get_option( 'blogname' ) );
 }
 
-function coursepress_get_invitation_passcode_from_email( ) {
+function coursepress_get_invitation_passcode_from_email() {
     return get_option( 'invitation_passcode_from_email', get_option( 'admin_email' ) );
 }
 
-function coursepress_get_invitation_passcode_email_subject( ) {
+function coursepress_get_invitation_passcode_email_subject() {
     return get_option( 'invitation_passcode_email_subject', 'Invitation to a Course ( Psss...for selected ones only )' );
 }
 
-function coursepress_get_invitation_content_passcode_email( ) {
+function coursepress_get_invitation_content_passcode_email() {
     $default_invitation_content_passcode_email = sprintf( __( 'Hi %1$s,
 
 we would like to invite you to participate in the course: "%2$s"
@@ -303,19 +331,19 @@ Yours sincerely,
 
 /* Get Student Invitation to a Course E-mail data */
 
-function coursepress_get_invitation_from_name( ) {
+function coursepress_get_invitation_from_name() {
     return get_option( 'invitation_from_name', get_option( 'blogname' ) );
 }
 
-function coursepress_get_invitation_from_email( ) {
+function coursepress_get_invitation_from_email() {
     return get_option( 'invitation_from_email', get_option( 'admin_email' ) );
 }
 
-function coursepress_get_invitation_email_subject( ) {
+function coursepress_get_invitation_email_subject() {
     return get_option( 'invitation_email_subject', 'Invitation to a Course' );
 }
 
-function coursepress_get_invitation_content_email( ) {
+function coursepress_get_invitation_content_email() {
     $default_invitation_content_email = sprintf( __( 'Hi %1$s,
 
 we would like to invite you to participate in the course: "%2$s"
@@ -334,19 +362,19 @@ Yours sincerely,
 
 /* Get registration email data */
 
-function coursepress_get_registration_from_name( ) {
+function coursepress_get_registration_from_name() {
     return get_option( 'registration_from_name', get_option( 'blogname' ) );
 }
 
-function coursepress_get_registration_from_email( ) {
+function coursepress_get_registration_from_email() {
     return get_option( 'registration_from_email', get_option( 'admin_email' ) );
 }
 
-function coursepress_get_registration_email_subject( ) {
+function coursepress_get_registration_email_subject() {
     return get_option( 'registration_email_subject', 'Registration Status' );
 }
 
-function coursepress_get_registration_content_email( ) {
+function coursepress_get_registration_content_email() {
     $default_registration_content_email = sprintf( __( 'Hi %1$s,
 
 Congratulations! You have registered account with %2$s successfully! You may log into your account here: %3$s.
@@ -359,13 +387,55 @@ Yours sincerely,
     return get_option( 'registration_content_email', $default_registration_content_email );
 }
 
+
+/* Get instructor invite email data */
+function coursepress_get_instructor_invitation_from_name() {
+	return get_option( 'instructor_invitation_from_name', get_option( 'blogname' ) );
+}
+function coursepress_get_instructor_invitation_from_email() {
+    return get_option( 'instructor_invitation_from_email', get_option( 'admin_email' ) );
+}
+function coursepress_get_instructor_invitation_email_subject() {
+    return get_option( 'instructor_invitation_email_subject', sprintf( __('Invitation to be an instructor at %s', 'cp'), get_option( 'blogname' ) ) );	
+}
+function coursepress_get_instructor_invitation_email() {
+	
+	$default_instructor_invitation_email = sprintf( __(
+	'Hi %1$s,
+
+Congratulations! You have been invited to become an instructor for the course: %2$s
+
+Click on the link below to confirm:
+
+%3$s
+
+If you haven\'t yet got a username you will need to create one.
+
+%4$s
+	'
+	, 'cp'), 'INSTRUCTOR_FIRST_NAME', 'COURSE_NAME', '<a href="CONFIRMATION_LINK">CONFIRMATION_LINK</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>'
+	);
+	
+	return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
+}
+
+
+
+
+
+
+
+
+
+
+
 function coursepress_admin_notice( $notice, $type = 'updated' ) {
     if ( $notice <> '' ) {
         echo '<div class="' . $type . '"><p>' . $notice . '</p></div>';
     }
 }
 
-function coursepress_get_number_of_instructors( ) {
+function coursepress_get_number_of_instructors() {
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
@@ -393,9 +463,9 @@ function coursepress_instructors_avatars( $course_id, $remove_buttons = true, $j
         'meta_key' => 'course_' . $course_id,
         'meta_value' => $course_id,
         'meta_compare' => '',
-        'meta_query' => array( ),
-        'include' => array( ),
-        'exclude' => array( ),
+        'meta_query' => array(),
+        'include' => array(),
+        'exclude' => array(),
         'orderby' => 'display_name',
         'order' => 'ASC',
         'offset' => '',
@@ -425,10 +495,10 @@ function coursepress_instructors_avatars( $course_id, $remove_buttons = true, $j
     }
 }
 
-function coursepress_instructors_avatars_array( $args = array( ) ) {
+function coursepress_instructors_avatars_array( $args = array() ) {
 
     $content = '<script type="text/javascript" language="JavaScript">        
-    var instructor_avatars = new Array( );';
+    var instructor_avatars = new Array();';
 
     $args = array(
         'blog_id' => $GLOBALS['blog_id'],
@@ -436,9 +506,9 @@ function coursepress_instructors_avatars_array( $args = array( ) ) {
         'meta_key' => ( isset( $args['meta_key'] ) ? $args['meta_key'] : '' ),
         'meta_value' => ( isset( $args['meta_value'] ) ? $args['meta_value'] : '' ),
         'meta_compare' => '',
-        'meta_query' => array( ),
-        'include' => array( ),
-        'exclude' => array( ),
+        'meta_query' => array(),
+        'include' => array(),
+        'exclude' => array(),
         'orderby' => 'display_name',
         'order' => 'ASC',
         'offset' => '',
@@ -459,7 +529,7 @@ function coursepress_instructors_avatars_array( $args = array( ) ) {
     echo $content;
 }
 
-function coursepress_students_drop_down( ) {
+function coursepress_students_drop_down() {
     $content = '';
     $content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
 
@@ -469,9 +539,9 @@ function coursepress_students_drop_down( ) {
         'meta_key' => '',
         'meta_value' => '',
         'meta_compare' => '',
-        'meta_query' => array( ),
-        'include' => array( ),
-        'exclude' => array( ),
+        'meta_query' => array(),
+        'include' => array(),
+        'exclude' => array(),
         'orderby' => 'display_name',
         'order' => 'ASC',
         'offset' => '',
@@ -508,9 +578,9 @@ function coursepress_instructors_drop_down( $class = '' ) {
         'meta_key' => '',
         'meta_value' => '',
         'meta_compare' => '',
-        'meta_query' => array( ),
-        'include' => array( ),
-        'exclude' => array( ),
+        'meta_query' => array(),
+        'include' => array(),
+        'exclude' => array(),
         'orderby' => 'display_name',
         'order' => 'ASC',
         'offset' => '',
@@ -658,9 +728,9 @@ if ( !function_exists( 'get_userdatabynicename' ) ) :
         if ( !$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename ) ) )
             return false;
 
-        $wpdb->hide_errors( );
+        $wpdb->hide_errors();
         $metavalues = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = %d", $user->ID ) );
-        $wpdb->show_errors( );
+        $wpdb->show_errors();
 
         if ( $metavalues ) {
             foreach ( $metavalues as $meta ) {
@@ -687,7 +757,7 @@ if ( !function_exists( 'get_userdatabynicename' ) ) :
 endif;
 
 function coursepress_get_count_of_users( $role = '' ) {
-    $result = count_users( );
+    $result = count_users();
     if ( $role == '' ) {
         return $result['total_users'];
     } else {
@@ -699,7 +769,7 @@ function coursepress_get_count_of_users( $role = '' ) {
     return 0;
 }
 
-function curPageURL( ) {
+function curPageURL() {
     $pageURL = 'http';
     if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
         $pageURL .= "s";
@@ -734,11 +804,11 @@ if ( !function_exists( 'coursepress_register_module' ) ) {
         //cp_write_log( $_POST );
 
         if ( !is_array( $coursepress_modules ) ) {
-            $coursepress_modules = array( );
+            $coursepress_modules = array();
         }
 
         if ( class_exists( $class_name ) ) {
-            $class = new $class_name( );
+            $class = new $class_name();
             $coursepress_modules_labels[$module_name] = $class->label;
             $coursepress_modules_descriptions[$module_name] = $class->description;
             $coursepress_modules[$section][$module_name] = $class_name;
@@ -756,7 +826,7 @@ if ( !function_exists( 'cp_write_log' ) ) {
 
     function cp_write_log( $message ) {
         //if ( true === WP_DEBUG ) {
-        $trace = debug_backtrace( );
+        $trace = debug_backtrace();
         $debug = array_shift( $trace );
         $caller = array_shift( $trace );
 
@@ -777,7 +847,7 @@ if ( !function_exists( 'cp_write_log' ) ) {
 if ( !function_exists( 'is_plugin_network_active' ) ) {
 
     function is_plugin_network_active( $plugin_file ) {
-        if ( is_multisite( ) ) {
+        if ( is_multisite() ) {
             return ( array_key_exists( $plugin_file, maybe_unserialize( get_site_option( 'active_sitewide_plugins' ) ) ) );
         }
     }
@@ -809,18 +879,18 @@ function cp_in_array_r( $needle, $haystack, $strict = false ) {
     return false;
 }
 
-function cp_suppress_errors( ) {
+function cp_suppress_errors() {
     ini_set( 'display_errors', 0 );
     ini_set( 'scream.enabled', false );
 }
 
-function cp_show_errors( ) {
+function cp_show_errors() {
     ini_set( 'display_errors', 1 );
     ini_set( 'scream.enabled', true );
 }
 
 function cp_replace_img_src( $original_img_tag, $new_src_url ) {
-    $doc = new DOMDocument( );
+    $doc = new DOMDocument();
     $doc->loadHTML( $original_img_tag );
 
     $tags = $doc->getElementsByTagName( 'img' );
@@ -849,7 +919,7 @@ function user_has_role( $check_role, $user_id = NULL ) {
     if ( $user_id )
         $user = get_userdata( $user_id );
     else
-        $user = wp_get_current_user( );
+        $user = wp_get_current_user();
 
     // No user found, return
     if ( empty( $user ) )
@@ -878,7 +948,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
 
     function coursepress_numeric_posts_nav( $navigation_id = '' ) {
 
-        if ( is_singular( ) )
+        if ( is_singular() )
             return;
 
         global $wp_query, $paged;
@@ -914,7 +984,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
         echo '<div class="navigation" ' . $id . '><ul>' . "\n";
 
         /** 	Previous Post Link */
-        if ( get_previous_posts_link( ) )
+        if ( get_previous_posts_link() )
             printf( '<li>%s</li>' . "\n", get_previous_posts_link( '<span class="meta-nav">&larr;</span>' ) );
 
         /** 	Link to first page, plus ellipses if necessary */
@@ -944,7 +1014,7 @@ if ( !function_exists( 'coursepress_numeric_posts_nav' ) ) {
         }
 
         /** 	Next Post Link */
-        if ( get_next_posts_link( ) )
+        if ( get_next_posts_link() )
             printf( '<li>%s</li>' . "\n", get_next_posts_link( '<span class="meta-nav">&rarr;</span>' ) );
 
         echo '</ul></div>' . "\n";

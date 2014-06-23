@@ -4,17 +4,17 @@
  */
 ?>
 
-<article id="post-<?php the_ID( ); ?>" <?php post_class( ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
-		<h1 class="entry-title"><?php the_title( ); ?></h1>
+		<h1 class="entry-title"><?php the_title(); ?></h1>
 
 		<div class="entry-meta">
-			<?php coursepress_posted_on( ); ?>
+			<?php coursepress_posted_on(); ?>
 		</div><!-- .entry-meta -->
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
-		<?php the_content( ); ?>
+		<?php the_content(); ?>
 		<?php
 			wp_link_pages( array(
 				'before' => '<div class="page-links">' . __( 'Pages:', 'coursepress' ),
@@ -31,7 +31,7 @@
 			/* translators: used between list items, there is a space after the comma */
 			$tag_list = get_the_tag_list( '', __( ', ', 'coursepress' ) );
 
-			if ( ! coursepress_categorized_blog( ) ) {
+			if ( ! coursepress_categorized_blog() ) {
 				// This blog only has 1 category so we just need to worry about tags in the meta text
 				if ( '' != $tag_list ) {
 					$meta_text = __( 'This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress' );
@@ -53,7 +53,7 @@
 				$meta_text,
 				$category_list,
 				$tag_list,
-				get_permalink( )
+				get_permalink()
 			);
 		?>
 

@@ -42,7 +42,7 @@
      * k.o.call( this );
      * </code>
      */
-    k.o = function ( ) {
+    k.o = function () {
         var s = this;
 
         this.o = null; // array of options
@@ -64,21 +64,21 @@
         this.eH = null; // cancel hook
         this.rH = null; // release hook
 
-        this.run = function ( ) {
+        this.run = function () {
             var cf = function ( e, conf ) {
                 var k;
                 for ( k in conf ) {
                     s.o[k] = conf[k];
                 }
-                s.init( );
-                s._configure( )
-                 ._draw( );
+                s.init();
+                s._configure()
+                 ._draw();
             };
 
             if( this.$.data( 'kontroled' ) ) return;
             this.$.data( 'kontroled', true );
 
-            this.extend( );
+            this.extend();
             this.o = $.extend(
                 {
                     // Config
@@ -103,9 +103,9 @@
                     step : this.$.data( 'step' ) || 1,
 
                     // Hooks
-                    draw : null, // function ( ) {}
+                    draw : null, // function () {}
                     change : null, // function ( value ) {}
-                    cancel : null, // function ( ) {}
+                    cancel : null, // function () {}
                     release : null // function ( value ) {}
                 }, this.o
             );
@@ -119,34 +119,34 @@
                 this.i.each( function( k ) {
                     var $this = $( this );
                     s.i[k] = $this;
-                    s.v[k] = $this.val( );
+                    s.v[k] = $this.val();
 
                     $this.bind(
                         'change'
-                        , function ( ) {
+                        , function () {
                             var val = {};
-                            val[k] = $this.val( );
+                            val[k] = $this.val();
                             s.val( val );
                         }
                     );
                 } );
-                this.$.find( 'legend' ).remove( );
+                this.$.find( 'legend' ).remove();
 
             } else {
                 // input = integer
                 this.i = this.$;
-                this.v = this.$.val( );
+                this.v = this.$.val();
                 ( this.v == '' ) && ( this.v = this.o.min );
 
                 this.$.bind(
                     'change'
-                    , function ( ) {
-                        s.val( s._validate( s.$.val( ) ) );
+                    , function () {
+                        s.val( s._validate( s.$.val() ) );
                     }
                 );
             }
 
-            ( !this.o.displayInput ) && this.$.hide( );
+            ( !this.o.displayInput ) && this.$.hide();
 
             this.$c = $( '<canvas width="' +
                             this.o.width + 'px" height="' +
@@ -168,22 +168,22 @@
 
             this.$
                 .bind( "configure", cf )
-                .parent( )
+                .parent()
                 .bind( "configure", cf );
 
-            this._listen( )
-                ._configure( )
-                ._xy( )
-                .init( );
+            this._listen()
+                ._configure()
+                ._xy()
+                .init();
 
             this.isInit = true;
 
-            this._draw( );
+            this._draw();
 
             return this;
         };
 
-        this._draw = function ( ) {
+        this._draw = function () {
 
             // canvas pre-rendering
             var d = true,
@@ -193,12 +193,12 @@
             c.height = s.o.height;
             s.g = c.getContext( '2d' );
 
-            s.clear( );
+            s.clear();
 
             s.dH
-            && ( d = s.dH( ) );
+            && ( d = s.dH() );
 
-            ( d !== false ) && s.draw( );
+            ( d !== false ) && s.draw();
 
             s.c.drawImage( c, 0, 0 );
             c = null;
@@ -222,7 +222,7 @@
 
 
                 s.change( s._validate( v ) );
-                s._draw( );
+                s._draw();
             };
 
             // get touches index
@@ -236,7 +236,7 @@
                 .bind( "touchmove.k", touchMove )
                 .bind(
                     "touchend.k"
-                    , function ( ) {
+                    , function () {
                         k.c.d.unbind( 'touchmove.k touchend.k' );
 
                         if (
@@ -263,7 +263,7 @@
                 ) return;
 
                 s.change( s._validate( v ) );
-                s._draw( );
+                s._draw();
             };
 
             // First click
@@ -281,10 +281,10 @@
 
                             if (
                                 s.eH
-                                && ( s.eH( ) === false )
+                                && ( s.eH() === false )
                             ) return;
 
-                            s.cancel( );
+                            s.cancel();
                         }
                     }
                 )
@@ -305,32 +305,32 @@
             return this;
         };
 
-        this._xy = function ( ) {
-            var o = this.$c.offset( );
+        this._xy = function () {
+            var o = this.$c.offset();
             this.x = o.left;
             this.y = o.top;
             return this;
         };
 
-        this._listen = function ( ) {
+        this._listen = function () {
 
             if ( !this.o.readOnly ) {
                 this.$c
                     .bind(
                         "mousedown"
                         , function ( e ) {
-                            e.preventDefault( );
-                            s._xy( )._mouse( e );
+                            e.preventDefault();
+                            s._xy()._mouse( e );
                          }
                     )
                     .bind(
                         "touchstart"
                         , function ( e ) {
-                            e.preventDefault( );
-                            s._xy( )._touch( e );
+                            e.preventDefault();
+                            s._xy()._touch( e );
                          }
                     );
-                this.listen( );
+                this.listen();
             } else {
                 this.$.attr( 'readonly', 'readonly' );
             }
@@ -338,7 +338,7 @@
             return this;
         };
 
-        this._configure = function ( ) {
+        this._configure = function () {
 
             // Hooks
             if ( this.o.draw ) this.dH = this.o.draw;
@@ -356,7 +356,7 @@
             return this;
         };
 
-        this._clear = function ( ) {
+        this._clear = function () {
             this.$c[0].width = this.$c[0].width;
         };
 
@@ -365,14 +365,14 @@
         };
 
         // Abstract methods
-        this.listen = function ( ) {}; // on start, one time
-        this.extend = function ( ) {}; // each time configure triggered
-        this.init = function ( ) {}; // each time configure triggered
+        this.listen = function () {}; // on start, one time
+        this.extend = function () {}; // each time configure triggered
+        this.init = function () {}; // each time configure triggered
         this.change = function ( v ) {}; // on change
         this.val = function ( v ) {}; // on release
         this.xy2val = function ( x, y ) {}; //
-        this.draw = function ( ) {}; // on change / on release
-        this.clear = function ( ) { this._clear( ); };
+        this.draw = function () {}; // on change / on release
+        this.clear = function () { this._clear(); };
 
         // Utils
         this.h2rgba = function ( h, a ) {
@@ -393,7 +393,7 @@
     /**
      * k.Dial
      */
-    k.Dial = function ( ) {
+    k.Dial = function () {
         k.o.call( this );
 
         this.startAngle = null;
@@ -404,7 +404,7 @@
         this.w2 = null;
         this.PI2 = 2*Math.PI;
 
-        this.extend = function ( ) {
+        this.extend = function () {
             this.o = $.extend(
                 {
                     bgColor : this.$.data( 'bgcolor' ) || '#EEEEEE',
@@ -420,7 +420,7 @@
                 this.cv = this.o.stopper ? max( min( v, this.o.max ), this.o.min ) : v;
                 this.v = this.cv;
                 this.$.val( this.v );
-                this._draw( );
+                this._draw();
             } else {
                 return this.v;
             }
@@ -450,15 +450,15 @@
             return ret;
         };
 
-        this.listen = function ( ) {
+        this.listen = function () {
             // bind MouseWheel
             var s = this,
                 mw = function ( e ) {
-                            e.preventDefault( );
+                            e.preventDefault();
                             var ori = e.originalEvent
                                 ,deltaX = ori.detail || ori.wheelDeltaX
                                 ,deltaY = ori.detail || ori.wheelDeltaY
-                                ,v = parseInt( s.$.val( ) ) + ( deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0 );
+                                ,v = parseInt( s.$.val() ) + ( deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0 );
 
                             if (
                                 s.cH
@@ -488,23 +488,23 @@
                             && ( kc !== 8 )       // bs
                             && ( kc !== 9 )       // tab
                             && ( kc !== 189 )     // -
-                            && e.preventDefault( );
+                            && e.preventDefault();
 
                             // arrows
                             if ( $.inArray( kc,[37,38,39,40] ) > -1 ) {
-                                e.preventDefault( );
+                                e.preventDefault();
 
-                                var v = parseInt( s.$.val( ) ) + kv[kc] * m;
+                                var v = parseInt( s.$.val() ) + kv[kc] * m;
 
                                 s.o.stopper
                                 && ( v = max( min( v, s.o.max ), s.o.min ) );
 
                                 s.change( v );
-                                s._draw( );
+                                s._draw();
 
                                 // long time keydown speed-up
                                 to = window.setTimeout(
-                                    function ( ) { m*=2; }
+                                    function () { m*=2; }
                                     ,30
                                 );
                             }
@@ -519,12 +519,12 @@
                                 window.clearTimeout( to );
                                 to = null;
                                 m = 1;
-                                s.val( s.$.val( ) );
+                                s.val( s.$.val() );
                             }
                         } else {
                             // kval postcond
-                            ( s.$.val( ) > s.o.max && s.$.val( s.o.max ) )
-                            || ( s.$.val( ) < s.o.min && s.$.val( s.o.min ) );
+                            ( s.$.val() > s.o.max && s.$.val( s.o.max ) )
+                            || ( s.$.val() < s.o.min && s.$.val( s.o.min ) );
                         }
 
                     }
@@ -534,7 +534,7 @@
             this.$.bind( "mousewheel DOMMouseScroll", mw )
         };
 
-        this.init = function ( ) {
+        this.init = function () {
 
             if (
                 this.v < this.o.min
@@ -600,7 +600,7 @@
             return ( v - this.o.min ) * this.angleArc / ( this.o.max - this.o.min );
         };
 
-        this.draw = function ( ) {
+        this.draw = function () {
 
             var c = this.g,                 // context
                 a = this.angle( this.cv )    // Angle
@@ -617,10 +617,10 @@
                 && ( sat = eat - this.cursorExt )
                 && ( eat = eat + this.cursorExt );
 
-            c.beginPath( );
+            c.beginPath();
                 c.strokeStyle = this.o.bgColor;
                 c.arc( this.xy, this.xy, this.radius, this.endAngle - 0.00001, this.startAngle + 0.00001, true );
-            c.stroke( );
+            c.stroke();
 
             if ( this.o.displayPrevious ) {
                 ea = this.startAngle + this.angle( this.v );
@@ -629,33 +629,33 @@
                     && ( sa = ea - this.cursorExt )
                     && ( ea = ea + this.cursorExt );
 
-                c.beginPath( );
+                c.beginPath();
                     c.strokeStyle = this.pColor;
                     c.arc( this.xy, this.xy, this.radius, sa, ea, false );
-                c.stroke( );
+                c.stroke();
                 r = ( this.cv == this.v );
             }
 
-            c.beginPath( );
+            c.beginPath();
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
                 c.arc( this.xy, this.xy, this.radius, sat, eat, false );
-            c.stroke( );
+            c.stroke();
         };
 
-        this.cancel = function ( ) {
+        this.cancel = function () {
             this.val( this.v );
         };
     };
 
     $.fn.dial = $.fn.knob = function ( o ) {
         return this.each(
-            function ( ) {
-                var d = new k.Dial( );
+            function () {
+                var d = new k.Dial();
                 d.o = o;
                 d.$ = $( this );
-                d.run( );
+                d.run();
             }
-        ).parent( );
+        ).parent();
     };
 
 } )( jQuery );

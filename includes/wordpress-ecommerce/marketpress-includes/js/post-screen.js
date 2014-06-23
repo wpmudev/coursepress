@@ -2,7 +2,7 @@ jQuery( document ).ready( function( $ ) {
   var formfield;
 
   //open thickbox when button is clicked
-  $( '#mp_upload_button' ).click( function( ) {
+  $( '#mp_upload_button' ).click( function() {
     formfield = $( '#mp_file' );
 		tb_show( 'Upload A Product File', 'media-upload.php?TB_iframe=true' );
 		return false;
@@ -16,14 +16,14 @@ jQuery( document ).ready( function( $ ) {
 			fileurl = $( html ).attr( 'href' );
 			$( formfield ).val( fileurl );
       formfield = false;
-			tb_remove( );
+			tb_remove();
 		} else {
 			window.original_send_to_editor( html );
 		}
 	};
 
   //remove formfield whenever thickbox is closed
-  $( 'a.thickbox, #TB_overlay, #TB_imageOff, #TB_closeWindowButton, #TB_TopCloseWindowButton' ).click( function( ) {
+  $( 'a.thickbox, #TB_overlay, #TB_imageOff, #TB_closeWindowButton, #TB_TopCloseWindowButton' ).click( function() {
     formfield = false;
   } );
 
@@ -33,7 +33,7 @@ jQuery( document ).ready( function( $ ) {
 	} else {
     $( 'td.mp_sale_col input' ).attr( 'disabled', true );
   }
-  $( '#mp_is_sale' ).change( function( ) {
+  $( '#mp_is_sale' ).change( function() {
     if( this.checked ) {
       $( 'td.mp_sale_col input' ).removeAttr( 'disabled' );
 		} else {
@@ -47,7 +47,7 @@ jQuery( document ).ready( function( $ ) {
 	} else {
     $( 'td.mp_inv_col input' ).attr( 'disabled', true );
   }
-  $( '#mp_track_inventory' ).change( function( ) {
+  $( '#mp_track_inventory' ).change( function() {
     if( this.checked ) {
       $( 'td.mp_inv_col input' ).removeAttr( 'disabled' );
 		} else {
@@ -56,24 +56,24 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	//variation name hiding
-	function variation_check( ) {
-    if( $( '.variation' ).size( ) > 1 ) {
-      $( '.mp_var_col' ).show( );
+	function variation_check() {
+    if( $( '.variation' ).size() > 1 ) {
+      $( '.mp_var_col' ).show();
 		} else {
-      $( '.mp_var_col' ).hide( );
+      $( '.mp_var_col' ).hide();
     }
 
 	// FPM: Custom Field Processing logic
-	variation_custom_check( );
+	variation_custom_check();
 	}
-  variation_check( );
+  variation_check();
 
 	/* 
 		When the user clicks the Add/Delete variation the table columns can switch from 5 to 6 column. This effects the 
 		layout of the custom field row elements. So this function sets the colspan of the <td> as needed 
 	*/
 	
-	function variation_custom_check( ) {
+	function variation_custom_check() {
 		if ( $( 'table#mp_product_variations_table th.mp_var_col' ).is( ':visible' ) ) {
 			$( 'table#mp_product_variations_table tr.variation-custom-field td.mp_custom_label_col' ).attr( 'colSpan', 6 );
 		} else {
@@ -83,17 +83,17 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	//setup del link html on load
-	var var_del_html = $( '.variation:last .mp_var_remove' ).html( );
-	if ( $( '.variation' ).size( ) == 1 )
-  	$( '.variation:last .mp_var_remove a' ).remove( );
+	var var_del_html = $( '.variation:last .mp_var_remove' ).html();
+	if ( $( '.variation' ).size() == 1 )
+  	$( '.variation:last .mp_var_remove a' ).remove();
   
 
 	/* 
 		On the Product Variation row we have added a checkbox to allow the admin to set a custom field. When
 		the checkbox is set we reveal a hidden row beneath to current row. 
 	*/
-	function reg_variation_custom_field( ) {
-		var parent_tr = $( this ).parent( ).parent( );
+	function reg_variation_custom_field() {
+		var parent_tr = $( this ).parent().parent();
 		var parent_custom_tr = $( parent_tr ).next( 'tr.variation-custom-field' );
 		
 		if ( $( this ).is( ":checked" ) ) {
@@ -104,16 +104,16 @@ jQuery( document ).ready( function( $ ) {
 			$( 'td', parent_tr ).css( 'border-bottom-color', '#DFDFDF' );
 			$( parent_tr ).next( 'tr.variation-custom-field' ).addClass( 'variation-custom-field-hidden' );			
 		}		
-		variation_custom_check( );			
+		variation_custom_check();			
 	}
 	$( 'input.mp_has_custom_field' ).click( reg_variation_custom_field );
 
 	//add new variation
-  $( '#mp_add_vars' ).click( function( ) {
+  $( '#mp_add_vars' ).click( function() {
 
-    //var var_html = '<tr class="variation">' + $( '.variation:last' ).html( ) + '</tr>';
-    var var_html = '<tr class="variation">' + $( '.variation:last' ).html( ) + '</tr><tr class="variation-custom-field">'+ $( '.variation-custom-field:last' ).html( ) + '</tr>';
-    $( '.variation:last .mp_var_remove a' ).remove( );
+    //var var_html = '<tr class="variation">' + $( '.variation:last' ).html() + '</tr>';
+    var var_html = '<tr class="variation">' + $( '.variation:last' ).html() + '</tr><tr class="variation-custom-field">'+ $( '.variation-custom-field:last' ).html() + '</tr>';
+    $( '.variation:last .mp_var_remove a' ).remove();
 	
 	//$( '.variation:last' ).after( var_html );
 	$( '.variation-custom-field:last' ).after( var_html );
@@ -122,9 +122,9 @@ jQuery( document ).ready( function( $ ) {
 	if ( $( '.variation:last .mp_var_remove a' ) )
 		$( '.variation:last .mp_var_remove' ).html( var_del_html );
 
-    variation_check( );
+    variation_check();
     
-    $( '.variation:last .mp_var_col input' ).val( '' ).focus( );
+    $( '.variation:last .mp_var_col input' ).val( '' ).focus();
     $( '.variation:last .mp_sku_col input' ).val( '' );
     $( '.variation:last .mp_var_col input' ).val( '' );
     
@@ -146,47 +146,47 @@ jQuery( document ).ready( function( $ ) {
     $( 'tr.variation-custom-field:last input.mp_custom_field_required' ).attr( 'checked', false );
     $( 'tr.variation-custom-field:last input.mp_custom_field_required' ).val( count_tr );
 
-	variation_custom_check( );
+	variation_custom_check();
 	
 	//remove variation
-   	reg_remove_variation( );
+   	reg_remove_variation();
 		return false;
 	} );
 
-	function reg_remove_variation( ) {
+	function reg_remove_variation() {
 		//remove variation
-	  $( '.mp_var_remove a' ).click( function( ) {
-	    $( '.variation:last' ).remove( );
+	  $( '.mp_var_remove a' ).click( function() {
+	    $( '.variation:last' ).remove();
 
 		// 2.5.9.1: PaulM - Added for Custom Field row
-	    $( '.variation-custom-field:last' ).remove( );
+	    $( '.variation-custom-field:last' ).remove();
 
 	    //add back in remove link if missing
-			if ( $( '.variation' ).size( ) > 1 && $( '.variation:last .mp_var_remove a' ) )
+			if ( $( '.variation' ).size() > 1 && $( '.variation:last .mp_var_remove a' ) )
 	      $( '.variation:last .mp_var_remove' ).html( var_del_html );
 	      
-      variation_check( );
-	    reg_remove_variation( );
+      variation_check();
+	    reg_remove_variation();
 			return false;
 		} );
 	}
-	reg_remove_variation( );
+	reg_remove_variation();
 	
 	//toggle extra tax field
-	$( '#mp_is_special_tax' ).change( function( ) {
+	$( '#mp_is_special_tax' ).change( function() {
     if( this.checked ) {
-      $( '#mp_special_tax' ).show( );
+      $( '#mp_special_tax' ).show();
 		} else {
-      $( '#mp_special_tax' ).hide( );
+      $( '#mp_special_tax' ).hide();
     }
 	} );
 	
 	//toggle the limit cart field
-	$( '#mp_track_limit' ).change( function( ) {
+	$( '#mp_track_limit' ).change( function() {
 		if( this.checked ) {
-			$( '#mp_limit' ).show( );
+			$( '#mp_limit' ).show();
 		}else{
-			$( '#mp_limit' ).hide( );
+			$( '#mp_limit' ).hide();
 		}
 	} )
 } );

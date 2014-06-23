@@ -42,7 +42,7 @@ class CP_Helper_Tooltip {
 		}
 		
 		if ( $return ) {
-			ob_start( );
+			ob_start();
 		}
 		?>
         <a class="help-icon" href="javascript:;"></a>
@@ -55,7 +55,7 @@ class CP_Helper_Tooltip {
         </div>
 		<?php
 		if ( $return ) {
-			return ob_get_clean( );
+			return ob_get_clean();
 		}
 	}	
 	

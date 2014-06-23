@@ -25,7 +25,7 @@ if ( isset( $_POST['item_title'] ) ) {
                     <tbody id="items">
                         <tr>
                             <th><strong><?php _e( 'Group Name', 'cp' ); ?></strong></th>
-                            <th><a href="javascript:new_link( );"><?php _e( 'Add New', 'cp' ); ?></a></th>
+                            <th><a href="javascript:new_link();"><?php _e( 'Add New', 'cp' ); ?></a></th>
                         </tr>
 
                         <?php

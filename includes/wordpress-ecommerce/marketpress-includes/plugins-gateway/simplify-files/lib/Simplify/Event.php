@@ -41,7 +41,7 @@ class Simplify_Event extends Simplify_Object {
      */
     static public function createEvent( $hash, $publicKey = null, $privateKey = null ) {
 
-        $paymentsApi = new Simplify_PaymentsApi( );
+        $paymentsApi = new Simplify_PaymentsApi();
 
         $jsonObject = $paymentsApi->jwsDecode( $hash, $publicKey, $privateKey );
 
@@ -49,13 +49,13 @@ class Simplify_Event extends Simplify_Object {
             throw new InvalidArgumentException( "Incorect data in webhook event" );
         }   
 
-        return  $paymentsApi->convertFromHashToObject( $jsonObject['event'], self::getClazz( ) );
+        return  $paymentsApi->convertFromHashToObject( $jsonObject['event'], self::getClazz() );
     }
 
     /**
      * @ignore
      */
-    static public function getClazz( ) {
+    static public function getClazz() {
         return "Event";
     }
 }

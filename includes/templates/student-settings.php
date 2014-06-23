@@ -1,11 +1,11 @@
-<?php if ( is_user_logged_in( ) ) { ?>
+<?php if ( is_user_logged_in() ) { ?>
     <?php
     $form_message_class = '';
     $form_message = '';
 
     if ( isset( $_POST['student-settings-submit'] ) ) {
-        $student_data = array( );
-        $student_data['ID'] = get_current_user_id( );
+        $student_data = array();
+        $student_data['ID'] = get_current_user_id();
         $form_errors = 0;
         
         do_action( 'before_settings_validation' );
@@ -31,7 +31,7 @@
         }
 
         if ( $form_errors == 0 ) {
-            $student = new Student( get_current_user_id( ) );
+            $student = new Student( get_current_user_id() );
             if ( $student->update_student_data( $student_data ) ) {
                 $form_message = __( 'Profile has been updated successfully.', 'cp' );
                 $form_message_class = 'regular';
@@ -41,7 +41,7 @@
             }
         }
     }
-    $student = new Student( get_current_user_id( ) );
+    $student = new Student( get_current_user_id() );
     ?>
     <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
     <?php do_action( 'before_settings_form' );?>
@@ -95,7 +95,7 @@
     </form><?php do_action( 'after_settings_form' );?>
     <?php
 } else {
-    wp_redirect( wp_login_url( ) );
+    wp_redirect( wp_login_url() );
     exit;
 }
 ?>

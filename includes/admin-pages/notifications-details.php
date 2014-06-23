@@ -7,10 +7,10 @@ $notification_id = '';
 
 if ( isset( $_GET['notification_id'] ) ) {
     $notification = new Notification( $_GET['notification_id'] );
-    $notification_details = $notification->get_notification( );
+    $notification_details = $notification->get_notification();
     $notification_id = ( int )$_GET['notification_id'];
 } else {
-    $notification = new Notification( );
+    $notification = new Notification();
     $notification_id = 0;
 }
 
@@ -20,10 +20,10 @@ if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'
 
     check_admin_referer( 'notifications_details' );
 
-    $new_post_id = $notification->update_notification( );
+    $new_post_id = $notification->update_notification();
 
     if ( $new_post_id !== 0 ) {
-        ob_start( );
+        ob_start();
         wp_redirect( admin_url( 'admin.php?page=' . $page . '&notification_id=' . $new_post_id . '&action=edit' ) );
         exit;
     } else {
@@ -114,7 +114,7 @@ if ( isset( $_GET['notification_id'] ) ) {
 
                                 <div class="buttons">
                                     <?php
-                                    if ( ( $notification_id == 0 && current_user_can( 'coursepress_create_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_my_notification_cap' ) && $notification_details->post_author == get_current_user_id( ) ) ) {//do not show anything
+                                    if ( ( $notification_id == 0 && current_user_can( 'coursepress_create_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_my_notification_cap' ) && $notification_details->post_author == get_current_user_id() ) ) {//do not show anything
                                         ?>
                                         <input type="submit" value = "<?php ( $notification_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class = "button-primary" />
                                         <?php

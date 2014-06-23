@@ -50,7 +50,7 @@ class Simplify_CardToken extends Simplify_Object {
      */
     static public function createCardToken( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_CardToken( );
+        $instance = new Simplify_CardToken();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -68,7 +68,7 @@ class Simplify_CardToken extends Simplify_Object {
          * @return    CardToken a CardToken object
          */
         static public function findCardToken( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_CardToken( );
+            $val = new Simplify_CardToken();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -79,7 +79,7 @@ class Simplify_CardToken extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "CardToken";
     }
 }

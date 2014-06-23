@@ -59,7 +59,7 @@ class Simplify_Customer extends Simplify_Object {
      */
     static public function createCustomer( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Customer( );
+        $instance = new Simplify_Customer();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -96,7 +96,7 @@ class Simplify_Customer extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listCustomer( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Customer( );
+            $val = new Simplify_Customer();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -112,7 +112,7 @@ class Simplify_Customer extends Simplify_Object {
          * @return    Customer a Customer object
          */
         static public function findCustomer( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Customer( );
+            $val = new Simplify_Customer();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -168,7 +168,7 @@ class Simplify_Customer extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Customer";
     }
 }

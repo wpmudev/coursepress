@@ -15,12 +15,12 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) && current_user_can( 
 
             switch ( addslashes( $action ) ) {
                 case 'delete':
-                    $instructor->delete_instructor( );
+                    $instructor->delete_instructor();
                     $message = __( 'Selected instructors has been removed successfully.', 'cp' );
                     break;
 
                 case 'unassign':
-                    $instructor->unassign_from_all_courses( );
+                    $instructor->unassign_from_all_courses();
                     $message = __( 'Selected instructors has been unassigned from all courses successfully.', 'cp' );
                     break;
             }
@@ -48,7 +48,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['in
     if ( !isset( $_GET['cp_nonce'] ) || !wp_verify_nonce( $_GET['cp_nonce'], 'delete_instructor_'.$_GET['instructor_id'] ) ) {
         die( __( 'Cheating huh?', 'cp' ) );
     }
-    $instructor->delete_instructor( );
+    $instructor->delete_instructor();
     $message = __( 'Selected instructor has been removed successfully.', 'cp' );
 }
 
@@ -151,7 +151,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                         <?php
                         $style = '';
 
-                        foreach ( $wp_user_search->get_results( ) as $user ) {
+                        foreach ( $wp_user_search->get_results() as $user ) {
 
                             $user_object = new Instructor( $user->ID );
                             $roles = $user_object->roles;
@@ -177,7 +177,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                                     </a>
                                 </td>
                                 <?php if ( current_user_can( 'manage_options' ) ) { ?>
-                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID ), 'delete_instructor_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeInstructors( );">
+                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID ), 'delete_instructor_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeInstructors();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>
@@ -187,7 +187,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                         ?>
 
                         <?php
-                        if ( count( $wp_user_search->get_results( ) ) == 0 ) {
+                        if ( count( $wp_user_search->get_results() ) == 0 ) {
                             ?>
                             <tr><td colspan="8"><div class="zero"><?php _e( 'No instructors found.', 'cp' ); ?></div></td></tr>
                             <?php
@@ -197,7 +197,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                 </table>
 
                 <div class="tablenav">
-                    <div class="tablenav-pages"><?php $wp_user_search->page_links( ); ?></div>
+                    <div class="tablenav-pages"><?php $wp_user_search->page_links(); ?></div>
                 </div><!--/tablenav-->
 
             </form>

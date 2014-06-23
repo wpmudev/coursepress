@@ -19,12 +19,12 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             if ( is_numeric( $discussion_value ) ) {
                 $discussion_id = ( int ) $discussion_value;
                 $discussion = new Discussion( $discussion_id );
-                $discussion_object = $discussion->get_discussion( );
+                $discussion_object = $discussion->get_discussion();
 
                 switch ( addslashes( $action ) ) {
                     case 'delete':
-                        if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id( ) ) ) {
-                            $discussion->delete_discussion( );
+                        if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
+                            $discussion->delete_discussion();
                             $message = __( 'Selected discussions have been deleted successfully.', 'cp' );
                         } else {
                             $message = __( "You don't have right persmissions to delete the discussion.", 'cp' );
@@ -60,8 +60,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             die( __( 'Cheating huh?', 'cp' ) );
         }
 
-        $discussion_object = $discussion->get_discussion( );
-        if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id( ) ) ) {
+        $discussion_object = $discussion->get_discussion();
+        if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
             $discussion->delete_discussion( $force_delete = true );
             $message = __( 'Selected discussion has been deleted successfully.', 'cp' );
         } else {
@@ -150,10 +150,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         <?php
                         $style = '';
 
-                        foreach ( $wp_discussion_search->get_results( ) as $discussion ) {
+                        foreach ( $wp_discussion_search->get_results() as $discussion ) {
 
                             $discussion_obj = new Discussion( $discussion->ID );
-                            $discussion_object = $discussion_obj->get_discussion( );
+                            $discussion_object = $discussion_obj->get_discussion();
                             $style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
                             ?>
                             <tr id='user-<?php echo $discussion_object->ID; ?>' <?php echo $style; ?>>
@@ -165,8 +165,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                                     <div class="row-actions">
                                         <span class="edit_discussion"><a href="<?php echo admin_url( 'admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID ); ?>"><?php _e( 'Edit', 'cp' ); ?></a> | </span>
 
-                                        <?php if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id( ) ) ) { ?>
-                                            <span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion( );"><?php _e( 'Delete', 'cp' ); ?></a></span>
+                                        <?php if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) { ?>
+                                            <span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();"><?php _e( 'Delete', 'cp' ); ?></a></span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -182,8 +182,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 
                                 <?php if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) ) ) { ?>
                                     <td <?php echo $style; ?>>
-                                        <?php if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id( ) ) ) { ?>
-                                            <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion( );">
+                                        <?php if ( current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) { ?>
+                                            <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_'.$discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>
                                         <?php } ?>
@@ -195,7 +195,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                         ?>
 
                         <?php
-                        if ( count( $wp_discussion_search->get_results( ) ) == 0 ) {
+                        if ( count( $wp_discussion_search->get_results() ) == 0 ) {
                             ?>
                             <tr>
                                 <td colspan="6"><div class="zero-courses"><?php _e( 'No discussions found.', 'cp' ) ?></div></td>
@@ -207,7 +207,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                 </table><!--/widefat shadow-table-->
 
                 <div class="tablenav">
-                    <div class="tablenav-pages"><?php $wp_discussion_search->page_links( ); ?></div>
+                    <div class="tablenav-pages"><?php $wp_discussion_search->page_links(); ?></div>
                 </div><!--/tablenav-->
 
             </form>

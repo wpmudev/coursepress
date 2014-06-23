@@ -43,7 +43,7 @@ class Simplify_Chargeback extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listChargeback( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Chargeback( );
+            $val = new Simplify_Chargeback();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -59,7 +59,7 @@ class Simplify_Chargeback extends Simplify_Object {
          * @return    Chargeback a Chargeback object
          */
         static public function findChargeback( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Chargeback( );
+            $val = new Simplify_Chargeback();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -70,7 +70,7 @@ class Simplify_Chargeback extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Chargeback";
     }
 }

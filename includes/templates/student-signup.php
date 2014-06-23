@@ -1,4 +1,4 @@
-<?php if ( !is_user_logged_in( ) ) { ?>
+<?php if ( !is_user_logged_in() ) { ?>
 
     <?php
     $form_message_class = '';
@@ -11,7 +11,7 @@
         check_admin_referer( 'student_signup' );
         $min_password_length = apply_filters( 'cp_min_password_length', 6 );
 
-        $student_data = array( );
+        $student_data = array();
         $form_errors = 0;
 
         do_action( 'cp_before_signup_validation' );
@@ -58,7 +58,7 @@
 
                     if ( $form_errors == 0 ) {
                         if ( $student_id = $student->add_student( $student_data ) !== 0 ) {
-                            //$form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url( ) . '/' . $this->get_login_slug( ) ) : wp_login_url( ) ) . '">log into your account</a>.', 'cp' );
+                            //$form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ) . '">log into your account</a>.', 'cp' );
                             //$form_message_class = 'regular';
                             $email_args['email_type'] = 'student_registration';
                             $email_args['student_id'] = $student_id;
@@ -67,20 +67,20 @@
                             $email_args['student_last_name'] = $student_data['last_name'];
                             coursepress_send_email( $email_args );
 
-                            $creds = array( );
+                            $creds = array();
                             $creds['user_login'] = $student_data['user_login'];
                             $creds['user_password'] = $student_data['user_pass'];
                             $creds['remember'] = true;
                             $user = wp_signon( $creds, false );
 
                             if ( is_wp_error( $user ) ) {
-                                $form_message = $user->get_error_message( );
+                                $form_message = $user->get_error_message();
                                 $form_message_class = 'red';
                             }
 
                             if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
                                 $course = new Course( $_POST['course_id'] );
-                                wp_redirect( $course->get_permalink( ) );
+                                wp_redirect( $course->get_permalink() );
                             } else {
                                 wp_redirect( $this->get_student_dashboard_slug( true ) );
                             }
@@ -159,7 +159,7 @@
     <?php do_action( 'after_all_signup_fields' ); ?>
 
         <label class="full">
-            <a href="<?php echo ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url( ) . '/' . $this->get_login_slug( ) ) : wp_login_url( ) ); ?>"><?php _e( 'Already have an Account?', 'cp' ); ?></a>
+            <a href="<?php echo ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ); ?>"><?php _e( 'Already have an Account?', 'cp' ); ?></a>
         </label>
 
         <label class="full-right">
@@ -175,7 +175,7 @@
     <?php
 } else {
     if ( isset( $this ) ) {
-        //ob_start( );
+        //ob_start();
         wp_redirect( $this->get_student_dashboard_slug( true ) );
         exit;
     }

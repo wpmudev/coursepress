@@ -12,7 +12,7 @@ $assigned_courses = $instructor->get_assigned_courses_ids( 'publish' );
 foreach ( $assigned_courses as $course_id ) {
 
     $course = new Course( $course_id );
-    $course_details = $course->get_course( );
+    $course_details = $course->get_course();
 
     if ( $course_details ) {
         ?>
@@ -20,7 +20,7 @@ foreach ( $assigned_courses as $course_id ) {
         <div class="course">
 
             <div class="enroll-box">
-                <h3><a href="<?php echo $course->get_permalink( ); ?>"><?php echo $course_details->post_title; ?></a></h3>
+                <h3><a href="<?php echo $course->get_permalink(); ?>"><?php echo $course_details->post_title; ?></a></h3>
                 <div class="enroll-box-left">
                     <div class="course-box">
                         <span class="strong"><?php _e( 'Course Dates: ', 'cp' ); ?></span><?php echo do_shortcode( '[course_details field="course_start_date" course_id="' . $course_details->ID . '"]' ) . ' - ' . do_shortcode( '[course_details field="course_end_date" course_id="' . $course_details->ID . '"]' ); ?><br />
@@ -30,7 +30,7 @@ foreach ( $assigned_courses as $course_id ) {
                     </div></div>
 
                 <div class="enroll-box-right">
-                    <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url( ) . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) );  ?>">
+                    <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url() . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) );  ?>">
                         <div class="apply-box">
                             <?php echo do_shortcode( '[course_details field="button" course_id="' . $course_details->ID . '"]' ); ?>
                         </div>

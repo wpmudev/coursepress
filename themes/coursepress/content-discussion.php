@@ -2,9 +2,9 @@
 /**
  * @package CoursePress
  */
-$discussion = new Discussion( get_the_ID( ) );
+$discussion = new Discussion( get_the_ID() );
 ?>
-<article id="post-<?php the_ID( ); ?>" <?php post_class( ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <header class="entry-header">
 
         <div class="discussion-archive-single-meta">
@@ -12,13 +12,13 @@ $discussion = new Discussion( get_the_ID( ) );
         </div>
 
         <div class="discussion-archive-single">
-            <h1 class="discussion-title"><?php the_title( ); ?></h1>
+            <h1 class="discussion-title"><?php the_title(); ?></h1>
 
             <div class="entry-content">
-                <?php the_content( ); ?>
+                <?php the_content(); ?>
             </div><!-- .entry-content -->
             <div class="discussion-meta">
-                <span><?php echo get_the_date( ); ?></span> | <span><?php the_author( ); ?></span> | <span><?php echo $discussion->get_unit_name( ); ?></span> | <span><?php echo get_comments_number( ); ?> <?php _e( 'Comments', 'coursepress' );?></span>
+                <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion->get_unit_name(); ?></span> | <span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress' );?></span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -26,7 +26,7 @@ $discussion = new Discussion( get_the_ID( ) );
         <div class="discussion-responses">
             <?php
             // If comments are open or we have at least one comment, load up the comment template
-            if ( comments_open( ) || '0' != get_comments_number( ) ) {
+            if ( comments_open() || '0' != get_comments_number() ) {
                 comments_template( '/comments-discussion.php' );
             }else{
                 _e( 'Comments are disabled', 'coursepress' );

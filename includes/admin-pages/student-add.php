@@ -11,7 +11,7 @@ if ( isset( $_POST['submit'] ) ) {
 
     check_admin_referer( 'student_signup' );
 
-    $student_data = array( );
+    $student_data = array();
     $form_errors = 0;
 
     if ( $_POST['username'] != '' && $_POST['first_name'] != '' && $_POST['last_name'] != '' && $_POST['email'] != '' && $_POST['password'] != '' && $_POST['password_confirmation'] != '' ) {

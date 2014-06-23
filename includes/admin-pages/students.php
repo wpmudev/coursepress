@@ -18,14 +18,14 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
             switch ( addslashes( $action ) ) {
                 case 'delete':
                     if ( current_user_can( 'coursepress_delete_students_cap' ) ) {
-                        $student->delete_student( );
+                        $student->delete_student();
                         $message = __( 'Selected students has been removed successfully.', 'cp' );
                     }
                     break;
 
                 case 'withdraw':
                     if ( current_user_can( 'coursepress_withdraw_students_cap' ) ) {
-                        $student->withdraw_from_all_courses( );
+                        $student->withdraw_from_all_courses();
                         $message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }
                     break;
@@ -51,7 +51,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['st
         die( __( 'Cheating huh?', 'cp' ) );
     }
     $student = new Student( $_GET['student_id'] );
-    $student->delete_student( );
+    $student->delete_student();
     $message = __( 'Selected student has been removed successfully.', 'cp' );
 }
 
@@ -159,7 +159,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                         <?php
                         $style = '';
 
-                        foreach ( $wp_user_search->get_results( ) as $user ) {
+                        foreach ( $wp_user_search->get_results() as $user ) {
 
                             $user_object = new Student( $user->ID );
                             $roles = $user_object->roles;
@@ -207,7 +207,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                                     </a>
                                 </td>
                                 <?php if ( current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
-                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=students&action=delete&student_id=' . $user_object->ID ), 'delete_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeStudent( );">
+                                    <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=students&action=delete&student_id=' . $user_object->ID ), 'delete_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>
@@ -217,7 +217,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                         }
                         ?>
                         <?php
-                        if ( count( $wp_user_search->get_results( ) ) == 0 ) {
+                        if ( count( $wp_user_search->get_results() ) == 0 ) {
                             ?>
                             <tr><td colspan="8"><div class="zero"><?php _e( 'No students found.', 'cp' ); ?></div></td></tr>
                             <?php
@@ -227,7 +227,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                 </table>
 
                 <div class="tablenav">
-                    <div class="tablenav-pages"><?php $wp_user_search->page_links( ); ?></div>
+                    <div class="tablenav-pages"><?php $wp_user_search->page_links(); ?></div>
                 </div><!--/tablenav-->
 
             </form>

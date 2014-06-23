@@ -10,11 +10,11 @@ $course_id = do_shortcode( '[get_parent_course_id]' );
 //redirect to the parent course page if not enrolled
 $coursepress->check_access( $course_id );
 
-get_header( );
+get_header();
 ?>
 <script>
     jQuery( function( $ ) {
-        jQuery( ".knob" ).knob( );
+        jQuery( ".knob" ).knob();
     } );
 </script>
 <div id="primary" class="content-area">
@@ -61,21 +61,21 @@ get_header( );
 
             query_posts( $query_args );
             ?>
-            <?php if ( have_posts( ) ) { ?>
+            <?php if ( have_posts() ) { ?>
                 <?php
-                while ( have_posts( ) ) {
-                    the_post( );
+                while ( have_posts() ) {
+                    the_post();
                     ?>
                     <li>
                         <div class="notification-archive-single-meta">
                             <div class="notification-date"><span class="date-part-one"><?php echo get_the_date( 'M' ); ?></span><span class="date-part-two"><?php echo get_the_date( 'j' ); ?></span></div>
                             <span class="notification-meta-devider"></span>
-                            <div class="notification-time"><?php the_time( ); ?></div>
+                            <div class="notification-time"><?php the_time(); ?></div>
                         </div>
                         <div class="notification-archive-single">
-                            <h1 class="notification-title"><?php the_title( ); ?></h1>
-                            <div class="notification_author"><?php the_author( ); ?></div>
-                            <div class="notification-content"><?php the_content( ); ?></div>
+                            <h1 class="notification-title"><?php the_title(); ?></h1>
+                            <div class="notification_author"><?php the_author(); ?></div>
+                            <div class="notification-content"><?php the_content(); ?></div>
                         </div>
                         <div class="clearfix"></div>
                     </li>
@@ -93,4 +93,4 @@ get_header( );
     </main><!-- #main -->
 </div><!-- #primary -->
 <?php get_sidebar( 'footer' ); ?>
-<?php get_footer( ); ?>
+<?php get_footer(); ?>

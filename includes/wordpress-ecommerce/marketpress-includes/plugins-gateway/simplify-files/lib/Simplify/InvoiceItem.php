@@ -41,7 +41,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
      */
     static public function createInvoiceItem( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_InvoiceItem( );
+        $instance = new Simplify_InvoiceItem();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -78,7 +78,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listInvoiceItem( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_InvoiceItem( );
+            $val = new Simplify_InvoiceItem();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -94,7 +94,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
          * @return    InvoiceItem a InvoiceItem object
          */
         static public function findInvoiceItem( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_InvoiceItem( );
+            $val = new Simplify_InvoiceItem();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -128,7 +128,7 @@ class Simplify_InvoiceItem extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "InvoiceItem";
     }
 }

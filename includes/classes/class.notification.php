@@ -9,7 +9,7 @@ if ( !class_exists( 'Notification' ) ) {
 
         var $id = '';
         var $output = 'OBJECT';
-        var $notification = array( );
+        var $notification = array();
         var $details;
 
         function __construct( $id = '', $output = 'OBJECT' ) {
@@ -22,7 +22,7 @@ if ( !class_exists( 'Notification' ) ) {
             $this->__construct( $id, $output );
         }
 
-        function get_notification( ) {
+        function get_notification() {
 
             $notification = get_post( $this->id, $this->output );
 
@@ -34,7 +34,7 @@ if ( !class_exists( 'Notification' ) ) {
 
                 return $notification;
             } else {
-                return new stdClass( );
+                return new stdClass();
             }
         }
 
@@ -56,7 +56,7 @@ if ( !class_exists( 'Notification' ) ) {
             }
         }
 
-        function update_notification( ) {
+        function update_notification() {
             global $user_id, $wpdb;
 
             $course = get_post( $this->id, $this->output );

@@ -42,9 +42,9 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
   /****** Below are the public methods you may overwrite via a plugin ******/
 
   /**
-   * Runs when your class is instantiated. Use to setup your plugin instead of __construct( )
+   * Runs when your class is instantiated. Use to setup your plugin instead of __construct()
    */
-  function on_creation( ) {
+  function on_creation() {
     global $mp;
     $settings = get_option( 'mp_settings' );
 
@@ -53,8 +53,8 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
     $this->public_name = __( 'PayPal', 'mp' );
 
     //dynamic button img, see: https://cms.paypal.com/us/cgi-bin/?&cmd=_render-content&content_ID=developer/e_howto_api_ECButtonIntegration
-    $this->method_img_url = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image&buttontype=ecmark&locale=' . get_locale( );
-    $this->method_button_img_url = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image&locale=' . get_locale( );
+    $this->method_img_url = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image&buttontype=ecmark&locale=' . get_locale();
+    $this->method_button_img_url = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image&locale=' . get_locale();
 
     //set paypal vars
     /** @todo Set all array keys to resolve Undefined indexes notice */;
@@ -226,7 +226,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
     global $mp;
 
     //create order id for paypal invoice
-    $order_id = $mp->generate_order_id( );
+    $order_id = $mp->generate_order_id();
     /*
     foreach ( $global_cart as $bid => $cart ) {
       foreach ( $cart as $product_id => $data ) {
@@ -322,7 +322,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
   function process_payment( $global_cart, $shipping_info ) {
     global $mp, $blog_id, $site_id, $switched_stack, $switched;
 		
-	  $blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+	  $blog_id = ( is_multisite() ) ? $blog_id : 1;
 	  $current_blog_id = $blog_id;
 
 	  if ( !$mp->global_cart )
@@ -347,7 +347,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 				  $payment_info['method'] = ( $result["PAYMENTINFO_{$i}_PAYMENTTYPE"] == 'echeck' ) ? __( 'eCheck', 'mp' ) : __( 'PayPal balance, Credit Card, or Instant Transfer', 'mp' );
 				  $payment_info['transaction_id'] = $result["PAYMENTINFO_{$i}_TRANSACTIONID"];
 
-				  $timestamp = time( );//strtotime( $result["PAYMENTINFO_{$i}_ORDERTIME"] );
+				  $timestamp = time();//strtotime( $result["PAYMENTINFO_{$i}_ORDERTIME"] );
 				  //setup status
 				  switch ( $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] ) {
 				    case 'Canceled-Reversal':
@@ -429,7 +429,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 				  $status = $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] . ': '. $status;
 
 				  //status's are stored as an array with unix timestamp as key
-				  $payment_info['status'] = array( );
+				  $payment_info['status'] = array();
 				  $payment_info['status'][$timestamp] = $status;
 				  $payment_info['currency'] = $result["PAYMENTINFO_{$i}_CURRENCYCODE"];
 				  $payment_info['total'] = $result["PAYMENTINFO_{$i}_AMT"];
@@ -440,14 +440,14 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
           $unique_id = ( $result["PAYMENTINFO_{$i}_PAYMENTREQUESTID"] ) ? $result["PAYMENTINFO_{$i}_PAYMENTREQUESTID"] : $result["PAYMENTREQUEST_{$i}_PAYMENTREQUESTID"]; //paypal docs messed up, not sure which is valid return
 					@list( $bid, $order_id ) = explode( ':', $unique_id );
 			
-          if ( is_multisite( ) )	
+          if ( is_multisite() )	
 						switch_to_blog( $bid, true );
 
 					//succesful payment, create our order now
 	        $mp->create_order( $_SESSION['mp_order'], $selected_cart[$bid], $shipping_info, $payment_info, $paid );
 				}	
 		
-        if ( is_multisite( ) )
+        if ( is_multisite() )
     			switch_to_blog( $current_blog_id, true );
 				
         //success. Do nothing, it will take us to the confirmation page
@@ -523,46 +523,46 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
       		$( '#mp-hdr-bdr' ).ColorPicker( {
           	onSubmit: function( hsb, hex, rgb, el ) {
           		$( el ).val( hex );
-          		$( el ).ColorPickerHide( );
+          		$( el ).ColorPickerHide();
           	},
-          	onBeforeShow: function ( ) {
+          	onBeforeShow: function () {
           		$( this ).ColorPickerSetColor( this.value );
           	},
             onChange: function ( hsb, hex, rgb ) {
           		$( '#mp-hdr-bdr' ).val( hex );
           	}
           } )
-          .bind( 'keyup', function( ) {
+          .bind( 'keyup', function() {
           	$( this ).ColorPickerSetColor( this.value );
           } );
           $( '#mp-hdr-bck' ).ColorPicker( {
           	onSubmit: function( hsb, hex, rgb, el ) {
           		$( el ).val( hex );
-          		$( el ).ColorPickerHide( );
+          		$( el ).ColorPickerHide();
           	},
-          	onBeforeShow: function ( ) {
+          	onBeforeShow: function () {
           		$( this ).ColorPickerSetColor( this.value );
           	},
             onChange: function ( hsb, hex, rgb ) {
           		$( '#mp-hdr-bck' ).val( hex );
           	}
           } )
-          .bind( 'keyup', function( ) {
+          .bind( 'keyup', function() {
           	$( this ).ColorPickerSetColor( this.value );
           } );
           $( '#mp-pg-bck' ).ColorPicker( {
           	onSubmit: function( hsb, hex, rgb, el ) {
           		$( el ).val( hex );
-          		$( el ).ColorPickerHide( );
+          		$( el ).ColorPickerHide();
           	},
-          	onBeforeShow: function ( ) {
+          	onBeforeShow: function () {
           		$( this ).ColorPickerSetColor( this.value );
           	},
             onChange: function ( hsb, hex, rgb ) {
           		$( '#mp-pg-bck' ).val( hex );
           	}
           } )
-          .bind( 'keyup', function( ) {
+          .bind( 'keyup', function() {
           	$( this ).ColorPickerSetColor( this.value );
           } );
     		} );
@@ -740,7 +740,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
    * Use to handle any payment returns from your gateway to the ipn_url. Do not echo anything here. If you encounter errors
    *  return the proper headers to your ipn sender. Exits after.
    */
-	function process_ipn_return( ) {
+	function process_ipn_return() {
     global $mp;
 
     // PayPal IPN handling code
@@ -755,7 +755,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 			$req = 'cmd=_notify-validate';
 			if ( !isset( $_POST ) ) $_POST = $HTTP_POST_VARS;
 			foreach ( $_POST as $k => $v ) {
-				if ( get_magic_quotes_gpc( ) ) $v = stripslashes( $v );
+				if ( get_magic_quotes_gpc() ) $v = stripslashes( $v );
 				$req .= '&' . $k . '=' . urlencode( $v );
 			}
 
@@ -883,7 +883,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 	//Purpose: 	Prepares the parameters for the SetExpressCheckout API Call.
   function SetExpressCheckout( $global_cart, $shipping_info, $order_id )	{
     global $mp, $blog_id;
-	  $blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+	  $blog_id = ( is_multisite() ) ? $blog_id : 1;
 	  $current_blog_id = $blog_id;
 
 	  if ( !$mp->global_cart ) {
@@ -917,7 +917,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
       if ( !is_array( $cart ) || count( $cart ) == 0 ) {
 				continue;
       }
-      if ( is_multisite( ) ) {
+      if ( is_multisite() ) {
 				switch_to_blog( $bid );
       }
 
@@ -926,7 +926,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 			if ( $mp->global_cart && empty( $merchant_email ) )
 				continue;
 			
-      $totals = array( );
+      $totals = array();
 			
       $request .= "&PAYMENTREQUEST_{$j}_SELLERID=" . $bid;
       $request .= "&PAYMENTREQUEST_{$j}_SELLERPAYPALACCOUNTID=" . $merchant_email;
@@ -966,7 +966,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
       $total = array_sum( $totals );
 
       //coupon line
-      if ( $coupon = $mp->coupon_value( $mp->get_coupon_code( ), $total ) ) {
+      if ( $coupon = $mp->coupon_value( $mp->get_coupon_code(), $total ) ) {
 				if ( false === strpos( $coupon['discount'], '%' ) )
 					$discount = preg_replace( "/&( [A-Za-z]+|#x[\dA-Fa-f]+|#\d+ );/", "", $coupon['discount'] ) . ' ' . $this->currencyCode;
 				
@@ -974,7 +974,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 				
 				$request .= "&L_PAYMENTREQUEST_{$j}_NAME$i=" . urlencode( sprintf( __( '%s Coupon discount' ), $discount ) );
 				$request .= "&L_PAYMENTREQUEST_{$j}_AMT$i=" . urlencode( $coupon_total-$total );
-				$request .= "&L_PAYMENTREQUEST_{$j}_NUMBER$i=" . urlencode( $mp->get_coupon_code( ) );
+				$request .= "&L_PAYMENTREQUEST_{$j}_NUMBER$i=" . urlencode( $mp->get_coupon_code() );
 				$request .= "&L_PAYMENTREQUEST_{$j}_QTY$i=1";
 				
 				$total = $coupon_total;
@@ -1011,7 +1011,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
       $j++;
     }
 
-    if ( is_multisite( ) )
+    if ( is_multisite() )
       switch_to_blog( $current_blog_id );
 		
 		$nvpstr .= $request;
@@ -1170,7 +1170,7 @@ class MP_Gateway_Paypal_Express extends MP_Gateway_API {
 //register shipping plugin
 mp_register_gateway_plugin( 'MP_Gateway_Paypal_Express', 'paypal-express', __( 'PayPal Express Checkout', 'mp' ), true );
 
-if ( is_multisite( ) ) {
+if ( is_multisite() ) {
 	//tie into network settings form
 	add_action( 'mp_network_gateway_settings', 'psts_pe_network_gateway_settings_box' );
 }
@@ -1180,8 +1180,8 @@ function psts_pe_network_gateway_settings_box( $settings ) {
   ?>
   <script type="text/javascript">
 	  jQuery( document ).ready( function( $ ) {
-      $( "#gbl_gw_paypal-express" ).change( function( ) {
-        $( "#mp-main-form" ).submit( );
+      $( "#gbl_gw_paypal-express" ).change( function() {
+        $( "#mp-main-form" ).submit();
   		} );
     } );
 	</script>
@@ -1196,46 +1196,46 @@ function psts_pe_network_gateway_settings_box( $settings ) {
     		$( '#mp-hdr-bdr' ).ColorPicker( {
         	onSubmit: function( hsb, hex, rgb, el ) {
         		$( el ).val( hex );
-        		$( el ).ColorPickerHide( );
+        		$( el ).ColorPickerHide();
         	},
-        	onBeforeShow: function ( ) {
+        	onBeforeShow: function () {
         		$( this ).ColorPickerSetColor( this.value );
         	},
           onChange: function ( hsb, hex, rgb ) {
         		$( '#mp-hdr-bdr' ).val( hex );
         	}
         } )
-        .bind( 'keyup', function( ) {
+        .bind( 'keyup', function() {
         	$( this ).ColorPickerSetColor( this.value );
         } );
         $( '#mp-hdr-bck' ).ColorPicker( {
         	onSubmit: function( hsb, hex, rgb, el ) {
         		$( el ).val( hex );
-        		$( el ).ColorPickerHide( );
+        		$( el ).ColorPickerHide();
         	},
-        	onBeforeShow: function ( ) {
+        	onBeforeShow: function () {
         		$( this ).ColorPickerSetColor( this.value );
         	},
           onChange: function ( hsb, hex, rgb ) {
         		$( '#mp-hdr-bck' ).val( hex );
         	}
         } )
-        .bind( 'keyup', function( ) {
+        .bind( 'keyup', function() {
         	$( this ).ColorPickerSetColor( this.value );
         } );
         $( '#mp-pg-bck' ).ColorPicker( {
         	onSubmit: function( hsb, hex, rgb, el ) {
         		$( el ).val( hex );
-        		$( el ).ColorPickerHide( );
+        		$( el ).ColorPickerHide();
         	},
-        	onBeforeShow: function ( ) {
+        	onBeforeShow: function () {
         		$( this ).ColorPickerSetColor( this.value );
         	},
           onChange: function ( hsb, hex, rgb ) {
         		$( '#mp-pg-bck' ).val( hex );
         	}
         } )
-        .bind( 'keyup', function( ) {
+        .bind( 'keyup', function() {
         	$( this ).ColorPickerSetColor( this.value );
         } );
   		} );

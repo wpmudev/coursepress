@@ -9,13 +9,13 @@ if ( !class_exists( 'Unit_Module' ) ) {
         var $front_save = false;
         var $response_type = '';
 
-        function __construct( ) {
-            $this->on_create( );
-            $this->check_for_modules_to_delete( );
+        function __construct() {
+            $this->on_create();
+            $this->check_for_modules_to_delete();
         }
 
-        function Unit_Module( ) {
-            $this->__construct( );
+        function Unit_Module() {
+            $this->__construct();
         }
 
         function admin_sidebar( $data ) {
@@ -97,9 +97,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
             }
         }
 
-        function check_for_modules_to_delete( ) {
+        function check_for_modules_to_delete() {
 
-            if ( is_admin( ) ) {
+            if ( is_admin() ) {
                 if ( isset( $_POST['modules_to_execute'] ) ) {
                     $modules_to_delete = $_POST['modules_to_execute'];
                     foreach ( $modules_to_delete as $module_to_delete ) {
@@ -155,7 +155,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
             $already_respond_posts_args = array(
                 'posts_per_page' => 1,
                 'meta_key' => 'user_ID',
-                'meta_value' => get_current_user_id( ),
+                'meta_value' => get_current_user_id(),
                 'post_type' => ( isset( $data->post_type ) ? $data->post_type : 'module_response' ),
                 'post_parent' => $data->response_id,
                 'post_status' => 'publish' );
@@ -182,7 +182,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
                     $this->save_response_grade( $post_id, $data->auto_grade );
                 }
 
-                //$coursepress->set_latest_activity( get_current_user_id( ) );
+                //$coursepress->set_latest_activity( get_current_user_id() );
                 return $post_id;
             } else {
                 return false;
@@ -219,7 +219,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
             foreach ( $modules as $mod ) {
                 $class_name = $mod->module_type;
                 if ( class_exists( $class_name ) ) {
-                    $module = new $class_name( );
+                    $module = new $class_name();
                     $module->admin_main( $mod );
                 }
             }
@@ -245,10 +245,10 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
                 if ( isset( $_POST['submit_modules_data_done'] ) ) {
                     //wp_redirect( full_url( $_SERVER ). '?saved=ok' );
-                    wp_redirect( get_permalink( $course_id ) . trailingslashit( $coursepress->get_units_slug( ) ) . '?saved=ok' );
+                    wp_redirect( get_permalink( $course_id ) . trailingslashit( $coursepress->get_units_slug() ) . '?saved=ok' );
                 } else {
                     //wp_redirect( full_url( $_SERVER ) );
-                    wp_redirect( get_permalink( $course_id ) . trailingslashit( $coursepress->get_units_slug( ) ) );
+                    wp_redirect( get_permalink( $course_id ) . trailingslashit( $coursepress->get_units_slug() ) );
                 }
 
                 exit;
@@ -264,7 +264,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );   ?>" onSubmit="return check_for_mandatory_answers( );"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );   ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -273,7 +273,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
                     $class_name = $mod->module_type;
 
                     if ( class_exists( $class_name ) ) {
-                        $module = new $class_name( );
+                        $module = new $class_name();
 
                         if ( $module->name == 'page_break_module' ) {
                             $pages_num++;
@@ -286,7 +286,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
                                     $front_save = true;
 
                                     if ( method_exists( $module, 'get_response' ) ) {
-                                        $response = $module->get_response( get_current_user_id( ), $mod->ID );
+                                        $response = $module->get_response( get_current_user_id(), $mod->ID );
 
                                         if ( count( $response ) > 0 ) {
                                             $responses++;
@@ -354,13 +354,13 @@ if ( !class_exists( 'Unit_Module' ) ) {
             return get_post_meta( $post_id, 'module_type', true );
         }
 
-        function additional_module_actions( ) {
-            $this->save_response_comment( );
-            $this->save_response_grade( );
+        function additional_module_actions() {
+            $this->save_response_comment();
+            $this->save_response_grade();
         }
 
-        function save_response_comment( ) {
-            if ( isset( $_POST['response_id'] ) && isset( $_POST['response_comment'] ) && is_admin( ) ) {
+        function save_response_comment() {
+            if ( isset( $_POST['response_id'] ) && isset( $_POST['response_comment'] ) && is_admin() ) {
                 update_post_meta( $_POST['response_id'], 'response_comment', $_POST['response_comment'] );
             }
         }
@@ -370,7 +370,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
                 $grade_data = array(
                     'grade' => ( $response_grade !== '' && is_numeric( $response_grade ) ? $response_grade : $_POST['response_grade'] ),
-                    'instructor' => get_current_user_ID( ),
+                    'instructor' => get_current_user_ID(),
                     'time' => current_time( 'timestamp' )
                 );
 
@@ -488,23 +488,23 @@ if ( !class_exists( 'Unit_Module' ) ) {
         function get_module_delete_link( $module_id ) {
             ?>
             <a class="delete_module_link" onclick="if ( deleteModule( <?php echo $module_id; ?> ) ) {
-                        jQuery( this ).parent( ).parent( ).parent( ).remove( );
-                        jQuery( this ).parent( ).parent( ).remove( );
+                        jQuery( this ).parent().parent().parent().remove();
+                        jQuery( this ).parent().parent().remove();
 
-                        update_sortable_module_indexes( );
+                        update_sortable_module_indexes();
                     }
                     ;"><?php //_e( 'Delete' );    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
             <?php
         }
 
-        function get_module_remove_link( ) {
+        function get_module_remove_link() {
             ?>
-            <a class="remove_module_link" onclick="if ( removeModule( ) ) {
-                        jQuery( this ).parent( ).parent( ).parent( ).remove( );
-                        jQuery( this ).parent( ).parent( ).remove( );
+            <a class="remove_module_link" onclick="if ( removeModule() ) {
+                        jQuery( this ).parent().parent().parent().remove();
+                        jQuery( this ).parent().parent().remove();
 
-                        update_sortable_module_indexes( );
+                        update_sortable_module_indexes();
                     }"><?php //_e( 'Remove' )    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
             <?php
@@ -527,11 +527,11 @@ if ( !class_exists( 'Unit_Module' ) ) {
             
         }
 
-        function on_create( ) {
+        function on_create() {
             
         }
 
-        function save_module_data( ) {
+        function save_module_data() {
             
         }
 

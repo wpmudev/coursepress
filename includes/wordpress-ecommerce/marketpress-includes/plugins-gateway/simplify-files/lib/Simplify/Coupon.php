@@ -45,7 +45,7 @@ class Simplify_Coupon extends Simplify_Object {
      */
     static public function createCoupon( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Coupon( );
+        $instance = new Simplify_Coupon();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -82,7 +82,7 @@ class Simplify_Coupon extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listCoupon( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Coupon( );
+            $val = new Simplify_Coupon();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -98,7 +98,7 @@ class Simplify_Coupon extends Simplify_Object {
          * @return    Coupon a Coupon object
          */
         static public function findCoupon( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Coupon( );
+            $val = new Simplify_Coupon();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -130,7 +130,7 @@ class Simplify_Coupon extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Coupon";
     }
 }

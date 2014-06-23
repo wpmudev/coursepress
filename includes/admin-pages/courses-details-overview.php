@@ -1,14 +1,14 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice, $coursepress, $mp;
 
-add_thickbox( );
+add_thickbox();
 
 if ( isset( $_GET['course_id'] ) ) {
     $course = new Course( ( int ) $_GET['course_id'] );
-    $course_details = $course->get_course( );
+    $course_details = $course->get_course();
     $course_id = ( int ) $_GET['course_id'];
 } else {
-    $course = new Course( );
+    $course = new Course();
     $course_id = 0;
 }
 
@@ -60,26 +60,26 @@ if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'
 
     if ( isset( $_POST['submit-unit'] ) ) {
         /* Save / Save Draft */
-        $new_post_id = $course->update_course( );
+        $new_post_id = $course->update_course();
     }
 
     if ( isset( $_POST['submit-unit-publish'] ) ) {
         /* Save & Publish */
-        $new_post_id = $course->update_course( );
+        $new_post_id = $course->update_course();
         $course = new Course( $new_post_id );
         $course->change_status( 'publish' );
     }
 
     if ( isset( $_POST['submit-unit-unpublish'] ) ) {
         /* Save & Unpublish */
-        $new_post_id = $course->update_course( );
+        $new_post_id = $course->update_course();
         $course = new Course( $new_post_id );
         $course->change_status( 'private' );
     }
 
 
     if ( $new_post_id != 0 ) {
-        ob_start( );
+        ob_start();
         if ( isset( $_GET['ms'] ) ) {
             wp_redirect( admin_url( 'admin.php?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms'] ) );
             exit;
@@ -177,7 +177,7 @@ if ( isset( $_GET['course_id'] ) ) {
                 <div id='edit-sub' class='course-holder-wrap mp-wrap'>
 
                     <div class='sidebar-name no-movecursor'>
-                        <h3><?php _e( 'Course Setup', 'cp' ); ?><i class="fa fa-group"></i></h3>
+                        <h3><?php _e( 'Course Setup', 'cp' ); ?></h3>
                     </div>
 
                     <div class='course-holder'>
@@ -194,17 +194,17 @@ if ( isset( $_GET['course_id'] ) ) {
                             <?php } ?>
 
                             <?php
-                            if ( ( $course_id != 0 && current_user_can( 'coursepress_update_course_cap' ) ) || ( $course_id != 0 && current_user_can( 'coursepress_update_my_course_cap' ) && $course_details->post_author == get_current_user_id( ) ) ) {//do not show anything
+                            if ( ( $course_id != 0 && current_user_can( 'coursepress_update_course_cap' ) ) || ( $course_id != 0 && current_user_can( 'coursepress_update_my_course_cap' ) && $course_details->post_author == get_current_user_id() ) ) {//do not show anything
                                 ?>
                                 <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $course_details->post_status == 'unpublished' ) ? __( 'Save Draft', 'cp' ) : __( 'Publish', 'cp' ); ?>">
                             <?php } ?>
 
                             <?php
-                            if ( ( $course_id != 0 && current_user_can( 'coursepress_update_course_cap' ) ) || ( $course_id != 0 && current_user_can( 'coursepress_update_my_course_cap' ) && $course_details->post_author == get_current_user_id( ) ) ) {//do not show anything
+                            if ( ( $course_id != 0 && current_user_can( 'coursepress_update_course_cap' ) ) || ( $course_id != 0 && current_user_can( 'coursepress_update_my_course_cap' ) && $course_details->post_author == get_current_user_id() ) ) {//do not show anything
                                 ?>
                                 <a class="button button-preview" href="<?php echo get_permalink( $course_id ); ?>" target="_new">Preview</a>
 
-                                <?php if ( current_user_can( 'coursepress_change_course_status_cap' ) || ( current_user_can( 'coursepress_change_my_course_status_cap' ) && $course_details->post_author == get_current_user_id( ) ) ) { ?>
+                                <?php if ( current_user_can( 'coursepress_change_course_status_cap' ) || ( current_user_can( 'coursepress_change_my_course_status_cap' ) && $course_details->post_author == get_current_user_id() ) ) { ?>
                                     <input type="submit" name="submit-unit-<?php echo ( $course_details->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $course_details->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $course_details->post_status == 'unpublished' ) ? __( 'Publish', 'cp' ) : __( 'Unpublish', 'cp' ); ?>">
                                     <?php
                                 }
@@ -343,10 +343,10 @@ if ( isset( $_GET['course_id'] ) ) {
 
                                         wp_enqueue_style( 'thickbox' );
                                         wp_enqueue_script( 'thickbox' );
-                                        wp_enqueue_media( );
+                                        wp_enqueue_media();
                                         wp_enqueue_script( 'media-upload' );
 
-                                        $supported_video_extensions = implode( ", ", wp_get_video_extensions( ) );
+                                        $supported_video_extensions = implode( ", ", wp_get_video_extensions() );
 
                                         if ( !empty( $data ) ) {
                                             if ( !isset( $data->player_width ) or empty( $data->player_width ) ) {
@@ -457,8 +457,8 @@ if ( isset( $_GET['course_id'] ) ) {
                                             <span><?php _e( 'Select one or more instructor to facilitate this course', 'cp' ); ?></span>
                                         </label>
 
-                                        <?php if ( ( current_user_can( 'coursepress_assign_and_assign_instructor_course_cap' ) ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && $course->details->post_author == get_current_user_id( ) ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && !isset( $_GET['course_id'] ) ) ) { ?>
-                                            <?php coursepress_instructors_avatars_array( ); ?>
+                                        <?php if ( ( current_user_can( 'coursepress_assign_and_assign_instructor_course_cap' ) ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && $course->details->post_author == get_current_user_id() ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && !isset( $_GET['course_id'] ) ) ) { ?>
+                                            <?php coursepress_instructors_avatars_array(); ?>
 
                                             <div class="clearfix"></div>
                                             <?php coursepress_instructors_drop_down( 'postform chosen-select-course course-instructors' ); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e( 'Assign', 'cp' ); ?>">
@@ -467,7 +467,7 @@ if ( isset( $_GET['course_id'] ) ) {
 
                                             <?php
                                         } else {
-                                            if ( coursepress_get_number_of_instructors( ) == 0 || coursepress_instructors_avatars( $course_id, false, true ) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                                            if ( coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars( $course_id, false, true ) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
                                                 _e( 'You do not have required permissions to assign instructors to a course.', 'cp' );
                                             }
                                         }
@@ -484,7 +484,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                             </div>
 
                                             <?php
-                                            if ( ( current_user_can( 'coursepress_assign_and_assign_instructor_course_cap' ) ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+                                            if ( ( current_user_can( 'coursepress_assign_and_assign_instructor_course_cap' ) ) || ( current_user_can( 'coursepress_assign_and_assign_instructor_my_course_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
                                                 $remove_button = true;
                                             } else {
                                                 $remove_button = false;
@@ -505,12 +505,12 @@ if ( isset( $_GET['course_id'] ) ) {
                                             <span><?php _e( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ); ?></span>
                                         </label>										
                                         <div class="instructor-invite">
-                                            <label for="**PLACEHOLDER**"><?php _e( 'First Name', 'cp' ); ?></label>
-                                            <input type="text" name="**PLACEHOLDER**" placeholder="First Name" />
-                                            <label for="**PLACEHOLDER**"><?php _e( 'Last Name', 'cp' ); ?></label>
-                                            <input type="text" name="**PLACEHOLDER**" placeholder="Last Name" />
-                                            <label for="**PLACEHOLDER**"><?php _e( 'E-Mail', 'cp' ); ?></label>
-                                            <input type="text" name="**PLACEHOLDER**" placeholder="instructor@email.com" />
+                                            <label for="invite_instructor_first_name"><?php _e( 'First Name', 'cp' ); ?></label>
+                                            <input type="text" name="invite_instructor_first_name" placeholder="First Name" />
+                                            <label for="invite_instructor_last_name"><?php _e( 'Last Name', 'cp' ); ?></label>
+                                            <input type="text" name="invite_instructor_first_name" placeholder="Last Name" />
+                                            <label for="invite_instructor_email"><?php _e( 'E-Mail', 'cp' ); ?></label>
+                                            <input type="text" name="invite_instructor_email" placeholder="instructor@email.com" />
                                             <input class="button-primary" id="invite-instructor-trigger" type="button" value="<?php _e( 'Send Invite', 'cp' ); ?>">
                                         </div>
 
@@ -703,7 +703,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                             foreach ( $pre_courses as $pre_course ) {
 
                                                 $pre_course_obj = new Course( $pre_course->ID );
-                                                $pre_course_object = $pre_course_obj->get_course( );
+                                                $pre_course_object = $pre_course_obj->get_course();
                                                 ?>
                                                 <option value="<?php echo $pre_course->ID; ?>" <?php selected( $prerequisite, $pre_course->ID, true ); ?>><?php echo $pre_course->post_title; ?></option>
                                                 <?php
@@ -728,7 +728,7 @@ if ( isset( $_GET['course_id'] ) ) {
 <?php // START //////////////////////////////////////////////////////////////////////////////////////////////////////////// ?>
 									<div class="narrow product">
 										<!-- MarketPress not Active -->
-										<?php if ( !$coursepress->is_marketpress_lite_active( ) && !$coursepress->is_cp_marketpress_lite_active( ) && $coursepress->is_marketpress_active( ) ) : ?>
+										<?php if ( !$coursepress->is_marketpress_lite_active() && !$coursepress->is_cp_marketpress_lite_active() && $coursepress->is_marketpress_active() ) : ?>
 											<label>
 									            <?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
 											</label>
@@ -807,7 +807,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                                                 <h3><?php _e( 'Cost to enroll in the course', 'cp' ); ?></h3>
                                                                 
                             <?php
-                            if ( $coursepress->is_marketpress_active( ) ) {
+                            if ( $coursepress->is_marketpress_active() ) {
                                 ?>
                                         
     <?php _e( 'MarketPress product' ); ?>
@@ -833,7 +833,7 @@ if ( isset( $_GET['course_id'] ) ) {
                                 foreach ( $posts as $post ) {
                                     setup_postdata( $post );
                                     ?>
-                                                                                                    <option value="<?php echo $post->ID; ?>" <?php selected( $marketpress_product, $post->ID, true ); ?>><?php the_title( ); ?></option>
+                                                                                                    <option value="<?php echo $post->ID; ?>" <?php selected( $marketpress_product, $post->ID, true ); ?>><?php the_title(); ?></option>
     <?php } ?>
                                                                                 </select>
                                                                                 

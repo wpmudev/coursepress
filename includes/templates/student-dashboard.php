@@ -1,12 +1,12 @@
-<?php if ( is_user_logged_in( ) ) { ?>
+<?php if ( is_user_logged_in() ) { ?>
     <?php
     global $coursepress;
-    $student = new Student( get_current_user_id( ) );
-    $student_courses = $student->get_enrolled_courses_ids( );
+    $student = new Student( get_current_user_id() );
+    $student_courses = $student->get_enrolled_courses_ids();
     
     foreach ( $student_courses as $course_id ) {
         $course = new Course( $course_id );
-        $course_details = $course->get_course( );
+        $course_details = $course->get_course();
         ?>
 
         <div class="course course-student-dashboard">
@@ -35,7 +35,7 @@
                 </div><!--enroll-box-left-->
 
                 <div class="enroll-box-right">
-                    <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url( ) . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) ); ?>">
+                    <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url() . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) ); ?>">
                         <div class="apply-box">
         <?php echo do_shortcode( '[course_details field="button" course_id="' . $course_details->ID . '"]' ); ?>
         <?php echo do_shortcode( '[course_details field="action_links" course_id="' . $course_details->ID . '"]' ); ?>
@@ -51,13 +51,13 @@
         <?php
     }
     if ( count( $student_courses ) == 0 ) {
-        printf( __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ), '<a target="_blank" href="'.trailingslashit( site_url( ) . '/' . $coursepress->get_course_slug( ) ).'">'.__( 'here', 'cp' ).'</a>' );
+        printf( __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ), '<a target="_blank" href="'.trailingslashit( site_url() . '/' . $coursepress->get_course_slug() ).'">'.__( 'here', 'cp' ).'</a>' );
     }
     ?>
     <?php
 } else {
-    //ob_start( );
-    wp_redirect( wp_login_url( ) );
+    //ob_start();
+    wp_redirect( wp_login_url() );
     exit;
 }
 ?>

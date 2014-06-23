@@ -96,19 +96,19 @@ class CoursePress_Pagination {
 
     var $pagination;
 
-    function pagination( ) {
+    function pagination() {
         
     }
 
-    function show( ) {
+    function show() {
         if ( !$this->calculate )
-            if ( $this->calculate( ) )
+            if ( $this->calculate() )
                 echo "<span class=\"displaying-num\">" . $this->total_pages . " " . $this->items_title . "</span><div class=\"tablenav-pages\"><span class=\"$this->className\">$this->pagination</span></div>\n";
     }
 
-    function getOutput( ) {
+    function getOutput() {
         if ( !$this->calculate )
-            if ( $this->calculate( ) )
+            if ( $this->calculate() )
                 return "<span class=\"$this->className\">$this->pagination</span>\n";
     }
 
@@ -122,7 +122,7 @@ class CoursePress_Pagination {
             return "$this->target&$this->parameterName=$id";
     }
 
-    function calculate( ) {
+    function calculate() {
         $this->pagination = "";
         $this->calculate == true;
         $error = false;

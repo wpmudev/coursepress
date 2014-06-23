@@ -38,7 +38,7 @@ class Simplify_Webhook extends Simplify_Object {
      */
     static public function createWebhook( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Webhook( );
+        $instance = new Simplify_Webhook();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -75,7 +75,7 @@ class Simplify_Webhook extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listWebhook( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Webhook( );
+            $val = new Simplify_Webhook();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -91,7 +91,7 @@ class Simplify_Webhook extends Simplify_Object {
          * @return    Webhook a Webhook object
          */
         static public function findWebhook( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Webhook( );
+            $val = new Simplify_Webhook();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -121,7 +121,7 @@ class Simplify_Webhook extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Webhook";
     }
 }

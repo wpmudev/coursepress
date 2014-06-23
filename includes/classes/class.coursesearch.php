@@ -8,7 +8,7 @@ if ( !class_exists( 'Course_Search' ) ) {
     class Course_Search {
 
         var $courses_per_page = 10;
-        var $args = array( );
+        var $args = array();
 
         function __construct( $search_term = '', $page_num = '' ) {
             $this->search_term = $search_term;
@@ -39,15 +39,15 @@ if ( !class_exists( 'Course_Search' ) ) {
             $this->__construct( $search_term, $page_num );
         }
 
-        function get_args( ) {
+        function get_args() {
             return $this->args;
         }
 
-        function get_results( ) {
+        function get_results() {
             return get_posts( $this->args );
         }
 
-        function get_count_of_all_courses( ) {
+        function get_count_of_all_courses() {
              $args = array(
                 's' => $this->search_term,
                 'posts_per_page' => -1,
@@ -67,9 +67,9 @@ if ( !class_exists( 'Course_Search' ) ) {
             //return wp_count_posts( 'course' )->publish + wp_count_posts( 'course' )->private;
         }
 
-        function page_links( ) {
-            $pagination = new CoursePress_Pagination( );
-            $pagination->Items( $this->get_count_of_all_courses( ) );
+        function page_links() {
+            $pagination = new CoursePress_Pagination();
+            $pagination->Items( $this->get_count_of_all_courses() );
             $pagination->limit( $this->courses_per_page );
             $pagination->parameterName = 'page_num';
             if ( $this->search_term != '' ) {
@@ -81,7 +81,7 @@ if ( !class_exists( 'Course_Search' ) ) {
             $pagination->nextIcon( '&#9658;' );
             $pagination->prevIcon( '&#9668;' );
             $pagination->items_title = __( 'courses', 'cp' );
-            $pagination->show( );
+            $pagination->show();
         }
 
     }

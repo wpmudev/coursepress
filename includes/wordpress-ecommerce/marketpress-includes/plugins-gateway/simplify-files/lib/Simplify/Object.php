@@ -32,7 +32,7 @@
  */
 class Simplify_Object {
 
-    private $properties = array( );
+    private $properties = array();
 
     /**
      * @ignore
@@ -65,7 +65,7 @@ class Simplify_Object {
     /**
      * @ignore
      */
-    public function __toString( ) {
+    public function __toString() {
         return json_encode( $this->properties );
     }
 
@@ -73,7 +73,7 @@ class Simplify_Object {
      * Returns the object's properties as a map.
      * @return array map of properties.
      */
-    public function getProperties( ) {
+    public function getProperties() {
         return $this->properties;
     }
 }

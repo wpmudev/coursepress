@@ -8,15 +8,15 @@ do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 <div class="units-archive">
     <ul class="units-archive-list">
-        <?php if ( have_posts( ) ) { ?>
+        <?php if ( have_posts() ) { ?>
             <?php
             $grades = 0;
             $units = 0;
-            while ( have_posts( ) ) : the_post( );
-                $grades = $grades + do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID( ) . '"]' );
+            while ( have_posts() ) : the_post();
+                $grades = $grades + do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]' );
                 ?>
                 <li>
-                    <span class="percentage"><?php echo do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID( ) . '" format="true"]' ); ?></span><a href="<?php echo do_shortcode( '[course_unit_details field="permalink" unit_id="' . get_the_ID( ) . '"]' ); ?>" rel="bookmark"><?php the_title( ); ?></a>
+                    <span class="percentage"><?php echo do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '" format="true"]' ); ?></span><a href="<?php echo do_shortcode( '[course_unit_details field="permalink" unit_id="' . get_the_ID() . '"]' ); ?>" rel="bookmark"><?php the_title(); ?></a>
                     <?php if ( do_shortcode( '[course_unit_details field="input_modules_count"]' ) > 0 ) { ?>
                         <span class="unit-archive-single-module-status"><?php echo do_shortcode( '[course_unit_details field="student_module_responses"]' ); ?> <?php _e( 'of', 'coursepress' ); ?> <?php echo do_shortcode( '[course_unit_details field="input_modules_count"]' ); ?> <?php _e( 'elements completed', 'coursepress' ); ?></span>
                     <?php } else { ?>

@@ -10,28 +10,28 @@ class MarketPress_Importer {
   var $importer_name = '';
 	var $results;
   
-  function __construct( ) {
+  function __construct() {
     global $mp;
 		
 		$priority = isset( $_POST['mp_import-'.sanitize_title( $this->importer_name )] ) ? 1 : 10;
 		
     add_action( 'marketpress_add_importer', array( &$this, '_html' ), $priority );
 		
-		$this->on_creation( );
+		$this->on_creation();
 	}
 
-	function _html( ) {
+	function _html() {
 	  global $mp;
 		
 		if ( isset( $_POST['mp_import-'.sanitize_title( $this->importer_name )] ) ) {
-			$this->process( );
+			$this->process();
 			remove_all_actions( 'marketpress_add_importer', 10 );
 		}
 		?>
 		<div class="postbox">
 			<h3 class='hndle'><span><?php printf( __( 'Import From %s', 'mp' ), $this->importer_name ); ?></span></h3>
 			<div class="inside">
-			<?php $this->display( ); ?>
+			<?php $this->display(); ?>
 			</div>
 		</div>
 		<?php
@@ -48,15 +48,15 @@ class MarketPress_Importer {
 		<?php
 	}
 	
-	function on_creation( ) {
+	function on_creation() {
 
 	}
 	
-	function display( ) {
+	function display() {
 
 	}
 	
-	function process( ) {
+	function process() {
 		
 	}
 
@@ -73,7 +73,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 
 	var $importer_name = 'WP e-Commerce';
 
-	function display( ) {
+	function display() {
 	  global $wpdb;
 
 		if ( $this->results ) {
@@ -93,7 +93,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 				<p><?php printf( __( 'It appears that you have %s products from WP e-Commerce. Click below to begin your import!', 'mp' ), number_format_i18n( $num_products ) ); ?></p>
 				<?php
 				if ( class_exists( 'WP_eCommerce' ) ) {
-					$this->import_button( );
+					$this->import_button();
 				} else {
 					?>
 					<p><?php _e( 'Please activate the WP e-Commerce plugin to import these products.', 'mp' ); ?></p>
@@ -107,7 +107,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 		}
 	}
 	
-	function process( ) {
+	function process() {
 	  global $wpdb;
 
 		set_time_limit( 90 ); //this can take a while
@@ -124,7 +124,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 			//add tags
 			$tags = wp_get_object_terms( $old_id, 'product_tag' );
 			if ( is_array( $tags ) && count( $tags ) ) {
-				$product_tags = array( );
+				$product_tags = array();
 				foreach ( $tags as $tag ) {
 					$product_tags[] = $tag->name;
 				}
@@ -137,7 +137,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 			//insert categories
 			$cats = wp_get_object_terms( $old_id, 'wpsc_product_category' );
 			if ( is_array( $cats ) && count( $cats ) ) {
-				$product_cats = array( );
+				$product_cats = array();
 				foreach ( $cats as $cat ) {
 					$product_cats[] = $cat->name;
 				}
@@ -168,7 +168,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 				update_post_meta( $new_id, 'mp_product_link', esc_url_raw( $meta_data['external_link'] ) );
 
 			//add shipping info
-			$shipping = array( );
+			$shipping = array();
 			if ( !empty( $meta_data['shipping']['local'] ) )
 				$shipping['extra_cost'] = round( ( float )preg_replace( '/[^0-9.]/', '', $meta_data['shipping']['local'] ), 2 );
 			if ( !empty( $meta_data['weight'] ) )
@@ -206,7 +206,7 @@ class WP_eCommerceImporter extends MarketPress_Importer {
 	}
 }
 //only load if the plugin is active and installed
-$mp_wpecommerce = new WP_eCommerceImporter( );
+$mp_wpecommerce = new WP_eCommerceImporter();
 
 
 /*
@@ -216,10 +216,10 @@ class CsvImporter extends MarketPress_Importer {
 
 	var $importer_name = 'CSV';
 
-	function display( ) {
+	function display() {
 		global $mp;
 		
-		$file_path = $this->file_path( );
+		$file_path = $this->file_path();
 		
 		//delete file
 		if ( isset( $_GET['csv_del'] ) && file_exists( $file_path ) ) {
@@ -242,7 +242,7 @@ class CsvImporter extends MarketPress_Importer {
 					echo '<div class="error"><p>'.__( 'There was a problem uploading your file. Please check permissions or use FTP.', 'mp' ).'</p></div>';
 				} else {
 					//check for required fields
-					$headers = $this->get_csv_headers( );
+					$headers = $this->get_csv_headers();
 					if ( !in_array( 'title', $headers ) || !in_array( 'price', $headers ) ) {
 						@unlink( $file_path );
 						echo '<div class="error"><p>'.__( 'The CSV file must contain at a minimum the "title" and "price" columns. Please fix and upload again.', 'mp' ).'</p></div>';
@@ -265,17 +265,17 @@ class CsvImporter extends MarketPress_Importer {
 		
 			//if file has been uploaded
 			if ( file_exists( $file_path ) ) {
-				$total = count( $this->get_csv_array( ) );
+				$total = count( $this->get_csv_array() );
 				?>
 				<h4><?php echo sprintf( __( 'A CSV import file was detected with %d products to process.', 'mp' ), $total ); ?> <a class="button" href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=importers&csv_del=1' ); ?>" title="<?php _e( "Delete the current CSV import file", 'mp' ); ?>"><?php _e( "Re-upload", 'mp' ); ?></a></h4>
 	
 				<p><?php _e( 'Please be patient while products are being imported. Ready?', 'mp' ) ?></p>
 				
 				<?php
-				$this->import_button( );
+				$this->import_button();
 				
 			} else { //file does not exist, show upload form
-				$dirs = wp_upload_dir( );
+				$dirs = wp_upload_dir();
 				?>
 				<span class="description"><?php _e( 'This will allow you to import products and most of their attributes from a CSV file.', 'mp' ); ?></span>
 				<p><span class="description"><?php _e( 'Your CSV file must be comma ( , ) delimited and fields with commas or quotes in them must be surrounded by parenthesis ( " ) as per the CSV standard. Columns in the CSV file can be in any order, provided that they have the correct headings from the example file. "title" and "price" are the only required columns, all others can be left blank.', 'mp' ); ?></span></p>
@@ -296,16 +296,16 @@ class CsvImporter extends MarketPress_Importer {
 		}
 	}
 	
-	function process( ) {
+	function process() {
 	  global $wpdb;
 
 		set_time_limit( 120 ); //this can take a while
 		$this->results = 0;
-		$products = $this->get_csv_array( );
-		$dirs = wp_upload_dir( );
+		$products = $this->get_csv_array();
+		$dirs = wp_upload_dir();
 		
 		foreach ( $products as $row ) {
-			$product = array( );
+			$product = array();
 			
 			if ( empty( $row['title'] ) || empty( $row['price'] ) )
 				continue;
@@ -359,7 +359,7 @@ class CsvImporter extends MarketPress_Importer {
 				update_post_meta( $new_id, 'mp_product_link', esc_url_raw( $row['external_link'] ) );
 
 			//add shipping info
-			$shipping = array( );
+			$shipping = array();
 			if ( !empty( $row['extra_shipping'] ) )
 				$shipping['extra_cost'] = round( ( float )preg_replace( '/[^0-9.]/', '', $row['extra_shipping'] ), 2 );
 			if ( !empty( $row['weight'] ) )
@@ -388,7 +388,7 @@ class CsvImporter extends MarketPress_Importer {
 				}
 				if ( $local ) { //just resize without downloading as it's on our server
 					preg_match( '/[^\?]+\.( jpe?g|jpe|gif|png )\b/i', $img_location, $matches );
-					$file_array = array( );
+					$file_array = array();
 					$file_array['name'] = basename( $matches[0] );
 					$file_array['tmp_name'] = $img_location;
 					
@@ -428,8 +428,8 @@ class CsvImporter extends MarketPress_Importer {
 		}	
 	}
 	
-	function get_csv_headers( ) {
-		$file_path = $this->file_path( );
+	function get_csv_headers() {
+		$file_path = $this->file_path();
 
 		@ini_set( 'auto_detect_line_endings', true ); //so it doesn't choke on mac CR line endings
 		$fh = @fopen( $file_path, 'r' );
@@ -447,8 +447,8 @@ class CsvImporter extends MarketPress_Importer {
 		}
 	}
 	
-	function get_csv_array( ) {
-		$file_path = $this->file_path( );
+	function get_csv_array() {
+		$file_path = $this->file_path();
 		$i = 0;
 		@ini_set( 'auto_detect_line_endings', true ); //so it doesn't choke on mac CR line endings
 		$fh = @fopen( $file_path, 'r' );
@@ -462,7 +462,7 @@ class CsvImporter extends MarketPress_Importer {
 						$titles = array_map( 'strtolower', $temp_fields );
 					
 					//switch keys out for titles
-					$new_fields = array( );
+					$new_fields = array();
 					foreach ( $temp_fields as $key => $value ) {
 						$new_fields[$titles[$key]] = $value;
 					}
@@ -483,7 +483,7 @@ class CsvImporter extends MarketPress_Importer {
 	}
 	
 	function file_path( $dir = false ) {
-		$target_path = wp_upload_dir( );
+		$target_path = wp_upload_dir();
 		if ( $dir )
 			return trailingslashit( $target_path['basedir'] );
 		else
@@ -492,4 +492,4 @@ class CsvImporter extends MarketPress_Importer {
 	
 }
 //only load if the plugin is active and installed
-$mp_csv = new CsvImporter( );
+$mp_csv = new CsvImporter();

@@ -1,26 +1,26 @@
 <?php
 global $coursepress;
 
-$unit_module_main = new Unit_Module( );
+$unit_module_main = new Unit_Module();
 $page = $_GET['page'];
 $s = ( isset( $_GET['s'] ) ? $_GET['s'] : '' );
 
 /* * **************************GENERATING REPORT******************************** */
 if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
-    //cp_suppress_errors( );
-    ob_end_clean( );
-    ob_start( );
+    //cp_suppress_errors();
+    ob_end_clean();
+    ob_start();
     $course_id = ( int )$_POST['course_id'];
     $course = new Course( $course_id );
-    $course_units = $course->get_units( );
-    $course_details = $course->get_course( );
+    $course_units = $course->get_units();
+    $course_details = $course->get_course();
     $units_filter = $_POST['units'];
     $assessable_answers = 0;
 
     if ( is_numeric( $units_filter ) ) {
-        $course_units = array( );
+        $course_units = array();
         $unit = new Unit( $units_filter );
-        $course_units[0] = $unit->get_unit( );
+        $course_units[0] = $unit->get_unit();
     }
 
     $report_title = $course_details->post_title;
@@ -60,7 +60,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
                 </tr>
             </table>
             <?php
-            $module = new Unit_Module( );
+            $module = new Unit_Module();
             $modules = $module->get_modules( $course_unit->ID );
 
             $input_modules_count = 0;
@@ -71,7 +71,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
                     if ( class_exists( $class_name ) ) {
 
-                        $module = new $class_name( );
+                        $module = new $class_name();
 
                         if ( $module->front_save ) {
                             $input_modules_count++;
@@ -99,7 +99,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
                     if ( class_exists( $class_name ) ) {
 
-                        $module = new $class_name( );
+                        $module = new $class_name();
                         $assessable = get_post_meta( $mod->ID, 'gradable_answer', true );
 
                         if ( $module->front_save ) {
@@ -214,7 +214,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
     }
 
 
-    $report_content = ob_get_clean( );
+    $report_content = ob_get_clean();
     //$report_title = __( 'Report', 'cp' );
     $report_name = __( $report_title . '.pdf', 'cp' );
     $coursepress->pdf_report( $report_content, $report_name, $report_title );
@@ -236,14 +236,14 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
             switch ( addslashes( $action ) ) {
                 case 'delete':
                     if ( current_user_can( 'coursepress_delete_students_cap' ) ) {
-                        $student->delete_student( );
+                        $student->delete_student();
                         $message = __( 'Selected students has been removed successfully.', 'cp' );
                     }
                     break;
 
                 case 'withdraw':
                     if ( current_user_can( 'coursepress_withdraw_students_cap' ) ) {
-                        $student->withdraw_from_all_courses( );
+                        $student->withdraw_from_all_courses();
                         $message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }
                     break;
@@ -305,9 +305,9 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                         }
 
                         $course_obj = new Course( $course->ID );
-                        $course_object = $course_obj->get_course( );
+                        $course_object = $course_obj->get_course();
 
-                        if ( $course_obj->get_number_of_students( ) >= 1 ) {
+                        if ( $course_obj->get_number_of_students() >= 1 ) {
                             $courses_with_students++;
                             ?>
                             <option value="<?php echo $course->ID; ?>" <?php echo ( ( isset( $_GET['course_id'] ) && $_GET['course_id'] == $course->ID ) ? 'selected="selected"' : '' ); ?>><?php echo $course->post_title; ?></option>
@@ -338,7 +338,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                 <?php
                 if ( $current_course_id !== 0 ) {//courses exists, at least one 
                     $course = new Course( $current_course_id );
-                    $course_units = $course->get_units( );
+                    $course_units = $course->get_units();
 
                     if ( count( $course_units ) >= 1 ) {
 
@@ -432,13 +432,13 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                     );
                 }
 
-                $additional_url_args = array( );
+                $additional_url_args = array();
                 $additional_url_args['course_id'] = $current_course_id;
                 $additional_url_args['classes'] = urlencode( $classes );
 
-                $student_search = new Student_Search( '', $page_num, array( ), $args, $additional_url_args );
+                $student_search = new Student_Search( '', $page_num, array(), $args, $additional_url_args );
 
-                foreach ( $student_search->get_results( ) as $user ) {
+                foreach ( $student_search->get_results() as $user ) {
 
                     $user_object = new Student( $user->ID );
                     $roles = $user_object->roles;
@@ -470,7 +470,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                 }
                 ?>
                 <?php
-                if ( count( $student_search->get_results( ) ) == 0 ) {
+                if ( count( $student_search->get_results() ) == 0 ) {
                     ?>
                     <tr><td colspan="8"><div class="zero"><?php _e( 'No students found.', 'cp' ); ?></div></td></tr>
                     <?php
@@ -485,7 +485,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                     <option value=""><?php _e( 'All Units' ) ?></option>
                     <?php
                     $course = new Course( $current_course_id );
-                    $course_units = $course->get_units( );
+                    $course_units = $course->get_units();
                     foreach ( $course_units as $course_unit ) {
                         ?>
                         <option value="<?php echo $course_unit->ID; ?>"><?php echo $course_unit->post_title; ?></option>
@@ -497,7 +497,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
                 <?php submit_button( __( 'Generate Report', 'cp' ), 'primary', 'generate_report_button', false ); ?>
             </div>
 
-            <div class="tablenav-pages"><?php $student_search->page_links( ); ?></div>
+            <div class="tablenav-pages"><?php $student_search->page_links(); ?></div>
 
         </div><!--/tablenav-->
     </form>

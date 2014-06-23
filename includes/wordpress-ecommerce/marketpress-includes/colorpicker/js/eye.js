@@ -5,14 +5,14 @@
  * 
  */
 ( function( $ ) {
-	var EYE = window.EYE = function( ) {
+	var EYE = window.EYE = function() {
 		var _registered = {
 			init: []
 		};
 		return {
-			init: function( ) {
+			init: function() {
 				$.each( _registered.init, function( nr, fn ) {
-					fn.call( );
+					fn.call();
 				} );
 			},
 			extend: function( prop ) {
@@ -29,6 +29,6 @@
 				_registered[type].push( fn );
 			}
 		};
-	}( );
+	}();
 	$( EYE.init );
 } )( jQuery );

@@ -40,7 +40,7 @@ class Simplify_Refund extends Simplify_Object {
      */
     static public function createRefund( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_Refund( );
+        $instance = new Simplify_Refund();
         $instance->setAll( $hash );
 
         $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
@@ -63,7 +63,7 @@ class Simplify_Refund extends Simplify_Object {
         * @see       ResourceList
         */
         static public function listRefund( $criteria = null, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Refund( );
+            $val = new Simplify_Refund();
             $list = Simplify_PaymentsApi::listObject( $val, $criteria, $publicKey, $privateKey );
 
             return $list;
@@ -79,7 +79,7 @@ class Simplify_Refund extends Simplify_Object {
          * @return    Refund a Refund object
          */
         static public function findRefund( $id, $publicKey = null, $privateKey = null ) {
-            $val = new Simplify_Refund( );
+            $val = new Simplify_Refund();
             $val->id = $id;
 
             $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
@@ -90,7 +90,7 @@ class Simplify_Refund extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz( ) {
+    public function getClazz() {
         return "Refund";
     }
 }

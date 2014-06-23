@@ -41,7 +41,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
             update_option( 'use_custom_login_form', 0 );
         }
         
-        flush_rewrite_rules( );
+        flush_rewrite_rules();
     }
 }
 ?>
@@ -60,7 +60,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
 
 
     <?php
-    $menus = array( );
+    $menus = array();
     if ( current_user_can( 'manage_options' ) ) {
         $menus['general'] = __( 'General', 'cp' );
     }
@@ -111,39 +111,39 @@ if ( isset( $_POST['_wpnonce'] ) ) {
 
             case 'general':
                 if ( current_user_can( 'manage_options' ) ) {
-                    $this->show_settings_general( );
+                    $this->show_settings_general();
                 }
                 break;
 
 
             case 'groups':
                 if ( current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
-                    $this->show_settings_groups( );
+                    $this->show_settings_groups();
                 }
                 break;
 
             /* case 'payment':
               if ( current_user_can( 'manage_options' ) ) {
-              $this->show_settings_payment( );
+              $this->show_settings_payment();
               }
               break; */
 
             case 'shortcodes':
                 if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
-                    $this->show_settings_shortcodes( );
+                    $this->show_settings_shortcodes();
                 }
                 break;
 
             case 'instructor_capabilities':
                 if ( current_user_can( 'manage_options' ) ) {
-                    //$this->add_user_roles_and_caps( );
-                    $this->show_settings_instructor_capabilities( );
+                    //$this->add_user_roles_and_caps();
+                    $this->show_settings_instructor_capabilities();
                 }
                 break;
 
             case 'email':
                 if ( current_user_can( 'manage_options' ) ) {
-                    $this->show_settings_email( );
+                    $this->show_settings_email();
                 }
                 break;
 

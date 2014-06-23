@@ -6,7 +6,7 @@ if ( isset( $_GET['student_id'] ) && is_numeric( $_GET['student_id'] ) ) {
 if ( isset( $_POST['course_id'] ) ) {
     if ( wp_verify_nonce( $_POST['save_class_and_group_changes'], 'save_class_and_group_changes' ) ) {
         $course = new Course( $_POST['course_id'] );
-        if ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course->details->post_author == get_current_user_id( ) ) ) {
+        if ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
             $student->update_student_group( $_POST['course_id'], $_POST['course_group'] );
             $student->update_student_class( $_POST['course_id'], $_POST['course_class'] );
             $message = __( 'Group and Class for the student has been updated successfully.', 'cp' );
@@ -60,7 +60,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
-                                    <span class="info"><?php echo $student->get_courses_number( ); ?></span>
+                                    <span class="info"><?php echo $student->get_courses_number(); ?></span>
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
@@ -82,7 +82,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 <h3><?php _e( 'Courses', 'cp' ); ?></h3>
 
                                 <?php
-                                $enrolled_courses = $student->get_enrolled_courses_ids( );
+                                $enrolled_courses = $student->get_enrolled_courses_ids();
 
                                 if ( count( $enrolled_courses ) == 0 ) {
                                     ?>
@@ -93,7 +93,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 foreach ( $enrolled_courses as $course_id ) {
 
                                     $course_object = new Course( $course_id );
-                                    $course_object = $course_object->get_course( );
+                                    $course_object = $course_object->get_course();
 
                                     if ( $course_object ) {
                                         ?>
@@ -148,7 +148,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
                                             </div><!--student-course-right-->
 
-                                            <?php if ( ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course_object->post_author == get_current_user_id( ) ) ) && 1 == 0 /* moving for the next release */ ) { ?>
+                                            <?php if ( ( ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course_object->post_author == get_current_user_id() ) ) && 1 == 0 /* moving for the next release */ ) { ?>
                                                 <div class="course-controls alternate">
 
                                                     <form name="form_student_<?php echo $course_object->ID; ?>" id="form_student_<?php echo $course_object->ID; ?>" method="post" action="<?php echo admin_url( 'admin.php?page=students&action=view&student_id='.$student->ID );?>">

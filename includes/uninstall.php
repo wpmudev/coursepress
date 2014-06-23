@@ -6,7 +6,7 @@ register_deactivation_hook( __FILE__, 'coursepress_deactivate' );
 function my_network_propagate( $pfunction, $networkwide ) {
     global $wpdb;
  
-    if ( function_exists( 'is_multisite' ) && is_multisite( ) ) {
+    if ( function_exists( 'is_multisite' ) && is_multisite() ) {
         // check if it is a network activation - if so, run the activation function
         // for each blog id
         if ( $networkwide ) {

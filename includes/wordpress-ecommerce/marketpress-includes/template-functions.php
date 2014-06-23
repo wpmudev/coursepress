@@ -45,14 +45,14 @@ if ( !function_exists( 'mp_tag_cloud' ) ) :
  * The 'topic_count_text_callback' argument is a function, which, given the count
  * of the posts	 with that tag, returns a text for the tooltip of the tag link.
  *
- * The 'exclude' and 'include' arguments are used for the {@link get_tags( )}
+ * The 'exclude' and 'include' arguments are used for the {@link get_tags()}
  * function. Only one should be used, because only one will be used and the
  * other ignored, if they are both set.
  *
  * @param bool $echo Optional. Whether or not to echo.
  * @param array|string $args Optional. Override default arguments.
  */
-function mp_tag_cloud( $echo = true, $args = array( ) ) {
+function mp_tag_cloud( $echo = true, $args = array() ) {
 
 		$args['echo'] = false;
 		$args['taxonomy'] = 'product_tag';
@@ -79,22 +79,22 @@ if ( !function_exists( 'mp_list_categories' ) ) :
  * categories.
  *		 'order' ( string ) default is 'ASC' - What direction to order categories.
  *		 'show_last_update' ( bool|int ) default is 0 - See {@link
- * walk_category_dropdown_tree( )}
+ * walk_category_dropdown_tree()}
  *		 'show_count' ( bool|int ) default is 0 - Whether to show how many posts are
  * in the category.
  *		 'hide_empty' ( bool|int ) default is 1 - Whether to hide categories that
  * don't have any posts attached to them.
  *		 'use_desc_for_title' ( bool|int ) default is 1 - Whether to use the
  * description instead of the category title.
- *		 'feed' - See {@link get_categories( )}.
- *		 'feed_type' - See {@link get_categories( )}.
- *		 'feed_image' - See {@link get_categories( )}.
- *		 'child_of' ( int ) default is 0 - See {@link get_categories( )}.
- *		 'exclude' ( string ) - See {@link get_categories( )}.
- *		 'exclude_tree' ( string ) - See {@link get_categories( )}.
- *		 'current_category' ( int ) - See {@link get_categories( )}.
- *		 'hierarchical' ( bool ) - See {@link get_categories( )}.
- *		 'title_li' ( string ) - See {@link get_categories( )}.
+ *		 'feed' - See {@link get_categories()}.
+ *		 'feed_type' - See {@link get_categories()}.
+ *		 'feed_image' - See {@link get_categories()}.
+ *		 'child_of' ( int ) default is 0 - See {@link get_categories()}.
+ *		 'exclude' ( string ) - See {@link get_categories()}.
+ *		 'exclude_tree' ( string ) - See {@link get_categories()}.
+ *		 'current_category' ( int ) - See {@link get_categories()}.
+ *		 'hierarchical' ( bool ) - See {@link get_categories()}.
+ *		 'title_li' ( string ) - See {@link get_categories()}.
  *		 'depth' ( int ) - The max depth.
  *
  * @param bool $echo Optional. Whether or not to echo.
@@ -126,13 +126,13 @@ if ( !function_exists( 'mp_dropdown_categories' ) ) :
  *		 'orderby' ( string ) default is 'ID' - What column to use for ordering the
  * categories.
  *		 'order' ( string ) default is 'ASC' - What direction to order categories.
- *		 'show_last_update' ( bool|int ) default is 0 - See {@link get_categories( )}
+ *		 'show_last_update' ( bool|int ) default is 0 - See {@link get_categories()}
  *		 'show_count' ( bool|int ) default is 0 - Whether to show how many posts are
  * in the category.
  *		 'hide_empty' ( bool|int ) default is 1 - Whether to hide categories that
  * don't have any posts attached to them.
- *		 'child_of' ( int ) default is 0 - See {@link get_categories( )}.
- *		 'exclude' ( string ) - See {@link get_categories( )}.
+ *		 'child_of' ( int ) default is 0 - See {@link get_categories()}.
+ *		 'exclude' ( string ) - See {@link get_categories()}.
  *		 'depth' ( int ) - The max depth.
  *		 'tab_index' ( int ) - Tab index for select element.
  *		 'name' ( string ) - The name attribute value for select element.
@@ -159,9 +159,9 @@ function mp_dropdown_categories( $echo = true, $args = '' ) {
 		$dropdown .= '<script type="text/javascript">
 /* <![CDATA[ */
 	var dropdown = document.getElementById( "mp_category_dropdown" );
-	function onCatChange( ) {
+	function onCatChange() {
 		if ( dropdown.options[dropdown.selectedIndex].value > 0 ) {
-			location.href = "' . get_home_url( ) . '/?product_category="+dropdown.options[dropdown.selectedIndex].value;
+			location.href = "' . get_home_url() . '/?product_category="+dropdown.options[dropdown.selectedIndex].value;
 		}
 	}
 	dropdown.onchange = onCatChange;
@@ -222,11 +222,11 @@ if ( !function_exists( 'mp_related_products' ) ) :
  * @param bool $simple_list Optional, whether to show the related products based on the "list_view" setting or as a simple unordered list
  * @param bool $in_same_tags Optional, whether to limit related to same tags
  */
-function mp_related_products( ) {
+function mp_related_products() {
 	global $mp, $post;
 	
 	$output = '';
-	$categories = $tag_list = array( );
+	$categories = $tag_list = array();
 	
 	if( $mp->get_setting( 'related_products->show' ) == 0 )
 		return '';
@@ -237,7 +237,7 @@ function mp_related_products( ) {
 		'limit' => $mp->get_setting( 'related_products->show_limit' ),
 	) );
 	
-	$args = $mp->parse_args( func_get_args( ), $defaults );
+	$args = $mp->parse_args( func_get_args(), $defaults );
 	
 	if( !is_null( $args['product_id'] ) ) {
 		$args['product_id'] = ( isset( $post ) && $post->post_type == 'product' ) ? $post->ID : false;
@@ -255,7 +255,7 @@ function mp_related_products( ) {
 		'post_type' 	 => 'product',
 		'posts_per_page' => intval( $args['limit'] ),
 		'post__not_in' 	 => array( $args['product_id'] ),
-		'tax_query' 	 => array( ), //we'll add these later
+		'tax_query' 	 => array(), //we'll add these later
 	);
 	
 	//get the tags for this product
@@ -383,7 +383,7 @@ if ( !function_exists( '_mp_cart_table' ) ) :
 //Prints cart table, for internal use
 function _mp_cart_table( $type = 'checkout', $echo = false ) {
 		global $mp, $blog_id;
-		$blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+		$blog_id = ( is_multisite() ) ? $blog_id : 1;
 		$current_blog_id = $blog_id;
 
 		$global_cart = $mp->get_cart_contents( true );
@@ -402,13 +402,13 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 				$content .= '<th class="mp_cart_col_price">' . __( 'Price:', 'mp' ) . '</th>';
 				$content .= '<th class="mp_cart_col_quant">' . __( 'Quantity:', 'mp' ) . '</th></tr></thead><tbody>';
 
-				$totals = array( );
-				$shipping_prices = array( );
-				$shipping_tax_prices = array( );
-				$tax_prices = array( );
+				$totals = array();
+				$shipping_prices = array();
+				$shipping_tax_prices = array();
+				$tax_prices = array();
 				foreach ( $selected_cart as $bid => $cart ) {
 
-						if ( is_multisite( ) )
+						if ( is_multisite() )
 								switch_to_blog( $bid );
 
 						foreach ( $cart as $product_id => $variations ) {
@@ -424,23 +424,23 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 								}
 						}
 
-						if ( ( $shipping_price = $mp->shipping_price( ) ) !== false )
+						if ( ( $shipping_price = $mp->shipping_price() ) !== false )
 								$shipping_prices[] = $shipping_price;
 
 						if ( ( $shipping_tax_price = $mp->shipping_tax_price( $shipping_price ) ) !== false )
 								$shipping_tax_prices[] = $shipping_tax_price;
 
-						if ( ( $tax_price = $mp->tax_price( ) ) !== false )
+						if ( ( $tax_price = $mp->tax_price() ) !== false )
 								$tax_prices[] = $tax_price;
 				}
 				//go back to original blog
-				if ( is_multisite( ) )
+				if ( is_multisite() )
 						switch_to_blog( $current_blog_id );
 
 				$total = array_sum( $totals );
 
 				//coupon line TODO - figure out how to apply them on global checkout
-				$coupon_code = $mp->get_coupon_code( );
+				$coupon_code = $mp->get_coupon_code();
 				if ( $coupon = $mp->coupon_value( $coupon_code, $total ) ) {
 						//dont' show confusing subtotal with tax inclusive pricing on
 						if ( !$mp->get_setting( 'tax->tax_inclusive' ) ) {
@@ -508,13 +508,13 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 				$content .= '<th class="mp_cart_col_quant">' . __( 'Qty:', 'mp' ) . '</th>';
 				$content .= '<th class="mp_cart_col_price">' . __( 'Price:', 'mp' ) . '</th></tr></thead><tbody>';
 
-				$totals = array( );
-				$shipping_prices = array( );
-				$shipping_tax_prices = array( );
-				$tax_prices = array( );
+				$totals = array();
+				$shipping_prices = array();
+				$shipping_tax_prices = array();
+				$tax_prices = array();
 				foreach ( $selected_cart as $bid => $cart ) {
 
-						if ( is_multisite( ) )
+						if ( is_multisite() )
 								switch_to_blog( $bid );
 
 						foreach ( $cart as $product_id => $variations ) {
@@ -550,23 +550,23 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 								}
 						}
 
-						if ( ( $shipping_price = $mp->shipping_price( ) ) !== false )
+						if ( ( $shipping_price = $mp->shipping_price() ) !== false )
 								$shipping_prices[] = $shipping_price;
 
 						if ( ( $shipping_tax_price = $mp->shipping_tax_price( $shipping_price ) ) !== false )
 								$shipping_tax_prices[] = $shipping_tax_price;
 
-						if ( ( $tax_price = $mp->tax_price( ) ) !== false )
+						if ( ( $tax_price = $mp->tax_price() ) !== false )
 								$tax_prices[] = $tax_price;
 				}
 				//go back to original blog
-				if ( is_multisite( ) )
+				if ( is_multisite() )
 						switch_to_blog( $current_blog_id );
 
 				$total = array_sum( $totals );
 
 				//coupon line TODO - figure out how to apply them on global checkout
-				$coupon_code = $mp->get_coupon_code( );
+				$coupon_code = $mp->get_coupon_code();
 				if ( $coupon = $mp->coupon_value( $coupon_code, $total ) ) {
 						
 						//dont' show confusing subtotal with tax inclusive pricing on
@@ -619,10 +619,10 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 				$content .= '<th class="mp_cart_col_quant">' . __( 'Qty:', 'mp' ) . '</th>';
 				$content .= '<th class="mp_cart_col_price">' . __( 'Price:', 'mp' ) . '</th></tr></thead><tbody>';
 
-				$totals = array( );
+				$totals = array();
 				foreach ( $selected_cart as $bid => $cart ) {
 
-						if ( is_multisite( ) )
+						if ( is_multisite() )
 								switch_to_blog( $bid );
 
 						foreach ( $cart as $product_id => $variations ) {
@@ -638,7 +638,7 @@ function _mp_cart_table( $type = 'checkout', $echo = false ) {
 						}
 				}
 
-				if ( is_multisite( ) )
+				if ( is_multisite() )
 						switch_to_blog( $current_blog_id );
 
 				$total = array_sum( $totals );
@@ -669,7 +669,7 @@ function _mp_cart_login( $echo = false ) {
 
 		$content = '';
 		//don't show if logged in
-		if ( is_user_logged_in( ) || defined( 'MP_HIDE_LOGIN_OPTION' ) ) {
+		if ( is_user_logged_in() || defined( 'MP_HIDE_LOGIN_OPTION' ) ) {
 				$content .= '<p class="mp_cart_direct_checkout">';
 				$content .= '<a class="mp_cart_direct_checkout_link" href="' . mp_checkout_step_url( 'shipping' ) . '">' . __( 'Checkout Now &raquo;', 'mp' ) . '</a>';
 				$content .= '</p>';
@@ -686,7 +686,7 @@ function _mp_cart_login( $echo = false ) {
 				$content .= '<tbody>';
 				$content .= '<tr>';
 				$content .= '<td class="mp_cart_login">';
-				$content .= '<form name="loginform" id="loginform" action="' . wp_login_url( ) . '" method="post">';
+				$content .= '<form name="loginform" id="loginform" action="' . wp_login_url() . '" method="post">';
 				$content .= '<label>' . __( 'Username', 'mp' ) . '<br />';
 				$content .= '<input type="text" name="log" id="user_login" class="input" value="" size="20" /></label>';
 				$content .= '<br />';
@@ -749,7 +749,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 
 		$content = '';
 		//don't show if logged in
-		if ( !is_user_logged_in( ) && !defined( 'MP_HIDE_LOGIN_OPTION' ) && $editable ) {
+		if ( !is_user_logged_in() && !defined( 'MP_HIDE_LOGIN_OPTION' ) && $editable ) {
 				$content .= '<p class="mp_cart_login_msg">';
 				$content .= __( 'Made a purchase here before?', 'mp' ) . ' <a class="mp_cart_login_link" href="' . wp_login_url( mp_checkout_step_url( 'shipping' ) ) . '">' . __( 'Login now to retrieve your saved info &raquo;', 'mp' ) . '</a>';
 				$content .= '</p>';
@@ -767,7 +767,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 
 				$content .= '<table class="mp_cart_shipping">';
 				$content .= '<thead><tr>';
-				$content .= '<th colspan="2">' . ( ( ( $mp->download_only_cart( $mp->get_cart_contents( ) ) && !$mp->global_cart ) || $mp->get_setting( 'shipping->method' ) != 'none' ) ? __( 'Enter Your Checkout Information:', 'mp' ) : __( 'Enter Your Shipping Information:', 'mp' ) ) . '</th>';
+				$content .= '<th colspan="2">' . ( ( ( $mp->download_only_cart( $mp->get_cart_contents() ) && !$mp->global_cart ) || $mp->get_setting( 'shipping->method' ) != 'none' ) ? __( 'Enter Your Checkout Information:', 'mp' ) : __( 'Enter Your Shipping Information:', 'mp' ) ) . '</th>';
 				$content .= '</tr></thead>';
 				$content .= '<tbody>';
 				$content .= '<tr>';
@@ -776,7 +776,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 				$content .= '<input size="35" name="email" type="text" value="' . esc_attr( $email ) . '" /></td>';
 				$content .= '</tr>';
 
-				if ( ( !$mp->download_only_cart( $mp->get_cart_contents( ) ) || $mp->global_cart || $mp->get_setting( 'tax->downloadable_address' ) ) && $mp->get_setting( 'shipping->method' ) != 'none' ) {
+				if ( ( !$mp->download_only_cart( $mp->get_cart_contents() ) || $mp->global_cart || $mp->get_setting( 'tax->downloadable_address' ) ) && $mp->get_setting( 'shipping->method' ) != 'none' ) {
 						$content .= '<tr>';
 						$content .= '<td align="right">' . __( 'Full Name:', 'mp' ) . '*</td><td>';
 						$content .= apply_filters( 'mp_checkout_error_name', '' );
@@ -786,7 +786,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 						$content .= '<td align="right">' . __( 'Country:', 'mp' ) . '*</td><td>';
 						$content .= apply_filters( 'mp_checkout_error_country', '' );
 						$content .= '<select id="mp_country" name="country" class="mp_shipping_field">';
-						foreach ( $mp->get_setting( 'shipping->allowed_countries', array( ) ) as $code ) {
+						foreach ( $mp->get_setting( 'shipping->allowed_countries', array() ) as $code ) {
 								$content .= '<option value="' . $code . '"' . selected( $country, $code, false ) . '>' . esc_attr( $mp->countries[$code] ) . '</option>';
 						}
 						$content .= '</select>';
@@ -833,7 +833,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 						$content .= '</tr>';
 				}
 
-				if ( !$mp->download_only_cart( $mp->get_cart_contents( ) ) ) {
+				if ( !$mp->download_only_cart( $mp->get_cart_contents() ) ) {
 					$content .= apply_filters( 'mp_checkout_shipping_field', '' );
 				}
 				
@@ -846,7 +846,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 				$content .= '<input type="submit" name="mp_shipping_submit" id="mp_shipping_submit" value="' . __( 'Continue Checkout &raquo;', 'mp' ) . '" />';
 				$content .= '</p>';
 				$content .= '</form>';
-		} else if ( !$mp->download_only_cart( $mp->get_cart_contents( ) ) ) { //is not editable and not download only
+		} else if ( !$mp->download_only_cart( $mp->get_cart_contents() ) ) { //is not editable and not download only
 				$content .= '<table class="mp_cart_shipping">';
 				$content .= '<thead><tr>';
 				$content .= '<th>' . __( 'Shipping Information:', 'mp' ) . '</th>';
@@ -902,7 +902,7 @@ function _mp_cart_shipping( $editable = false, $echo = false ) {
 						$content .= '</tr>';
 				}
 
-				if ( !$mp->download_only_cart( $mp->get_cart_contents( ) ) ) {
+				if ( !$mp->download_only_cart( $mp->get_cart_contents() ) ) {
 					$content .= apply_filters( 'mp_checkout_shipping_field_readonly', '' );
 				}
 
@@ -925,7 +925,7 @@ if ( !function_exists( '_mp_cart_payment' ) ) :
 //Prints cart payment gateway form, for internal use
 function _mp_cart_payment( $type, $echo = false ) {
 		global $mp, $blog_id, $mp_gateway_active_plugins;
-		$blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+		$blog_id = ( is_multisite() ) ? $blog_id : 1;
 
 		$cart = $mp->get_cart_contents( $mp->global_cart );
 
@@ -1023,7 +1023,7 @@ function mp_show_cart( $context = '', $checkoutstep = null, $echo = true ) {
 		if ( $checkoutstep == null )
 				$checkoutstep = get_query_var( 'checkoutstep' );
 
-		if ( mp_items_in_cart( ) || $checkoutstep == 'confirmation' ) {
+		if ( mp_items_in_cart() || $checkoutstep == 'confirmation' ) {
 
 				if ( $context == 'widget' ) {
 						$content .= _mp_cart_table( 'widget' );
@@ -1104,7 +1104,7 @@ if ( !function_exists( 'mp_order_status' ) ) :
 function mp_order_status( $echo = true ) {
 		global $mp, $wp_query, $blog_id;
 
-		$bid = ( is_multisite( ) ) ? $blog_id : 1; // FPM: Used for Custom Field Processing
+		$bid = ( is_multisite() ) ? $blog_id : 1; // FPM: Used for Custom Field Processing
 		$content = do_shortcode( $mp->get_setting( 'msg->order_status' ) );
 		$order_id = isset( $wp_query->query_vars['order_id'] ) ? $wp_query->query_vars['order_id'] : ( isset( $_GET['order_id'] ) ? $_GET['order_id'] : '' );
 		$order = false;
@@ -1346,9 +1346,9 @@ function mp_order_status( $echo = true ) {
 				}
 		} else {
 				//get from usermeta
-				$user_id = get_current_user_id( );
+				$user_id = get_current_user_id();
 				if ( $user_id ) {
-						if ( is_multisite( ) ) {
+						if ( is_multisite() ) {
 								global $blog_id;
 								$meta_id = 'mp_order_history_' . $blog_id;
 						} else {
@@ -1357,7 +1357,7 @@ function mp_order_status( $echo = true ) {
 						$orders = get_user_meta( $user_id, $meta_id, true );
 				} else {
 						//get from cookie
-						if ( is_multisite( ) ) {
+						if ( is_multisite() ) {
 								global $blog_id;
 								$cookie_id = 'mp_order_history_' . $blog_id . '_' . COOKIEHASH;
 						} else {
@@ -1400,7 +1400,7 @@ function mp_order_status( $echo = true ) {
 								<input type="submit" id="order-id-submit" value="' . apply_filters( 'mp_order_status_label_look_up_button', __( 'Look Up &raquo;', 'mp' ), $order ) . '" />
 						</form>';
 				} else {
-						if ( !is_user_logged_in( ) ) {
+						if ( !is_user_logged_in() ) {
 							$content .= '
 								<table class="mp_cart_login">
 										<thead><tr>
@@ -1410,7 +1410,7 @@ function mp_order_status( $echo = true ) {
 										<tbody>
 												<tr>
 														<td class="mp_cart_login">
-																<form name="loginform" id="loginform" action="' . wp_login_url( ) . '" method="post">
+																<form name="loginform" id="loginform" action="' . wp_login_url() . '" method="post">
 																		<label>' . apply_filters( 'mp_order_status_label_username', __( 'Username', 'mp' ), $order ) . '<br />
 																				<input type="text" name="log" id="user_login" class="input" value="" size="20" /></label>
 																		<br />
@@ -1534,10 +1534,10 @@ if ( !function_exists( 'mp_list_products' ) ) :
  * @param bool $filters Optional, show filters
  */
 
-function mp_list_products( ) {
+function mp_list_products() {
 	global $wp_query, $mp;
 	
-	$args = $mp->parse_args( func_get_args( ), $mp->defaults['list_products'] );
+	$args = $mp->parse_args( func_get_args(), $mp->defaults['list_products'] );
 	$args['nopaging'] = false;
 	
 	$query = array(
@@ -1646,7 +1646,7 @@ function mp_list_products( ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		//do nothing
 	} else {
-		$content .= ( ( is_null( $args['filters'] ) && 1 == $mp->get_setting( 'show_filters' ) ) || $args['filters'] ) ? mp_products_filter( ) : mp_products_filter( true );
+		$content .= ( ( is_null( $args['filters'] ) && 1 == $mp->get_setting( 'show_filters' ) ) || $args['filters'] ) ? mp_products_filter() : mp_products_filter( true );
 	}
 	
 	$content .= '<div id="mp_product_list" class="mp_' . $layout_type . '">';
@@ -1677,7 +1677,7 @@ function _mp_products_html_list( $custom_query ) {
 		$total = $custom_query->post_count;
 		$count = 0;
 		
-		while ( $custom_query->have_posts( ) ) : $custom_query->the_post( );
+		while ( $custom_query->have_posts() ) : $custom_query->the_post();
 				$count = $custom_query->current_post + 1;
 
 				//add last css class for styling grids
@@ -1707,7 +1707,7 @@ function _mp_products_html_list( $custom_query ) {
 				$html .= '</div>';
 		endwhile;
 		
-		$post = NULL; //wp_reset_postdata( ) doesn't work here
+		$post = NULL; //wp_reset_postdata() doesn't work here
 		
 		return apply_filters( '_mp_products_html_list', $html, $custom_query );
 }
@@ -1728,7 +1728,7 @@ function _mp_products_html_grid( $custom_query ) {
 
 		$inline_style = !( $mp->get_setting( 'store_theme' ) == 'none' || current_theme_supports( 'mp_style' ) );
 
-		while ( $custom_query->have_posts( ) ) : $custom_query->the_post( );
+		while ( $custom_query->have_posts() ) : $custom_query->the_post();
 				$img = mp_product_image( false, 'list', $post->ID );
 				$excerpt = $mp->get_setting( 'show_excerpt' ) ?
 								'<p class="mp_excerpt">' . $mp->product_excerpt( $post->post_excerpt, $post->post_content, $post->ID, '' ) . '</p>' :
@@ -1737,7 +1737,7 @@ function _mp_products_html_grid( $custom_query ) {
 		
 		$pinit = mp_pinit_button( $post->ID, 'all_view' );
 
-				$class = array( );
+				$class = array();
 				$class[] = strlen( $img ) > 0 ? 'mp_thumbnail' : '';
 				$class[] = strlen( $excerpt ) > 0 ? 'mp_excerpt' : '';
 				$class[] = mp_has_variations( $post->ID ) ? 'mp_price_variations' : '';
@@ -1767,7 +1767,7 @@ function _mp_products_html_grid( $custom_query ) {
 
 		$html .= ( $custom_query->found_posts > 0 ) ? '<div class="clear"></div>' : '';
 		
-		$post = NULL; //wp_reset_postdata( ) doesn't work here
+		$post = NULL; //wp_reset_postdata() doesn't work here
 		
 		return apply_filters( '_mp_products_html_grid', $html, $custom_query );
 }
@@ -2054,7 +2054,7 @@ function mp_get_product_class( $class = '', $post_id = null ) {
 
 		$post = get_post( $post_id );
 
-		$classes = array( );
+		$classes = array();
 
 		if ( empty( $post ) )
 				return $classes;
@@ -2179,10 +2179,10 @@ function mp_buy_button( $echo = true, $context = 'list', $post_id = NULL ) {
 		}
 
 		//check stock
-		$no_inventory = array( );
+		$no_inventory = array();
 		$all_out = false;
 		if ( $meta['mp_track_inventory'] ) {
-				$cart = $mp->get_cart_contents( );
+				$cart = $mp->get_cart_contents();
 				if ( isset( $cart[$post_id] ) && is_array( $cart[$post_id] ) ) {
 						foreach ( $cart[$post_id] as $variation => $data ) {
 								if ( $meta['mp_inventory'][$variation] <= $data['quantity'] )
@@ -2405,7 +2405,7 @@ function mp_product_image( $echo = true, $context = 'list', $post_id = NULL, $si
 		}
 		
 		//force ssl on images ( if applicable ) http://wp.mu/8s7
-		if ( is_ssl( ) ) {
+		if ( is_ssl() ) {
 			$image = str_replace( 'http://', 'https://', $image );
 		}
 
@@ -2434,7 +2434,7 @@ function mp_products_filter( $hidden = false ) {
 		global $wp_query, $mp;
 
 		if ( 'product_category' == get_query_var( 'taxonomy' ) ) {
-				$term = get_queried_object( ); //must do this for number tags
+				$term = get_queried_object(); //must do this for number tags
 				$default = $term->term_id;
 		} else {
 				$default = '-1';
@@ -2503,10 +2503,10 @@ if ( !function_exists( 'mp_cart_link' ) ) :
 function mp_cart_link( $echo = true, $url = false, $link_text = '' ) {
 		global $mp, $mp_wpmu;
 
-		if ( $mp->global_cart && is_object( $mp_wpmu ) && !$mp_wpmu->is_main_site( ) && function_exists( 'mp_main_site_id' ) ) {
-				switch_to_blog( mp_main_site_id( ) );
+		if ( $mp->global_cart && is_object( $mp_wpmu ) && !$mp_wpmu->is_main_site() && function_exists( 'mp_main_site_id' ) ) {
+				switch_to_blog( mp_main_site_id() );
 				$link = home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' );
-				restore_current_blog( );
+				restore_current_blog();
 		} else {
 				$link = home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' );
 		}
@@ -2660,7 +2660,7 @@ function mp_cart_breadcrumbs( $current_step ) {
 
 		$order = array_keys( $steps );
 		$current = array_search( $current_step, $order );
-		$all = array( );
+		$all = array();
 
 		foreach ( $steps as $str => $human ) {
 				$i = array_search( $str, $order );
@@ -2721,7 +2721,7 @@ if ( !function_exists( 'mp_is_shop_page' ) ) :
  *
  * @retuns bool whether current page is a MarketPress store page.
  */
-function mp_is_shop_page( ) {
+function mp_is_shop_page() {
 		global $mp;
 		return $mp->is_shop_page;
 }
@@ -2734,8 +2734,8 @@ if ( !function_exists( 'mp_items_in_cart' ) ) :
  *
  * @retuns bool whether items are in the cart for the current user.
  */
-function mp_items_in_cart( ) {
-		if ( mp_items_count_in_cart( ) )
+function mp_items_in_cart() {
+		if ( mp_items_count_in_cart() )
 				return true;
 		else
 				return false;
@@ -2749,9 +2749,9 @@ if ( !function_exists( 'mp_items_count_in_cart' ) ) :
  *
  * @retuns int number of items that are in the cart for the current user.
  */
-function mp_items_count_in_cart( ) {
+function mp_items_count_in_cart() {
 		global $mp, $blog_id;
-		$blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+		$blog_id = ( is_multisite() ) ? $blog_id : 1;
 
 		$global_cart = $mp->get_cart_contents( true );
 		if ( !$mp->global_cart )
@@ -2786,7 +2786,7 @@ if ( !function_exists( 'mp_products_count' ) ) :
  *
  * @retuns int number of published products.
  */
-function mp_products_count( ) {
+function mp_products_count() {
 		$custom_query = new WP_Query( 'post_type=product&post_status=publish' );
 		return $custom_query->post_count;
 }
@@ -2811,10 +2811,10 @@ function mp_custom_fields_checkout_after_shipping( $content = '' ) {
 		if ( isset( $_SESSION['mp_shipping_info']['mp_custom_fields'] ) ) {
 				$mp_custom_fields = $_SESSION['mp_shipping_info']['mp_custom_fields'];
 		} else {
-				$mp_custom_fields = array( );
+				$mp_custom_fields = array();
 		}
 
-		$blog_id = ( is_multisite( ) ) ? $blog_id : 1;
+		$blog_id = ( is_multisite() ) ? $blog_id : 1;
 
 		$current_blog_id = $blog_id;
 
@@ -2828,7 +2828,7 @@ function mp_custom_fields_checkout_after_shipping( $content = '' ) {
 
 		foreach ( $selected_cart as $bid => $cart ) {
 
-				if ( is_multisite( ) )
+				if ( is_multisite() )
 						switch_to_blog( $bid );
 
 				foreach ( $cart as $product_id => $variations ) {
@@ -2899,7 +2899,7 @@ function mp_custom_fields_checkout_after_shipping( $content = '' ) {
 				}
 
 				//go back to original blog
-				if ( is_multisite( ) )
+				if ( is_multisite() )
 						switch_to_blog( $current_blog_id );
 		}
 
@@ -2937,7 +2937,7 @@ function mp_custom_fields_single_order_display_box( $order ) {
 
 		$content_product = '';
 
-		$bid = ( is_multisite( ) ) ? $blog_id : 1;
+		$bid = ( is_multisite() ) ? $blog_id : 1;
 		foreach ( $order->mp_cart_info as $product_id => $variations ) {
 				foreach ( $variations as $variation => $data ) {
 						$content_product .= '<h3>' . $data['name'] . '</h3>';
