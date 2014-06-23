@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Incsub (http://incsub.com/)
+ * @copyright Incsub ( http://incsub.com/ )
  *
- * @license http://opensource.org/licenses/GPL-2.0 GNU General Public License, version 2 (GPL-2.0)
+ * @license http://opensource.org/licenses/GPL-2.0 GNU General Public License, version 2 ( GPL-2.0 )
  * 
  * This program is free software; you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License, version 2, as  
@@ -42,7 +42,7 @@ class CP_Helper_Tooltip {
 		}
 		
 		if ( $return ) {
-			ob_start();
+			ob_start( );
 		}
 		?>
         <a class="help-icon" href="javascript:;"></a>
@@ -55,7 +55,7 @@ class CP_Helper_Tooltip {
         </div>
 		<?php
 		if ( $return ) {
-			return ob_get_clean();
+			return ob_get_clean( );
 		}
 	}	
 	

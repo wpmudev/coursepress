@@ -1,72 +1,72 @@
 <?php
 $page = $_GET['page'];
-$s = (isset($_GET['s']) ? $_GET['s'] : '');
+$s = ( isset( $_GET['s'] ) ? $_GET['s'] : '' );
 
-if (isset($_POST['action']) && isset($_POST['users']) && current_user_can('manage_options')) {
-    check_admin_referer('bulk-instructors');
+if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) && current_user_can( 'manage_options' ) ) {
+    check_admin_referer( 'bulk-instructors' );
 
     $action = $_POST['action'];
-    foreach ($_POST['users'] as $user_value) {
+    foreach ( $_POST['users'] as $user_value ) {
 
-        if (is_numeric($user_value)) {
+        if ( is_numeric( $user_value ) ) {
 
-            $instructor_id = (int) $user_value;
-            $instructor = new Instructor($instructor_id);
+            $instructor_id = ( int ) $user_value;
+            $instructor = new Instructor( $instructor_id );
 
-            switch (addslashes($action)) {
+            switch ( addslashes( $action ) ) {
                 case 'delete':
-                    $instructor->delete_instructor();
-                    $message = __('Selected instructors has been removed successfully.', 'cp');
+                    $instructor->delete_instructor( );
+                    $message = __( 'Selected instructors has been removed successfully.', 'cp' );
                     break;
 
                 case 'unassign':
-                    $instructor->unassign_from_all_courses();
-                    $message = __('Selected instructors has been unassigned from all courses successfully.', 'cp');
+                    $instructor->unassign_from_all_courses( );
+                    $message = __( 'Selected instructors has been unassigned from all courses successfully.', 'cp' );
                     break;
             }
         }
     }
 }
 
-if (isset($_GET['page_num'])) {
-    $page_num = (int) $_GET['page_num'];
+if ( isset( $_GET['page_num'] ) ) {
+    $page_num = ( int ) $_GET['page_num'];
 } else {
     $page_num = 1;
 }
 
-if (isset($_GET['s'])) {
+if ( isset( $_GET['s'] ) ) {
     $usersearch = $_GET['s'];
 } else {
     $usersearch = '';
 }
 
-if (isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
-    $instructor = new Instructor($_GET['instructor_id']);
+if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
+    $instructor = new Instructor( $_GET['instructor_id'] );
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
-    if (!isset($_GET['cp_nonce']) || !wp_verify_nonce($_GET['cp_nonce'], 'delete_instructor_'.$_GET['instructor_id'])) {
-        die(__('Cheating huh?', 'cp'));
+if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
+    if ( !isset( $_GET['cp_nonce'] ) || !wp_verify_nonce( $_GET['cp_nonce'], 'delete_instructor_'.$_GET['instructor_id'] ) ) {
+        die( __( 'Cheating huh?', 'cp' ) );
     }
-    $instructor->delete_instructor();
-    $message = __('Selected instructor has been removed successfully.', 'cp');
+    $instructor->delete_instructor( );
+    $message = __( 'Selected instructor has been removed successfully.', 'cp' );
 }
 
-if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == 'view') && isset($_GET['instructor_id']) && is_numeric($_GET['instructor_id'])) {
-    include('instructors-profile.php');
+if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'view' ) && isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
+    include( 'instructors-profile.php' );
 } else {
 
     // Query the users
-    $wp_user_search = new Instructor_Search($usersearch, $page_num);
+    $wp_user_search = new Instructor_Search( $usersearch, $page_num );
     ?>
 
     <div class="wrap nosubsub">
 
         <div class="icon32 " id="icon-users"><br></div>
-        <h2><?php _e('Instructors', 'cp'); ?><?php if (current_user_can('manage_options')) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e( 'Instructors', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?><a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
         <?php
-        if (isset($message)) {
+        if ( isset( $message ) ) {
             ?>
             <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
             <?php
@@ -76,26 +76,26 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
         <div class="tablenav tablenav-top">
 
             <div class="alignright actions new-actions">
-                <form method="get" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" class="search-form">
+                <form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
                     <p class="search-box">
-                        <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
-                        <label class="screen-reader-text"><?php _e('Search Instructors', 'cp'); ?>:</label>
-                        <input type="text" value="<?php echo esc_attr(isset($s) ? $s : ''); ?>" name="s">
-                        <input type="submit" class="button" value="<?php _e('Search Instructors', 'cp'); ?>">
+                        <input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>' />
+                        <label class="screen-reader-text"><?php _e( 'Search Instructors', 'cp' ); ?>:</label>
+                        <input type="text" value="<?php echo esc_attr( isset( $s ) ? $s : '' ); ?>" name="s">
+                        <input type="submit" class="button" value="<?php _e( 'Search Instructors', 'cp' ); ?>">
                     </p>
                 </form>
             </div>
 
-            <form method="post" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" id="posts-filter">
+            <form method="post" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" id="posts-filter">
 
                 <div class="alignleft actions">
-                    <?php if (current_user_can('manage_options')) { ?>
+                    <?php if ( current_user_can( 'manage_options' ) ) { ?>
                         <select name="action">
-                            <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
-                            <option value="delete"><?php _e('Delete', 'cp'); ?></option>
-                            <option value="unassign"><?php _e('Unassign from all courses', 'cp'); ?></option>
+                            <option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
+                            <option value="delete"><?php _e( 'Delete', 'cp' ); ?></option>
+                            <option value="unassign"><?php _e( 'Unassign from all courses', 'cp' ); ?></option>
                         </select>
-                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e('Apply', 'cp'); ?>" />
+                        <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'cp' ); ?>" />
                     <?php } ?>
                 </div>
 
@@ -106,16 +106,16 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
 
 
                 <?php
-                wp_nonce_field('bulk-instructors');
+                wp_nonce_field( 'bulk-instructors' );
 
                 $columns = array(
-                    "ID" => __('ID', 'cp'),
-                    "user_fullname" => __('Full Name', 'cp'),
-                    "user_firstname" => __('First Name', 'cp'),
-                    "user_lastname" => __('Surname', 'cp'),
-                    "registration_date" => __('Registered', 'cp'),
-                    "courses" => __('Courses', 'cp'),
-                    "edit" => __('Profile', 'cp'),
+                    "ID" => __( 'ID', 'cp' ),
+                    "user_fullname" => __( 'Full Name', 'cp' ),
+                    "user_firstname" => __( 'First Name', 'cp' ),
+                    "user_lastname" => __( 'Surname', 'cp' ),
+                    "registration_date" => __( 'Registered', 'cp' ),
+                    "courses" => __( 'Courses', 'cp' ),
+                    "edit" => __( 'Profile', 'cp' ),
                 );
 
 
@@ -123,8 +123,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                     '5', '15', '15', '20', '15', '15'
                 );
 
-                if (current_user_can('manage_options')) {
-                    $columns["delete"] = __('Delete', 'cp');
+                if ( current_user_can( 'manage_options' ) ) {
+                    $columns["delete"] = __( 'Delete', 'cp' );
                     $col_sizes[] = '6';
                 }
                 ?>
@@ -137,9 +137,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                             </th>
                             <?php
                             $n = 0;
-                            foreach ($columns as $key => $col) {
+                            foreach ( $columns as $key => $col ) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo str_replace('_', '-', $key); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -151,11 +151,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                         <?php
                         $style = '';
 
-                        foreach ($wp_user_search->get_results() as $user) {
+                        foreach ( $wp_user_search->get_results( ) as $user ) {
 
-                            $user_object = new Instructor($user->ID);
+                            $user_object = new Instructor( $user->ID );
                             $roles = $user_object->roles;
-                            $role = array_shift($roles);
+                            $role = array_shift( $roles );
 
                             $style = ( ' alternate' == $style ) ? '' : ' alternate';
                             ?>
@@ -172,12 +172,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                                 <td class="column-user-lastname <?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                                 <td class="column-registration-date <?php echo $style; ?>"><?php echo $user_object->user_registered; ?></td>
                                 <td class="column-courses <?php echo $style; ?>"><?php echo $user_object->courses_number; ?></td>
-                                <td class="column-edit <?php echo $style; ?>" style="padding-top:9px; padding-right:15px;"><a href="<?php echo admin_url('admin.php?page=instructors&action=view&instructor_id=' . $user_object->ID); ?>">
+                                <td class="column-edit <?php echo $style; ?>" style="padding-top:9px; padding-right:15px;"><a href="<?php echo admin_url( 'admin.php?page=instructors&action=view&instructor_id=' . $user_object->ID ); ?>">
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
-                                <?php if (current_user_can('manage_options')) { ?>
-                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID), 'delete_instructor_'.$user_object->ID, 'cp_nonce'); ?>" onclick="return removeInstructors();">
+                                <?php if ( current_user_can( 'manage_options' ) ) { ?>
+                                    <td class="column-remove <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=instructors&action=delete&instructor_id=' . $user_object->ID ), 'delete_instructor_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeInstructors( );">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
                                 <?php } ?>
@@ -187,9 +187,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                         ?>
 
                         <?php
-                        if (count($wp_user_search->get_results()) == 0) {
+                        if ( count( $wp_user_search->get_results( ) ) == 0 ) {
                             ?>
-                            <tr><td colspan="8"><div class="zero"><?php _e('No instructors found.', 'cp'); ?></div></td></tr>
+                            <tr><td colspan="8"><div class="zero"><?php _e( 'No instructors found.', 'cp' ); ?></div></td></tr>
                             <?php
                         }
                         ?>
@@ -197,7 +197,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'edit' || $_GET['action'] == '
                 </table>
 
                 <div class="tablenav">
-                    <div class="tablenav-pages"><?php $wp_user_search->page_links(); ?></div>
+                    <div class="tablenav-pages"><?php $wp_user_search->page_links( ); ?></div>
                 </div><!--/tablenav-->
 
             </form>

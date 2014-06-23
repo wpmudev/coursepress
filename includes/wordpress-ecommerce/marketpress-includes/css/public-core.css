@@ -1,4 +1,4 @@
-/* layout/default styles for public views (non-admin) */
+/* layout/default styles for public views ( non-admin ) */
 .clear{
 clear:both;
 }
@@ -54,9 +54,9 @@ border:1px solid #cccccc;
 -moz-border-radius: 3px;
 border-radius: 3px;
 
--webkit-box-shadow: 0 .0625em .25em rgba(51, 65, 80, .35);
--moz-box-shadow: 0 .0625em .25em rgba(51,65,80,.35);
-box-shadow: 0 .0625em .25em rgba(51, 65, 80, .35);
+-webkit-box-shadow: 0 .0625em .25em rgba( 51, 65, 80, .35 );
+-moz-box-shadow: 0 .0625em .25em rgba( 51,65,80,.35 );
+box-shadow: 0 .0625em .25em rgba( 51, 65, 80, .35 );
 
 z-index:3;
 }
@@ -194,14 +194,14 @@ top:0px;
 bottom:0px;
 left:0px;
 right:0px;
-background:rgba(201,201,201,.2) url('../images/ajax-loader.gif') no-repeat 5px 5px;
+background:rgba( 201,201,201,.2 ) url( '../images/ajax-loader.gif' ) no-repeat 5px 5px;
 z-index: 1;
 -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border-radius: 3px;
 }
 .mp_list .mp_ajax_loading{
-background:rgba(201,201,201,.2) url('../images/ajax-loader.gif') no-repeat 99% 5px;
+background:rgba( 201,201,201,.2 ) url( '../images/ajax-loader.gif' ) no-repeat 99% 5px;
 }
 
 
@@ -226,7 +226,7 @@ font-weight: bold;
 }
 
 .mp_cart_breadcrumbs .sep,
-.mp_cart_breadcrumbs .incomplete:not(.current){
+.mp_cart_breadcrumbs .incomplete:not( .current ) {
 color:#cccccc;
 }
 .mp_cart_breadcrumbs .current + .sep{

@@ -73,11 +73,11 @@ video guide</a> that walks you through the settings in MarketPress.
 
 <a href="http://premium.wpmudev.org/project/e-commerce/">Download the pro version</a> for:
 
-* Product personalization (i.e. assign a customer entered text field to a product)
+* Product personalization ( i.e. assign a customer entered text field to a product )
 * Google Analytics eCommerce tracking
 * More than one built-in store style
-* Calculated shipping modules (UPS, USPS, Fedex, in-store pickup)
-* Full suite of payment methods (Lite version only displays PayPal Express, Simplify and manual payment gateways)
+* Calculated shipping modules ( UPS, USPS, Fedex, in-store pickup )
+* Full suite of payment methods ( Lite version only displays PayPal Express, Simplify and manual payment gateways )
 
 == Installation ==
 = To Install: =
@@ -152,8 +152,8 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 - Added support for all Stripe payment gateway currencies http://wp.mu/8sw
 - Updated session handling code - fixes some PHP warnings that some users were reporting
 - Fixed some bugs in WePay gateway
-- Localization files (.mo) can now be loaded from wp-content/language/marketpress/mp-{your locale}.mo
-- Fixed issue (fatal error) when calculating total price with taxes in 2checkout payment gateway
+- Localization files ( .mo ) can now be loaded from wp-content/language/marketpress/mp-{your locale}.mo
+- Fixed issue ( fatal error ) when calculating total price with taxes in 2checkout payment gateway
 - Fixed a bug where product pagination sometimes wouldn't display
 - Fixed a bug in [mp_list_products] where products would always show above all other content
 - Updated some default styles for cart widget
@@ -163,13 +163,13 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 - Fixed a bug where product filters would show even if turned off in presentation settings
 - Fixed a Genesis theme compatibility update for >2.0
 - Fixed a bug where no lightbox would show when using the [mp_product_image context="single"] shortcode with lightbox enabled in presentation settings http://wp.mu/8ov
-- Added new payment gateway - WePay (beta)
+- Added new payment gateway - WePay ( beta )
 
 = 2.9.0.3 =
 * Fix: Genesis theme compatibility update for >2.0
 * Use WP3.8 dashicon for admin menu
 * Fixed a bug with product filters some times redirecting to a 404 page or returning the wrong product set
-* Fixed a bug when calling mp_list_products() with no arguments, the default set of arguments would be populated incorrectly
+* Fixed a bug when calling mp_list_products( ) with no arguments, the default set of arguments would be populated incorrectly
 * Fixed a bug where product listings would use default posts per page setting instead of the value in MarketPress presentation settings
 * Fixed a bug where users couldn't update products/order after updating
 * Added Coupons for individual categories/products
@@ -192,40 +192,40 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * In FedEx fixed problem with calculating the correct number of packages.
 * Added https support for custom styles in the wp-content/marketpress-styles/ directory.
 * Added ajax checkout error flag which is set when ajax starts and reset when ajax is finished. Prevents form submits from aborting shipping lookups.
-* Removed apply_filters("mp_shipping_options_... call in extra_shipping_box_label() It passes nulls instead of an address so it can't properly recalculate the options anyway.
+* Removed apply_filters( "mp_shipping_options_... call in extra_shipping_box_label( ) It passes nulls instead of an address so it can't properly recalculate the options anyway.
 * Changes to USPS to standardize across the calculated shipping plugins.
 * Make messages visual editor css more specific to avoid conflicts
 * Add US Virgin Islands to USPS allowed base country list
-* Added 4 new currencies to PayMill payment gateway (BGN, HRK, GIP, RON)
-* Added 3 new currencies to PIN payment gateway (SGD, EUR and GBP)
-* Added Australian Dollars (AUD) currency to Stripe payment gateway
-* Added Norwegian Krone (NOK) currency to Skrill / MoneyBookers payment gateway
-* Added 8 new currencies to 2CheckOut payment gateway (AED, ILS, LTL, PHP, RON, RUB, SGD, TRY)
-* Added 2 new currencies to Authorize.net AIM payment gateway (AUD and NZD)
+* Added 4 new currencies to PayMill payment gateway ( BGN, HRK, GIP, RON )
+* Added 3 new currencies to PIN payment gateway ( SGD, EUR and GBP )
+* Added Australian Dollars ( AUD ) currency to Stripe payment gateway
+* Added Norwegian Krone ( NOK ) currency to Skrill / MoneyBookers payment gateway
+* Added 8 new currencies to 2CheckOut payment gateway ( AED, ILS, LTL, PHP, RON, RUB, SGD, TRY )
+* Added 2 new currencies to Authorize.net AIM payment gateway ( AUD and NZD )
 * Add filter so certain products can be excluded from GA tracking
-* Pass manual gateway instuctions through wpautop() and allow shortcodes in it
+* Pass manual gateway instuctions through wpautop( ) and allow shortcodes in it
 * Remove encoded html from PayPal IPN strings http://wp.mu/7s9
 * Delay upgrade rewrite flush to end of init hook http://wp.mu/7vt
 * Remove retired Google checkout gateway
 * Fixed bug with PayPal Express gateway and coupons where totals would be incorrect after being transferred to PayPal
-* Updated mp_list_products() function to use WP-style arguments - users can still use existing argument style if they wish
-* Added mp_list_products() can now display filters - no need to call mp_products_filter() in your theme template
-* Added mp_list_products() can now display pagination
-* Added mp_products_nav() to display products pagination
+* Updated mp_list_products( ) function to use WP-style arguments - users can still use existing argument style if they wish
+* Added mp_list_products( ) can now display filters - no need to call mp_products_filter( ) in your theme template
+* Added mp_list_products( ) can now display pagination
+* Added mp_products_nav( ) to display products pagination
 * Fixed some warnings related to shipping fields when checking out
 * Fixed premature deletion of csv import file after previously deleting
 * Fixed old text in Payflow gateway
 * Related products can now be set to use either categories/tags separately or both at the same time
 * Fixed bug when using category filter the page title, menu item, etc would not update accordingly http://wp.mu/8l9
 * Fixed bug when checking out digital downloads and shipping was enabled the user would still be asked to choose a shipping method http://wp.mu/8mz
-* Added PIN payment gateway (beta)
+* Added PIN payment gateway ( beta )
 * Added Simplify Commerce gateway by MasterCard
 * Add multiple currency support to Payflow Pro gateway
-* Add Euro support to Stripe gateway (Ireland)
+* Add Euro support to Stripe gateway ( Ireland )
 * Add "Tax Label" setting to customize the tax line item label in the cart
-* Removed all the old style PHP 4 constructors (Class name functions)
+* Removed all the old style PHP 4 constructors ( Class name functions )
 * Remove help screen when WPMUDEV_REMOVE_BRANDING defined
-* Fixed order_confirmation_email() declaration to match it's parent.(Warnings)
+* Fixed order_confirmation_email( ) declaration to match it's parent.( Warnings )
 * In USPS shipping added maximum box weights to flat rate boxes to improve calculating the number of boxes needed.
 * Fixed problem where shipping option could be unselected if the suboption disappeared due to changing the address.
 * In FedEx, default to residential delivery. Only allow the customer to change residential to commercial if Allow Commercial checked in settings.
@@ -240,15 +240,15 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Add support for GBP to Stripe gateway
 * Fix store count on global checkout confirmation screen
 * Fix coupons datepicker
-* Added process_shipping_form call to shipping_sub_options() so that custom fields that can affect shipping will be read. (ie Resedential in FedEx)
+* Added process_shipping_form call to shipping_sub_options( ) so that custom fields that can affect shipping will be read. ( ie Resedential in FedEx )
 * Make custom column code more efficient - props @michael_cannon
 * Add a note to table rate shipping that it uses the pre-tax order total
 * Add Serbia and Montenegro country codes
-* Add mp_product_title() template function
+* Add mp_product_title( ) template function
 * Add mp_product_description template function
 * Add mp_product_meta template function
 * Make order and payment history times adjust dynamically for the site timezone
-* Add Paymill gateway (beta)
+* Add Paymill gateway ( beta )
 * Fix encoded discount display in confirmation emails and PayPal
 * Fix products display reverting to grid in list mode when ajax filters are used
 * Fix undefined filter_post_kses error for subsite admins in multisite in Manual Payments and Cubepoints gateways
@@ -261,7 +261,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Fix paypal express documentation links
 * Add setting for "Collect Address on Downloadable Only Cart"
 * SQL injection hardening
-* Allow styling of global products by site (blogid in classname)
+* Allow styling of global products by site ( blogid in classname )
 * Fix sort by price in product list widget http://wp.mu/1r5
 * Fix popular products shortcode ordering
 * Change Shipping form label when shipping is turned off
@@ -269,21 +269,21 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Add Israel locale to PayPal gateway
 * Fix function name conflict with WP-Client plugin
 * Fix mp_product_list shortcode list_view argument
-* Added eWay Rapid Payments 3.0 gateway (beta)
+* Added eWay Rapid Payments 3.0 gateway ( beta )
 * Fixed FedEx no results problem. Shipment in non US countries were treated as International even though the destination was the same country.
 * Added "Disable Large Image Display" to Presentatio, which prevents clicking on a product image from displaying a large image. Requested to prevent poaching large gallery images.
 * Changed class if Lightbox is disabled so that if another plugin loads lightbox the product images won't use it.
 * Fix a fatal error that slipped through when sending emails. Important!
-* Add mp_product_sku() template function and shortcode
+* Add mp_product_sku( ) template function and shortcode
 * Add setting to disable sales tax on digital products if desired
 * Add option to set products to draft when out of stock
-* Show all gateways to super admins in multisite (avoid confusion)
-* Fix rounding errors with tax inclusive pricing (big one!)
+* Show all gateways to super admins in multisite ( avoid confusion )
+* Fix rounding errors with tax inclusive pricing ( big one! )
 * Fix problems with ajax paging with grid on taxonomy archive pages
 * Fix css class on product images
 * Fix being unable to overwrite shipping information fields with a blank value
 * Fix grid bug when no styles are loaded http://wp.mu/h7
-* Pass messages settings through wpautop()
+* Pass messages settings through wpautop( )
 * Added check for US country before trimming zip code to 5 characters in calculated shipping modules
 * Disabled continue button on shipping form while shipping rates are being updated
 * Fix up some notices and warnings on profile page: http://wp.mu/kl
@@ -392,7 +392,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Fix stripslashes issue in cart widget custom text
 * Fix bug with x_delim_data in authorize.net gateway
 * Fix wrong orderstatus link on global checkout confirmation page
-* Four new shortcodes! [mp_product] (display a single product anywhere!), [mp_product_image], [mp_buy_button], [mp_product_price]
+* Four new shortcodes! [mp_product] ( display a single product anywhere! ), [mp_product_image], [mp_buy_button], [mp_product_price]
 * Add support for custom css files in /wp-content/marketpress-styles/ folder to avoid overwriting on updates
 * Fixed improper switching to V2 rate schedule on foreign orders in USPS module - Arnold Bailey
 * Genesis compatibility improvements with it's featured images settings
@@ -422,7 +422,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Add Stripe payment gateway! Accept credit cards directly on your site with full PCI compliance
 * Add custom API url support to Authorize.net gateway for compatibility with many 3rd party gateways
 * Add beta PayPal Payflow Pro gateway
-* Add beta iDEAL gateway (ING bank only)
+* Add beta iDEAL gateway ( ING bank only )
 * Add setting to hide Product Image on single pages
 * Fix translation issues for gateway and shipping plugin names
 * Fix bug with category dropdown widget
@@ -458,11 +458,11 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Fix title incompatibility with Genesis & Catalyst framework based themes
 * Style fixes to icons CSS theme
 * Fix double email for digital only orders
-* Still send shipped notification email for download only carts (for gateways with delayed paid confirmations)
+* Still send shipped notification email for download only carts ( for gateways with delayed paid confirmations )
 * Fix cart widget title getting removed on AJAX add to cart for some themes
 * Combine forms on the edit order screen to avoid confusion when saving
 * Add back in Inventory Threshold option
-* Add action hook to mp_order_status() template function.
+* Add action hook to mp_order_status( ) template function.
 * Add points and credits currency types
 * Add Table Rate shipping plugin
 * Fix tax inclusive display in cart widget
@@ -488,10 +488,10 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Fix small bug in global products paging last page
 
 = 2.1.6 =
-* Fix sprintf() bug on paypal-express gateway
+* Fix sprintf( ) bug on paypal-express gateway
 * Fix rare bug with paypal-express gateway where orders were being duplicated across random blogs
 * Usability improvements to settings pages
-* Fix rewrites to ignore base (example /blog/)
+* Fix rewrites to ignore base ( example /blog/ )
 * Up the timeout to 60 seconds for Paypal API requests
 * Fix global cart cookies for some setups
 * Fixes to order arguments for shortcodes and template functions
@@ -504,15 +504,15 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Coupons and Downloads now in the Lite version!
 * Added a little hack for compatibility with Headway and Genesis themes
 * Google Analytics Ecommerce tracking support
-* Ability to add define('MP_HIDE_LOGIN_OPTION', true); to hide the login option on checkout
+* Ability to add define( 'MP_HIDE_LOGIN_OPTION', true ); to hide the login option on checkout
 * Fixed redirect bug for login link on checkout
 * Many new hooks for WPML full translation capability
-* Ability to add add_theme_support('mp_style') to disable frontend css
+* Ability to add add_theme_support( 'mp_style' ) to disable frontend css
 * Fixed Kenyan Shilling symbol
 * Added hooks to the download handler to allow plugins to override
 * Fixed bug in drop down menus
 * Changes to the download script to enable larger files
-* Ability to add define('MP_LARGE_DOWNLOADS', true); to wp-config.php to use redirects for very large files
+* Ability to add define( 'MP_LARGE_DOWNLOADS', true ); to wp-config.php to use redirects for very large files
 * Some improvements to the WP e-Commerce product importer for old thumbnails
 
 = 2.1.1 =
@@ -583,7 +583,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Chained payments not clearing cart bugfix
 
 = 1.2.0 =
-* Headway theme compatiblity fix: Missing argument 2 for MarketPress::filter_nav_menu()
+* Headway theme compatiblity fix: Missing argument 2 for MarketPress::filter_nav_menu( )
 * Fix category dropdown widget js
 * Add filter to orderid generation
 * Additional classes and filters added for our custom theme
@@ -592,7 +592,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 
 = 1.1.9 =
 * Hooks added for externally loaded gateway/shipping plugins
-* Added mp_items_in_cart() template function to determine if items are in the users cart
+* Added mp_items_in_cart( ) template function to determine if items are in the users cart
 * 2Checkout payment plugin conflict with Membership plugin
 * Fixed bug with low stock notification
 * Added admin notification for new orders
@@ -613,7 +613,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 * Fixed order status change success message on orders page
 
 = 1.1.5 =
-* Fixed: Global MarketPress Permalink Updating Problems - for sure this time ;-)
+* Fixed: Global MarketPress Permalink Updating Problems - for sure this time ;- )
 
 = 1.1.4 =
 * WP 3.1 compatibility
@@ -641,7 +641,7 @@ We provide comprehensive and guaranteed support on the <a href='http://premium.w
 
 = 1.1 =
 * 2Checkout and Authorize.net beta gateways added
-* new mp_is_shop_page() template function http://premium.wpmudev.org/forums/topic/marketpressload_store_templates-should-make-is_shop_page-available
+* new mp_is_shop_page( ) template function http://premium.wpmudev.org/forums/topic/marketpressload_store_templates-should-make-is_shop_page-available
 * fixed bug not allowing limited gateways for supporters
 * lots of little bug fixes/improvements
 

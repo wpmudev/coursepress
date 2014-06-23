@@ -5,26 +5,26 @@
  * @package CoursePress
  */
 global $coursepress, $wp;
-$course_id = do_shortcode('[get_parent_course_id]');
+$course_id = do_shortcode( '[get_parent_course_id]' );
 //redirect to the parent course page if not enrolled
-$coursepress->check_access($course_id);
+$coursepress->check_access( $course_id );
 ?>
 <?php
-do_shortcode('[course_unit_archive_submenu]');
+do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 
 <div class="discussion-controls">
-    <a class="button_submit" href="<?php echo get_permalink($course_id); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e('Ask a Question', 'coursepress'); ?></a>
+    <a class="button_submit" href="<?php echo get_permalink( $course_id ); ?><?php echo $coursepress->get_discussion_slug( ) . '/' . $coursepress->get_discussion_slug_new( ); ?>/"><?php _e( 'Ask a Question', 'coursepress' ); ?></a>
 </div>
 
 <div class="clearfix"></div>
 
 <ul class="discussion-archive-list">
     <?php
-    //print_r(get_query_var('paged'));
-    //do_shortcode('[course_discussion_loop]'); //required to get good results
+    //print_r( get_query_var( 'paged' ) );
+    //do_shortcode( '[course_discussion_loop]' ); //required to get good results
 
-    $page = (isset($wp->query_vars['paged'])) ? $wp->query_vars['paged'] : 1;
+    $page = ( isset( $wp->query_vars['paged'] ) ) ? $wp->query_vars['paged'] : 1;
     $query_args = array(
         'order' => 'DESC',
         'post_type' => 'discussions',
@@ -34,36 +34,36 @@ do_shortcode('[course_unit_archive_submenu]');
         'paged' => $page,
     );
 
-    query_posts($query_args);
+    query_posts( $query_args );
 
-    if (have_posts()) {
+    if ( have_posts( ) ) {
         ?>
         <?php
-        while (have_posts()) : the_post();
-            $discussion = new Discussion(get_the_ID());
+        while ( have_posts( ) ) : the_post( );
+            $discussion = new Discussion( get_the_ID( ) );
             ?>
             <li>
                 <div class="discussion-archive-single-meta">
                     <div class="<?php
-        if (get_comments_number() > 0) {
+        if ( get_comments_number( ) > 0 ) {
             echo 'discussion-answer-circle';
         } else {
             echo 'discussion-comments-circle';
         }
-            ?>"><span class="comments-count"><?php echo get_comments_number(); ?> <?php _e('Comments', 'cp');?></span></div>
+            ?>"><span class="comments-count"><?php echo get_comments_number( ); ?> <?php _e( 'Comments', 'cp' );?></span></div>
                 </div>
                 <div class="discussion-archive-single">
-                    <h1 class="discussion-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
+                    <h1 class="discussion-title"><a href="<?php the_permalink( ); ?>"><?php the_title( ); ?></a></h1>
                     <div class="discussion-meta">
         <?php
-        if ($discussion->details->unit_id == '') {
-            $discussion_unit = $discussion->get_unit_name();
+        if ( $discussion->details->unit_id == '' ) {
+            $discussion_unit = $discussion->get_unit_name( );
         } else {
-            $unit = new Unit($discussion->details->unit_id);
-            $discussion_unit = '<a href="' . $unit->get_permalink() . '">' . $discussion->get_unit_name() . '</a>';
+            $unit = new Unit( $discussion->details->unit_id );
+            $discussion_unit = '<a href="' . $unit->get_permalink( ) . '">' . $discussion->get_unit_name( ) . '</a>';
         }
         ?>
-                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'coursepress'); ?></span>
+                        <span><?php echo get_the_date( ); ?></span> | <span><?php the_author( ); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number( ); ?> <?php _e( 'Comments', 'coursepress' ); ?></span>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -73,10 +73,10 @@ do_shortcode('[course_unit_archive_submenu]');
     endwhile;
 } else {
     ?>
-        <h1 class="zero-course-units"><?php _e("0 discussions. Start one, ask a question."); ?></h1>
+        <h1 class="zero-course-units"><?php _e( "0 discussions. Start one, ask a question." ); ?></h1>
         <?php
     }
     ?>
 </ul>
 <br clear="all" />
-<?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+<?php coursepress_numeric_posts_nav( 'navigation-pagination' ); ?>

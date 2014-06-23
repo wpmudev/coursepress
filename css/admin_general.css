@@ -116,8 +116,8 @@
     background: none repeat scroll 0 0 #db2020;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -142,8 +142,8 @@
     background: none repeat scroll 0 0 #05C8F2;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -186,8 +186,8 @@
     background: none repeat scroll 0 0 #0088A5;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -214,8 +214,8 @@
     background: none repeat scroll 0 0 #3ed69f;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -241,8 +241,8 @@
     background: none repeat scroll 0 0 #e65c52;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -266,8 +266,8 @@
     background: none repeat scroll 0 0 #3ed69f;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;
@@ -291,8 +291,8 @@
     background: none repeat scroll 0 0 #FF881F;
     text-shadow: none;
     color: #fff;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
-    filter: alpha(opacity=70);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
+    filter: alpha( opacity=70 );
     -moz-opacity: 0.7;
     -khtml-opacity: 0.7;
     opacity: 0.7;

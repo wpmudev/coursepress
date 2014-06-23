@@ -16,11 +16,11 @@
 
 <footer id="colophon" class="site-footer" role="contentinfo">
     <nav id="footer-navigation" class="footer-navigation wrap" role="navigation">
-        <?php wp_nav_menu(array('theme_location' => 'secondary')); ?>
+        <?php wp_nav_menu( array( 'theme_location' => 'secondary' ) ); ?>
     </nav><!-- #site-navigation -->
 </footer><!-- #colophon -->
 
-<?php wp_footer(); ?>
+<?php wp_footer( ); ?>
 
 </body>
 </html>

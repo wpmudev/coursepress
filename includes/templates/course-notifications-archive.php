@@ -5,21 +5,21 @@
  * @package CoursePress
  */
 global $coursepress, $wp;
-$course_id = do_shortcode('[get_parent_course_id]');
+$course_id = do_shortcode( '[get_parent_course_id]' );
 
 //redirect to the parent course page if not enrolled
-$coursepress->check_access($course_id);
+$coursepress->check_access( $course_id );
 ?>
 
         <?php
-        do_shortcode('[course_unit_archive_submenu]');
+        do_shortcode( '[course_unit_archive_submenu]' );
         ?>
 
         <div class="clearfix"></div>
 
         <ul class="notification-archive-list">
             <?php
-            $page = (isset($wp->query_vars['paged'])) ? $wp->query_vars['paged'] : 1;
+            $page = ( isset( $wp->query_vars['paged'] ) ) ? $wp->query_vars['paged'] : 1;
 
             $query_args = array(
                 'category' => '',
@@ -43,23 +43,23 @@ $coursepress->check_access($course_id);
                 )
             );
 
-            query_posts($query_args);
+            query_posts( $query_args );
             ?>
-            <?php if (have_posts()) { ?>
+            <?php if ( have_posts( ) ) { ?>
                 <?php
-                while (have_posts()) {
-                    the_post();
+                while ( have_posts( ) ) {
+                    the_post( );
                     ?>
                     <li>
                         <div class="notification-archive-single-meta">
-                            <div class="notification-date"><span class="date-part-one"><?php echo get_the_date('M'); ?></span><span class="date-part-two"><?php echo get_the_date('j'); ?></span></div>
+                            <div class="notification-date"><span class="date-part-one"><?php echo get_the_date( 'M' ); ?></span><span class="date-part-two"><?php echo get_the_date( 'j' ); ?></span></div>
                             <span class="notification-meta-devider"></span>
-                            <div class="notification-time"><?php the_time(); ?></div>
+                            <div class="notification-time"><?php the_time( ); ?></div>
                         </div>
                         <div class="notification-archive-single">
-                            <h1 class="notification-title"><?php the_title(); ?></h1>
-                            <div class="notification_author"><?php the_author(); ?></div>
-                            <div class="notification-content"><?php the_content(); ?></div>
+                            <h1 class="notification-title"><?php the_title( ); ?></h1>
+                            <div class="notification_author"><?php the_author( ); ?></div>
+                            <div class="notification-content"><?php the_content( ); ?></div>
                         </div>
                         <div class="clearfix"></div>
                     </li>
@@ -67,10 +67,10 @@ $coursepress->check_access($course_id);
     }
 } else {
     ?>
-                <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later."); ?></h1>
+                <h1 class="zero-course-units"><?php _e( "0 notifications. Please check back later." ); ?></h1>
                 <?php
             }
             ?>
         </ul>
         <br clear="all" />
-<?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+<?php coursepress_numeric_posts_nav( 'navigation-pagination' ); ?>

@@ -13,7 +13,7 @@
 }
 
 .js .nav-collapse {
-    clip: rect(0 0 0 0);
+    clip: rect( 0 0 0 0 );
     max-height: 0;
     position: absolute;
     display: block;
@@ -38,7 +38,7 @@
 }
 
 .nav-toggle {
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba( 0,0,0,0 );
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -85,7 +85,7 @@
     font-size: 16px;
 }
 
-@media screen and (max-width: 790px) {
+@media screen and ( max-width: 790px ) {
     
     .main-navigation a.nav-toggle{
         display: block;
@@ -96,7 +96,7 @@
     }
 }
 
-@media screen and (min-width: 791px) {
+@media screen and ( min-width: 791px ) {
     
     .js .nav-collapse {
         position: relative;

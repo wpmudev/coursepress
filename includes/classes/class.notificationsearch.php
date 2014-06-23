@@ -1,19 +1,19 @@
 <?php
 
-if (!defined('ABSPATH'))
+if ( !defined( 'ABSPATH' ) )
     exit; // Exit if accessed directly
 
-if (!class_exists('Notification_Search')) {
+if ( !class_exists( 'Notification_Search' ) ) {
 
     class Notification_Search {
 
         var $notifications_per_page = 10;
-        var $args = array();
+        var $args = array( );
 
-        function __construct($search_term = '', $page_num = '') {
+        function __construct( $search_term = '', $page_num = '' ) {
             $this->search_term = $search_term;
-            $this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
-            $this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
+            $this->raw_page = ( '' == $page_num ) ? false : ( int ) $page_num;
+            $this->page_num = ( int ) ( '' == $page_num ) ? 1 : $page_num;
 
             $args = array(
                 's' => $this->search_term,
@@ -35,19 +35,19 @@ if (!class_exists('Notification_Search')) {
             $this->args = $args;
         }
 
-        function Course($search_term = '', $page_num = '') {
-            $this->__construct($search_term, $page_num);
+        function Course( $search_term = '', $page_num = '' ) {
+            $this->__construct( $search_term, $page_num );
         }
 
-        function get_args() {
+        function get_args( ) {
             return $this->args;
         }
 
-        function get_results() {
-            return get_posts($this->args);
+        function get_results( ) {
+            return get_posts( $this->args );
         }
 
-        function get_count_of_all_notifications() {
+        function get_count_of_all_notifications( ) {
              $args = array(
                 's' => $this->search_term,
                 'posts_per_page' => -1,
@@ -63,24 +63,24 @@ if (!class_exists('Notification_Search')) {
                 'post_parent' => '',
                 'post_status' => 'any'
             );
-             return count(get_posts($args));
+             return count( get_posts( $args ) );
         }
 
-        function page_links() {
-            $pagination = new CoursePress_Pagination();
-            $pagination->Items($this->get_count_of_all_notifications());
-            $pagination->limit($this->notifications_per_page);
+        function page_links( ) {
+            $pagination = new CoursePress_Pagination( );
+            $pagination->Items( $this->get_count_of_all_notifications( ) );
+            $pagination->limit( $this->notifications_per_page );
             $pagination->parameterName = 'page_num';
-            if ($this->search_term != '') {
-                $pagination->target("admin.php?page=notifications&s=".$this->search_term);
+            if ( $this->search_term != '' ) {
+                $pagination->target( "admin.php?page=notifications&s=".$this->search_term );
             } else {
-                $pagination->target("admin.php?page=notifications");
+                $pagination->target( "admin.php?page=notifications" );
             }
-            $pagination->currentPage($this->page_num);
-            $pagination->nextIcon('&#9658;');
-            $pagination->prevIcon('&#9668;');
-            $pagination->items_title = __('notifications', 'cp');
-            $pagination->show();
+            $pagination->currentPage( $this->page_num );
+            $pagination->nextIcon( '&#9658;' );
+            $pagination->prevIcon( '&#9668;' );
+            $pagination->items_title = __( 'notifications', 'cp' );
+            $pagination->show( );
         }
 
     }

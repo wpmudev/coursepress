@@ -6,7 +6,7 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
     padding: 0em 0em;
-    color: rgba(0,0,0, .8);
+    color: rgba( 0,0,0, .8 );
     text-shadow: 0 1px 0 #fff;
     line-height: 1.5;
     margin: 0px auto;
@@ -23,24 +23,24 @@
     width: 50%; 
     top: 80%;
     max-width:300px;
-    background: rgba(0, 0, 0, 0.7); 
-    -webkit-box-shadow: 0 15px 10px rgba(0,0,0, 0.7);   
-    -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-    -webkit-transform: rotate(-3deg);    
-    -moz-transform: rotate(-3deg);   
-    -o-transform: rotate(-3deg);
-    -ms-transform: rotate(-3deg);
-    transform: rotate(-3deg);
+    background: rgba( 0, 0, 0, 0.7 ); 
+    -webkit-box-shadow: 0 15px 10px rgba( 0,0,0, 0.7 );   
+    -moz-box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
+    box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
+    -webkit-transform: rotate( -3deg );    
+    -moz-transform: rotate( -3deg );   
+    -o-transform: rotate( -3deg );
+    -ms-transform: rotate( -3deg );
+    transform: rotate( -3deg );
 }
 
 .shadow-table:after 
 {
-    -webkit-transform: rotate(3deg);
-    -moz-transform: rotate(3deg);
-    -o-transform: rotate(3deg);
-    -ms-transform: rotate(3deg);
-    transform: rotate(3deg);
+    -webkit-transform: rotate( 3deg );
+    -moz-transform: rotate( 3deg );
+    -o-transform: rotate( 3deg );
+    -ms-transform: rotate( 3deg );
+    transform: rotate( 3deg );
     right: 10px;
     left: auto;
 }
@@ -54,7 +54,7 @@
     text-align: right;
 }
 .remove-button{
-    background-image: url("../images/delete.png");
+    background-image: url( "../images/delete.png" );
     background-repeat: no-repeat;
     height: 20px;
     display: block;
@@ -327,7 +327,7 @@ a.action-to-negative {
 }
 
 .action-top.open {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -339,7 +339,7 @@ a.action-to-negative {
 }
 
 .action-top.closed {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -376,11 +376,11 @@ a.action-to-negative {
     margin-right: 0px;
     width: 26px;
     height: 20px;
-    background: url("../images/arrows.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-button:hover {
-    background: url("../images/arrows-dark.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows-dark.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-top-placeholder {
@@ -512,11 +512,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #808080;
 }
 
@@ -526,11 +526,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #cfcfcf;
 }
 
@@ -703,7 +703,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .remove-button{
-    background-image: url("../images/delete.png");
+    background-image: url( "../images/delete.png" );
     background-repeat: no-repeat;
     height: 80px;
     min-width: 80px;
@@ -711,7 +711,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .remove-button-student{
-    background-image: url("../images/delete.png");
+    background-image: url( "../images/delete.png" );
     background-repeat: no-repeat;
     height: 20px;
     min-width: 20px;
@@ -769,7 +769,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     -webkit-border-radius: 999px;
     -moz-border-radius: 999px;
     border-radius: 999px;
-    behavior: url(PIE.htc);
+    behavior: url( PIE.htc );
 
     width: 14px;
     height: 14px;
@@ -790,10 +790,10 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 
 .transparent_class {
     /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
 
     /* IE 5-7 */
-    filter: alpha(opacity=70);
+    filter: alpha( opacity=70 );
 
     /* Netscape */
     -moz-opacity: 0.7;
@@ -819,10 +819,10 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 
 .instructor-avatar-holder:hover{
     /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
 
     /* IE 5-7 */
-    filter: alpha(opacity=70);
+    filter: alpha( opacity=70 );
 
     /* Netscape */
     -moz-opacity: 0.7;
@@ -840,7 +840,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .instructor-remove a:hover{
-    /*background-image: url("../images/delete.png");*/
+    /*background-image: url( "../images/delete.png" );*/
     background-position: 30px 31px;
     background-repeat: no-repeat;
     height: 80px;
@@ -1010,7 +1010,7 @@ input.wide, textarea.wide {
 }
 
 .action-top.open {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -1022,7 +1022,7 @@ input.wide, textarea.wide {
 }
 
 .action-top.closed {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -1058,11 +1058,11 @@ input.wide, textarea.wide {
     margin-right: 0px;
     width: 26px;
     height: 20px;
-    background: url("../images/arrows.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-button:hover {
-    background: url("../images/arrows-dark.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows-dark.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-top-placeholder {
@@ -1464,11 +1464,11 @@ a .remove-btn:hover{
     width: 140px;
 }
 
-.student_additional_info div:nth-child(4){
+.student_additional_info div:nth-child( 4 ) {
     width: 230px;
 }
 
-.student_additional_info div:nth-child(4) span{
+.student_additional_info div:nth-child( 4 ) span{
     width: 230px;
 }
 

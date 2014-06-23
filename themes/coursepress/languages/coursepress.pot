@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Automattic
+# Copyright ( C ) 2013 Automattic
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""

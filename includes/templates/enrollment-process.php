@@ -1,63 +1,63 @@
 <?php
 
-$student = new Student(get_current_user_id());
+$student = new Student( get_current_user_id( ) );
 
 $course_price = 0;
 
-if (is_user_logged_in()) {
+if ( is_user_logged_in( ) ) {
 
-    if (isset($_POST['course_id']) && is_numeric($_POST['course_id'])) {
+    if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
 
-        check_admin_referer('enrollment_process');
+        check_admin_referer( 'enrollment_process' );
 
         $course_id = $_POST['course_id'];
-        $course = new Course($course_id);
+        $course = new Course( $course_id );
         $pass_errors = 0;
 
         global $coursepress;
         
-        if (isset($course->details->marketpress_product) && $course->details->marketpress_product != '' && $coursepress->is_marketpress_active()) {
+        if ( isset( $course->details->marketpress_product ) && $course->details->marketpress_product != '' && $coursepress->is_marketpress_active( ) ) {
             $course_price = 1; //forces user to purchase course / show purchase form
-            $course->is_user_purchased_course($course->details->marketpress_product, get_current_user_ID());
+            $course->is_user_purchased_course( $course->details->marketpress_product, get_current_user_ID( ) );
         }
 
-        if ($course->details->enroll_type == 'passcode') {
-            if ($_POST['passcode'] != $course->details->passcode) {
+        if ( $course->details->enroll_type == 'passcode' ) {
+            if ( $_POST['passcode'] != $course->details->passcode ) {
                 $pass_errors++;
             }
         }
 
-        if (!$student->user_enrolled_in_course($course_id)) {
-            if ($pass_errors == 0) {
-                if ($course_price == 0) {//Course is FREE
+        if ( !$student->user_enrolled_in_course( $course_id ) ) {
+            if ( $pass_errors == 0 ) {
+                if ( $course_price == 0 ) {//Course is FREE
                     //Enroll student in
-                    if ($student->enroll_in_course($course_id)) {
-                        printf(__('Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), '<strong>'.$course->details->post_title.'</strong>');
+                    if ( $student->enroll_in_course( $course_id ) ) {
+                        printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug( true ) . '">Dashboard</a> for more info.', 'cp' ), '<strong>'.$course->details->post_title.'</strong>' );
                     } else {
-                        _e('Something went wrong during the enrollment process. Please try again later.', 'cp');
+                        _e( 'Something went wrong during the enrollment process. Please try again later.', 'cp' );
                     }
                 } else {
-                    if ($course->is_user_purchased_course($course->details->marketpress_product, get_current_user_ID())) {
+                    if ( $course->is_user_purchased_course( $course->details->marketpress_product, get_current_user_ID( ) ) ) {
                         //Enroll student in
-                        if ($student->enroll_in_course($course_id)) {
-                            printf(__('Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), '<strong>'.$course->details->post_title.'</strong>');
+                        if ( $student->enroll_in_course( $course_id ) ) {
+                            printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug( true ) . '">Dashboard</a> for more info.', 'cp' ), '<strong>'.$course->details->post_title.'</strong>' );
                         } else {
-                            _e('Something went wrong during the enrollment process. Please try again later.', 'cp');
+                            _e( 'Something went wrong during the enrollment process. Please try again later.', 'cp' );
                         }
                     } else {
-                        $course->show_purchase_form($course->details->marketpress_product);
+                        $course->show_purchase_form( $course->details->marketpress_product );
                     }
                 }
             } else {
-                _e('Passcode is not valid. Please <a href="' . $course->get_permalink() . '">go back</a> and try again.', 'cp');
+                _e( 'Passcode is not valid. Please <a href="' . $course->get_permalink( ) . '">go back</a> and try again.', 'cp' );
             }
         } else {
-            _e('You have already enrolled in the course.', 'cp'); //can't enroll more than once to the same course at the time
+            _e( 'You have already enrolled in the course.', 'cp' ); //can't enroll more than once to the same course at the time
         }
     } else {
-        _e('Please select a course first you want to enroll in.', 'cp');
+        _e( 'Please select a course first you want to enroll in.', 'cp' );
     }
 } else {
-    _e('You must be logged in in order to complete the action', 'cp');
+    _e( 'You must be logged in in order to complete the action', 'cp' );
 }
 ?>

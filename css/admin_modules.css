@@ -24,7 +24,7 @@ div.level-holder-wrap {
 
 .sidebar-name {
     background-color: #aaa;
-    background-image: url(../images/ed-bg.gif);
+    background-image: url( ../images/ed-bg.gif );
     text-shadow: #FFF 0 1px 0;
     border-color: #dfdfdf;
     -moz-border-radius-topleft: 8px;
@@ -225,7 +225,7 @@ a.action-to-negative {
     -khtml-border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -242,7 +242,7 @@ a.action-to-negative {
     -khtml-border-radius: 6px;
     border-radius: 6px;
     border-radius: 6px;
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -287,11 +287,11 @@ a.action-to-negative {
     margin-right: 0px;
     width: 26px;
     height: 20px;
-    background: url("../images/arrows.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-button:hover {
-    background: url("../images/arrows-dark.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows-dark.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-top-placeholder {
@@ -459,11 +459,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #808080;
 }
 
@@ -473,11 +473,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #cfcfcf;
 }
 

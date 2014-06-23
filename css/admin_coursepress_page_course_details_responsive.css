@@ -1,4 +1,4 @@
-@media only screen and (max-width: 1039px) {
+@media only screen and ( max-width: 1039px ) {
 	.student-invitation fieldset label,
 	.student-invitation label {
 		display: block;
@@ -16,8 +16,8 @@
 	
 }
 
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (max-width: 900px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( max-width: 900px ) {
 	.student-invitation fieldset label,
 	.student-invitation label {
 		display: block;
@@ -36,14 +36,14 @@
 }
 
 /* Menu bar goes responsive */
-@media only screen and (max-width: 782px) {
+@media only screen and ( max-width: 782px ) {
 	.sidebar-name{
 		/*clear: both;*/
 	}
 }
 
 /* List table anomalies */
-@media (max-width: 439px) {
+@media ( max-width: 439px ) {
 	.coursepress_page_course_details .nav-tab{
 		padding: 10px;
 	}
@@ -53,7 +53,7 @@
 
 
 /* List table anomalies */
-@media (max-width: 555px) {
+@media ( max-width: 555px ) {
 	#students_accordion .additional_class_actions_add_student,
 	#students_accordion .additional_class_actions { 
 		width: 100%; 
@@ -62,7 +62,7 @@
 }
 
 /* For extra small devices */
-@media (max-width: 480px) {
+@media ( max-width: 480px ) {
 	
 	.student-invitation fieldset label,
 	.student-invitation label {

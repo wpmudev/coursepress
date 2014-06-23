@@ -1,4 +1,4 @@
-# Copyright (C) 2014 MarketPress
+# Copyright ( C ) 2014 MarketPress
 # This file is distributed under the same license as the MarketPress package.
 msgid ""
 msgstr ""
@@ -63,14 +63,14 @@ msgid "<p>Thank you for your order! We appreciate your business, and please come
 msgstr ""
 
 #: marketpress.php:290
-msgid "Your Order Confirmation (ORDERID)"
+msgid "Your Order Confirmation ( ORDERID )"
 msgstr ""
 
 #: marketpress.php:291
 msgid ""
 "Thank you for your order CUSTOMERNAME!\n"
 "\n"
-"Your order has been received, and any items to be shipped will be processed as soon as possible. Please refer to your Order ID (ORDERID) whenever contacting us.\n"
+"Your order has been received, and any items to be shipped will be processed as soon as possible. Please refer to your Order ID ( ORDERID ) whenever contacting us.\n"
 "Here is a confirmation of your order details:\n"
 "\n"
 "Order Information:\n"
@@ -90,14 +90,14 @@ msgid ""
 msgstr ""
 
 #: marketpress.php:310
-msgid "Your Order Has Been Shipped! (ORDERID)"
+msgid "Your Order Has Been Shipped! ( ORDERID )"
 msgstr ""
 
 #: marketpress.php:311
 msgid ""
 "Dear CUSTOMERNAME,\n"
 "\n"
-"Your order has been shipped! Depending on the shipping method and your location it should be arriving shortly. Please refer to your Order ID (ORDERID) whenever contacting us.\n"
+"Your order has been shipped! Depending on the shipping method and your location it should be arriving shortly. Please refer to your Order ID ( ORDERID ) whenever contacting us.\n"
 "Here is a confirmation of your order details:\n"
 "\n"
 "Order Information:\n"
@@ -141,7 +141,7 @@ msgid "Are you sure you want to remove all items from your cart?"
 msgstr ""
 
 #: marketpress.php:705
-msgid "Item(s) Added!"
+msgid "Item( s ) Added!"
 msgstr ""
 
 #: marketpress.php:707
@@ -299,7 +299,7 @@ msgid "Received"
 msgstr ""
 
 #: marketpress.php:895
-msgid "Received <span class=\"count\">(%s)</span>"
+msgid "Received <span class=\"count\">( %s )</span>"
 msgstr ""
 
 #: marketpress.php:900 marketpress.php:2035 marketpress.php:2067
@@ -321,7 +321,7 @@ msgid "Paid"
 msgstr ""
 
 #: marketpress.php:901
-msgid "Paid <span class=\"count\">(%s)</span>"
+msgid "Paid <span class=\"count\">( %s )</span>"
 msgstr ""
 
 #: marketpress.php:906 marketpress.php:2037 marketpress.php:2068
@@ -336,7 +336,7 @@ msgid "Shipped"
 msgstr ""
 
 #: marketpress.php:907
-msgid "Shipped <span class=\"count\">(%s)</span>"
+msgid "Shipped <span class=\"count\">( %s )</span>"
 msgstr ""
 
 #: marketpress.php:912 marketpress.php:2039 marketpress.php:2069
@@ -350,7 +350,7 @@ msgid "Closed"
 msgstr ""
 
 #: marketpress.php:913
-msgid "Closed <span class=\"count\">(%s)</span>"
+msgid "Closed <span class=\"count\">( %s )</span>"
 msgstr ""
 
 #: marketpress.php:918
@@ -359,8 +359,8 @@ msgid "Trash"
 msgstr ""
 
 #: marketpress.php:919
-msgid "Trash <span class=\"count\">(%s)</span>"
-msgid_plural "Trash <span class=\"count\">(%s)</span>"
+msgid "Trash <span class=\"count\">( %s )</span>"
+msgid_plural "Trash <span class=\"count\">( %s )</span>"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -574,7 +574,7 @@ msgid "Trash"
 msgstr ""
 
 #: marketpress.php:2099
-msgid "Regarding Your Order (%s)"
+msgid "Regarding Your Order ( %s )"
 msgstr ""
 
 #: marketpress.php:2135
@@ -721,7 +721,7 @@ msgid "Browse Products &raquo;"
 msgstr ""
 
 #: marketpress.php:2959 marketpress.php:2962
-msgid "Sorry, we don't have enough of this item in stock. (%s remaining)"
+msgid "Sorry, we don't have enough of this item in stock. ( %s remaining )"
 msgstr ""
 
 #: marketpress.php:2982 marketpress.php:2985
@@ -730,11 +730,11 @@ msgid "Sorry, there is a per order limit of %1$s for \"%2$s\"."
 msgstr ""
 
 #: marketpress.php:3024
-msgid "Sorry, there is not enough stock for \"%s\". (%s remaining)"
+msgid "Sorry, there is not enough stock for \"%s\". ( %s remaining )"
 msgstr ""
 
 #: marketpress.php:3054
-msgid "Item(s) Removed"
+msgid "Item( s ) Removed"
 msgstr ""
 
 #: marketpress.php:3092
@@ -1047,7 +1047,7 @@ msgstr ""
 
 #: marketpress.php:4542
 msgid ""
-"A new order (ORDERID) was created in your store:\n"
+"A new order ( ORDERID ) was created in your store:\n"
 "\n"
 "Order Information:\n"
 "ORDERINFOSKU\n"
@@ -1102,7 +1102,7 @@ msgid "Order details have been saved!"
 msgstr ""
 
 #: marketpress.php:4892
-msgid "Order Details (%s)"
+msgid "Order Details ( %s )"
 msgstr ""
 
 #: marketpress.php:4900
@@ -1173,7 +1173,7 @@ msgid "Product Personalization:"
 msgstr ""
 
 #: marketpress.php:5120
-msgid " (Limit Reached)"
+msgid " ( Limit Reached )"
 msgstr ""
 
 #: marketpress.php:5128 marketpress-includes/template-functions.php:1238
@@ -1263,8 +1263,8 @@ msgstr ""
 
 #: marketpress.php:5422
 msgctxt "posts"
-msgid "All <span class=\"count\">(%s)</span>"
-msgid_plural "All <span class=\"count\">(%s)</span>"
+msgid "All <span class=\"count\">( %s )</span>"
+msgid_plural "All <span class=\"count\">( %s )</span>"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1394,7 +1394,7 @@ msgid "%s Tax Rate"
 msgstr ""
 
 #: marketpress.php:5859
-msgid "Total Tax Rates (VAT,GST,PST,HST)"
+msgid "Total Tax Rates ( VAT,GST,PST,HST )"
 msgstr ""
 
 #: marketpress.php:5861
@@ -1410,7 +1410,7 @@ msgid "GST Tax Rate"
 msgstr ""
 
 #: marketpress.php:5911
-msgid "Country Total Tax Rate (VAT, GST, Etc.)"
+msgid "Country Total Tax Rate ( VAT, GST, Etc. )"
 msgstr ""
 
 #: marketpress.php:5917
@@ -1540,7 +1540,7 @@ msgid "Maximum Downloads"
 msgstr ""
 
 #: marketpress.php:6044
-msgid "How many times may a customer download a file they have purchased? (It's best to set this higher than one in case they have any problems downloading)"
+msgid "How many times may a customer download a file they have purchased? ( It's best to set this higher than one in case they have any problems downloading )"
 msgstr ""
 
 #: marketpress.php:6057
@@ -1556,7 +1556,7 @@ msgid "Force Login"
 msgstr ""
 
 #: marketpress.php:6070
-msgid "Whether or not customers must be registered and logged in to checkout. (Not recommended: Enabling this can lower conversions)"
+msgid "Whether or not customers must be registered and logged in to checkout. ( Not recommended: Enabling this can lower conversions )"
 msgstr ""
 
 #: marketpress.php:6074
@@ -1612,7 +1612,7 @@ msgid "Save Changes"
 msgstr ""
 
 #: marketpress.php:6140
-msgid "Coupon(s) succesfully deleted."
+msgid "Coupon( s ) succesfully deleted."
 msgstr ""
 
 #: marketpress.php:6153
@@ -2224,11 +2224,11 @@ msgid "Measurement System"
 msgstr ""
 
 #: marketpress.php:7199
-msgid "Engish (Pounds)"
+msgid "Engish ( Pounds )"
 msgstr ""
 
 #: marketpress.php:7200
-msgid "Metric (Kilograms)"
+msgid "Metric ( Kilograms )"
 msgstr ""
 
 #: marketpress.php:7244
@@ -2236,7 +2236,7 @@ msgid "Payment Settings"
 msgstr ""
 
 #: marketpress.php:7256
-msgid "Select Payment Gateway(s)"
+msgid "Select Payment Gateway( s )"
 msgstr ""
 
 #: marketpress.php:7275
@@ -2364,7 +2364,7 @@ msgid "\"per_page\" - How many products to display in the product list if \"pagi
 msgstr ""
 
 #: marketpress.php:7387
-msgid "\"order_by\" - What field to order products by. Can be: title, date, ID, author, price, sales, rand (random)."
+msgid "\"order_by\" - What field to order products by. Can be: title, date, ID, author, price, sales, rand ( random )."
 msgstr ""
 
 #: marketpress.php:7388
@@ -2380,7 +2380,7 @@ msgid "\"tag\" - Limits list to a specific product tag. Use the tag Slug"
 msgstr ""
 
 #: marketpress.php:7391
-msgid "\"list_view\" - 1 for list view, 0 (default) for grid view"
+msgid "\"list_view\" - 1 for list view, 0 ( default ) for grid view"
 msgstr ""
 
 #: marketpress.php:7393
@@ -2412,7 +2412,7 @@ msgid "\"image\" - Whether and what context of image size to display. Options ar
 msgstr ""
 
 #: marketpress.php:7409
-msgid "\"meta\" - Whether to display the product meta (price, buy button)."
+msgid "\"meta\" - Whether to display the product meta ( price, buy button )."
 msgstr ""
 
 #: marketpress.php:7418
@@ -2450,7 +2450,7 @@ msgid "\"context\" - What context for display. Options are list or single, defau
 msgstr ""
 
 #: marketpress.php:7448
-msgid "Displays the product price (and sale price)."
+msgid "Displays the product price ( and sale price )."
 msgstr ""
 
 #: marketpress.php:7453 marketpress.php:7481
@@ -2462,7 +2462,7 @@ msgid "Product SKU"
 msgstr ""
 
 #: marketpress.php:7462
-msgid "Displays the product SKU number(s)."
+msgid "Displays the product SKU number( s )."
 msgstr ""
 
 #: marketpress.php:7467
@@ -2673,7 +2673,7 @@ msgid "Please activate the WP e-Commerce plugin to import these products."
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:104
-msgid "It appears you have no products from WP e-Commerce to import. Check that the plugin is updated to the latest version (the importer only works with >3.8)."
+msgid "It appears you have no products from WP e-Commerce to import. Check that the plugin is updated to the latest version ( the importer only works with >3.8 )."
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:227
@@ -2693,7 +2693,7 @@ msgid "Invalid file format. Please upload your import file ending in \".csv\"."
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:261
-msgid "Successfully imported %s products from your CSV file. Products were created in draft status, so you will need to review them then publish (bulk or one-by-one). Importing the CSV file again will just create copies of the products in MarketPress."
+msgid "Successfully imported %s products from your CSV file. Products were created in draft status, so you will need to review them then publish ( bulk or one-by-one ). Importing the CSV file again will just create copies of the products in MarketPress."
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:262
@@ -2721,7 +2721,7 @@ msgid "This will allow you to import products and most of their attributes from 
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:281
-msgid "Your CSV file must be comma (,) delimited and fields with commas or quotes in them must be surrounded by parenthesis (\") as per the CSV standard. Columns in the CSV file can be in any order, provided that they have the correct headings from the example file. \"title\" and \"price\" are the only required columns, all others can be left blank."
+msgid "Your CSV file must be comma ( , ) delimited and fields with commas or quotes in them must be surrounded by parenthesis ( \" ) as per the CSV standard. Columns in the CSV file can be in any order, provided that they have the correct headings from the example file. \"title\" and \"price\" are the only required columns, all others can be left blank."
 msgstr ""
 
 #: marketpress-includes/marketpress-importers.php:282
@@ -2888,7 +2888,7 @@ msgid "\"as_list\" - Whether to show as an unordered list. Default: 0"
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:731
-msgid "You may also use the mp_list_global_products() template function in your theme with the same arguments."
+msgid "You may also use the mp_list_global_products( ) template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:735
@@ -2913,7 +2913,7 @@ msgid "\"include\" - What to show, \"tags\", \"categories\", or \"both\". Defaul
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:747
-msgid "You may also use the mp_global_tag_cloud() template function in your theme with the same arguments."
+msgid "You may also use the mp_global_tag_cloud( ) template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:751
@@ -2941,7 +2941,7 @@ msgid "\"include\" - What to show, \"tags\", \"categories\", or \"both\"."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:765
-msgid "You may also use the mp_global_categories_list() template function in your theme with the same arguments."
+msgid "You may also use the mp_global_categories_list( ) template function in your theme with the same arguments."
 msgstr ""
 
 #: marketpress-includes/marketpress-ms.php:1125
@@ -3057,7 +3057,7 @@ msgid "Please check the url"
 msgstr ""
 
 #: marketpress-includes/marketpress-shipping.php:152
-msgid "Weight (Kilograms)"
+msgid "Weight ( Kilograms )"
 msgstr ""
 
 #: marketpress-includes/marketpress-shipping.php:164
@@ -3092,7 +3092,7 @@ msgid "MarketPress Statistics"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:44
-msgid "This Month (%s)"
+msgid "This Month ( %s )"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:53
@@ -3106,7 +3106,7 @@ msgid "Average Order"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:64
-msgid "Last Month (%s)"
+msgid "Last Month ( %s )"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:90
@@ -3114,11 +3114,11 @@ msgid "Store Content"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:141
-msgid "Received (Awaiting Payment)"
+msgid "Received ( Awaiting Payment )"
 msgstr ""
 
 #: marketpress-includes/marketpress-stats.php:152
-msgid "Paid (Awaiting Shipping)"
+msgid "Paid ( Awaiting Shipping )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/2checkout.php:38
@@ -3400,7 +3400,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/authorizenet-aim.php:754
 #: marketpress-includes/plugins-gateway/payflow.php:783
-msgid "Email Customer (on success):"
+msgid "Email Customer ( on success ):"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/authorizenet-aim.php:763
@@ -3482,7 +3482,7 @@ msgid "CubePoints Settings"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/cubepoints.php:211
-msgid "Accept CubePoints as payment(requires the CubePoints plugin)."
+msgid "Accept CubePoints as payment( requires the CubePoints plugin )."
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/cubepoints.php:214
@@ -3634,7 +3634,7 @@ msgid "This will be displayed as the company the customer is purchasing from, in
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:381
-msgid "Page Title (optional)"
+msgid "Page Title ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:383
@@ -3643,11 +3643,11 @@ msgid "This value is used to populate the browsers title bar at the top of the s
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:390
-msgid "Page Description (optional)"
+msgid "Page Description ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:399
-msgid "Page Footer (optional)"
+msgid "Page Footer ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:401
@@ -3655,7 +3655,7 @@ msgid "The page footer text can be customised and populated below the customer's
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:408
-msgid "Company Logo (optional)"
+msgid "Company Logo ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:410
@@ -3664,7 +3664,7 @@ msgid "The url of the image can be hosted on your website and pass the secure ht
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:417
-msgid "Page Banner Image (optional)"
+msgid "Page Banner Image ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway.php:467
@@ -3673,7 +3673,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway30.php:43
 #: marketpress-includes/plugins-gateway/eway30.php:591
-msgid "eWay Rapid 3.0 Payments (beta)"
+msgid "eWay Rapid 3.0 Payments ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/eway30.php:84
@@ -3803,7 +3803,7 @@ msgid "You must setup your API callback URL in Google Checkout to be able to pro
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/google-checkout.php:323
-msgid "Login to the Integration page of your Merchant Center <a target=\"_blank\" href=\"https://sandbox.google.com/checkout/sell/settings?section=Integration\">sandbox</a> or <a target=\"_blank\" href=\"https://checkout.google.com/sell/settings?section=Integration\">production</a> account. (You must set it in each)"
+msgid "Login to the Integration page of your Merchant Center <a target=\"_blank\" href=\"https://sandbox.google.com/checkout/sell/settings?section=Integration\">sandbox</a> or <a target=\"_blank\" href=\"https://checkout.google.com/sell/settings?section=Integration\">production</a> account. ( You must set it in each )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/google-checkout.php:324
@@ -3848,7 +3848,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/ideal.php:42
 #: marketpress-includes/plugins-gateway/ideal.php:411
-msgid "iDEAL (beta)"
+msgid "iDEAL ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/ideal.php:43
@@ -3900,7 +3900,7 @@ msgid "ABN Amro Bank"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/ideal.php:363
-msgid "iDEAL Simulator (for testing)"
+msgid "iDEAL Simulator ( for testing )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/ideal.php:374
@@ -4021,7 +4021,7 @@ msgid "Language"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:411
-msgid "Merchant Name (optional)"
+msgid "Merchant Name ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:413
@@ -4029,7 +4029,7 @@ msgid "The name of this store, which will be shown on the gateway. If no value i
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:419
-msgid "Logo Image (optional)"
+msgid "Logo Image ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:421
@@ -4037,7 +4037,7 @@ msgid "The URL of the logo which you would like to appear at the top of the paym
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:428
-msgid "Confirmation Note (optional)"
+msgid "Confirmation Note ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:430
@@ -4067,7 +4067,7 @@ msgid "Chargeback - A payment was reversed due to a chargeback. The funds have b
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/moneybookers.php:549
-msgid "Skrill (Moneybookers)"
+msgid "Skrill ( Moneybookers )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/payflow.php:48
@@ -4108,7 +4108,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/paymill.php:36
 #: marketpress-includes/plugins-gateway/paymill.php:448
-msgid "Paymill (beta)"
+msgid "Paymill ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paymill.php:62
@@ -4263,13 +4263,13 @@ msgstr ""
 #: marketpress-includes/plugins-gateway/paymill.php:284
 #: marketpress-includes/plugins-gateway/pin.php:313
 #: marketpress-includes/plugins-gateway/stripe.php:337
-msgid "Force SSL (Live Site)"
+msgid "Force SSL ( Live Site )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paymill.php:285
 #: marketpress-includes/plugins-gateway/pin.php:314
 #: marketpress-includes/plugins-gateway/stripe.php:338
-msgid "No SSL (Testing)"
+msgid "No SSL ( Testing )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paymill.php:290
@@ -4368,7 +4368,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-chained-payments.php:217
 #: marketpress-includes/plugins-gateway/paypal-chained-payments.php:502
-msgid "The transaction was rejected by the receiver (you)."
+msgid "The transaction was rejected by the receiver ( you )."
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-chained-payments.php:224
@@ -4708,7 +4708,7 @@ msgid "There was a problem finalizing your purchase with PayPal. Please <a href=
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:495
-msgid "Your order(s) for %s store(s) totaling %s were successful."
+msgid "Your order( s ) for %s store( s ) totaling %s were successful."
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:570
@@ -4735,17 +4735,17 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:689
 #: marketpress-includes/plugins-gateway/paypal-express.php:1355
-msgid "PayPal Header Image (optional)"
+msgid "PayPal Header Image ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:691
 #: marketpress-includes/plugins-gateway/paypal-express.php:1357
-msgid "URL for an image you want to appear at the top left of the payment page. The image has a maximum size of 750 pixels wide by 90 pixels high. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name is displayed."
+msgid "URL for an image you want to appear at the top left of the payment page. The image has a maximum size of 750 pixels wide by 90 pixels high. PayPal recommends that you provide an image that is stored on a secure ( https ) server. If you do not specify an image, the business name is displayed."
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:698
 #: marketpress-includes/plugins-gateway/paypal-express.php:1364
-msgid "PayPal Header Border Color (optional)"
+msgid "PayPal Header Border Color ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:700
@@ -4755,7 +4755,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:707
 #: marketpress-includes/plugins-gateway/paypal-express.php:1373
-msgid "PayPal Header Background Color (optional)"
+msgid "PayPal Header Background Color ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:709
@@ -4765,7 +4765,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:716
 #: marketpress-includes/plugins-gateway/paypal-express.php:1382
-msgid "PayPal Page Background Color (optional)"
+msgid "PayPal Page Background Color ( optional )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/paypal-express.php:718
@@ -4838,7 +4838,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-gateway/pin.php:36
 #: marketpress-includes/plugins-gateway/pin.php:491
-msgid "PIN (beta)"
+msgid "PIN ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-gateway/pin.php:100
@@ -5194,7 +5194,7 @@ msgid "First Overnight"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:35
-msgid "(1 Day am)"
+msgid "( 1 Day am )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:36
@@ -5202,7 +5202,7 @@ msgid "Priority Overnight"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:36
-msgid "(1 Day am )"
+msgid "( 1 Day am )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:37
@@ -5211,7 +5211,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:37
 #: marketpress-includes/plugins-shipping/mp-ups.php:52
-msgid "(1 Day)"
+msgid "( 1 Day )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:39
@@ -5219,7 +5219,7 @@ msgid "Fedex 2 Day AM"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:39
-msgid "(2 Days am)"
+msgid "( 2 Days am )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:40
@@ -5229,7 +5229,7 @@ msgstr ""
 #: marketpress-includes/plugins-shipping/mp-fedex.php:40
 #: marketpress-includes/plugins-shipping/mp-ups.php:49
 #: marketpress-includes/plugins-shipping/mp-ups.php:54
-msgid "(2 Days)"
+msgid "( 2 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:43
@@ -5238,7 +5238,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:43
 #: marketpress-includes/plugins-shipping/mp-ups.php:51
-msgid "(3 Days)"
+msgid "( 3 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:47
@@ -5246,7 +5246,7 @@ msgid "Fedex Ground"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:47
-msgid "(1-7 Days)"
+msgid "( 1-7 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:48
@@ -5256,7 +5256,7 @@ msgstr ""
 #: marketpress-includes/plugins-shipping/mp-fedex.php:48
 #: marketpress-includes/plugins-shipping/mp-ups.php:50
 #: marketpress-includes/plugins-shipping/mp-ups.php:59
-msgid "(1-5 Days)"
+msgid "( 1-5 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:49
@@ -5264,7 +5264,7 @@ msgid "Smart Post"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:49
-msgid "(2-7 Days)"
+msgid "( 2-7 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:54
@@ -5272,7 +5272,7 @@ msgid "International Economy"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:54
-msgid "(5 Days)"
+msgid "( 5 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:56
@@ -5283,7 +5283,7 @@ msgstr ""
 #: marketpress-includes/plugins-shipping/mp-fedex.php:57
 #: marketpress-includes/plugins-shipping/mp-ups.php:55
 #: marketpress-includes/plugins-shipping/mp-ups.php:58
-msgid "(1-3 Days)"
+msgid "( 1-3 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:57
@@ -5296,7 +5296,7 @@ msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:59
 #: marketpress-includes/plugins-shipping/mp-ups.php:48
-msgid "(Next Day)"
+msgid "( Next Day )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:136
@@ -5536,7 +5536,7 @@ msgid "Centimeters"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-fedex.php:967
-msgid "FedEx (beta)"
+msgid "FedEx ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-flat-rate.php:25
@@ -5798,7 +5798,7 @@ msgid "Next Day Air Early AM"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:53
-msgid "(1 Days)"
+msgid "( 1 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:54
@@ -5814,7 +5814,7 @@ msgid "Worldwide Expedited"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:56
-msgid "(2-5 Days)"
+msgid "( 2-5 Days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:57
@@ -5822,7 +5822,7 @@ msgid "Standard"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:57
-msgid "(Scheduled)"
+msgid "( Scheduled )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:58
@@ -5882,7 +5882,7 @@ msgid "Handling Charge per Box Shipped"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:309
-msgid "Default Weight (for products whose weights are not specified)"
+msgid "Default Weight ( for products whose weights are not specified )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:357
@@ -5890,7 +5890,7 @@ msgid "Note: the shipping prices this plugin calculates are estimates.  If they 
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-ups.php:868
-msgid "UPS (beta)"
+msgid "UPS ( beta )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:63
@@ -5908,7 +5908,7 @@ msgstr ""
 #: marketpress-includes/plugins-shipping/mp-usps.php:77
 #: marketpress-includes/plugins-shipping/mp-usps.php:80
 #: marketpress-includes/plugins-shipping/mp-usps.php:83
-msgid "(1-2 days)"
+msgid "( 1-2 days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:71
@@ -5936,7 +5936,7 @@ msgid "Priority Mail"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:86
-msgid "(2-4) days"
+msgid "( 2-4 ) days"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:89
@@ -5948,7 +5948,7 @@ msgstr ""
 #: marketpress-includes/plugins-shipping/mp-usps.php:95
 #: marketpress-includes/plugins-shipping/mp-usps.php:98
 #: marketpress-includes/plugins-shipping/mp-usps.php:101
-msgid "(2-4 days)"
+msgid "( 2-4 days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:92
@@ -5972,7 +5972,7 @@ msgid "Parcel Post"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:104
-msgid "(4-7 days)"
+msgid "( 4-7 days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:107
@@ -6012,7 +6012,7 @@ msgid "Priority Mail Express International Padded Flat Rate Envelope"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:134
-msgid "(3-5 days)"
+msgid "( 3-5 days )"
 msgstr ""
 
 #: marketpress-includes/plugins-shipping/mp-usps.php:137
@@ -6234,7 +6234,7 @@ msgid "Confirm Payment &raquo;"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:989
-msgid "You may track the latest status of your order(s) here:<br />%s"
+msgid "You may track the latest status of your order( s ) here:<br />%s"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:1031
@@ -6258,7 +6258,7 @@ msgid "Checkout &raquo;"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:1118
-msgid "Order Details (%s):"
+msgid "Order Details ( %s ):"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:1149
@@ -6433,11 +6433,11 @@ msgid "Release Date"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:2455
-msgid "Price (Low to High)"
+msgid "Price ( Low to High )"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:2456
-msgid "Price (High to Low)"
+msgid "Price ( High to Low )"
 msgstr ""
 
 #: marketpress-includes/template-functions.php:2457

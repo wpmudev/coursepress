@@ -1,10 +1,10 @@
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (max-width: 900px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( max-width: 900px ) {
 
 }
 
 /* Menu bar goes responsive */
-@media only screen and (max-width: 782px) {
+@media only screen and ( max-width: 782px ) {
 	/*.coursepress_page_assessment .assesment-response-details*/
 	/*.assessment-holder .buttons
 		.assessment-holder .buttons .additional_grade_info
@@ -21,7 +21,7 @@
 }
 
 /* List table anomalies */
-@media (max-width: 555px) {
+@media ( max-width: 555px ) {
 	.coursepress_page_assessment .assesment-response-details .front_response_content {
 		width:94%;
 	}	
@@ -73,7 +73,7 @@
 }
 
 /* For extra small devices */
-@media (max-width: 480px) {
+@media ( max-width: 480px ) {
 
 	.assessment-holder .buttons .additional_grade_info {
 		width: 30%;

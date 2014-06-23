@@ -8,7 +8,7 @@
  */
 
 /**
- * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link.
+ * Get our wp_nav_menu( ) fallback, wp_page_menu( ), to show a home link.
  *
  * @param array $args Configuration arguments.
  * @return array
@@ -27,7 +27,7 @@ add_filter( 'wp_page_menu_args', 'coursepress_page_menu_args' );
  */
 function coursepress_body_classes( $classes ) {
 	// Adds a class of group-blog to blogs with more than 1 published author.
-	if ( is_multi_author() ) {
+	if ( is_multi_author( ) ) {
 		$classes[] = 'group-blog';
 	}
 
@@ -45,7 +45,7 @@ add_filter( 'body_class', 'coursepress_body_classes' );
 function coursepress_wp_title( $title, $sep ) {
 	global $page, $paged;
 
-	if ( is_feed() ) {
+	if ( is_feed( ) ) {
 		return $title;
 	}
 
@@ -54,7 +54,7 @@ function coursepress_wp_title( $title, $sep ) {
 
 	// Add the blog description for the home/front page.
 	$site_description = get_bloginfo( 'description', 'display' );
-	if ( $site_description && ( is_home() || is_front_page() ) ) {
+	if ( $site_description && ( is_home( ) || is_front_page( ) ) ) {
 		$title .= " $sep $site_description";
 	}
 

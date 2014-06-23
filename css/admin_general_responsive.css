@@ -1,15 +1,15 @@
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (min-width: 2000px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( min-width: 2000px ) {
 	
 }
 
 
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (max-width: 900px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( max-width: 900px ) {
 }
 
 /* Menu bar goes responsive */
-@media only screen and (max-width: 782px) {
+@media only screen and ( max-width: 782px ) {
 	/* Hide from smaller displays. */
 	.hide-small {
 		display:none;
@@ -106,7 +106,7 @@
 }
 
 /* List table anomalies */
-@media (max-width: 555px) {
+@media ( max-width: 555px ) {
 	.hide-extra-small {
 		display:none;
 	}
@@ -131,7 +131,7 @@
 }
 
 /* For extra small devices */
-@media (max-width: 480px) {
+@media ( max-width: 480px ) {
 
 	.column-units {
 		display:none;

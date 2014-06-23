@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2013, MasterCard International Incorporated
+ * Copyright ( c ) 2013, MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -18,10 +18,10 @@
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
  * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED
  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR OTHERWISE ) ARISING 
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE.
  */
@@ -33,10 +33,10 @@ class Simplify_CardToken extends Simplify_Object {
      * @param     array $hash a map of parameters; valid keys are:<dl style="padding-left:10px;">
      *     <dt><tt>callback</tt></dt>    <dd>The URL callback for the cardtoken </dd>
      *     <dt><tt>card.addressCity</tt></dt>    <dd>City of the cardholder. </dd>
-     *     <dt><tt>card.addressCountry</tt></dt>    <dd>Country code (ISO-3166-1-alpha-2 code) of residence of the cardholder. </dd>
+     *     <dt><tt>card.addressCountry</tt></dt>    <dd>Country code ( ISO-3166-1-alpha-2 code ) of residence of the cardholder. </dd>
      *     <dt><tt>card.addressLine1</tt></dt>    <dd>Address of the cardholder. </dd>
      *     <dt><tt>card.addressLine2</tt></dt>    <dd>Address of the cardholder if needed. </dd>
-     *     <dt><tt>card.addressState</tt></dt>    <dd>State code (USPS code) of residence of the cardholder. </dd>
+     *     <dt><tt>card.addressState</tt></dt>    <dd>State code ( USPS code ) of residence of the cardholder. </dd>
      *     <dt><tt>card.addressZip</tt></dt>    <dd>Postal code of the cardholder. </dd>
      *     <dt><tt>card.cvc</tt></dt>    <dd>CVC security code of the card. This is the code on the back of the card. Example: 123 </dd>
      *     <dt><tt>card.expMonth</tt></dt>    <dd>Expiration month of the card. Format is MM. Example: January = 01 <strong>required </strong></dd>
@@ -48,12 +48,12 @@ class Simplify_CardToken extends Simplify_Object {
      * @param     string privateKey Private key. If null, the value of static Simplify::$privateKey will be used
      * @return    CardToken a CardToken object.
      */
-    static public function createCardToken($hash, $publicKey = null, $privateKey = null) {
+    static public function createCardToken( $hash, $publicKey = null, $privateKey = null ) {
 
-        $instance = new Simplify_CardToken();
-        $instance->setAll($hash);
+        $instance = new Simplify_CardToken( );
+        $instance->setAll( $hash );
 
-        $object = Simplify_PaymentsApi::createObject($instance, $publicKey, $privateKey);
+        $object = Simplify_PaymentsApi::createObject( $instance, $publicKey, $privateKey );
         return $object;
     }
 
@@ -67,11 +67,11 @@ class Simplify_CardToken extends Simplify_Object {
          * @param     string privateKey Private key. If null, the value of Simplify::$privateKey will be used
          * @return    CardToken a CardToken object
          */
-        static public function findCardToken($id, $publicKey = null, $privateKey = null) {
-            $val = new Simplify_CardToken();
+        static public function findCardToken( $id, $publicKey = null, $privateKey = null ) {
+            $val = new Simplify_CardToken( );
             $val->id = $id;
 
-            $obj = Simplify_PaymentsApi::findObject($val, $publicKey, $privateKey);
+            $obj = Simplify_PaymentsApi::findObject( $val, $publicKey, $privateKey );
 
             return $obj;
         }
@@ -79,7 +79,7 @@ class Simplify_CardToken extends Simplify_Object {
     /**
      * @ignore
      */
-    public function getClazz() {
+    public function getClazz( ) {
         return "CardToken";
     }
 }

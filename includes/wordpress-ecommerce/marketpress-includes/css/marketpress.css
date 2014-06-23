@@ -43,16 +43,16 @@ span.mp-inv-full { color: green; }
   background: transparent no-repeat left center;
 }
 .widefat tr.status-order_received td a.mp_order_status {
-  background-image: url('../images/new-small.png');
+  background-image: url( '../images/new-small.png' );
 }
 .widefat tr.status-order_paid td a.mp_order_status {
-  background-image: url('../images/credit-cards-small.png');
+  background-image: url( '../images/credit-cards-small.png' );
 }
 .widefat tr.status-order_shipped td a.mp_order_status {
-  background-image: url('../images/delivery-small.png');
+  background-image: url( '../images/delivery-small.png' );
 }
 .widefat tr.status-order_closed td a.mp_order_status {
-  background-image: url('../images/secure-payment-small.png');
+  background-image: url( '../images/secure-payment-small.png' );
 }
 
 div.mp-settings .postbox .hndle {
@@ -67,16 +67,16 @@ div.mp-settings .postbox .hndle {
   background: transparent no-repeat left center;
 }
 #mp-single-statuses .received {
-  background-image: url('../images/new-small.png');
+  background-image: url( '../images/new-small.png' );
 }
 #mp-single-statuses .paid {
-  background-image: url('../images/credit-cards-small.png');
+  background-image: url( '../images/credit-cards-small.png' );
 }
 #mp-single-statuses .shipped {
-  background-image: url('../images/delivery-small.png');
+  background-image: url( '../images/delivery-small.png' );
 }
 #mp-single-statuses .closed {
-  background-image: url('../images/secure-payment-small.png');
+  background-image: url( '../images/secure-payment-small.png' );
 }
 #mp-single-statuses span.current {
   background-color: yellow;
@@ -167,7 +167,7 @@ td.mp_sale_col {
 	width: 100px;
 }
 
-/* FPM: (2.6.0) Updated to limit for text input */
+/* FPM: ( 2.6.0 ) Updated to limit for text input */
 td.mp_price_col input[type="text"], td.mp_sale_col input[type="text"] {
 	width: 65px;
 }
@@ -217,13 +217,13 @@ tr.variation-custom-field-hidden {
 	margin-top: 5px;
 }
 #mp_add_vars a {
-  background: transparent url('../images/plus.gif') no-repeat scroll left center;
+  background: transparent url( '../images/plus.gif' ) no-repeat scroll left center;
   padding: 1px 0 1px 20px;
 }
 .mp_var_remove a {
 	text-indent: -9999px;
 	overflow: hidden;
-	background: transparent url('../images/remove.png') no-repeat scroll center center;
+	background: transparent url( '../images/remove.png' ) no-repeat scroll center center;
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -257,7 +257,7 @@ div#mp-meta-details #mp_cart_limit_div label { display:inline; }
   background-color: #FFFFFF;
 }
 #mp-need-help {
-	background: transparent url('../images/need-help.png') no-repeat scroll top left;
+	background: transparent url( '../images/need-help.png' ) no-repeat scroll top left;
 	display: block;
 	width: 272px;
 	height: 119px;
@@ -355,11 +355,11 @@ div.mp-pro-update {
 }
 
 .mp_box_add a{
-  background: transparent url('../images/plus.gif') no-repeat scroll left center;
+  background: transparent url( '../images/plus.gif' ) no-repeat scroll left center;
   padding: 1px 0 1px 20px;
 }
 
 .mp_box_remove a{
-  background: transparent url('../images/remove.png') no-repeat scroll left center;
+  background: transparent url( '../images/remove.png' ) no-repeat scroll left center;
   padding: 1px 0 1px 20px;
 }

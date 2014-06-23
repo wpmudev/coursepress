@@ -1,6 +1,6 @@
 <?php
 
-function first_install() {
+function first_install( ) {
     
     /*
      *
@@ -8,7 +8,7 @@ function first_install() {
      *  
      */
 
-    $course_author = get_current_user_ID();
+    $course_author = get_current_user_ID( );
     $course_title = 'Aenean auctor nec magna sed mattis';
     $course_excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius enim hendrerit tincidunt hendrerit. Duis sem justo, eleifend vel pellentesque ut, tristique eu quam.';
     $course_content = 'Fusce non consectetur magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse potenti. Curabitur placerat dolor cursus imperdiet tincidunt. Quisque velit lacus, egestas id velit iaculis, hendrerit accumsan lectus. Curabitur hendrerit ut dolor quis scelerisque. Mauris at diam eu ipsum consequat malesuada. Pellentesque nulla nisi, hendrerit id luctus quis, dignissim sit amet ipsum. Nam aliquam odio nibh, non accumsan metus tincidunt nec.
@@ -88,9 +88,9 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
     //If there isn't any course, create one
     
-    $_courses_count = (wp_count_posts('course')->publish) + (wp_count_posts('course')->private);
+    $_courses_count = ( wp_count_posts( 'course' )->publish ) + ( wp_count_posts( 'course' )->private );
     
-    if ($_courses_count == 0) {
+    if ( $_courses_count == 0 ) {
         $new_course = array(
             'post_author' => $course_author,
             'post_excerpt' => $course_excerpt,
@@ -100,35 +100,35 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             'post_type' => 'course',
         );
 
-        $course_id = wp_insert_post($new_course);
+        $course_id = wp_insert_post( $new_course );
         
-        if ($course_id != 0) {
+        if ( $course_id != 0 ) {
             //Set a instructor - for the example, instructor will be the author of the post
-            //update_user_meta($course_author, 'course_' . $course_id, $course_id); //only could be a user with "Intructor" role so admin can't be assigned
+            //update_user_meta( $course_author, 'course_' . $course_id, $course_id ); //only could be a user with "Intructor" role so admin can't be assigned
 
             //Set hero video
-            update_post_meta($course_id, 'course_video_url', $course_hero_video_url);
+            update_post_meta( $course_id, 'course_video_url', $course_hero_video_url );
 
             //Set course class size
-            update_post_meta($course_id, 'class_size', $course_class_size);
+            update_post_meta( $course_id, 'class_size', $course_class_size );
 
             //Set who can enroll to the course
-            update_post_meta($course_id, 'enroll_type', $course_who_can_enroll);
+            update_post_meta( $course_id, 'enroll_type', $course_who_can_enroll );
 
             //Set course language
-            update_post_meta($course_id, 'course_language', $course_language);
+            update_post_meta( $course_id, 'course_language', $course_language );
 
             //Course is open-ended? Start date, but no end date.
-            update_post_meta($course_id, 'open_ended_course', $course_open_ended);
+            update_post_meta( $course_id, 'open_ended_course', $course_open_ended );
 			
 			//Students can enroll anytime?
-			update_post_meta($course_id, 'open_ended_enrollment', $course_open_ended_enrollment);
+			update_post_meta( $course_id, 'open_ended_enrollment', $course_open_ended_enrollment );
 
             //Allow course discussion?
-            update_post_meta($course_id, 'allow_course_discussion', $course_allow_discussion);
+            update_post_meta( $course_id, 'allow_course_discussion', $course_allow_discussion );
 
             //Show grade page?
-            update_post_meta($course_id, 'allow_course_grades_page', $course_show_grade_page);
+            update_post_meta( $course_id, 'allow_course_grades_page', $course_show_grade_page );
 
             /*
              *
@@ -148,23 +148,23 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
                 'post_type' => 'unit',
             );
 
-            $unit_id = wp_insert_post($new_unit);
+            $unit_id = wp_insert_post( $new_unit );
 
-            if ($unit_id != 0) {
+            if ( $unit_id != 0 ) {
 
                 $first_unit_id = $unit_id;
 
                 //Set parent course
-                update_post_meta($unit_id, 'course_id', $course_id);
+                update_post_meta( $unit_id, 'course_id', $course_id );
                 
                 //Set unit order to it's ID for start
-                update_post_meta($unit_id, 'unit_order', $unit_id);
+                update_post_meta( $unit_id, 'unit_order', $unit_id );
 
                 //To force or not to force the unit completion in order to access to the next one
-                update_post_meta($unit_id, 'force_current_unit_completion', 'off');
+                update_post_meta( $unit_id, 'force_current_unit_completion', 'off' );
 
                 //Date from when the unit is available / set current date for the example
-                update_post_meta($unit_id, 'unit_availability', date('Y-m-d', current_time('timestamp', 0)));
+                update_post_meta( $unit_id, 'unit_availability', date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
             }
 
             /*
@@ -185,23 +185,23 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
                 'post_type' => 'unit',
             );
 
-            $unit_id = wp_insert_post($new_unit);
+            $unit_id = wp_insert_post( $new_unit );
 
-            if ($unit_id != 0) {
+            if ( $unit_id != 0 ) {
 
                 $second_unit_id = $unit_id;
 
                 //Set parent course
-                update_post_meta($unit_id, 'course_id', $course_id);
+                update_post_meta( $unit_id, 'course_id', $course_id );
                 
                 //Set unit order to it's ID for start
-                update_post_meta($unit_id, 'unit_order', $unit_id);
+                update_post_meta( $unit_id, 'unit_order', $unit_id );
 
                 //To force or not to force the unit completion in order to access to the next one
-                update_post_meta($unit_id, 'force_current_unit_completion', 'off');
+                update_post_meta( $unit_id, 'force_current_unit_completion', 'off' );
 
                 //Date from when the unit is available / set current date for the example
-                update_post_meta($unit_id, 'unit_availability', date('Y-m-d', current_time('timestamp', 0)));
+                update_post_meta( $unit_id, 'unit_availability', date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
             }
 
             /*
@@ -222,23 +222,23 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
                 'post_type' => 'unit',
             );
 
-            $unit_id = wp_insert_post($new_unit);
+            $unit_id = wp_insert_post( $new_unit );
 
-            if ($unit_id != 0) {
+            if ( $unit_id != 0 ) {
 
                 $third_unit_id = $unit_id;
 
                 //Set parent course
-                update_post_meta($unit_id, 'course_id', $course_id);
+                update_post_meta( $unit_id, 'course_id', $course_id );
                 
                 //Set unit order to it's ID for start
-                update_post_meta($unit_id, 'unit_order', $unit_id);
+                update_post_meta( $unit_id, 'unit_order', $unit_id );
 
                 //To force or not to force the unit completion in order to access to the next one
-                update_post_meta($unit_id, 'force_current_unit_completion', 'off');
+                update_post_meta( $unit_id, 'force_current_unit_completion', 'off' );
 
                 //Date from when the unit is available / set current date for the example
-                update_post_meta($unit_id, 'unit_availability', date('Y-m-d', current_time('timestamp', 0)));
+                update_post_meta( $unit_id, 'unit_availability', date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
             }
 
 
@@ -249,7 +249,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
              */
 
 
-            $unit_element = new Unit_Module();
+            $unit_element = new Unit_Module( );
 
             //Add an audio element
 
@@ -261,10 +261,10 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['loop'] = 'No';
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'audio_module';
-            $data->metas = array();
+            $data->metas = array( );
             $data->metas['module_order'] = 1;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             //Add a video element
 
@@ -277,7 +277,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['module_type'] = 'video_module';
             $data->metas['module_order'] = 2;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             $data->unit_id = $first_unit_id;
             $data->title = 'Text Input Block Title';
@@ -286,7 +286,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['module_type'] = 'text_input_module';
             $data->metas['module_order'] = 3;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             //Add a text element
 
@@ -297,7 +297,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['module_type'] = 'text_module';
             $data->metas['module_order'] = 4;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             /*
              *
@@ -316,7 +316,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             $data->metas['module_type'] = 'video_module';
             $data->metas['module_order'] = 1;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             //Add a text element
 
@@ -329,7 +329,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['module_type'] = 'text_module';
             $data->metas['module_order'] = 2;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
             $data->unit_id = $second_unit_id;
             $data->title = 'Text Input Element Title';
@@ -338,7 +338,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['module_type'] = 'textarea_input_module';
             $data->metas['module_order'] = 3;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
 
 
             /*
@@ -356,7 +356,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['module_type'] = 'text_module';
             $data->metas['module_order'] = 2;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
             
             //Add a checkbox element
 
@@ -366,10 +366,10 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['show_title_on_front'] = 'yes';
             $data->metas['module_type'] = 'checkbox_input_module';
             $data->metas['module_order'] = 3;
-            $data->metas['answers'] = array('Fermentum ', 'Vivamus', 'Mauris');
-            $data->metas['checked_answers'] = array('Fermentum ', 'Vivamus');
+            $data->metas['answers'] = array( 'Fermentum ', 'Vivamus', 'Mauris' );
+            $data->metas['checked_answers'] = array( 'Fermentum ', 'Vivamus' );
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
             
             //Add a page break
 
@@ -379,7 +379,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['module_type'] = 'page_break_module';
             $data->metas['module_order'] = 4;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
             
             //Add a radio element
             
@@ -392,7 +392,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['link_text'] = 'Donec bibendum auctor tellus et venenatis';
             $data->metas['file_url'] = 'https://github.com/danleech/simple-icons/archive/master.zip';
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
             
             //Add a file input element
 
@@ -403,7 +403,7 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $data->metas['module_type'] = 'file_input_module';
             $data->metas['module_order'] = 7;
 
-            $unit_element->update_module($data);
+            $unit_element->update_module( $data );
         }
     }
 }

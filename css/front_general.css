@@ -158,7 +158,7 @@ input[type="button"].apply-button-finished{
     font-size:14px;
     font-weight:normal;
     padding:10px 50px;
-    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba( 0, 0, 0, 0.5 );
     border: 1px solid #CCC;
     text-align: center;
     text-decoration: none;
@@ -180,7 +180,7 @@ input[type="button"].apply-button-pending{
     font-size:14px;
     font-weight:normal;
     padding:10px 50px;
-    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba( 0, 0, 0, 0.5 );
     border: 1px solid #CCC;
     text-align: center;
     text-decoration: none;
@@ -201,7 +201,7 @@ input[type="button"].apply-button-enrolled{
     font-size:14px;
     font-weight:normal;
     padding:10px 50px;
-    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba( 0, 0, 0, 0.5 );
     border: 1px solid #458b45;
     text-align: center;
     text-decoration: none;
@@ -229,7 +229,7 @@ input[type="button"].apply-button{
     font-size:14px;
     font-weight:normal;
     padding:10px 50px;
-    //text-shadow:0 1px 1px rgba(0, 0, 0, 0.5);
+    //text-shadow:0 1px 1px rgba( 0, 0, 0, 0.5 );
     border: 1px solid #0099CC;
     text-align: center;
     text-decoration: none;
@@ -320,10 +320,10 @@ span.percentage{
 
 .li-locked-unit {
     /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
 
     /* IE 5-7 */
-    filter: alpha(opacity=50);
+    filter: alpha( opacity=50 );
 
     /* Netscape */
     -moz-opacity: 0.5;
@@ -537,7 +537,7 @@ h1.notification-title{
     font-size: 12px;
     font-weight: 400;
     color: #828282;
-    background-image: url("../images/time-icon.png");
+    background-image: url( "../images/time-icon.png" );
     background-repeat: no-repeat;
     padding-left: 20px;
     margin-top: 13px;
@@ -554,7 +554,7 @@ h1.notification-title{
     font-size: 12px;
     font-weight: 400;
     color: #828282;
-    background-image: url("../images/language-icon.png");
+    background-image: url( "../images/language-icon.png" );
     background-repeat: no-repeat;
     padding-left: 20px;
     margin-top: 13px;

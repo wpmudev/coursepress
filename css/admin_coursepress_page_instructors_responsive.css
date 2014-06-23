@@ -1,9 +1,9 @@
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (max-width: 900px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( max-width: 900px ) {
 }
 
 /* Menu bar goes responsive */
-@media only screen and (max-width: 782px) {
+@media only screen and ( max-width: 782px ) {
 	.check-column,
 	.column-registration-date,
 	.column-user-firstname,
@@ -18,7 +18,7 @@
 }
 
 /* List table anomalies */
-@media (max-width: 555px) {
+@media ( max-width: 555px ) {
 	.coursepress_page_instructors div.course-liquid-right{
 		clear:both;
 		float:left;
@@ -32,5 +32,5 @@
 }
 
 /* For extra small devices */
-@media (max-width: 480px) {
+@media ( max-width: 480px ) {
 }

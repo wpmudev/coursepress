@@ -59,7 +59,7 @@
     padding-left: 12px;
     padding-right: 12px;
     height: 49px;
-    background: transparent url(../images/Assets.svg) no-repeat;
+    background: transparent url( ../images/Assets.svg ) no-repeat;
     text-align: center;
     padding-bottom: 5px;
     margin-bottom: 10px;
@@ -94,7 +94,7 @@
 .elements-holder .output-element .add-element{
     position: absolute;
     display: block;
-    background: transparent url(../images/Assets.svg) no-repeat;
+    background: transparent url( ../images/Assets.svg ) no-repeat;
     background-position: -714px -234px;
     width: 13px;
     height: 13px;
@@ -354,7 +354,7 @@ a.action-to-negative {
 }
 
 .action-top.open {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -366,7 +366,7 @@ a.action-to-negative {
 }
 
 .action-top.closed {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -403,11 +403,11 @@ a.action-to-negative {
     margin-right: 0px;
     width: 26px;
     height: 20px;
-    background: url("../images/arrows.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-button:hover {
-    background: url("../images/arrows-dark.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows-dark.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-top-placeholder {
@@ -573,11 +573,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #808080;
 }
 
@@ -587,11 +587,11 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix(-1.6,1,1.6,1,0,0);
-    -webkit-transform: matrix(-1.6,1,1.6,1,0,0);
-    -o-transform: matrix(-1.6,1,1.6,1,0,0);
-    -ms-transform: matrix(-1.6,1,1.6,1,0,0);
-    transform: matrix(-1.6,1,1.6,1,0,0);
+    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
+    -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
+    transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #cfcfcf;
 }
 
@@ -772,7 +772,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .remove-button{
-    background-image: url("../images/delete.png");
+    background-image: url( "../images/delete.png" );
     background-repeat: no-repeat;
     height: 80px;
     min-width: 80px;
@@ -780,7 +780,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .remove-button-student{
-    background-image: url("../images/delete.png");
+    background-image: url( "../images/delete.png" );
     background-repeat: no-repeat;
     height: 20px;
     min-width: 20px;
@@ -838,7 +838,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     -webkit-border-radius: 999px;
     -moz-border-radius: 999px;
     border-radius: 999px;
-    behavior: url(PIE.htc);
+    behavior: url( PIE.htc );
 
     width: 14px;
     height: 14px;
@@ -859,10 +859,10 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 
 .transparent_class {
     /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
 
     /* IE 5-7 */
-    filter: alpha(opacity=70);
+    filter: alpha( opacity=70 );
 
     /* Netscape */
     -moz-opacity: 0.7;
@@ -888,10 +888,10 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 
 .instructor-avatar-holder:hover{
     /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
 
     /* IE 5-7 */
-    filter: alpha(opacity=70);
+    filter: alpha( opacity=70 );
 
     /* Netscape */
     -moz-opacity: 0.7;
@@ -909,7 +909,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .instructor-remove a:hover{
-    /*background-image: url("../images/delete.png");*/
+    /*background-image: url( "../images/delete.png" );*/
     background-position: 30px 31px;
     background-repeat: no-repeat;
     height: 80px;
@@ -1084,7 +1084,7 @@ input.wide, textarea.wide {
 }
 
 .action-top.open {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -1096,7 +1096,7 @@ input.wide, textarea.wide {
 }
 
 .action-top.closed {
-    background: #dfdfdf url("../images/gray-grad.png") repeat-x left top;
+    background: #dfdfdf url( "../images/gray-grad.png" ) repeat-x left top;
     text-shadow: #fff 0 1px 0;
     width: 260px;
     margin-left: 10px;
@@ -1132,11 +1132,11 @@ input.wide, textarea.wide {
     margin-right: 0px;
     width: 26px;
     height: 20px;
-    background: url("../images/arrows.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-button:hover {
-    background: url("../images/arrows-dark.png") no-repeat scroll 5px 3px transparent;
+    background: url( "../images/arrows-dark.png" ) no-repeat scroll 5px 3px transparent;
 }
 
 .action-top-placeholder {
@@ -1726,19 +1726,19 @@ label.bold-label{
     top: 17px;
     right: 20px;
     line-height: 48px;
-    background: url(../images/course-setup.png) 0 0;
+    background: url( ../images/course-setup.png ) 0 0;
 }
 
 .course-section.step .course-section-title .status.saved {
-    background: url(../images/course-setup.png) -17px 0;
+    background: url( ../images/course-setup.png ) -17px 0;
 }
 
 .course-section.step .course-section-title .status.invalid {
-    background: url(../images/course-setup.png) -34px 0;
+    background: url( ../images/course-setup.png ) -34px 0;
 }
 
 .course-section.step .course-section-title .status.attention {
-    background: url(../images/course-setup.png) -51px 0;
+    background: url( ../images/course-setup.png ) -51px 0;
 }
 
 .course-section.step .course-section-title .status.progress:before {
@@ -1749,7 +1749,7 @@ label.bold-label{
     color: #0091cd;
 }
 .course-section.step .course-section-title .status.progress {
-    background: url(../images/ajax-loader.gif) no-repeat;
+    background: url( ../images/ajax-loader.gif ) no-repeat;
 }
 
 .course-section.step .course-section-title h3 {
@@ -2066,7 +2066,7 @@ label.bold-label{
 .course-section .course-form .button-incomplete-gateways {
 	border-color: #cc712e;
 	color: #ffffff;
-	box-shadow: 0 1px 0 #fdc575 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+	box-shadow: 0 1px 0 #fdc575 inset, 0 1px 0 rgba( 0, 0, 0, 0.08 );
 	background-color: #f5a00c;
 }
 

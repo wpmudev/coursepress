@@ -1,9 +1,9 @@
-/* Left side navifation (Admin Menu) is collapsed */
-@media only screen and (max-width: 900px) {
+/* Left side navifation ( Admin Menu ) is collapsed */
+@media only screen and ( max-width: 900px ) {
 }
 
 /* Menu bar goes responsive */
-@media only screen and (max-width: 782px) {
+@media only screen and ( max-width: 782px ) {
 	.coursepress_page_reports .column-registration-date,
 	.coursepress_page_reports .column-user-firstname,
 	.coursepress_page_reports .column-user-lastname,
@@ -21,7 +21,7 @@
 }
 
 /* List table anomalies */
-@media (max-width: 555px) {
+@media ( max-width: 555px ) {
 	.coursepress_page_reports .column-ID {
 		width: 4%;
 	}
@@ -49,5 +49,5 @@
 }
 
 /* For extra small devices */
-@media (max-width: 480px) {
+@media ( max-width: 480px ) {
 }

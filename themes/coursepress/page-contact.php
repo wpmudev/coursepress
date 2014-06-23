@@ -10,21 +10,21 @@
  *
  * @package CoursePress
  */
-get_header();
+get_header( );
 ?>
 
 <div id="primary" class="content-area content-side-area">
     <main id="main" class="site-main" role="main">
 
-        <?php while (have_posts()) : the_post(); ?>
+        <?php while ( have_posts( ) ) : the_post( ); ?>
 
             <header class="entry-header">
-                <h1 class="entry-title"><?php the_title(); ?></h1>
+                <h1 class="entry-title"><?php the_title( ); ?></h1>
             </header><!-- .entry-header -->
 
             <div class="entry-content">
-                <?php the_content(); ?>
-                <?php echo do_shortcode('[contact_form]'); ?>
+                <?php the_content( ); ?>
+                <?php echo do_shortcode( '[contact_form]' ); ?>
             </div><!-- .entry-content -->
 
         <?php endwhile; // end of the loop. ?>
@@ -32,5 +32,5 @@ get_header();
     </main><!-- #main -->
 </div><!-- #primary -->
 
-<?php get_sidebar(); ?>
-<?php get_footer(); ?>
+<?php get_sidebar( ); ?>
+<?php get_footer( ); ?>

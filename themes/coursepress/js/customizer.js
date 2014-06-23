@@ -21,7 +21,7 @@
 		value.bind( function( to ) {
 			if ( 'blank' === to ) {
 				$( '.site-title, .site-description' ).css( {
-					'clip': 'rect(1px, 1px, 1px, 1px)',
+					'clip': 'rect( 1px, 1px, 1px, 1px )',
 					'position': 'absolute'
 				} );
 			} else {

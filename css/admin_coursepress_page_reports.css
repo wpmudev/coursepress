@@ -10,7 +10,7 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
     padding: 0em 0em;
-    color: rgba(0,0,0, .8);
+    color: rgba( 0,0,0, .8 );
     text-shadow: 0 1px 0 #fff;
     line-height: 1.5;
     margin: 0px auto;
@@ -27,24 +27,24 @@
     width: 50%; 
     top: 80%;
     max-width:300px;
-    background: rgba(0, 0, 0, 0.7); 
-    -webkit-box-shadow: 0 15px 10px rgba(0,0,0, 0.7);   
-    -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
-    -webkit-transform: rotate(-3deg);    
-    -moz-transform: rotate(-3deg);   
-    -o-transform: rotate(-3deg);
-    -ms-transform: rotate(-3deg);
-    transform: rotate(-3deg);
+    background: rgba( 0, 0, 0, 0.7 ); 
+    -webkit-box-shadow: 0 15px 10px rgba( 0,0,0, 0.7 );   
+    -moz-box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
+    box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
+    -webkit-transform: rotate( -3deg );    
+    -moz-transform: rotate( -3deg );   
+    -o-transform: rotate( -3deg );
+    -ms-transform: rotate( -3deg );
+    transform: rotate( -3deg );
 }
 
 .shadow-table:after 
 {
-    -webkit-transform: rotate(3deg);
-    -moz-transform: rotate(3deg);
-    -o-transform: rotate(3deg);
-    -ms-transform: rotate(3deg);
-    transform: rotate(3deg);
+    -webkit-transform: rotate( 3deg );
+    -moz-transform: rotate( 3deg );
+    -o-transform: rotate( 3deg );
+    -ms-transform: rotate( 3deg );
+    transform: rotate( 3deg );
     right: 10px;
     left: auto;
 }
@@ -58,7 +58,7 @@
     text-align: right;
 }
 .pdf{
-    background-image: url("../images/pdf_document.png");
+    background-image: url( "../images/pdf_document.png" );
     background-repeat: no-repeat;
     height: 16px;
     display: block;
