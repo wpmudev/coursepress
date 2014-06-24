@@ -70,6 +70,7 @@ $students_count = $course->get_number_of_students();
     $message['us'] = __( 'Selected student has been withdrawed successfully from the course.', 'cp' );
     $message['usl'] = __( 'Selected students has been withdrawed successfully from the course.', 'cp' );
     $message['is'] = __( 'Invitation sent sucessfully.', 'cp' );
+	$message['ia'] = __( 'Successfully added as instructor.', 'cp' );
 
     $error_message['wrong_email'] = __( 'Please enter valid e-mail address', 'cp' );
 

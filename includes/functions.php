@@ -191,7 +191,7 @@ function coursepress_send_email( $email_args = array() ) {
 
     if ( $email_args['email_type'] == 'student_registration' ) {
         global $course_slug;
-        $student_email = $email_args['student_email'];
+        $email_address = $email_args['student_email'];
         $subject = coursepress_get_registration_email_subject();
         $courses_address = trailingslashit( site_url() ) . trailingslashit( $course_slug );
 
@@ -219,7 +219,7 @@ function coursepress_send_email( $email_args = array() ) {
     if ( $email_args['email_type'] == 'student_invitation' ) {
         global $course_slug;
 
-        $student_email = $email_args['student_email'];
+        $email_address = $email_args['student_email'];
 
         if ( isset( $email_args['course_id'] ) ) {
             $course = new Course( $email_args['course_id'] );
@@ -271,12 +271,18 @@ function coursepress_send_email( $email_args = array() ) {
 			$course_address = $course->get_permalink();
         }
 		
-		$instructor_email = $email_args['instructor_email'];
+		//$confirm_link = admin_url( 'admin.php?page=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'] );
+		$confirm_link = $course_address . '?action=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'];
+		//http://coursepress.dev/courses/demo-2/?action=course_invite&course_id=47&c=3sb5PgvvucS8bIu0xttn&h=a6ad00ac113a19d953efb91820d8788e2263b28a
+		
+		cp_write_log( $confirm_link );
+		
+		$email_address = $email_args['instructor_email'];
 		$subject = coursepress_get_instructor_invitation_email_subject();
 
 		$tags = 			array( 'INSTRUCTOR_FIRST_NAME', 'INSTRUCTOR_LAST_NAME', 'INSTRUCTOR_EMAIL', 'CONFIRMATION_LINK', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'WEBSITE_NAME' );
 		
-		$tags_replaces =	array( $email_args['first_name'], $email_args['last_name'], $instructor_email, 'TODO: Confirmation', $course_name, $course_summary, $course_address, site_url(), get_bloginfo() );
+		$tags_replaces =	array( $email_args['first_name'], $email_args['last_name'], $email_address, $confirm_link, $course_name, $course_summary, $course_address, site_url(), get_bloginfo() );
 		
         $message = coursepress_get_instructor_invitation_email();
 
@@ -295,7 +301,7 @@ function coursepress_send_email( $email_args = array() ) {
         }
 		
 		cp_write_log( $message );
-		exit;
+		// exit;
 	}
 
     add_filter( 'wp_mail_content_type', 'set_content_type' );
@@ -310,7 +316,7 @@ function coursepress_send_email( $email_args = array() ) {
         return get_option( 'blog_charset' );
     }
 
-    return wp_mail( $student_email, stripslashes( $subject ), stripslashes( nl2br( $message ) ) );
+    return wp_mail( $email_address, stripslashes( $subject ), stripslashes( nl2br( $message ) ) );
 }
 
 /* Get Student Invitation with Passcode to a Course E-mail data */

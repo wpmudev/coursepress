@@ -193,6 +193,17 @@ if ( !class_exists( 'Unit_Module' ) ) {
             $module = get_post( $module_id );
             return $module;
         }
+		
+		function order_modules( $modules ) {
+			$ordered_modules = array();
+			
+			foreach( $modules as $module ) {
+				$order = get_post_meta( $module->ID, 'module_order', true );
+				$ordered_modules[ $order ] = $module;
+			}
+			
+			return $ordered_modules;
+		}
 
         function get_modules( $unit_id ) {
 

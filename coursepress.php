@@ -242,6 +242,8 @@ if ( !class_exists( 'CoursePress' ) ) {
             add_action( 'wp_logout', array( &$this, 'redirect_after_logout' ) );
 
             add_action( 'template_redirect', array( &$this, 'virtual_page_template' ) );
+			
+			add_action( 'template_redirect', array( &$this, 'instructor_invite_confirmation' ) );
 
             // Setup TinyMCE callback
             add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
@@ -1329,51 +1331,60 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 			if ( !empty( $_POST['course_id'] ) ) {
 				$email_args['course_id'] = (int) $_POST['course_id'];			
-				
-				// Save the invite in the course meta. Hash the invite code.
-				$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-			    $invite_code = '';
-			    for ($i = 0; $i < 20; $i++) {
-			        $invite_code .= $characters[rand(0, strlen($characters) - 1)];
-			    }
-				$email_args['invite_code'] = $invite_code;
-				
-				
+								
 				$ajax_response = '';
 				$ajax_status = 1; //success
 				
-				if( coursepress_send_email( $email_args ) ){
-					
+				// Get the invite meta for this course and add the new invite
+				$invite_exists = false;
+				if ( $instructor_invites = get_post_meta( $email_args['course_id'], 'instructor_invites', true ) ) {
+					foreach ( $instructor_invites as $i ) {
+						$invite_exists = array_search( $email_args['instructor_email'], $i );
+					} 
+				} else {
+					$instructor_invites = array();					
+				}
+				
+				if ( ! $invite_exists ) {
+
+					// Generate invite code.
+					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				    $invite_code = '';
+				    for ($i = 0; $i < 20; $i++) {
+				        $invite_code .= $characters[rand(0, strlen($characters) - 1)];
+				    }
+					// Save the invite in the course meta. Hash will be used for user authentication.
+					$email_args['invite_code'] = $invite_code;
 					$invite_hash = sha1( $email_args['instructor_email'] . $email_args['invite_code'] );
-				
-					$invite = array(
-						'first_name' => $email_args['first_name'],
-						'last_name'  => $email_args['last_name'],
-						'email'      => $email_args['instructor_email'],
-						'invite'     => $invite_hash,
-					);
-				
-					// Get the invite meta for this course and add the new invite
-					$invite_exists = false;
-					if ( $instructor_invites = get_post_meta( $email_args['course_id'], 'instructor_invites', true ) ) {
-						foreach ( $instructor_invites as $i => $v ) $instructor_invites[$i] = $v['email'];
-						$invite_exists = array_search( $email_args['instructor_email'], $instructor_invites );
-					} else {
-						$instructor_invites = array();					
-					}
-				
-					if ( ! $invite_exists ) {
+					
+					$email_args['invite_hash'] = $invite_hash;
+					
+					if( coursepress_send_email( $email_args ) ){
+			
+						$invite = array(
+							'first_name' => $email_args['first_name'],
+							'last_name'  => $email_args['last_name'],
+							'email'      => $email_args['instructor_email'],
+							'code'		 => $email_args['invite_code'],
+							'hash'     => $email_args['invite_hash'],
+						);
+						
 						$instructor_invites[] = $invite;
+
+						cp_write_log( $instructor_invites );
 						update_post_meta( $email_args['course_id'], 'instructor_invites', $instructor_invites );
 						$ajax_response = __( 'Invitation successfully sent.', 'cp' );
+
 					} else {
-						$ajax_response = __( 'Invitation already exists.', 'cp' );;
+						$ajax_status = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
+						$ajax_response = __( 'Email failed to send.', 'cp' );
 					}
 					
 				} else {
-					$ajax_status = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
-					$ajax_response = __( 'Email failed to send.', 'cp' );
+					cp_write_log("EXISTS");
+					$ajax_response = __( 'Invitation already exists.', 'cp' );;
 				}
+					
 				
                 $response = array(
                     'what' => 'instructor_invite',
@@ -1383,9 +1394,81 @@ if ( !class_exists( 'CoursePress' ) ) {
                 );
                 $xmlResponse = new WP_Ajax_Response( $response );
                 $xmlResponse->send();
+			}	
+		}
+		
+		function instructor_invite_confirmation() {
+			if ( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
 				
+				get_header();
+				
+				if( is_user_logged_in() ) {
+					
+					$current_user = wp_get_current_user();
+					$hash = sha1( $current_user->user_email . $_GET['c'] );					
+										
+					if ( $hash == $_GET['h'] ) {
+						
+						$instructors = get_post_meta( $_GET['course_id'], 'instructors', true );
+						$invites = get_post_meta( $_GET['course_id'], 'instructor_invites', true );
+						
+						foreach( $invites as $key => $invite ) {
+							if ( $_GET['c'] == $invite['code'] ) {
+
+								$exists = false;
+								foreach( $instructors as $instructor ) {
+									if ( $instructor == $current_user->ID ) {
+										$exists = true;
+										exit;
+									}
+								}
+							
+								if ( ! $exists ) {
+									$instructors[] = $current_user->ID;
+									update_post_meta( $_GET['course_id'], 'instructors', $instructors );
+									update_user_meta( $current_user->ID, 'course_' . $_GET['course_id'], $_GET['course_id'] );
+									unset( $invites[ $key ] );
+									update_post_meta( $_GET['course_id'], 'instructor_invites', $invites );
+									
+									$course_link = '<a href="' . admin_url( 'admin.php?page=course_details&course_id=' . $_GET['course_id'] ) . '">' . get_the_title( $_GET['course_id'] ) . '</a>';
+									
+									echo sprintf( __('<h3>Invitation activated.</h3>
+										<p>Congratulations. You are now an instructor in the following course:</p>
+										<p>%s</p>
+									', 'cp' ), $course_link );											
+									
+								}
+								break;
+							}
+						}
+						
+						wp_redirect( admin_url( 'admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id'] ) . '">' . get_the_title( $_GET['course_id'] ) );
+													
+					} else {
+						echo __('
+							<h3>Invalid Invitation</h3>
+							<p>This invitation link is not associated with your email address.</p>
+							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
+						', 'cp' );
+					} 
+									
+				} else {
+					echo __('
+						<h3>Login Required</h3>
+						<p>To accept your invitation request you will need to be logged in.</p>
+						<p>Please login with the account associated with this email.</p>
+					', 'cp' );					
+					
+					wp_login_form();
+
+					echo sprintf( __('
+						<p>If you do not have an account please click on the %s link to create a new account. When you have registered for your new account, please click on the invitation link in the original email again.</p>
+					', 'cp' ), wp_register( '', '', false ) );										
+				}
+				
+				get_footer();
+				exit;
 			}
-			
 		}
 		
 
