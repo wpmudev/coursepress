@@ -252,6 +252,11 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'edit' && isset( $_GET['new_
                                     ?>
                                     <div id="unit-page-<?php echo $i; ?>">
                                         <div class='course-details elements-holder'>
+                                            <div class="unit_page_title">
+                                                <label><?php _e('Page Title', 'cp');?></label>
+                                                <div class="description"><?php _e('The title will be displayed on the Course Overview and Unit page'); ?></div>
+                                                <input type="text" value="" name="page_title[]" placeholder="<?php _e('Page Title', 'cp');?>" />
+                                            </div>
                                             <?php
                                             foreach ( $coursepress_modules_ordered['output'] as $element ) {
                                                 ?>

@@ -21,7 +21,7 @@ if (!class_exists('Course')) {
         function Course($id = '', $output = 'OBJECT') {
             $this->__construct($id, $output);
         }
-
+        
         function get_course() {
 
             $course = get_post($this->id, $this->output);
@@ -42,6 +42,10 @@ if (!class_exists('Course')) {
             } else {
                 return new stdClass();
             }
+        }
+        
+         function is_open_ended(){
+            
         }
 
         function get_course_thumbnail() {
@@ -114,9 +118,10 @@ if (!class_exists('Course')) {
 
             if ($mp_product_id) {
                 $post['ID'] = $mp_product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+                $post_id = wp_update_post($post);
+            } else {
+                $post_id = wp_insert_post($post);
             }
-
-            $post_id = wp_insert_post($post);
 
             $automatic_sku = $_POST['meta_auto_sku'];
 
@@ -126,13 +131,13 @@ if (!class_exists('Course')) {
                 $sku = $_POST['mp_sku'];
             }
 
-            //if (isset($_POST['mp_product_id']) || $post_id) {
-            //update_post_meta($post_id, 'mp_product_id', $post_id);
+            update_post_meta($this->id, 'mp_product_id', $post_id);
+            update_post_meta($this->id, 'marketpress_product', $post_id);
+
             update_post_meta($post_id, 'mp_sku', $sku);
             update_post_meta($post_id, 'mp_price', $_POST['mp_price']);
             update_post_meta($post_id, 'mp_sale_price', $_POST['mp_sale_price']);
             update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
-            //}
         }
 
         function update_course() {

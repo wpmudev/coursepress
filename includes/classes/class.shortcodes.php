@@ -132,6 +132,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
                             ), $atts ) );
 
             $course_obj = new Course( $course_id );
+            
+            if($course_obj->is_open_ended()){
+                $open_ended = true;
+            }else{
+                $open_ended = false;
+            }
+            
             $course = $course_obj->get_course();
 
             if ( $field == 'action_links' ) {
@@ -204,7 +211,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( $field == 'price' ) {
                 global $coursepress;
-                if ( isset( $course->marketpress_product ) && $course->marketpress_product != '' && $coursepress->is_marketpress_active() ) {
+                if ( isset( $course->marketpress_product ) && $course->marketpress_product != '' && ($coursepress->is_marketpress_active() || $coursepress->is_marketpress_lite_active() || $coursepress->is_cp_marketpress_lite_active()) ) {
                     echo do_shortcode( '[mp_product_price product_id="' . $course->marketpress_product . '" label=""]' );
                 } else {
                     $course->price = __( 'FREE', 'cp' );

@@ -798,7 +798,7 @@ if (isset($_GET['course_id'])) {
                                             $mp_product_id = $course->mp_product_id();
                                             //var_dump(get_post_custom($course_id));
                                             $mp_product_details = get_post_custom($course_id);
-
+                                            
                                             ?>
 
                                             <input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr(isset($course->details->mp_product_id) ? $course->details->mp_product_id : ''); ?>" />
@@ -818,7 +818,7 @@ if (isset($_GET['course_id'])) {
                                                     <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
                                                 <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
                                                 if ($auto_sku == 'on') {
-                                                    echo esc_attr($mp_product_details["mp_sale_price"][0]);
+                                                    echo esc_attr($mp_product_details["mp_sku"][0]);
                                                 }
                                                 ?>" />
                                             </div>
