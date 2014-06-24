@@ -2001,6 +2001,7 @@ label.bold-label{
 .course-section .course-form div.wide .enrollment-date-override label,
 .course-section .course-form div.wide .enrollment-date-override input[type="checkbox"] {
 	display: inline;
+	min-width: 10px;
 }
 
 .course-section .course-form div.wide .course-date-override label,
