@@ -123,6 +123,10 @@ if ( isset( $_GET['course_id'] ) ) {
     $gateways = false;
     $course_structure_options = $course->details->course_structure_options;
     $course_structure_time_display = $course->details->course_setup_progressrse_structure_time_display;
+	$show_module = $course->details->show_module;
+	$preview_module = $course->details->preview_module;	
+	cp_write_log( $show_module );
+	cp_write_log( $preview_module );
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -414,15 +418,54 @@ if ( isset( $_GET['course_id'] ) ) {
                                                     <tr class="break"><td colspan="4"></td></tr>
                                                 </thead>
                                                 <tbody>	
+												<?php
+												
+													$units = $course->get_units();
+													
+													if ( 0 == count( $units ) ) {
+														?>
+		                                                    <tr>
+		                                                        <th colspan="4"><?php _e( 'There are currently no Units to Display', 'cp' ); ?></th>
+		                                                    </tr>
+														<?php
+														
+													} else { 
+														foreach( $units as $unit ) {
+												?>
                                                     <tr>
-                                                        <th colspan="4"><?php _e( 'There are currently no Units to Display', 'cp' ); ?></th>
+                                                        <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
                                                     </tr>
+															<?php
+															
+							                                $module = new Unit_Module();
+							                                $modules = $module->order_modules( $module->get_modules( $unit->ID ) );
+															
+															foreach( $modules as $module ) {
+																if( ! empty( $module->post_title ) ) {
+															?>
                                                     <tr>
-                                                        <td>Unit...</td>
-                                                        <td><input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked /></td>
-                                                        <td><input type='checkbox' id='**PLACEHOLDER**' name='**PLACEHOLDER**' value='1' $checked /></td>
+                                                        <td><?php echo $module->post_title; ?></td>
+                                                        <td><input type='checkbox' id='show-<?php echo $module->ID; ?>' name='meta_show_module[<?php echo $module->ID; ?>]' <?php if ( isset( $show_module[ $module->ID ] ) ) { 
+														       echo ( $show_module[ $module->ID ] == 'on' ) ? 'checked' : ''; } ?> /></td>
+														<td><input type='checkbox' id='preview-<?php echo $module->ID; ?>' name='meta_preview_module[<?php echo $module->ID; ?>]' <?php if ( isset( $preview_module[ $module->ID ] ) ) { 
+														       echo ( $preview_module[ $module->ID ] == 'on' ) ? 'checked' : ''; } ?> /></td>
+
                                                         <td>10 min</td>
                                                     </tr>
+															<?php
+																} // if not empty post title
+															} // foreach ( $modules as $modul )
+															
+													
+													
+															?>
+												<?php
+												
+														} // foreach ( $units as $unit )
+													}
+												
+												?>
+													
                                                 </tbody>
                                             </table>
                                         </div>
