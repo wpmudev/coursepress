@@ -796,7 +796,9 @@ if (isset($_GET['course_id'])) {
                                         <?php else: ?>
                                             <?php
                                             $mp_product_id = $course->mp_product_id();
-                                            var_dump(get_post_custom($course_id));
+                                            //var_dump(get_post_custom($course_id));
+                                            $mp_product_details = get_post_custom($course_id);
+
                                             ?>
 
                                             <input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr(isset($course->details->mp_product_id) ? $course->details->mp_product_id : ''); ?>" />
@@ -816,22 +818,22 @@ if (isset($_GET['course_id'])) {
                                                     <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
                                                 <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
                                                 if ($auto_sku == 'on') {
-                                                    echo esc_attr($mp_product_details["mp_sale_price"]);
+                                                    echo esc_attr($mp_product_details["mp_sale_price"][0]);
                                                 }
                                                 ?>" />
                                             </div>
 
                                             <div class="course-price">
                                                 <div><span><?php _e('Price', 'cp'); ?></span>
-                                                    <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"]); ?>" /></div>
+                                                    <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" /></div>
                                             </div>
 
                                             <div class="clearfix"></div>
 
                                             <div class="course-sale-price">
-                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="1"<?php checked($mp_product_details["mp_is_sale"], '1'); ?> />
+                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="1"<?php checked($mp_product_details["mp_is_sale"][0], '1'); ?> />
                                                     <?php _e('Enabled Sale Price', 'cp'); ?></p>
-                                                <p><span><?php _e('Sale Price', 'cp'); ?></span><input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"]); ?>" /></p>
+                                                <p><span><?php _e('Sale Price', 'cp'); ?></span><input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"][0]); ?>" /></p>
                                             </div>
 
                                             <div class="clearfix"></div>
