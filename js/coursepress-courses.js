@@ -329,6 +329,18 @@ function step_2_update(attr) {
         content = $('[name=course_description]').val();
     }
 
+	var show_boxes = {};
+	var preview_boxes = {};
+	
+	$("input[name^=module_element]").each( function() {
+		var mod_id = $( this ).val();
+		
+		show_boxes[ mod_id ] = $( sanitize_checkbox( $( "input[name=meta_show_module\\[" + mod_id + "\\]]") ) ).val();
+		preview_boxes[ mod_id ] = $( sanitize_checkbox( $( "input[name=meta_preview_module\\[" + mod_id + "\\]]") ) ).val();
+
+	});
+
+
     return {
         // Don't remove
         action: initialVars['action'],
@@ -339,6 +351,8 @@ function step_2_update(attr) {
         course_description: content,
         meta_course_structure_options: $('[name=meta_course_structure_options]').is(':checked') ? 'on' : 'off',
         meta_course_structure_time_display: $('[name=meta_course_structure_time_display]').is(':checked') ? 'on' : 'off',
+		meta_show_module: show_boxes,
+		meta_preview_module: preview_boxes,		
         // Don't remove
         meta_course_setup_progress: initialVars['meta_course_setup_progress'],
         meta_course_setup_marker: 'step-3',
@@ -499,11 +513,18 @@ function courseAutoUpdate(step) {
     }
 }
 
-function sendInstructotInvitation() {
-
-
-
-
+function sanitize_checkbox( checkbox ) {
+	$ = jQuery;
+	
+	if ( $( checkbox ).attr( 'type' ) == 'checkbox' ) {
+		if ( $( checkbox ).attr( 'checked' ) ) {
+			$( checkbox ).val( 'on' );
+		} else {
+			$( checkbox ).val( 'off' );
+		}
+	}
+	
+	return checkbox;
 }
 
 /** Handle Course Setup Wizard */
@@ -684,6 +705,16 @@ jQuery(document).ready(function($) {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
         }
+		
+		if ( $( this ).attr( 'type' ) == 'checkbox' ) {
+			if ( $( this ).attr( 'checked' ) ) {
+				$( this ).val( 'on' );
+			} else {
+				$( this ).val( 'off' );
+			}
+		}
+		
+		
     });
     $('.course-form textarea').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
