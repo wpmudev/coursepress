@@ -429,7 +429,15 @@ function step_6_update( attr ) {
 		course_name: initialVars['course_name'],
 				
 		// Alter as required
+        meta_paid_course: $('[name=meta_paid_course]').is(':checked') ? 'on' : 'off',
+        meta_auto_sku: $('[name=meta_auto_sku]').is(':checked') ? 'on' : 'off',
+        mp_sku: $('[name=mp_sku]').val(),
+        mp_is_sale: $('[name=mp_is_sale]').is(':checked') ? '1' : '0',
+        mp_price: $('[name=mp_price]').val(),
+        mp_sale_price: $('[name=mp_sale_price]').val(),
+        mp_product_id: $('#meta_mp_product_id').val(),
 		
+        //meta_allow_workbook_page: $('[name=meta_allow_workbook_page]').is(':checked') ? 'on' : 'off',
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],
 		meta_course_setup_marker: initialVars['meta_course_setup_marker'],
