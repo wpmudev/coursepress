@@ -352,6 +352,11 @@ function step_3_update( attr ) {
 	var theStatus = attr['status'];
 	var initialVars = attr['initialVars'];
 	
+	var instructors = $("input[name^=instructor]").map(function(){return $(this).val();}).get();
+	if ( $( instructors ).length == 0 ){
+		instructors = 0;
+	}
+	
 	return {
 		// Don't remove
 		action: initialVars['action'],
@@ -359,7 +364,7 @@ function step_3_update( attr ) {
 		course_name: initialVars['course_name'],
 				
 		// Alter as required
-		instructor: $("input[name^=instructor]").map(function(){return $(this).val();}).get(),
+		instructor: instructors,
 		
 		// Don't remove
 		meta_course_setup_progress: initialVars['meta_course_setup_progress'],

@@ -183,17 +183,21 @@ if ( !class_exists( 'Course' ) ) {
 					//Get last instructor ID array in order to compare with posted one
 	                $old_post_meta = get_post_meta( $post_id, 'instructors', false );
 					
-	                if ( serialize( array( $_POST['instructor'] ) ) !== serialize( $old_post_meta ) ) {//If instructors IDs don't match
+	                if ( serialize( array( $_POST['instructor'] ) ) !== serialize( $old_post_meta ) || 0 == $_POST['instructor'] ) {//If instructors IDs don't match
 	                    delete_post_meta( $post_id, 'instructors' );
 	                    delete_user_meta_by_key( 'course_' . $post_id );
 	                }
 
-	                update_post_meta( $post_id, 'instructors', $_POST['instructor'] ); //Save instructors for the Course
-
-
-                    foreach ( $_POST['instructor'] as $instructor_id ) {
-                        update_user_meta( $instructor_id, 'course_' . $post_id, $post_id ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
-                    }
+					if ( 0 != $_POST['instructor'] ) {
+		
+		                update_post_meta( $post_id, 'instructors', $_POST['instructor'] ); //Save instructors for the Course
+						
+						
+	                    foreach ( $_POST['instructor'] as $instructor_id ) {
+	                        update_user_meta( $instructor_id, 'course_' . $post_id, $post_id ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
+	                    }						
+						
+					} // only add meta if array is sent	
                 }
 				
             }
