@@ -1958,6 +1958,10 @@ if ( !class_exists( 'CoursePress' ) ) {
             //wp_enqueue_script( 'jquery-ui-core' );
             wp_enqueue_script( 'jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in 
             wp_enqueue_script( 'jquery-ui-spinner' );
+			
+			// CryptoJS.MD5
+            wp_enqueue_script( 'cryptojs-md5', $this->plugin_url . 'js/md5.js' );
+			
 
             if ( isset( $_GET['page'] ) ) {
                 $page = isset( $_GET['page'] );

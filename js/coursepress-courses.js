@@ -677,8 +677,6 @@ jQuery(document).ready(function($) {
 				var response = $.parseJSON( $(data).find('response_data').text() );
 				var response_type = $( $.parseHTML( response.content ) );
 				
-				console.log(response);
-
 				if ( $( response_type ).hasClass( 'status-success') ) {
 					
 					var remove_button = '';
@@ -689,7 +687,7 @@ jQuery(document).ready(function($) {
 					var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
 						'<div class="instructor-status">PENDING</div>' +
 						remove_button +
-						'<img class="avatar avatar-80 photo" width="80" height="80" src="http://1.gravatar.com/avatar/9d2f55a32acd04fbfe7c00cc75d9d8e8?s=80&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D80&r=G" alt="admin">' +
+						'<img class="avatar avatar-80 photo" width="80" height="80" src="http://www.gravatar.com/avatar/' + CryptoJS.MD5( response.data.email ) + '" alt="admin">' +
 						'<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
 					'</div>';
 
