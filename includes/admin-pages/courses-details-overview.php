@@ -534,18 +534,19 @@ if (isset($_GET['course_id'])) {
 
                                             <?php
                                             if (( current_user_can('coursepress_assign_and_assign_instructor_course_cap') ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id() )) {
-                                                $remove_button = true;
+                                                $can_manage_instructors = true;
                                             } else {
-                                                $remove_button = false;
+                                                $can_manage_instructors = false;
                                             }
                                             ?>
 
-                                            <?php coursepress_instructors_avatars($course_id, $remove_button); ?>
-                                            <?php coursepress_instructors_pending($course_id, $remove_button); ?>
-                                        </div>						
+                                            <?php coursepress_instructors_avatars( $course_id, $can_manage_instructors ); ?>
+                                            <?php coursepress_instructors_pending( $course_id, $can_manage_instructors ); ?>
+                                        </div>
+										
+										<?php if ( $can_manage_instructors ) : ?>						
                                         <div class="clearfix"></div>
                                         <hr />
-
                                         <!-- INVITE INSTRUCTOR -->
 
                                         <label>
@@ -565,6 +566,7 @@ if (isset($_GET['course_id'])) {
 	                                            <input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
 											</div>
                                         </div>
+										<?php endif; ?>
 
 
                                     </div>

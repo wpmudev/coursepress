@@ -35,11 +35,97 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             add_shortcode( 'get_parent_course_id', array( &$this, 'get_parent_course_id' ) );
             add_shortcode( 'units_dropdown', array( &$this, 'units_dropdown' ) );
 
+			add_shortcode( 'course', array( &$this, 'course' ) );
+
+
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 
 
             $GLOBALS['units_breadcrumbs'] = '';
         }
+		
+		function course( $atts ) {
+			
+            extract( shortcode_atts( array(
+                'course_id'   => get_the_ID(),
+				'show'        => 'summary',
+				'date_format' => get_option( 'date_format' ),
+				'label_tag'   => 'strong',
+            ), $atts, 'course' ) );
+			
+			$course = new Course( $course_id );
+			
+			$sections = explode( ',', $show );
+			
+			foreach( $sections as $section )
+			{
+				if ( 'summary' == trim( $section ) ) {
+					ob_start();
+					?>
+						<div class="course-summary course-summary-<?php echo $course_id; ?>">
+						<?php echo $course->details->post_excerpt; ?>
+						</div>
+					<?php
+					$content .= ob_get_clean();
+				}
+				
+				if ( 'description' == trim( $section ) ) {				
+					ob_start();
+					?>
+						<div class="course-description course-description-<?php echo $course_id; ?>">
+						<?php echo $course->details->post_content; ?>
+						</div>
+					<?php
+					$content .= ob_get_clean();					
+				}
+
+				if ( 'start-date' == trim( $section ) ) {				
+					$start_date = get_post_meta( $course_id, 'course_start_date', true );
+					ob_start();
+					?>
+						<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
+						<<?php echo $label_tag; ?> class="label"><?php _e('Course Start Date')?></<?php echo $label_tag; ?>>
+						<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
+						</div>
+					<?php
+					$content .= ob_get_clean();					
+				}
+
+				if ( 'end-date' == trim( $section ) ) {				
+					$end_date = get_post_meta( $course_id, 'course_end_date', true );
+					ob_start();
+					?>
+						<div class="course-end-date course-end-date-<?php echo $course_id; ?>">
+						<<?php echo $label_tag; ?> class="label"><?php _e('Course End Date')?></<?php echo $label_tag; ?>>
+						<?php echo sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+						</div>
+					<?php
+					$content .= ob_get_clean();					
+				}
+				
+				if ( 'dates' == trim( $section ) ) {			
+					$start_date = get_post_meta( $course_id, 'course_start_date', true );	
+					$end_date = get_post_meta( $course_id, 'course_end_date', true );
+					print_r( $start_date );
+					ob_start();
+					?>
+						<div class="course-dates course-dates-<?php echo $course_id; ?>">
+						<<?php echo $label_tag; ?> class="label"><?php _e('Course Dates')?></<?php echo $label_tag; ?>>
+						<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+						</div>
+					<?php
+					$content .= ob_get_clean();					
+				}
+				
+				
+
+				
+				
+			}
+			
+			// return print_r( $course );
+			return $content;
+		}
 
         function course_unit_archive_submenu( $atts ) {
             global $coursepress;
