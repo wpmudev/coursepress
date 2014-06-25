@@ -497,14 +497,14 @@ function courseAutoUpdate(step) {
         $.post(
                 'admin-ajax.php', post_vars
                 ).done(function(data, status) {
-            // Set a course_id if its still empty
-            course_id = $(data).find('response_data').text();
-            console.log(course_id);
-            if ($('[name=course_id]').val() == 0 && course_id) {
-                $('[name=course_id]').val(course_id);
-            }
-            // Handle return
-            autosave_course_setup_done(data, status, 'step-' + step, theStatus);
+		            // Set a course_id if its still empty
+		            course_id = $(data).find('response_data').text();
+
+		            if ($('[name=course_id]').val() == 0 && course_id) {
+		                $('[name=course_id]').val(course_id);
+		            }
+		            // Handle return
+		            autosave_course_setup_done(data, status, 'step-' + step, theStatus);
         }).fail(function(data) {
         });
 
@@ -654,21 +654,6 @@ jQuery(document).ready(function($) {
 
     $('#invite-instructor-trigger').click(function() {
 
-        // var instructor_id = jQuery( '#instructors option:selected' ).val();
-
-        // Mark as dirty
-        // var parent_section = jQuery( this ).parents( '.course-section.step' )[0];
-        // if ( parent_section ) {
-        // 	if ( ! jQuery( parent_section ).hasClass( 'dirty' ) ) {
-        // 		jQuery( parent_section ).addClass( 'dirty' );
-        // 	}
-        // }
-
-        // if ( jQuery( "#instructor_holder_" + instructor_id ).length == 0 ) {
-// 			jQuery( '.instructor-avatar-holder.empty' ).hide();
-//             jQuery( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery( '#instructors option:selected' ).text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
-//         }
-
         // Course ID
         var course_id = $('[name=course_id]').val();
         if (!course_id) {
@@ -688,16 +673,68 @@ jQuery(document).ready(function($) {
         ).done(function(data, status) {
             // Handle return
             if (status == 'success') {
+
+				var response = $.parseJSON( $(data).find('response_data').text() );
+				var response_type = $( $.parseHTML( response.content ) );
+				
+				console.log(response);
+
+				if ( $( response_type ).hasClass( 'status-success') ) {
+					
+					var remove_button = '';
+					if ( response.capability ) { 
+						remove_button = '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' + response.data.code + '\', ' + course_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>'; 
+					}
+
+					var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
+						'<div class="instructor-status">PENDING</div>' +
+						remove_button +
+						'<img class="avatar avatar-80 photo" width="80" height="80" src="http://1.gravatar.com/avatar/9d2f55a32acd04fbfe7c00cc75d9d8e8?s=80&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D80&r=G" alt="admin">' +
+						'<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
+					'</div>';
+
+					$( '#instructors-info' ).append( content );
+					
+					$( '[name=invite_instructor_first_name]' ).val( '' );
+					$( '[name=invite_instructor_last_name]' ).val( '' );					
+					$( '[name=invite_instructor_email]' ).val( '' );					
+				} 
+				
+				if ( $( '#invite-message' ) ) { $( '#invite-message' ).remove() };
+				$( 'div.instructor-invite .submit-message' ).append( '<div id="invite-message" style="display:none;">' + response.content + '</div>' )	
+				// Popup Message
+			    $( '#invite-message' ).show(function(){
+			          $( this ).fadeOut(3000);
+			    });
+				$( '[name=invite_instructor_first_name]' ).trigger( 'focus' );
+						
             } else {
             }
         }).fail(function(data) {
         });
 
-        // jQuery.get( 'admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id} )
-        //         .success( function( data ) {
-        //             //alert( data );
-        //         } );
     });
+
+
+	// Submit Invite on 'Return/Enter' 
+	$('.instructor-invite input').keypress( function( event ) {
+		if ( event.which == 13 ) {
+			switch( $( this ).attr( 'name' ) ) {
+
+			case "invite_instructor_first_name":
+				$( '[name=invite_instructor_last_name]').trigger( 'focus' );
+				break;
+			case "invite_instructor_last_name":
+				$( '[name=invite_instructor_email]').trigger( 'focus' );
+				break;
+			case "invite_instructor_email":
+			case "invite_instructor_trigger":
+				$( '#invite-instructor-trigger' ).trigger( 'click' );
+				break;
+			}
+			event.preventDefault();
+		}
+	});
 
 
     /** Mark "dirty" content */

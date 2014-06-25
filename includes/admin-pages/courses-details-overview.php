@@ -528,13 +528,9 @@ if (isset($_GET['course_id'])) {
 
                                         <p>Assigned Instructors:</p>
                                         <div class="instructors-info" id="instructors-info">
-                                            <div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e('Please Assign Instructor', 'cp'); ?></span></div>
-                                            <div id="instructor_holder_DEMO" class="instructor-avatar-holder pending demo">
-                                                <div class="instructor-status">PENDING</div>
-                                                <div class="instructor-remove"></div>
-                                                <img class="avatar avatar-80 photo" width="80" height="80" src="http://1.gravatar.com/avatar/9d2f55a32acd04fbfe7c00cc75d9d8e8?s=80&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D80&r=G" alt="admin">
-                                                <span class="instructor-name">DEMO IN CODE</span>
-                                            </div>
+											<?php if ( 0 >= coursepress_instructors_avatars($course_id, true, true) ) : ?> 
+	                                            <div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e('Please Assign Instructor', 'cp'); ?></span></div>											
+											<?php endif ?>
 
                                             <?php
                                             if (( current_user_can('coursepress_assign_and_assign_instructor_course_cap') ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id() )) {
@@ -564,8 +560,10 @@ if (isset($_GET['course_id'])) {
                                             <label for="invite_instructor_last_name"><?php _e('Last Name', 'cp'); ?></label>
                                             <input type="text" name="invite_instructor_last_name" placeholder="Last Name" />
                                             <label for="invite_instructor_email"><?php _e('E-Mail', 'cp'); ?></label>
-                                            <input type="text" name="invite_instructor_email" placeholder="instructor@email.com" />
-                                            <input class="button-primary" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
+                                            <input type="text" name="invite_instructor_email" placeholder="instructor@email.com" />											
+											<div class="submit-message">
+	                                            <input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
+											</div>
                                         </div>
 
 

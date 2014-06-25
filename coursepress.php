@@ -108,6 +108,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				//Invite instructor ajax call
 				add_action( 'wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ) );
 
+				//Remove instructor invite ajax call
+				add_action( 'wp_ajax_remove_instructor_invite', array( &$this, 'remove_instructor_invite' ) );
+
                 add_action( 'mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ) );
             }
 
@@ -1332,7 +1335,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( !empty( $_POST['course_id'] ) ) {
 				$email_args['course_id'] = (int) $_POST['course_id'];			
 								
-				$ajax_response = '';
+				$ajax_response = array();
 				$ajax_status = 1; //success
 				
 				// Get the invite meta for this course and add the new invite
@@ -1369,20 +1372,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 							'hash'     => $email_args['invite_hash'],
 						);
 						
-						$instructor_invites[] = $invite;
+						$instructor_invites[ $email_args['invite_code'] ] = $invite;
 
-						cp_write_log( $instructor_invites );
 						update_post_meta( $email_args['course_id'], 'instructor_invites', $instructor_invites );
-						$ajax_response = __( 'Invitation successfully sent.', 'cp' );
+
+                        if (( current_user_can('coursepress_assign_and_assign_instructor_course_cap') ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id() )) {
+                            $ajax_response['capability'] = true;
+                        } else {
+                            $ajax_response['capability'] = false;
+                        }
+						
+						$ajax_response['data'] = $invite;
+						$ajax_response['content'] = '<i class="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', 'cp' );
+						
 
 					} else {
 						$ajax_status = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
-						$ajax_response = __( 'Email failed to send.', 'cp' );
+						$ajax_response['content'] = '<i class="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', 'cp' );
 					}
 					
 				} else {
-					cp_write_log("EXISTS");
-					$ajax_response = __( 'Invitation already exists.', 'cp' );;
+					$ajax_response['content'] = '<i class="fa fa-info-circle status status-exist"></i> ' . __( 'Invitation already exists.', 'cp' );;
 				}
 					
 				
@@ -1390,11 +1400,38 @@ if ( !class_exists( 'CoursePress' ) ) {
                     'what' => 'instructor_invite',
                     'action' => 'instructor_invite',
                     'id' => $ajax_status,
-                    'data' => $ajax_response,
+                    'data' => json_encode( $ajax_response ),
                 );
                 $xmlResponse = new WP_Ajax_Response( $response );
                 $xmlResponse->send();
 			}	
+		}
+		
+		function remove_instructor_invite() {
+			$ajax_response = array();
+			$ajax_status = 1; //success
+			
+			if ( !empty( $_POST['course_id'] ) ) {
+				$course_id = (int) $_POST['course_id'];
+				$invite_code = sanitize_text_field( $_POST['invite_code'] );
+				$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
+					
+				unset( $instructor_invites[ $invite_code ] );
+				
+				update_post_meta( $course_id, 'instructor_invites', $instructor_invites );
+				
+				$ajax_response['content'] = __( 'Instructor invitation cancelled.', 'cp' );
+			}
+
+            $response = array(
+                'what' => 'remove_instructor_invite',
+                'action' => 'remove_instructor_invite',
+                'id' => $ajax_status,
+                'data' => json_encode( $ajax_response ),
+            );
+            $xmlResponse = new WP_Ajax_Response( $response );
+            $xmlResponse->send();
+			
 		}
 		
 		function instructor_invite_confirmation() {
@@ -1945,6 +1982,7 @@ if ( !class_exists( 'CoursePress' ) ) {
                 wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js' );
                 wp_localize_script( 'courses_bulk', 'coursepress', array(
                     'delete_instructor_alert' => __( 'Please confirm that you want to remove the instructor from this course?', 'cp' ),
+                    'delete_pending_instructor_alert' => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'cp' ),					
                     'delete_course_alert' => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'cp' ),
                     'delete_notification_alert' => __( 'Please confirm that you want to permanently delete the notification?', 'cp' ),
                     'delete_discussion_alert' => __( 'Please confirm that you want to permanently delete the discussion?', 'cp' ),

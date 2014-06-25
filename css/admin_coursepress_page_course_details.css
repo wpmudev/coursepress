@@ -1924,9 +1924,13 @@ label.bold-label{
 }
 
 .course-section div.wide.narrow .instructor-invite .button-primary {
-	display: block;
+	display: inline;
 	clear: both;
 	margin-left: 100px;
+}
+
+.course-section div.wide.narrow .instructor-invite .submit-message {
+	clear: both;
 }
 
 
@@ -2092,6 +2096,29 @@ label.bold-label{
 .course-section .course-form input.class_size.disabled + a {
 	display:none;
 }
+
+#invite-message {
+/*    position: absolute;
+    bottom: 5px;
+    left: 195px;
+    z-index: 999;
+	*/
+	display: inline;
+	padding-left:5px;
+}
+
+#invite-message .fa-check {
+	color: #6FC26E;
+}
+
+#invite-message .fa-info-circle {
+	color: #FC9F26;
+}
+
+#invite-message .fa-exclamation {
+	color: #f00;
+}
+
 
 ::-webkit-input-placeholder { /* WebKit browsers */
     font-size:0.9em;

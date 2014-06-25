@@ -503,9 +503,9 @@ function coursepress_instructors_avatars( $course_id, $remove_buttons = true, $j
 
         foreach ( $instructors as $instructor ) {
             if ( $remove_buttons ) {
-                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' . $instructor->ID . ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' . $instructor->ID . ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
             } else {
-                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-status"></div><div class="instructor-remove"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+                $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
             }
         }
 
@@ -548,10 +548,24 @@ function coursepress_instructors_avatars_array( $args = array() ) {
 }
 
 function coursepress_instructors_pending( $course_id, $has_capability ) {
-	
-	
-	
-	
+	$content = '';
+	$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
+
+	foreach( $instructor_invites as $instructor ) {
+
+		$remove_button = $has_capability ? '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' . $instructor['code'] . '\', ' . $course_id . ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' : '';
+
+		// Cancel Pending
+		$content .=
+			'<div class="instructor-avatar-holder pending" id="' . $instructor['code'] . '">' .
+				'<div class="instructor-status">PENDING</div>' .
+				$remove_button .
+				'<img class="avatar avatar-80 photo" width="80" height="80" src="http://1.gravatar.com/avatar/9d2f55a32acd04fbfe7c00cc75d9d8e8?s=80&d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D80&r=G" alt="admin">' .
+				'<span class="instructor-name">' . $instructor['first_name'] . ' ' . $instructor['last_name'] . '</span>' .
+			'</div>';
+	}
+
+	echo $content;
 }
 
 function coursepress_students_drop_down() {

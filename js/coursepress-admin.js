@@ -447,6 +447,24 @@ function removeInstructor( instructor_id ) {
     }
 }
 
+function removePendingInstructor( invite_code, course_id ) {
+	$ = jQuery;
+	if ( confirm( coursepress.delete_pending_instructor_alert ) ){
+        $.post(
+                'admin-ajax.php', {
+                    action: 'remove_instructor_invite',
+                    invite_code: invite_code,
+                    course_id: course_id,
+                }
+        ).done(function(data, status) {
+            if (status == 'success') {
+				$( '#' + invite_code ).remove();
+            } 
+        }).fail(function(data) {
+        });
+	}
+}
+
 jQuery( document ).ready( function() {
 
     function get_tinymce_content( id ) {
