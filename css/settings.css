@@ -1687,7 +1687,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 #unit-pages.ui-tabs .ui-tabs-panel.ui-widget-content.ui-corner-bottom{
-    padding: 0.5em;
+    padding: 0.0em;
 }
 
 #unit-pages .sidebar-name.ui-tabs-nav{
@@ -2688,7 +2688,7 @@ label.error:before {
     bottom: 0px;
     background: #0074A2;
     content: "a";
-    display: block;
+    display: none;
     font-size: 0;
     line-height: 0;
     width: 2px;

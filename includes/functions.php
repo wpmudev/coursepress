@@ -25,8 +25,7 @@ function preg_array_key_exists( $pattern, $array ) {
 }
 
 function cp_get_fragment() {
-    $url = parse_url( $_SERVER["REQUEST_URI"] );
-    return $url["fragment"];
+    
 }
 
 function is_chat_plugin_active() {

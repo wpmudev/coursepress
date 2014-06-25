@@ -514,7 +514,6 @@ if ( !class_exists( 'Unit_Module' ) ) {
             <a class="remove_module_link" onclick="if ( removeModule() ) {
                         jQuery( this ).parent().parent().parent().remove();
                         jQuery( this ).parent().parent().remove();
-
                         update_sortable_module_indexes();
                     }"><?php //_e( 'Remove' )    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
             <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>

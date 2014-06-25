@@ -909,7 +909,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
 }
 
 .instructor-remove a:hover{
-/*    background-image: url( "../images/delete.png" );*/
+    /*    background-image: url( "../images/delete.png" );*/
     background-position: 30px 31px;
     background-repeat: no-repeat;
     height: 80px;
@@ -1012,7 +1012,7 @@ p.description {
 
 div.course-details {
     /*    padding-top: 10px;*/
-    padding-left: 10px;
+    padding-left: 17px;
 }
 
 .course-holder label {
@@ -1687,7 +1687,7 @@ label.bold-label{
 /* COURSE SETUP PAGE */
 
 .coursepress_page_course_details .course-details {
-	padding-bottom: 30px;
+    padding-bottom: 0px;
 }
 
 .course-section.step input.button {
@@ -1697,8 +1697,8 @@ label.bold-label{
 
 .course-section.step .course-form {
     display: none;
-	font-family: "Open Sans", serif;
-	font-size:13px;
+    font-family: "Open Sans", serif;
+    font-size:13px;
 }
 
 .course-section.step.save-marker .course-form {
@@ -1771,12 +1771,12 @@ label.bold-label{
 }
 
 .course-section .course-form hr {
-	margin: 25px 0;
-	clear: both;
+    margin: 25px 0;
+    clear: both;
 }
 
 .course-section .course-form div.narrow {
-	width: 61.25%;
+    width: 61.25%;
 }
 .course-section .course-form div.narrow, .course-section .course-form div.wide {
     margin-bottom: 40px;
@@ -1844,7 +1844,7 @@ label.bold-label{
 
 .course-section .course-form label {
     font-size: 1.1em;
-	cursor: default;
+    cursor: default;
 }
 
 .course-section .course-form label span {
@@ -1871,15 +1871,15 @@ label.bold-label{
 }
 
 .course-section div.wide.narrow .instructor-avatar-holder.empty {
-	border: 1px dashed #e1e1e1;
+    border: 1px dashed #e1e1e1;
 }
 .course-section div.wide.narrow .instructor-avatar-holder.empty .instructor-name {
-	position: relative;
-	top: 40px;
+    position: relative;
+    top: 40px;
 }
 
 .course-section div.wide.narrow .instructor-avatar-holder.pending {
-	border: 1px solid #B3CFDC;
+    border: 1px solid #B3CFDC;
 }
 
 .course-section div.wide.narrow .instructor-avatar-holder.pending .instructor-status {
@@ -1893,44 +1893,44 @@ label.bold-label{
 }
 
 .course-section div.wide.narrow .instructor-remove .cp-move-icon{
-	z-index: 9999;
-	text-shadow: 0px 0px 2px rgba( 0, 0, 0, 0.7 );
+    z-index: 9999;
+    text-shadow: 0px 0px 2px rgba( 0, 0, 0, 0.7 );
 }
 
 
 .course-section div.wide.narrow .instructor-invite {
-	margin-top: 20px 0 30px 0;
+    margin-top: 20px 0 30px 0;
 }
 
 .course-section div.wide.narrow .instructor-invite label {
-	width: 100px;
-	display: block;
-	float: left;
-	clear: both;
-	font-weight: normal;
+    width: 100px;
+    display: block;
+    float: left;
+    clear: both;
+    font-weight: normal;
 }
 
 .course-section div.wide.narrow .instructor-invite input[type="text"],
 .course-section div.wide.narrow .instructor-invite input[type="email"] {
-	width: 280px;
-	margin-bottom: 10px;
-	display: block;
-	float: left;
-	clear: right;
+    width: 280px;
+    margin-bottom: 10px;
+    display: block;
+    float: left;
+    clear: right;
 }
 
 .course-section div.wide.narrow .instructors-info {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 .course-section div.wide.narrow .instructor-invite .button-primary {
-	display: inline;
-	clear: both;
-	margin-left: 100px;
+    display: inline;
+    clear: both;
+    margin-left: 100px;
 }
 
 .course-section div.wide.narrow .instructor-invite .submit-message {
-	clear: both;
+    clear: both;
 }
 
 
@@ -1964,39 +1964,39 @@ label.bold-label{
 /* Date Ranger */
 
 .course-section .course-form div.wide .date-range label {
-	display: block;
-	width: 85px;
-	float: left;
-	font-size: 1em;
-	line-height: 2em;
-	font-weight: bold;
+    display: block;
+    width: 85px;
+    float: left;
+    font-size: 1em;
+    line-height: 2em;
+    font-weight: bold;
 }
 
 .course-section .course-form div.wide .date-range div.date,
 .course-section .course-form div.wide .date-range input[type="text"] {
-	display: block;
-	width: 220px;
-	float: left;
-	font-weight: bold;
+    display: block;
+    width: 220px;
+    float: left;
+    font-weight: bold;
 }
 
 /* Start Date */
 .course-section .course-form div.wide .date-range .start-date div {
-	margin-right: 45px;
+    margin-right: 45px;
 }
 .course-section .course-form div.wide .date-range .start-date label {
-	color: #97bc85;
+    color: #97bc85;
 }
 /* End Date */
 .course-section .course-form div.wide .date-range .end-date label {
-	color: #4dbdec;
+    color: #4dbdec;
 }
 
 .course-section .course-form div.wide .date-range .start-date.disabled input,
 .course-section .course-form div.wide .date-range .start-date.disabled label,
 .course-section .course-form div.wide .date-range .end-date.disabled input,
 .course-section .course-form div.wide .date-range .end-date.disabled label {
-	color: #dddddd;
+    color: #dddddd;
 }
 
 /* Date overrides */
@@ -2004,119 +2004,119 @@ label.bold-label{
 .course-section .course-form div.wide .course-date-override input[type="checkbox"], 
 .course-section .course-form div.wide .enrollment-date-override label,
 .course-section .course-form div.wide .enrollment-date-override input[type="checkbox"] {
-	display: inline;
-	min-width: 10px;
+    display: inline;
+    min-width: 10px;
 }
 
 .course-section .course-form div.wide .course-date-override label,
 .course-section .course-form div.wide .enrollment-date-override label {
-	font-size:1em;
+    font-size:1em;
 }
 
 .course-section .course-form div.wide .date-range div.date {
-	position: relative;
+    position: relative;
 }
 
 .course-section .course-form div.wide .date-range div.date:after {
     font: normal normal 17px/17px dashicons;
-	font-weight: normal;
-	content: "\f145";
-	position: absolute;
-	top: 6px;
-	right: 4px;
-	z-index: 9999;
-	color: #c9c9c9;
+    font-weight: normal;
+    content: "\f145";
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    z-index: 9999;
+    color: #c9c9c9;
 }
 
 .course-section .course-form div.wide .date-range .start-date.disabled div.date:after,
 .course-section .course-form div.wide .date-range .end-date.disabled div.date:after {
-	color: #dddddd;
+    color: #dddddd;
 }
 
 .course-section .course-form div.narrow .course-sku input[type="text"] {
-	width: 160px;
-	margin-left: 25px;
+    width: 160px;
+    margin-left: 25px;
 }
 
 
 .course-section .course-form div.narrow .course-price {
-	margin: 20px 0 10px 0;
+    margin: 20px 0 10px 0;
 }
 .course-section .course-form div.narrow .course-sale-price,
 .course-section .course-form div.narrow .course-enable-gateways {
-	margin: 10px 0;
+    margin: 10px 0;
 }
 
 
 .course-section .course-form div.narrow .course-price span,
 .course-section .course-form div.narrow .course-sale-price span {
-	display: block;
-	width: 75px;
-	float: left;
-	line-height: 2em;
+    display: block;
+    width: 75px;
+    float: left;
+    line-height: 2em;
 }
 
 .course-section .course-form div.narrow .course-price input[type="text"],
 .course-section .course-form div.narrow .course-sale-price input[type="text"] {
-	width: 80px;
+    width: 80px;
 }
 
 
 .course-section .course-form .button-edit-gateways,
 .course-section .course-form .button-incomplete-gateways {
-	padding-left: 24px;
-	position: relative;
+    padding-left: 24px;
+    position: relative;
 }
 
 .course-section .course-form .button-incomplete-gateways {
-	border-color: #cc712e;
-	color: #ffffff;
-	box-shadow: 0 1px 0 #fdc575 inset, 0 1px 0 rgba( 0, 0, 0, 0.08 );
-	background-color: #f5a00c;
+    border-color: #cc712e;
+    color: #ffffff;
+    box-shadow: 0 1px 0 #fdc575 inset, 0 1px 0 rgba( 0, 0, 0, 0.08 );
+    background-color: #f5a00c;
 }
 
 
 .course-section .course-form .button-edit-gateways:before,
 .course-section .course-form .button-incomplete-gateways:before {
     font: normal normal 17px/17px dashicons;
-	font-weight: normal;
-	content: "\f111";
-	position: absolute;
-	top: 5px;
-	left: 4px;
-	z-index: 9999;
-	color: #ffffff;
+    font-weight: normal;
+    content: "\f111";
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    z-index: 9999;
+    color: #ffffff;
 }
 
 .course-section .course-form .button-edit-gateways:before {
-	color: #444;	
+    color: #444;	
 }
 
 .course-section .course-form input.class_size.disabled + a + a,
 .course-section .course-form input.class_size.disabled + a {
-	display:none;
+    display:none;
 }
 
 #invite-message {
-/*    position: absolute;
-    bottom: 5px;
-    left: 195px;
-    z-index: 999;
-	*/
-	display: inline;
-	padding-left:5px;
+    /*    position: absolute;
+        bottom: 5px;
+        left: 195px;
+        z-index: 999;
+    */
+    display: inline;
+    padding-left:5px;
 }
 
 #invite-message .fa-check {
-	color: #6FC26E;
+    color: #6FC26E;
 }
 
 #invite-message .fa-info-circle {
-	color: #FC9F26;
+    color: #FC9F26;
 }
 
 #invite-message .fa-exclamation {
-	color: #f00;
+    color: #f00;
 }
 
 
@@ -2141,4 +2141,47 @@ label.bold-label{
     font-size:0.9em;
     color: #909090;	
     font-style: oblique;
+}
+
+.unit_page_title{
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.coursepress_page_course_details .course-details hr{
+    margin-left: -17px;
+}
+
+.unit_page_title input{
+    width: 99%;
+    margin-bottom: 20px;
+}
+
+.unit_page_title label{
+    display: block;
+    padding-top: 4px;
+    font-size: 13px;
+    padding-left: 3px;
+}
+
+.unit_page_title .description{
+    font-size: 12px;
+    padding-left: 3px;
+    margin-bottom: 10px;
+}
+
+span.no-elements {
+    text-align: center;
+    font-size: 12px;
+    color: #e1dcdc;
+    display: block;
+    padding: 13px;
+    border: 1px solid #ececec;
+    width: 97%;
+    margin-top: 15px;
+    margin-bottom: 13px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; /* future proofing */
+    -khtml-border-radius: 5px; /* for old Konqueror browsers */
 }

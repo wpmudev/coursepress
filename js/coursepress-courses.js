@@ -112,12 +112,28 @@ function update_sortable_indexes() {
         //alert(response);
     });
 
+
+
 }
 
 /* Native WP media browser for audio module (unit module) */
 
 jQuery(document).ready(function()
 {
+
+    jQuery('.remove_module_link').live('click', function() {
+        var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+        var accordion_elements_count = (jQuery('#unit-page-' + current_unit_page + ' .modules_accordion div.module-holder-title').length);//.modules_accordion').find('.modules_accordion div.module-holder-title').length);
+
+        //alert('Current page: '+current_unit_page+', elements count: '+accordion_elements_count);
+
+        if ((current_unit_page == 1 && accordion_elements_count == 0) || (current_unit_page >= 2 && accordion_elements_count == 1)) {
+            jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
+        } else {
+            jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
+        }
+    });
+
     jQuery('.audio_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".audio_url:first");
@@ -329,16 +345,16 @@ function step_2_update(attr) {
         content = $('[name=course_description]').val();
     }
 
-	var show_boxes = {};
-	var preview_boxes = {};
-	
-	$("input[name^=module_element]").each( function() {
-		var mod_id = $( this ).val();
-		
-		show_boxes[ mod_id ] = $( sanitize_checkbox( $( "input[name=meta_show_module\\[" + mod_id + "\\]]") ) ).val();
-		preview_boxes[ mod_id ] = $( sanitize_checkbox( $( "input[name=meta_preview_module\\[" + mod_id + "\\]]") ) ).val();
+    var show_boxes = {};
+    var preview_boxes = {};
 
-	});
+    $("input[name^=module_element]").each(function() {
+        var mod_id = $(this).val();
+
+        show_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_show_module\\[" + mod_id + "\\]]"))).val();
+        preview_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_preview_module\\[" + mod_id + "\\]]"))).val();
+
+    });
 
 
     return {
@@ -351,8 +367,8 @@ function step_2_update(attr) {
         course_description: content,
         meta_course_structure_options: $('[name=meta_course_structure_options]').is(':checked') ? 'on' : 'off',
         meta_course_structure_time_display: $('[name=meta_course_structure_time_display]').is(':checked') ? 'on' : 'off',
-		meta_show_module: show_boxes,
-		meta_preview_module: preview_boxes,		
+        meta_show_module: show_boxes,
+        meta_preview_module: preview_boxes,
         // Don't remove
         meta_course_setup_progress: initialVars['meta_course_setup_progress'],
         meta_course_setup_marker: 'step-3',
@@ -497,14 +513,14 @@ function courseAutoUpdate(step) {
         $.post(
                 'admin-ajax.php', post_vars
                 ).done(function(data, status) {
-		            // Set a course_id if its still empty
-		            course_id = $(data).find('response_data').text();
+            // Set a course_id if its still empty
+            course_id = $(data).find('response_data').text();
 
-		            if ($('[name=course_id]').val() == 0 && course_id) {
-		                $('[name=course_id]').val(course_id);
-		            }
-		            // Handle return
-		            autosave_course_setup_done(data, status, 'step-' + step, theStatus);
+            if ($('[name=course_id]').val() == 0 && course_id) {
+                $('[name=course_id]').val(course_id);
+            }
+            // Handle return
+            autosave_course_setup_done(data, status, 'step-' + step, theStatus);
         }).fail(function(data) {
         });
 
@@ -513,18 +529,18 @@ function courseAutoUpdate(step) {
     }
 }
 
-function sanitize_checkbox( checkbox ) {
-	$ = jQuery;
-	
-	if ( $( checkbox ).attr( 'type' ) == 'checkbox' ) {
-		if ( $( checkbox ).attr( 'checked' ) ) {
-			$( checkbox ).val( 'on' );
-		} else {
-			$( checkbox ).val( 'off' );
-		}
-	}
-	
-	return checkbox;
+function sanitize_checkbox(checkbox) {
+    $ = jQuery;
+
+    if ($(checkbox).attr('type') == 'checkbox') {
+        if ($(checkbox).attr('checked')) {
+            $(checkbox).val('on');
+        } else {
+            $(checkbox).val('off');
+        }
+    }
+
+    return checkbox;
 }
 
 /** Handle Course Setup Wizard */
@@ -674,38 +690,41 @@ jQuery(document).ready(function($) {
             // Handle return
             if (status == 'success') {
 
-				var response = $.parseJSON( $(data).find('response_data').text() );
-				var response_type = $( $.parseHTML( response.content ) );
-				
-				if ( $( response_type ).hasClass( 'status-success') ) {
-					
-					var remove_button = '';
-					if ( response.capability ) { 
-						remove_button = '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' + response.data.code + '\', ' + course_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>'; 
-					}
+                var response = $.parseJSON($(data).find('response_data').text());
+                var response_type = $($.parseHTML(response.content));
 
-					var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
-						'<div class="instructor-status">PENDING</div>' +
-						remove_button +
-						'<img class="avatar avatar-80 photo" width="80" height="80" src="http://www.gravatar.com/avatar/' + CryptoJS.MD5( response.data.email ) + '" alt="admin">' +
-						'<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
-					'</div>';
+                if ($(response_type).hasClass('status-success')) {
 
-					$( '#instructors-info' ).append( content );
-					
-					$( '[name=invite_instructor_first_name]' ).val( '' );
-					$( '[name=invite_instructor_last_name]' ).val( '' );					
-					$( '[name=invite_instructor_email]' ).val( '' );					
-				} 
-				
-				if ( $( '#invite-message' ) ) { $( '#invite-message' ).remove() };
-				$( 'div.instructor-invite .submit-message' ).append( '<div id="invite-message" style="display:none;">' + response.content + '</div>' )	
-				// Popup Message
-			    $( '#invite-message' ).show(function(){
-			          $( this ).fadeOut(3000);
-			    });
-				$( '[name=invite_instructor_first_name]' ).trigger( 'focus' );
-						
+                    var remove_button = '';
+                    if (response.capability) {
+                        remove_button = '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' + response.data.code + '\', ' + course_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>';
+                    }
+
+                    var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
+                            '<div class="instructor-status">PENDING</div>' +
+                            remove_button +
+                            '<img class="avatar avatar-80 photo" width="80" height="80" src="http://www.gravatar.com/avatar/' + CryptoJS.MD5(response.data.email) + '" alt="admin">' +
+                            '<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
+                            '</div>';
+
+                    $('#instructors-info').append(content);
+
+                    $('[name=invite_instructor_first_name]').val('');
+                    $('[name=invite_instructor_last_name]').val('');
+                    $('[name=invite_instructor_email]').val('');
+                }
+
+                if ($('#invite-message')) {
+                    $('#invite-message').remove()
+                }
+                ;
+                $('div.instructor-invite .submit-message').append('<div id="invite-message" style="display:none;">' + response.content + '</div>')
+                // Popup Message
+                $('#invite-message').show(function() {
+                    $(this).fadeOut(3000);
+                });
+                $('[name=invite_instructor_first_name]').trigger('focus');
+
             } else {
             }
         }).fail(function(data) {
@@ -714,25 +733,25 @@ jQuery(document).ready(function($) {
     });
 
 
-	// Submit Invite on 'Return/Enter' 
-	$('.instructor-invite input').keypress( function( event ) {
-		if ( event.which == 13 ) {
-			switch( $( this ).attr( 'name' ) ) {
+    // Submit Invite on 'Return/Enter' 
+    $('.instructor-invite input').keypress(function(event) {
+        if (event.which == 13) {
+            switch ($(this).attr('name')) {
 
-			case "invite_instructor_first_name":
-				$( '[name=invite_instructor_last_name]').trigger( 'focus' );
-				break;
-			case "invite_instructor_last_name":
-				$( '[name=invite_instructor_email]').trigger( 'focus' );
-				break;
-			case "invite_instructor_email":
-			case "invite_instructor_trigger":
-				$( '#invite-instructor-trigger' ).trigger( 'click' );
-				break;
-			}
-			event.preventDefault();
-		}
-	});
+                case "invite_instructor_first_name":
+                    $('[name=invite_instructor_last_name]').trigger('focus');
+                    break;
+                case "invite_instructor_last_name":
+                    $('[name=invite_instructor_email]').trigger('focus');
+                    break;
+                case "invite_instructor_email":
+                case "invite_instructor_trigger":
+                    $('#invite-instructor-trigger').trigger('click');
+                    break;
+            }
+            event.preventDefault();
+        }
+    });
 
 
     /** Mark "dirty" content */
@@ -740,16 +759,16 @@ jQuery(document).ready(function($) {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
         }
-		
-		if ( $( this ).attr( 'type' ) == 'checkbox' ) {
-			if ( $( this ).attr( 'checked' ) ) {
-				$( this ).val( 'on' );
-			} else {
-				$( this ).val( 'off' );
-			}
-		}
-		
-		
+
+        if ($(this).attr('type') == 'checkbox') {
+            if ($(this).attr('checked')) {
+                $(this).val('on');
+            } else {
+                $(this).val('off');
+            }
+        }
+
+
     });
     $('.course-form textarea').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
