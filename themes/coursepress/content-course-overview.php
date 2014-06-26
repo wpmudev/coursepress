@@ -20,6 +20,7 @@ $course_language = $course->details->course_language;
     </header><!-- .entry-header -->
 
     <section id="course-summary">
+		<?php echo do_shortcode( '[course show="title,summary,description,dates,start,end,enrollment_start,enrollment_end,enrollment_dates,class_size,cost,language,enrollment_type"]' ); ?>
         <?php if ( $course->details->course_video_url != '' ) { ?>  
                 <div class="course-video">
                     <?php

@@ -966,8 +966,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             global $wp;
 
             if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                $course = new Course();
-                $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
             } else {
                 $course_id = 0;
             }
@@ -986,9 +985,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
                 'avatar_size' => 80
                             ), $atts ) );
 
-
             $course = new Course( $course_id );
+			
             $instructors = $course->get_course_instructors();
+
+						cp_write_log( $instructors );
 
             $instructors_count = 0;
             $content = '';
@@ -1064,8 +1065,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( empty( $course_id ) ) {
                 if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                    $course = new Course();
-                    $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                    $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 } else {
                     $course_id = 0;
                 }
@@ -1107,8 +1107,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( empty( $course_id ) ) {
                 if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                    $course = new Course();
-                    $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                    $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 } else {
                     $course_id = 0;
                 }
@@ -1146,8 +1145,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( empty( $course_id ) ) {
                 if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                    $course = new Course();
-                    $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                    $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 } else {
                     $course_id = 0;
                 }
@@ -1177,8 +1175,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( empty( $course_id ) ) {
                 if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                    $course = new Course();
-                    $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                    $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 } else {
                     $course_id = 0;
                 }
@@ -1600,8 +1597,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
             if ( empty( $course_id ) ) {
                 if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                    $course = new Course();
-                    $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                    $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 } else {
                     $course_id = 0;
                 }
@@ -1626,8 +1622,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             global $wp;
 
             if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-                $course = new Course();
-                $course_id = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
             } else {
                 $course_id = 0;
             }

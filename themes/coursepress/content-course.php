@@ -5,7 +5,7 @@
 ?>
 <?php
 $course = new Course( get_the_ID() );
-$course_thumbnail = $course->get_course_id_by_name( 'asdas' );
+$course_thumbnail = Course::get_course_id_by_name( 'asdas' );
 //$course_category_id = $course->details->course_category;
 //$course_category = get_term_by( 'ID', $course_category_id, 'course_category' );
 

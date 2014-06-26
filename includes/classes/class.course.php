@@ -61,7 +61,7 @@ if (!class_exists('Course')) {
             }
         }
 
-        function get_course_by_marketpress_product_id($marketpress_product_id) {
+        static function get_course_by_marketpress_product_id($marketpress_product_id) {
 
             $args = array(
                 'post_type' => 'course',
@@ -80,7 +80,7 @@ if (!class_exists('Course')) {
             }
         }
 
-        function get_course_id_by_name($slug) {
+        static function get_course_id_by_name($slug) {
 
             $args = array(
                 'name' => $slug,

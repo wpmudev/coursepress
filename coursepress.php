@@ -451,15 +451,13 @@ if ( !class_exists( 'CoursePress' ) ) {
             if ( array_key_exists( 'discussion_name', $wp->query_vars ) ) {
 
                 $vars['discussion_name'] = $wp->query_vars['discussion_name'];
-                $course = new Course();
-                $vars['course_id'] = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $vars['course_id'] = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
             }
 
             /* Add New Discussion template */
 
             if ( array_key_exists( 'discussion_archive', $wp->query_vars ) || ( array_key_exists( 'discussion_name', $wp->query_vars ) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new() ) ) {
-                $course = new Course();
-                $vars['course_id'] = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $vars['course_id'] = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
 
                 if ( ( array_key_exists( 'discussion_name', $wp->query_vars ) && $wp->query_vars['discussion_name'] == $this->get_discussion_slug_new() ) ) {
                     $this->units_archive_subpage = 'discussions';
@@ -560,8 +558,7 @@ if ( !class_exists( 'CoursePress' ) ) {
                 }
 
                 $vars = array();
-                $course = new Course();
-                $vars['course_id'] = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $vars['course_id'] = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
 
                 if ( $notifications_archive_page ) {
                     $this->units_archive_subpage = 'notifications';
@@ -671,13 +668,12 @@ if ( !class_exists( 'CoursePress' ) ) {
             /* Show Unit single template */
             if ( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
                 $vars = array();
-                $course = new Course();
                 $unit = new Unit();
 
-                $vars['course_id'] = $course->get_course_id_by_name( $wp->query_vars['coursename'] );
+                $vars['course_id'] = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
                 $vars['unit_id'] = $unit->get_unit_id_by_name( $wp->query_vars['unitname'] );
 
-                //$this->set_course_visited( get_current_user_id(), $course->get_course_id_by_name( $wp->query_vars['coursename'] ) );
+                //$this->set_course_visited( get_current_user_id(), Course::get_course_id_by_name( $wp->query_vars['coursename'] ) );
 
                 $unit = new Unit( $vars['unit_id'] );
 
@@ -2547,8 +2543,7 @@ if ( !class_exists( 'CoursePress' ) ) {
             $purchase_order = $mp->get_order( $order->ID );
             $product_id = key( $purchase_order->mp_cart_info );
 
-            $course = new Course();
-            $course_details = $course->get_course_by_marketpress_product_id( $product_id );
+            $course_details = Course::get_course_by_marketpress_product_id( $product_id );
 
             if ( $course_details && !empty( $course_details ) ) {
                 $student = new Student( $order->post_author );
