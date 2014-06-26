@@ -100,7 +100,7 @@ class video_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
-                <label class="bold-label"><?php _e( 'Title', 'cp' ); ?></label>
+                <label class="bold-label"><?php _e( 'Element Title', 'cp' ); $this->time_estimation($data); ?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : '' ); ?>" />
 
 
@@ -195,6 +195,8 @@ class video_module extends Unit_Module {
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
                             $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
+                            $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
+                            
                             if ( isset( $_POST[$this->name . '_show_title_on_front'][$key] ) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {

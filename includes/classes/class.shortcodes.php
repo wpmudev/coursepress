@@ -251,7 +251,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
@@ -288,7 +288,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="course-end-date course-end-date-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
@@ -327,7 +327,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="course-dates course-dates-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?>
@@ -364,7 +364,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="enrollment-start-date enrollment-start-date-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
@@ -404,7 +404,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="enrollment-end-date enrollment-end-date-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>				
@@ -447,7 +447,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
@@ -507,7 +507,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				ob_start();
 				?>
 					<div class="course-class-size course-class-size-<?php echo $course_id; ?>">
-					<? if ( ! empty ( $label ) ) :?>
+					<?php if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
 					<?php echo $content; ?>
@@ -556,7 +556,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				ob_start();
 				?>
 					<div class="course-cost course-cost-<?php echo $course_id; ?>">
-					<? if ( ! empty ( $label ) ) :?>
+					<?php if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
 					<?php echo $content; ?>
@@ -589,7 +589,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="course-language course-language-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $language; ?>
@@ -645,7 +645,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<div class="course-enrollment-type course-enrollment-type-<?php echo $course_id; ?>">
-				<? if ( ! empty ( $label ) ) :?>
+				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
 				<?php echo $content; ?>

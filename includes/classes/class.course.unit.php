@@ -154,11 +154,17 @@ if (!class_exists('Unit')) {
 
             update_post_meta($post_id, 'force_current_unit_completion', $_POST['force_current_unit_completion']);
 
+            update_post_meta($post_id, 'page_title', $_POST['page_title']);
+
             if (!get_post_meta($post_id, 'unit_order', true)) {
                 update_post_meta($post_id, 'unit_order', $post_id);
             }
 
             return $post_id;
+        }
+
+        function get_unit_page_name($page_number) {
+            return $this->details->page_title[(int) ($page_number - 1)];
         }
 
         function delete_unit($force_delete) {
@@ -251,7 +257,7 @@ if (!class_exists('Unit')) {
                     }
                 }
             }
-            
+
             return $pages_num;
         }
 

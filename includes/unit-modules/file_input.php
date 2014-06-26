@@ -145,7 +145,7 @@ class file_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
-                <label class="bold-label"><?php _e( 'Title', 'cp' ); ?></label>
+                <label class="bold-label"><?php _e( 'Element Title', 'cp' ); $this->time_estimation($data);?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : '' ); ?>" />
 
                 <div class="group-check">
@@ -256,6 +256,7 @@ class file_input_module extends Unit_Module {
                             } else {
                                 $data->metas['gradable_answer'] = 'no';
                             }
+                            $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
                             parent::update_module( $data );
                         }

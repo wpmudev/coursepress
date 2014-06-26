@@ -25,14 +25,14 @@ if (!class_exists('Unit_Module')) {
                 <div class='action action-draggable'>
                     <div class='action-top closed'>
                         <a href="#available-actions" class="action-button hide-if-no-js"></a>
-            <?php _e($this->label, 'cp'); ?>
+                        <?php _e($this->label, 'cp'); ?>
                     </div>
                     <div class='action-body closed'>
-                            <?php if (!empty($this->description)) { ?>
+                        <?php if (!empty($this->description)) { ?>
                             <p>
-                            <?php _e($this->description, 'cp'); ?>
+                                <?php _e($this->description, 'cp'); ?>
                             </p>
-            <?php } ?>
+                        <?php } ?>
 
                     </div>
                 </div>
@@ -275,7 +275,7 @@ if (!class_exists('Unit_Module')) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );    ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );      ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -330,7 +330,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next     ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next       ?>
                         <?php
                     } else {
                         ?>
@@ -494,6 +494,13 @@ if (!class_exists('Unit_Module')) {
 
                 return count($ungraded_responses);
             }
+        }
+
+        function time_estimation($data) {
+           // var_dump($data->time_estimation);
+            ?>
+            <div class="module_time_estimation"><?php _e('Time Estimation (mins)', 'cp'); ?> <input type="text" name="<?php echo $this->name; ?>_time_estimation[]" value="<?php echo esc_attr(isset($data->time_estimation) ? $data->time_estimation : '1:00');?>" /></div>
+            <?php
         }
 
         function get_module_delete_link($module_id) {

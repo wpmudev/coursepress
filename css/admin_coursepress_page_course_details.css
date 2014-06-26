@@ -2213,23 +2213,96 @@ ol.tree
     display: block;
 }
 
+.tree .tree-element-left{
+    display: inline-block;
+    width: 258px;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tree .tree-element-right{
+    display: inline-block;
+    width: 184px;
+}
+
+.tree .tree-page-left{
+    display: inline-block;
+    width: 284px;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tree .tree-page-right{
+    display: inline-block;
+    width: 184px;
+}
+
+.tree .tree-unit-left{
+    display: inline-block;
+    width: 307px;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tree .tree-unit-right{
+    display: inline-block;
+    width: 184px;
+}
+
+.tree .tree-element-right .module_show {
+    margin-left: 5px;
+}
+
+.tree .tree-element-right .module_preview {
+    margin-left: 50px;
+}
+
+.tree .tree-page-right .module_show {
+    margin-left: 5px;
+}
+
+.tree .tree-page-right .module_preview {
+    margin-left: 50px;
+}
+
+.tree .tree-unit-right .module_show {
+    margin-left: 5px;
+}
+
+.tree .tree-unit-right .module_preview {
+    margin-left: 50px;
+}
+
+.tree .tree-page-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
+.tree .tree-unit-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
 .tree li input
 {
-    position: absolute;
-    left: 0;
-    margin-left: 0;
-    opacity: 0;
-    z-index: 2;
     cursor: pointer;
-    height: 1em;
-    width: 1em;
-    top: 0;
+}
+
+.tree .tree-element-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
 }
 
 .tree li input + ol
 {
     background: url(../images/toggle-small.png) 40px 0 no-repeat;
-    margin: -0.938em 0 0 -44px; /* 15px */
+    margin: -16px 0 0 -44px; /* 15px */
     height: 1em;
 }
 
@@ -2240,13 +2313,21 @@ ol.tree
     height: 1em;
 }
 
-.tree li input + ol > li { display: none; margin-left: -14px !important; padding-left: 1px; }
+.tree li input + ol > li { 
+    display: none; 
+    margin-left: -14px !important; 
+    padding-left: 1px; }
 
 .tree li label
 {
     cursor: pointer;
     display: block;
     padding-left: 10px;
+    font-weight: bold;
+}
+
+.course-section .course-form .tree label span{
+    margin: 0px;
 }
 
 .tree li input:checked + ol
@@ -2266,9 +2347,13 @@ ol.tree
 }
 
 .tree li input:checked + ol > li { display: block; margin: 0 0 0.125em;  /* 2px */}
-.tree li input:checked + ol > li:last-child { margin: 0 0 0.063em; /* 1px */ }
+.tree li input:checked + ol > li:last-child { margin: 0 0 0.0em; /* 1px */ }
 
 
 .tree .hidden_checkbox{
     display: none;
+}
+
+.tree ol{
+    margin-left: 30px;
 }

@@ -445,35 +445,122 @@ if (isset($_GET['course_id'])) {
                                                                         ?>
                                                                         <ol>
                                                                             <?php
+                                                                            $module = new Unit_Module();
+
                                                                             foreach ($units as $unit) {
                                                                                 $unit_class = new Unit($unit->ID);
                                                                                 $unit_pages = $unit_class->get_number_of_unit_pages();
+
+                                                                                $modules = $module->get_modules($unit->ID);
                                                                                 ?>
 
                                                                                 <li>
-                                                                                    <label for="unit_<?php echo $unit->ID; ?>"><?php echo $unit->post_title; ?></label> <input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox" /> 
+
+                                                                                    <label for="unit_<?php echo $unit->ID; ?>">
+                                                                                        <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+                                                                                        <div class="tree-unit-right">
+                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
+                                                                                            if (isset($show_module[$unit->ID])) {
+                                                                                                echo ( $show_module[$unit->ID] == 'on' ) ? 'checked' : '';
+                                                                                            }
+                                                                                            ?> />
+
+                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' name='meta_preview_page[<?php echo $unit->ID; ?>]' <?php
+                                                                                            if (isset($preview_module[$unit->ID])) {
+                                                                                                echo ( $preview_module[$unit->ID] == 'on' ) ? 'checked' : '';
+                                                                                            }
+                                                                                            ?> />
+
+                                                                                            <span>10 min</span>
+                                                                                        </div>
+                                                                                    </label> <input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox" /> 
+
+
                                                                                     <ol>
                                                                                         <?php
-                                                                                        if ($unit_pages == 0) {//actually, we need to check for empty page / title, not 0!
+                                                                                        if ($unit_pages == 0) {
                                                                                             ?>
-                                                                                        <li>
-                                                                                            <label><?php _e('There are currently no pages to display', 'cp'); ?></label>
-                                                                                        </li>
+                                                                                            <li>
+                                                                                                <label><?php _e('There are currently no pages to display', 'cp'); ?></label>
+                                                                                            </li>
                                                                                             <?php
                                                                                         } else {
                                                                                             ?>
                                                                                             <li>
                                                                                                 <?php
                                                                                                 for ($i = 1; $i <= $unit_pages; $i++) {
+                                                                                                    $pages_num = 1;
+                                                                                                    $page_title = $unit_class->get_unit_page_name($i);
                                                                                                     ?>
-                                                                                                    <label for="page_<?php echo $unit->ID . '_' . $i; ?>">Page <?php echo $i; //PAGE NAME WILL GO HERE     ?></label> <input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox" /> 
+
+                                                                                                    <label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+                                                                                                        <div class="tree-page-left">
+                                                                                                            <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
+                                                                                                        </div>
+                                                                                                        <div class="tree-page-right">
+                                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+                                                                                                            if (isset($show_module[$unit->ID . '_' . $i])) {
+                                                                                                                echo ( $show_module[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
+                                                                                                            }
+                                                                                                            ?> />
+
+                                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+                                                                                                            if (isset($preview_module[$unit->ID . '_' . $i])) {
+                                                                                                                echo ( $preview_module[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
+                                                                                                            }
+                                                                                                            ?> />
+
+                                                                                                            <span>10 min</span>
+                                                                                                        </div>
+                                                                                                    </label>
+                                                                                                
+                                                                                                    <input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox" /> 
+
                                                                                                     <ol>
-                                                                                                        <li class="element">Element 1</li>
-                                                                                                        <li class="element">Element 2</li>
-                                                                                                        <li class="element">Element 3</li>
-                                                                                                        <li class="element">Element 4</li>
-                                                                                                        <li class="element">Element 5</li>
-                                                                                                        <li class="element">Element 6</li>
+                                                                                                        <?php
+                                                                                                        foreach ($modules as $mod) {
+                                                                                                            $class_name = $mod->module_type;
+
+                                                                                                            if (class_exists($class_name)) {
+                                                                                                                $module = new $class_name();
+
+                                                                                                                if ($module->name == 'page_break_module') {
+                                                                                                                    $pages_num++;
+                                                                                                                } else {
+                                                                                                                    ?>
+                                                                                                                    <?php
+                                                                                                                    if ($pages_num == $i) {
+                                                                                                                        if ($module->name !== 'section_break_module') {
+                                                                                                                            ?>
+                                                                                                                            <li class="element">
+                                                                                                                                <div class="tree-element-left">
+                                                                                                                                    <?php echo ($mod->post_title && $mod->post_title !== '' ? $mod->post_title : __('Untitled Element', 'cp')); ?>
+                                                                                                                                </div>
+
+                                                                                                                                <div class="tree-element-right">
+                                                                                                                                    <input type='checkbox' class="module_show" id='show-<?php echo $mod->ID; ?>' name='meta_show_module[<?php echo $mod->ID; ?>]' <?php
+                                                                                                                                    if (isset($show_module[$mod->ID])) {
+                                                                                                                                        echo ( $show_module[$mod->ID] == 'on' ) ? 'checked' : '';
+                                                                                                                                    }
+                                                                                                                                    ?> />
+
+                                                                                                                                    <input type='checkbox' class="module_preview" id='preview-<?php echo $mod->ID; ?>' name='meta_preview_module[<?php echo $mod->ID; ?>]' <?php
+                                                                                                                                    if (isset($preview_module[$mod->ID])) {
+                                                                                                                                        echo ( $preview_module[$mod->ID] == 'on' ) ? 'checked' : '';
+                                                                                                                                    }
+                                                                                                                                    ?> />
+
+                                                                                                                                    <span>10 min</span>
+                                                                                                                                </div>
+                                                                                                                            </li>
+                                                                                                                            <?php
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        ?>
+
                                                                                                     </ol>
                                                                                                     <?php
                                                                                                 }
@@ -574,7 +661,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="wide narrow">
                                         <label>
                                             <?php _e('Course Instructor( s )', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );          ?>
                                             <br />
                                             <span><?php _e('Select one or more instructor to facilitate this course', 'cp'); ?></span>
                                         </label>
@@ -620,7 +707,7 @@ if (isset($_GET['course_id'])) {
 
                                             <label>
                                                 <?php _e('Invite New Instructor', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );        ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );          ?>
                                                 <br />
                                                 <span><?php _e('If the instructor can not be found in the list above, you will need to invite them via email.', 'cp'); ?></span>
                                             </label>										
@@ -663,7 +750,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="wide course-dates"> 
                                         <label>
                                             <?php _e('Course Dates', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );          ?>
                                         </label>	
 
                                         <div class="course-date-override">    
@@ -689,7 +776,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="wide enrollment-dates">                             
                                         <label>
                                             <?php _e('Enrollment Dates', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );          ?>
                                         </label>	
 
                                         <div class="enrollment-date-override">    
@@ -736,7 +823,7 @@ if (isset($_GET['course_id'])) {
                                         <label for='meta_class-size'>
                                             <input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
                                             <?php _e('Limit class size', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );          ?>
                                             <br />
                                             <span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp'); ?></span>
                                         </label>
@@ -747,7 +834,7 @@ if (isset($_GET['course_id'])) {
                                         <label for='meta_allow_course_discussion'>
                                             <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
                                             <?php _e('Allow Course Discussion', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );          ?>
                                             <br />
                                             <span><?php _e('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp'); ?></span>
                                         </label>
@@ -755,7 +842,7 @@ if (isset($_GET['course_id'])) {
                                         <label for='meta_class-size'>
                                             <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
                                             <?php _e('Show student Workbook', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );          ?>
                                             <br />
                                             <span><?php _e('If checked, students can see their progress and grades.', 'cp'); ?></span>
                                         </label>										
@@ -789,7 +876,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="narrow">
                                         <label for='meta_enroll_type'>
                                             <?php _e('Who can Enroll in this course', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );          ?>
                                             <br />
                                             <span><?php _e('Select the limitations on accessing and enrolling in this course.', 'cp'); ?></span>
                                         </label>
@@ -809,7 +896,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="wide" id="enroll_type_prerequisite_holder" <?php echo ( $enroll_type <> 'prerequisite' ? 'style="display:none"' : '' ) ?>>
                                         <label for='meta_enroll_type'>
                                             <?php _e('Prerequisite Course', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );          ?>
                                         </label>
                                         <p><?php _e('Students will need to complete the following prerequisite course in order to enroll.', 'cp'); ?></p>
                                         <select name="meta_prerequisite" class="chosen-select">
@@ -839,7 +926,7 @@ if (isset($_GET['course_id'])) {
                                     <div class="narrow" id="enroll_type_holder" <?php echo ( $enroll_type <> 'passcode' ? 'style="display:none"' : '' ) ?>>
                                         <label for='meta_enroll_type'>
                                             <?php _e('Pass Code', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );        ?>
+                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );          ?>
                                         </label>
                                         <p><?php _e('Students will need to enter this pass code in order to enroll.', 'cp'); ?></p>
 
@@ -848,7 +935,7 @@ if (isset($_GET['course_id'])) {
                                     </div>
 
                                     <hr />
-                                    <?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////         ?>
+                                    <?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////              ?>
                                     <div class="narrow product">
                                         <!-- MarketPress not Active -->
                                         <?php if (!$coursepress->is_marketpress_lite_active() && !$coursepress->is_cp_marketpress_lite_active() && $coursepress->is_marketpress_active()) : ?>
@@ -924,7 +1011,7 @@ if (isset($_GET['course_id'])) {
 
 
 
-                                    <?php // END ///////////////////////////////        ?>
+                                    <?php // END ///////////////////////////////             ?>
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                         <input type="button" class="button button-units done" value="<?php _e('Done', 'cp'); ?>" />
@@ -942,20 +1029,20 @@ if (isset($_GET['course_id'])) {
                             <?php
                             if ($coursepress->is_marketpress_active()) {
                                 ?>
-                                                                                                                                    
+                                                                                                                                                                                                            
                                 <?php _e('MarketPress product'); ?>
-                                                                                                                                    
-                                                                                                                                                                            <a class="help-icon" href="javascript:;"></a>
-                                                                                                                                                                            <div class="tooltip">
-                                                                                                                                                                                <div class="tooltip-before"></div>
-                                                                                                                                                                                <div class="tooltip-button">&times;</div>
-                                                                                                                                                                                <div class="tooltip-content">
+                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                        <a class="help-icon" href="javascript:;"></a>
+                                                                                                                                                                                                                                                                                                                        <div class="tooltip">
+                                                                                                                                                                                                                                                                                                                            <div class="tooltip-before"></div>
+                                                                                                                                                                                                                                                                                                                            <div class="tooltip-button">&times;</div>
+                                                                                                                                                                                                                                                                                                                            <div class="tooltip-content">
                                 <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
-                                                                                                                                                                                </div>
-                                                                                                                                                                            </div>
-                                                                                                                                                                            
-                                                                                                                                                                            <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
-                                                                                                                                                                                <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
+                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                        <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
+                                                                                                                                                                                                                                                                                                                            <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
                                 <?php
                                 global $post;
                                 $args = array(
@@ -966,14 +1053,14 @@ if (isset($_GET['course_id'])) {
                                 foreach ($posts as $post) {
                                     setup_postdata($post);
                                     ?>
-                                                                                                                                                                                                                                                                                            <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
                                 <?php } ?>
-                                                                                                                                                                            </select>
-                                                                                                                                                                            
-                                                                                                                                                                            <p><?php _e('NOTE: If you wish to sell a course and have not set up a product in MarketPress, please finish creating your course and save it. Once you have saved your course, you can create a product in MarketPress to sell this course, then come back to this "Course Overview" page and select the product you have created. Click <a href="post-new.php?post_type=product" target="_blank">here</a> to open a new window that takes you to the "MarketPress Product page"', 'cp'); ?></p>
-                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                        </select>
+                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                        <p><?php _e('NOTE: If you wish to sell a course and have not set up a product in MarketPress, please finish creating your course and save it. Once you have saved your course, you can create a product in MarketPress to sell this course, then come back to this "Course Overview" page and select the product you have created. Click <a href="post-new.php?post_type=product" target="_blank">here</a> to open a new window that takes you to the "MarketPress Product page"', 'cp'); ?></p>
+                                                                                                                                                                                                            
                             <?php } else { ?>
-                                                                                                                                                                            <p><?php printf(__('%s integrates with the <a href="https://premium.wpmudev.org/project/e-commerce/?ref=wordpress.org">MarketPress</a> plugin. Install it it to sell this course online.', 'cp'), $coursepress->name); ?></p>
+                                                                                                                                                                                                                                                                                                                        <p><?php printf(__('%s integrates with the <a href="https://premium.wpmudev.org/project/e-commerce/?ref=wordpress.org">MarketPress</a> plugin. Install it it to sell this course online.', 'cp'), $coursepress->name); ?></p>
                             <?php } ?>
                             
                                                             </div>

@@ -256,7 +256,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                             <div class="unit_page_title">
                                                 <label><?php _e('Page Title', 'cp'); ?></label>
                                                 <div class="description"><?php _e('The title will be displayed on the Course Overview and Unit page'); ?></div>
-                                                <input type="text" value="" name="page_title[]" />
+                                                <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i));?>" name="page_title[]" />
 
                                                 <label><?php _e('Build Page', 'cp'); ?></label>
                                                 <div class="description"><?php _e('Click to add elements to the page'); ?></div>
