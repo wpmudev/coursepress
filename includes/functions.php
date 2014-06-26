@@ -749,6 +749,28 @@ if ( !function_exists( 'coursepress_register_module' ) ) {
     //to do
 }
 
+function object_encode( $object ) {
+	$encoded = json_encode( $object, JSON_FORCE_OBJECT | JSON_HEX_QUOT | JSON_HEX_APOS );			
+	$encoded = str_replace( '"', '&quot;', $encoded );
+	$encoded = str_replace( "'", '&apos;', $encoded );
+	return $encoded;
+}
+
+function object_decode( $string, $class = 'stdClass' ) {
+	$object = str_replace( '&quot;', '"', $string );
+	$object = str_replace( '&apos;', "'", $object );
+	$object = json_decode( $object );
+	
+	// Convert to correct Class
+    return unserialize(sprintf(
+        'O:%d:"%s"%s',
+        strlen($class),
+        $class,
+        strstr(strstr(serialize($object), '"'), ':')
+    ));
+}
+
+
 function sp2nbsp( $string ) {
     return str_replace( ' ', '&nbsp;', $string );
 }

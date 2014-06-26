@@ -36,14 +36,29 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             add_shortcode( 'units_dropdown', array( &$this, 'units_dropdown' ) );
 
 			add_shortcode( 'course', array( &$this, 'course' ) );
-
-
+			// Sub-shortcodes
+			add_shortcode( 'course_summary', array( &$this, 'course_summary' ) );
+			add_shortcode( 'course_description', array( &$this, 'course_description' ) );
+			add_shortcode( 'course_start', array( &$this, 'course_start' ) );			
+			add_shortcode( 'course_end', array( &$this, 'course_end' ) );						
+			add_shortcode( 'course_dates', array( &$this, 'course_dates' ) );		
+			add_shortcode( 'course_enrollment_start', array( &$this, 'course_enrollment_start' ) );			
+			add_shortcode( 'course_enrollment_end', array( &$this, 'course_enrollment_end' ) );						
+			add_shortcode( 'course_enrollment_dates', array( &$this, 'course_enrollment_dates' ) );						
+			add_shortcode( 'course_class_size', array( &$this, 'course_class_size' ) );								
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 
 
             $GLOBALS['units_breadcrumbs'] = '';
         }
 		
+		/**
+		 * Creates a [course] shortcode.
+		 *
+		 * This is just a wrapper shortcode for several other shortcodes.
+		 *
+		 * @since 1.0.0
+		 */
 		function course( $atts ) {
 			
             extract( shortcode_atts( array(
@@ -55,116 +70,58 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             ), $atts, 'course' ) );
 			
 			$course = new Course( $course_id );
-			
+			$encoded = object_encode( $course );
+
 			$sections = explode( ',', $show );
+			
+			$content = '';
 			
 			foreach( $sections as $section )
 			{
+				// [course_summary]
 				if ( 'summary' == trim( $section ) ) {
-					ob_start();
-					?>
-						<div class="course-summary course-summary-<?php echo $course_id; ?>">
-						<?php echo $course->details->post_excerpt; ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();
+					$content .= do_shortcode('[course_summary course="' . $encoded . '"]');
 				}
 				
+				// [course_description]
 				if ( 'description' == trim( $section ) ) {				
-					ob_start();
-					?>
-						<div class="course-description course-description-<?php echo $course_id; ?>">
-						<?php echo $course->details->post_content; ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();					
+					$content .= do_shortcode('[course_description course="' . $encoded . '"]');					
 				}
 
-				if ( 'start-date' == trim( $section ) ) {				
-					$start_date = get_post_meta( $course_id, 'course_start_date', true );
-					ob_start();
-					?>
-						<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Course Start Date', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-						
-						<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();					
+				// [course_start]
+				if ( 'start' == trim( $section ) ) {				
+					$content .= do_shortcode('[course_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');								
 				}
 
-				if ( 'end-date' == trim( $section ) ) {				
-					$end_date = get_post_meta( $course_id, 'course_end_date', true );
-					$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;															
-					ob_start();
-					?>
-						<div class="course-end-date course-end-date-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Course End Date', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-						<?php echo $open_ended ? __( 'No End Date', 'cp' ) : sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();					
+				// [course_end]
+				if ( 'end' == trim( $section ) ) {				
+					$content .= do_shortcode('[course_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');								
 				}
-				
+
+				// [course_dates]
 				if ( 'dates' == trim( $section ) ) {			
-					$start_date = get_post_meta( $course_id, 'course_start_date', true );	
-					$end_date = get_post_meta( $course_id, 'course_end_date', true );
-					$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;																			
-					$end_output = $open_ended ? __( 'No End Date', 'cp' ) : sp2nbsp( date( $date_format, strtotime( $end_date ) ) );
-					ob_start();
-					?>
-						<div class="course-dates course-dates-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Course Dates', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>						
-						<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();					
+					$content .= do_shortcode('[course_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
 				}
 				
-				if ( 'enrollment-start-date' == trim( $section ) ) {				
-					$start_date = get_post_meta( $course_id, 'enrollment_start_date', true );
-					$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;					
-					ob_start();
-					?>
-						<div class="enrollment-start-date enrollment-start-date-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Enrollment Start Date', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-						<?php echo $open_ended ? __( 'Enroll Anytime', 'cp' ) : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
-						</div>
-					<?php
-					$content .= ob_get_clean();					
-				}
-
-				if ( 'enrollment-end-date' == trim( $section ) ) {				
-					$end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
-					$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
-					ob_start();
-					?>
-						<div class="enrollment-end-date enrollment-end-date-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Enrollment End Date', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-						<?php echo sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
-						</div>
-					<?php
-					if ( ! $open_ended ) {
-						$content .= ob_get_clean();					
-					} else {
-						ob_clean();
-					}
+				// [course_enrollment_start]
+				if ( 'enrollment_start' == trim( $section ) ) {				
+					$content .= do_shortcode('[course_enrollment_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
 				}
 				
-				if ( 'enrollment-dates' == trim( $section ) ) {			
-					$start_date = get_post_meta( $course_id, 'enrollment_start_date', true );	
-					$end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
-					$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
-					ob_start();
-					?>
-						<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?>">
-						<<?php echo $label_tag; ?> class="label"><?php _e( 'Enrollment Dates', 'cp' )?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-						<?php echo $open_ended ? __( 'Enroll Anytime', 'cp' ) : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
-					</div>
-					<?php
-					$content .= ob_get_clean();					
+				// [course_enrollment_end]
+				if ( 'enrollment_end' == trim( $section ) ) {				
+					$content .= do_shortcode('[course_enrollment_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
+				}
+				
+				// [course_enrollment_dates]				
+				if ( 'enrollment_dates' == trim( $section ) ) {			
+					$content .= do_shortcode('[course_enrollment_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');					
 				}				
-
+				
+				// [course_summary]
+				if ( 'class_size' == trim( $section ) ) {
+					$content .= do_shortcode('[course_class_size course="' . $encoded . '"]');
+				}
 				
 				
 			}
@@ -172,6 +129,350 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// return print_r( $course );
 			return $content;
 		}
+		
+		
+		/**
+		 * Shows the course summary/excerpt.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_summary( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => '',
+            ), $atts, 'course_summary' ) );
+
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+			
+			ob_start();
+			?>
+				<div class="course-summary course-summary-<?php echo $course_id; ?>">
+				<?php echo $course->details->post_excerpt; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();
+
+			// Return the html in the buffer.
+			return $content;
+		}
+
+		/**
+		 * Shows the course description.
+		 *
+		 * @since 1.0.0
+		 */		
+		function course_description( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+            ), $atts, 'course' ) );
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			ob_start();
+			?>
+				<div class="course-description course-description-<?php echo $course_id; ?>">
+				<?php echo $course->details->post_content; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();					
+
+			// Return the html in the buffer.
+			return $content;
+		}		
+
+		/**
+		 * Shows the course start date.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_start( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Course Start Date', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',				
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$start_date = get_post_meta( $course_id, 'course_start_date', true );
+			ob_start();
+			?>
+				<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}				
+
+		/**
+		 * Shows the course end date.
+		 *
+		 * If the course has no end date, the no_date_text will be displayed instead of the date.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_end( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Course End Date', 'cp' ),				
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',				
+				'no_date_text'    => __( 'No End Date', 'cp' ),								
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$end_date = get_post_meta( $course_id, 'course_end_date', true );
+			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;															
+			ob_start();
+			?>
+				<div class="course-end-date course-end-date-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+				</div>
+			<?php
+			$content = ob_get_clean();					
+			// Return the html in the buffer.
+			return $content;
+		}				
+
+		/**
+		 * Shows the course start and end date.
+		 *
+		 * If the course has no end date, the no_date_text will be displayed instead of the date.		
+		 *
+		 * @since 1.0.0
+		 */
+		function course_dates( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Course Dates', 'cp' ),				
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',				
+				'no_date_text'    => __( 'No End Date', 'cp' ),								
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$start_date = get_post_meta( $course_id, 'course_start_date', true );	
+			$end_date = get_post_meta( $course_id, 'course_end_date', true );
+			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;																			
+			$end_output = $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) );
+			ob_start();
+			?>
+				<div class="course-dates course-dates-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();					
+			// Return the html in the buffer.
+			return $content;
+		}				
+
+		/**
+		 * Shows the enrollment start date.
+		 *
+		 * If it is an open ended enrollment the no_date_text will be displayed.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_enrollment_start( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Enrollment Start Date', 'cp' ),				
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',				
+				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$start_date = get_post_meta( $course_id, 'enrollment_start_date', true );
+			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;					
+			ob_start();
+			?>
+				<div class="enrollment-start-date enrollment-start-date-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
+				</div>
+			<?php
+			$content = ob_get_clean();					
+			// Return the html in the buffer.
+			return $content;
+		}				
+		
+		/**
+		 * Shows the enrollment end date.
+		 *
+		 * By default this will not show for open ended enrollments.
+		 * Set show_all_dates="yes" to make it display.
+		 * If it is an open ended enrollment the no_date_text will be displayed.		
+		 *
+		 * @since 1.0.0
+		 */		
+		function course_enrollment_end( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Enrollment End Date', 'cp' ),								
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',		
+				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
+				'show_all_dates'  => 'no',		
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
+			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
+			ob_start();
+			?>
+				<div class="enrollment-end-date enrollment-end-date-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>				
+				</div>
+			<?php
+			$content='';
+			if ( ! $open_ended || 'yes' == $show_all_dates) {
+				$content = ob_get_clean();					
+			} else {
+				ob_clean();
+			}
+			// Return the html in the buffer.
+			return $content;
+		}				
+		
+		/**
+		 * Shows the enrollment start and end date.
+		 *
+		 * If it is an open ended enrollment the no_date_text will be displayed.
+		 *
+		 * @since 1.0.0
+		 */		
+		function course_enrollment_dates( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'date_format'     => get_option( 'date_format' ),
+				'label'           => __( 'Enrollment Dates', 'cp' ),								
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',
+				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$start_date = get_post_meta( $course_id, 'enrollment_start_date', true );	
+			$end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
+			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
+			ob_start();
+			?>
+				<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+			</div>
+			<?php
+			$content = ob_get_clean();					
+			// Return the html in the buffer.
+			return $content;
+		}				
+
+		/**
+		 * Shows the course class size.
+		 *
+		 * If there is no limit set on the course nothing will be displayed.
+		 * You can make the no_limit_text display by setting show_no_limit="yes".
+		 *
+		 * By default it will show the remaining places,
+		 * turn this off by setting show_remaining="no".
+		 *
+		 * @since 1.0.0
+		 */
+		function course_class_size( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'show_no_limit'   => 'no',				
+				'show_remaining'  => 'yes',
+				'label'           => __( 'Class Size', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',
+				'no_limit_text'   => __( 'Unlimited', 'cp' ),
+				'remaining_text'  => __( '(%d places left)', 'cp' ),
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+			
+			$content = '';
+			
+			$is_limited = get_post_meta( $course_id, 'limit_class_size', true ) == 'on' ? true : false;
+			$class_size = (int) get_post_meta( $course_id, 'class_size', true );
+			
+			if( $is_limited ) {
+				$content .= $class_size;
+                
+				if ( 'yes' == $show_remaining ) {
+					cp_write_log( $course );
+					$remaining = $class_size - $course->get_number_of_students();
+					$content .= ' ' . sprintf( $remaining_text, $remaining );
+				}
+			} else {
+				if ( 'yes' == $show_no_limit ) {
+					$content .= $no_limit_text;
+				}
+			}
+
+			if ( ! empty( $content ) ) {
+				ob_start();
+				?>
+					<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
+					<? if ( ! empty ( $label ) ) :?>
+						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+					<?php endif;?>
+					<?php echo $content; ?>
+					</div>
+				<?php
+				$content = ob_get_clean();		
+			}
+			// Return the html in the buffer.
+			return $content;
+		}				
+
 
         function course_unit_archive_submenu( $atts ) {
             global $coursepress;
