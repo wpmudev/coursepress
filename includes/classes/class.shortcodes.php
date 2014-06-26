@@ -37,6 +37,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			add_shortcode( 'course', array( &$this, 'course' ) );
 			// Sub-shortcodes
+			add_shortcode( 'course_title', array( &$this, 'course_title' ) );
 			add_shortcode( 'course_summary', array( &$this, 'course_summary' ) );
 			add_shortcode( 'course_description', array( &$this, 'course_description' ) );
 			add_shortcode( 'course_start', array( &$this, 'course_start' ) );			
@@ -45,7 +46,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_enrollment_start', array( &$this, 'course_enrollment_start' ) );			
 			add_shortcode( 'course_enrollment_end', array( &$this, 'course_enrollment_end' ) );						
 			add_shortcode( 'course_enrollment_dates', array( &$this, 'course_enrollment_dates' ) );						
-			add_shortcode( 'course_class_size', array( &$this, 'course_class_size' ) );								
+			add_shortcode( 'course_enrollment_type', array( &$this, 'course_enrollment_type' ) );				
+			add_shortcode( 'course_class_size', array( &$this, 'course_class_size' ) );		
+			add_shortcode( 'course_cost', array( &$this, 'course_cost' ) );
+			add_shortcode( 'course_language', array( &$this, 'course_language' ) );			
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 
 
@@ -78,6 +82,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			
 			foreach( $sections as $section )
 			{
+				// [course_title]
+				if ( 'title' == trim( $section ) ) {
+					$content .= do_shortcode('[course_title title_tag="h3"]');
+				}
+
 				// [course_summary]
 				if ( 'summary' == trim( $section ) ) {
 					$content .= do_shortcode('[course_summary course="' . $encoded . '"]');
@@ -123,6 +132,20 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$content .= do_shortcode('[course_class_size course="' . $encoded . '"]');
 				}
 				
+				// [course_cost]
+				if ( 'cost' == trim( $section ) ) {
+					$content .= do_shortcode('[course_cost course="' . $encoded . '"]');
+				}
+
+				// [course_language]
+				if ( 'language' == trim( $section ) ) {
+					$content .= do_shortcode('[course_language course="' . $encoded . '"]');
+				}				
+				
+				// [course_enrollment_type]
+				if ( 'enrollment_type' == trim( $section ) ) {
+					$content .= do_shortcode('[course_enrollment_type course="' . $encoded . '"]');
+				}								
 				
 			}
 			
@@ -130,6 +153,30 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			return $content;
 		}
 		
+		/**
+		 * Shows the course title.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_title( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'title_tag'       => 'h3',
+            ), $atts, 'course_summary' ) );
+
+			$title = get_the_title( $course_id );
+			
+			ob_start();
+			?>
+				<<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?>">
+				<?php echo $title; ?>
+				</<?php echo $title_tag; ?>>
+			<?php
+			$content = ob_get_clean();
+
+			// Return the html in the buffer.
+			return $content;
+		}
 		
 		/**
 		 * Shows the course summary/excerpt.
@@ -447,7 +494,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$content .= $class_size;
                 
 				if ( 'yes' == $show_remaining ) {
-					cp_write_log( $course );
 					$remaining = $class_size - $course->get_number_of_students();
 					$content .= ' ' . sprintf( $remaining_text, $remaining );
 				}
@@ -460,7 +506,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( ! empty( $content ) ) {
 				ob_start();
 				?>
-					<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
+					<div class="course-class-size course-class-size-<?php echo $course_id; ?>">
 					<? if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
@@ -472,6 +518,143 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Return the html in the buffer.
 			return $content;
 		}				
+
+		/**
+		 * Shows the course cost.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_cost( $atts ) {
+            global $coursepress;
+			
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+ 				'label'           => __( 'Price', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',
+				'no_cost_text'    => __( 'FREE', 'cp' ),				
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$is_paid = get_post_meta( $course_id, 'paid_course', true ) == 'on' ? true : false;
+
+			$content = '';
+
+			if ( $is_paid  && ($coursepress->is_marketpress_active() || $coursepress->is_marketpress_lite_active() || $coursepress->is_cp_marketpress_lite_active() ) ) {
+				
+				$mp_product = get_post_meta( $course_id, 'marketpress_product', true );
+				$content .= do_shortcode( '[mp_product_price product_id="' . $mp_product . '" label=""]' );
+				
+			} else {
+				$content .= $no_cost_text;
+			}
+
+			if ( ! empty( $content ) ) {
+				ob_start();
+				?>
+					<div class="course-cost course-cost-<?php echo $course_id; ?>">
+					<? if ( ! empty ( $label ) ) :?>
+						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+					<?php endif;?>
+					<?php echo $content; ?>
+					</div>
+				<?php
+				$content = ob_get_clean();		
+			}
+			// Return the html in the buffer.
+			return $content;
+		}				
+		
+		/**
+		 * Shows the course language.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_language( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'label'           => __( 'Course Language', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',				
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$language = get_post_meta( $course_id, 'course_language', true );
+			ob_start();
+			?>
+				<div class="course-language course-language-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $language; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}						
+
+		/**
+		 * Shows a friendly course enrollment type message.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_enrollment_type( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'label'           => __( 'Who can Enroll?', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',		
+				'manual_text'     => __( 'Students are added by instructors.', 'cp' ),
+				'prerequisite_text' => __( 'Students need to complete "%s" first.', 'cp' ),		
+				'passcode_text'   => __( 'A passcode is required to enroll.', 'cp' ),
+				'anyone_text'     => __( 'Anyone', 'cp' ),
+            ), $atts, 'course' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$enrollment_type = get_post_meta( $course_id, 'enroll_type', true );
+			
+			$content = '';
+			
+			switch ( $enrollment_type ) {
+				case 'anyone':
+					$content = $anyone_text;
+					break;	
+				case 'passcode':
+					$content = $passcode_text;
+					break;
+				case 'prerequisite':
+					$prereq = get_post_meta( $course_id, 'prerequisite', true );
+					$pretitle = '<a href="' . get_permalink( $prereq ) . '">' . get_the_title( $prereq ) . '</a>';
+					$content = sprintf( $prerequisite_text, $pretitle );
+					break;				
+				case 'manually':	
+					$content = $manual_text;
+					break;				
+			}
+			
+			ob_start();
+			?>
+				<div class="course-enrollment-type course-enrollment-type-<?php echo $course_id; ?>">
+				<? if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $content; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}						
 
 
         function course_unit_archive_submenu( $atts ) {
