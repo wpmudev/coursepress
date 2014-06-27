@@ -192,6 +192,23 @@ if (!class_exists('Course')) {
                     if (preg_match("/mp_/i", $key)) {
                         update_post_meta($post_id, $key, $value);
                     }
+					
+					if( isset( $_POST['meta_course_category'] ) ) { 
+						if ( is_array( $_POST['meta_course_category'] ) )
+						{
+							$sanitized_array = array();
+							foreach( $_POST['meta_course_category'] as $cat_id ) {
+								$sanitized_array = (int) $cat_id;
+							}
+							wp_set_post_categories( $post_id, $sanitized_array );
+						} else {
+							$cat = array( (int) $_POST['meta_course_category'] );
+							if( $cat ){
+								wp_set_post_categories( $post_id, $cat );
+							}
+						}
+
+					} // meta_course_category
 
                     //Add featured image
                     if (isset($_POST['_thumbnail_id']) && is_numeric($_POST['_thumbnail_id']) && isset($_POST['meta_featured_url']) && $_POST['meta_featured_url'] !== '') {
@@ -325,6 +342,30 @@ if (!class_exists('Course')) {
 
             return get_users($args);
         }
+		
+		static function get_categories( $course_id = false ) {
+			
+			if ( ! $course_id ) {
+				return false;
+			}
+			
+			$course_category = get_post_meta( $course_id, 'course_category', true );
+			
+			if ( ! is_array( $course_category ) )
+			{
+				$course_category = array( $course_category );
+			}
+					
+			$args = array(
+				'type'                     => 'link_category',
+				'hide_empty'               => 0,
+				'include'				   => $course_category,
+				'taxonomy'                 => array('course_category'),
+			); 
+			
+			return get_categories( $args );
+			
+		}
 
         function change_status($post_status) {
             $post = array(

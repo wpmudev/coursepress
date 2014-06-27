@@ -50,6 +50,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_class_size', array( &$this, 'course_class_size' ) );		
 			add_shortcode( 'course_cost', array( &$this, 'course_cost' ) );
 			add_shortcode( 'course_language', array( &$this, 'course_language' ) );			
+			add_shortcode( 'course_category', array( &$this, 'course_category' ) );
+			add_shortcode( 'course_list_image', array( &$this, 'course_list_image' ) );						
+			add_shortcode( 'course_featured_video', array( &$this, 'course_featured_video' ) );					
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 
 
@@ -149,6 +152,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( 'language' == trim( $section ) ) {
 					$content .= do_shortcode('[course_language course="' . $encoded . '"]');
 				}				
+
+				// [course_category]
+				if ( 'category' == trim( $section ) ) {
+					$content .= do_shortcode('[course_category course="' . $encoded . '"]');
+				}				
 				
 				// [course_enrollment_type]
 				if ( 'enrollment_type' == trim( $section ) ) {
@@ -158,6 +166,16 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				// [course_instructors]
 				if ( 'instructors' == trim( $section ) ) {
 					$content .= do_shortcode('[course_instructors course="' . $encoded . '"]');
+				}												
+				
+				// [course_list_image]
+				if ( 'image' == trim( $section ) ) {
+					$content .= do_shortcode('[course_list_image course="' . $encoded . '"]');
+				}												
+
+				// [course_featured_video]
+				if ( 'video' == trim( $section ) ) {
+					$content .= do_shortcode('[course_featured_video course="' . $encoded . '"]');
 				}												
 				
 			}
@@ -557,8 +575,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = '';
 
 			if ( $is_paid  && ($coursepress->is_marketpress_active() || $coursepress->is_marketpress_lite_active() || $coursepress->is_cp_marketpress_lite_active() ) ) {
-				
+
 				$mp_product = get_post_meta( $course_id, 'marketpress_product', true );
+
 				$content .= do_shortcode( '[mp_product_price product_id="' . $mp_product . '" label=""]' );
 				
 			} else {
@@ -609,6 +628,52 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				</div>
 			<?php
 			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}						
+
+		/**
+		 * Shows the course category.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_category( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'label'           => __( 'Course Category', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',	
+				'no_category_test'=> __( 'None', 'cp' ),			
+            ), $atts, 'course_category' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$content = '';
+			
+			$categories = Course::get_categories( $course_id );
+			foreach( $categories as $key => $category ) {
+				$content .= $category->name;
+				$content .= count( $categories ) - 1 < $key ? ', ' : '';
+			}
+			// $category = get_category( $category );
+			
+			if ( ! $categories || 0 == count( $categories ) ) {
+				$content .= $no_category_text;
+			}
+			
+			ob_start();
+			?>
+				<div class="course-category course-category-<?php echo $course_id; ?>">
+				<?php if ( ! empty ( $label ) ) :?>
+					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+				<?php endif;?>
+				<?php echo $content; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			
 			// Return the html in the buffer.
 			return $content;
 		}						
@@ -668,6 +733,105 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Return the html in the buffer.
 			return $content;
 		}						
+
+		/**
+		 * Shows the course list image.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_list_image( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'width'           => 'default',
+				'height'          => 'default',
+            ), $atts, 'course_list_image' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$image_src = get_post_meta( $course_id, 'featured_url', true );
+			
+			list( $img_w, $img_h ) = getimagesize( $image_src );
+			
+			// Note: by using both it usually reverts to the width
+			$width = 'default' == $width ? $img_w : $width;
+			$height = 'default' == $height ? $img_h : $height;			
+
+			ob_start();
+			?>
+				<div class="course-list-image course-list-image-<?php echo $course_id; ?>">
+				<img width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="<?php echo $image_src; ?>" alt="<?php echo $course->details->post_title; ?>" title="<?php echo $course->details->post_title; ?>" />
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}
+		
+		/**
+		 * Shows the course featured video.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_featured_video( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'width'           => 'default',
+				'height'          => 'default',
+            ), $atts, 'course_featured_video' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$video_src = get_post_meta( $course_id, 'course_video_url', true );
+			
+            $video_extension = pathinfo( $video_src, PATHINFO_EXTENSION );
+
+			$content = '';
+
+            if ( !empty( $video_extension ) ) {//it's file, most likely on the server
+                $attr = array(
+                    'src' => $video_src,
+                );
+				
+				if( 'default' != $width ) {
+					$attr['width'] = $width;
+				}
+				
+				if( 'default' != $height ) {
+					$attr['height'] = $height;
+				}
+
+                $content .= wp_video_shortcode( $attr );
+            } else {
+
+                $embed_args = array(
+                );
+				
+				if( 'default' != $width ) {
+					$embed_args['width'] = $width;
+				}
+				
+				if( 'default' != $height ) {
+					$embed_args['height'] = $height;
+				}
+
+                $content .= wp_oembed_get( $video_src, $embed_args );
+            }
+
+			ob_start();
+			?>
+				<div class="course-featured-video course-featured-video-<?php echo $course_id; ?>">
+				<?php echo $content; ?>
+				</div>
+			<?php
+			$content = ob_get_clean();		
+			// Return the html in the buffer.
+			return $content;
+		}
+		
 		
 		/**
 	     *
@@ -676,6 +840,18 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 *
 		 */
 		
+		/**
+		 * Shows all the instructors of the given course.
+		 *
+		 * Four styles are supported:  
+		 *
+		 * * style="block" - List profile blocks including name, avatar, description (optional) and profile link. You can choose to make the entire block clickable ( link_all="yes" ) or only the profile link ( link_all="no", Default).
+		 * * style="list"  - Lists instructor display names (separated by list_separator).  
+		 * * style="link"  - Same as 'list', but returns hyperlinks to instructor profiles.  
+		 * * style="count" - Outputs a simple integer value with the total of instructors for the course.  
+		 *
+		 * @since 1.0.0
+		 */		
         function course_instructors( $atts ) {
             global $wp_query;
             global $instructor_profile_slug;
@@ -683,47 +859,95 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'course'          => false,
-                'count'           => false,
-                'list'            => false,
-                'link'            => true,
-                'avatar_size'     => 80
+                'count'           => false,  // deprecated
+                'list'            => false,  // deprecated
+                'link'            => false,   // deprecated
+				'link_text'       => __( 'View Full Profile', 'cp' ),
+				'show_summary'    => 'no',
+				'summary_length'  => 50,
+				'style'           => 'block',  //list, link, block, count
+				'list_separator'  => ', ',
+                'avatar_size'     => 80,
+				'default_avatar'  => '',
+				'link_all'        => 'no',
 			), $atts, 'course_instructors' ) );
+
+			// Support previous arguments
+			$style = $count ? 'count' : $style;
+			$style = $list ? 'list' : $style;
+			$style = $link ? 'link' : $style;
 
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 			
             $instructors = Course::get_course_instructors( $course_id );
 
-            $instructors_count = 0;
             $content = '';
             $list = array();
 
-            foreach ( $instructors as $instructor ) {
-                $list[] = ( $link == true ? '<a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
-                $doc = new DOMDocument();
-                $doc->loadHTML( get_avatar( $instructor->ID, $avatar_size ) );
-                $imageTags = $doc->getElementsByTagName( 'img' );
+			if ( 'count' != $style ) {
+	            foreach ( $instructors as $instructor ) {
+				
+					$profile_href = trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login );
+				
+					switch ( $style ) {
 
-                foreach ( $imageTags as $tag ) {
-                    $avatar_url = $tag->getAttribute( 'src' );
-                }
-                ?>
-                <?php
-                $content .= '<div class="instructor"><a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
-                $content .= '<div class="small-circle-profile-image" style="background: url( ' . $avatar_url . ' );"></div>';
-                $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
-                $content .= '</a></div>';
-                $instructors_count++;
-            }
+						case 'block':
+							ob_start();
+							?>
+							<div class="instructor-profile">
+								<?php if ( 'yes' == $link_all ) { ?>
+									<a href="<?php echo $profile_href ?>">
+								<?php } ?>
+								<div class="profile-name"><?php echo $instructor->display_name; ?></div>
+								<div class="profile-avatar">
+									<?php echo get_avatar( $instructor->ID, $avatar_size, $default_avatar, $instructor->display_name ); ?>
+								</div>
+								<div class="profile-description"><?php echo author_description_excerpt( $instructor->ID, $summary_length ); ?></div>
+								<div class="profile-link">
+									<?php if ( 'no' == $link_all ) { ?>
+										<a href="<?php echo $profile_href ?>">
+									<?php } ?>
+									<?php echo $link_text; ?>
+									<?php if ( 'no' == $link_all ) { ?>
+										</a>
+									<?php } ?>								
+								</div>
+								<?php if ( 'yes' == $link_all ) { ?>
+									</a>
+								<?php } ?>
+							</div>	
+							<?php
+							$content .= ob_get_clean();				
+					
+						break;
+					
+						case 'link':
+						case 'list':
+		                	$list[] = ( 'link' == $style ? '<a href="' . $profile_href . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
+					
+						break;					
+					}
+				}
+			}
 
-            $list = implode( ", ", $list );
+			switch ( $style ) {
+				
+				case 'block':
+					$content = '' . $content . '';
+				break;
+				
+				case 'list':
+				case 'link':				
+					$content = implode( $list_separator, $list );
+				break;
+				
+				case 'count':
+					$content = count( $instructors );
+				break;								
+				
+			}
 
-            if ( $count ) {
-                return $instructors_count;
-            } elseif ( $list ) {
-                return $list;
-            } else {
-                return $content;
-            }
+			return $content;
         }		
 		
         function course_instructor_avatar( $atts ) {

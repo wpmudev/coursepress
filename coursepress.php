@@ -1294,7 +1294,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
             if ( is_admin() && ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_cap' ) || current_user_can( 'coursepress_update_my_course_cap' ) ) ) {
 
-                cp_write_log( $_POST );
+                // cp_write_log( $_POST );
 
                 /*
                   http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init

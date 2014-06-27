@@ -20,6 +20,7 @@ $course_language = $course->details->course_language;
     </header><!-- .entry-header -->
 
     <section id="course-summary">
+
         <?php if ( $course->details->course_video_url != '' ) { ?>  
                 <div class="course-video">
                     <?php
