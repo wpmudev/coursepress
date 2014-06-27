@@ -116,7 +116,7 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                                                         <div><span class="info_caption"><?php _e( 'First Name', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->user_firstname; ?></span></div>
                                                         <div><span class="info_caption"><?php _e( 'Last Name', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->user_lastname; ?></span></div>
                                                         <div><span class="info_caption"><?php _e( 'Email', 'cp' ); ?>:</span> <span class="info"><a href="mailto:<?php echo $instructor->user_email; ?>"><?php echo $instructor->user_email; ?></a></span></div>
-                                                        <div><span class="info_caption"><?php _e( 'Courses', 'cp' ); ?>:</span> <span class="info"><?php echo $instructor->get_courses_number(); ?></span></div>
+                                                        <div><span class="info_caption"><?php _e( 'Courses', 'cp' ); ?>:</span> <span class="info"><?php echo Instructor::get_courses_number( $instructor->ID ); ?></span></div>
                                                     </div>
                                                 </td>
                                             <?php } else { ?>

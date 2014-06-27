@@ -17,6 +17,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             //register plugin shortcodes
             add_shortcode( 'course_instructors', array( &$this, 'course_instructors' ) );
             add_shortcode( 'course_instructor_avatar', array( &$this, 'course_instructor_avatar' ) );
+            add_shortcode( 'instructor_profile_url', array( &$this, 'instructor_profile_url' ) );			
             add_shortcode( 'course_details', array( &$this, 'course_details' ) );
             add_shortcode( 'courses_student_dashboard', array( &$this, 'courses_student_dashboard' ) );
             add_shortcode( 'courses_student_settings', array( &$this, 'courses_student_settings' ) );
@@ -31,7 +32,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             add_shortcode( 'course_unit_archive_submenu', array( &$this, 'course_unit_archive_submenu' ) );
             add_shortcode( 'course_breadcrumbs', array( &$this, 'course_breadcrumbs' ) );
             add_shortcode( 'course_discussion', array( &$this, 'course_discussion' ) );
-            add_shortcode( 'instructor_profile_url', array( &$this, 'instructor_profile_url' ) );
             add_shortcode( 'get_parent_course_id', array( &$this, 'get_parent_course_id' ) );
             add_shortcode( 'units_dropdown', array( &$this, 'units_dropdown' ) );
 
@@ -57,6 +57,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
         }
 		
 		/**
+	     *
+		 * COURSE DETAILS SHORTCODES
+		 * =========================
+		 *
+		 */
+		
+		/**
 		 * Creates a [course] shortcode.
 		 *
 		 * This is just a wrapper shortcode for several other shortcodes.
@@ -71,6 +78,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'date_format'     => get_option( 'date_format' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
+				'show_title'      => 'no',
             ), $atts, 'course' ) );
 			
 			$course = new Course( $course_id );
@@ -83,7 +91,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			foreach( $sections as $section )
 			{
 				// [course_title]
-				if ( 'title' == trim( $section ) ) {
+				if ( 'title' == trim( $section ) && 'yes' == $show_title ) {
 					$content .= do_shortcode('[course_title title_tag="h3"]');
 				}
 
@@ -147,6 +155,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$content .= do_shortcode('[course_enrollment_type course="' . $encoded . '"]');
 				}								
 				
+				// [course_instructors]
+				if ( 'instructors' == trim( $section ) ) {
+					$content .= do_shortcode('[course_instructors course="' . $encoded . '"]');
+				}												
+				
 			}
 			
 			// return print_r( $course );
@@ -162,7 +175,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'title_tag'       => 'h3',
-            ), $atts, 'course_summary' ) );
+            ), $atts, 'course_title' ) );
 
 			$title = get_the_title( $course_id );
 			
@@ -212,7 +225,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'course'          => false,
-            ), $atts, 'course' ) );
+            ), $atts, 'course_description' ) );
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -242,7 +255,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Course Start Date', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_start' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -278,7 +291,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
 				'no_date_text'    => __( 'No End Date', 'cp' ),								
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_end' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -315,7 +328,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
 				'no_date_text'    => __( 'No End Date', 'cp' ),								
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -354,7 +367,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_enrollment_start' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -394,7 +407,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_delimeter' => ':',		
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
 				'show_all_dates'  => 'no',		
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_enrollment_end' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -436,7 +449,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_enrollment_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -480,7 +493,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_delimeter' => ':',
 				'no_limit_text'   => __( 'Unlimited', 'cp' ),
 				'remaining_text'  => __( '(%d places left)', 'cp' ),
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_class_size' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -534,7 +547,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'no_cost_text'    => __( 'FREE', 'cp' ),				
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_cost' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -580,7 +593,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Course Language', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_language' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -616,7 +629,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'prerequisite_text' => __( 'Students need to complete "%s" first.', 'cp' ),		
 				'passcode_text'   => __( 'A passcode is required to enroll.', 'cp' ),
 				'anyone_text'     => __( 'Anyone', 'cp' ),
-            ), $atts, 'course' ) );			
+            ), $atts, 'course_enrollment_type' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
@@ -655,7 +668,106 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Return the html in the buffer.
 			return $content;
 		}						
+		
+		/**
+	     *
+		 * INSTRUCTOR DETAILS SHORTCODES
+		 * =========================
+		 *
+		 */
+		
+        function course_instructors( $atts ) {
+            global $wp_query;
+            global $instructor_profile_slug;
 
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+                'count'           => false,
+                'list'            => false,
+                'link'            => true,
+                'avatar_size'     => 80
+			), $atts, 'course_instructors' ) );
+
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+			
+            $instructors = Course::get_course_instructors( $course_id );
+
+            $instructors_count = 0;
+            $content = '';
+            $list = array();
+
+            foreach ( $instructors as $instructor ) {
+                $list[] = ( $link == true ? '<a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
+                $doc = new DOMDocument();
+                $doc->loadHTML( get_avatar( $instructor->ID, $avatar_size ) );
+                $imageTags = $doc->getElementsByTagName( 'img' );
+
+                foreach ( $imageTags as $tag ) {
+                    $avatar_url = $tag->getAttribute( 'src' );
+                }
+                ?>
+                <?php
+                $content .= '<div class="instructor"><a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
+                $content .= '<div class="small-circle-profile-image" style="background: url( ' . $avatar_url . ' );"></div>';
+                $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
+                $content .= '</a></div>';
+                $instructors_count++;
+            }
+
+            $list = implode( ", ", $list );
+
+            if ( $count ) {
+                return $instructors_count;
+            } elseif ( $list ) {
+                return $list;
+            } else {
+                return $content;
+            }
+        }		
+		
+        function course_instructor_avatar( $atts ) {
+            global $wp_query;
+
+            extract( shortcode_atts( array( 'instructor_id' => 0, 'thumb_size' => 80, 'class' => 'small-circle-profile-image' ), $atts ) );
+
+            $doc = new DOMDocument();
+            $doc->loadHTML( get_avatar( $instructor_id, $thumb_size ) );
+            $imageTags = $doc->getElementsByTagName( 'img' );
+
+            $content = '';
+
+            foreach ( $imageTags as $tag ) {
+                $avatar_url = $tag->getAttribute( 'src' );
+            }
+            ?>
+            <?php
+            $content .= '<div class="instructor-avatar">';
+            $content .= '<div class="' . $class . '" style="background: url( ' . $avatar_url . ' );"></div>';
+            $content .= '</div>';
+
+            return $content;
+        }
+
+        function instructor_profile_url( $atts ) {
+            global $instructor_profile_slug;
+
+            extract( shortcode_atts( array(
+                'instructor_id' => 0 ), $atts ) );
+
+            $instructor = get_userdata( $instructor_id );
+
+            if ( $instructor_id ) {
+                return trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login );
+            }
+        }		
+		
+		/**
+	     *
+		 * UNIT DETAILS SHORTCODES
+		 * =========================
+		 *
+		 */		
 
         function course_unit_archive_submenu( $atts ) {
             global $coursepress;
@@ -926,41 +1038,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             return $course->$field;
         }
 
-        function course_instructor_avatar( $atts ) {
-            global $wp_query;
-
-            extract( shortcode_atts( array( 'instructor_id' => 0, 'thumb_size' => 80, 'class' => 'small-circle-profile-image' ), $atts ) );
-
-            $doc = new DOMDocument();
-            $doc->loadHTML( get_avatar( $instructor_id, $thumb_size ) );
-            $imageTags = $doc->getElementsByTagName( 'img' );
-
-            $content = '';
-
-            foreach ( $imageTags as $tag ) {
-                $avatar_url = $tag->getAttribute( 'src' );
-            }
-            ?>
-            <?php
-            $content .= '<div class="instructor-avatar">';
-            $content .= '<div class="' . $class . '" style="background: url( ' . $avatar_url . ' );"></div>';
-            $content .= '</div>';
-
-            return $content;
-        }
-
-        function instructor_profile_url( $atts ) {
-            global $instructor_profile_slug;
-
-            extract( shortcode_atts( array(
-                'instructor_id' => 0 ), $atts ) );
-
-            $instructor = get_userdata( $instructor_id );
-
-            if ( $instructor_id ) {
-                return trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login );
-            }
-        }
 
         function get_parent_course_id( $atts ) {
             global $wp;
@@ -973,56 +1050,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             return $course_id;
         }
 
-        function course_instructors( $atts ) {
-            global $wp_query;
-            global $instructor_profile_slug;
-
-            extract( shortcode_atts( array(
-                'course_id' => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
-                'count' => false,
-                'list' => false,
-                'link' => true,
-                'avatar_size' => 80
-                            ), $atts ) );
-
-            $course = new Course( $course_id );
-			
-            $instructors = $course->get_course_instructors();
-
-						cp_write_log( $instructors );
-
-            $instructors_count = 0;
-            $content = '';
-            $list = array();
-
-            foreach ( $instructors as $instructor ) {
-                $list[] = ( $link == true ? '<a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
-                $doc = new DOMDocument();
-                $doc->loadHTML( get_avatar( $instructor->ID, $avatar_size ) );
-                $imageTags = $doc->getElementsByTagName( 'img' );
-
-                foreach ( $imageTags as $tag ) {
-                    $avatar_url = $tag->getAttribute( 'src' );
-                }
-                ?>
-                <?php
-                $content .= '<div class="instructor"><a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
-                $content .= '<div class="small-circle-profile-image" style="background: url( ' . $avatar_url . ' );"></div>';
-                $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
-                $content .= '</a></div>';
-                $instructors_count++;
-            }
-
-            $list = implode( ", ", $list );
-
-            if ( $count ) {
-                return $instructors_count;
-            } elseif ( $list ) {
-                return $list;
-            } else {
-                return $content;
-            }
-        }
 
         function courses_student_dashboard( $atts ) {
             global $plugin_dir;

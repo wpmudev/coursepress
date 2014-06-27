@@ -504,14 +504,18 @@ if ( !class_exists( 'CoursePress' ) ) {
                 }
             }
 
-            /* Show Instructor single template */
-
-            if ( array_key_exists( 'instructor_username', $wp->query_vars ) ) {
+            /* Show Instructor single template only if the user is an instructor of at least 1 course */
+            if ( array_key_exists( 'instructor_username', $wp->query_vars ) && 0 < Instructor::get_courses_number( get_userdatabynicename( $wp->query_vars['instructor_username'] )->ID ) ) {
                 $vars = array();
                 $vars['instructor_username'] = $wp->query_vars['instructor_username'];
                 $vars['user'] = get_userdatabynicename( $wp->query_vars['instructor_username'] );
 
                 $theme_file = locate_template( array( 'single-instructor.php' ) );
+				
+				// $course_count = Instructor::get_courses_number( $vars['user']->ID );
+				// if ( $course_count <= 1 ) {
+				// 	exit;
+				// }
 
                 if ( $theme_file != '' ) {
                     require_once( $theme_file );
@@ -762,29 +766,27 @@ if ( !class_exists( 'CoursePress' ) ) {
         function add_rewrite_rules( $rules ) {
             $new_rules = array();
 
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_discussion_slug() . '/page/( [0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_discussion_slug() . '/( [^/]* )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/page/([0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
 
-            //$new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_discussion_slug().'/( [^/]+ )/page/?( [0-9]{1,} )/?$'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
+            //$new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug().'/([^/]+ )/page/?( [0-9]{1,} )/?$'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';
 
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_workbook_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_workbook_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
 
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_units_slug() . '/( [^/]* )/page/( [0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_units_slug() . '/( [^/]* )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
 
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_notifications_slug() . '/page/( [0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]';
-            $new_rules['^' . $this->get_course_slug() . '/( [^/]* )/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() . '/page/([0-9]{1,} )/?'] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]';
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
 
-            $new_rules['^' . $this->get_instructor_profile_slug() . '/( [^/]* )/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
-
+            $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
             //Remove potential conflicts between single and virtual page on single site
             /* if ( !is_multisite() ) {
               unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
               } */
-
             return array_merge( $new_rules, $rules );
         }
 

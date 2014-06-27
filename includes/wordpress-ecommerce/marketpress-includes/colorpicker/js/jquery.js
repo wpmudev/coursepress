@@ -803,7 +803,7 @@ jQuery.extend( {
 			if ( name.match( /float/i ) )
 				name = "float";
 
-			name = name.replace( /( [A-Z] )/g, "-$1" ).toLowerCase();
+			name = name.replace( /([A-Z] )/g, "-$1" ).toLowerCase();
 
 			var computedStyle = defaultView.getComputedStyle( elem, null );
 
@@ -1049,7 +1049,7 @@ jQuery.extend( {
 			}
 
 			return elem.filter && elem.filter.indexOf( "opacity=" ) >= 0 ?
-				( parseFloat( elem.filter.match( /opacity=( [^ )]* )/ )[1] ) / 100 ) + '':
+				( parseFloat( elem.filter.match( /opacity=( [^ )]*)/ )[1] ) / 100 ) + '':
 				"";
 		}
 
@@ -1800,7 +1800,7 @@ var Expr = Sizzle.selectors = {
 		CHILD: function( match ) {
 			if ( match[1] == "nth" ) {
 				// parse equations like 'even', 'odd', '5', '2n', '3n+2', '4n-1', '-n+6'
-				var test = /( -? )( \d* )n( ( ?:\+|- )?\d* )/.exec(
+				var test = /( -? )( \d* )n( ( ?:\+|- )?\d*)/.exec(
 					match[2] == "even" && "2n" || match[2] == "odd" && "2n+1" ||
 					!/\D/.test( match[2] ) && "0n+" + match[2] || match[2] );
 
@@ -3466,7 +3466,7 @@ jQuery.extend( {
 			jQuery.event.trigger( "ajaxStart" );
 
 		// Matches an absolute URL, and saves the domain
-		var parts = /^( \w+: )?\/\/( [^\/?#]+ )/.exec( s.url );
+		var parts = /^( \w+: )?\/\/([^\/?#]+ )/.exec( s.url );
 
 		// If we're requesting a remote document
 		// and trying to load JSON or Script with a GET

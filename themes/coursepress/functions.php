@@ -336,7 +336,7 @@ function cp_theme_element_content_filter_add_thickbox( $content ) {
 
 function cp_theme_callback_link( $match ) {
     $new_url = str_replace( '../wp-content', WP_CONTENT_URL, $match[0] );
-    $output = preg_replace( '#( http://( [^\s]* )\.( jpg|gif|png ) )#', '$1" class="thickbox', $new_url );
+    $output = preg_replace( '#( http://([^\s]* )\.( jpg|gif|png ) )#', '$1" class="thickbox', $new_url );
     return $output;
 }
 

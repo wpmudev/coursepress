@@ -956,11 +956,11 @@ Thanks again!", 'mp')
 
         //checkout page
         $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->cart') . '/?$'] = 'index.php?pagename=cart';
-        $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->cart') . '/( [^/]+ )/?$'] = 'index.php?pagename=cart&checkoutstep=$matches[1]';
+        $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->cart') . '/([^/]+ )/?$'] = 'index.php?pagename=cart&checkoutstep=$matches[1]';
 
         //order status page
         $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->orderstatus') . '/?$'] = 'index.php?pagename=orderstatus';
-        $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->orderstatus') . '/( [^/]+ )/?$'] = 'index.php?pagename=orderstatus&order_id=$matches[1]';
+        $new_rules[$this->get_setting('slugs->store') . '/' . $this->get_setting('slugs->orderstatus') . '/([^/]+ )/?$'] = 'index.php?pagename=orderstatus&order_id=$matches[1]';
 
         //ipn handling for payment gateways
         $new_rules[$this->get_setting('slugs->store') . '/payment-return/( .+ )'] = 'index.php?paymentgateway=$matches[1]';

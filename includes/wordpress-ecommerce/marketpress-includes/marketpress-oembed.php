@@ -39,7 +39,7 @@ class MP_Oembed {
 	function add_oembed_rewrite_filter( $rules ) {
     	$oembed_rules = array();
 		
-		$oembed_rules['services/( [^/]+ )/?$'] = 'index.php?service=$matches[1]';
+		$oembed_rules['services/([^/]+ )/?$'] = 'index.php?service=$matches[1]';
 		return array_merge( $oembed_rules, $rules );
 	}
 	

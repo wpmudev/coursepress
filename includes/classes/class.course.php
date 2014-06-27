@@ -298,16 +298,23 @@ if (!class_exists('Course')) {
             }
         }
 
-        function get_course_instructors() {
+        static function get_course_instructors( $course_id = false ) {
+			
+			if ( ! $course_id ) {
+				return false;
+			}
+			
+			// Get instructor ID's to return
+			$instructors = get_post_meta( $course_id, 'instructors', true );
+
             $args = array(
                 'blog_id' => $GLOBALS['blog_id'],
-                'role' => 'instructor',
-                'meta_key' => 'course_' . $this->id,
-                'meta_value' => $this->id,
+                'meta_key' => 'course_' . $course_id,
+                'meta_value' => $course_id,
                 'meta_compare' => '',
                 'meta_query' => array(),
-                'include' => array(),
-                'exclude' => array(),
+				// Only include instructors, not students				
+                'include' => $instructors,
                 'orderby' => 'display_name',
                 'order' => 'ASC',
                 'offset' => '',

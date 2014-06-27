@@ -93,7 +93,7 @@ $course_language = $course->details->course_language;
     <br clear="all" />
 
     <?php
-    $instructors = $course->get_course_instructors();
+    $instructors = Course::get_course_instructors( $course->details->ID );
     ?>
     <div class="entry-content <?php echo( count( $instructors ) > 0 ? 'left-content' : '' ); ?>">
         <h1 class="h1-about-course"><?php _e( 'About the Course', 'coursepress' ); ?></h1>
