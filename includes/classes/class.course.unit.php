@@ -109,6 +109,88 @@ if (!class_exists('Unit')) {
             return $previous_unit;
         }
 
+        function get_unit_page_time_estimation($unit_id, $page_num) {
+
+            $unit_pages = $this->get_number_of_unit_pages();
+            $module = new Unit_Module();
+            $modules = $module->get_modules($unit_id);
+
+
+            for ($i = 1; $i <= $unit_pages; $i++) {
+                $pages_num = 1;
+                $total_minutes = 0;
+                $total_seconds = 0;
+
+                foreach ($modules as $mod) {
+                    $class_name = $mod->module_type;
+                    $time_estimation = $mod->time_estimation;
+
+                    if (class_exists($class_name)) {
+                        $module = new $class_name();
+
+                        if ($module->name == 'page_break_module') {
+                            $pages_num++;
+                        } else {
+                            if ($pages_num == $page_num) {
+                                if (isset($time_estimation) && $time_estimation !== '') {
+                                    $estimatation = explode(':', $time_estimation);
+                                    if (isset($estimatation[0])) {
+                                        $total_minutes = $total_minutes + intval($estimatation[0]);
+                                    }
+                                    if (isset($estimatation[1])) {
+                                        $total_seconds = $total_seconds + intval($estimatation[1]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+
+                $minutes = floor($total_seconds / 60);
+                $seconds = $total_seconds % 60;
+
+                if ($minutes >= 1 || $seconds >= 1) {
+                    return apply_filters('cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0'.$seconds : $seconds) . ' min'));
+                } else {
+                    return apply_filters('cp_unit_time_estimation_na_format', __('N/A', 'cp'));
+                }
+                
+            }
+        }
+
+        function get_unit_time_estimation($unit_id) {
+            $module = new Unit_Module();
+            $modules = $module->get_modules($unit_id);
+            $total_minutes = 0;
+            $total_seconds = 0;
+
+            foreach ($modules as $mod) {
+                $time_estimation = $mod->time_estimation;
+                if (isset($time_estimation) && $time_estimation !== '') {
+                    $estimatation = explode(':', $time_estimation);
+                    if (isset($estimatation[0])) {
+                        $total_minutes = $total_minutes + intval($estimatation[0]);
+                    }
+                    if (isset($estimatation[1])) {
+                        $total_seconds = $total_seconds + intval($estimatation[1]);
+                    }
+                }
+            }
+
+            $total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+
+            $minutes = floor($total_seconds / 60);
+            $seconds = $total_seconds % 60;
+
+            if ($minutes >= 1 || $seconds >= 1) {
+                return apply_filters('cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0'.$seconds : $seconds) . ' min'));
+            } else {
+                return apply_filters('cp_unit_time_estimation_na_format', __('N/A', 'cp'));
+            }
+        }
+
         function update_unit() {
             global $user_id, $last_inserted_unit_id;
 

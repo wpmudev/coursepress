@@ -591,3 +591,126 @@ h1.notification-title{
 .image_holder img{
     width: 100%;
 }
+
+/* CSS Tree menu styles */
+ul.tree
+{
+    padding: 0 0 0 0px;
+    /* width: 300px;*/
+}
+
+.tree li 
+{ 
+    position: relative; 
+    margin-left: -15px;
+    list-style: none;
+}
+
+.tree li.element
+{
+    margin-left: -1px !important;
+}
+
+.tree li.element a
+{
+    color: #fff;
+    padding-left: 21px;
+    text-decoration: none;
+    display: block;
+}
+
+.tree .tree-element-left{
+    display: inline-block;
+    width: 70%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tree .tree-element-right{
+    display: inline-block;
+    width: 29%;
+}
+
+.tree .tree-page-left{
+    display: inline-block;
+    width: 70%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tree .tree-page-right{
+    display: inline-block;
+    width: 29%;
+}
+
+.tree .tree-unit-left{
+    display: inline-block;
+    width: 70%;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    float: left;
+}
+
+.tree .tree-unit-right{
+    display: inline-block;
+    width: 29%;
+}
+
+.tree .tree-page-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
+.tree .tree-unit-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
+.tree .tree-element-right span{
+    display: inline-block;
+    text-align: right;
+    float: right;
+}
+
+.course_structure_unit_label{
+    background-color: red;
+}
+
+.tree li label
+{
+    cursor: pointer;
+    display: block;
+    padding-left: 10px;
+}
+
+.course-section .course-form .tree label span{
+    margin: 0px;
+}
+
+.tree li:before input:checked + ul{
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #f00;
+}
+
+.tree li input:checked + ul > li { display: block; margin: 0 0 0.125em;  /* 2px */}
+.tree li input:checked + ul > li:last-child { margin: 0 0 0.0em; /* 1px */ }
+
+.tree li input:checked + ul > li.course_structure_page_li{
+    margin: 0em
+}
+
+.tree .hidden_checkbox{
+    display: none;
+}
+
+.tree ul{
+    margin-left: 30px;
+}

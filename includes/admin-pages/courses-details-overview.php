@@ -132,9 +132,16 @@ if (isset($_GET['course_id'])) {
     $course_setup_marker = empty($course->details->course_setup_marker) ? 'step-1' : $course->details->course_setup_marker;
     $gateways = false;
     $course_structure_options = $course->details->course_structure_options;
-    $course_structure_time_display = $course->details->course_setup_progressrse_structure_time_display;
-    $show_module = $course->details->show_module;
-    $preview_module = $course->details->preview_module;
+    $course_structure_time_display = $course->details->course_structure_time_display;
+    
+    //$show_module = $course->details->show_module;
+    //$preview_module = $course->details->preview_module;
+    
+    $show_unit = $course->details->show_unit_boxes;
+    $preview_unit = $course->details->preview_unit_boxes;
+    
+    $show_page = $course->details->show_page_boxes;
+    $preview_page = $course->details->preview_page_boxes;
 } else {
     $class_size = 0;
     $enroll_type = '';
@@ -459,19 +466,19 @@ if (isset($_GET['course_id'])) {
                                                                                     <label for="unit_<?php echo $unit->ID; ?>">
                                                                                         <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
                                                                                         <div class="tree-unit-right">
-                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
-                                                                                            if (isset($show_module[$unit->ID])) {
-                                                                                                echo ( $show_module[$unit->ID] == 'on' ) ? 'checked' : '';
+                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
+                                                                                            if (isset($show_unit[$unit->ID])) {
+                                                                                                echo ( $show_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                             }
                                                                                             ?> />
 
-                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' name='meta_preview_page[<?php echo $unit->ID; ?>]' <?php
-                                                                                            if (isset($preview_module[$unit->ID])) {
-                                                                                                echo ( $preview_module[$unit->ID] == 'on' ) ? 'checked' : '';
+                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
+                                                                                            if (isset($preview_unit[$unit->ID])) {
+                                                                                                echo ( $preview_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                             }
                                                                                             ?> />
 
-                                                                                            <span>10 min</span>
+                                                                                            <span><?php echo $unit_class->get_unit_time_estimation($unit->ID);?></span>
                                                                                         </div>
                                                                                     </label> <input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox" /> 
 
@@ -486,7 +493,7 @@ if (isset($_GET['course_id'])) {
                                                                                             <?php
                                                                                         } else {
                                                                                             ?>
-                                                                                            <li>
+                                                                                            <li class="course_structure_page_li">
                                                                                                 <?php
                                                                                                 for ($i = 1; $i <= $unit_pages; $i++) {
                                                                                                     $pages_num = 1;
@@ -498,26 +505,27 @@ if (isset($_GET['course_id'])) {
                                                                                                             <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
                                                                                                         </div>
                                                                                                         <div class="tree-page-right">
-                                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-                                                                                                            if (isset($show_module[$unit->ID . '_' . $i])) {
-                                                                                                                echo ( $show_module[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
+                                                                                                            <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+                                                                                                            if (isset($show_page[$unit->ID . '_' . $i])) {
+                                                                                                                echo ( $show_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
                                                                                                             }
                                                                                                             ?> />
 
-                                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-                                                                                                            if (isset($preview_module[$unit->ID . '_' . $i])) {
-                                                                                                                echo ( $preview_module[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
+                                                                                                            <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+                                                                                                            if (isset($preview_page[$unit->ID . '_' . $i])) {
+                                                                                                                echo ( $preview_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
                                                                                                             }
                                                                                                             ?> />
 
-                                                                                                            <span>10 min</span>
+                                                                                                            <span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i);?></span>
                                                                                                         </div>
                                                                                                     </label>
                                                                                                 
                                                                                                     <input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox" /> 
 
-                                                                                                    <ol>
+                                                                                                    <ol class="course_structure_elements_ol">
                                                                                                         <?php
+                                                                                                        /*
                                                                                                         foreach ($modules as $mod) {
                                                                                                             $class_name = $mod->module_type;
 
@@ -550,7 +558,7 @@ if (isset($_GET['course_id'])) {
                                                                                                                                     }
                                                                                                                                     ?> />
 
-                                                                                                                                    <span>10 min</span>
+                                                                                                                                    <span><?php echo (isset($mod->time_estimation) && $mod->time_estimation !== '') ? $mod->time_estimation.' '.__('min', 'cp') : __('N/A', 'cp');?></span>
                                                                                                                                 </div>
                                                                                                                             </li>
                                                                                                                             <?php
@@ -558,7 +566,7 @@ if (isset($_GET['course_id'])) {
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
-                                                                                                        }
+                                                                                                        }*/
                                                                                                         ?>
 
                                                                                                     </ol>

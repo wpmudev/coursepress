@@ -2338,6 +2338,19 @@ ol.tree
     height: auto;
 }
 
+.tree li input:checked + ol.course_structure_elements_ol,
+.tree li input + ol.course_structure_elements_ol{
+    background: none;
+}
+
+.tree li input:checked + ol.course_structure_elements_ol
+{
+    margin: -3px 0 0 -44px; /* 20px */
+    padding: 0 0 0 80px;
+    height: auto;
+}
+
+
 .tree li:before input:checked + ol{
     width: 0; 
     height: 0; 
@@ -2349,6 +2362,9 @@ ol.tree
 .tree li input:checked + ol > li { display: block; margin: 0 0 0.125em;  /* 2px */}
 .tree li input:checked + ol > li:last-child { margin: 0 0 0.0em; /* 1px */ }
 
+.tree li input:checked + ol > li.course_structure_page_li{
+    margin: 0em
+}
 
 .tree .hidden_checkbox{
     display: none;

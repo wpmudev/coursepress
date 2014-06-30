@@ -345,8 +345,32 @@ function step_2_update(attr) {
         content = $('[name=course_description]').val();
     }
 
-    var show_boxes = {};
-    var preview_boxes = {};
+    //var show_boxes = {};
+    //var preview_boxes = {};
+
+    var show_unit_boxes = {};
+    var preview_unit_boxes = {};
+
+    var show_page_boxes = {};
+    var preview_page_boxes = {};
+
+    $("input[name^=meta_show_unit]").each(function() {
+        var unit_id = $(this).attr('data-id');
+
+        show_unit_boxes[ unit_id ] = $(sanitize_checkbox($("input[name=meta_show_unit\\[" + unit_id + "\\]]"))).val();
+        preview_unit_boxes[ unit_id ] = $(sanitize_checkbox($("input[name=meta_preview_unit\\[" + unit_id + "\\]]"))).val();
+
+    });
+    
+    $("input[name^=meta_show_page]").each(function() {
+        var page_id = $(this).attr('data-id');
+
+        show_page_boxes[ page_id ] = $(sanitize_checkbox($("input[name=meta_show_page\\[" + page_id + "\\]]"))).val();
+        preview_page_boxes[ page_id ] = $(sanitize_checkbox($("input[name=meta_preview_page\\[" + page_id + "\\]]"))).val();
+
+    });
+    
+    /*
 
     $("input[name^=module_element]").each(function() {
         var mod_id = $(this).val();
@@ -355,7 +379,7 @@ function step_2_update(attr) {
         preview_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_preview_module\\[" + mod_id + "\\]]"))).val();
 
     });
-
+    */
 
     return {
         // Don't remove
@@ -367,8 +391,12 @@ function step_2_update(attr) {
         course_description: content,
         meta_course_structure_options: $('[name=meta_course_structure_options]').is(':checked') ? 'on' : 'off',
         meta_course_structure_time_display: $('[name=meta_course_structure_time_display]').is(':checked') ? 'on' : 'off',
-        meta_show_module: show_boxes,
-        meta_preview_module: preview_boxes,
+        meta_show_unit_boxes: show_unit_boxes,
+        meta_preview_unit_boxes: preview_unit_boxes,
+        meta_show_page_boxes: show_page_boxes,
+        meta_preview_page_boxes: preview_page_boxes,
+        //meta_show_module: show_boxes,
+        //meta_preview_module: preview_boxes,
         // Don't remove
         meta_course_setup_progress: initialVars['meta_course_setup_progress'],
         meta_course_setup_marker: 'step-3',

@@ -189,6 +189,7 @@ if (!class_exists('Unit_Module')) {
             }
         }
 
+
         function get_module($module_id) {
             $module = get_post($module_id);
             return $module;
@@ -275,7 +276,7 @@ if (!class_exists('Unit_Module')) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );        ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );          ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -330,7 +331,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next         ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next              ?>
                         <?php
                     } else {
                         ?>
