@@ -28,7 +28,7 @@ class audio_module extends Unit_Module {
                 <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
 
-                <?php if ($data->audio_url != '') { ?>  
+            <?php if ($data->audio_url != '') { ?>  
                 <div class="audio_player">
                     <?php
                     $attr = array(
@@ -39,7 +39,7 @@ class audio_module extends Unit_Module {
                     echo wp_audio_shortcode($attr);
                     ?>
                 </div>
-        <?php } ?>
+            <?php } ?>
         </div>
         <?php
     }
@@ -71,11 +71,7 @@ class audio_module extends Unit_Module {
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
                     <?php
-                    if (isset($data->ID)) {
-                        parent::get_module_delete_link($data->ID);
-                    } else {
-                        parent::get_module_remove_link();
-                    }
+                    parent::get_module_move_link();
                     ?>
                 </span>
             </h3>
@@ -86,7 +82,10 @@ class audio_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <label class="bold-label"><?php _e('Element Title', 'cp'); $this->time_estimation($data); ?></label>
+                <label class="bold-label"><?php
+                    _e('Element Title', 'cp');
+                    $this->time_estimation($data);
+                    ?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
 
@@ -141,7 +140,13 @@ class audio_module extends Unit_Module {
                 </div>
 
             </div>
-
+            <?php
+            if (isset($data->ID)) {
+                parent::get_module_delete_link($data->ID);
+            } else {
+                parent::get_module_remove_link();
+            }
+            ?>
         </div>
 
         <?php
@@ -181,6 +186,7 @@ class audio_module extends Unit_Module {
                             $data->metas['audio_url'] = $_POST[$this->name . '_audio_url'][$key];
                             $data->metas['autoplay'] = $_POST[$this->name . '_autoplay'][$key];
                             $data->metas['loop'] = $_POST[$this->name . '_loop'][$key];
+                            $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
                             if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {

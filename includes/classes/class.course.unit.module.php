@@ -275,7 +275,7 @@ if (!class_exists('Unit_Module')) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );      ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );        ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -330,7 +330,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next       ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next         ?>
                         <?php
                     } else {
                         ?>
@@ -497,34 +497,45 @@ if (!class_exists('Unit_Module')) {
         }
 
         function time_estimation($data) {
-           // var_dump($data->time_estimation);
+            // var_dump($data->time_estimation);
             ?>
-            <div class="module_time_estimation"><?php _e('Time Estimation (mins)', 'cp'); ?> <input type="text" name="<?php echo $this->name; ?>_time_estimation[]" value="<?php echo esc_attr(isset($data->time_estimation) ? $data->time_estimation : '1:00');?>" /></div>
+            <div class="module_time_estimation"><?php _e('Time Estimation (mins)', 'cp'); ?> <input type="text" name="<?php echo $this->name; ?>_time_estimation[]" value="<?php echo esc_attr(isset($data->time_estimation) ? $data->time_estimation : '1:00'); ?>" /></div>
+            <?php
+        }
+
+        function get_module_move_link() {
+            ?>
+            <span class="module_move"><i class="fa fa-th cp-move-icon"></i></span>
             <?php
         }
 
         function get_module_delete_link($module_id) {
-            ?>
-            <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                        jQuery(this).parent().parent().parent().remove();
-                        jQuery(this).parent().parent().remove();
+            /*
+              ?>
+              <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
+              jQuery(this).parent().parent().parent().remove();
+              jQuery(this).parent().parent().remove();
 
-                        update_sortable_module_indexes();
-                    }
-                    ;"><?php //_e( 'Delete' );    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
-            <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
-            <?php
+              update_sortable_module_indexes();
+              }
+              ;"><?php //_e( 'Delete' );    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
+              <span class="module_move"><i class="fa fa-th cp-move-icon"></i></span>
+              <?php
+
+             */
         }
 
         function get_module_remove_link() {
-            ?>
-            <a class="remove_module_link" onclick="if (removeModule()) {
-                        jQuery(this).parent().parent().parent().remove();
-                        jQuery(this).parent().parent().remove();
-                        update_sortable_module_indexes();
-                    }"><?php //_e( 'Remove' )    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
-            <span class="module_move"><i class="fa fa-arrows-v cp-move-icon"></i></span>
-            <?php
+            /*
+              ?>
+              <a class="remove_module_link" onclick="if (removeModule()) {
+              jQuery(this).parent().parent().parent().remove();
+              jQuery(this).parent().parent().remove();
+              update_sortable_module_indexes();
+              }"><?php //_e( 'Remove' )    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
+              <span class="module_move"><i class="fa fa-th cp-move-icon"></i></span>
+              <?php
+             */
         }
 
         function display_title_on_front($data) {

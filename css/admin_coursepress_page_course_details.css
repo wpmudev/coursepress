@@ -2357,3 +2357,13 @@ ol.tree
 .tree ol{
     margin-left: 30px;
 }
+
+.module_time_estimation{
+    display: inline-block;
+    float: right;
+    margin-top: -9px;
+}
+
+.module-content .module_time_estimation input[type="text"]{
+    width: 60px;
+}
