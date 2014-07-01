@@ -285,7 +285,8 @@ function get_meta_course_setup_progress() {
     return meta_course_setup_progress;
 }
 
-function autosave_course_setup_done(data, status, step, statusElement, nextAction = false ) {
+function autosave_course_setup_done(data, status, step, statusElement, nextAction) {
+    if(typeof(nextAction)==='undefined') nextAction = false;
     if (status == 'success') {
         $($('.' + step + '.dirty')[0]).removeClass('dirty')
         $(statusElement).removeClass('progress');
@@ -520,7 +521,8 @@ function step_6_update(attr) {
     }
 }
 
-function courseAutoUpdate(step, nextAction = false ) {
+function courseAutoUpdate(step, nextAction ) {
+    if(typeof(nextAction)==='undefined') nextAction = false
     $ = jQuery;
     var theStatus = $($('.course-section.step-' + step + ' .course-section-title h3')[0]).siblings('.status')[0];
 

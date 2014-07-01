@@ -300,6 +300,7 @@ if (!class_exists('Unit')) {
             $course = $course->get_course();
 
             $unit_permalink = trailingslashit(site_url() . '/' . $course_slug . '/' . $course->post_name . '/' . $units_slug . '/' . $this->details->post_name);
+ 
             return $unit_permalink;
         }
 

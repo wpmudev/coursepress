@@ -2382,3 +2382,7 @@ ol.tree
 .module-content .module_time_estimation input[type="text"]{
     width: 60px;
 }
+
+li.disabled_unit{
+    color: #dedede;
+}

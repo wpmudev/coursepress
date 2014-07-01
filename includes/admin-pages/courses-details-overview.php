@@ -470,7 +470,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                                                                 $modules = $module->get_modules($unit->ID);
                                                                                 ?>
 
-                                                                                <li>
+                                                                                <li class="<?php echo ($unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit');?>">
 
                                                                                     <label for="unit_<?php echo $unit->ID; ?>">
                                                                                         <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
@@ -479,13 +479,13 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                                                                             if (isset($show_unit[$unit->ID])) {
                                                                                                 echo ( $show_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                             }
-                                                                                            ?> />
+                                                                                            ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled');?> />
 
                                                                                             <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
                                                                                             if (isset($preview_unit[$unit->ID])) {
                                                                                                 echo ( $preview_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                             }
-                                                                                            ?> />
+                                                                                            ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled');?> />
 
                                                                                             <span><?php echo $unit_class->get_unit_time_estimation($unit->ID);?></span>
                                                                                         </div>
@@ -518,13 +518,13 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                                                                                             if (isset($show_page[$unit->ID . '_' . $i])) {
                                                                                                                 echo ( $show_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
                                                                                                             }
-                                                                                                            ?> />
+                                                                                                            ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled');?> />
 
                                                                                                             <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
                                                                                                             if (isset($preview_page[$unit->ID . '_' . $i])) {
                                                                                                                 echo ( $preview_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
                                                                                                             }
-                                                                                                            ?> />
+                                                                                                            ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled');?> />
 
                                                                                                             <span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i);?></span>
                                                                                                         </div>

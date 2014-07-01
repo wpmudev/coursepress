@@ -44,9 +44,15 @@ if (!class_exists('Course')) {
         }
 
         function course_structure_front() {
+            $show_unit = $this->details->show_unit_boxes;
+            $preview_unit = $this->details->preview_unit_boxes;
+
+            $show_page = $this->details->show_page_boxes;
+            $preview_page = $this->details->preview_page_boxes;
+
             $units = $this->get_units();
             ?>
-            <label><?php echo $this->details->post_title;?></label>
+            <label><?php echo $this->details->post_title; ?></label>
             <ul class="tree">
                 <li>
                     <ul>
@@ -58,68 +64,73 @@ if (!class_exists('Course')) {
                             $unit_pages = $unit_class->get_number_of_unit_pages();
 
                             $modules = $module->get_modules($unit->ID);
-                            ?>
 
-                            <li>
+                            if (isset($show_unit[$unit->ID]) && $show_unit[$unit->ID] == 'on' && $unit->post_status == 'publish') {
+                                ?>
 
-                                <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
-                                    <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
-                                    <div class="tree-unit-right">
-                                        <!--<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
-                                        if (isset($show_unit[$unit->ID])) {
-                                            echo ( $show_unit[$unit->ID] == 'on' ) ? 'checked' : '';
-                                        }
-                                        ?> />
+                                <li>
 
-                                        <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
-                                        if (isset($preview_unit[$unit->ID])) {
-                                            echo ( $preview_unit[$unit->ID] == 'on' ) ? 'checked' : '';
-                                        }
-                                        ?> />-->
+                                    <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
+                                        <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+                                        <div class="tree-unit-right">
 
-                                        <span><?php echo $unit_class->get_unit_time_estimation($unit->ID); ?></span>
-                                    </div>
-                                </label> <!--<input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox" /> -->
-
-
-                                <ul>
-
-                                    <li class="course_structure_page_li">
-                                        <?php
-                                        for ($i = 1; $i <= $unit_pages; $i++) {
-                                            $pages_num = 1;
-                                            $page_title = $unit_class->get_unit_page_name($i);
-                                            ?>
-
-                                            <label for="page_<?php echo $unit->ID . '_' . $i; ?>">
-                                                <div class="tree-page-left">
-                                                    <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
-                                                </div>
-                                                <div class="tree-page-right">
-                                                    <!--<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-                                                    if (isset($show_page[$unit->ID . '_' . $i])) {
-                                                        echo ( $show_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
-                                                    }
-                                                    ?> />-->
-
-                                                                        <!--<input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-                                                    if (isset($preview_page[$unit->ID . '_' . $i])) {
-                                                        echo ( $preview_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
-                                                    }
-                                                    ?> />-->
-
-                                                    <span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i); ?></span>
-                                                </div>
-                                            </label>
+                                            <?php if ($this->details->course_structure_time_display == 'on') { ?>
+                                                <span><?php echo $unit_class->get_unit_time_estimation($unit->ID); ?></span>
+                                            <?php } ?>
 
                                             <?php
-                                        }
-                                        ?>
-                                    </li>
+                                            if (isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on') {
+                                                ?>
+                                                <a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php _e('Try Now', 'tc'); ?></a>
+                                            <?php } ?>
+                                        </div>
+                                    </label>
 
-                                </ul>
-                            </li>
-                        <?php } ?>
+                                    <ul>
+                                        <?php
+                                        for ($i = 1; $i <= $unit_pages; $i++) {
+                                            if (isset($show_page[$unit->ID . '_' . $i]) && $show_page[$unit->ID . '_' . $i] == 'on') {
+                                                ?>
+
+                                                <li class="course_structure_page_li">
+                                                    <?php
+                                                    $pages_num = 1;
+                                                    $page_title = $unit_class->get_unit_page_name($i);
+                                                    ?>
+
+                                                    <label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+                                                        <div class="tree-page-left">
+                                                            <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
+                                                        </div>
+                                                        <div class="tree-page-right">
+
+                                                            <?php if ($this->details->course_structure_time_display == 'on') { ?>
+                                                                <span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i); ?></span>
+                                                            <?php } ?>
+
+                                                            <?php
+                                                            if (isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on') {
+                                                                ?>
+                                                                <a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php _e('Try Now', 'tc'); ?></a>
+                                                            <?php } ?>
+
+                                                        </div>
+                                                    </label>
+
+                                                    <?php
+                                                    ?>
+                                                </li>
+                                                <?php
+                                            }
+                                        }//page visible 
+                                        ?>
+
+                                    </ul>
+                                </li>
+                                <?php
+                            }//unit visible
+                        }
+                        ?>
 
                     </ul>
                     <?php

@@ -99,7 +99,7 @@ $course_language = $course->details->course_language;
     <div class="entry-content <?php echo( count($instructors) > 0 ? 'left-content' : '' ); ?>">
         <h1 class="h1-about-course"><?php _e('About the Course', 'coursepress'); ?></h1>
         <?php the_content(); ?>
-        <?php if ($course->details->course_structure_time_display == 'on') { ?>
+        <?php if ($course->details->course_structure_options == 'on') { ?>
             <h1 class = "h1-about-course"><?php
                 _e('Course Structure', 'coursepress');
                 ?></h1>
