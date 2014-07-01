@@ -105,6 +105,9 @@ if ( !class_exists( 'CoursePress' ) ) {
                 //Assign Course Setup auto-update ajax call
                 add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
 				
+				//Does Course have an active Gateway?
+                add_action( 'wp_ajax_course_has_gateway', array( &$this, 'course_has_gateway' ) );
+				
 				//Invite instructor ajax call
 				add_action( 'wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ) );
 
@@ -1284,6 +1287,28 @@ if ( !class_exists( 'CoursePress' ) ) {
 
             do_action( 'after_custom_post_types' );
         }
+		
+		
+		/**
+		 *
+		 *
+		 * ::RK::
+		 */
+		function course_has_gateway() {
+			
+			$gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : false;
+			
+			$ajax_response = array( 'has_gateway' => $gateways );
+			
+            $response = array(
+                'what' => 'instructor_invite',
+                'action' => 'instructor_invite',
+                'id' => $ajax_status,
+                'data' => json_encode( $ajax_response ),
+            );
+            $xmlResponse = new WP_Ajax_Response( $response );
+            $xmlResponse->send();
+		}
 
         /**
          * Handles AJAX call for Course Settings auto-update.
@@ -2007,8 +2032,9 @@ if ( !class_exists( 'CoursePress' ) ) {
             wp_localize_script( 'courses-units', 'coursepress_units', array(
                 'withdraw_class_alert' => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
                 'delete_class' => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp' ),
+				'setup_gateway' => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp' ),
             ) );
-
+			
             wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
             wp_enqueue_style( 'admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css', array(), $this->version );
             wp_enqueue_style( 'admin_coursepress_page_course_details_responsive', $this->plugin_url . 'css/admin_coursepress_page_course_details_responsive.css', array(), $this->version );

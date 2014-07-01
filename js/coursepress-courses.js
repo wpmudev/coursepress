@@ -112,8 +112,6 @@ function update_sortable_indexes() {
         //alert(response);
     });
 
-
-
 }
 
 /* Native WP media browser for audio module (unit module) */
@@ -287,18 +285,47 @@ function get_meta_course_setup_progress() {
     return meta_course_setup_progress;
 }
 
-function autosave_course_setup_done(data, status, step, statusElement) {
+function autosave_course_setup_done(data, status, step, statusElement, nextAction = false ) {
     if (status == 'success') {
         $($('.' + step + '.dirty')[0]).removeClass('dirty')
         $(statusElement).removeClass('progress');
-        $(statusElement).addClass('saved');
+		
+		var is_paid = $('[name=meta_paid_course]').is(':checked') ? true : false;
+		var has_gateway = $( $('.step-6 .course-enable-gateways')[0] ).hasClass('gateway-active');
+		
+		// Different logic required here for last step
+		if ( step == 'step-6' ) {
+			// Paid product
+			if( is_paid )
+			{
+				// Gateway is setup and next action is set
+				if ( has_gateway && 'unit_setup' == nextAction ) {
+					$course_id = $('[name=course_id]').val();
+					$admin_url = $('[name=admin_url]').val();
+					window.location = $admin_url + '&tab=units&course_id=' + $course_id;
+				// Gateway is set, but we forgot to tell the 'done' button what to do
+				} else if ( has_gateway ){
+			        $(statusElement).addClass('saved');
+			        set_update_progress(step, 'saved');
+				// Gateway is not set	
+				} else {
+					alert( coursepress_units.setup_gateway );
+			        $(statusElement).addClass('attention');
+			        set_update_progress(step, 'attention');
+				}
+			} else {
+				
+			}
+		// Steps 1 - 5	
+		} else {
+			$(statusElement).addClass('saved');
+		}
     } else {
         $(statusElement).removeClass('progress');
         $(statusElement).addClass('invalid');
         set_update_progress(step, 'invalid');
     }
 }
-;
 
 /** Prepare AJAX post vars */
 function step_1_update(attr) {
@@ -493,7 +520,7 @@ function step_6_update(attr) {
     }
 }
 
-function courseAutoUpdate(step) {
+function courseAutoUpdate(step, nextAction = false ) {
     $ = jQuery;
     var theStatus = $($('.course-section.step-' + step + ' .course-section-title h3')[0]).siblings('.status')[0];
 
@@ -511,7 +538,11 @@ function courseAutoUpdate(step) {
     $(theStatus).removeClass('invalid');
     $(theStatus).removeClass('attention');
 
-    if ($('.step-' + step + '.dirty')[0]) {
+	var dirty = $('.step-' + step + '.dirty')[0];
+    // Step 5 doesn't have anything that MUST be set, so override.
+	if ( ! dirty && step == 5 ) { dirty = true; }
+		
+    if ( dirty || nextAction == 'unit_setup' ) {
         $(theStatus).addClass('progress');
 
         // Course ID
@@ -548,7 +579,7 @@ function courseAutoUpdate(step) {
                 $('[name=course_id]').val(course_id);
             }
             // Handle return
-            autosave_course_setup_done(data, status, 'step-' + step, theStatus);
+            autosave_course_setup_done( data, status, 'step-' + step, theStatus, nextAction );
         }).fail(function(data) {
         });
 
@@ -573,6 +604,55 @@ function sanitize_checkbox(checkbox) {
 
 /** Handle Course Setup Wizard */
 jQuery(document).ready(function($) {
+
+
+	$(window).bind('tb_unload', function( e ) {
+		if ( $( e ).parents('.step-6') ) {
+			$( $( e ).parents('.course-section.step')[0]).addClass('dirty');			
+			
+			var statusElement = $($('.course-section.step-6 .course-section-title h3')[0]).siblings('.status')[0];
+			
+			//Does course have an active gateway now?
+			$( statusElement ).addClass( 'progress' );
+	        $.post(
+	                'admin-ajax.php', {
+	                    action: 'course_has_gateway',
+	                }
+	        ).done(function(data, status) {
+	            if (status == 'success') {
+	                var response = $.parseJSON($(data).find('response_data').text());
+					if( response.has_gateway ){
+						$( $('.step-6 .course-enable-gateways')[0] ).addClass('gateway-active');
+						$('.step-6 .button-edit-gateways').css('display','inline-block');
+						$('.step-6 .button-incomplete-gateways').css('display','none');
+						$( statusElement ).removeClass( 'progress' );
+						$( statusElement ).removeClass( 'attention' );
+						$( statusElement ).removeClass( 'invalid' );						
+						$( statusElement ).addClass( 'saved' );
+						set_update_progress(step, 'saved');
+					} else {
+						$( $('.step-6 .course-enable-gateways')[0] ).removeClass('gateway-active');
+						$('.step-6 .button-edit-gateways').css('display','none');
+						$('.step-6 .button-incomplete-gateways').css('display','inline-block');						
+						$( statusElement ).removeClass( 'progress' );
+						$( statusElement ).removeClass( 'saved' );
+						$( statusElement ).removeClass( 'invalid' );						
+						$( statusElement ).addClass( 'attention' );
+						set_update_progress(step, 'attention');
+					}
+					// Update step-6
+					courseAutoUpdate( 6 );
+	            }
+	        });
+		}
+	});
+
+
+    /** Done course setupp. */
+    $('.course-section.step input.done').click(function(e) {
+		var step = 6;
+		courseAutoUpdate( step, 'unit_setup' );
+    });
 
     /** Proceed to next step. */
     $('.course-section.step input.next').click(function(e) {
@@ -808,7 +888,6 @@ jQuery(document).ready(function($) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
         }
     });
-
 
 
 });

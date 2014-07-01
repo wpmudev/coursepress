@@ -130,7 +130,6 @@ if (isset($_GET['course_id'])) {
         'step-6' => 'incomplete',
             ) : $course->details->course_setup_progress;
     $course_setup_marker = empty($course->details->course_setup_marker) ? 'step-1' : $course->details->course_setup_marker;
-    $gateways = false;
     $course_structure_options = $course->details->course_structure_options;
     $course_structure_time_display = $course->details->course_structure_time_display;
     
@@ -172,9 +171,14 @@ if (isset($_GET['course_id'])) {
     $course_setup_marker = 'step-1';
     $course_structure_options = 'off';
     $course_structure_time_display = 'off';
-
-    $gateways = false;
 }
+
+// Detect gateways for MarketPress
+// MarketPress 2.x and MarketPress Lite 
+$gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : false;
+
+
+
 ?>
 
 <div class='wrap nocoursesub'>
@@ -188,6 +192,11 @@ if (isset($_GET['course_id'])) {
 
                 <?php if (isset($course_id)) { ?>
                     <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
+                    <?php
+                    if ( current_user_can('coursepress_update_course_cap') || current_user_can('coursepress_update_my_course_cap') ) {
+                        ?>
+                        <input type="hidden" name="admin_url" value="<?php echo admin_url('admin.php?page=course_details'); ?>" />
+                    <?php } ?>
                     <input type="hidden" name="action" value="update" />
                 <?php } else { ?>
                     <input type="hidden" name="action" value="add" />
@@ -995,7 +1004,7 @@ if (isset($_GET['course_id'])) {
 
                                             <div class="clearfix"></div>
 
-                                            <div class="course-sale-price">
+											<div class="course-sale-price">
                                                 <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="1"<?php checked($mp_product_details["mp_is_sale"][0], '1'); ?> />
                                                     <?php _e('Enabled Sale Price', 'cp'); ?></p>
                                                 <p><span><?php _e('Sale Price', 'cp'); ?></span><input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"][0]); ?>" /></p>
@@ -1003,21 +1012,18 @@ if (isset($_GET['course_id'])) {
 
                                             <div class="clearfix"></div>
 
-                                            <div class="course-enable-gateways">
-                                                <?php if (!$gateways) : ?>
-                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
-                                                <?php else: ?>
-                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox"><?php _e('Edit Payment Gateways', 'cp'); ?></a>												
-                                                <?php endif; ?>
+                                            <div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
+
+												<!-- Add both links for JS/CSS toggle -->
+                                                   <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
+
+                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e('Edit Payment Gateways', 'cp'); ?></a>												
+
                                             </div>
 
 
                                         <?php endif; ?>
                                     </div>
-
-
-
-
 
                                     <?php // END ///////////////////////////////             ?>
                                     <div class="course-step-buttons">
