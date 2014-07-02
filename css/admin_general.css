@@ -166,7 +166,7 @@
 }
 
 .wp-core-ui input[type="submit"].button-units{
-    background: none repeat scroll 0 0 #0088A5;
+    background: none repeat scroll 0 0 #00B0D6;
     text-shadow: none;
     color: #fff;
     width: 100%;
@@ -183,7 +183,7 @@
 
 .wp-core-ui a.button-units:hover,
 .wp-core-ui input[type="submit"].button-units:hover{
-    background: none repeat scroll 0 0 #0088A5;
+    background: none repeat scroll 0 0 #00B0D6;
     text-shadow: none;
     color: #fff;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=70 )";
@@ -344,7 +344,7 @@
     color: #fff;
     width: 100%;
     text-align: center;
-    margin: 2px 0px 3px 0px;
+    margin: 3px 0px 3px 0px;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;

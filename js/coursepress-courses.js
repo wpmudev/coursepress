@@ -286,41 +286,42 @@ function get_meta_course_setup_progress() {
 }
 
 function autosave_course_setup_done(data, status, step, statusElement, nextAction) {
-    if(typeof(nextAction)==='undefined') nextAction = false;
+    if (typeof (nextAction) === 'undefined')
+        nextAction = false;
     if (status == 'success') {
         $($('.' + step + '.dirty')[0]).removeClass('dirty')
         $(statusElement).removeClass('progress');
-		
-		var is_paid = $('[name=meta_paid_course]').is(':checked') ? true : false;
-		var has_gateway = $( $('.step-6 .course-enable-gateways')[0] ).hasClass('gateway-active');
-		
-		// Different logic required here for last step
-		if ( step == 'step-6' ) {
-			// Paid product
-			if( is_paid )
-			{
-				// Gateway is setup and next action is set
-				if ( has_gateway && 'unit_setup' == nextAction ) {
-					$course_id = $('[name=course_id]').val();
-					$admin_url = $('[name=admin_url]').val();
-					window.location = $admin_url + '&tab=units&course_id=' + $course_id;
-				// Gateway is set, but we forgot to tell the 'done' button what to do
-				} else if ( has_gateway ){
-			        $(statusElement).addClass('saved');
-			        set_update_progress(step, 'saved');
-				// Gateway is not set	
-				} else {
-					alert( coursepress_units.setup_gateway );
-			        $(statusElement).addClass('attention');
-			        set_update_progress(step, 'attention');
-				}
-			} else {
-				
-			}
-		// Steps 1 - 5	
-		} else {
-			$(statusElement).addClass('saved');
-		}
+
+        var is_paid = $('[name=meta_paid_course]').is(':checked') ? true : false;
+        var has_gateway = $($('.step-6 .course-enable-gateways')[0]).hasClass('gateway-active');
+
+        // Different logic required here for last step
+        if (step == 'step-6') {
+            // Paid product
+            if (is_paid)
+            {
+                // Gateway is setup and next action is set
+                if (has_gateway && 'unit_setup' == nextAction) {
+                    $course_id = $('[name=course_id]').val();
+                    $admin_url = $('[name=admin_url]').val();
+                    window.location = $admin_url + '&tab=units&course_id=' + $course_id;
+                    // Gateway is set, but we forgot to tell the 'done' button what to do
+                } else if (has_gateway) {
+                    $(statusElement).addClass('saved');
+                    set_update_progress(step, 'saved');
+                    // Gateway is not set	
+                } else {
+                    alert(coursepress_units.setup_gateway);
+                    $(statusElement).addClass('attention');
+                    set_update_progress(step, 'attention');
+                }
+            } else {
+
+            }
+            // Steps 1 - 5	
+        } else {
+            $(statusElement).addClass('saved');
+        }
     } else {
         $(statusElement).removeClass('progress');
         $(statusElement).addClass('invalid');
@@ -389,7 +390,7 @@ function step_2_update(attr) {
         preview_unit_boxes[ unit_id ] = $(sanitize_checkbox($("input[name=meta_preview_unit\\[" + unit_id + "\\]]"))).val();
 
     });
-    
+
     $("input[name^=meta_show_page]").each(function() {
         var page_id = $(this).attr('data-id');
 
@@ -397,17 +398,17 @@ function step_2_update(attr) {
         preview_page_boxes[ page_id ] = $(sanitize_checkbox($("input[name=meta_preview_page\\[" + page_id + "\\]]"))).val();
 
     });
-    
+
     /*
-
-    $("input[name^=module_element]").each(function() {
-        var mod_id = $(this).val();
-
-        show_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_show_module\\[" + mod_id + "\\]]"))).val();
-        preview_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_preview_module\\[" + mod_id + "\\]]"))).val();
-
-    });
-    */
+     
+     $("input[name^=module_element]").each(function() {
+     var mod_id = $(this).val();
+     
+     show_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_show_module\\[" + mod_id + "\\]]"))).val();
+     preview_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_preview_module\\[" + mod_id + "\\]]"))).val();
+     
+     });
+     */
 
     return {
         // Don't remove
@@ -521,8 +522,9 @@ function step_6_update(attr) {
     }
 }
 
-function courseAutoUpdate(step, nextAction ) {
-    if(typeof(nextAction)==='undefined') nextAction = false
+function courseAutoUpdate(step, nextAction) {
+    if (typeof (nextAction) === 'undefined')
+        nextAction = false
     $ = jQuery;
     var theStatus = $($('.course-section.step-' + step + ' .course-section-title h3')[0]).siblings('.status')[0];
 
@@ -540,11 +542,13 @@ function courseAutoUpdate(step, nextAction ) {
     $(theStatus).removeClass('invalid');
     $(theStatus).removeClass('attention');
 
-	var dirty = $('.step-' + step + '.dirty')[0];
+    var dirty = $('.step-' + step + '.dirty')[0];
     // Step 5 doesn't have anything that MUST be set, so override.
-	if ( ! dirty && step == 5 ) { dirty = true; }
-		
-    if ( dirty || nextAction == 'unit_setup' ) {
+    if (!dirty && step == 5) {
+        dirty = true;
+    }
+
+    if (dirty || nextAction == 'unit_setup') {
         $(theStatus).addClass('progress');
 
         // Course ID
@@ -581,7 +585,7 @@ function courseAutoUpdate(step, nextAction ) {
                 $('[name=course_id]').val(course_id);
             }
             // Handle return
-            autosave_course_setup_done( data, status, 'step-' + step, theStatus, nextAction );
+            autosave_course_setup_done(data, status, 'step-' + step, theStatus, nextAction);
         }).fail(function(data) {
         });
 
@@ -608,52 +612,52 @@ function sanitize_checkbox(checkbox) {
 jQuery(document).ready(function($) {
 
 
-	$(window).bind('tb_unload', function( e ) {
-		if ( $( e ).parents('.step-6') ) {
-			$( $( e ).parents('.course-section.step')[0]).addClass('dirty');			
-			
-			var statusElement = $($('.course-section.step-6 .course-section-title h3')[0]).siblings('.status')[0];
-			
-			//Does course have an active gateway now?
-			$( statusElement ).addClass( 'progress' );
-	        $.post(
-	                'admin-ajax.php', {
-	                    action: 'course_has_gateway',
-	                }
-	        ).done(function(data, status) {
-	            if (status == 'success') {
-	                var response = $.parseJSON($(data).find('response_data').text());
-					if( response.has_gateway ){
-						$( $('.step-6 .course-enable-gateways')[0] ).addClass('gateway-active');
-						$('.step-6 .button-edit-gateways').css('display','inline-block');
-						$('.step-6 .button-incomplete-gateways').css('display','none');
-						$( statusElement ).removeClass( 'progress' );
-						$( statusElement ).removeClass( 'attention' );
-						$( statusElement ).removeClass( 'invalid' );						
-						$( statusElement ).addClass( 'saved' );
-						set_update_progress(step, 'saved');
-					} else {
-						$( $('.step-6 .course-enable-gateways')[0] ).removeClass('gateway-active');
-						$('.step-6 .button-edit-gateways').css('display','none');
-						$('.step-6 .button-incomplete-gateways').css('display','inline-block');						
-						$( statusElement ).removeClass( 'progress' );
-						$( statusElement ).removeClass( 'saved' );
-						$( statusElement ).removeClass( 'invalid' );						
-						$( statusElement ).addClass( 'attention' );
-						set_update_progress(step, 'attention');
-					}
-					// Update step-6
-					courseAutoUpdate( 6 );
-	            }
-	        });
-		}
-	});
+    $(window).bind('tb_unload', function(e) {
+        if ($(e).parents('.step-6')) {
+            $($(e).parents('.course-section.step')[0]).addClass('dirty');
+
+            var statusElement = $($('.course-section.step-6 .course-section-title h3')[0]).siblings('.status')[0];
+
+            //Does course have an active gateway now?
+            $(statusElement).addClass('progress');
+            $.post(
+                    'admin-ajax.php', {
+                        action: 'course_has_gateway',
+                    }
+            ).done(function(data, status) {
+                if (status == 'success') {
+                    var response = $.parseJSON($(data).find('response_data').text());
+                    if (response.has_gateway) {
+                        $($('.step-6 .course-enable-gateways')[0]).addClass('gateway-active');
+                        $('.step-6 .button-edit-gateways').css('display', 'inline-block');
+                        $('.step-6 .button-incomplete-gateways').css('display', 'none');
+                        $(statusElement).removeClass('progress');
+                        $(statusElement).removeClass('attention');
+                        $(statusElement).removeClass('invalid');
+                        $(statusElement).addClass('saved');
+                        set_update_progress(step, 'saved');
+                    } else {
+                        $($('.step-6 .course-enable-gateways')[0]).removeClass('gateway-active');
+                        $('.step-6 .button-edit-gateways').css('display', 'none');
+                        $('.step-6 .button-incomplete-gateways').css('display', 'inline-block');
+                        $(statusElement).removeClass('progress');
+                        $(statusElement).removeClass('saved');
+                        $(statusElement).removeClass('invalid');
+                        $(statusElement).addClass('attention');
+                        set_update_progress(step, 'attention');
+                    }
+                    // Update step-6
+                    courseAutoUpdate(6);
+                }
+            });
+        }
+    });
 
 
     /** Done course setupp. */
     $('.course-section.step input.done').click(function(e) {
-		var step = 6;
-		courseAutoUpdate( step, 'unit_setup' );
+        var step = 6;
+        courseAutoUpdate(step, 'unit_setup');
     });
 
     /** Proceed to next step. */
@@ -892,4 +896,41 @@ jQuery(document).ready(function($) {
     });
 
 
+});
+
+jQuery(document).ready(function($) {
+    var wpds = {
+        init: function() {
+            //$('body').addClass('wpds');
+            this.attachHandlers('.unit-state .control');
+        },
+        controls: {
+            $radio_slide_init: function(selector)
+            {
+                //console.log('requested');
+                $(selector).click(function()
+                {
+                    if ($(selector).hasClass('on')) {
+                        $(selector).removeClass('on');
+                        $(selector).parent().find('.live').removeClass('on');
+                        $(selector).parent().find('.draft').addClass('on');
+                        $('#unit_state').val('draft');
+                        $('.mp-tab.active .unit-state-circle').removeClass('active');
+                    } else {
+                        $(selector).addClass('on');
+                        $(selector).parent().find('.draft').removeClass('on');
+                        $(selector).parent().find('.live').addClass('on');
+                        $('#unit_state').val('publish');
+                        $('.mp-tab.active .unit-state-circle').addClass('active');
+                    }
+                });
+            }
+        },
+        attachHandlers: function(selector) {
+            console.log('handlers attached');
+            this.controls.$radio_slide_init(selector);
+        }
+    };
+
+    wpds.init();
 });
