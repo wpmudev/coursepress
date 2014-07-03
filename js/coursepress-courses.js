@@ -899,9 +899,8 @@ jQuery(document).ready(function($) {
 });
 
 jQuery(document).ready(function($) {
-    var wpds = {
+    var unit_state_toggle = {
         init: function() {
-            //$('body').addClass('wpds');
             this.attachHandlers('.unit-state .control');
         },
         controls: {
@@ -927,10 +926,55 @@ jQuery(document).ready(function($) {
             }
         },
         attachHandlers: function(selector) {
-            console.log('handlers attached');
+            //console.log('handlers attached');
             this.controls.$radio_slide_init(selector);
         }
     };
 
-    wpds.init();
+    var course_state_toggle = {
+        init: function() {
+            this.attachHandlers('.course-state .control');
+        },
+        controls: {
+            $radio_slide_init: function(selector)
+            {
+                //console.log('requested');
+                $(selector).click(function()
+                {
+                    if ($(selector).hasClass('on')) {
+                        $(selector).removeClass('on');
+                        $(selector).parent().find('.live').removeClass('on');
+                        $(selector).parent().find('.draft').addClass('on');
+                        $('#course_state').val('draft');
+                        var course_state = 'draft';
+                    } else {
+                        $(selector).addClass('on');
+                        $(selector).parent().find('.draft').removeClass('on');
+                        $(selector).parent().find('.live').addClass('on');
+                        var course_state = 'publish';
+                    }
+
+                    var course_id = $('#course_state_id').attr('data-id');
+
+                    $.post(
+                            'admin-ajax.php', {
+                                action: 'change_course_state',
+                                course_state: course_state,
+                                course_id: course_id
+                            }
+                    ).done(function(data) {
+                        //all good
+                    });
+
+                });
+            }
+        },
+        attachHandlers: function(selector) {
+            //console.log('handlers attached');
+            this.controls.$radio_slide_init(selector);
+        }
+    };
+
+    course_state_toggle.init();//single course in admin
+    unit_state_toggle.init();
 });

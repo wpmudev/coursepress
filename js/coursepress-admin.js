@@ -1,4 +1,50 @@
 jQuery(document).ready(function($) {
+
+    var courses_state_toggle = {
+        init: function() {
+            this.attachHandlers('.courses-state .control');
+        },
+        controls: {
+            $radio_slide_init: function(selector)
+            {
+                //console.log('requested');
+                $(selector).click(function()
+                {
+                    if ($(this).hasClass('on')) {
+                        $(this).removeClass('on');
+                        $(this).parent().find('.live').removeClass('on');
+                        $(this).parent().find('.draft').addClass('on');
+                        var course_state = 'draft';
+                    } else {
+                        $(this).addClass('on');
+                        $(this).parent().find('.draft').removeClass('on');
+                        $(this).parent().find('.live').addClass('on');
+                        var course_state = 'publish';
+                    }
+
+                    var course_id = $(this).parent().find('.course_state_id').attr('data-id');
+
+                    $.post(
+                            'admin-ajax.php', {
+                                action: 'change_course_state',
+                                course_state: course_state,
+                                course_id: course_id
+                            }
+                    ).done(function(data) {
+                        //all good
+                    });
+
+                });
+            }
+        },
+        attachHandlers: function(selector) {
+            //console.log('handlers attached');
+            this.controls.$radio_slide_init(selector);
+        }
+    };
+
+    courses_state_toggle.init();//course admin archive page
+
     jQuery('#unit-pages').tabs({});
 
     jQuery('#add_new_unit_page').live("click", function(event) {
@@ -642,7 +688,7 @@ jQuery(document).ready(function() {
     jQuery('.modules_accordion').accordion({
         heightStyle: "content",
         header: "> div > h3",
-        collapsible:false,
+        collapsible: false,
         //active: ".remove_module_link"
     }).sortable({
         items: "div:not( .module-holder-page_break_module )",

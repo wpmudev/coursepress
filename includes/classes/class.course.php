@@ -459,7 +459,7 @@ if (!class_exists('Course')) {
                         'ID' => $this->id,
                         'post_status' => $post_status,
                     );
-
+                   
                     // Update the post status
                     wp_update_post($post);
                 }

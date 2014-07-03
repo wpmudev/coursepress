@@ -2395,6 +2395,89 @@ li.disabled_unit{
 
 /* ---- */
 
+
+.course-state{
+    margin-top: 0px;
+    margin-right: 20px;
+}
+
+.course-state{
+    display: inline-block;
+    float: right;
+    margin-right: 2px;
+}
+
+.course-state .control:focus {
+    background:none;
+    outline:none;
+}
+
+.course-state .control {
+    border-radius: 10px;
+    background: rgb(176,176,176);
+    width:40px;
+    height:18px;
+    margin: -2px 10px 0px 10px;
+    position: relative;
+    opacity:.8;
+    display: inline-block;
+    float: left;
+}
+
+.course-state .control:hover {
+    cursor: pointer;
+    opacity:1;
+}
+
+.course-state .control .toggle {
+    width:12px;
+    height:12px;
+    margin:3px;
+    background: #F4F4F4;
+    border-radius:50%;
+    display:block;
+    position:absolute;
+    -webkit-transition:all .2s ease-in-out;
+    left:0px;
+}
+
+.course-state .control .toggle:hover {
+    -webkit-transform:scale(1.1);
+}
+
+.course-state .control.on .toggle {
+    left:21px;
+}
+
+.course-state .control.on {
+    background: rgb(107,187,26);
+}
+
+.course-state .publish-course-message{
+    display: inline-block;
+    font-size: 14px;
+    float: left;
+    margin-top: -2px;
+    margin-right: 10px;
+}
+
+.course-state .live,
+.course-state .draft{
+    color:#d4d4d4;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: -2px;
+    float: left;
+    font-weight: bold;
+}
+
+.course-state .live.on,
+.course-state .draft.on{
+    color:#6bbb1a;
+}
+
+/* ---- */
+
 .unit-state{
     display: inline-block;
     float: right;
@@ -2488,4 +2571,8 @@ li.disabled_unit{
 .unit-state-circle.active{
     background: #6bbb1a;
     border: 1px solid #61a31e;
+}
+
+h2.nav-tab-wrapper, h3.nav-tab-wrapper{
+    width: 98.2%;
 }
