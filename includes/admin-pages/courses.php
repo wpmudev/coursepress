@@ -148,17 +148,17 @@ if (isset($_GET['quick_setup'])) {
                     "course" => __('Course', 'cp'),
                     "units" => __('Units', 'cp'),
                     "students" => __('Students', 'cp'),
-                    "status" => __('Status', 'cp'),
-                    "actions" => __('Actions', 'cp'),
+                    "status" => __('Published', 'cp'),
+                    //"actions" => __('Actions', 'cp'),
                 );
 
 
                 $col_sizes = array(
-                    '3', '50', '5', '5', '10', '10'
+                    '3', '55', '10', '4', '10'
                 );
 
                 if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') )) {
-                    $columns["remove"] = __('Remove', 'cp');
+                    $columns["remove"] = __('Delete', 'cp');
                     $col_sizes[] = '7';
                 }
                 ?>
@@ -171,7 +171,7 @@ if (isset($_GET['quick_setup'])) {
                             $n = 1;
                             foreach ($columns as $key => $col) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" style="width: <?php echo $col_sizes[$n] . '%'; ?>;" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }
@@ -212,12 +212,12 @@ if (isset($_GET['quick_setup'])) {
                                             <span class="course_units"><a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_object->ID); ?>"><?php _e('Units', 'cp'); ?></a> | </span>
                                         <?php } ?>
                                         <span class="course_students"><a href="<?php echo admin_url('admin.php?page=course_details&tab=students&course_id=' . $course_object->ID); ?>"><?php _e('Students', 'cp'); ?></a> | </span>
-                                        <?php if (current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() )) { ?>
+                                        <?php /*if (current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() )) { ?>
                                             <span class="course_publish_unpublish"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=courses&course_id=' . $course_object->ID . '&action=change_status&new_status=' . ( $course_object->post_status == 'unpublished' ? 'publish' : 'private' )), 'change_course_status_' . $course_object->ID, 'cp_nonce'); ?>"><?php ( $course_object->post_status == 'unpublished' ) ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a> | </span>
-                                        <?php } ?>
-                                        <?php if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id() )) { ?>
+                                        <?php }*/ ?>
+                                        <?php /*if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id() )) { ?>
                                             <span class="course_remove"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=courses&action=delete&course_id=' . $course_object->ID), 'delete_course_' . $course_object->ID, 'cp_nonce'); ?>" onClick="return removeCourse();"><?php _e('Delete', 'cp'); ?></a> | </span>
-                                        <?php } ?>
+                                        <?php } */?>
                                         <span class="view_course"><a href="<?php echo get_permalink($course->ID); ?>" rel="permalink"><?php _e('View Course', 'cp') ?></a><?php if (current_user_can('coursepress_view_all_units_cap') || $course_object->post_author == get_current_user_id()) { ?> | <?php } ?></span>
                                         <?php if (current_user_can('coursepress_view_all_units_cap') || $course_object->post_author == get_current_user_id()) { ?>
                                             <span class="units"><a href="<?php echo get_permalink($course->ID); ?>units/" rel="permalink"><?php _e('View Units', 'cp') ?></a></span>
@@ -240,17 +240,17 @@ if (isset($_GET['quick_setup'])) {
                                     </div>
                                     <!--<?php echo ( $course_object->post_status == 'publish' ) ? ucfirst($course_object->post_status) . 'ed' : ucfirst($course_object->post_status); ?>-->
                                 </td>
-                                <td class="column-actions <?php echo $style; ?>">
+                                <!--<td class="column-actions <?php echo $style; ?>">
                                     <a href="<?php echo admin_url('admin.php?page=course_details&course_id=' . $course_object->ID); ?>" class="button button-settings"><?php _e('Settings', 'cp'); ?></a>
 
-                                    <?php if (current_user_can('coursepress_view_all_units_cap') || $course_object->post_author == get_current_user_id()) { ?>
-                                        <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_object->ID); ?>" class="button button-units"><?php _e('Units', 'cp'); ?></a>
-                                    <?php } ?>
-                                    <?php if (current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() )) { ?>
+                                <?php if (current_user_can('coursepress_view_all_units_cap') || $course_object->post_author == get_current_user_id()) { ?>
+                                            <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_object->ID); ?>" class="button button-units"><?php _e('Units', 'cp'); ?></a>
+                                <?php } ?>
+                                <?php if (current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() )) { ?>
 
-                        <!--<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=courses&course_id=' . $course_object->ID . '&action=change_status&new_status=' . ( $course_object->post_status == 'unpublished' ? 'publish' : 'private' )), 'change_course_status_' . $course_object->ID, 'cp_nonce'); ?>" class="button button-<?php echo ( $course_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>"><?php ( $course_object->post_status == 'unpublished' ) ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>-->
-                                    <?php } ?>
-                                    <?php if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') )) { ?>
+                            <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=courses&course_id=' . $course_object->ID . '&action=change_status&new_status=' . ( $course_object->post_status == 'unpublished' ? 'publish' : 'private' )), 'change_course_status_' . $course_object->ID, 'cp_nonce'); ?>" class="button button-<?php echo ( $course_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>"><?php ( $course_object->post_status == 'unpublished' ) ? _e('Publish', 'cp') : _e('Unpublish', 'cp'); ?></a></td>-->
+                                <?php } ?>
+                                <?php if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') )) { ?>
                                     <td class="column-remove <?php echo $style; ?>">
                                         <?php if (current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id() )) { ?>
                                             <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=courses&action=delete&course_id=' . $course_object->ID), 'delete_course_' . $course_object->ID, 'cp_nonce'); ?>" onClick="return removeCourse();">

@@ -189,7 +189,6 @@ if (!class_exists('Unit_Module')) {
             }
         }
 
-
         function get_module($module_id) {
             $module = get_post($module_id);
             return $module;
@@ -276,7 +275,7 @@ if (!class_exists('Unit_Module')) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );          ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );           ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -331,7 +330,7 @@ if (!class_exists('Unit_Module')) {
                             <p class="form-info-regular"><?php echo $form_message; ?></p>
                         <?php } ?>
 
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next              ?>
+                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                ?>
                         <?php
                     } else {
                         ?>
@@ -511,32 +510,31 @@ if (!class_exists('Unit_Module')) {
         }
 
         function get_module_delete_link($module_id) {
-            /*
-              ?>
-              <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-              jQuery(this).parent().parent().parent().remove();
-              jQuery(this).parent().parent().remove();
+            ?>
+            <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
+                        //alert(jQuery(this).parent().parent().parent().attr('class'));
+                        //alert(jQuery(this).parent().parent().attr('class'));
 
-              update_sortable_module_indexes();
-              }
-              ;"><?php //_e( 'Delete' );    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
-              <span class="module_move"><i class="fa fa-th cp-move-icon"></i></span>
-              <?php
+                        jQuery(this).parent().parent().remove();
+                        update_sortable_module_indexes();
+                        /* jQuery(this).parent().parent().remove();*/
+                         
+                         
+                    }
+                    ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
+               <?php
+           }
 
-             */
-        }
-
-        function get_module_remove_link() {
-            /*
-              ?>
-              <a class="remove_module_link" onclick="if (removeModule()) {
-              jQuery(this).parent().parent().parent().remove();
-              jQuery(this).parent().parent().remove();
-              update_sortable_module_indexes();
-              }"><?php //_e( 'Remove' )    ?><i class="fa fa-times-circle cp-move-icon"></i></a>
-              <span class="module_move"><i class="fa fa-th cp-move-icon"></i></span>
-              <?php
-             */
+           function get_module_remove_link() {
+               ?>
+            <a class="remove_module_link" onclick="if (removeModule()) {
+                        
+                        jQuery(this).parent().parent().remove();
+                        update_sortable_module_indexes();
+                        /* jQuery(this).parent().parent().remove();*/
+                     
+                    }"><i class="fa fa-trash-o"></i> <?php _e('Remove') ?></a>
+            <?php
         }
 
         function display_title_on_front($data) {

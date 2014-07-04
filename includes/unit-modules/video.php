@@ -110,7 +110,7 @@ class video_module extends Unit_Module {
                         <div class="tooltip-before"></div>
                         <div class="tooltip-button">&times;</div>
                         <div class="tooltip-content">
-        <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
                         </div>
                     </div>
                 </label>
@@ -139,7 +139,7 @@ class video_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-        <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  ( oEmbed support is required ). Alternatively you can Browse for a file - supported video extensions ( %s )', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
+                                <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  ( oEmbed support is required ). Alternatively you can Browse for a file - supported video extensions ( %s )', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
                             </div>
                         </div>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr(( isset($data->video_url) ? $data->video_url : '')); ?>" />
@@ -153,15 +153,15 @@ class video_module extends Unit_Module {
                     <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) ); ?>" />
 
                 </div>
-
+                <?php
+                if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                }
+                ?>
             </div>
-            <?php
-            if (isset($data->ID)) {
-                parent::get_module_delete_link($data->ID);
-            } else {
-                parent::get_module_remove_link();
-            }
-            ?>
+
         </div>
 
         <?php

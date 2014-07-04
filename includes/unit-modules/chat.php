@@ -86,14 +86,16 @@ if (is_chat_plugin_active()) {
                         ?>
                     </div>
 
+                    <?php
+                    if (isset($data->ID)) {
+                        parent::get_module_delete_link($data->ID);
+                    } else {
+                        parent::get_module_remove_link();
+                    }
+                    ?>
+
                 </div>
-                <?php
-                if (isset($data->ID)) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
-                ?>
+
             </div>
 
             <?php

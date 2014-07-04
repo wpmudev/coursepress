@@ -73,38 +73,42 @@
 a .remove-btn{
     margin-left: 17px;
     margin-right: auto;
-    margin-top: 24px;
-    font-size: 22px;
+    margin-top: 1px;
+    font-size: 18px;
+}
+
+.column-course .row-actions{
+    text-transform: uppercase;
 }
 
 /* Column Widths */
 .column-course { 
-	width: 50%; 
+    width: 50%; 
 }
 
 .column-units { 
-	width: 5%; 
+    width: 5%; 
 }
 
 .column-students { 
-	width: 5%; 
+    width: 5%; 
 }
 
 .column-status { 
-	width: 10%;
+    width: 10%;
 }
 
 .column-actions { 
-	width: 10%;
+    width: 10%;
 }
 
 .column-remove { 
-	width: 5%; 
+    width: 5%; 
 }
 
 .column-course .course-thumbnail img{
-	width:100%;
-	height:auto;
+    width:100%;
+    height:auto;
 }
 
 .courses-state{
@@ -177,7 +181,10 @@ a .remove-btn{
     font-weight: bold;
 }
 
-.courses-state .live.on,
-.courses-state .draft.on{
+.courses-state .live.on{
     color:#6bbb1a;
+}
+
+.courses-state .draft.on{
+    color:red;
 }

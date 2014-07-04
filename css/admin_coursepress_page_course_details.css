@@ -1382,14 +1382,24 @@ input[type=text].course_video_url{
     padding-bottom:5px;    
 }
 
-a.delete_module_link, a.remove_module_link {
-    position: absolute;
-    right: 22px;
-    cursor: pointer;
-    z-index:9999;
-    color:#ccc;
+a.delete_module_link:hover,
+a.delete_module_link:remove{
     text-decoration: none;
-    margin-top: 0px;
+}
+
+.module-content a.delete_module_link, 
+.module-content a.remove_module_link {
+    cursor: pointer;
+    color:#e96653;
+    text-decoration: none;
+    margin-top: 10px;
+    display: block;
+    font-weight: 600;
+}
+
+.module-holder-section_break_module .module-content a.delete_module_link,
+.module-holder-section_break_module .module-content a.remove_module_link{
+    margin-top: 1px;
 }
 
 .module-holder-page_break_module .h3-label-right, 
@@ -2471,9 +2481,12 @@ li.disabled_unit{
     font-weight: bold;
 }
 
-.course-state .live.on,
-.course-state .draft.on{
+.course-state .live.on{
     color:#6bbb1a;
+}
+
+.course-state .draft.on{
+    color: red;
 }
 
 /* ---- */

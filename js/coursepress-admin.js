@@ -419,6 +419,35 @@ jQuery(function() {
         dateFormat: 'yy-mm-dd'
     });
 });
+
+ function update_sortable_module_indexes() {
+
+        jQuery('.module_order').each(function(i, obj) {
+            jQuery(this).val(i + 1);
+        });
+        jQuery("input[name*='radio_answers']").each(function(i, obj) {
+            jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+        jQuery("input[name*='radio_check']").each(function(i, obj) {
+            jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+        jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
+            jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+        jQuery("input[name*='checkbox_check']").each(function(i, obj) {
+            jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+        
+        var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+        var elements_count = jQuery('#unit-page-' + current_page + ' .modules_accordion .module-holder-title').length;
+
+        if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && elements_count == 1)) {
+            jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').show();
+        } else {
+            jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
+        }
+    }
+    
 function withdraw_student_confirmed() {
     return confirm(coursepress.withdraw_student_alert);
 }
@@ -738,25 +767,6 @@ jQuery(document).ready(function() {
 //e.stopPropagation();
     })
     /*} );*/
-    function update_sortable_module_indexes() {
-
-        jQuery('.module_order').each(function(i, obj) {
-            jQuery(this).val(i + 1);
-        });
-        jQuery("input[name*='radio_answers']").each(function(i, obj) {
-            jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='radio_check']").each(function(i, obj) {
-            jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
-            jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='checkbox_check']").each(function(i, obj) {
-            jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-    }
-
 
 
     jQuery('#open_ended_enrollment').change(function() {

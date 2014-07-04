@@ -161,8 +161,9 @@ class text_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <label class="bold-label"><?php _e('Element Title', 'cp');
-            $this->time_estimation($data);
+                <label class="bold-label"><?php
+                    _e('Element Title', 'cp');
+                    $this->time_estimation($data);
                     ?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
@@ -239,15 +240,15 @@ class text_input_module extends Unit_Module {
                     </label>
                     <input type="text" class="placeholder_text" name="<?php echo $this->name; ?>_placeholder_text[]" value="<?php echo esc_attr(isset($data->placeholder_text) ? $data->placeholder_text : '' ); ?>" />
                 </div>
-
+                <?php
+                if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                }
+                ?>
             </div>
-            <?php
-            if (isset($data->ID)) {
-                parent::get_module_delete_link($data->ID);
-            } else {
-                parent::get_module_remove_link();
-            }
-            ?>
+
         </div>
 
         <?php

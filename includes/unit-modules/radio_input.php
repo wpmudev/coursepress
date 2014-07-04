@@ -165,7 +165,7 @@ class radio_input_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-        <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                                <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
                             </div>
                         </div>
                     </label>
@@ -177,7 +177,7 @@ class radio_input_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-        <?php _e('Student will need to provide a response on this question in order to continue the unit.', 'cp'); ?>
+                                <?php _e('Student will need to provide a response on this question in order to continue the unit.', 'cp'); ?>
                             </div>
                         </div>
                     </label>
@@ -189,7 +189,7 @@ class radio_input_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-        <?php _e('If checked, this question will be graded. If not checked, the response can still be viewed within the Assessment section but listed as Non-assessable.', 'cp'); ?>
+                                <?php _e('If checked, this question will be graded. If not checked, the response can still be viewed within the Assessment section but listed as Non-assessable.', 'cp'); ?>
                             </div>
                         </div>
                     </label>
@@ -217,7 +217,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="90%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                  ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                   ?></div>
                         </th>
                         <th width="10%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
@@ -248,13 +248,13 @@ class radio_input_module extends Unit_Module {
                                         <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr(( isset($answer) ? $answer : '')); ?>' />
 
                                     </td>
-                <?php if ($answer_cnt >= 2) { ?>
+                                    <?php if ($answer_cnt >= 2) { ?>
                                         <td width="10%">    
                                             <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
                                         </td>
                                     <?php } else { ?>
                                         <td width="10%">&nbsp;</td>
-                                <?php } ?>
+                                    <?php } ?>
                                 </tr>
                                 <?php
                                 $answer_cnt++;
@@ -286,15 +286,15 @@ class radio_input_module extends Unit_Module {
                     <a class="radio_new_link button-secondary">Add New</a>
 
                 </div>
-
+                <?php
+                if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                }
+                ?>
             </div>
-            <?php
-            if (isset($data->ID)) {
-                parent::get_module_delete_link($data->ID);
-            } else {
-                parent::get_module_remove_link();
-            }
-            ?>
+
         </div>
 
 

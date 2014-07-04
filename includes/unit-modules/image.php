@@ -73,7 +73,7 @@ class image_module extends Unit_Module {
                         <div class="tooltip-before"></div>
                         <div class="tooltip-button">&times;</div>
                         <div class="tooltip-content">
-        <?php _e('The title is used to identify this element. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                            <?php _e('The title is used to identify this element. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
                         </div>
                     </div>
                 </label>
@@ -84,15 +84,15 @@ class image_module extends Unit_Module {
                         <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>
                 </div>
-
+                <?php
+                if (isset($data->ID)) {
+                    parent::get_module_delete_link($data->ID);
+                } else {
+                    parent::get_module_remove_link();
+                }
+                ?>
             </div>
-            <?php
-            if (isset($data->ID)) {
-                parent::get_module_delete_link($data->ID);
-            } else {
-                parent::get_module_remove_link();
-            }
-            ?>
+
         </div>
 
         <?php
