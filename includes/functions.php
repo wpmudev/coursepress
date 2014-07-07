@@ -874,11 +874,32 @@ if ( !function_exists( 'coursepress_register_module' ) ) {
         } else {
             return false;
         }
-
-        //print_r( $coursepress_modules_ordered );
     }
 
 }
+
+if ( !function_exists( 'coursepress_register_front_page_module' ) ) {
+
+    function coursepress_register_front_page_module( $module_name, $class_name, $section ) {
+        global $coursepress_front_page_modules, $coursepress_front_page_modules_labels, $coursepress_front_page_modules_descriptions, $coursepress_front_page_modules_ordered;
+        
+        if ( !is_array( $coursepress_front_page_modules ) ) {
+            $coursepress_front_page_modules = array();
+        }
+
+        if ( class_exists( $class_name ) ) {
+            $class = new $class_name();
+            $coursepress_front_page_modules_labels[$module_name] = $class->label;
+            $coursepress_front_page_modules_descriptions[$module_name] = $class->description;
+            $coursepress_front_page_modules[$section][$module_name] = $class_name;
+            $coursepress_front_page_modules_ordered[$section][$class->order] = $class_name;
+        } else {
+            return false;
+        }
+    }
+
+}
+
 
 if ( !function_exists( 'cp_write_log' ) ) {
 

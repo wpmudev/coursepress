@@ -13,7 +13,7 @@ class video_module extends Unit_Module {
         $this->on_create();
     }
 
-    function audio_module() {
+    function video_module() {
         $this->__construct();
     }
 
