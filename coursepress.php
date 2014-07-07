@@ -1118,6 +1118,9 @@ if (!class_exists('CoursePress')) {
             add_submenu_page('courses', __('Discussions', 'cp'), __('Discussions', 'cp'), 'coursepress_discussions_cap', 'discussions', array(&$this, 'coursepress_discussions_admin'));
             do_action('coursepress_add_menu_items_after_course_discussions');
 
+            add_submenu_page('courses', __('Front Page Builder', 'cp'), __('Front Page Builder', 'cp'), 'manage_options', 'front_page_builder', array(&$this, 'front_page_builder_admin'));
+            do_action('coursepress_add_menu_items_after_settings');
+
             add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array(&$this, 'coursepress_settings_admin'));
             do_action('coursepress_add_menu_items_after_settings');
 
@@ -1346,7 +1349,7 @@ if (!class_exists('CoursePress')) {
             if (isset($_POST['course_state']) && isset($_POST['course_id']) && current_user_can('manage_options')) {
 
                 if ($_POST['course_id']) {
-                    $course = new Course((int)$_POST['course_id']);
+                    $course = new Course((int) $_POST['course_id']);
                     $course->change_status($_POST['course_state']);
                 }
             }
@@ -1854,6 +1857,10 @@ if (!class_exists('CoursePress')) {
             include_once( $this->plugin_dir . 'includes/admin-pages/discussions.php' );
         }
 
+        function front_page_builder_admin() {
+            include_once( $this->plugin_dir . 'includes/admin-pages/front-page-builder.php' );
+        }
+
         function coursepress_reports_admin() {
             include_once( $this->plugin_dir . 'includes/admin-pages/reports.php' );
         }
@@ -1999,6 +2006,23 @@ if (!class_exists('CoursePress')) {
 
             $this->add_jquery_ui();
 
+
+            if ($page == 'front_page_builder') {
+                wp_enqueue_style('courses', $this->plugin_url . 'css/admin_coursepress_page_courses.css', array(), $this->version);
+                wp_enqueue_style('courses_responsive', $this->plugin_url . 'css/admin_coursepress_page_courses_responsive.css', array(), $this->version);
+
+                wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
+                wp_enqueue_style('cp_settings_responsive', $this->plugin_url . 'css/settings_responsive.css', array(), $this->version);
+                wp_enqueue_style('cp_tooltips', $this->plugin_url . 'css/tooltips.css', array(), $this->version);
+                wp_enqueue_script('cp-plugins', $this->plugin_url . 'js/plugins.js', array('jquery'), $this->version);
+                wp_enqueue_script('cp-tooltips', $this->plugin_url . 'js/tooltips.js', array('jquery'), $this->version);
+                wp_enqueue_script('cp-settings', $this->plugin_url . 'js/settings.js', array('jquery', 'jquery-ui', 'jquery-ui-spinner'), $this->version);
+                wp_enqueue_script('cp-chosen-config', $this->plugin_url . 'js/chosen-config.js', array('cp-settings'), $this->version, true);
+
+                wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');
+                wp_enqueue_style('admin_coursepress_page_course_details', $this->plugin_url . 'css/admin_coursepress_page_course_details.css', array(), $this->version);
+                wp_enqueue_style('admin_coursepress_page_course_details_responsive', $this->plugin_url . 'css/admin_coursepress_page_course_details_responsive.css', array(), $this->version);
+            }
 
             if ($page == 'course_details' || $page == 'settings') {
                 wp_enqueue_style('cp_settings', $this->plugin_url . 'css/settings.css', array(), $this->version);
