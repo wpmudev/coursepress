@@ -52,7 +52,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_language', array( &$this, 'course_language' ) );			
 			add_shortcode( 'course_category', array( &$this, 'course_category' ) );
 			add_shortcode( 'course_list_image', array( &$this, 'course_list_image' ) );						
-			add_shortcode( 'course_featured_video', array( &$this, 'course_featured_video' ) );					
+			add_shortcode( 'course_featured_video', array( &$this, 'course_featured_video' ) );
+			add_shortcode( 'course_join_button', array( &$this, 'course_join_button' ) );				
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 
 
@@ -93,6 +94,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			
 			foreach( $sections as $section )
 			{
+				$section = strtolower( $section );
 				// [course_title]
 				if ( 'title' == trim( $section ) && 'yes' == $show_title ) {
 					$content .= do_shortcode('[course_title title_tag="h3"]');
@@ -177,6 +179,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( 'video' == trim( $section ) ) {
 					$content .= do_shortcode('[course_featured_video course="' . $encoded . '"]');
 				}												
+				
+				// [course_join_button]
+				if ( 'button' == trim( $section ) ) {
+					$content .= do_shortcode('[course_join_button course="' . $encoded . '"]');
+				}
 				
 			}
 			
@@ -345,7 +352,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Course Dates', 'cp' ),				
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
-				'no_date_text'    => __( 'No End Date', 'cp' ),								
+				'no_date_text'    => __( 'No End Date', 'cp' ),
+				'alt_display_text'=> __( 'Open-ended', 'cp' ),
+				'show_alt_display'=> false,
             ), $atts, 'course_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -355,13 +364,18 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$end_date = get_post_meta( $course_id, 'course_end_date', true );
 			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;																			
 			$end_output = $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $end_date ) ) );
+			$show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;			
 			ob_start();
 			?>
 				<div class="course-dates course-dates-<?php echo $course_id; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
-				<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?>
+				<?php if ( ( 'yes' == strtolower( $show_alt_display ) || $show_alt_display ) && $open_ended ) :?>
+					<?php echo $alt_display_text; ?>
+				<?php else: ?>	
+					<?php echo sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?>
+				<?php endif;?>
 				</div>
 			<?php
 			$content = ob_get_clean();					
@@ -467,6 +481,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),
+				'alt_display_text'=> __( 'Open-ended', 'cp' ),
+				'show_alt_display'=> false,				
             ), $atts, 'course_enrollment_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -475,13 +491,19 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$start_date = get_post_meta( $course_id, 'enrollment_start_date', true );	
 			$end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
 			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
+			$show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
 			ob_start();
 			?>
 				<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
-				<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+				<?php if ( ( 'yes' == strtolower( $show_alt_display ) || $show_alt_display ) && $open_ended ) :?>
+					<?php echo $alt_display_text; ?>
+				<?php else: ?>	
+					<?php echo $open_ended ? $no_date_text : sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+				<?php endif;?>
+				
 			</div>
 			<?php
 			$content = ob_get_clean();					
@@ -620,12 +642,14 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$language = get_post_meta( $course_id, 'course_language', true );
 			ob_start();
 			?>
-				<div class="course-language course-language-<?php echo $course_id; ?>">
-				<?php if ( ! empty ( $label ) ) :?>
-					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
-				<?php endif;?>
-				<?php echo $language; ?>
-				</div>
+				<?php if ( isset( $language ) ) :?>	
+					<div class="course-language course-language-<?php echo $course_id; ?>">
+					<?php if ( ! empty ( $label ) ) :?>
+						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
+					<?php endif;?>
+					<?php echo $language; ?>
+					</div>
+				<?php endif;?>								
 			<?php
 			$content = ob_get_clean();		
 			// Return the html in the buffer.
@@ -831,6 +855,83 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Return the html in the buffer.
 			return $content;
 		}
+		
+		/**
+		 * Shows the course join button.
+		 *
+		 * @since 1.0.0
+		 */
+		// function course_join_button( $atts ) {
+		//             extract( shortcode_atts( array(
+		//                 'course_id'       => get_the_ID(),
+		// 		'course'          => false,
+		//             ), $atts, 'course_join_button' ) );
+		//
+		// 	// Saves some overhead by not loading the post again if we don't need to.
+		// 	$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+		// 	cp_write_log( $course->get_number_of_students() );
+		// 	cp_write_log( $course->is_populated() );
+		// 	// $course = new Course( $course_id );
+		//
+		// 	$course->enroll_type = get_post_meta( $course_id, 'enroll_type', true );
+		// 	$course->course_start_date = get_post_meta( $course_id, 'course_start_date', true );
+		// 	$course->course_end_date = get_post_meta( $course_id, 'course_end_date', true );
+		// 	$course->enrollment_start_date = get_post_meta( $course_id, 'enrollment_start_date', true );
+		// 	$course->enrollment_end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
+		// 	$course->open_ended_course = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
+		// 	$course->open_ended_enrollment = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;
+		// 	$course->prerequisite = get_post_meta( $course_id, 'prerequisite', true );
+		//
+		//
+		//             $button = '<form name="enrollment-process" method="post" action="' . do_shortcode( "[courses_urls url='enrollment-process']" ) . '">';
+		//
+		//             if ( is_user_logged_in() ) {
+		//
+		// 		$student = new Student( get_current_user_id() );
+		//
+		// 		if ( ! $student->user_enrolled_in_course( $course_id ) ) {
+		// 			// Course is not full
+		// 			if ( ! $course->is_populated() ) {
+		// 				if ( $course->enroll_type != 'manually' ) {
+		// 					// Is course finished?
+		// 	                if ( strtotime( $course->course_end_date ) <= time() && ! $course->open_ended_enrollment ) {//Course is no longer active
+		// 	                    $button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
+		// 	                } else {
+		// 	                    if ( ( $course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime( $course->enrollment_start_date ) <= time() && strtotime( $course->enrollment_end_date ) >= time() ) || $course->open_ended_enrollment ) {
+		// 	                        if ( ( $course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course( $course->prerequisite ) ) || $course->init_enroll_type !== 'prerequisite' ) {
+		// 	                            $course->button .= '<input type="submit" class="apply-button" value="' . __( 'Enroll Now', 'cp' ) . '" />';
+		// 	                            $course->button .= '<div class="passcode-box">' . do_shortcode( '[course_details field="passcode_input"]' ) . '</div>';
+		// 	                        } else {
+		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Prerequisite Required', 'cp' ) . '</span>';
+		// 	                        }
+		// 	                    } else {
+		// 	                        if ( strtotime( $course->enrollment_end_date ) <= time() ) {
+		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Not available any more', 'cp' ) . '</span>';
+		// 	                        } else {
+		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Not available yet', 'cp' ) . '</span>';
+		// 	                        }
+		// 	                    }
+		//
+		//
+		// 	                }
+		// 				} else {
+		// 	                //don't show any button because public enrollments are disabled with manuall enroll type
+		// 				}
+		// 			} else {
+		// 				$button .= '<span class="apply-button-finished">' . __( 'Course Full', 'cp' ) . '</span>';
+		// 			}
+		// 		// Not enrolled in Course
+		// 		} else {
+		//
+		// 		}
+		//
+		//
+		// 	} else {
+		//
+		// 	}
+		//
+		// 	return $button;
+		// }
 		
 		
 		/**

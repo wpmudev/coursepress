@@ -50,32 +50,15 @@ $course_language = $course->details->course_language;
         <div class="entry-content-excerpt <?php echo (!isset($course->details->course_video_url) || $course->details->course_video_url == '' ? 'entry-content-excerpt-right' : '' ); ?>">
             <?php //the_excerpt(); ?>
             <div class="course-box">
-                <span class="strong"><?php _e('Course Dates: ', 'cp'); ?></span><?php
-                if (do_shortcode('[course_details field="course_start_date"]') == 'Open-ended') {
-                    _e('Open-ended', 'cp');
-                } else {
-                    echo do_shortcode('[course_details field="course_start_date"]') . ' - ' . do_shortcode('[course_details field="course_end_date"]');
-                }
-                ?><br />
-                <span class="strong"><?php _e('Enrollment Dates: ', 'cp'); ?></span><?php
-                if (do_shortcode('[course_details field="enrollment_start_date"]') == 'Open-ended') {
-                    _e('Open-ended', 'cp');
-                } else {
-                    echo do_shortcode('[course_details field="enrollment_start_date"]') . ' - ' . do_shortcode('[course_details field="enrollment_end_date"]');
-                }
-                ?><br />
-                <span class="strong"><?php _e('Class Size: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="class_size"]'); ?><br />
-                <span class="strong"><?php _e('Who can Enroll: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="enroll_type"]'); ?><br />
-                <?php if (isset($course_language) && $course_language !== '') { ?>
-                    <span class="strong"><?php _e('Language: ', 'cp'); ?></span><span><?php echo $course_language; ?></span><br />
-                <?php } ?>
-                <span class="strong"><?php _e('Price: ', 'cp'); ?></span><?php echo do_shortcode('[course_details field="price"]'); ?>
+                <?php echo do_shortcode('[course_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
+				<?php echo do_shortcode('[course_enrollment_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
+				<?php echo do_shortcode('[course_class_size]'); ?>
+				<?php echo do_shortcode('[course_enrollment_type label="Who can Enroll"]'); ?>
+				<?php echo do_shortcode('[course_language]'); ?>				
+				<?php echo do_shortcode('[course_cost]'); ?>	
+											
             </div><!--course-box-->
             <div class="quick-course-info">
-                <!--<span class="course-time"><?php echo do_shortcode('[course_details field="course_start_date"]'); ?></span>-->
-                <?php /* if ( isset( $course_language ) && $course_language !== '' ) { ?>
-                  <span class="course-lang"><?php echo $course_language; ?></span>
-                  <?php } */ ?>
                 <?php echo do_shortcode('[course_details field="button"]'); ?>
             </div>
         </div>

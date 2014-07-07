@@ -2113,6 +2113,12 @@ label.bold-label{
     display:none;
 }
 
+.course-section .course-form input[type="checkbox"] {
+    display: inline-block;
+}
+
+
+
 #invite-message {
     /*    position: absolute;
         bottom: 5px;

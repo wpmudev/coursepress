@@ -354,8 +354,9 @@ if (!class_exists('Course')) {
                             }
                         }
 
-
-                        $this->update_mp_product($post_id);
+						if (isset($_POST['meta_paid_course'])) {
+	                        $this->update_mp_product($post_id);	
+						}
 
                         return $post_id;
                     }
