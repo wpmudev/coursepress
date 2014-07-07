@@ -413,7 +413,11 @@ jQuery(document).ready(coursepress_modules_ready);
 
 jQuery(function() {
     jQuery(".spinners").spinner({
-        min: 0
+        min: 0,
+		stop: function( event, ui ) {
+			// Trigger change event.
+			jQuery(this).change();
+		},
     });
     jQuery('.dateinput').datepicker({
         dateFormat: 'yy-mm-dd'

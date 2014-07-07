@@ -2723,7 +2723,7 @@ label.error:before {
 
 .mp-wrap .mp-tab-link {
     display: block;
-    padding: 8px 15px;
+    padding: 8px 30px 8px 10px;
     text-decoration: none;
     min-height: 18px;/*25*/
 }

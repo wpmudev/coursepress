@@ -254,6 +254,10 @@ function cp_editor_key_down(ed, page, tab) {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
             $('#' + ed.id).parents('.course-section').addClass('dirty');
+			if ($('#' + ed.id).parents('.course-section.step').children('.status.saved')) {
+				$('#' + ed.id).parents('.course-section.step').find('input.button.update').css('display','inline-block');
+			}
+			
             active_editor = ed.id;
 
         }
@@ -322,6 +326,8 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
         } else {
             $(statusElement).addClass('saved');
         }
+		
+		$('.course-section.step input.button.update').css('display', 'none');
     } else {
         $(statusElement).removeClass('progress');
         $(statusElement).addClass('invalid');
@@ -654,11 +660,18 @@ jQuery(document).ready(function($) {
     });
 
 
-    /** Done course setupp. */
+    /** Done course setup. */
     $('.course-section.step input.done').click(function(e) {
         var step = 6;
         courseAutoUpdate(step, 'unit_setup');
     });
+
+    /** Inline step update. */
+    $('.course-section.step input.update').click(function(e) {
+		var course_section = $(this).parents('.course-section.step')[0];
+        var step = $(course_section).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
+        courseAutoUpdate(step);
+	});
 
     /** Proceed to next step. */
     $('.course-section.step input.next').click(function(e) {
@@ -868,10 +881,21 @@ jQuery(document).ready(function($) {
     });
 
 
+	$('.course-form input').keypress(function(event) {
+		$( this ).change();
+	});
+	$('.course-form textarea').keypress(function(event) {
+		$( this ).change();
+	});
+
     /** Mark "dirty" content */
     $('.course-form input').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
+
+			if ($(this).parents('.course-section.step').children('.status.saved')) {
+				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
+			}
         }
 
         if ($(this).attr('type') == 'checkbox') {
@@ -887,14 +911,22 @@ jQuery(document).ready(function($) {
     $('.course-form textarea').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
+			if ($(this).parents('.course-section.step').children('.status.saved')) {
+				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
+			}			
         }
     });
     $('.course-form select').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
+			if ($(this).parents('.course-section.step').children('.status.saved')) {
+				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
+			}
+			
         }
     });
-
+	
+	
 
 });
 

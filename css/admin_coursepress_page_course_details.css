@@ -2167,6 +2167,11 @@ label.bold-label{
     margin-left: -17px;
 }
 
+
+.course-section.step .course-form input.update {
+	display: none;
+}
+
 .unit_page_title input{
     width: 99%;
     margin-bottom: 20px;
@@ -2577,7 +2582,7 @@ li.disabled_unit{
     height: 8px;
     display:block;
     position: absolute;
-    top: 12px;
+    top: 40%;
     right: 20px;
 }
 

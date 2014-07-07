@@ -349,6 +349,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
 
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units next" value="<?php _e('Next', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -659,6 +660,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                         <input type="button" class="button button-units next" value="<?php _e('Next', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
                                     </div>
                                 </div>
                             </div>
@@ -748,6 +750,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                         <input type="button" class="button button-units next" value="<?php _e('Next', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
                                     </div>
                                 </div>
                             </div>
@@ -820,6 +823,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                         <input type="button" class="button button-units next" value="<?php _e('Next', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
                                     </div>
                                 </div>
                             </div>
@@ -869,6 +873,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                         <input type="button" class="button button-units next" value="<?php _e('Next', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
                                     </div>
                                 </div>
                             </div>
@@ -1028,6 +1033,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <?php // END ///////////////////////////////             ?>
                                     <div class="course-step-buttons">
                                         <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
+										<input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
                                         <input type="button" class="button button-units done" value="<?php _e('Done', 'cp'); ?>" />
                                     </div>
                                 </div>
