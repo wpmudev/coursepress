@@ -508,12 +508,27 @@ function step_6_update(attr) {
     var theStatus = attr['status'];
     var initialVars = attr['initialVars'];
 
+	var passcode_val = false;
+	var prerequisite_val = false;
+
+	switch( $('[name=meta_enroll_type]').val() ) {		
+		case 'passcode':
+			passcode_val = $('[name=meta_passcode]').val();
+			break;
+		case 'prerequisite':
+			prerequisite_val = $('[name=meta_prerequisite]').val();
+			break;
+	}
+
     return {
         // Don't remove
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         // Alter as required
+		meta_enroll_type: $('[name=meta_enroll_type]').val(),
+		meta_prerequisite: prerequisite_val,
+		meta_passcode: passcode_val,
         meta_paid_course: $('[name=meta_paid_course]').is(':checked') ? 'on' : 'off',
         meta_auto_sku: $('[name=meta_auto_sku]').is(':checked') ? 'on' : 'off',
         mp_sku: $('[name=mp_sku]').val(),

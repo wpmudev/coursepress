@@ -861,77 +861,145 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 *
 		 * @since 1.0.0
 		 */
-		// function course_join_button( $atts ) {
-		//             extract( shortcode_atts( array(
-		//                 'course_id'       => get_the_ID(),
-		// 		'course'          => false,
-		//             ), $atts, 'course_join_button' ) );
-		//
-		// 	// Saves some overhead by not loading the post again if we don't need to.
-		// 	$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
-		// 	cp_write_log( $course->get_number_of_students() );
-		// 	cp_write_log( $course->is_populated() );
-		// 	// $course = new Course( $course_id );
-		//
-		// 	$course->enroll_type = get_post_meta( $course_id, 'enroll_type', true );
-		// 	$course->course_start_date = get_post_meta( $course_id, 'course_start_date', true );
-		// 	$course->course_end_date = get_post_meta( $course_id, 'course_end_date', true );
-		// 	$course->enrollment_start_date = get_post_meta( $course_id, 'enrollment_start_date', true );
-		// 	$course->enrollment_end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
-		// 	$course->open_ended_course = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
-		// 	$course->open_ended_enrollment = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;
-		// 	$course->prerequisite = get_post_meta( $course_id, 'prerequisite', true );
-		//
-		//
-		//             $button = '<form name="enrollment-process" method="post" action="' . do_shortcode( "[courses_urls url='enrollment-process']" ) . '">';
-		//
-		//             if ( is_user_logged_in() ) {
-		//
-		// 		$student = new Student( get_current_user_id() );
-		//
-		// 		if ( ! $student->user_enrolled_in_course( $course_id ) ) {
-		// 			// Course is not full
-		// 			if ( ! $course->is_populated() ) {
-		// 				if ( $course->enroll_type != 'manually' ) {
-		// 					// Is course finished?
-		// 	                if ( strtotime( $course->course_end_date ) <= time() && ! $course->open_ended_enrollment ) {//Course is no longer active
-		// 	                    $button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
-		// 	                } else {
-		// 	                    if ( ( $course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime( $course->enrollment_start_date ) <= time() && strtotime( $course->enrollment_end_date ) >= time() ) || $course->open_ended_enrollment ) {
-		// 	                        if ( ( $course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course( $course->prerequisite ) ) || $course->init_enroll_type !== 'prerequisite' ) {
-		// 	                            $course->button .= '<input type="submit" class="apply-button" value="' . __( 'Enroll Now', 'cp' ) . '" />';
-		// 	                            $course->button .= '<div class="passcode-box">' . do_shortcode( '[course_details field="passcode_input"]' ) . '</div>';
-		// 	                        } else {
-		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Prerequisite Required', 'cp' ) . '</span>';
-		// 	                        }
-		// 	                    } else {
-		// 	                        if ( strtotime( $course->enrollment_end_date ) <= time() ) {
-		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Not available any more', 'cp' ) . '</span>';
-		// 	                        } else {
-		// 	                            $course->button .= '<span class="apply-button-finished">' . __( 'Not available yet', 'cp' ) . '</span>';
-		// 	                        }
-		// 	                    }
-		//
-		//
-		// 	                }
-		// 				} else {
-		// 	                //don't show any button because public enrollments are disabled with manuall enroll type
-		// 				}
-		// 			} else {
-		// 				$button .= '<span class="apply-button-finished">' . __( 'Course Full', 'cp' ) . '</span>';
-		// 			}
-		// 		// Not enrolled in Course
-		// 		} else {
-		//
-		// 		}
-		//
-		//
-		// 	} else {
-		//
-		// 	}
-		//
-		// 	return $button;
-		// }
+		function course_join_button( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'course_full_text'=> __( 'Course Full', 'cp' ),
+				'course_expired_text' => __( 'Not available anymore', 'cp' ),
+				'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
+				'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
+				'enroll_text' => __( 'Enroll now.', 'cp' ),
+				'signup_text' => __( 'Signup!', 'cp' ),
+				'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
+				'passcode_text' => __( 'Passcode Required', 'cp' ),
+				'not_started_text' => __( 'Not yet available', 'cp' ),
+				'access_text' => __( 'Go to Class', 'cp' ),
+            ), $atts, 'course_join_button' ) );
+
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+			
+			global $enrollment_process_url, $signup_url;
+
+			$course->enroll_type = get_post_meta( $course_id, 'enroll_type', true );
+			$course->course_start_date = get_post_meta( $course_id, 'course_start_date', true );
+			$course->course_end_date = get_post_meta( $course_id, 'course_end_date', true );
+			$course->enrollment_start_date = get_post_meta( $course_id, 'enrollment_start_date', true );
+			$course->enrollment_end_date = get_post_meta( $course_id, 'enrollment_end_date', true );
+			$course->open_ended_course = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
+			$course->open_ended_enrollment = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;
+			$course->prerequisite = get_post_meta( $course_id, 'prerequisite', true );
+			
+			$course_active = true; // NEED CHECK HERE
+			
+			$course_started = strtotime( $course->course_start_date ) >= time() ? true : false;
+			$enrollment_started = strtotime( $course->enrollment_start_date ) >= time() ? true : false;
+			$course_expired = strtotime( $course->course_end_date ) <= time() ? true : false;
+			$enrollment_expired = strtotime( $course->enrollment_end_date ) <= time() ? true : false;
+			$course_full = $course->is_populated();
+
+            $button = '<form name="enrollment-process" method="post" action="' . $enrollment_process_url . '">';
+			
+			// User is not logged in, so we need to see if course is ready for signup or not.
+			if ( ! is_user_logged_in() ) {
+				
+				if( 'manually' != $course->enroll_type ) {
+					if ( $course_full ) {
+						// "COURSE FULL"
+						$button .= '<span class="apply-button apply-button-full">' . $course_full_text . '</span>';
+					} else {
+						
+						// Course expired
+						if( $course_expired && ! $course->open_ended_course ) {
+							// "COURSE FINISHED"
+							$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+							
+						// Course hasn't expired, but its not yet available for enrollments (closed)
+						} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
+							// "ENROLLMENT NOT YET AVAILABLE/CLOSED"
+							$button .= '<span class="apply-button apply-button-enrollment-closed">' . $enrollment_closed_text . '</span>';
+							
+						// Course is available, but enrollments have expired
+						} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
+							// "ENROLLMENTS ARE FINISHED"
+							$button .= '<span class="apply-button apply-button-enrollment-finished">' . $enrollment_finished_text . '</span>';
+
+						// Course hasn't expired and enrollments are open... Lets sign up!
+						} else {
+							// "SIGN UP NOW"
+		                    $button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . $signup_text . '</a>';
+						}
+					}
+				} else {
+					// nothing to do here when its a manual enrollment
+				}
+			
+			// User is logged in, if its a student, lets see if they can access their course.	
+			} else {
+				
+				// Assume user is a student
+				$student = new Student( get_current_user_id() );
+				
+				// If the student is not enrolled in the course, lets get them enrolled!
+				if( ! $student->user_enrolled_in_course( $course_id ) ) {
+					
+					if ( $course_full ) {
+						// "COURSE FULL"
+						$button .= '<span class="apply-button apply-button-full">' . $course_full_text . '</span>';
+				    // We've got room, but make sure its not expired	
+					} elseif ( $course_expired && ! $course->open_ended_course ) {
+						// "COURSE FINISHED"
+						$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+					// Course hasn't expired, but its not yet available for enrollments (closed)
+					} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
+						// "ENROLLMENT NOT YET AVAILABLE"
+						$button .= '<span class="apply-button apply-button-enrollment-closed">' . $enrollment_closed_text . '</span>';
+					// Course is available, but enrollments have expired
+					} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
+						// "ENROLLMENTS ARE FINISHED"
+						$button .= '<span class="apply-button apply-button-enrollment-finished">' . $enrollment_finished_text . '</span>';
+					// Enrollments are open, but requires a prerequisite
+					} elseif ( 'prerequisite' == $course->enroll_type ) {
+						// PREREQUISITE CODE HERE
+						$button .= '<span class="apply-button apply-button-prerequisite">' . $prerequisite_text . '</span>';
+					// No prerequisites, but requires a passcode
+					} elseif ( 'passcode' == $course->enroll_type ) {
+						// PASSCODE CODE
+						$button .= '<div class="passcode-box"><label>' . $passcode_text . ' <input type="password" name="passcode" /></label></div>';
+						$button .= '<input type="submit" class="apply-button" value="' . $enroll_text . '" />';
+					// No passcodes, so lets join.
+					} else {
+						// ENROLL
+						$button .= '<input type="submit" class="apply-button" value="' . $enroll_text . '" />';
+					}
+					
+				// Student is enrolled, but lets see if they can still access it.	
+				} else {
+					
+					// The course is finished.
+					if ( $course_expired && ! $course->open_ended_course ) {
+						// "COURSE FINISHED"
+						$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+					// Course hasn't expired, but is not yet available
+					} elseif ( ! $course_started && ! $course->open_ended_course ) {
+						// "NOT YET AVAILABLE"
+						$button .= '<span class="apply-button apply-button-not-started">' . $not_started_text . '</span>';
+					// Course is available, so lets go to class
+					} else {
+						// "GO TO CLASS"
+						$button .= '<a href="' . get_permalink( $course->ID ) . 'units/" class="apply-button-enrolled">' . $access_text . '</a>';
+					}
+					
+				}
+			}
+
+			$button .= wp_nonce_field( 'enrollment_process' );
+			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
+			$button .= '</form>';
+		
+			return $button;
+		}
 		
 		
 		/**

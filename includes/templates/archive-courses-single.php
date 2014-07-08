@@ -27,9 +27,9 @@ if ( $course_thumbnail ) {
 </div>
 
 <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
-    <span class="course-time"><?php echo do_shortcode( '[course_details field="course_start_date"]' ); ?></span>
+    <span class="course-time"><?php echo do_shortcode( '[course_start label=""]' ); ?></span>
     <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
-        <span class="course-lang"><?php echo $course_language; ?></span>
+        <span class="course-lang"><?php echo do_shortcode( '[course_language label=""]' ); ?></span>
     <?php } ?>
     <a class="go-to-course-button" href="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></a>
 </div>

@@ -48,8 +48,7 @@
                             <span class="description"></span>
                         </td>
                     </tr>
-
-
+				
                     <tr>
                         <th scope="row"><?php _e( 'Course Details', 'cp' ) ?></th>
                         <td>
@@ -124,6 +123,32 @@
                             </ul>
                         </td>
                     </tr>
+
+                    <tr>
+                        <th colspan="2" scope="row"><?php _e( 'Course Information Shortcodes', 'cp' ) ?><hr /></th>
+					</tr>
+					<tr>
+						<td><?php _e( 'Course Title', 'cp' ) ?></td>
+                        <td>
+                            <strong>[course_title]</strong> -
+                            <span class="description"><?php _e( 'Display list of the Units for the course ( Units Archive )', 'cp' ) ?></span>
+                            <p><strong><?php _e( 'Required Attributes:', 'cp' ) ?></strong></p>
+                            <ul class="cp-shortcode-options">
+                                <li><?php _e( '"unit_id" - ID of the Unit', 'cp' ) ?></li>
+                            </ul>
+                            
+                            <p><strong><?php _e( 'Optional Attribute:', 'cp' ) ?></strong></p>
+                            <ul class="cp-shortcode-options">
+                                <li><?php _e( '"field" - post type field we want to show ( ID, post_author, post_date, post_content, post_title, post_status, post_name, post_modified etc. )', 'cp' ) ?></li>
+                            </ul>
+
+                            <ul class="cp-shortcode-options">
+                                <li><?php _e( 'Example:', 'cp' ) ?> <em>[course_unit_details unit_id="5" field="post_title"]</em></li>
+                            </ul>
+                        </td>
+                    </tr>
+					
+
 
                 </table>
             </div>

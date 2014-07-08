@@ -1231,7 +1231,21 @@ a.rsswidget{
 
 /* SPAN COURSE STATUS INDICATION BUTTONS */
 
-.apply-button-finished, .apply-button-pending, .apply-button, .apply-button-enrolled, a.apply-button-enrolled, #student-settings input[type="submit"].apply-button-enrolled, #modules_form input[type="submit"].apply-button-enrolled, #contact_form input[type="submit"].apply-button-enrolled, .apply-box input[type="submit"].apply-button, .apply-box a.apply-button{
+.apply-button-finished, 
+.apply-button-full,
+.apply-button-enrollment-closed,
+.apply-button-enrollment-finished,
+.apply-button-prerequisite,
+.apply-button-not-started,
+.apply-button-pending, 
+.apply-button, 
+.apply-button-enrolled, 
+a.apply-button-enrolled, 
+#student-settings input[type="submit"].apply-button-enrolled, 
+#modules_form input[type="submit"].apply-button-enrolled, 
+#contact_form input[type="submit"].apply-button-enrolled, 
+.apply-box input[type="submit"].apply-button, 
+.apply-box a.apply-button{
     min-width: 240px;
     display: block;
     background-color: #ccc;
@@ -1257,12 +1271,23 @@ a.rsswidget{
     box-shadow: none;
 }
 
-.apply-button-pending, .apply-button-enrolled, a.apply-button-enrolled{
+.apply-button-not-started,
+.apply-button-pending, 
+.apply-button-enrolled, 
+a.apply-button-enrolled{
     background-color: #ff6600;
     background: #ff6600;
 }
 
-.apply-button, .apply-button-enrolled, a.apply-button-enrolled, #student-settings input[type="submit"].apply-button-enrolled, #modules_form input[type="submit"].apply-button-enrolled, #contact_form input[type="submit"].apply-button-enrolled, .apply-box input[type="submit"].apply-button, .apply-box a.apply-button{
+.apply-button, 
+.apply-button-enrolled, 
+.apply-button-not-started,
+a.apply-button-enrolled, 
+#student-settings input[type="submit"].apply-button-enrolled, 
+#modules_form input[type="submit"].apply-button-enrolled, 
+#contact_form input[type="submit"].apply-button-enrolled, 
+.apply-box input[type="submit"].apply-button, 
+.apply-box a.apply-button{
     background-color: #0facd9;
     background: #0facd9;
 }
@@ -1313,7 +1338,17 @@ a.apply-button-enrolled:hover, #student-settings input[type="submit"].apply-butt
 
 /* gray button */
 
-.single-course a.apply-button-finished, a.apply-button-finished, input[type="submit"].apply-button-finished, .single-course span.apply-button-finished{
+.single-course span.apply-button-finished, 
+.single-course span.apply-button-full,
+.single-course span.apply-button-enrollment-closed,
+.single-course span.apply-button-enrollment-finished,
+.single-course span.apply-button-prerequisite,
+.single-course span.apply-button-prerequisite,
+.single-course a.apply-button-finished, 
+a.apply-button-finished, 
+input[type="submit"].apply-button-finished, 
+.single-course span.apply-button-finished
+{
     width: 100%;
     float: right;
     display: block;

@@ -30,28 +30,17 @@ the_excerpt();
 <div class="enroll-box">
     <div class="enroll-box-left">
         <div class="course-box">
-            <span class="strong"><?php _e( 'Course Dates: ', 'cp' ); ?></span><?php
-            if ( do_shortcode( '[course_details field="course_start_date"]' ) == 'Open-ended' ) {
-                _e( 'Open-ended', 'cp' );
-            } else {
-                echo do_shortcode( '[course_details field="course_start_date"]' ) . ' - ' . do_shortcode( '[course_details field="course_end_date"]' );
-            }
-            ?><br />
-            <span class="strong"><?php _e( 'Enrollment Dates: ', 'cp' ); ?></span><?php
-            if ( do_shortcode( '[course_details field="enrollment_start_date"]' ) == 'Open-ended' ) {
-                _e( 'Open-ended', 'cp' );
-            } else {
-                echo do_shortcode( '[course_details field="enrollment_start_date"]' ) . ' - ' . do_shortcode( '[course_details field="enrollment_end_date"]' );
-            }
-            ?><br />
-            <span class="strong"><?php _e( 'Class Size: ', 'cp' ); ?></span><?php echo do_shortcode( '[course_details field="class_size"]' ); ?><br />
-            <span class="strong"><?php _e( 'Who can Enroll: ', 'cp' ); ?></span><?php echo do_shortcode( '[course_details field="enroll_type"]' ); ?>
-            <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
-                <br /><span class="strong"><?php _e( 'Language: ', 'cp' ); ?></span><span><?php echo $course_language; ?></span><?php } ?><br /><span class="strong"><?php _e( 'Price: ', 'cp' ); ?></span><?php echo do_shortcode( '[course_details field="price"]' ); ?>
-        </div></div>
+            <?php echo do_shortcode( '[course_dates course_id="' . $course_details->ID . '"]' ); ?>
+            <?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course_details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_class_size course_id="' . $course_details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_enrollment_type course_id="' . $course_details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_language course_id="' . $course_details->ID . '"]' ); ?>
+        </div>
+	</div>
     <div class="enroll-box-right">
         <div class="apply-box">
-            <?php echo do_shortcode( '[course_details field="button"]' ); ?>
+			<?php echo do_shortcode('[course_join_button]'); ?>
+            <?php // echo do_shortcode( '[course_details field="button"]' ); ?>
         </div>
     </div>
 </div>

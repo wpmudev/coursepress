@@ -35,9 +35,9 @@ if ( isset( $_POST['new_question_submit'] ) ) {
 ?>
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-        <h1><?php echo do_shortcode( '[course_details field="post_title" course_id="' . $course_id . '"]' ); ?></h1>
+        <h1><?php echo do_shortcode( '[course_title course_id="' . $course_id . '"]' ); ?></h1>
         <div class="instructors-content">
-            <?php echo do_shortcode( '[course_instructors list="true" course_id="' . $course_id . '"]' ); ?>
+            <?php echo do_shortcode( '[course_instructors style="list" course_id="' . $course_id . '"]' ); ?>
         </div>
         
         <?php

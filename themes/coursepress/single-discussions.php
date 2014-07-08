@@ -16,9 +16,9 @@ get_header();
             $course_id = get_post_meta( get_the_ID(), 'course_id', true );
             $coursepress->check_access( $course_id );
             ?>
-            <h1><?php echo do_shortcode( '[course_details field="post_title" course_id="' . $course_id . '"]' ); ?></h1>
+            <h1><?php echo do_shortcode( '[course_title course_id="' . $course_id . '"]' ); ?></h1>
             <div class="instructors-content">
-                <?php echo do_shortcode( '[course_instructors list="true" course_id="' . $course_id . '"]' ); ?>
+                <?php echo do_shortcode( '[course_instructors style="list" course_id="' . $course_id . '"]' ); ?>
             </div>
             
             <?php

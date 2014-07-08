@@ -59,7 +59,8 @@ $course_language = $course->details->course_language;
 											
             </div><!--course-box-->
             <div class="quick-course-info">
-                <?php echo do_shortcode('[course_details field="button"]'); ?>
+                <?php // echo do_shortcode('[course_details field="button"]'); ?>
+				<?php echo do_shortcode('[course_join_button]'); ?>
             </div>
         </div>
     </section>
