@@ -774,8 +774,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                         </label>	
 
                                         <div class="course-date-override">    
-                                            <input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ( $open_ended_course == 'on' ) ? 'checked' : ''; ?> />
-                                            <label><?php _e('This course has no end date', 'cp'); ?></label>
+                                            <label><input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ( $open_ended_course == 'on' ) ? 'checked' : ''; ?> /><?php _e('This course has no end date', 'cp'); ?></label>
                                         </div>
 
                                         <p><?php _e('This is the duration the course will be open to the students', 'cp'); ?></p>
@@ -800,8 +799,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                         </label>	
 
                                         <div class="enrollment-date-override">    
-                                            <input type="checkbox" name="meta_open_ended_enrollment" id="open_ended_enrollment" <?php echo ( $open_ended_enrollment == 'on' ) ? 'checked' : ''; ?> />
-                                            <label><?php _e('Users can enroll at any time', 'cp'); ?></label>
+                                            <label><input type="checkbox" name="meta_open_ended_enrollment" id="open_ended_enrollment" <?php echo ( $open_ended_enrollment == 'on' ) ? 'checked' : ''; ?> /><?php _e('Users can enroll at any time', 'cp'); ?></label>
                                         </div>
 
                                         <p><?php _e('These are the dates that students can enroll', 'cp'); ?></p>
