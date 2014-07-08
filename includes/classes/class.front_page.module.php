@@ -24,7 +24,6 @@ if (!class_exists('Front_Page_Module')) {
 
             $post = array(
                 'post_author' => $user_id,
-                'post_parent' => $data->unit_id,
                 'post_excerpt' => ( isset($data->excerpt) ? $data->excerpt : '' ),
                 'post_content' => ( isset($data->content) ? $data->content : '' ),
                 'post_status' => 'publish',
@@ -58,7 +57,7 @@ if (!class_exists('Front_Page_Module')) {
             wp_delete_post($id, $force_delete); //Whether to bypass trash and force deletion
             //Delete unit module responses
 
-                wp_delete_post($units_module_response->ID, true);
+            wp_delete_post($units_module_response->ID, true);
         }
 
         function check_for_modules_to_delete() {
@@ -71,6 +70,15 @@ if (!class_exists('Front_Page_Module')) {
                     }
                 }
             }
+        }
+
+        function get_module_width_controls($module_id = false) {
+            ?>
+            <a class="column-icon column-one-icon" alt="<?php _e('Full Width', 'cp');?>" title="<?php _e('Full Width', 'cp');?>"></a>
+            <a class="column-icon column-two-icon" alt="<?php _e('One Half', 'cp');?>" title="<?php _e('One Half', 'cp');?>"></a>
+            <a class="column-icon column-tree-icon" alt="<?php _e('One Third', 'cp');?>" title="<?php _e('One Third', 'cp');?>"></a>
+            <a class="column-icon column-two-thirds-icon" alt="<?php _e('Two Thirds', 'cp');?>" title="<?php _e('Two Thirds', 'cp');?>"></a>
+            <?php
         }
 
         function get_module($module_id) {
@@ -89,13 +97,12 @@ if (!class_exists('Front_Page_Module')) {
             return $ordered_modules;
         }
 
-        function get_modules($unit_id) {
+        function get_modules() {
 
             $args = array(
                 'post_type' => 'front_page_module',
                 'post_status' => 'any',
                 'posts_per_page' => -1,
-                'post_parent' => $unit_id,
                 'meta_key' => 'module_order',
                 'orderby' => 'meta_value_num',
                 'order' => 'ASC',
@@ -106,10 +113,10 @@ if (!class_exists('Front_Page_Module')) {
             return $modules;
         }
 
-        function get_modules_admin_forms($unit_id = 0) {
+        function get_modules_admin_forms() {
             global $coursepress_modules;
 
-            $modules = $this->get_modules($unit_id);
+            $modules = $this->get_modules();
 
             foreach ($modules as $mod) {
                 $class_name = $mod->module_type;
@@ -120,7 +127,7 @@ if (!class_exists('Front_Page_Module')) {
             }
         }
 
-        function get_modules_front($unit_id = 0) {
+        function get_modules_front() {
 
             global $coursepress, $coursepress_modules, $wp, $paged, $_POST;
 
@@ -130,7 +137,7 @@ if (!class_exists('Front_Page_Module')) {
 
             $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
-            $modules = $this->get_modules($unit_id);
+            $modules = $this->get_modules();
 
             $course_id = do_shortcode('[get_parent_course_id]');
 
@@ -159,7 +166,7 @@ if (!class_exists('Front_Page_Module')) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );           ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );              ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -195,41 +202,10 @@ if (!class_exists('Front_Page_Module')) {
                 }
 
                 wp_nonce_field('modules_nonce');
-
-                $is_last_page = coursepress_unit_module_pagination($unit_id, $pages_num, true); //check if current unit page is last page
-
-                if ($front_save) {
-
-                    if ($input_modules !== $responses) {
-                        ?>
-                        <div class="mandatory_message"><?php _e('All questions marked with "* Mandatory" require your input.', 'cp'); ?></div><div class="clearf"></div>
-                        <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
-                        <a id="submit_bottom"></a>
-                        <?php
-                        if (isset($_POST['submit_modules_data'])) {
-                            $form_message = __('The module data has been submitted successfully.', 'coursepress');
-                        }
-                        if (isset($form_message)) {
-                            ?>
-                            <p class="form-info-regular"><?php echo $form_message; ?></p>
-                        <?php } ?>
-
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                ?>
-                        <?php
-                    } else {
-                        ?>
-                        <input type="submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value = "<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
-                        <?php
-                    }
-                } else {
-                    ?>
-                    <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
-                    <?php
-                }
                 ?>
             </form>
             <?php
-            coursepress_unit_module_pagination($unit_id, $pages_num);
+            //coursepress_unit_module_pagination($unit_id, $pages_num);
         }
 
         function get_module_type($post_id) {
@@ -251,8 +227,8 @@ if (!class_exists('Front_Page_Module')) {
                         jQuery(this).parent().parent().remove();
                         update_sortable_module_indexes();
                         /* jQuery(this).parent().parent().remove();*/
-                         
-                         
+
+
                     }
                     ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
                <?php
@@ -261,11 +237,11 @@ if (!class_exists('Front_Page_Module')) {
            function get_module_remove_link() {
                ?>
             <a class="remove_module_link" onclick="if (removeModule()) {
-                        
+
                         jQuery(this).parent().parent().remove();
                         update_sortable_module_indexes();
                         /* jQuery(this).parent().parent().remove();*/
-                     
+
                     }"><i class="fa fa-trash-o"></i> <?php _e('Remove') ?></a>
             <?php
         }

@@ -1,12 +1,14 @@
-<?php global $coursepress_front_page_modules; ?>
+<?php global $coursepress_front_page_modules, $coursepress_front_page_modules_labels, $coursepress_front_page_modules_descriptions, $coursepress_front_page_modules_ordered, $save_elements; ?>
+
+
 <div class="wrap nosubsub coursepress_page_course_details">
     <h2><?php _e('Front Page Builder', 'cp'); ?></h2>
 
     <div class="wrap mp-wrap nocoursesub">
 
         <div class="mp-settings"><!--course-liquid-left-->
-            <form action="" name="unit-add" id="unit-add" class="unit-add" method="post">
-
+            <form action="<?php echo esc_attr(admin_url('admin.php?page=front_page_builder'));?>" name="front-page-builder-form" id="front-page-builder-form" class="unit-add" method="post">
+                <?php wp_nonce_field('front_page_builder_' . $user_id); ?>
                 <div class="section elements-section">
                     <input type="hidden" name="beingdragged" id="beingdragged" value="">
                     <div id="course">
@@ -14,78 +16,64 @@
 
                         <div id="edit-sub" class="course-holder-wrap elements-wrap">
 
-                            <div class="course-holder">
+                            <div class="course-holder front-page-builder">
 
-                                <div id="unit-pages" >
+                                <div id="unit-pages">
                                     <div class="page-builder-title"><span><?php _e('Front Page Builder', 'cp') ?></span></div>
 
-                                    <div id="unit-page-1" aria-labelledby="ui-id-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="true" aria-hidden="false">
-                                        <div class="course-details elements-holder">
+                                    <?php
+                                    $save_elements = true;
+
+                                    $module = new Front_Page_Module();
+                                    $modules = $module->get_modules();
+                                    ?>
+                                    <div id="unit-page-<?php echo $i; ?>">
+                                        <div class='course-details front-page-builder-elements-holder'>
                                             <div class="unit_page_title">
                                                 <div class="description"><?php _e('Click to add elements to the Front page', 'cp'); ?></div>
                                             </div>
-                                            <div class="output-element audio_module">
-                                                <span class="element-label">
-                                                    Audio                                                    </span>
-                                                <a class="add-element" id="audio_module"></a>
-                                            </div>
-                                            <div class="output-element chat_module">
-                                                <span class="element-label">
-                                                    Live Chat                                                    </span>
-                                                <a class="add-element" id="chat_module"></a>
-                                            </div>
-                                            <div class="output-element file_module">
-                                                <span class="element-label">
-                                                    File Download                                                    </span>
-                                                <a class="add-element" id="file_module"></a>
-                                            </div>
-                                            <div class="output-element image_module">
-                                                <span class="element-label">
-                                                    Image                                                    </span>
-                                                <a class="add-element" id="image_module"></a>
-                                            </div>
-                                            <div class="output-element section_break_module">
-                                                <span class="element-label">
-                                                    Section Break                                                    </span>
-                                                <a class="add-element" id="section_break_module"></a>
-                                            </div>
-                                            <div class="output-element text_module">
-                                                <span class="element-label">
-                                                    Text                                                    </span>
-                                                <a class="add-element" id="text_module"></a>
-                                            </div>
-                                            <div class="output-element video_module">
-                                                <span class="element-label">
-                                                    Video                                                    </span>
-                                                <a class="add-element" id="video_module"></a>
-                                            </div>
+                                            <?php
+                                            foreach ($coursepress_front_page_modules_ordered['output'] as $element) {
+                                                ?>
+                                                <div class="output-element <?php echo $element; ?>">
+                                                    <span class="element-label">
+                                                        <?php
+                                                        $module = new $element;
+                                                        echo $module->label;
+                                                        ?>
+                                                    </span>
+                                                    <a class="add-element" id="<?php echo $element; ?>"></a>
+                                                </div>
+                                                <?php
+                                            }
 
+                                            $save_elements = false;
+                                            ?>
 
+                                            <hr />
 
-
-
-                                            <div class="input-element page_break_module">
-                                                <span class="element-label">
-                                                    Page Break                                                    </span>
-                                                <a class="add-element" id="page_break_module"></a>
-                                            </div>
-
-                                            <hr>
-
-                                            <span class="no-elements">No elements have been added to front page yet</span>
+                                            <span class="no-elements"><?php _e('No elements have been added to this page yet'); ?></span>
 
                                         </div>
 
-
-
-                                        <div class="modules_accordion ui-accordion ui-widget ui-helper-reset ui-sortable" role="tablist">
+                                        <div class="modules_accordion">
                                             <!--modules will appear here-->
+                                            <?php
+                                            foreach ($modules as $mod) {
+                                                $class_name = $mod->module_type;
+                                                if (class_exists($class_name)) {
+                                                    $module = new $class_name();
+                                                    $module->admin_main($mod);
+                                                }
+                                            }
+                                            ?>
                                         </div>
 
                                     </div>
+
                                 </div>
 
-                                <div class="course-details-unit-controls">
+                                <div class="course-details-unit-controls front-page-builder-controls">
                                     <div class="unit-control-buttons">
 
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="Save">

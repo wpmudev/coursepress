@@ -3,7 +3,7 @@
 class video_front_page_module extends Front_Page_Module {
 
     var $order = 3;
-    var $name = 'video_module';
+    var $name = 'video_front_page_module';
     var $label = 'Video';
     var $description = '';
 
@@ -34,17 +34,10 @@ class video_front_page_module extends Front_Page_Module {
                     if (!empty($video_extension)) {//it's file, most likely on the server
                         $attr = array(
                             'src' => $data->video_url,
-                            'width' => $data->player_width,
-                            'height' => $data->player_height,
                         );
 
                         echo wp_video_shortcode($attr);
                     } else {
-
-                        $embed_args = array(
-                            'width' => $data->player_width,
-                            'height' => 900
-                        );
 
                         echo wp_oembed_get($data->video_url, $embed_args);
                     }
@@ -64,12 +57,6 @@ class video_front_page_module extends Front_Page_Module {
         wp_enqueue_script('media-upload');
 
         $supported_video_extensions = implode(",", wp_get_video_extensions());
-
-        if (!empty($data)) {
-            if (!isset($data->player_width) or empty($data->player_width)) {
-                $data->player_width = empty($content_width) ? 960 : $content_width;
-            }
-        }
         ?>
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
@@ -77,6 +64,7 @@ class video_front_page_module extends Front_Page_Module {
             <h3 class="module-title sidebar-name">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
+                    <span class="h3-label-center"><?php parent::get_module_width_controls(isset($data->ID) && $data->ID !== '' ? $data->ID : false );?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
                     <?php
                     parent::get_module_move_link();
@@ -92,7 +80,6 @@ class video_front_page_module extends Front_Page_Module {
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
-                    $this->time_estimation($data);
                     ?></label>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
@@ -109,23 +96,6 @@ class video_front_page_module extends Front_Page_Module {
                     </div>
                 </label>
 
-                <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
-
-                <div class="editor_in_place">
-
-                    <?php
-                    $args = array(
-                        "textarea_name" => $this->name . "_content[]",
-                        "textarea_rows" => 5,
-                        "quicktags" => false,
-                        "teeny" => true,
-                    );
-
-                    $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                    wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
-                    ?>
-                </div>
-
                 <div class="video_url_holder">
                     <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?>
                         <a class="help-icon" href="javascript:;"></a>
@@ -141,12 +111,6 @@ class video_front_page_module extends Front_Page_Module {
                     </label>
                 </div>
 
-                <div class="video_additional_controls">
-
-                    <label><?php _e('Player Width ( pixels )', 'cp'); ?></label>
-                    <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) ); ?>" />
-
-                </div>
                 <?php
                 if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);
@@ -188,11 +152,10 @@ class video_front_page_module extends Front_Page_Module {
                         foreach ($_POST[$this->name . '_id'] as $key => $value) {
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->title = $_POST[$this->name . '_title'][$key];
-                            $data->content = $_POST[$this->name . '_content'][$key];
+                            //$data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
-                            $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
-                            $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
+                            //$data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
 
                             if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
