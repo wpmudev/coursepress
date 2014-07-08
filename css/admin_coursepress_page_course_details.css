@@ -2020,7 +2020,7 @@ label.bold-label{
 .course-section .course-form div.wide .course-date-override input[type="checkbox"], 
 .course-section .course-form div.wide .enrollment-date-override label,
 .course-section .course-form div.wide .enrollment-date-override input[type="checkbox"] {
-    display: inline;
+/*    display: inline;*/
     min-width: 10px;
 }
 

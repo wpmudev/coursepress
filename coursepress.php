@@ -1553,11 +1553,15 @@ if (!class_exists('CoursePress')) {
                                 foreach ($instructors as $instructor) {
                                     if ($instructor == $current_user->ID) {
                                         $exists = true;
-                                        exit;
+                                        //exit;
                                     }
                                 }
 
                                 if (!$exists) {
+									// Assign Instructor capabilities
+									$_GET['user_id'] = $current_user->ID;
+									$this->assign_instructor_capabilities();
+
                                     $instructors[] = $current_user->ID;
                                     update_post_meta($_GET['course_id'], 'instructors', $instructors);
                                     update_user_meta($current_user->ID, 'course_' . $_GET['course_id'], $_GET['course_id']);
@@ -1575,7 +1579,7 @@ if (!class_exists('CoursePress')) {
                             }
                         }
 
-                        wp_redirect(admin_url('admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']));
+                        //wp_redirect(admin_url('admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']));
                     } else {
                         echo __('
 							<h3>Invalid Invitation</h3>
