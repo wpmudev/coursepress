@@ -128,5 +128,13 @@ jQuery(document).ready(function() {
 
         //return false;
     });
+	
+	// Use data-link attribute to follow links
+	jQuery('button').click( function( event ) {
+		if( jQuery( this ).data( 'link' ) ) {
+			window.location.href = jQuery( this ).data( 'link' );			
+		}
+	});
+	
 
 });

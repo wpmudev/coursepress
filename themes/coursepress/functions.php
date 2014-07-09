@@ -28,7 +28,6 @@ function author_description_excerpt( $user_id = false, $length = 100 ) {
     return $excerpt;
 }
 
-
 /**
  * Coloroze first word of the widget title
  */

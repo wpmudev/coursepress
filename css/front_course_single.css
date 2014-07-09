@@ -106,7 +106,7 @@
 }
 
 a.apply-button-enrolled{
-    -moz-border-radius:0px;
+/*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
 
@@ -122,12 +122,12 @@ a.apply-button-enrolled{
     border: 1px solid #458b45;
     text-align: center;
     text-decoration: none;
-}
+*/}
 
 a.apply-button-enrolled:hover{
-    background: #60b160;
+/*    background: #60b160;
     color: #f1f1f1;
-}
+*/}
 
 a.apply-button, input.apply-button{
     -moz-border-radius:0px;

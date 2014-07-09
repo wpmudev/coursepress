@@ -31,5 +31,6 @@ if ( $course_thumbnail ) {
     <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
         <span class="course-lang"><?php echo do_shortcode( '[course_language label=""]' ); ?></span>
     <?php } ?>
-    <a class="go-to-course-button" href="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></a>
+
+	<button data-link="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></button>
 </div>

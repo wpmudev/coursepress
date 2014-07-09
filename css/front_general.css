@@ -189,7 +189,7 @@ input[type="button"].apply-button-pending{
 a.apply-button-enrolled, 
 input[type="submit"].apply-button-enrolled, 
 input[type="button"].apply-button-enrolled{
-    -moz-border-radius:0px;
+/*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
 
@@ -205,14 +205,14 @@ input[type="button"].apply-button-enrolled{
     border: 1px solid #458b45;
     text-align: center;
     text-decoration: none;
-}
+*/}
 
 a.apply-button-enrolled:hover, 
 input[type="submit"].apply-button-enrolled:hover,
 input[type="button"].apply-button-enrolled:hover{
-    background: #60b160;
+/*    background: #60b160;
     color: #f1f1f1;
-}
+*/}
 
 a.apply-button, 
 input[type="submit"].apply-button, 

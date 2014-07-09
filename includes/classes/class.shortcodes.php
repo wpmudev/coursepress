@@ -898,8 +898,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$course_expired = strtotime( $course->course_end_date ) <= time() ? true : false;
 			$enrollment_expired = strtotime( $course->enrollment_end_date ) <= time() ? true : false;
 			$course_full = $course->is_populated();
-
-            $button = '<form name="enrollment-process" method="post" action="' . $enrollment_process_url . '">';
+			
+			$button = '';
+			$button_url = $enrollment_process_url;
 			
 			// User is not logged in, so we need to see if course is ready for signup or not.
 			if ( ! is_user_logged_in() ) {
@@ -928,7 +929,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						// Course hasn't expired and enrollments are open... Lets sign up!
 						} else {
 							// "SIGN UP NOW"
-		                    $button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . $signup_text . '</a>';
+							$button_url = $signup_url;
+		                    $button .= '<button data-link="' . $button_url . '?course_id=' . $course->ID . '" class="apply-button">' . $signup_text . '</button>';
 						}
 					}
 				} else {
@@ -988,12 +990,15 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
-						$button .= '<a href="' . get_permalink( $course_id ) . 'units/" class="apply-button-enrolled">' . $access_text . '</a>';
+						$button_url = get_permalink( $course_id ) . 'units/';
+						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled">' . $access_text . '</button>';
 					}
 					
 				}
 			}
-
+			
+			// $button to output
+            $button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
 			$button .= wp_nonce_field( 'enrollment_process' );
 			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
 			$button .= '</form>';
