@@ -896,6 +896,54 @@ jQuery(document).ready(function($) {
     });
 
 
+    $('#add-instructor-trigger').click(function() {
+
+        // Course ID
+        var course_id = $('[name=course_id]').val();
+        if (!course_id) {
+            course_id = $.urlParam('course_id');
+            $('[name=course_id]').val(course_id);
+        }
+
+        var instructor_id = $('#instructors option:selected').val();
+
+        // Mark as dirty
+        var parent_section = $(this).parents('.course-section.step')[0];
+        if (parent_section) {
+            if (!$(parent_section).hasClass('dirty')) {
+                $(parent_section).addClass('dirty');
+            }
+        }
+
+        $.post(
+                'admin-ajax.php', {
+                    action: 'add_course_instructor',
+                    user_id: instructor_id,
+                    course_id: course_id,
+                }
+        ).done(function(data, status) {
+            // Handle return
+            if (status == 'success') {
+
+                var response = $.parseJSON($(data).find('response_data').text());
+                var response_type = $($.parseHTML(response.content));
+				
+		        if ($("#instructor_holder_" + instructor_id).length == 0 && response.instructor_added ) {
+		            $('.instructor-avatar-holder.empty').hide();
+		            $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+		        } else {
+		        	alert( response.reason );
+		        }
+
+            } else {
+            }
+        }).fail(function(data) {
+        });				
+				
+				
+    });
+
+
 	$('.course-form input').keypress(function(event) {
 		$( this ).change();
 	});

@@ -551,21 +551,50 @@ function delete_instructor_confirmed() {
 }
 
 function removeInstructor(instructor_id) {
+	$ = jQuery;
     if (delete_instructor_confirmed()) {
 
+        // Course ID
+        var course_id = $('[name=course_id]').val();
+        if (!course_id) {
+            course_id = $.urlParam('course_id');
+            $('[name=course_id]').val(course_id);
+        }
+		
         // Mark as dirty
-        var parent_section = jQuery('#instructor_holder_' + instructor_id).parents('.course-section.step')[0];
+        var parent_section = $('#instructor_holder_' + instructor_id).parents('.course-section.step')[0];
         if (parent_section) {
-            if (!jQuery(parent_section).hasClass('dirty')) {
-                jQuery(parent_section).addClass('dirty');
+            if (!$(parent_section).hasClass('dirty')) {
+                $(parent_section).addClass('dirty');
             }
         }
 
-        jQuery("#instructor_holder_" + instructor_id).remove();
-        jQuery("#instructor_" + instructor_id).remove();
-        if (1 == jQuery('.instructor-avatar-holder').length) {
-            jQuery('.instructor-avatar-holder.empty').show();
-        }
+        $.post(
+                'admin-ajax.php', {
+                    action: 'remove_course_instructor',
+                    user_id: instructor_id,
+                    course_id: course_id,
+                }
+        ).done(function(data, status) {
+            // Handle return
+            if (status == 'success') {
+
+                var response = $.parseJSON($(data).find('response_data').text());
+                var response_type = $($.parseHTML(response.content));
+				
+				if ( response.instructor_removed ) {
+			        $("#instructor_holder_" + instructor_id).remove();
+			        $("#instructor_" + instructor_id).remove();
+			        if (1 == $('.instructor-avatar-holder').length) {
+			            $('.instructor-avatar-holder.empty').show();
+			        }					
+				}
+				
+            } else {
+            }
+        }).fail(function(data) {
+        });				
+			
     }
 }
 
@@ -653,28 +682,30 @@ jQuery(document).ready(function() {
             });
         }
     });
-    jQuery('#add-instructor-trigger').click(function() {
 
-        var instructor_id = jQuery('#instructors option:selected').val();
-
-        // Mark as dirty
-        var parent_section = jQuery(this).parents('.course-section.step')[0];
-        if (parent_section) {
-            if (!jQuery(parent_section).hasClass('dirty')) {
-                jQuery(parent_section).addClass('dirty');
-            }
-        }
-
-        if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
-            jQuery('.instructor-avatar-holder.empty').hide();
-            jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
-        }
-
-        jQuery.get('admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id})
-                .success(function(data) {
-                    //alert( data );
-                });
-    });
+	// MOVED TO: coursepress-courses.js
+    // jQuery('#add-instructor-trigger').click(function() {
+    //
+    //     var instructor_id = jQuery('#instructors option:selected').val();
+    //
+    //     // Mark as dirty
+    //     var parent_section = jQuery(this).parents('.course-section.step')[0];
+    //     if (parent_section) {
+    //         if (!jQuery(parent_section).hasClass('dirty')) {
+    //             jQuery(parent_section).addClass('dirty');
+    //         }
+    //     }
+    //
+    //     if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
+    //         jQuery('.instructor-avatar-holder.empty').hide();
+    //         jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+    //     }
+    //
+    //     jQuery.get('admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id})
+    //             .success(function(data) {
+    //                 //alert( data );
+    //             });
+    // });
     var ct = 2;
     jQuery('a.radio_new_link').live('click', function() {
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
