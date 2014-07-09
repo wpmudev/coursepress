@@ -1,12 +1,13 @@
 <?php
-the_excerpt();
+echo do_shortcode( get_the_excerpt() );
 ?>
 
 <div class="instructors-box">
     <?php
     $course = new Course( get_the_ID() );
+
     //Get instructors count for this course
-    $instructors = do_shortcode( '[course_instructors count="true"]' );
+    $instructors = do_shortcode( '[course_instructors style="count"]' );
 
     if ( $instructors > 0 ) {
         if ( $instructors >= 2 ) {
@@ -30,11 +31,11 @@ the_excerpt();
 <div class="enroll-box">
     <div class="enroll-box-left">
         <div class="course-box">
-            <?php echo do_shortcode( '[course_dates course_id="' . $course_details->ID . '"]' ); ?>
-            <?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course_details->ID . '"]' ); ?>
-			<?php echo do_shortcode( '[course_class_size course_id="' . $course_details->ID . '"]' ); ?>
-			<?php echo do_shortcode( '[course_enrollment_type course_id="' . $course_details->ID . '"]' ); ?>
-			<?php echo do_shortcode( '[course_language course_id="' . $course_details->ID . '"]' ); ?>
+            <?php echo do_shortcode( '[course_dates course_id="' . $course->details->ID . '"]' ); ?>
+            <?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course->details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_class_size course_id="' . $course->details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_enrollment_type course_id="' . $course->details->ID . '"]' ); ?>
+			<?php echo do_shortcode( '[course_language course_id="' . $course->details->ID . '"]' ); ?>
         </div>
 	</div>
     <div class="enroll-box-right">

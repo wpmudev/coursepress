@@ -23,17 +23,17 @@ foreach ( $assigned_courses as $course_id ) {
                 <h3><a href="<?php echo $course->get_permalink(); ?>"><?php echo $course_details->post_title; ?></a></h3>
                 <div class="enroll-box-left">
                     <div class="course-box">
-						<?php echo do_shortcode( '[course_dates course_id="' . $course_details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course_details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_class_size course_id="' . $course_details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_cost course_id="' . $course_details->ID . '"]' ); ?>
+						<?php echo do_shortcode( '[course_dates course_id="' . $course->details->ID . '"]' ); ?>
+						<?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course->details->ID . '"]' ); ?>
+						<?php echo do_shortcode( '[course_class_size course_id="' . $course->details->ID . '"]' ); ?>
+						<?php echo do_shortcode( '[course_cost course_id="' . $course->details->ID . '"]' ); ?>
                     </div></div>
 
                 <div class="enroll-box-right">
                     <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url() . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) );  ?>">
                         <div class="apply-box">
-							<?php echo do_shortcode('[course_join_button course_id="' . $course_details->ID . '"]' ); ?>
-                            <?php // echo do_shortcode( '[course_details field="button" course_id="' . $course_details->ID . '"]' ); ?>
+							<?php echo do_shortcode('[course_join_button course_id="' . $course->details->ID . '"]' ); ?>
+                            <?php // echo do_shortcode( '[course_details field="button" course_id="' . $course->details->ID . '"]' ); ?>
                         </div>
                     </form>
                 </div>

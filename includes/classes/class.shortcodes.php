@@ -988,7 +988,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
-						$button .= '<a href="' . get_permalink( $course->ID ) . 'units/" class="apply-button-enrolled">' . $access_text . '</a>';
+						$button .= '<a href="' . get_permalink( $course_id ) . 'units/" class="apply-button-enrolled">' . $access_text . '</a>';
 					}
 					
 				}
@@ -1071,7 +1071,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 								<div class="profile-avatar">
 									<?php echo get_avatar( $instructor->ID, $avatar_size, $default_avatar, $instructor->display_name ); ?>
 								</div>
-								<div class="profile-description"><?php echo author_description_excerpt( $instructor->ID, $summary_length ); ?></div>
+								<div class="profile-description"><?php echo $this->author_description_excerpt( $instructor->ID, $summary_length ); ?></div>
 								<div class="profile-link">
 									<?php if ( 'no' == $link_all ) { ?>
 										<a href="<?php echo $profile_href ?>">
@@ -1087,7 +1087,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							</div>	
 							<?php
 							$content .= ob_get_clean();				
-					
+							cp_write_log( $content );
 						break;
 					
 						case 'link':
@@ -2137,6 +2137,29 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             global $plugin_dir;
             load_template( $plugin_dir . 'includes/templates/student-signup.php', true );
         }
+
+		function author_description_excerpt( $user_id = false, $length = 100 ) {
+
+		    $excerpt = get_the_author_meta( 'description', $user_id );
+
+		    $excerpt = strip_shortcodes( $excerpt );
+		    $excerpt = apply_filters( 'the_content', $excerpt );
+		    $excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
+		    $excerpt = strip_tags( $excerpt );
+		    $excerpt_length = apply_filters( 'excerpt_length', $length );
+		    $excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
+
+		    $words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
+		    if ( count( $words ) > $excerpt_length ) {
+		        array_pop( $words );
+		        $excerpt = implode( ' ', $words );
+		        $excerpt = $excerpt . $excerpt_more;
+		    } else {
+		        $excerpt = implode( ' ', $words );
+		    }
+
+		    return $excerpt;
+		}
 
     }
 

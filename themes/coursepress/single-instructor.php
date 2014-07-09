@@ -46,8 +46,8 @@ $assigned_courses = $instructor->get_assigned_courses_ids( 'publish' );
                         <div class="enroll-box-right">
                             <form name="enrollment-process" method="post" action="<?php echo trailingslashit( site_url() . '/' . get_option( 'enrollment_process_slug', 'enrollment-process' ) ); ?>">
                                 <div class="apply-box">
-							        <?php //echo do_shortcode( '[course_details field="button" course_id="' . $course_details->ID . '"]' ); ?>
-									<?php echo do_shortcode( '[course_join_button course_id="' . $course_details->ID . '"]' ); ?>
+							        <?php //echo do_shortcode( '[course_details field="button" course_id="' . $course->details->ID . '"]' ); ?>
+									<?php echo do_shortcode( '[course_join_button course_id="' . $course->details->ID . '"]' ); ?>
                                 </div>
                             </form>
                         </div>

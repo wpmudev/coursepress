@@ -4,6 +4,31 @@
  *
  * @package CoursePress
  */
+
+function author_description_excerpt( $user_id = false, $length = 100 ) {
+
+    $excerpt = get_the_author_meta( 'description', $user_id );
+
+    $excerpt = strip_shortcodes( $excerpt );
+    $excerpt = apply_filters( 'the_content', $excerpt );
+    $excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
+    $excerpt = strip_tags( $excerpt );
+    $excerpt_length = apply_filters( 'excerpt_length', $length );
+    $excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
+
+    $words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
+    if ( count( $words ) > $excerpt_length ) {
+        array_pop( $words );
+        $excerpt = implode( ' ', $words );
+        $excerpt = $excerpt . $excerpt_more;
+    } else {
+        $excerpt = implode( ' ', $words );
+    }
+
+    return $excerpt;
+}
+
+
 /**
  * Coloroze first word of the widget title
  */
@@ -197,28 +222,6 @@ function author_description_excerptOLD( $user_id ) {
     return ( implode( $authorDescriptionShort, ' ' ) ) . $displayAuthorPageLink;
 }
 
-function author_description_excerpt( $user_id = false, $length = 100 ) {
-
-    $excerpt = get_the_author_meta( 'description', $user_id );
-
-    $excerpt = strip_shortcodes( $excerpt );
-    $excerpt = apply_filters( 'the_content', $excerpt );
-    $excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
-    $excerpt = strip_tags( $excerpt );
-    $excerpt_length = apply_filters( 'excerpt_length', $length );
-    $excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
-
-    $words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
-    if ( count( $words ) > $excerpt_length ) {
-        array_pop( $words );
-        $excerpt = implode( ' ', $words );
-        $excerpt = $excerpt . $excerpt_more;
-    } else {
-        $excerpt = implode( ' ', $words );
-    }
-
-    return $excerpt;
-}
 
 function cp_filter_search( $query ) {
     if ( $query->is_search ) {

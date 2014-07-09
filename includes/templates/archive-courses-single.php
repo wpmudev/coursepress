@@ -23,7 +23,7 @@ if ( $course_thumbnail ) {
 </div>
 
 <div class="course-excerpt">
-    <?php echo $post->post_excerpt; ?>
+    <?php echo do_shortcode( $post->post_excerpt ); ?>
 </div>
 
 <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">

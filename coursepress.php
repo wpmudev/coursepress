@@ -31,6 +31,9 @@
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
+// Load the common functions
+require_once( 'includes/functions.php' );
+
 if (!class_exists('CoursePress')) {
 
     class CoursePress {
@@ -59,9 +62,6 @@ if (!class_exists('CoursePress')) {
             $GLOBALS['instructor_profile_slug'] = $this->get_instructor_profile_slug();
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
             $GLOBALS['signup_url'] = $this->get_signup_slug(true);
-
-            // Load the common functions
-            require_once( 'includes/functions.php' );
 
             //Install plugin
             register_activation_hook(__FILE__, array($this, 'install'));
@@ -2857,7 +2857,7 @@ if (!class_exists('CoursePress')) {
 
             if ($course_details && !empty($course_details)) {
                 $student = new Student($order->post_author);
-                $student->enroll_in_course($course_details->ID);
+                $student->enroll_in_course($course->details->ID);
             }
         }
 
