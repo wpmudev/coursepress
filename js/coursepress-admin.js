@@ -64,6 +64,53 @@ jQuery(document).ready(function($) {
         }
     });
 
+    jQuery('.delete_unit_page .button-delete-unit').live("click", function() {
+        var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+
+        if (delete_unit_page_and_elements_confirmed()) {
+            jQuery('#unit-page-' + current_page + ' .element_id').each(function(i, obj) {
+                prepare_element_for_execution(jQuery(this).val());
+                jQuery(this).closest('.module-holder-title').remove();
+            });
+
+            jQuery('#unit-page-' + current_page + ' .removable').each(function(i, obj) {
+                jQuery(this).closest('.module-holder-title').remove();
+            });
+
+            jQuery('#unit-pages .ui-tabs-nav .ui-state-active').remove();
+            
+            jQuery('#unit-page-' + current_page).remove();
+
+            reenumarate_unit_pages();
+
+            jQuery("#unit-pages").tabs({active: 0});
+        }
+
+        function reenumarate_unit_pages() {
+            var i = 1;
+            jQuery(".unit-pages-navigation li.ui-state-default").each(function(index) {
+                //alert(jQuery(this).find('a').html());
+                if (jQuery(this).find('a').html() !== '+') {
+                    jQuery(this).find('a').html(i);
+                    i++;
+                }
+            });
+        }
+
+        function delete_unit_page_and_elements_confirmed() {
+            return confirm(coursepress.delete_unit_page_and_elements_alert);
+        }
+
+        function prepare_element_for_execution(module_to_execute_id) {
+            jQuery('<input>').attr({
+                type: 'hidden',
+                name: 'modules_to_execute[]',
+                value: module_to_execute_id
+            }).appendTo('#unit-add');
+        }
+
+    });
+
 
     jQuery('.ui-tabs-anchor').live("click", function(event) {
         var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
@@ -96,8 +143,10 @@ jQuery(document).ready(function($) {
         jQuery('.ui-tabs-nav').html(tabs_html + li + add_page_plus);
 
         jQuery('#unit-pages').append('<div id="unit-page-' + next_page + '"><div class="course-details elements-holder">' + jQuery('.elements-holder').html() + '</div><div class="modules_accordion"></div></div>');
-
+        //jQuery('#unit-page-'+next_page).append('<a class="delete_module_link" onclick="delete_unit_page_and_elements_confirmed()"><i class="fa fa-trash-o"></i> '+coursepress.delete_unit_page_label+'</a>');
         tabs.tabs("refresh");
+
+        jQuery('#unit-page-' + next_page + ' .page_title').val('');
 
         /*jQuery( '#unit-page-' + next_page + ' .modules_accordion' ).accordion( {
          heightStyle: "content",
@@ -211,17 +260,20 @@ jQuery(document).ready(function() {
 
     });
 });
+
 jQuery(document).ready(function() {
     jQuery('.checkbox_answer').live('input', function() {
         jQuery(this).closest('td').find(".checkbox_answer_check").val(jQuery(this).val());
     });
 });
+
 jQuery(document).ready(function() {
     if (coursepress.course_taxonomy_screen) {
 //jQuery( '#adminmenu .wp-submenu li.current' ).removeClass( "current" );
         jQuery('a[href="edit-tags.php?taxonomy=course_category&post_type=course"]').parent().addClass("current");
     }
 });
+
 /* UNIT MODULES */
 jQuery(document).ready(function() {
     jQuery('.action .action-top .action-button').live('click', function() {
@@ -234,6 +286,7 @@ jQuery(document).ready(function() {
         }
     });
 });
+
 function coursepress_module_click_action_toggle() {
     if (jQuery(this).parent().hasClass('open')) {
         jQuery(this).parent().removeClass('open').addClass('closed');
@@ -260,7 +313,7 @@ function coursepress_modules_ready() {
 
         }
     });
-    jQuery('.elements-holder div').live('click', function() {//.unit-module-add, 
+    jQuery('.elements-holder div.output-element, .elements-holder div.input-element').live('click', function() {//.unit-module-add, 
 
         var current_unit_page = 0;//current selected unit page
 
@@ -414,44 +467,44 @@ jQuery(document).ready(coursepress_modules_ready);
 jQuery(function() {
     jQuery(".spinners").spinner({
         min: 0,
-		stop: function( event, ui ) {
-			// Trigger change event.
-			jQuery(this).change();
-		},
+        stop: function(event, ui) {
+            // Trigger change event.
+            jQuery(this).change();
+        },
     });
     jQuery('.dateinput').datepicker({
         dateFormat: 'yy-mm-dd'
     });
 });
 
- function update_sortable_module_indexes() {
+function update_sortable_module_indexes() {
 
-        jQuery('.module_order').each(function(i, obj) {
-            jQuery(this).val(i + 1);
-        });
-        jQuery("input[name*='radio_answers']").each(function(i, obj) {
-            jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='radio_check']").each(function(i, obj) {
-            jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
-            jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        jQuery("input[name*='checkbox_check']").each(function(i, obj) {
-            jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
-        });
-        
-        var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
-        var elements_count = jQuery('#unit-page-' + current_page + ' .modules_accordion .module-holder-title').length;
+    jQuery('.module_order').each(function(i, obj) {
+        jQuery(this).val(i + 1);
+    });
+    jQuery("input[name*='radio_answers']").each(function(i, obj) {
+        jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
+    jQuery("input[name*='radio_check']").each(function(i, obj) {
+        jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
+    jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
+        jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
+    jQuery("input[name*='checkbox_check']").each(function(i, obj) {
+        jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
 
-        if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && elements_count == 1)) {
-            jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').show();
-        } else {
-            jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
-        }
+    var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+    var elements_count = jQuery('#unit-page-' + current_page + ' .modules_accordion .module-holder-title').length;
+
+    if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && elements_count == 1)) {
+        jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').show();
+    } else {
+        jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
     }
-    
+}
+
 function withdraw_student_confirmed() {
     return confirm(coursepress.withdraw_student_alert);
 }
@@ -551,7 +604,7 @@ function delete_instructor_confirmed() {
 }
 
 function removeInstructor(instructor_id) {
-	$ = jQuery;
+    $ = jQuery;
     if (delete_instructor_confirmed()) {
 
         // Course ID
@@ -560,7 +613,7 @@ function removeInstructor(instructor_id) {
             course_id = $.urlParam('course_id');
             $('[name=course_id]').val(course_id);
         }
-		
+
         // Mark as dirty
         var parent_section = $('#instructor_holder_' + instructor_id).parents('.course-section.step')[0];
         if (parent_section) {
@@ -581,20 +634,20 @@ function removeInstructor(instructor_id) {
 
                 var response = $.parseJSON($(data).find('response_data').text());
                 var response_type = $($.parseHTML(response.content));
-				
-				if ( response.instructor_removed ) {
-			        $("#instructor_holder_" + instructor_id).remove();
-			        $("#instructor_" + instructor_id).remove();
-			        if (1 == $('.instructor-avatar-holder').length) {
-			            $('.instructor-avatar-holder.empty').show();
-			        }					
-				}
-				
+
+                if (response.instructor_removed) {
+                    $("#instructor_holder_" + instructor_id).remove();
+                    $("#instructor_" + instructor_id).remove();
+                    if (1 == $('.instructor-avatar-holder').length) {
+                        $('.instructor-avatar-holder.empty').show();
+                    }
+                }
+
             } else {
             }
         }).fail(function(data) {
-        });				
-			
+        });
+
     }
 }
 
@@ -683,7 +736,7 @@ jQuery(document).ready(function() {
         }
     });
 
-	// MOVED TO: coursepress-courses.js
+    // MOVED TO: coursepress-courses.js
     // jQuery('#add-instructor-trigger').click(function() {
     //
     //     var instructor_id = jQuery('#instructors option:selected').val();
@@ -752,10 +805,10 @@ jQuery(document).ready(function() {
     jQuery('.modules_accordion').accordion({
         heightStyle: "content",
         header: "> div > h3",
-        collapsible: false,
+        collapsible: true,
         //active: ".remove_module_link"
     }).sortable({
-        items: "div:not( .module-holder-page_break_module )",
+        //items: "div:not(.notmovable)",
         handle: "h3",
         axis: "y",
         stop: function(event, ui) {

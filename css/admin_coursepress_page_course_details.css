@@ -508,7 +508,7 @@ div.buttons a.cancellink {
     background: #fff;
     content: "";
     height:0px;
-    
+
 }
 
 .unit-control-buttons .button.button-preview{
@@ -2020,7 +2020,7 @@ label.bold-label{
 .course-section .course-form div.wide .course-date-override input[type="checkbox"], 
 .course-section .course-form div.wide .enrollment-date-override label,
 .course-section .course-form div.wide .enrollment-date-override input[type="checkbox"] {
-/*    display: inline;*/
+    /*    display: inline;*/
     min-width: 10px;
 }
 
@@ -2175,7 +2175,7 @@ label.bold-label{
 
 
 .course-section.step .course-form input.update {
-	display: none;
+    display: none;
 }
 
 .unit_page_title input{
@@ -2599,4 +2599,8 @@ li.disabled_unit{
 
 h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     width: 98.2%;
+}
+
+#unit-page-1 .delete_unit_page{
+    display: none;
 }

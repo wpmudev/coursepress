@@ -88,8 +88,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <li class="mp-tab <?php echo ( isset($_GET['unit_id']) && $unit->ID == $_GET['unit_id'] ? 'active' : '' ); ?>">
                     <a class="mp-tab-link" href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=edit'); ?>"><?php echo $unit_object->post_title; ?></a>
                     <i class="fa fa-arrows-v cp-move-icon"></i>
-                    <span class="unit-state-circle <?php echo (isset($unit_object->post_status) && $unit_object->post_status == 'publish' ? 'active' : '');?>"></span>
-                    
+                    <span class="unit-state-circle <?php echo (isset($unit_object->post_status) && $unit_object->post_status == 'publish' ? 'active' : ''); ?>"></span>
+
                     <input type="hidden" class="unit_order" value="<?php echo $list_order; ?>" name="unit_order_<?php echo $unit_object->ID; ?>" />
                     <input type="hidden" name="unit_id" class="unit_id" value="<?php echo $unit_object->ID; ?>" />                                                                                         
                 </li>
@@ -257,9 +257,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     <div id="unit-page-<?php echo $i; ?>">
                                         <div class='course-details elements-holder'>
                                             <div class="unit_page_title">
-                                                <label><?php _e('Page Title', 'cp'); ?></label>
+                                                <label><?php _e('Page Title', 'cp'); ?>
+                                                    <span class="delete_unit_page">							
+                                                        <a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e('Delete Unit Page and Elements', 'cp'); ?></a>
+                                                    </span>
+                                                </label>
                                                 <div class="description"><?php _e('The title will be displayed on the Course Overview and Unit page'); ?></div>
-                                                <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i)); ?>" name="page_title[]" />
+                                                <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i)); ?>" name="page_title[]" class="page_title" />
 
                                                 <label><?php _e('Build Page', 'cp'); ?></label>
                                                 <div class="description"><?php _e('Click to add elements to the page'); ?></div>
@@ -448,10 +452,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
             jQuery('.modules_accordion .switch-tmce').each(function() {
                 jQuery(this).trigger('click');
             });
-
             var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
             var elements_count = jQuery('#unit-page-1 .modules_accordion .module-holder-title').length;
-
             //jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
 
             if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && elements_count == 1)) {

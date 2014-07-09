@@ -48,6 +48,12 @@ class section_break_module extends Unit_Module {
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
+                <?php if (isset($data->ID)) { ?>
+                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
+                <?php } else { ?>
+                    <input type="hidden" class="removable" />
+                <?php } ?>
+
                 <?php
                 if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);

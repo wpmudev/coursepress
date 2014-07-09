@@ -143,6 +143,12 @@ class file_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
+                <?php if (isset($data->ID)) { ?>
+                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
+                <?php } else { ?>
+                    <input type="hidden" class="removable" />
+                <?php } ?>
+
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);

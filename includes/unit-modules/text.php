@@ -55,6 +55,12 @@ class text_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
+                <?php if (isset($data->ID)) { ?>
+                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
+                <?php } else { ?>
+                    <input type="hidden" class="removable" />
+                <?php } ?>
+
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);
@@ -69,7 +75,7 @@ class text_module extends Unit_Module {
                         <div class="tooltip-before"></div>
                         <div class="tooltip-button">&times;</div>
                         <div class="tooltip-content">
-        <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
                         </div>
                     </div>
                 </label>

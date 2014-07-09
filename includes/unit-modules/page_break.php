@@ -31,7 +31,7 @@ class page_break_module extends Unit_Module {
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name">
+            <h3 class="module-title sidebar-name notmovable">
                 <span class="h3-label">
 
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label ); ?></span>
@@ -49,9 +49,15 @@ class page_break_module extends Unit_Module {
             <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
             <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
+            <?php if (isset($data->ID)) { ?>
+                <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
+            <?php } else { ?>
+                <input type="hidden" class="removable" />
+            <?php } ?>
+
             <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
-                                        <!--<p><?php echo $this->description; ?></p>-->
+                                                        <!--<p><?php echo $this->description; ?></p>-->
 
             <!--</div>-->
             <?php

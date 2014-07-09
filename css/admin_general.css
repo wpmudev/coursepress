@@ -424,5 +424,22 @@ td.label {
 /* Hide from larger displays. */
 .visible-small,
 .visible-extra-small {
-	display:none;
+    display:none;
+}
+
+.delete_unit_page{
+    float: right;
+    margin-right: 14px;
+    margin-top: -5px;
+}
+
+a.button.button-units.button-delete-unit{
+    background-color: #0092cb;
+    font-weight: normal;
+}
+
+a.button.button-units.button-delete-unit:hover{
+    background: #E65C52;
+    color: #fff;
+    opacity: 0.7;
 }
