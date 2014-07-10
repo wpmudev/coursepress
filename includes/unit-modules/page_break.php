@@ -44,6 +44,21 @@ class page_break_module extends Unit_Module {
                 </span>
             </h3>
 
+            <div class="editor_in_place" style="display:none;">
+
+                <?php
+                $args = array(
+                    "textarea_name" => $this->name . "_content[]",
+                    "textarea_rows" => 5,
+                    "quicktags" => false,
+                    "teeny" => true,
+                );
+
+                $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+                wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                ?>
+            </div>
+
             <!--<div class="module-content">-->
             <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
             <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
@@ -57,7 +72,7 @@ class page_break_module extends Unit_Module {
 
             <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
-                                                        <!--<p><?php echo $this->description; ?></p>-->
+                                                                <!--<p><?php echo $this->description; ?></p>-->
 
             <!--</div>-->
             <?php

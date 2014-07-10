@@ -270,7 +270,7 @@ if (!class_exists('CoursePress')) {
 
             // Setup TinyMCE callback
             add_filter('tiny_mce_before_init', array(&$this, 'init_tiny_mce_listeners'));
-		
+          	
         }
 
 		

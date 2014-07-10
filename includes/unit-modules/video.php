@@ -36,19 +36,18 @@ class video_module extends Unit_Module {
                     if (!empty($video_extension)) {//it's file, most likely on the server
                         $attr = array(
                             'src' => $data->video_url,
-                            'width' => $data->player_width,
-                            'height' => $data->player_height,
+                                //'width' => $data->player_width,
+                                //'height' => 550//$data->player_height,
                         );
-
                         echo wp_video_shortcode($attr);
                     } else {
 
                         $embed_args = array(
-                            'width' => $data->player_width,
-                            'height' => 900
+                                //'width' => $data->player_width,
+                                //'height' => 550
                         );
 
-                        echo wp_oembed_get($data->video_url, $embed_args);
+                        echo wp_oembed_get($data->video_url);
                     }
                     ?>
                 </div>
@@ -67,15 +66,6 @@ class video_module extends Unit_Module {
 
         $supported_video_extensions = implode(",", wp_get_video_extensions());
 
-        if (!empty($data)) {
-            if (!isset($data->player_width) or empty($data->player_width)) {
-                $data->player_width = empty($content_width) ? 960 : $content_width;
-            }
-
-            /* if ( !isset( $data->player_height ) or empty( $data->player_height ) ) {
-              $data->player_height = 360;
-              } */
-        }
         ?>
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
@@ -100,7 +90,7 @@ class video_module extends Unit_Module {
                     <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
                 <?php } else { ?>
                     <input type="hidden" class="removable" />
-                <?php } ?>
+        <?php } ?>
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
@@ -116,7 +106,7 @@ class video_module extends Unit_Module {
                         <div class="tooltip-before"></div>
                         <div class="tooltip-button">&times;</div>
                         <div class="tooltip-content">
-                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
+        <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
                         </div>
                     </div>
                 </label>
@@ -145,7 +135,7 @@ class video_module extends Unit_Module {
                             <div class="tooltip-before"></div>
                             <div class="tooltip-button">&times;</div>
                             <div class="tooltip-content">
-                                <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  ( oEmbed support is required ). Alternatively you can Browse for a file - supported video extensions ( %s )', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
+        <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  ( oEmbed support is required ). Alternatively you can Browse for a file - supported video extensions ( %s )', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
                             </div>
                         </div>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr(( isset($data->video_url) ? $data->video_url : '')); ?>" />
@@ -153,12 +143,12 @@ class video_module extends Unit_Module {
                     </label>
                 </div>
 
-                <div class="video_additional_controls">
+                <!--<div class="video_additional_controls">
 
                     <label><?php _e('Player Width ( pixels )', 'cp'); ?></label>
                     <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) ); ?>" />
 
-                </div>
+                </div>-->
                 <?php
                 if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);
@@ -174,9 +164,18 @@ class video_module extends Unit_Module {
     }
 
     function on_create() {
+        add_filter('wp_video_shortcode', array(&$this, 'cp_video_shortcode'));
         $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
+    }
+
+    function cp_video_shortcode($html) {
+        if (!empty($html)) {
+            $out = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $html);
+            $out = preg_replace('/(width|height)="\d*"\s/', "", $out);
+        }
+        return $out;
     }
 
     function save_module_data() {

@@ -54,6 +54,21 @@ class section_break_module extends Unit_Module {
                     <input type="hidden" class="removable" />
                 <?php } ?>
 
+                <div class="editor_in_place" style="display:none;">
+
+                    <?php
+                    $args = array(
+                        "textarea_name" => $this->name . "_content[]",
+                        "textarea_rows" => 5,
+                        "quicktags" => false,
+                        "teeny" => true,
+                    );
+
+                    $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+                    wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                    ?>
+                </div>
+
                 <?php
                 if (isset($data->ID)) {
                     parent::get_module_delete_link($data->ID);

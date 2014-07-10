@@ -89,12 +89,25 @@ jQuery(document).ready(function($) {
         function reenumarate_unit_pages() {
             var i = 1;
             jQuery(".unit-pages-navigation li.ui-state-default").each(function(index) {
-                //alert(jQuery(this).find('a').html());
                 if (jQuery(this).find('a').html() !== '+') {
                     jQuery(this).find('a').html(i);
+                    jQuery(this).attr('aria-controls', 'unit-page-' + i);
+                    jQuery(this).attr('aria-labelledby', 'ui-id-' + i);
+                    jQuery(this).find('a').attr('href', '#unit-page-' + i);
+                    jQuery(this).find('a').attr('id', 'ui-id-' + i);
                     i++;
                 }
             });
+            
+            i = 1;
+            
+            jQuery("#unit-pages .ui-tabs-panel").each(function(index) {
+                jQuery(this).attr('id', 'unit-page-' + i);
+                jQuery(this).attr('aria-controls', 'unit-page-' + i);
+                jQuery(this).attr('aria-labelledby', 'ui-id-' + i);
+                i++;
+            });
+            
         }
 
         function delete_unit_page_and_elements_confirmed() {
