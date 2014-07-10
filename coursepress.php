@@ -40,6 +40,8 @@ if (!class_exists('CoursePress')) {
 
     class CoursePress {
 
+		private static $instance = null;
+		
         var $version = '1.0b';
         var $name = 'CoursePress';
         var $dir_name = 'coursepress';
@@ -98,6 +100,9 @@ if (!class_exists('CoursePress')) {
 
                 //Tooltip Helper
                 require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php' );
+
+                // Menu Meta Box
+                require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );
 
                 //Listen to dynamic editor requests ( using on unit page in the admin )
                 add_action('wp_ajax_dynamic_wp_editor', array(&$this, 'dynamic_wp_editor'));
@@ -1437,10 +1442,6 @@ if (!class_exists('CoursePress')) {
             if (empty($assigned_courses_ids)) {
                 $this->drop_instructor_capabilities($user_id);
             }
-
-            // Debug
-            $instructor = new Instructor($user_id);
-            cp_write_log($instructor);
 
             $ajax_response['instructor_removed'] = true;
 
@@ -2830,11 +2831,27 @@ if (!class_exists('CoursePress')) {
 
             exit;
         }
+		
+		public static function instance( $instance = null ) {
+			if ( ! $instance || 'CoursePress' != get_class( $instance ) ){
+				if ( is_null( self::$instance ) ) {
+					self::$instance = new CoursePress();
+				}
+			} else {
+				if ( is_null( self::$instance ) ) {
+					self::$instance = $instance;
+				}			
+			}
+			return self::$instance;
+		}
 
     }
 
 }
 
+CoursePress::instance( new CoursePress() );
 global $coursepress;
-$coursepress = new CoursePress();
+$coursepress = CoursePress::instance();
+
+
 ?>
