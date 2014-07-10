@@ -270,7 +270,12 @@ if (!class_exists('CoursePress')) {
 
             // Setup TinyMCE callback
             add_filter('tiny_mce_before_init', array(&$this, 'init_tiny_mce_listeners'));
+		
         }
+
+		
+
+		
 
         function cp_marketpress_popup() {
             if (( isset($_GET['cp_admin_ref']) && $_GET['cp_admin_ref'] == 'cp_course_creation_page' ) || ( isset($_POST['cp_admin_ref']) && $_POST['cp_admin_ref'] == 'cp_course_creation_page' )) {
@@ -317,7 +322,8 @@ if (!class_exists('CoursePress')) {
 
         function redirect_after_logout() {
             if (get_option('use_custom_login_form', 1)) {
-                wp_redirect(trailingslashit(site_url() . '/' . $this->get_login_slug()));
+				$url = get_option( 'cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug() ) );
+                wp_redirect( $url );
                 exit;
             }
         }
