@@ -1,49 +1,13 @@
 <?php
-echo do_shortcode( '[course_instructor_avatar instructor_id="' . $user->ID . '"]' );
-echo get_user_meta( $user->ID, 'description', true );
+	// Avatar
+	echo do_shortcode( '[course_instructor_avatar instructor_id="' . $user->ID . '"]' );
+	// Bio
+	echo get_user_meta( $user->ID, 'description', true );	
 ?>
 
 <h2 class="h2-instructor-bio"><?php _e( 'Courses', 'cp' ); ?></h2>
 
 <?php
-$instructor = new Instructor( $user->ID );
-$assigned_courses = $instructor->get_assigned_courses_ids( 'publish' );
-
-foreach ( $assigned_courses as $course_id ) {
-
-    $course = new Course( $course_id );
-    $course_details = $course->get_course();
-
-    if ( $course_details ) {
-        ?>
-
-        <div class="course">
-
-            <div class="enroll-box">
-                <h3><a href="<?php echo $course->get_permalink(); ?>"><?php echo $course_details->post_title; ?></a></h3>
-                <div class="enroll-box-left">
-                    <div class="course-box">
-						<?php echo do_shortcode( '[course_dates course_id="' . $course->details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_enrollment_dates course_id="' . $course->details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_class_size course_id="' . $course->details->ID . '"]' ); ?>
-						<?php echo do_shortcode( '[course_cost course_id="' . $course->details->ID . '"]' ); ?>
-                    </div></div>
-
-                <div class="enroll-box-right">
-                        <div class="apply-box">
-							<?php echo do_shortcode('[course_join_button course_id="' . $course->details->ID . '"]' ); ?>
-                            <?php // echo do_shortcode( '[course_details field="button" course_id="' . $course->details->ID . '"]' ); ?>
-                        </div>
-                </div>
-
-            </div>
-
-        </div><div class="divider"></div>
-
-        <?php
-    }
-}
-if ( count( $assigned_courses ) == 0 ) {
-    _e( 'The Instructor does not have any courses assigned yet.', 'cp' );
-}
+	// Course List
+	echo do_shortcode('[course_list instructor="' . $user->ID . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no"]');
 ?>

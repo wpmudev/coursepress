@@ -86,7 +86,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function course( $atts ) {
 			
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'show'            => 'summary',
 				'date_format'     => get_option( 'date_format' ),
 				'label_tag'       => 'strong',
@@ -95,7 +95,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             ), $atts, 'course' ) );
 			
 			$course = new Course( $course_id );
-			$encoded = object_encode( $course );
+
+			// needs some more work...
+			// $encoded = object_encode( $course );
+			$encoded = false;
 
 			$sections = explode( ',', $show );
 			
@@ -106,102 +109,102 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$section = strtolower( $section );
 				// [course_title]
 				if ( 'title' == trim( $section ) && 'yes' == $show_title ) {
-					$content .= do_shortcode('[course_title title_tag="h3"]');
+					$content .= do_shortcode('[course_title title_tag="h3" course_id="' . $course_id . '" course_id="' . $course_id . '"]');
 				}
 
 				// [course_summary]
 				if ( 'summary' == trim( $section ) ) {
-					$content .= do_shortcode('[course_summary course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_summary course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_description]
 				if ( 'description' == trim( $section ) ) {				
-					$content .= do_shortcode('[course_description course="' . $encoded . '"]');					
+					$content .= do_shortcode('[course_description course="' . $encoded . '" course_id="' . $course_id . '"]');					
 				}
 
 				// [course_start]
 				if ( 'start' == trim( $section ) ) {				
-					$content .= do_shortcode('[course_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');								
+					$content .= do_shortcode('[course_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');								
 				}
 
 				// [course_end]
 				if ( 'end' == trim( $section ) ) {				
-					$content .= do_shortcode('[course_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');								
+					$content .= do_shortcode('[course_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');								
 				}
 
 				// [course_dates]
 				if ( 'dates' == trim( $section ) ) {			
-					$content .= do_shortcode('[course_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
+					$content .= do_shortcode('[course_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_enrollment_start]
 				if ( 'enrollment_start' == trim( $section ) ) {				
-					$content .= do_shortcode('[course_enrollment_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
+					$content .= do_shortcode('[course_enrollment_start course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_enrollment_end]
 				if ( 'enrollment_end' == trim( $section ) ) {				
-					$content .= do_shortcode('[course_enrollment_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');
+					$content .= do_shortcode('[course_enrollment_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_enrollment_dates]				
 				if ( 'enrollment_dates' == trim( $section ) ) {			
-					$content .= do_shortcode('[course_enrollment_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '"]');					
+					$content .= do_shortcode('[course_enrollment_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');					
 				}				
 				
 				// [course_summary]
 				if ( 'class_size' == trim( $section ) ) {
-					$content .= do_shortcode('[course_class_size course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_class_size course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_cost]
 				if ( 'cost' == trim( $section ) ) {
-					$content .= do_shortcode('[course_cost course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_cost course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}
 
 				// [course_language]
 				if ( 'language' == trim( $section ) ) {
-					$content .= do_shortcode('[course_language course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_language course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}				
 
 				// [course_category]
 				if ( 'category' == trim( $section ) ) {
-					$content .= do_shortcode('[course_category course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_category course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}				
 				
 				// [course_enrollment_type]
 				if ( 'enrollment_type' == trim( $section ) ) {
-					$content .= do_shortcode('[course_enrollment_type course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_enrollment_type course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}								
 				
 				// [course_instructors]
 				if ( 'instructors' == trim( $section ) ) {
-					$content .= do_shortcode('[course_instructors course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_instructors course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}												
 				
 				// [course_list_image]
 				if ( 'image' == trim( $section ) ) {
-					$content .= do_shortcode('[course_list_image course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_list_image course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}												
 
 				// [course_featured_video]
 				if ( 'video' == trim( $section ) ) {
-					$content .= do_shortcode('[course_featured_video course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_featured_video course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}												
 				
 				// [course_join_button]
 				if ( 'button' == trim( $section ) ) {
-					$content .= do_shortcode('[course_join_button course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_join_button course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}
 				
 				// [course_thumbnail]
 				if ( 'thumbnail' == trim( $section ) ) {
-					$content .= do_shortcode('[course_thumbnail course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_thumbnail course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}				
 				
 				// [course_action_links]
 				if ( 'action_links' == trim( $section ) ) {
-					$content .= do_shortcode('[course_action_links course="' . $encoded . '"]');
+					$content .= do_shortcode('[course_action_links course="' . $encoded . '" course_id="' . $course_id . '"]');
 				}
 				
 			}
@@ -216,8 +219,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_title( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'title_tag'       => 'h3',
+				'link'            => 'no',
 				'class'           => '',
             ), $atts, 'course_title' ) );
 
@@ -226,7 +230,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?> <?php echo $class; ?>">
+				<?php echo 'yes' == $link ? '<a href="' . get_permalink( $course_id) . '" title="' . $title . '">' : '';  ?>
 				<?php echo $title; ?>
+				<?php echo 'yes' == $link ? '</a>' : '';  ?>
 				</<?php echo $title_tag; ?>>
 			<?php
 			$content = ob_get_clean();
@@ -242,7 +248,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_summary( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => '',
 				'class'           => '',				
             ), $atts, 'course_summary' ) );
@@ -268,7 +274,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */		
 		function course_description( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'class'           => '',
             ), $atts, 'course_description' ) );
@@ -295,7 +301,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_start( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Course Start Date', 'cp' ),
@@ -331,7 +337,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_end( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Course End Date', 'cp' ),				
@@ -369,7 +375,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_dates( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Course Dates', 'cp' ),				
@@ -416,7 +422,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_enrollment_start( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Enrollment Start Date', 'cp' ),				
@@ -456,7 +462,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */		
 		function course_enrollment_end( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Enrollment End Date', 'cp' ),								
@@ -500,7 +506,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */		
 		function course_enrollment_dates( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Enrollment Dates', 'cp' ),								
@@ -551,7 +557,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_class_size( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'show_no_limit'   => 'no',				
 				'show_remaining'  => 'yes',
@@ -609,7 +615,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             global $coursepress;
 			
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
  				'label'           => __( 'Price', 'cp' ),
 				'label_tag'       => 'strong',
@@ -658,7 +664,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_language( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'label'           => __( 'Course Language', 'cp' ),
 				'label_tag'       => 'strong',
@@ -693,7 +699,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_category( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'label'           => __( 'Course Category', 'cp' ),
 				'label_tag'       => 'strong',
@@ -740,7 +746,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_enrollment_type( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'label'           => __( 'Who can Enroll?', 'cp' ),
 				'label_tag'       => 'strong',
@@ -797,7 +803,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_list_image( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'width'           => 'default',
 				'height'          => 'default',
@@ -833,7 +839,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_featured_video( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'width'           => 'default',
 				'height'          => 'default',
@@ -897,7 +903,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_join_button( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'course_full_text'=> __( 'Course Full', 'cp' ),
 				'course_expired_text' => __( 'Not available anymore', 'cp' ),
@@ -1083,7 +1089,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_thumbnail( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'wrapper'         => 'figure',
 				'class'           => '',
@@ -1124,7 +1130,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_action_links( $atts ) {
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'class'           => '',
             ), $atts, 'course_action_links' ) );			
@@ -1167,21 +1173,105 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function course_list( $atts ) {
 			
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => '',
+				'status'          => 'publish',
+				'instructor'      => '',
  				'label'           => __( 'Price', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
-				'no_cost_text'    => __( 'FREE', 'cp' ),				
+				'no_cost_text'    => __( 'FREE', 'cp' ),
+				'two_column'      => 'yes',
+				'left_class'      => '',
+				'right_class'     => '',
+				'course_class'    => '',
+				'title_link'      => 'yes',
+				'show'            => 'dates,enrollment_dates,class_size,cost',				
 				'class'           => '',
             ), $atts, 'course_list' ) );			
 			
+			$status = 'published' == $status ? 'publish' : $status;
+			
 			$content = '';
-		
-			ob_start();			
-			?>
-		        TODO!!!
-			<?php
-			$content .= trim( ob_get_clean() );	
+						
+			$include_ids = array();
+			if ( ! empty ( $instructor ) )
+			{
+				$instructors = explode( ',', $instructor );
+				if ( ! empty ( $instructors ) ) { 
+					foreach( $instructors as $ins ) {
+						$ins = (int) $ins;
+						if ( $ins ) {
+							$ins = new Instructor( $ins );
+							$course_ids = $ins->get_assigned_courses_ids( $status );
+							if ( $course_ids ) {
+								$include_ids = array_unique(array_merge( $include_ids ,$course_ids ) );	
+							}
+						}
+					}
+				} else {
+					$instructor = (int) $instructore;
+					if ( $instructor ) {
+						$instructor = new Instructor( $ins );
+						$course_ids = $instructor->get_assigned_courses_ids( $status );
+						if ( $course_ids ) {
+							$include_ids = array_unique(array_merge( $include_ids ,$course_ids ) );	
+						}						
+					}
+				}
+			}
+			
+			$post_args = array(
+				'order'            => 'ASC',
+				'post_type'        => 'course',
+				'meta_key'         => 'enroll_type',
+				'post_status'      => $status,
+			);
+			
+			if ( ! empty( $include_ids ) ) {
+				$post_args = wp_parse_args( array( 'include' => $include_ids ), $post_args );
+			}
+			
+			$courses = get_posts( $post_args );
+			
+			$content .= '<div class="course-list ' . $class . '">';
+						
+			foreach( $courses as $course ) {
+				$content .= '<div class="course-list-item ' . $course_class . '">';
+				$content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '"]');
+			
+				if ( 'yes' == $two_column ) {
+					$content .= '<div class="course-list-box-left ' . $left_class . '">';
+				}
+				
+				// One liner...
+				$content .= do_shortcode('[course show="' . $show . '" show_title="yes" course_id="' . $course->ID . '"]');
+				
+				// Or multiple lines...
+				// $content .= do_shortcode('[course_dates course_id="' . $course->ID . '"]');
+				// $content .= do_shortcode('[course_enrollment_dates course_id="' . $course->ID . '"]');
+				// $content .= do_shortcode('[course_class_size course_id="' . $course->ID . '"]');
+				// $content .= do_shortcode('[course_cost course_id="' . $course->ID . '"]');
+				
+				if ( 'yes' == $two_column ) {
+					$content .= '</div>';
+					$content .= '<div class="course-list-box-right ' . $right_class . '">';
+				}
+				
+				$content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
+
+				if ( 'yes' == $two_column ) {
+					$content .= '</div>';
+				}				
+
+				$content .= '<div class="divider" ></div>';
+				
+			} // foreach
+			
+			if ( ( ! $courses || 0 == count( $courses ) ) && ! empty( $instructor ) ) {
+				$content .= __( 'The Instructor does not have any courses assigned yet.', 'cp' );
+			}
+			
+			$content .= '</div>'; //course-list
 			
 			return $content;
 			
@@ -1211,7 +1301,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             global $instructor_profile_slug;
 
             extract( shortcode_atts( array(
-                'course_id'       => get_the_ID(),
+                'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'label'           => __( 'Instructor', 'cp' ),
 				'label_plural'    => __( 'Instructors', 'cp' ),
