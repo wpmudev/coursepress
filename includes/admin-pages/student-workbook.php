@@ -69,7 +69,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 <span class="info"><a href="<?php echo admin_url( 'admin.php?page=students&action=view&student_id='.$student->ID );?>"><i class="fa fa-user"></i></a></span>
                             </div>
                         </div>
-                        <div class="full border-devider"></div>
+                        <div class="full border-divider"></div>
                     </div><!--student-profile-info-->
 
                     <div id="units-wrap">
@@ -169,7 +169,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                     </form>
                                 </div><!--tablenav-->
 
-                                <div class="full border-devider"></div>
+                                <div class="full border-divider"></div>
                                 <?php if ( count( $course_units ) >= 1 ) { ?>
                                     <div id="units_accordion" class="units_accordion">
                                         <?php foreach ( $course_units as $unit ) { ?>

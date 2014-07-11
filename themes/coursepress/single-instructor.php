@@ -54,7 +54,7 @@ $assigned_courses = $instructor->get_assigned_courses_ids( 'publish' );
 
                     </div>
 
-                </div><div class="devider"></div>
+                </div><div class="divider"></div>
 
         <?php
     }

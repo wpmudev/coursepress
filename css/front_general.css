@@ -72,7 +72,7 @@ html[xmlns] .clearfix {
     font-weight: bold;
 }
 
-.devider{
+.divider{
     width: 100%;
     height: 1px;
     background-color: #ccc;
@@ -113,11 +113,14 @@ html[xmlns] .clearfix {
 }
 
 .instructor-profile {
-	margin: 15px 0 0 0;
+	margin: 0 0 15px 0;
 	padding: 0 0 15px 0;
 	border-bottom: 1px solid #efefef;	
 }
+
 .instructor-profile:last-child {
+	margin: 0;
+	padding: 0;
 	border: none;
 }
 
@@ -149,6 +152,7 @@ html[xmlns] .clearfix {
 
 .apply-links{
     text-align: right;
+	clear:both;
 }
 
 .apply-button-finished,
@@ -198,6 +202,7 @@ input[type="button"].apply-button-pending{
 	float:right;	
 }
 
+button.apply-button-enrolled,
 a.apply-button-enrolled, 
 input[type="submit"].apply-button-enrolled, 
 input[type="button"].apply-button-enrolled{
@@ -221,6 +226,7 @@ input[type="button"].apply-button-enrolled{
 		float:right;
 }
 
+button.apply-button-enrolled:hover, 
 a.apply-button-enrolled:hover, 
 input[type="submit"].apply-button-enrolled:hover,
 input[type="button"].apply-button-enrolled:hover{
@@ -228,6 +234,7 @@ input[type="button"].apply-button-enrolled:hover{
         color: #f1f1f1;
     */}
 
+button.apply-button, 
 a.apply-button, 
 input[type="submit"].apply-button, 
 input[type="button"].apply-button{
@@ -251,11 +258,13 @@ input[type="button"].apply-button{
 	float:right;
 }
 
+button.apply-button:hover, 
 a.apply-button:hover, 
 input[type="submit"].apply-button:hover,
 input[type="button"].apply-button:hover{
-    background: #0088CC;
+/*    background: #0088CC;
     color: #f1f1f1;
+*/	
 }
 
 /* MODULES */
@@ -477,7 +486,7 @@ span.percentage{
     text-align: center;
 }
 
-.notification-meta-devider{
+.notification-meta-divider{
     background-color: #dbdbdb;
     height: 2px;
     width: 24px;
@@ -600,8 +609,8 @@ h1.notification-title{
 }
 
 .course-summary{
-    margin-bottom: 25px;
-    margin-top: 25px;
+/*    margin-bottom: 25px;
+    margin-top: 25px;*/
 }
 
 .image_holder img{

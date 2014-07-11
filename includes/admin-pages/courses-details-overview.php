@@ -1040,7 +1040,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
 
 
                             <!-- OLD MARKETPRESS INTEGRATION
-                                                        <div class="full border-devider">
+                                                        <div class="full border-divider">
                                                             <div class="half">
                                                                 <h3><?php _e('Cost to enroll in the course', 'cp'); ?></h3>
                                                                 
@@ -1086,7 +1086,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                  // OLD MARKETPRESS INTEGRATION -->
 
                             <!-- OLD GRADEBOOK INTEGRATION
-                                                                                            <div class="full border-devider">
+                                                                                            <div class="full border-divider">
                                                             <label><?php _e('Show Grades Page for Students', 'cp'); ?>
                                                                 <a class="help-icon" href="javascript:;"></a>
                                                                 <div class="tooltip">

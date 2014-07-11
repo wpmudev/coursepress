@@ -53,7 +53,7 @@ class checkbox_input_module extends Unit_Module {
             _e('No answer / response', 'cp');
         }
         ?>
-        <div class="full regular-border-devider"></div>
+        <div class="full regular-border-divider"></div>
         <?php
     }
 
@@ -342,8 +342,6 @@ class checkbox_input_module extends Unit_Module {
                 foreach ($_POST[$this->name . '_checkbox_check'] as $post_checked_answers) {
                     $checked_answers[] = $post_checked_answers;
                 }
-
-
 
                 //cp_write_log( $checked_answers );
 

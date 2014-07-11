@@ -46,7 +46,7 @@ class file_input_module extends Unit_Module {
             _e('File not uploaded yet.', 'cp');
         }
         ?>
-        <div class="full regular-border-devider"></div>
+        <div class="full regular-border-divider"></div>
         <?php
     }
 

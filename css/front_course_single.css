@@ -2,7 +2,7 @@
     font-weight: bold;
 }
 
-.devider{
+.divider{
     width: 100%;
     height: 1px;
     background-color: #ccc;
@@ -108,6 +108,7 @@
 	float:right;
 }
 
+button.apply-button-enrolled,
 a.apply-button-enrolled{
 /*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
@@ -129,12 +130,15 @@ a.apply-button-enrolled{
 	float:right;	
 }
 
+button.apply-button-enrolled:hover,
 a.apply-button-enrolled:hover{
 /*    background: #60b160;
     color: #f1f1f1;
 */}
 
-a.apply-button, input.apply-button{
+button.apply-button,
+a.apply-button,
+input.apply-button{
 /*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
@@ -155,7 +159,8 @@ a.apply-button, input.apply-button{
 	float: right;
 }
 
+button.apply-button:hover,
 a.apply-button:hover, input.apply-button:hover{
-    background: #0088CC;
-    color: #f1f1f1;
+/*    background: #0088CC;
+    color: #f1f1f1;*/
 }

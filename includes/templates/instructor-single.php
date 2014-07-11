@@ -40,7 +40,7 @@ foreach ( $assigned_courses as $course_id ) {
 
             </div>
 
-        </div><div class="devider"></div>
+        </div><div class="divider"></div>
 
         <?php
     }

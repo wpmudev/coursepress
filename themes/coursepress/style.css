@@ -1548,7 +1548,7 @@ input[type="submit"].apply-button-finished,
     cursor: default;
 }
 
-.entry-content .devider:last-child{
+.entry-content .divider:last-child{
     display: none;
 }
 
@@ -1738,7 +1738,7 @@ li.submenu-active{
     top: 0;
 }
 
-.content-instructor-profile .devider:last-child{
+.content-instructor-profile .divider:last-child{
     display: none;
 }
 
@@ -1876,7 +1876,7 @@ a[rel="prev"] {
     text-align: center;
 }
 
-.notification-meta-devider{
+.notification-meta-divider{
     background-color: #dbdbdb;
     height: 2px;
     width: 24px;

@@ -1484,12 +1484,12 @@ a .remove-btn:hover{
     font-size: 14px;
 }
 
-.student-profile-info .border-devider,
-.student-course .border-devider{
+.student-profile-info .border-divider,
+.student-course .border-divider{
     margin: 25px 10px 0px 0px;
 }
 
-.student-course:last-child .border-devider{
+.student-course:last-child .border-divider{
     border: none;
 }
 
@@ -1605,7 +1605,7 @@ a .remove-btn:hover{
     padding-top: 0px;
 }
 
-#units-wrap .border-devider{
+#units-wrap .border-divider{
     margin-bottom: 8px;
 }
 

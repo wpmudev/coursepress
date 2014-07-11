@@ -51,7 +51,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                     <?php echo $unit_module->post_content; //may contain prefiltered html ?>
                                 </div>
 
-                                <div class="full regular-border-devider"></div>
+                                <div class="full regular-border-divider"></div>
                             <?php } ?>
 
                             <?php

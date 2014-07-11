@@ -53,7 +53,7 @@ $coursepress->check_access( $course_id );
                     <li>
                         <div class="notification-archive-single-meta">
                             <div class="notification-date"><span class="date-part-one"><?php echo get_the_date( 'M' ); ?></span><span class="date-part-two"><?php echo get_the_date( 'j' ); ?></span></div>
-                            <span class="notification-meta-devider"></span>
+                            <span class="notification-meta-divider"></span>
                             <div class="notification-time"><?php the_time(); ?></div>
                         </div>
                         <div class="notification-archive-single">

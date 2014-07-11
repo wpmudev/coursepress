@@ -67,7 +67,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                     <span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
                                 </div>
                             </div>
-                            <div class="full border-devider"></div>
+                            <div class="full border-divider"></div>
                         </div><!--student-profile-info-->
 
                         <?php
@@ -202,7 +202,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
                                                 </div>
                                             <?php } else { ?>
-                                                <div class="full border-devider"></div>
+                                                <div class="full border-divider"></div>
                                             <?php } ?>
                                         </div>
                                         <?php

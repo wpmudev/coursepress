@@ -76,8 +76,8 @@
         <?php do_action( 'after_settings_username' );?>
         
         <label>
-            <?php _e( 'Password ( empty = don\'t change )', 'cp' ); ?>:
-            <input type="password" name="password" value="" />
+            <?php _e( 'Password', 'cp' ); ?>:
+            <input type="password" name="password" value="" placeholder="<?php _e( 'Won\'t change if empty.', 'cp' ); ?>" />
         </label>
         
         <?php do_action( 'after_settings_passwordon' );?>

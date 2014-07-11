@@ -829,12 +829,12 @@ if (!class_exists('CoursePress')) {
                             //just output the content
                         } else {
                             $prepend_content = $this->get_template_details($this->plugin_dir . 'includes/templates/single-course-before-details.php');
-
-                            $content = $prepend_content . $content;
+                            $content = do_shortcode( $prepend_content . $content );
                         }
                     }
                 }
             }
+						
             return $content;
         }
 

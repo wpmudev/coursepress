@@ -53,7 +53,7 @@ class radio_input_module extends Unit_Module {
             _e('No answer / response', 'cp');
         }
         ?>
-        <div class="full regular-border-devider"></div>
+        <div class="full regular-border-divider"></div>
         <?php
     }
 

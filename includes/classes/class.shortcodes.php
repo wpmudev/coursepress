@@ -59,6 +59,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_featured_video', array( &$this, 'course_featured_video' ) );
 			add_shortcode( 'course_join_button', array( &$this, 'course_join_button' ) );	
 			add_shortcode( 'course_thumbnail', array( &$this, 'course_thumbnail' ) );									
+			add_shortcode( 'course_action_links', array( &$this, 'course_action_links' ) );
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 			
 			// Page Shortcodes
@@ -197,9 +198,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$content .= do_shortcode('[course_thumbnail course="' . $encoded . '"]');
 				}				
 				
+				// [course_action_links]
+				if ( 'action_links' == trim( $section ) ) {
+					$content .= do_shortcode('[course_action_links course="' . $encoded . '"]');
+				}
+				
 			}
 			
-			// return print_r( $course );
 			return $content;
 		}
 		
@@ -1026,10 +1031,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					} elseif ( ! $course_started && ! $course->open_ended_course ) {
 						// "NOT YET AVAILABLE"
 						$button .= '<span class="apply-button apply-button-not-started ' . $class. '">' . $not_started_text . '</span>';
-					} elseif ( ! is_single() ) {
+					} elseif ( ! is_single() && false === strpos( $_SERVER['REQUEST_URI'], CoursePress::get_student_dashboard_slug() ) ) {
 						// GO TO COURSE
 						$button_url = get_permalink( $course_id );
-						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';						
+						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
 					// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
@@ -1090,8 +1095,47 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			return $content;
 		}						
 		
+		/**
+		 * Shows the course action links.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_action_links( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'class'           => '',
+            ), $atts, 'course_action_links' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+	
+			$course->course_start_date = get_post_meta( $course_id, 'course_start_date', true );
+			$course->course_end_date = get_post_meta( $course_id, 'course_end_date', true );
+			$course->open_ended_course = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
 		
-		
+	        $withdraw_link_visible = false;
+			
+			$content = '';
+			
+			$student = new Student( get_current_user_id() );
+
+	        if ( $student && $student->user_enrolled_in_course( $course_id ) ) {
+	            if ( ( ( strtotime( $course->course_start_date ) <= time() && strtotime( $course->course_end_date ) >= time() ) || ( strtotime( $course->course_end_date ) >= time() ) ) || $course->open_ended_course == 'on' ) {
+					//course is currently active or is not yet active ( will be active in the future )
+	                $withdraw_link_visible = true;
+	            }
+	        }
+
+	        $content = '<div class="apply-links course-action-links course-action-links-' . $course_id . ' ' . $class . '">';
+
+	        if ( $withdraw_link_visible === true ) {
+	            $content .= '<a href="?withdraw=' . $course_id . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
+	        }
+	        $content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
+			
+			return $content;
+		}		
 		/**
 	     *
 		 * INSTRUCTOR DETAILS SHORTCODES
@@ -1121,11 +1165,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Instructor', 'cp' ),
 				'label_plural'    => __( 'Instructors', 'cp' ),
 				'label_delimeter' => ': ',
+				'label_element'   => '',
                 'count'           => false,  // deprecated
                 'list'            => false,  // deprecated
                 'link'            => false,
 				'link_text'       => __( 'View Full Profile', 'cp' ),
 				'show_summary'    => 'no',
+				'show_label'      => false, // yes, no
 				'summary_length'  => 50,
 				'style'           => 'block',  //list, list-flat, block, count
 				'list_separator'  => ', ',
@@ -1138,13 +1184,26 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Support previous arguments
 			$style = $count ? 'count' : $style;
 			$style = $list ? 'list-flat' : $style;
+			
+			$show_label = 'list-flat' == $style && ! $show_label ? 'yes' : $show_label;
 
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 			
             $instructors = Course::get_course_instructors( $course_id );
-
-            $content = '';
             $list = array();
+			$content = '';
+			
+			if( 0 < count( $instructors ) && 'yes' == $show_label ) {
+				if( ! empty( $label_element ) ) {
+					$content .= '<' . $label_element . '>';
+				}
+				
+				$content .= count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
+				
+				if( ! empty( $label_element ) ) {
+					$content .= '</' . $label_element . '>';
+				}
+			}
 
 			if ( 'count' != $style ) {
 	            foreach ( $instructors as $instructor ) {
@@ -1195,23 +1254,23 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			switch ( $style ) {
 				
 				case 'block':
-					$content = '' . $content . '';
+					$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
 				break;
 				
 				case 'list-flat':		
-					$content = '';
-					if( 0 < count( $instructors ) && ! empty( $label ) ) {
-						$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
-					}
+					// $content = '';
+					// if( 0 < count( $instructors ) && ! empty( $label ) ) {
+					// 	$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
+					// }
 					$content .= implode( $list_separator, $list );
 					$content = '<div class="instructor-list instructor-list-flat ' . $class . '">' . $content . '</div>';
 				break;
 
 				case 'list':		
-					$content = '';
-					if( 0 < count( $instructors ) && ! empty( $label ) ) {
-						$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
-					}
+					// $content = '';
+					// if( 0 < count( $instructors ) && ! empty( $label ) ) {
+					// 	$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
+					// }
 				
 					$content .= '<ul>';
 					foreach( $list as $instructor ){
