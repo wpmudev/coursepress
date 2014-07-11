@@ -38,6 +38,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             add_shortcode( 'course_discussion', array( &$this, 'course_discussion' ) );
             add_shortcode( 'get_parent_course_id', array( &$this, 'get_parent_course_id' ) );
             add_shortcode( 'units_dropdown', array( &$this, 'units_dropdown' ) );
+			add_shortcode( 'course_list', array( &$this, 'course_list' ) );
 
 			add_shortcode( 'course', array( &$this, 'course' ) );
 			// Sub-shortcodes
@@ -936,6 +937,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			
 			$button = '';
 			$button_url = $enrollment_process_url;
+			$is_form = false;
 			
 			// User is not logged in, so we need to see if course is ready for signup or not.
 			if ( ! is_user_logged_in() ) {
@@ -944,31 +946,35 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course_full ) {
 						// "COURSE FULL"
 						$button .= '<span class="apply-button apply-button-full ' . $class. '">' . $course_full_text . '</span>';
+						// cp_write_log( 'ONE');
 					} else {
 						
 						// Course expired
 						if( $course_expired && ! $course->open_ended_course ) {
 							// "COURSE FINISHED"
 							$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
-							
+							// cp_write_log( 'TWO');
 						// Course hasn't expired, but its not yet available for enrollments (closed)
 						} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
 							// "ENROLLMENT NOT YET AVAILABLE/CLOSED"
 							$button .= '<span class="apply-button apply-button-enrollment-closed ' . $class. '">' . $enrollment_closed_text . '</span>';
-							
+							// cp_write_log( 'THREE');
 						// Course is available, but enrollments have expired
 						} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
 							// "ENROLLMENTS ARE FINISHED"
 							$button .= '<span class="apply-button apply-button-enrollment-finished ' . $class. '">' . $enrollment_finished_text . '</span>';
+							// cp_write_log( 'FOUR');	
 						} elseif ( ! is_single() ) {
 							// GO TO COURSE
 							$button_url = get_permalink( $course_id );
 							$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
+							// cp_write_log( 'FIVE');
 						// Course hasn't expired and enrollments are open... Lets sign up!
 						} else {
 							// "SIGN UP NOW"
 							$button_url = $signup_url;
 		                    $button .= '<button data-link="' . $button_url . '?course_id=' . $course_id . '" class="apply-button ' . $class. '">' . $signup_text . '</button>';
+							// cp_write_log( 'SIX');	
 						}
 					}
 				} else {
@@ -987,37 +993,46 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course_full ) {
 						// "COURSE FULL"
 						$button .= '<span class="apply-button apply-button-full ' . $class. '">' . $course_full_text . '</span>';
+						// cp_write_log( 'SEVEN');			
 				    // We've got room, but make sure its not expired	
 					} elseif ( $course_expired && ! $course->open_ended_course ) {
 						// "COURSE FINISHED"
 						$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
+						// cp_write_log( 'EIGHT');				
 					// Course hasn't expired, but its not yet available for enrollments (closed)
 					} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
 						// "ENROLLMENT NOT YET AVAILABLE"
 						$button .= '<span class="apply-button apply-button-enrollment-closed ' . $class. '">' . $enrollment_closed_text . '</span>';
+						// cp_write_log( 'NINE');					
 					// Course is available, but enrollments have expired
 					} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
 						// "ENROLLMENTS ARE FINISHED"
 						$button .= '<span class="apply-button apply-button-enrollment-finished ' . $class. '">' . $enrollment_finished_text . '</span>';
-
+							// cp_write_log( 'TEN');
 						//We're not on a single page, so we're probably on a course list page. Behaviour is slightly different.
 					} elseif ( ! is_single() ) {
 						// GO TO COURSE
 						$button_url = get_permalink( $course_id );
 						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
+							// cp_write_log( 'ELEVEN');
 					// Enrollments are open, but requires a prerequisite
 					} elseif ( 'prerequisite' == $course->enroll_type ) {
 						// PREREQUISITE CODE HERE
 						$button .= '<span class="apply-button apply-button-prerequisite ' . $class. '">' . $prerequisite_text . '</span>';
+							// cp_write_log( 'TWELVE');
 					// No prerequisites, but requires a passcode
 					} elseif ( 'passcode' == $course->enroll_type ) {
 						// PASSCODE CODE
 						$button .= '<div class="passcode-box"><label>' . $passcode_text . ' <input type="password" name="passcode" /></label></div>';
 						$button .= '<input type="submit" class="apply-button ' . $class. '" value="' . $enroll_text . '" />';
+						$is_form = true;
+							// cp_write_log( 'THIRTEEN');
 					// No passcodes, so lets join.
 					} else {
 						// ENROLL
 						$button .= '<input type="submit" class="apply-button ' . $class. '" value="' . $enroll_text . '" />';
+						$is_form = true;
+							// cp_write_log( 'FOURTEEN');	
 					}
 					
 				// Student is enrolled, but lets see if they can still access it.	
@@ -1027,29 +1042,36 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course_expired && ! $course->open_ended_course ) {
 						// "COURSE FINISHED"
 						$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
+							// cp_write_log( 'FIFTEEN');		
 					// Course hasn't expired, but is not yet available
 					} elseif ( ! $course_started && ! $course->open_ended_course ) {
 						// "NOT YET AVAILABLE"
 						$button .= '<span class="apply-button apply-button-not-started ' . $class. '">' . $not_started_text . '</span>';
+							// cp_write_log( 'SIXTEEN');			
 					} elseif ( ! is_single() && false === strpos( $_SERVER['REQUEST_URI'], CoursePress::get_student_dashboard_slug() ) ) {
 						// GO TO COURSE
 						$button_url = get_permalink( $course_id );
 						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
+							// cp_write_log( 'SEVENTEEN');				
 					// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
 						$button_url = get_permalink( $course_id ) . 'units/';
 						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $access_text . '</button>';
+							// cp_write_log( 'EIGHTEEN');					
 					}
 					
 				}
 			}
 			
 			// $button to output
-            $button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
-			$button .= wp_nonce_field( 'enrollment_process' );
-			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
-			$button .= '</form>';
+			if ( $is_form ) {
+				$button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
+				$button .= wp_nonce_field( 'enrollment_process' );
+				$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
+				$button .= '</form>';
+				
+			}
 		
 			return $button;
 		}
@@ -1135,7 +1157,36 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 	        $content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
 			
 			return $content;
-		}		
+		}
+		
+		/**
+		 * Shows the course cost.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_list( $atts ) {
+			
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+ 				'label'           => __( 'Price', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ':',
+				'no_cost_text'    => __( 'FREE', 'cp' ),				
+				'class'           => '',
+            ), $atts, 'course_list' ) );			
+			
+			$content = '';
+		
+			ob_start();			
+			?>
+		        TODO!!!
+			<?php
+			$content .= trim( ob_get_clean() );	
+			
+			return $content;
+			
+		}	
+				
 		/**
 	     *
 		 * INSTRUCTOR DETAILS SHORTCODES
@@ -2594,7 +2645,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							<?php do_action( 'cp_form_fields' ); ?>
 
 					        <label class="full">
-					            <a href="<?php echo $signup_url; ?>"><?php _e( '« Back to Sign-up', 'cp' ); ?></a>
+					            <a href="<?php echo $signup_url; ?>"><?php _e( "Don't have an account? Go to Signup!", 'cp' ); ?></a>
 					        </label>
 				
 						    <label class="full-right"><br>
