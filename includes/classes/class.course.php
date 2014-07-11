@@ -140,16 +140,32 @@ if (!class_exists('Course')) {
                     
                 }
 
-                function get_course_thumbnail() {
-                    $thumb = get_post_thumbnail_id($this->id);
+				static function get_course_featured_url( $course_id = false ) {
+					if ( ! $course_id ) {
+						return false;
+					}
+					
+					$course = new Course( $course_id );
+					
+                    if ($course->details->featured_url !== '') {
+                        return $course->details->featured_url;
+                    } else {
+                        return false;
+                    }
+					
+					unset( $course );
+				}
+
+                static function get_course_thumbnail( $course_id = false ) {					
+					if ( ! $course_id ) {
+						return false;
+					}
+					
+                    $thumb = get_post_thumbnail_id($course_id);
                     if ($thumb !== '') {
                         return $thumb;
                     } else {
-                        if ($this->details->featured_url !== '') {
-                            return $this->details->featured_url;
-                        } else {
-                            return false;
-                        }
+                        self::get_course_featured_url( $course_id );
                     }
                 }
 
@@ -385,15 +401,11 @@ if (!class_exists('Course')) {
 
                     $course_units = get_posts($args);
 
-                    //cp_write_log( $course_units );
-
                     foreach ($course_units as $course_unit) {
                         $unit = new Unit($course_unit->ID);
                         $unit->delete_unit(true);
-                        //cp_write_log( 'Deleted unit :'.$course_unit->ID.' from course: '.$this->id );
                     }
 
-                    //cp_write_log( 'done deletion' );
                 }
 
                 function can_show_permalink() {

@@ -75,7 +75,6 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						$courses = get_posts( $args );
 						
 						foreach( $courses as $course ) {
-							// cp_write_log( get_permalink( $course->ID ) );	
 							$_nav_menu_placeholder = $_nav_menu_placeholder + 1;
 							?>
 							<li>
@@ -118,6 +117,7 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_settings_slug( network_site_url() ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-dashboard">
 						</li>
+						
 					</ul>
 				</div><!-- /.tabs-panel -->
 

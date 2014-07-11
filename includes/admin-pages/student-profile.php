@@ -109,7 +109,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
                                             <div class="student-course-bottom">
 
-                                                <div class="course-excerpt"><?php echo get_the_course_excerpt( $course_object->ID ); ?></div>
+                                                <div class="course-summary"><?php echo get_the_course_excerpt( $course_object->ID ); ?></div>
 
                                                 <div class="course-info-holder">
                                                     <span class="course_info_caption"><?php _e( 'Start', 'cp' ); ?> <i class="fa fa-calendar"></i></span>

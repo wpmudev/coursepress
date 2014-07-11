@@ -57,7 +57,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_category', array( &$this, 'course_category' ) );
 			add_shortcode( 'course_list_image', array( &$this, 'course_list_image' ) );						
 			add_shortcode( 'course_featured_video', array( &$this, 'course_featured_video' ) );
-			add_shortcode( 'course_join_button', array( &$this, 'course_join_button' ) );				
+			add_shortcode( 'course_join_button', array( &$this, 'course_join_button' ) );	
+			add_shortcode( 'course_thumbnail', array( &$this, 'course_thumbnail' ) );									
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 			
 			// Page Shortcodes
@@ -191,6 +192,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$content .= do_shortcode('[course_join_button course="' . $encoded . '"]');
 				}
 				
+				// [course_thumbnail]
+				if ( 'thumbnail' == trim( $section ) ) {
+					$content .= do_shortcode('[course_thumbnail course="' . $encoded . '"]');
+				}				
+				
 			}
 			
 			// return print_r( $course );
@@ -206,13 +212,14 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'title_tag'       => 'h3',
+				'class'           => '',
             ), $atts, 'course_title' ) );
 
 			$title = get_the_title( $course_id );
 			
 			ob_start();
 			?>
-				<<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?>">
+				<<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php echo $title; ?>
 				</<?php echo $title_tag; ?>>
 			<?php
@@ -231,14 +238,15 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'course'          => '',
+				'class'           => '',				
             ), $atts, 'course_summary' ) );
 
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 			
 			ob_start();
 			?>
-				<div class="course-summary course-summary-<?php echo $course_id; ?>">
-				<?php echo $course->details->post_excerpt; ?>
+				<div class="course-summary course-summary-<?php echo $course_id; ?> <?php echo $class; ?>">
+				<?php echo do_shortcode( $course->details->post_excerpt ); ?>
 				</div>
 			<?php
 			$content = ob_get_clean();
@@ -256,6 +264,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'course'          => false,
+				'class'           => '',
             ), $atts, 'course_description' ) );
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -263,8 +272,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			ob_start();
 			?>
-				<div class="course-description course-description-<?php echo $course_id; ?>">
-				<?php echo $course->details->post_content; ?>
+				<div class="course-description course-description-<?php echo $course_id; ?> <?php echo $class; ?>">
+				<?php echo do_shortcode( $course->details->post_content ); ?>
 				</div>
 			<?php
 			$content = ob_get_clean();					
@@ -285,7 +294,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'date_format'     => get_option( 'date_format' ),
 				'label'           => __( 'Course Start Date', 'cp' ),
 				'label_tag'       => 'strong',
-				'label_delimeter' => ':',				
+				'label_delimeter' => ':',
+				'class'           => '',				
             ), $atts, 'course_start' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -294,7 +304,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$start_date = get_post_meta( $course_id, 'course_start_date', true );
 			ob_start();
 			?>
-				<div class="course-start-date course-start-date-<?php echo $course_id; ?>">
+				<div class="course-start-date course-start-date-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -321,7 +331,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Course End Date', 'cp' ),				
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
-				'no_date_text'    => __( 'No End Date', 'cp' ),								
+				'no_date_text'    => __( 'No End Date', 'cp' ),		
+				'class'           => '',						
             ), $atts, 'course_end' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -331,7 +342,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;															
 			ob_start();
 			?>
-				<div class="course-end-date course-end-date-<?php echo $course_id; ?>">
+				<div class="course-end-date course-end-date-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -361,6 +372,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'no_date_text'    => __( 'No End Date', 'cp' ),
 				'alt_display_text'=> __( 'Open-ended', 'cp' ),
 				'show_alt_display'=> false,
+				'class'           => '',
             ), $atts, 'course_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -373,7 +385,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;			
 			ob_start();
 			?>
-				<div class="course-dates course-dates-<?php echo $course_id; ?>">
+				<div class="course-dates course-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -405,6 +417,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',				
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
+				'class'           => '',
             ), $atts, 'course_enrollment_start' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -414,7 +427,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;					
 			ob_start();
 			?>
-				<div class="enrollment-start-date enrollment-start-date-<?php echo $course_id; ?>">
+				<div class="enrollment-start-date enrollment-start-date-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -444,7 +457,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',		
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),				
-				'show_all_dates'  => 'no',		
+				'show_all_dates'  => 'no',	
+				'class'           => '',	
             ), $atts, 'course_enrollment_end' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -454,7 +468,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$open_ended = 'off' == get_post_meta( $course_id, 'open_ended_enrollment', true ) ? false : true;										
 			ob_start();
 			?>
-				<div class="enrollment-end-date enrollment-end-date-<?php echo $course_id; ?>">
+				<div class="enrollment-end-date enrollment-end-date-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -488,7 +502,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_delimeter' => ':',
 				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),
 				'alt_display_text'=> __( 'Open-ended', 'cp' ),
-				'show_alt_display'=> false,				
+				'show_alt_display'=> false,
+				'class'           => '',
             ), $atts, 'course_enrollment_dates' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -500,7 +515,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
 			ob_start();
 			?>
-				<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?>">
+				<div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -539,6 +554,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_delimeter' => ':',
 				'no_limit_text'   => __( 'Unlimited', 'cp' ),
 				'remaining_text'  => __( '(%d places left)', 'cp' ),
+				'class'           => '',
             ), $atts, 'course_class_size' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -565,7 +581,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( ! empty( $content ) ) {
 				ob_start();
 				?>
-					<div class="course-class-size course-class-size-<?php echo $course_id; ?>">
+					<div class="course-class-size course-class-size-<?php echo $course_id; ?> <?php echo $class; ?>">
 					<?php if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
@@ -593,6 +609,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'no_cost_text'    => __( 'FREE', 'cp' ),				
+				'class'           => '',
             ), $atts, 'course_cost' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -615,7 +632,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( ! empty( $content ) ) {
 				ob_start();
 				?>
-					<div class="course-cost course-cost-<?php echo $course_id; ?>">
+					<div class="course-cost course-cost-<?php echo $course_id; ?> <?php echo $class; ?>">
 					<?php if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
@@ -639,7 +656,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course'          => false,
 				'label'           => __( 'Course Language', 'cp' ),
 				'label_tag'       => 'strong',
-				'label_delimeter' => ':',				
+				'label_delimeter' => ':',
+				'class'           => '',			
             ), $atts, 'course_language' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -649,7 +667,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			?>
 				<?php if ( isset( $language ) ) :?>	
-					<div class="course-language course-language-<?php echo $course_id; ?>">
+					<div class="course-language course-language-<?php echo $course_id; ?> <?php echo $class; ?>">
 					<?php if ( ! empty ( $label ) ) :?>
 						<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 					<?php endif;?>
@@ -674,7 +692,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'label'           => __( 'Course Category', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',	
-				'no_category_test'=> __( 'None', 'cp' ),			
+				'no_category_test'=> __( 'None', 'cp' ),	
+				'class'           => '',		
             ), $atts, 'course_category' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -695,7 +714,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			
 			ob_start();
 			?>
-				<div class="course-category course-category-<?php echo $course_id; ?>">
+				<div class="course-category course-category-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -724,6 +743,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'prerequisite_text' => __( 'Students need to complete "%s" first.', 'cp' ),		
 				'passcode_text'   => __( 'A passcode is required to enroll.', 'cp' ),
 				'anyone_text'     => __( 'Anyone', 'cp' ),
+				'class'           => '',
             ), $atts, 'course_enrollment_type' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -752,7 +772,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			
 			ob_start();
 			?>
-				<div class="course-enrollment-type course-enrollment-type-<?php echo $course_id; ?>">
+				<div class="course-enrollment-type course-enrollment-type-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( ! empty ( $label ) ) :?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif;?>
@@ -775,6 +795,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course'          => false,
 				'width'           => 'default',
 				'height'          => 'default',
+				'class'           => '',
             ), $atts, 'course_list_image' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -790,7 +811,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			ob_start();
 			?>
-				<div class="course-list-image course-list-image-<?php echo $course_id; ?>">
+				<div class="course-list-image course-list-image-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<img width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="<?php echo $image_src; ?>" alt="<?php echo $course->details->post_title; ?>" title="<?php echo $course->details->post_title; ?>" />
 				</div>
 			<?php
@@ -810,6 +831,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course'          => false,
 				'width'           => 'default',
 				'height'          => 'default',
+				'class'           => '',
             ), $atts, 'course_featured_video' ) );			
 	
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -853,7 +875,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			ob_start();
 			?>
-				<div class="course-featured-video course-featured-video-<?php echo $course_id; ?>">
+				<div class="course-featured-video course-featured-video-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php echo $content; ?>
 				</div>
 			<?php
@@ -877,10 +899,12 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
 				'enroll_text' => __( 'Enroll now.', 'cp' ),
 				'signup_text' => __( 'Signup!', 'cp' ),
+				'details_text'=> __( 'Course Details', 'cp' ),
 				'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
 				'passcode_text' => __( 'Passcode Required', 'cp' ),
 				'not_started_text' => __( 'Not yet available', 'cp' ),
-				'access_text' => __( 'Go to Class', 'cp' ),
+				'access_text' => __( 'Start Learning', 'cp' ),
+				'class'       => '',
             ), $atts, 'course_join_button' ) );
 
 			// Saves some overhead by not loading the post again if we don't need to.
@@ -914,29 +938,32 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if( 'manually' != $course->enroll_type ) {
 					if ( $course_full ) {
 						// "COURSE FULL"
-						$button .= '<span class="apply-button apply-button-full">' . $course_full_text . '</span>';
+						$button .= '<span class="apply-button apply-button-full ' . $class. '">' . $course_full_text . '</span>';
 					} else {
 						
 						// Course expired
 						if( $course_expired && ! $course->open_ended_course ) {
 							// "COURSE FINISHED"
-							$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+							$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
 							
 						// Course hasn't expired, but its not yet available for enrollments (closed)
 						} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
 							// "ENROLLMENT NOT YET AVAILABLE/CLOSED"
-							$button .= '<span class="apply-button apply-button-enrollment-closed">' . $enrollment_closed_text . '</span>';
+							$button .= '<span class="apply-button apply-button-enrollment-closed ' . $class. '">' . $enrollment_closed_text . '</span>';
 							
 						// Course is available, but enrollments have expired
 						} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
 							// "ENROLLMENTS ARE FINISHED"
-							$button .= '<span class="apply-button apply-button-enrollment-finished">' . $enrollment_finished_text . '</span>';
-
+							$button .= '<span class="apply-button apply-button-enrollment-finished ' . $class. '">' . $enrollment_finished_text . '</span>';
+						} elseif ( ! is_single() ) {
+							// GO TO COURSE
+							$button_url = get_permalink( $course_id );
+							$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
 						// Course hasn't expired and enrollments are open... Lets sign up!
 						} else {
 							// "SIGN UP NOW"
 							$button_url = $signup_url;
-		                    $button .= '<button data-link="' . $button_url . '?course_id=' . $course_id . '" class="apply-button">' . $signup_text . '</button>';
+		                    $button .= '<button data-link="' . $button_url . '?course_id=' . $course_id . '" class="apply-button ' . $class. '">' . $signup_text . '</button>';
 						}
 					}
 				} else {
@@ -954,32 +981,38 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					
 					if ( $course_full ) {
 						// "COURSE FULL"
-						$button .= '<span class="apply-button apply-button-full">' . $course_full_text . '</span>';
+						$button .= '<span class="apply-button apply-button-full ' . $class. '">' . $course_full_text . '</span>';
 				    // We've got room, but make sure its not expired	
 					} elseif ( $course_expired && ! $course->open_ended_course ) {
 						// "COURSE FINISHED"
-						$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+						$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
 					// Course hasn't expired, but its not yet available for enrollments (closed)
 					} elseif( ! $enrollment_started && ! $course->open_ended_enrollment ) {
 						// "ENROLLMENT NOT YET AVAILABLE"
-						$button .= '<span class="apply-button apply-button-enrollment-closed">' . $enrollment_closed_text . '</span>';
+						$button .= '<span class="apply-button apply-button-enrollment-closed ' . $class. '">' . $enrollment_closed_text . '</span>';
 					// Course is available, but enrollments have expired
 					} elseif ( ! $enrollment_expired && ! $course->open_ended_enrollment ) {
 						// "ENROLLMENTS ARE FINISHED"
-						$button .= '<span class="apply-button apply-button-enrollment-finished">' . $enrollment_finished_text . '</span>';
+						$button .= '<span class="apply-button apply-button-enrollment-finished ' . $class. '">' . $enrollment_finished_text . '</span>';
+
+						//We're not on a single page, so we're probably on a course list page. Behaviour is slightly different.
+					} elseif ( ! is_single() ) {
+						// GO TO COURSE
+						$button_url = get_permalink( $course_id );
+						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';
 					// Enrollments are open, but requires a prerequisite
 					} elseif ( 'prerequisite' == $course->enroll_type ) {
 						// PREREQUISITE CODE HERE
-						$button .= '<span class="apply-button apply-button-prerequisite">' . $prerequisite_text . '</span>';
+						$button .= '<span class="apply-button apply-button-prerequisite ' . $class. '">' . $prerequisite_text . '</span>';
 					// No prerequisites, but requires a passcode
 					} elseif ( 'passcode' == $course->enroll_type ) {
 						// PASSCODE CODE
 						$button .= '<div class="passcode-box"><label>' . $passcode_text . ' <input type="password" name="passcode" /></label></div>';
-						$button .= '<input type="submit" class="apply-button" value="' . $enroll_text . '" />';
+						$button .= '<input type="submit" class="apply-button ' . $class. '" value="' . $enroll_text . '" />';
 					// No passcodes, so lets join.
 					} else {
 						// ENROLL
-						$button .= '<input type="submit" class="apply-button" value="' . $enroll_text . '" />';
+						$button .= '<input type="submit" class="apply-button ' . $class. '" value="' . $enroll_text . '" />';
 					}
 					
 				// Student is enrolled, but lets see if they can still access it.	
@@ -988,16 +1021,20 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					// The course is finished.
 					if ( $course_expired && ! $course->open_ended_course ) {
 						// "COURSE FINISHED"
-						$button .= '<span class="apply-button apply-button-finished">' . $course_expired_text . '</span>';
+						$button .= '<span class="apply-button apply-button-finished ' . $class. '">' . $course_expired_text . '</span>';
 					// Course hasn't expired, but is not yet available
 					} elseif ( ! $course_started && ! $course->open_ended_course ) {
 						// "NOT YET AVAILABLE"
-						$button .= '<span class="apply-button apply-button-not-started">' . $not_started_text . '</span>';
+						$button .= '<span class="apply-button apply-button-not-started ' . $class. '">' . $not_started_text . '</span>';
+					} elseif ( ! is_single() ) {
+						// GO TO COURSE
+						$button_url = get_permalink( $course_id );
+						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $details_text . '</button>';						
 					// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
 						$button_url = get_permalink( $course_id ) . 'units/';
-						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled">' . $access_text . '</button>';
+						$button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class. '">' . $access_text . '</button>';
 					}
 					
 				}
@@ -1011,6 +1048,48 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		
 			return $button;
 		}
+		
+		/**
+		 * Shows the course thumbnail.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_thumbnail( $atts ) {
+            extract( shortcode_atts( array(
+                'course_id'       => get_the_ID(),
+				'course'          => false,
+				'wrapper'         => 'figure',
+				'class'           => '',
+            ), $atts, 'course_thumbnail' ) );			
+	
+			// Saves some overhead by not loading the post again if we don't need to.
+			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+
+			$thumbnail = Course::get_course_thumbnail( $course_id );
+
+			$content = '';
+			
+			if( ! empty( $thumbnail ) ) {
+				ob_start();
+				
+				if ( ! empty( $wrapper ) ) {
+					$content = '<' . $wrapper . ' class="course-thumbnail course-thumbnail-' . $course_id . ' ' . $class . '">';
+				}
+				
+				?>
+			        <img src="<?php echo $thumbnail; ?>" class="course-thumbnail-img" />
+				<?php
+				$content .= trim( ob_get_clean() );		
+				
+				if ( ! empty( $wrapper ) ) {
+					$content .= '</' . $wrapper . '>';
+				}
+				
+			}
+
+			return $content;
+		}						
+		
 		
 		
 		/**
@@ -1039,23 +1118,26 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
             extract( shortcode_atts( array(
                 'course_id'       => get_the_ID(),
 				'course'          => false,
+				'label'           => __( 'Instructor', 'cp' ),
+				'label_plural'    => __( 'Instructors', 'cp' ),
+				'label_delimeter' => ': ',
                 'count'           => false,  // deprecated
                 'list'            => false,  // deprecated
-                'link'            => false,   // deprecated
+                'link'            => false,
 				'link_text'       => __( 'View Full Profile', 'cp' ),
 				'show_summary'    => 'no',
 				'summary_length'  => 50,
-				'style'           => 'block',  //list, link, block, count
+				'style'           => 'block',  //list, list-flat, block, count
 				'list_separator'  => ', ',
                 'avatar_size'     => 80,
 				'default_avatar'  => '',
 				'link_all'        => 'no',
+				'class'           => '',
 			), $atts, 'course_instructors' ) );
 
 			// Support previous arguments
 			$style = $count ? 'count' : $style;
-			$style = $list ? 'list' : $style;
-			$style = $link ? 'link' : $style;
+			$style = $list ? 'list-flat' : $style;
 
 			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 			
@@ -1074,7 +1156,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						case 'block':
 							ob_start();
 							?>
-							<div class="instructor-profile">
+							<div class="instructor-profile <?php echo $class; ?>">
 								<?php if ( 'yes' == $link_all ) { ?>
 									<a href="<?php echo $profile_href ?>">
 								<?php } ?>
@@ -1098,12 +1180,12 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							</div>	
 							<?php
 							$content .= ob_get_clean();				
-							cp_write_log( $content );
 						break;
 					
 						case 'link':
 						case 'list':
-		                	$list[] = ( 'link' == $style ? '<a href="' . $profile_href . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
+						case 'list-flat':						
+		                	$list[] = ( $link ? '<a href="' . $profile_href . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
 					
 						break;					
 					}
@@ -1116,9 +1198,27 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$content = '' . $content . '';
 				break;
 				
-				case 'list':
-				case 'link':				
-					$content = implode( $list_separator, $list );
+				case 'list-flat':		
+					$content = '';
+					if( 0 < count( $instructors ) && ! empty( $label ) ) {
+						$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
+					}
+					$content .= implode( $list_separator, $list );
+					$content = '<div class="instructor-list instructor-list-flat ' . $class . '">' . $content . '</div>';
+				break;
+
+				case 'list':		
+					$content = '';
+					if( 0 < count( $instructors ) && ! empty( $label ) ) {
+						$content = count( $instructors ) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
+					}
+				
+					$content .= '<ul>';
+					foreach( $list as $instructor ){
+						$content .= '<li>' . $instructor . '</li>';
+					}
+					$content .= '</ul>';
+					$content = '<div class="instructor-list ' . $class . '">' . $content . '</div>';
 				break;
 				
 				case 'count':

@@ -52,7 +52,9 @@ if ( is_user_logged_in() ) {
                 _e( 'Passcode is not valid. Please <a href="' . $course->get_permalink() . '">go back</a> and try again.', 'cp' );
             }
         } else {
-            _e( 'You have already enrolled in the course.', 'cp' ); //can't enroll more than once to the same course at the time
+            // _e( 'You have already enrolled in the course.', 'cp' ); //can't enroll more than once to the same course at the time
+	        wp_redirect( $course->get_permalink() . '/units' );
+	        exit;
         }
     } else {
         _e( 'Please select a course first you want to enroll in.', 'cp' );

@@ -1340,9 +1340,6 @@ if (!class_exists('CoursePress')) {
         function autoupdate_course_settings() {
 
             if (is_admin() && ( current_user_can('manage_options') || current_user_can('coursepress_create_course_cap') || current_user_can('coursepress_update_my_course_cap') )) {
-
-                // cp_write_log( $_POST );
-
                 /*
                   http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
                   http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange

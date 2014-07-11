@@ -23,7 +23,7 @@
                                 ?>&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php echo esc_attr( $this->get_course_slug() );
                                 ?>' />&nbsp;/
 
-                                <p class='description'><?php _e( 'Your course URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( site_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ); ?><?php _e( '/example-course-name/', 'cp' ); ?></p>
+                                <p class='description'><?php _e( 'Your course URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( site_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ); ?><?php _e( '/my-course/', 'cp' ); ?></p>
 
                             </td>
                         </tr>
@@ -32,7 +32,7 @@
                             <th scope="row"><?php _e( 'Units Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 ?>&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php echo esc_attr( $this->get_units_slug() );
                                 ?>' />&nbsp;/
 
@@ -43,7 +43,7 @@
                             <th scope="row"><?php _e( 'Course Notifications Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 ?>&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='notifications_slug' value='<?php echo esc_attr( $this->get_notifications_slug() );
                                 ?>' />&nbsp;/
                             </td>
@@ -53,7 +53,7 @@
                             <th scope="row"><?php _e( 'Course Discussions Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug' id='discussion_slug' value='<?php echo esc_attr( $this->get_discussion_slug() );
                                 ?>' />&nbsp;/
                             </td>
@@ -63,7 +63,7 @@
                             <th scope="row"><?php _e( 'Course New Discussions Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 echo '' . $this->get_discussion_slug() . '/';
                                 ?>&nbsp;<input type='text' name='option_coursepress_discussion_slug_new' id='discussion_slug_new' value='<?php echo esc_attr( $this->get_discussion_slug_new() );
                                 ?>' />&nbsp;/
@@ -74,7 +74,7 @@
                             <th scope="row"><?php _e( 'Course Grades Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 ?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php echo esc_attr( $this->get_grades_slug() );
                                 ?>' />&nbsp;/
                             </td>
@@ -84,7 +84,7 @@
                             <th scope="row"><?php _e( 'Course Workbook Slug', 'cp' ); ?></th>
                             <td>
                                 <?php
-                                echo esc_html( trailingslashit( site_url() ) ) . '' . _e( 'example-course-name/', 'cp' );
+                                echo esc_html( trailingslashit( site_url() . __( '/my-course/', 'cp' ) ) );
                                 ?>&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php echo esc_attr( $this->get_workbook_slug() );
                                 ?>' />&nbsp;/
                             </td>

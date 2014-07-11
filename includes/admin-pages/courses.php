@@ -195,7 +195,7 @@ if (isset($_GET['quick_setup'])) {
                                     <input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
                                 </th>
                                 <td class="column-course <?php echo $style; ?>"><a href="<?php echo admin_url('admin.php?page=course_details&course_id=' . $course_object->ID); ?>"><strong><?php echo $course_object->post_title; ?></strong></a><br />
-                                    <!-- <div class="course-thumbnail"><img src="<?php echo $course_obj->get_course_thumbnail(); ?>" alt="<?php echo esc_attr($course_object->post_title); ?>" /></div> -->
+                                    <!-- <div class="course-thumbnail"><img src="<?php echo Course::get_course_thumbnail( $course_ID ); ?>" alt="<?php echo esc_attr($course_object->post_title); ?>" /></div> -->
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
                                     <div class="column-course-units visible-small visible-extra-small">
                                         <strong><?php _e('Units', 'cp'); ?>:</strong>

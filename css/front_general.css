@@ -112,6 +112,15 @@ html[xmlns] .clearfix {
     margin-top: 25px;
 }
 
+.instructor-profile {
+	margin: 15px 0 0 0;
+	padding: 0 0 15px 0;
+	border-bottom: 1px solid #efefef;	
+}
+.instructor-profile:last-child {
+	border: none;
+}
+
 .enroll-box{
     float: left;
     width: 100%;
@@ -145,7 +154,7 @@ html[xmlns] .clearfix {
 .apply-button-finished,
 input[type="submit"].apply-button-finished, 
 input[type="button"].apply-button-finished{
-    -moz-border-radius:0px;
+ /*   -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
 
@@ -161,13 +170,14 @@ input[type="button"].apply-button-finished{
     //text-shadow:0 1px 1px rgba( 0, 0, 0, 0.5 );
     border: 1px solid #CCC;
     text-align: center;
-    text-decoration: none;
+    text-decoration: none;*/
+ 	float:right;
 }
 
 .apply-button-pending,
 input[type="submit"].apply-button-pending, 
 input[type="button"].apply-button-pending{
-    -moz-border-radius:0px;
+/*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
 
@@ -184,6 +194,8 @@ input[type="button"].apply-button-pending{
     border: 1px solid #CCC;
     text-align: center;
     text-decoration: none;
+*/
+	float:right;	
 }
 
 a.apply-button-enrolled, 
@@ -205,7 +217,9 @@ input[type="button"].apply-button-enrolled{
         border: 1px solid #458b45;
         text-align: center;
         text-decoration: none;
-    */}
+    */
+		float:right;
+}
 
 a.apply-button-enrolled:hover, 
 input[type="submit"].apply-button-enrolled:hover,
@@ -217,7 +231,7 @@ input[type="button"].apply-button-enrolled:hover{
 a.apply-button, 
 input[type="submit"].apply-button, 
 input[type="button"].apply-button{
-    -moz-border-radius:0px;
+/*    -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
 
@@ -233,6 +247,8 @@ input[type="button"].apply-button{
     border: 1px solid #0099CC;
     text-align: center;
     text-decoration: none;
+*/
+	float:right;
 }
 
 a.apply-button:hover, 
@@ -583,7 +599,7 @@ h1.notification-title{
     max-width: 180px;
 }
 
-.course-excerpt{
+.course-summary{
     margin-bottom: 25px;
     margin-top: 25px;
 }

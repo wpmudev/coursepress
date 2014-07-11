@@ -5,7 +5,6 @@
 ?>
 <?php
 $course = new Course( get_the_ID() );
-$course_thumbnail = Course::get_course_id_by_name( 'asdas' );
 //$course_category_id = $course->details->course_category;
 //$course_category = get_term_by( 'ID', $course_category_id, 'course_category' );
 
@@ -13,14 +12,14 @@ $course_language = $course->details->course_language;
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php
-    if ( $course->get_course_thumbnail() ) {
+    if ( Course::get_course_thumbnail( the_ID() ) ) {
         ?>
         <figure>
             <?php /*if ( isset( $course_category->name ) ) { ?>
                 <figcaption><?php echo $course_category->name; ?></figcaption>
             <?php }*/ ?>
 
-            <img src="<?php echo $course->get_course_thumbnail(); ?>">
+            <img src="<?php echo Course::get_course_thumbnail( the_ID() ); ?>">
 
             <?php edit_post_link( __( 'Edit Course', 'coursepress' ), '<span class="edit-link">', '</span>' ); ?>
         </figure>

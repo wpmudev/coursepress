@@ -1,36 +1,29 @@
 <?php
-global $post;
 
-$course = new Course( get_the_ID() );
-$course_language = $course->details->course_language;
-?>
-
-<?php
-$course_thumbnail = $course->get_course_thumbnail();
-if ( $course_thumbnail ) {
-    ?>
-    <figure>
-        <img src="<?php echo $course_thumbnail; ?>">
-    </figure>
-    <?php
-} else {
+$course_thumbnail = Course::get_course_thumbnail( get_the_ID() );
+if ( ! $course_thumbnail ) {
     $extended_class = 'quick-course-info-extended';
 }
+
 ?>
 
-<div class="instructors-content">
-    <?php echo do_shortcode( '[course_instructors list="true" link="true"]' ); ?>
-</div>
+<?php 
+	// Course thumbnail
+	echo do_shortcode( '[course_thumbnail]' );
+?>
 
-<div class="course-excerpt">
-    <?php echo do_shortcode( $post->post_excerpt ); ?>
-</div>
+<?php 
+	// Flat hyperlinked list of instructors
+	echo do_shortcode( '[course_instructors style="list-flat" link="true"]' );
+?>
+
+<?php 
+	// Course summary/excerpt
+	echo do_shortcode( '[course_summary]' );
+?>
 
 <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
-    <span class="course-time"><?php echo do_shortcode( '[course_start label=""]' ); ?></span>
-    <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
-        <span class="course-lang"><?php echo do_shortcode( '[course_language label=""]' ); ?></span>
-    <?php } ?>
-
-	<button data-link="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></button>
+    <?php echo do_shortcode( '[course_start label="" class="course-time"]' ); ?> 
+	<?php echo do_shortcode( '[course_language label="" class="course-lang"]' ); ?>
+    <?php echo do_shortcode( '[course_join_button]' ); ?>
 </div>

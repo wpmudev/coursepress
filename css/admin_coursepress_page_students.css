@@ -1574,8 +1574,8 @@ a .remove-btn:hover{
     padding-left: 167px;
 }
 
-.student-course-bottom .course-excerpt{
-    //padding-right: 160px;
+.student-course-bottom .course-summary{
+/*    padding-right: 160px;*/
 }
 
 .student-course-top .workbook-button{

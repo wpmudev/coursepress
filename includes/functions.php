@@ -254,9 +254,6 @@ function coursepress_send_email( $email_args = array() ) {
 	if ( 'instructor_invitation' == $email_args['email_type'] ) {		
 		global $course_slug;
 		
-		// cp_write_log('TESTING: Instructor email.');
-		// cp_write_log( $email_args );
-		
 		$course = '';
 		$course_summary = '';
 		$course_name = '';
@@ -270,11 +267,7 @@ function coursepress_send_email( $email_args = array() ) {
 			$course_address = $course->get_permalink();
         }
 		
-		//$confirm_link = admin_url( 'admin.php?page=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'] );
 		$confirm_link = $course_address . '?action=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'];
-		//http://coursepress.dev/courses/demo-2/?action=course_invite&course_id=47&c=3sb5PgvvucS8bIu0xttn&h=a6ad00ac113a19d953efb91820d8788e2263b28a
-		
-		// cp_write_log( $confirm_link );
 		
 		$email_address = $email_args['instructor_email'];
 		$subject = coursepress_get_instructor_invitation_email_subject();
@@ -299,7 +292,6 @@ function coursepress_send_email( $email_args = array() ) {
             return coursepress_get_instructor_invitation_from_name();
         }
 		
-		// cp_write_log( $message );
 	}
 
     add_filter( 'wp_mail_content_type', 'set_content_type' );
@@ -858,8 +850,6 @@ if ( !function_exists( 'coursepress_register_module' ) ) {
 
     function coursepress_register_module( $module_name, $class_name, $section ) {
         global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered;
-
-        //cp_write_log( $_POST );
 
         if ( !is_array( $coursepress_modules ) ) {
             $coursepress_modules = array();
