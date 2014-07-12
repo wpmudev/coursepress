@@ -51,7 +51,7 @@ function is_chat_plugin_active() {
  */
 function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_last_page = false ) {
     global $wp, $wp_query, $paged, $coursepress_modules;
-
+    
     $modules_class = new Unit_Module();
 
     if ( !isset( $unit_id ) ) {// || !is_singular()

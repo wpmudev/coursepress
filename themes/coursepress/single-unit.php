@@ -5,6 +5,9 @@
  * @package CoursePress
  */
 global $coursepress, $wp;
+
+global $wp_query;
+
 $course_id = do_shortcode( '[get_parent_course_id]' );
 
 add_thickbox();
@@ -15,6 +18,7 @@ $coursepress->check_access( $course_id );
 get_header();
 
 $post = $unit->details;
+
 ?>
 
 <div id="primary" class="content-area">
@@ -33,7 +37,9 @@ $post = $unit->details;
                 ?>
 
                 <div class="clearfix"></div>
-
+                
+                <h2><?php echo do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="unit_page_title"]');?></h2>
+                
                 <div class="entry-content">
                     <?php
                     $paged = $wp->query_vars['paged'] ? absint( $wp->query_vars['paged'] ) : 1;
