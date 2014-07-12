@@ -32,6 +32,8 @@ if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
 
 
+
+
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -126,6 +128,9 @@ if ( !class_exists('CoursePress') ) {
 
                 //Change course state (draft / publish)
                 add_action('wp_ajax_change_course_state', array( &$this, 'change_course_state' ));
+
+                //Change unit state (draft / publish)
+                add_action('wp_ajax_change_unit_state', array( &$this, 'change_unit_state' ));
 
                 //Remove instructor invite ajax call
                 add_action('wp_ajax_remove_instructor_invite', array( &$this, 'remove_instructor_invite' ));
@@ -332,14 +337,43 @@ if ( !class_exists('CoursePress') ) {
             return preg_replace_callback('#( <a\s[^>]*href )="( [^"]+ )".*<img#', "callback_link", $content);
         }
 
-        function check_access( $course_id ) {
-            if ( !current_user_can('manage_options') ) {
-                $student = new Student(get_current_user_id());
-                if ( !$student->has_access_to_course($course_id) ) {
-                    wp_redirect(get_permalink($course_id));
-                    exit;
+        function is_preview( $unit_id, $page_num = false ) {
+            if ( isset($_GET['try']) ) {
+                $unit = new Unit($unit_id);
+                $course = new Course($unit->details->post_parent);
+                if ( $page_num ) {
+                    $paged = $page_num;
+                } else {
+                    $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+                }
+                $preview_unit = $course->details->preview_unit_boxes;
+                $preview_page = $course->details->preview_page_boxes;
+
+                if ( isset($preview_unit[$unit_id]) && $preview_unit[$unit_id] == 'on' ) {
+                    if ( isset($preview_page[$unit_id . '_' . $paged]) && $preview_page[$unit_id . '_' . $paged] == 'on' ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
+        }
+
+        function check_access( $course_id, $unit_id = false ) {
+            if ( $this->is_preview($unit_id, $page_num) ) {
+                //have access
+            } else {
+                if ( !current_user_can('manage_options') ) {
+                    $student = new Student(get_current_user_id());
+                    if ( !$student->has_access_to_course($course_id) ) {
+                        wp_redirect(get_permalink($course_id));
+                        exit;
+                    }
                 }
             }
+            return true;
         }
 
         function comments_open_filter( $open, $post_id ) {
@@ -789,7 +823,7 @@ if ( !class_exists('CoursePress') ) {
         function add_rewrite_rules( $rules ) {
             $new_rules = array();
 
-            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]';///page/?( [0-9]{1,} )/?$
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; ///page/?( [0-9]{1,} )/?$
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
 
@@ -797,11 +831,11 @@ if ( !class_exists('CoursePress') ) {
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_workbook_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
 
-            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]';///page/?( [0-9]{1,} )/?$
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]'; ///page/?( [0-9]{1,} )/?$
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug()] = 'index.php?page_id=-1&coursename=$matches[1]';
 
-            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() . '/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]';///page/?( [0-9]{1,} )/?$
+            $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() . '/page/([^/]*)/?'] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; ///page/?( [0-9]{1,} )/?$
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
 
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
@@ -1362,6 +1396,17 @@ if ( !class_exists('CoursePress') ) {
                 if ( $_POST['course_id'] ) {
                     $course = new Course(( int ) $_POST['course_id']);
                     $course->change_status($_POST['course_state']);
+                }
+            }
+        }
+
+        function change_unit_state() {
+
+            if ( isset($_POST['unit_state']) && isset($_POST['unit_id']) && current_user_can('manage_options') ) {
+
+                if ( $_POST['unit_id'] ) {
+                    $unit = new Unit(( int ) $_POST['unit_id']);
+                    $unit->change_status($_POST['unit_state']);
                 }
             }
         }
@@ -2095,9 +2140,12 @@ if ( !class_exists('CoursePress') ) {
         /* Custom header actions */
 
         function header_actions() {//front
+            global $post;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
-
+            if ( !$this->is_preview($post->ID) ) {
+                wp_enqueue_script('coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ));
+            }
             $course_id = do_shortcode('[get_parent_course_id]');
             $units_archive_url = is_numeric($course_id) ? get_permalink($course_id) . trailingslashit($this->get_units_slug()) : '';
 

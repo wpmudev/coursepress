@@ -2392,6 +2392,10 @@ ol.tree
     margin: 0em
 }
 
+.course-section .course-form input[type="checkbox"].hidden_checkbox{
+    display: none;
+}
+
 .tree .hidden_checkbox{
     display: none;
 }

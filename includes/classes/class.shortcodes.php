@@ -1882,7 +1882,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         }
 
         function course_units( $atts ) {
-            global $wp;
+            global $wp, $coursepress;
 
             $content = '';
 
@@ -1913,6 +1913,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
             }
 
+
             $content .= '<ol>';
             $last_unit_url = '';
 
@@ -1941,7 +1942,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         }
 
         function course_unit_details( $atts ) {
-            global $post_id, $wp;
+            global $post_id, $wp, $coursepress;
 
             extract(shortcode_atts(array(
                 'unit_id' => 0,
@@ -2081,7 +2082,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             //redirect to the parent course page if not enrolled
             if ( !current_user_can('manage_options') ) {
-                if ( !$student->has_access_to_course($unit->course_id) ) {
+                if ( !$coursepress->check_access($unit->course_id, $unit_id) ) {
                     //ob_start();
                     wp_redirect(get_permalink($unit->course_id));
                     exit;
@@ -2638,51 +2639,51 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                         <form id="student-settings" name="student-settings" method="post" class="student-settings">
 
-                        <?php do_action('cp_before_all_signup_fields'); ?>
+                            <?php do_action('cp_before_all_signup_fields'); ?>
 
                             <input type="hidden" name="course_id" value="<?php esc_attr_e(isset($_GET['course_id']) ? $_GET['course_id'] : '' ); ?>" />
 
                             <label>
-                        <?php _e('First Name', 'cp'); ?>:
+                                <?php _e('First Name', 'cp'); ?>:
                                 <input type="text" name="first_name" value="<?php echo ( isset($_POST['first_name']) ? $_POST['first_name'] : '' ); ?>" />
                             </label>
 
-                                <?php do_action('cp_after_signup_first_name'); ?>
+                            <?php do_action('cp_after_signup_first_name'); ?>
 
                             <label>
-                        <?php _e('Last Name', 'cp'); ?>:
+                                <?php _e('Last Name', 'cp'); ?>:
                                 <input type="text" name="last_name" value="<?php echo ( isset($_POST['last_name']) ? $_POST['last_name'] : '' ); ?>" />
                             </label>
 
-                                <?php do_action('cp_after_signup_last_name'); ?>
+                            <?php do_action('cp_after_signup_last_name'); ?>
 
                             <label>
-                        <?php _e('Username', 'cp'); ?>:
+                                <?php _e('Username', 'cp'); ?>:
                                 <input type="text" name="username" value="<?php echo ( isset($_POST['username']) ? $_POST['username'] : '' ); ?>" />
                             </label>
 
-                                <?php do_action('cp_after_signup_username'); ?>
+                            <?php do_action('cp_after_signup_username'); ?>
 
                             <label>
-                        <?php _e('E-mail', 'cp'); ?>:
+                                <?php _e('E-mail', 'cp'); ?>:
                                 <input type="text" name="email" value="<?php echo ( isset($_POST['email']) ? $_POST['email'] : '' ); ?>" />
                             </label>
 
-                                <?php do_action('cp_after_signup_email'); ?>
+                            <?php do_action('cp_after_signup_email'); ?>
 
                             <label>
-                        <?php _e('Password', 'cp'); ?>:
+                                <?php _e('Password', 'cp'); ?>:
                                 <input type="password" name="password" value="" />
                             </label>
 
-                                <?php do_action('cp_after_signup_password'); ?>
+                            <?php do_action('cp_after_signup_password'); ?>
 
                             <label class="right">
-                        <?php _e('Confirm Password', 'cp'); ?>:
+                                <?php _e('Confirm Password', 'cp'); ?>:
                                 <input type="password" name="password_confirmation" value="" />
                             </label>
 
-                        <?php do_action('after_all_signup_fields'); ?>
+                            <?php do_action('after_all_signup_fields'); ?>
 
                             <label class="full">
                                 <a href="<?php echo $login_url; ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
@@ -2694,7 +2695,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                             <?php do_action('cp_after_submit'); ?>
 
-                        <?php wp_nonce_field('student_signup'); ?>
+                            <?php wp_nonce_field('student_signup'); ?>
                         </form>
                         <div class="clearfix" style="clear: both;" />
 
@@ -2718,9 +2719,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     }
                     ?>
                     <p class="form-info-<?php echo apply_filters('signup_form_message_class', $form_message_class); ?>"><?php echo apply_filters('signup_form_message', $form_message); ?></p>
-                            <?php do_action('cp_before_login_form'); ?>
+                    <?php do_action('cp_before_login_form'); ?>
                     <form name="loginform" id="student-settings" class="student-settings" method="post">
-                    <?php do_action('cp_after_start_form_fields'); ?>
+                        <?php do_action('cp_after_start_form_fields'); ?>
 
                         <label>
                             <?php _e('Username', 'cp'); ?>:
@@ -2728,11 +2729,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
 
                         <label>
-                        <?php _e('Password', 'cp'); ?>:
+                            <?php _e('Password', 'cp'); ?>:
                             <input type="password" name="pwd" value="<?php echo ( isset($_POST['pwd']) ? $_POST['pwd'] : '' ); ?>" />
                         </label>
 
-                    <?php do_action('cp_form_fields'); ?>
+                        <?php do_action('cp_form_fields'); ?>
 
                         <label class="full">
                             <a href="<?php echo $signup_url; ?>"><?php _e("Don't have an account? Go to Signup!", 'cp'); ?></a>
@@ -2743,11 +2744,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                            <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                    <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">
-                    <?php do_action('cp_before_end_form_fields'); ?>
+                        <?php do_action('cp_before_end_form_fields'); ?>
                     </form>
 
                     <?php do_action('cp_after_login_form'); ?>			

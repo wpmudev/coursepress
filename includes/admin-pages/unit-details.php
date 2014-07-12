@@ -139,6 +139,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
+                            <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';?>"></div>
                             <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
                             <div class="control <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                 <div class="toggle"></div>
@@ -392,6 +393,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     ?>
 
                                     <div class="unit-state">
+                                        <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';?>"></div>
                                         <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
                                         <div class="control <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>

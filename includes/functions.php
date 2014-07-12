@@ -50,7 +50,7 @@ function is_chat_plugin_active() {
  * Unit unit module pagination
  */
 function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_last_page = false ) {
-    global $wp, $wp_query, $paged, $coursepress_modules;
+    global $wp, $wp_query, $paged, $coursepress_modules, $coursepress;
     
     $modules_class = new Unit_Module();
 
@@ -81,9 +81,15 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
     echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
 
     for ( $link_num = 1; $link_num <= $max; $link_num++ ) {
-        $class = ( $paged == $link_num ? ' class="active"' : '' );
-
-        printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url( get_pagenum_link( $link_num ) ), $link_num );
+        if($coursepress->is_preview( $unit_id, $link_num)){
+            $enabled = 'enabled-link';
+        }else{
+            $enabled = 'disabled-link';
+        }
+        
+        $class = ( $paged == $link_num ? ' class="active '.$enabled.'"' : ' class="'.$enabled.'"' );
+        
+        printf( '<li%1$s><a href="%2$s">%3$s</a></li>' . "\n", $class, esc_url( get_pagenum_link( $link_num ) ), $link_num );
     }
 
     echo '</ul></div>' . "\n";

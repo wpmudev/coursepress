@@ -254,10 +254,10 @@ function cp_editor_key_down(ed, page, tab) {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
             $('#' + ed.id).parents('.course-section').addClass('dirty');
-			if ($('#' + ed.id).parents('.course-section.step').children('.status.saved')) {
-				$('#' + ed.id).parents('.course-section.step').find('input.button.update').css('display','inline-block');
-			}
-			
+            if ($('#' + ed.id).parents('.course-section.step').children('.status.saved')) {
+                $('#' + ed.id).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+            }
+
             active_editor = ed.id;
 
         }
@@ -326,8 +326,8 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
         } else {
             $(statusElement).addClass('saved');
         }
-		
-		$('.course-section.step input.button.update').css('display', 'none');
+
+        $('.course-section.step input.button.update').css('display', 'none');
     } else {
         $(statusElement).removeClass('progress');
         $(statusElement).addClass('invalid');
@@ -508,17 +508,17 @@ function step_6_update(attr) {
     var theStatus = attr['status'];
     var initialVars = attr['initialVars'];
 
-	var passcode_val = false;
-	var prerequisite_val = false;
+    var passcode_val = false;
+    var prerequisite_val = false;
 
-	switch( $('[name=meta_enroll_type]').val() ) {		
-		case 'passcode':
-			passcode_val = $('[name=meta_passcode]').val();
-			break;
-		case 'prerequisite':
-			prerequisite_val = $('[name=meta_prerequisite]').val();
-			break;
-	}
+    switch ($('[name=meta_enroll_type]').val()) {
+        case 'passcode':
+            passcode_val = $('[name=meta_passcode]').val();
+            break;
+        case 'prerequisite':
+            prerequisite_val = $('[name=meta_prerequisite]').val();
+            break;
+    }
 
     return {
         // Don't remove
@@ -526,9 +526,9 @@ function step_6_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         // Alter as required
-		meta_enroll_type: $('[name=meta_enroll_type]').val(),
-		meta_prerequisite: prerequisite_val,
-		meta_passcode: passcode_val,
+        meta_enroll_type: $('[name=meta_enroll_type]').val(),
+        meta_prerequisite: prerequisite_val,
+        meta_passcode: passcode_val,
         meta_paid_course: $('[name=meta_paid_course]').is(':checked') ? 'on' : 'off',
         meta_auto_sku: $('[name=meta_auto_sku]').is(':checked') ? 'on' : 'off',
         mp_sku: $('[name=mp_sku]').val(),
@@ -683,10 +683,10 @@ jQuery(document).ready(function($) {
 
     /** Inline step update. */
     $('.course-section.step input.update').click(function(e) {
-		var course_section = $(this).parents('.course-section.step')[0];
+        var course_section = $(this).parents('.course-section.step')[0];
         var step = $(course_section).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
         courseAutoUpdate(step);
-	});
+    });
 
     /** Proceed to next step. */
     $('.course-section.step input.next').click(function(e) {
@@ -927,38 +927,38 @@ jQuery(document).ready(function($) {
 
                 var response = $.parseJSON($(data).find('response_data').text());
                 var response_type = $($.parseHTML(response.content));
-				
-		        if ($("#instructor_holder_" + instructor_id).length == 0 && response.instructor_added ) {
-		            $('.instructor-avatar-holder.empty').hide();
-		            $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
-		        } else {
-		        	alert( response.reason );
-		        }
+
+                if ($("#instructor_holder_" + instructor_id).length == 0 && response.instructor_added) {
+                    $('.instructor-avatar-holder.empty').hide();
+                    $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+                } else {
+                    alert(response.reason);
+                }
 
             } else {
             }
         }).fail(function(data) {
-        });				
-				
-				
+        });
+
+
     });
 
 
-	$('.course-form input').keypress(function(event) {
-		$( this ).change();
-	});
-	$('.course-form textarea').keypress(function(event) {
-		$( this ).change();
-	});
+    $('.course-form input').keypress(function(event) {
+        $(this).change();
+    });
+    $('.course-form textarea').keypress(function(event) {
+        $(this).change();
+    });
 
     /** Mark "dirty" content */
     $('.course-form input').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
 
-			if ($(this).parents('.course-section.step').children('.status.saved')) {
-				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
-			}
+            if ($(this).parents('.course-section.step').children('.status.saved')) {
+                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+            }
         }
 
         if ($(this).attr('type') == 'checkbox') {
@@ -974,22 +974,22 @@ jQuery(document).ready(function($) {
     $('.course-form textarea').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
-			if ($(this).parents('.course-section.step').children('.status.saved')) {
-				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
-			}			
+            if ($(this).parents('.course-section.step').children('.status.saved')) {
+                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+            }
         }
     });
     $('.course-form select').change(function() {
         if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
             $($(this).parents('.course-section.step')[0]).addClass('dirty');
-			if ($(this).parents('.course-section.step').children('.status.saved')) {
-				$(this).parents('.course-section.step').find('input.button.update').css('display','inline-block');
-			}
-			
+            if ($(this).parents('.course-section.step').children('.status.saved')) {
+                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+            }
+
         }
     });
-	
-	
+
+
 
 });
 
@@ -1010,12 +1010,28 @@ jQuery(document).ready(function($) {
                         $(selector).parent().find('.draft').addClass('on');
                         $('#unit_state').val('draft');
                         $('.mp-tab.active .unit-state-circle').removeClass('active');
+                        var unit_state = 'draft';
                     } else {
                         $(selector).addClass('on');
                         $(selector).parent().find('.draft').removeClass('on');
                         $(selector).parent().find('.live').addClass('on');
                         $('#unit_state').val('publish');
                         $('.mp-tab.active .unit-state-circle').addClass('active');
+                        var unit_state = 'publish';
+                    }
+
+                    var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
+
+                    if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
+                        $.post(
+                                'admin-ajax.php', {
+                                    action: 'change_unit_state',
+                                    unit_state: unit_state,
+                                    unit_id: unit_id
+                                }
+                        ).done(function(data) {
+                            //all good
+                        });
                     }
                 });
             }

@@ -17,12 +17,12 @@ class radio_input_module extends Unit_Module {
         $this->__construct();
     }
 
-    function get_response_form($user_ID, $response_request_ID, $show_label = true) {
+    function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
         $response = $this->get_response($user_ID, $response_request_ID);
-        if (count((array) $response >= 1)) {
+        if ( count(( array ) $response >= 1) ) {
             ?>
             <div class="module_text_response_answer">
-                <?php if ($show_label) { ?>
+                <?php if ( $show_label ) { ?>
                     <label><?php _e('Response', 'cp'); ?></label>
                 <?php } ?>
                 <div class="front_response_content radio_input_module">
@@ -31,11 +31,11 @@ class radio_input_module extends Unit_Module {
                         $answers = get_post_meta($response_request_ID, 'answers', true);
                         $checked_answer = get_post_meta($response_request_ID, 'checked_answer', true);
 
-                        foreach ($answers as $answer) {
+                        foreach ( $answers as $answer ) {
                             ?>
                             <li>
                                 <input class="radio_answer_check" type="radio" value='<?php echo esc_attr($answer); ?>' disabled <?php echo ( isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : '' ); ?> /><?php echo $answer; ?><?php
-                                if (isset($response->post_content) && trim($response->post_content) == $answer) {
+                                if ( isset($response->post_content) && trim($response->post_content) == $answer ) {
                                     echo ( $checked_answer == $answer ? '<span class="correct_answer">✓</span>' : '<span class="not_correct_answer">✘</span>' );
                                 };
                                 ?>
@@ -57,7 +57,7 @@ class radio_input_module extends Unit_Module {
         <?php
     }
 
-    function get_response($user_ID, $response_request_ID) {
+    function get_response( $user_ID, $response_request_ID ) {
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'meta_key' => 'user_ID',
@@ -69,7 +69,7 @@ class radio_input_module extends Unit_Module {
 
         $already_respond_posts = get_posts($already_respond_posts_args);
 
-        if (isset($already_respond_posts[0]) && is_object($already_respond_posts[0])) {
+        if ( isset($already_respond_posts[0]) && is_object($already_respond_posts[0]) ) {
             $response = $already_respond_posts[0];
         } else {
             $response = $already_respond_posts;
@@ -78,28 +78,33 @@ class radio_input_module extends Unit_Module {
         return $response;
     }
 
-    function front_main($data) {
+    function front_main( $data ) {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
 
-        if (count($response) == 0) {
-            $enabled = 'enabled';
+        if ( count($response) == 0 ) {
+            global $coursepress;
+            if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
+                $enabled = 'disabled';
+            } else {
+                $enabled = 'enabled';
+            }
         } else {
             $enabled = 'disabled';
         }
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
-            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+            <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
-            <?php if ($data->post_content != '') { ?>  
+            <?php if ( $data->post_content != '' ) { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
             <?php } ?>
 
             <ul class='radio_answer_check_li radio_answer_group' <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?>>
                 <?php
-                foreach ($data->answers as $answer) {
+                foreach ( $data->answers as $answer ) {
                     ?>
                     <li>
                         <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo ( isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : '' ); ?> /><?php echo $answer; ?>
@@ -122,17 +127,17 @@ class radio_input_module extends Unit_Module {
               }
               } */
             ?>
-            <?php if ($data->mandatory_answer == 'yes') { ?>
+            <?php if ( $data->mandatory_answer == 'yes' ) { ?>
                 <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
             <?php } ?>
         </div>
         <?php
     }
 
-    function admin_main($data) {
+    function admin_main( $data ) {
         ?>
 
-        <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
+        <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
             <h3 class="module-title sidebar-name">
                 <span class="h3-label">
@@ -151,7 +156,7 @@ class radio_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if (isset($data->ID)) { ?>
+                <?php if ( isset($data->ID) ) { ?>
                     <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
                 <?php } else { ?>
                     <input type="hidden" class="removable" />
@@ -223,7 +228,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="90%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                     ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                      ?></div>
                         </th>
                         <th width="10%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
@@ -239,22 +244,22 @@ class radio_input_module extends Unit_Module {
                         ?>
 
                         <?php
-                        if (isset($data->ID)) {
+                        if ( isset($data->ID) ) {
                             $answer_cnt = 0;
 
-                            foreach ($data->answers as $answer) {
+                            foreach ( $data->answers as $answer ) {
                                 ?>
                                 <tr>
                                     <td width="90%">
                                         <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" <?php
-                                        if ($data->checked_answer == $answer) {
+                                        if ( $data->checked_answer == $answer ) {
                                             echo 'checked';
                                         }
                                         ?> />
                                         <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr(( isset($answer) ? $answer : '')); ?>' />
 
                                     </td>
-                                    <?php if ($answer_cnt >= 2) { ?>
+                                    <?php if ( $answer_cnt >= 2 ) { ?>
                                         <td width="10%">    
                                             <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
                                         </td>
@@ -293,7 +298,7 @@ class radio_input_module extends Unit_Module {
 
                 </div>
                 <?php
-                if (isset($data->ID)) {
+                if ( isset($data->ID) ) {
                     parent::get_module_delete_link($data->ID);
                 } else {
                     parent::get_module_remove_link();
@@ -317,18 +322,18 @@ class radio_input_module extends Unit_Module {
     function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
-        if (isset($_POST['module_type']) && ( $save_elements == true )) {
+        if ( isset($_POST['module_type']) && ( $save_elements == true ) ) {
 
             $answers = array();
 
-            if (isset($_POST[$this->name . '_radio_answers'])) {
-                foreach ($_POST[$this->name . '_radio_answers'] as $post_answers) {
+            if ( isset($_POST[$this->name . '_radio_answers']) ) {
+                foreach ( $_POST[$this->name . '_radio_answers'] as $post_answers ) {
                     $answers[] = $post_answers;
                 }
 
 
-                foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
-                    if ($module_value == $this->name) {
+                foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
+                    if ( $module_value == $this->name ) {
                         $data = new stdClass();
                         $data->ID = '';
                         $data->unit_id = '';
@@ -339,7 +344,7 @@ class radio_input_module extends Unit_Module {
                         $data->metas['module_type'] = $this->name;
                         $data->post_type = 'module';
 
-                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                        foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
                             //cp_write_log( $key );
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
@@ -350,19 +355,19 @@ class radio_input_module extends Unit_Module {
                             $data->metas['answers'] = $answers[$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
-                            if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {
                                 $data->metas['show_title_on_front'] = 'no';
                             }
 
-                            if (isset($_POST[$this->name . '_mandatory_answer'][$key])) {
+                            if ( isset($_POST[$this->name . '_mandatory_answer'][$key]) ) {
                                 $data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer'][$key];
                             } else {
                                 $data->metas['mandatory_answer'] = 'no';
                             }
 
-                            if (isset($_POST[$this->name . '_gradable_answer'][$key])) {
+                            if ( isset($_POST[$this->name . '_gradable_answer'][$key]) ) {
                                 $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
                             } else {
                                 $data->metas['gradable_answer'] = 'no';
@@ -375,15 +380,15 @@ class radio_input_module extends Unit_Module {
             }
         }
 
-        if (isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done'])) {
+        if ( isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done']) ) {
 
-            foreach ($_POST as $response_name => $response_value) {
+            foreach ( $_POST as $response_name => $response_value ) {
 
-                if (preg_match('/' . $this->name . '_front_/', $response_name)) {
+                if ( preg_match('/' . $this->name . '_front_/', $response_name) ) {
 
                     $response_id = intval(str_replace($this->name . '_front_', '', $response_name));
 
-                    if ($response_value != '') {
+                    if ( $response_value != '' ) {
                         $data = new stdClass();
                         $data->ID = '';
                         $data->title = '';
@@ -400,7 +405,7 @@ class radio_input_module extends Unit_Module {
 
                         $checked_value = get_post_meta($response_id, 'checked_answer', true);
 
-                        if ($response_value == $checked_value) {
+                        if ( $response_value == $checked_value ) {
                             $response_grade = 100;
                         } else {
                             $response_grade = 0;
