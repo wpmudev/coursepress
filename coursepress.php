@@ -362,6 +362,10 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function check_access( $course_id, $unit_id = false ) {
+			// $page_num not set...
+			// @TODO: implement $page_num and remove next line.
+			$page_num = false;
+			
             if ( $this->is_preview($unit_id, $page_num) ) {
                 //have access
             } else {
@@ -2143,7 +2147,7 @@ if ( !class_exists('CoursePress') ) {
             global $post;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
-            if ( !$this->is_preview($post->ID) ) {
+            if ( $post && !$this->is_preview($post->ID) ) {
                 wp_enqueue_script('coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ));
             }
             $course_id = do_shortcode('[get_parent_course_id]');

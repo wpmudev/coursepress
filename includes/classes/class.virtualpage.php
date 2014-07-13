@@ -69,7 +69,9 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
                 $post->menu_order = 0;
                 $post->post_type = $this->type;
                 $post->post_mime_type = '';
-                $post->comment_count = -1;
+				
+				// setting this to -1 lets wordpress load comment 1... it uses the absolute value.
+                $post->comment_count = 0;
 
                 //$posts = array_merge( $posts, array( $post ) );
                 
