@@ -1166,7 +1166,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => '',
                 'status' => 'publish',
-                'instructor' => '',
+                'instructor' => '',  // Note, one or the other
+                'student' => '',	// If both student and instructor is specified only student will be used			
                 'label' => __('Price', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
@@ -1199,10 +1200,36 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         }
                     }
                 } else {
-                    $instructor = ( int ) $instructore;
+                    $instructor = ( int ) $instructor;
                     if ( $instructor ) {
                         $instructor = new Instructor($ins);
                         $course_ids = $instructor->get_assigned_courses_ids($status);
+                        if ( $course_ids ) {
+                            $include_ids = array_unique(array_merge($include_ids, $course_ids));
+                        }
+                    }
+                }
+            }
+			
+            $include_ids = array();
+            if ( !empty($student) ) {
+                $students = explode(',', $student);
+                if ( !empty($students) ) {
+                    foreach ( $students as $stud ) {
+                        $stud = ( int ) $stud;
+                        if ( $stud ) {
+                            $stud = new Student($stud);
+                            $course_ids = $stud->get_assigned_courses_ids($status);
+                            if ( $course_ids ) {
+                                $include_ids = array_unique(array_merge($include_ids, $course_ids));
+                            }
+                        }
+                    }
+                } else {
+                    $student = ( int ) $student;
+                    if ( $student ) {
+                        $student = new Student($student);
+                        $course_ids = $student->get_assigned_courses_ids($status);
                         if ( $course_ids ) {
                             $include_ids = array_unique(array_merge($include_ids, $course_ids));
                         }
@@ -1248,6 +1275,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
 
                 $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
+				
+				// Add action links if student
+				if ( ! empty( $student ) ) {
+					$content .= do_shortcode( '[course_action_links course_id="' . $course->ID . '"]' ); 
+				}
 
                 if ( 'yes' == $two_column ) {
                     $content .= '</div>';
@@ -1259,9 +1291,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( (!$courses || 0 == count($courses) ) && !empty($instructor) ) {
                 $content .= __('The Instructor does not have any courses assigned yet.', 'cp');
             }
+            if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
+                $content .= sprintf( __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ), '<a target="_blank" href="'.trailingslashit( site_url() . '/' . $coursepress->get_course_slug() ).'">'.__( 'here', 'cp' ).'</a>' );
+            }
 
             $content .= '</div>'; //course-list
-
+			
             return $content;
         }
 

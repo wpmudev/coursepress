@@ -75,7 +75,7 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						$courses = get_posts( $args );
 						
 						foreach( $courses as $course ) {
-							$_nav_menu_placeholder = $_nav_menu_placeholder + 1;
+							$_nav_menu_placeholder = $_nav_menu_placeholder - 1;
 							?>
 							<li>
 								<label class="menu-item-title">
@@ -97,26 +97,56 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 				?>">
 					<ul id="<?php echo $post_type_name; ?>checklist-cp-special-pages" class="categorychecklist form-no-clear">
 						<?php $_nav_menu_placeholder = 0 > $_nav_menu_placeholder ? $_nav_menu_placeholder - 1 : -1; ?>
-						<?php $_nav_menu_placeholder = $_nav_menu_placeholder + 1; ?>
+						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
+						<li>
+							<label class="menu-item-title">
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'Course List', 'cp' ); ?>
+							</label>
+							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Courses', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_course_slug( true ); ?>">
+							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-courses">
+						</li>
+						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
 								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Courses', 'cp' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Courses', 'cp' ); ?>">
-							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( network_site_url() ); ?>">
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-dashboard">
 						</li>
-						<?php $_nav_menu_placeholder = $_nav_menu_placeholder + 1; ?>
+						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
 								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Profile', 'cp' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Profile', 'cp' ); ?>">
-							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_settings_slug( network_site_url() ); ?>">
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_settings_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-dashboard">
 						</li>
+						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
+						<li>
+							<label class="menu-item-title">
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Login', 'cp' ); ?>
+							</label>
+							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Login', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_login_slug( true ); ?>">
+							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-login">
+						</li>						
+						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
+						<li>
+							<label class="menu-item-title">
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Signup', 'cp' ); ?>
+							</label>
+							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Signup', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_signup_slug( true ); ?>">
+							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-signup">
+						</li>						
 						
 					</ul>
 				</div><!-- /.tabs-panel -->

@@ -168,7 +168,7 @@
                                         <div class="tooltip-before"></div>
                                         <div class="tooltip-button">&times;</div>
                                         <div class="tooltip-content">
-                                            <?php _e( 'Whether to attach additional plugin menu items automatically ( Courses, Student Dashboard, Log Out etc. ) to the theme menu on front. Note: theme must have defined a Primary Menu in order to attach new menu items to it.', 'cp' ) ?>
+                                            <?php _e( '<div>Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.</div><div>Items can also be added from Appearance > Menus and the CoursePress panel.</div>', 'cp' ) ?>
                                         </div>
                                     </div>
                                 <input type='checkbox' name='display_menu_items' <?php echo ( ( get_option( 'display_menu_items', 1 ) ) ? 'checked' : '' ); ?> />
@@ -192,7 +192,7 @@
                                         <div class="tooltip-before"></div>
                                         <div class="tooltip-button">&times;</div>
                                         <div class="tooltip-content">
-                                            <?php _e( 'Whether to use custom login form or default WordPress one', 'cp' ) ?>
+                                            <?php _e( 'Uses a custom Login Form to keep students on the front-end of your site.', 'cp' ) ?>
                                         </div>
                                     </div>
                                 <input type='checkbox' name='use_custom_login_form' <?php echo ( ( get_option( 'use_custom_login_form', 1 ) ) ? 'checked' : '' ); ?> />

@@ -253,6 +253,9 @@ if ( !class_exists('CoursePress') ) {
             add_action('wp_login', array( &$this, 'set_latest_student_activity_upon_login' ), 10, 2);
             add_action('mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ));
             add_action('parent_file', array( &$this, 'parent_file_correction' ));
+			
+			// Update CoursePress login/logout menu item.
+            add_filter('wp_nav_menu_objects', array( &$this, 'menu_metabox_navigation_links' ), 10, 2);
 
             if ( get_option('display_menu_items', 1) ) {
                 add_filter('wp_nav_menu_objects', array( &$this, 'main_navigation_links' ), 10, 2);
@@ -365,7 +368,6 @@ if ( !class_exists('CoursePress') ) {
 			// $page_num not set...
 			// @TODO: implement $page_num and remove next line.
 			$page_num = false;
-			
             if ( $this->is_preview($unit_id, $page_num) ) {
                 //have access
             } else {
@@ -973,9 +975,13 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 
-        function get_course_slug() {
+        function get_course_slug( $url = false ) {
             $default_slug_value = 'courses';
-            return get_option('coursepress_course_slug', $default_slug_value);
+            if ( !$url ) {
+                return get_option('coursepress_course_slug', $default_slug_value);
+            } else {
+                return site_url() . '/' . get_option('coursepress_course_slug', $default_slug_value);
+            }			
         }
 
         function get_module_slug() {
@@ -2475,6 +2481,35 @@ if ( !class_exists('CoursePress') ) {
                 echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
             }
         }
+		
+		// updates login/logout navigation link
+		function menu_metabox_navigation_links( $sorted_menu_items, $args ) {
+			$is_in = is_user_logged_in();
+			
+			$new_menu_items = array();
+			foreach( $sorted_menu_items as $menu_item ){	
+				// LOGIN / LOGOUT
+				if( CoursePress::instance()->get_login_slug( true ) == $menu_item->url && $is_in ) {
+					$menu_item->post_title = __( 'Log Out', 'cp' );
+					$menu_item->title = $menu_item->post_title;
+					$menu_item->url = wp_logout_url();
+				}
+
+				// Remove personalised items
+				if( ( CoursePress::instance()->get_student_dashboard_slug( true ) == $menu_item->url ||
+					  CoursePress::instance()->get_student_settings_slug( true ) == $menu_item->url ) && 
+					  !$is_in ) {
+					cp_write_log( $menu_item );
+					continue;
+				}
+				
+				$new_menu_items[] = $menu_item;
+				
+			}
+
+			return $new_menu_items;
+		}
+		
 
         //adds our links to custom theme nav menus using wp_nav_menu()
         function main_navigation_links( $sorted_menu_items, $args ) {
@@ -2554,6 +2589,7 @@ if ( !class_exists('CoursePress') ) {
 
                     $sorted_menu_items[] = $login;
                 }
+
                 return $sorted_menu_items;
             }
         }

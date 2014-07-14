@@ -110,6 +110,12 @@ if ( !class_exists( 'Student' ) ) {
                 $this->withdraw_from_course( $course_id );
             }
         }
+		
+		// alias to get_enrolled_course_ids()
+		function get_assigned_courses_ids() {
+			return $this->get_enrolled_courses_ids();
+		}
+		
 
         function get_enrolled_courses_ids() {
             global $wpdb;

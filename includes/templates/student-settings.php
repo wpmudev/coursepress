@@ -95,7 +95,7 @@
     </form><?php do_action( 'after_settings_form' );?>
     <?php
 } else {
-    wp_redirect( wp_login_url() );
+    wp_redirect( get_option('use_custom_login_form', 1) ? CoursePress::instance()->get_signup_slug( true ) : wp_login_url() );
     exit;
 }
 ?>
