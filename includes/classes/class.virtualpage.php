@@ -32,17 +32,18 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
             $this->comment_status = isset( $args['comment_status'] ) ? $args['comment_status'] : 'closed';
             $this->post_type = 'public';
             
-            
             add_filter( 'the_posts', array( &$this, 'virtualPage' ) );
             add_filter( 'the_title', array( &$this, 'hide_title' ), 10, 2 );
         }
 
         // filter to create virtual page content
         function virtualPage( $posts ) {
-            global $wp, $wp_query, $wpdb;
+            global $wp, $wp_query, $wpdb, $comment;
 
             $old_post_slug_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s", $wp->request ) ); //check if slug already exists
-
+			// cp_write_log( $comment );
+			// unset( $comment );
+			
             if ( $old_post_slug_id == '' ) {
 
                 $post = new stdClass;

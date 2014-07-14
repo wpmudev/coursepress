@@ -229,6 +229,8 @@ if ( !class_exists('CoursePress') ) {
             add_filter('login_redirect', array( &$this, 'login_redirect' ), 10, 3);
             add_filter('post_type_link', array( &$this, 'check_for_valid_post_type_permalinks' ), 10, 3);
             add_filter('comments_open', array( &$this, 'comments_open_filter' ), 10, 2);
+			
+			add_filter( "comments_template", array( &$this, "no_comments_template" ) );
 
             // Load payment gateways ( to do )
             //$this->load_payment_gateways();
@@ -2499,7 +2501,6 @@ if ( !class_exists('CoursePress') ) {
 				if( ( CoursePress::instance()->get_student_dashboard_slug( true ) == $menu_item->url ||
 					  CoursePress::instance()->get_student_settings_slug( true ) == $menu_item->url ) && 
 					  !$is_in ) {
-					cp_write_log( $menu_item );
 					continue;
 				}
 				
@@ -2718,9 +2719,21 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
         }
+		
+		
+		function no_comments_template( $template ) {
+			global $post;
+			
+			if ( 'virtual_page' == $post->post_type ) {
+				$template = $this->plugin_dir . 'includes/templates/no-comments.php';
+			}
+			
+			return $template;
+		}
 
         function comments_template( $template ) {
             global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
+
             if ( get_post_type($id) == 'course' ) {
                 $template = $this->plugin_dir . 'includes/templates/no-comments.php';
             }

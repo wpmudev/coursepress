@@ -14,7 +14,7 @@ do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 
 <div class="discussion-controls">
-    <a class="button_submit" href="<?php echo get_permalink( $course_id ); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e( 'Ask a Question', 'coursepress' ); ?></a>
+    <button data-link="<?php echo get_permalink( $course_id ); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e( 'Ask a Question', 'coursepress' ); ?></button>
 </div>
 
 <div class="clearfix"></div>

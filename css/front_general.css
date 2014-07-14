@@ -23,6 +23,13 @@ html[xmlns] .clearfix {
     padding: 0px 10px 14px;
 }
 
+input[type="text"],
+.new_question textarea{
+	width: 95%;
+    font-size: 1em;
+	margin-bottom: 5px;
+}
+
 .apply-button-archive{
     margin-top:10px;
 }
