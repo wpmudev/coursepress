@@ -546,7 +546,11 @@ function coursepress_instructors_avatars_array( $args = array() ) {
 function coursepress_instructors_pending( $course_id, $has_capability ) {
 	$content = '';
 	$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
-
+	
+	if ( empty( $instructor_invites ) ) {
+		return;
+	}
+	
 	foreach( $instructor_invites as $instructor ) {
 
 		$remove_button = $has_capability ? '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' . $instructor['code'] . '\', ' . $course_id . ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' : '';

@@ -2596,7 +2596,6 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function main_navigation_links_fallback( $current_menu ) {
-
             if ( !is_admin() ) {
                 $is_in = is_user_logged_in();
 
@@ -2668,7 +2667,7 @@ if ( !class_exists('CoursePress') ) {
                 $login->menu_item_parent = 0;
                 $login->ID = 'cp-logout';
                 $login->db_id = '';
-                $login->url = $is_in ? wp_logout_url() : wp_login_url();
+                $login->url = $is_in ? wp_logout_url() : ( get_option('use_custom_login_form', 1) ? trailingslashit(site_url() . '/' . $this->get_login_slug()) : wp_login_url() );
 
                 $main_sorted_menu_items[] = $login;
                 ?>

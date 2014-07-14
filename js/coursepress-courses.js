@@ -320,7 +320,11 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                     set_update_progress(step, 'attention');
                 }
             } else {
-
+				$(statusElement).addClass('saved');
+				set_update_progress(step, 'saved');
+                $course_id = $('[name=course_id]').val();
+                $admin_url = $('[name=admin_url]').val();
+                window.location = $admin_url + '&tab=units&course_id=' + $course_id;				
             }
             // Steps 1 - 5	
         } else {

@@ -1183,7 +1183,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $status = 'published' == $status ? 'publish' : $status;
 
+			// student or instructor ids provided
+			$user_provided = false;
+			$user_provided = empty( $student ) ? empty( $instructor ) ? false : true : true;
+			
             $content = '';
+			$courses = array();
 
             $include_ids = array();
             if ( !empty($instructor) ) {
@@ -1237,6 +1242,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
             }
 
+			cp_write_log( $include_ids );
+
             $post_args = array(
                 'order' => 'ASC',
                 'post_type' => 'course',
@@ -1247,8 +1254,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( !empty($include_ids) ) {
                 $post_args = wp_parse_args(array( 'include' => $include_ids ), $post_args);
             }
+			
 
-            $courses = get_posts($post_args);
+            if ( $user_provided && !empty($include_ids) || ! $user_provided ) {
+	            $courses = get_posts($post_args);
+			}
 
             $content .= '<div class="course-list ' . $class . '">';
 
@@ -1292,7 +1302,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $content .= __('The Instructor does not have any courses assigned yet.', 'cp');
             }
             if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
-                $content .= sprintf( __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ), '<a target="_blank" href="'.trailingslashit( site_url() . '/' . $coursepress->get_course_slug() ).'">'.__( 'here', 'cp' ).'</a>' );
+                $content .= sprintf( __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ), '<a target="_blank" href="'.trailingslashit( site_url() . '/' . CoursePress::instance()->get_course_slug() ).'">'.__( 'here', 'cp' ).'</a>' );
             }
 
             $content .= '</div>'; //course-list
