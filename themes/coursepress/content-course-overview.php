@@ -21,12 +21,12 @@ $course_language = $course->details->course_language;
 
     <section id="course-summary">
 
-        <?php if ($course->details->course_video_url != '') { ?>  
+        <?php if ( $course->details->course_video_url != '' ) { ?>  
             <div class="course-video">
                 <?php
                 $video_extension = pathinfo($course->details->course_video_url, PATHINFO_EXTENSION);
 
-                if (!empty($video_extension)) {//it's file, most likely on the server
+                if ( !empty($video_extension) ) {//it's file, most likely on the server
                     $attr = array(
                         'src' => $course->details->course_video_url,
                             /* 'width' => 500,
@@ -50,17 +50,17 @@ $course_language = $course->details->course_language;
         <div class="entry-content-excerpt <?php echo (!isset($course->details->course_video_url) || $course->details->course_video_url == '' ? 'entry-content-excerpt-right' : '' ); ?>">
             <?php //the_excerpt(); ?>
             <div class="course-box">
-                <?php echo do_shortcode('[course_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
-				<?php echo do_shortcode('[course_enrollment_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
-				<?php echo do_shortcode('[course_class_size]'); ?>
-				<?php echo do_shortcode('[course_enrollment_type label="Who can Enroll"]'); ?>
-				<?php echo do_shortcode('[course_language]'); ?>				
-				<?php echo do_shortcode('[course_cost]'); ?>	
-											
+                <?php echo do_shortcode('[course_dates show_alt_display="yes"]'); //change to yes for 'Open-ended' ?>
+                <?php echo do_shortcode('[course_enrollment_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
+                <?php echo do_shortcode('[course_class_size]'); ?>
+                <?php echo do_shortcode('[course_enrollment_type label="Who can Enroll"]'); ?>
+                <?php echo do_shortcode('[course_language]'); ?>				
+                <?php echo do_shortcode('[course_cost]'); ?>	
+
             </div><!--course-box-->
             <div class="quick-course-info">
                 <?php // echo do_shortcode('[course_details field="button"]'); ?>
-				<?php echo do_shortcode('[course_join_button]'); ?>
+                <?php echo do_shortcode('[course_join_button]'); ?>
             </div>
         </div>
     </section>
@@ -83,7 +83,7 @@ $course_language = $course->details->course_language;
     <div class="entry-content <?php echo( count($instructors) > 0 ? 'left-content' : '' ); ?>">
         <h1 class="h1-about-course"><?php _e('About the Course', 'coursepress'); ?></h1>
         <?php the_content(); ?>
-        <?php if ($course->details->course_structure_options == 'on') { ?>
+        <?php if ( $course->details->course_structure_options == 'on' ) { ?>
             <h1 class = "h1-about-course"><?php
                 _e('Course Structure', 'coursepress');
                 ?></h1>
@@ -99,7 +99,7 @@ $course_language = $course->details->course_language;
         ?>
     </div><!-- .entry-content -->
 
-    <?php if (count($instructors) > 0) { ?>
+    <?php if ( count($instructors) > 0 ) { ?>
         <div class="course-instructors right-content">
             <h1 class="h1-instructors"><?php _e('Instructors', 'coursepress'); ?></h1>
             <script>
@@ -113,7 +113,7 @@ $course_language = $course->details->course_language;
             </script>
             <div id="instructor-profiles">
                 <?php
-                foreach ($instructors as $instructor) {
+                foreach ( $instructors as $instructor ) {
                     ?>
 
                     <h3><?php echo $instructor->display_name; ?></h3>
@@ -123,17 +123,9 @@ $course_language = $course->details->course_language;
                     $doc->loadHTML(get_avatar($instructor->ID, 235));
                     $imageTags = $doc->getElementsByTagName('img');
 
-                    foreach ($imageTags as $tag) {
+                    foreach ( $imageTags as $tag ) {
                         $avatar_url = $tag->getAttribute('src');
                     }
-                    ?>
-
-                    <?php
-                    /* $content .= '<div class="instructor"><a href="' . trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login ) . '">';
-                      $content .= '<div class="small-circle-profile-image" style="background: url( ' . $avatar_url . ' );"></div>';
-                      $content .= '<div class="instructor-name">' . $instructor->display_name . '</div>';
-                      $content .= '</a></div>';
-                      $instructors_count++; */
                     ?>
 
                     <div>
@@ -158,9 +150,9 @@ $course_language = $course->details->course_language;
         /* translators: used between list items, there is a space after the comma */
         $tag_list = get_the_tag_list('', __(', ', 'coursepress'));
 
-        if (!coursepress_categorized_blog()) {
+        if ( !coursepress_categorized_blog() ) {
             // This blog only has 1 category so we just need to worry about tags in the meta text
-            if ('' != $tag_list) {
+            if ( '' != $tag_list ) {
                 $meta_text = __('This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');
             } else {
                 //$meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress' );
@@ -168,7 +160,7 @@ $course_language = $course->details->course_language;
             }
         } else {
             // But this blog has loads of categories so we should probably display them here
-            if ('' != $tag_list) {
+            if ( '' != $tag_list ) {
                 $meta_text = __('This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');
             } else {
                 $meta_text = __('This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');

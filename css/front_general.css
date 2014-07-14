@@ -137,11 +137,11 @@ input[type="text"],
 }
 
 .enroll-box-left{
-    width: 49%;
+    width: 69%;
     float: left;
 }
 .enroll-box-right{
-    width: 49%;
+    width: 30%;
     float: right;
 }
 

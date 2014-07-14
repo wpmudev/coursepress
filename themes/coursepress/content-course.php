@@ -4,30 +4,26 @@
  */
 ?>
 <?php
-$course = new Course( get_the_ID() );
-//$course_category_id = $course->details->course_category;
-//$course_category = get_term_by( 'ID', $course_category_id, 'course_category' );
+$course = new Course(get_the_ID());
+$course_category_id = $course->details->course_category;
+$course_category = get_term_by('ID', $course_category_id, 'course_category');
 
 $course_language = $course->details->course_language;
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php
-    if ( Course::get_course_thumbnail( the_ID() ) ) {
-        ?>
-        <figure>
-            <?php /*if ( isset( $course_category->name ) ) { ?>
-                <figcaption><?php echo $course_category->name; ?></figcaption>
-            <?php }*/ ?>
-
-            <img src="<?php echo Course::get_course_thumbnail( the_ID() ); ?>">
-
-            <?php edit_post_link( __( 'Edit Course', 'coursepress' ), '<span class="edit-link">', '</span>' ); ?>
-        </figure>
-    <?php }else{
+    $course_thumbnail = Course::get_course_thumbnail(get_the_ID());
+    if ( !$course_thumbnail ) {
         $extended_class = 'quick-course-info-extended';
-    } ?>
+    }
+    ?>
 
-    <section class='article-content-right'>
+    <?php
+    // Course thumbnail
+    echo do_shortcode('[course_thumbnail]');
+    ?>
+
+    <section class='article-content-right <?php echo $extended_class; ?> course-archive'>
         <header class="entry-header">
             <h1 class="entry-title"><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
         </header><!-- .entry-header -->
@@ -37,23 +33,30 @@ $course_language = $course->details->course_language;
                 <?php the_excerpt(); ?>
             </div><!-- .entry-summary -->
         <?php else : ?>
-            <div class="entry-content">
+            <div class="entry-content <?php echo $extended_class; ?>">
                 <div class="instructors-content">
-                    <?php echo do_shortcode( '[course_instructors list="true" link="true"]' ); ?>
+                    <?php
+                    // Flat hyperlinked list of instructors
+                    echo do_shortcode('[course_instructors style="list-flat" link="true"]');
+                    ?>
                 </div>
-                <?php the_excerpt(); ?>
+
                 <?php
-                wp_link_pages( array(
-                    'before' => '<div class="page-links">' . __( 'Pages:', 'coursepress' ),
-                    'after' => '</div>',
-                ) );
+                // Course summary/excerpt
+                echo do_shortcode('[course_summary length="50" class="' . $extended_class . '"]');
                 ?>
-                <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' );?>">
-                    <span class="course-time"><?php echo do_shortcode( '[course_start label=""]' ); ?></span>
-                    <?php if ( isset( $course_language ) && $course_language !== '' ) { ?>
-                        <span class="course-lang"><?php echo do_shortcode( '[course_language label=""]' ); ?></span>
-                    <?php } ?>
-                    <a class="go-to-course-button" href="<?php the_permalink(); ?>"><?php _e( 'Go to Course', 'coursepress' ); ?></a>
+
+                <?php
+                wp_link_pages(array(
+                    'before' => '<div class="page-links">' . __('Pages:', 'coursepress'),
+                    'after' => '</div>',
+                ));
+                ?>
+                <div class="quick-course-info <?php echo ( isset($extended_class) ? $extended_class : '' ); ?>">
+                    <?php echo do_shortcode('[course_start label="" class="course-time"]'); ?>
+                    <?php echo do_shortcode('[course_language label="" class="course-lang"]'); ?>
+                    <?php echo do_shortcode('[course_join_button details_text="'.__('Details', 'cp').'" course_expired_text="'.__('Not Available', 'cp').'"]'); ?>
+                    <!--go-to-course-button-->
                 </div>
             </div><!-- .entry-content -->
 
@@ -63,23 +66,23 @@ $course_language = $course->details->course_language;
             <?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search  ?>
                 <?php
                 /* translators: used between list items, there is a space after the comma */
-                $categories_list = get_the_category_list( __( ', ', 'coursepress' ) );
+                $categories_list = get_the_category_list(__(', ', 'coursepress'));
                 if ( $categories_list && coursepress_categorized_blog() ) :
                     ?>
                     <span class="cat-links">
-                        <?php printf( __( 'Courses in %1$s', 'coursepress' ), $categories_list ); ?>
+                        <?php printf(__('Courses in %1$s', 'coursepress'), $categories_list); ?>
                     </span>
                 <?php endif; // End if categories   ?>
 
                 <?php
                 /* translators: used between list items, there is a space after the comma */
-                $tags_list = get_the_tag_list( '', __( ', ', 'coursepress' ) );
+                $tags_list = get_the_tag_list('', __(', ', 'coursepress'));
                 if ( $tags_list ) :
                     ?>
                     <span class="tags-links">
-                        <?php printf( __( 'Tagged %1$s', 'coursepress' ), $tags_list ); ?>
+                        <?php printf(__('Tagged %1$s', 'coursepress'), $tags_list); ?>
                     </span>
-                <?php endif; // End if $tags_list  ?>
+                <?php endif; // End if $tags_list   ?>
             <?php endif; // End if 'post' == get_post_type()  ?>
 
             <?php /* if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) : ?>

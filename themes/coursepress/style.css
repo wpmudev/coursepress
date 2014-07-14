@@ -279,8 +279,8 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover {
-    border-color: #ccc #bbb #aaa #bbb;
-    box-shadow: inset 0 1px 0 rgba( 255, 255, 255, 0.8 ), inset 0 15px 17px rgba( 255, 255, 255, 0.8 ), inset 0 -5px 12px rgba( 0, 0, 0, 0.02 );
+    //border-color: #ccc #bbb #aaa #bbb;
+    //box-shadow: inset 0 1px 0 rgba( 255, 255, 255, 0.8 ), inset 0 15px 17px rgba( 255, 255, 255, 0.8 ), inset 0 -5px 12px rgba( 0, 0, 0, 0.02 );
 }
 button:focus,
 input[type="button"]:focus,
@@ -956,7 +956,10 @@ a.rsswidget{
     margin-left: 30px;
     width: 400px;
     margin-top: 15px;
+}
 
+.post-type-archive-course section.article-content-right.quick-course-info-extended{
+    width: 100%;
 }
 
 .post-type-archive-course section.article-content-right .entry-content{
@@ -1068,8 +1071,11 @@ a.rsswidget{
     /*color:#d7fdff;*/
 }
 
-.post-type-archive-course article.type-course:hover .quick-course-info .go-to-course-button{
+.post-type-archive-course article.type-course:hover .quick-course-info .go-to-course-button,
+.post-type-archive-course article.type-course:hover .quick-course-info button.apply-button-enrolled 
+{
     background-color: #23bee9;
+    text-decoration: underline;
 }
 
 .post-type-archive-course article.type-course:hover .course-time{
@@ -1135,21 +1141,15 @@ a.rsswidget{
 }
 
 .course-video{
-    width: 500px;
+    width: 52%;
     min-height: 281px;
     border: 1px solid #ccc;
     display: block;
     float: left;
-    margin-right: 30px;
+    margin-right: 2%;
     overflow: hidden;
     position: relative;
 }
-/*
-.course-video iframe{
-    max-width: 100%;
-    max-height: 100%;
-}*/
-
 
 .course-video iframe,  
 .course-video object,  
@@ -1167,7 +1167,7 @@ a.rsswidget{
 
 .entry-content-excerpt{
     float: right;
-    width: 425px;
+    width: 45%;
     min-height: 283px;
     position: relative;
 
@@ -1269,6 +1269,31 @@ a.apply-button-enrolled,
     font-weight: 300;
 
     box-shadow: none;
+}
+
+.course-archive .apply-button-finished, 
+.course-archive .apply-button-full,
+.course-archive .apply-button-enrollment-closed,
+.course-archive .apply-button-enrollment-finished,
+.course-archive .apply-button-prerequisite,
+.course-archive .apply-button-not-started,
+.course-archive .apply-button-pending, 
+.course-archive .apply-button, 
+.course-archive .apply-button-enrolled, 
+.course-archive a.apply-button-enrolled, 
+.course-archive #student-settings input[type="submit"].apply-button-enrolled, 
+.course-archive #modules_form input[type="submit"].apply-button-enrolled, 
+.course-archive #contact_form input[type="submit"].apply-button-enrolled, 
+.course-archive .apply-box input[type="submit"].apply-button, 
+.course-archive .apply-box a.apply-button{
+    margin-top: 0px;
+    min-width: 0px;
+    padding: 6px 24px 6px 24px;
+}
+
+.course-archive button.apply-button-enrolled,
+.content-instructor-profile button.apply-button-enrolled{
+    padding: 11px 24px 11px 24px;
 }
 
 .apply-button-not-started,
@@ -1373,6 +1398,50 @@ input[type="submit"].apply-button-finished,
     font-weight: 300;
 }
 
+/* gray button archive */
+
+.course-archive span.apply-button-finished, 
+.course-archive span.apply-button-full,
+.course-archive span.apply-button-enrollment-closed,
+.course-archive span.apply-button-enrollment-finished,
+.course-archive span.apply-button-prerequisite,
+.course-archive span.apply-button-prerequisite,
+.course-archive a.apply-button-finished, 
+.course-archive a.apply-button-finished, 
+.course-archive input[type="submit"].apply-button-finished, 
+.course-archive span.apply-button-finished,
+
+.content-instructor-profile span.apply-button-finished, 
+.content-instructor-profile span.apply-button-full,
+.content-instructor-profile span.apply-button-enrollment-closed,
+.content-instructor-profile span.apply-button-enrollment-finished,
+.content-instructor-profile span.apply-button-prerequisite,
+.content-instructor-profile span.apply-button-prerequisite,
+.content-instructor-profile a.apply-button-finished, 
+.content-instructor-profile a.apply-button-finished, 
+.content-instructor-profile input[type="submit"].apply-button-finished, 
+.content-instructor-profile span.apply-button-finished
+{
+    float: right;
+    display: block;
+    background-color: #ccc;
+    background: #ccc;
+    color: #fff;
+    text-align: center;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    border: none;
+    text-shadow: none;
+    font-weight: 300;
+}
+
 /* ff6600 */
 
 .single-course a.apply-button-pending, a.apply-button-pending, input[type="submit"].apply-button-pending, .single-course span.apply-button-pending{
@@ -1437,6 +1506,10 @@ input[type="submit"].apply-button-finished,
 
 .course-student-dashboard .clearfix, .notification-archive-list .clearfix{
     display: block;
+}
+
+.course-student-dashboard.course-list .divider{
+    display: none;
 }
 
 #additional-summary{
@@ -2366,31 +2439,31 @@ footer.comment-meta{
 }
 
 .clearf:after {
-	content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	line-height: 0;
-	height: 0;
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
 }
- 
+
 .clearf {
-	display: inline-block;
+    display: inline-block;
 }
- 
+
 html[xmlns] .clearf {
-	display: block;
+    display: block;
 }
- 
+
 * html .clearf {
-	height: 1%;
+    height: 1%;
 }
 
 /*
 RESPONSIVE
 */
 
-@media screen and ( max-width: 960px ) {
+@media screen and ( max-width: 980px ) {
     .wrap, 
     .site-content,
     .content-side-area,
@@ -2400,7 +2473,9 @@ RESPONSIVE
         margin-right: 2%;
         position: relative;
     }
+}
 
+@media screen and ( max-width: 960px ) {
     .student-settings label,
     .student-settings label.right{
         width: 96%;
@@ -2416,7 +2491,9 @@ RESPONSIVE
     }
 
     .post-type-archive-course article.type-course h1{
-        width: 100%;
+        width: 95.6%;
+        margin-left: 3%;
+        margin-right: 3%;
     }
 
     .post-type-archive-course article.type-course h1 a, .post-type-archive-course article.type-course .entry-title a{
@@ -2424,21 +2501,15 @@ RESPONSIVE
     }
 
     .post-type-archive-course .quick-course-info{
-        width: calc( 94.9% - 235px );
+        width: calc( 92.9% - 235px );
+    }
+
+    .post-type-archive-course .quick-course-info.quick-course-info-extended{
+        width: 97.9%;
     }
 
     #course-summary{
         padding: 2%;
-    }
-
-    .entry-content-excerpt{
-        float: right;
-        width: 100%;
-        position: relative;
-        max-height: 195px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-top: 30px;
     }
 
     .social-shares{
@@ -2448,8 +2519,8 @@ RESPONSIVE
 
     .entry-content{
         margin-bottom: 30px;
-        margin-left: 2%;
-        margin-right: 2%;
+        margin-left: 3%;
+        margin-right: 3%;
     }
 
     .left-content{
@@ -2460,10 +2531,6 @@ RESPONSIVE
         float: none;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .course-video{
-        width: 100%;
     }
 
     .mejs-video{
@@ -2522,10 +2589,28 @@ RESPONSIVE
         width: 100%;
     }
 
+    .enroll-box-left{
+        width: 100% !important;
+    }
+
 
 }
 
 @media screen and ( max-width: 750px ) {
+
+    .course-video{
+        width: 100%;
+    }
+    .entry-content-excerpt{
+        float: right;
+        width: 100%;
+        position: relative;
+        max-height: 195px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 30px;
+    }
+
     .post-type-archive-course article.type-course figure,
     .post-type-archive-course article.type-course .course-lang{
         display: none;
@@ -2544,10 +2629,26 @@ RESPONSIVE
         padding-left: 3%
     }
 
+    .post-type-archive-course .quick-course-info.quick-course-info-extended{
+        width: 97%;
+        left: 0px;
+        padding-left: 3%
+    }
+
+
+
     .post-type-archive-course article.type-course h1,
     .post-type-archive-course article.type-course .entry-content p,
     header{
         width: 97%;
+        margin-left: 0%;
+        margin-right: 0%;
+    }
+
+    .entry-content {
+        margin-bottom: 30px;
+        margin-left: 0.5%;
+        margin-right: 0%;
     }
 
 }
