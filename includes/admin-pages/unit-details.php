@@ -7,6 +7,7 @@ $course_id = '';
 if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
     $course_id = (int) $_GET['course_id'];
     $course = new Course($course_id);
+	
 }
 
 if (!current_user_can('coursepress_view_all_units_cap') && $course->details->post_author != get_current_user_id()) {
@@ -77,7 +78,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
         <ul id="sortable-units" class="mp-tabs" style="">
             <?php
             $units = $course->get_units();
-
+			?>
+			<input type="hidden" name="unit_count" value="<?php echo $units ? count( $units ) : 0; ?>">
+			<?php
             $list_order = 1;
 
             foreach ($units as $unit) {

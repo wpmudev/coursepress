@@ -997,6 +997,36 @@ jQuery(document).ready(function($) {
 
 });
 
+// Popup that shows upon 'Course Setup' completed or when 0 units are found.
+jQuery(document).ready(function($) {
+	var unit_count = $('[name="unit_count"]').val();
+	
+	if ( unit_count == 0 ) {
+        var content = '<div class="update orange top-right">' + coursepress_units.unit_setup_prompt + '<i class="fa fa-times-circle" /></div>';
+
+        $('#wpbody-content').append(content);
+		$('.update.orange.top-right').css({
+			position: 'absolute', 
+			top: '25px', 
+			right: '35px',
+		    'background-color': '#fff',
+		    'border-left': '4px solid #ec8c35',
+		    'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
+		    padding: '15px 25px 15px 15px',
+		});
+		$('.update.orange.top-right .fa-times-circle').css({
+			'font-size': '20px',
+			position: 'absolute', 
+			top: '10px', 
+			right: '10px',
+			cursor: 'pointer',
+		}).click( function( event ) {
+			$( this ).parent().remove();
+		});
+	}
+});
+
+
 jQuery(document).ready(function($) {
     var unit_state_toggle = {
         init: function() {
