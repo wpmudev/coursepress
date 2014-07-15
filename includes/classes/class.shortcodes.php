@@ -1169,7 +1169,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_class' => '',
                 'title_link' => 'yes',
                 'title_class' => 'course-title',
+                'title_tag' => 'h3',
                 'show' => 'dates,enrollment_dates,class_size,cost',
+                'show_button' => 'yes',
+                'show_divider' => 'yes',
+                'limit' => -1,
+                'order' => 'ASC',
                 'class' => '',
                             ), $atts, 'course_list'));
 
@@ -1238,10 +1243,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             //cp_write_log($include_ids);
 
             $post_args = array(
-                'order' => 'ASC',
+                'order' => $order,
                 'post_type' => 'course',
                 'meta_key' => 'enroll_type',
                 'post_status' => $status,
+                'posts_per_page' => $limit
             );
 
             if ( !empty($include_ids) ) {
@@ -1257,7 +1263,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             foreach ( $courses as $course ) {
                 $content .= '<div class="course-list-item ' . $course_class . '">';
-                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '"]');
+                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="'.$title_tag.'"]');
 
                 if ( 'yes' == $two_column ) {
                     $content .= '<div class="course-list-box-left ' . $left_class . '">';
@@ -1271,7 +1277,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     $content .= '<div class="course-list-box-right ' . $right_class . '">';
                 }
 
-                $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
+                if ( 'yes' == $show_button ) {
+                    $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
+                }
 
                 // Add action links if student
                 if ( !empty($student) ) {
@@ -1281,8 +1289,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( 'yes' == $two_column ) {
                     $content .= '</div>';
                 }
-
-                $content .= '<div class="divider" ></div>';
+                
+                if ( 'yes' == $show_divider ) {
+                    $content .= '<div class="divider" ></div>';
+                }
             } // foreach
 
             if ( (!$courses || 0 == count($courses) ) && !empty($instructor) ) {
@@ -2777,7 +2787,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                    <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                            <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">

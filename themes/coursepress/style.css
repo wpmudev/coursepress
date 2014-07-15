@@ -2494,7 +2494,9 @@ html[xmlns] .clearf {
     line-height: 25px;
 }
 
-.cp_featured_widget .cp_featured_widget_course_link a{
+.cp_featured_widget_course_link a,
+.cp_featured_widget_course_link a:visited,
+.cp_featured_widget_course_link a:hover{
     color: #fff;
     background-color: #0facd9;
     font-size: 18px;
