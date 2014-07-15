@@ -782,32 +782,41 @@ jQuery(document).ready(function($) {
         var activeStep = $(activeElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
         var thisElement = $(this).parents('.course-section.step')[0];
+		var thisElementFormVisible = $(thisElement).children('.course-form').is(':visible');
         var thisStep = $(thisElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
         var thisStatus = $(this).siblings('.status')[0];
 
         // Only move to a saved step or a previous step (asuming that it has to be saved)
-        if ($(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep) {
+        if ( $(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep ) {
 
             // There is a 'previous section'. What do you want to do with it?
             if (thisStep < activeStep) {
                 var newTop = $(thisElement).position().top + 130;
-            } else {
+            } else if ( thisStep != 1 ) {
                 var step = thisStep + 1;
                 var newTop = $(thisElement).prev('.step').offset().top + 20;
-            }
-
-            $(thisElement).children('.course-form').slideDown(500);
-            $(thisElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
-            $(thisElement).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
-            $(activeElement).children('.course-form').slideUp(500);
-            $(activeElement).children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
-            $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);
-
-            // Animate first then jump
-            $(document).scrollTop(newTop);
-            $(thisElement).addClass('active');
+            }	
+				
+			if ( ! thisElementFormVisible ) {
+	            $(thisElement).children('.course-form').slideDown(500);
+	            $(thisElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+	            $(thisElement).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
+				if( thisStep != activeStep ) {
+		            $(activeElement).children('.course-form').slideUp(500);
+		            $(activeElement).children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
+		            $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);						
+		            // Animate first then jump
+		            $(document).scrollTop(newTop);
+				}
+			} else {
+	            $(activeElement).children('.course-form').slideUp(500);
+  	            $(activeElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+  	            $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);
+			}
+			
             $(activeElement).removeClass('active');
+            $(thisElement).addClass('active');
 
         } else {
             $($(this).parent()).effect('shake', {distance: 10}, 100);
