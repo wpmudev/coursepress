@@ -137,11 +137,11 @@ input[type="text"],
 }
 
 .enroll-box-left{
-    width: 69%;
+    width: 65%;
     float: left;
 }
 .enroll-box-right{
-    width: 30%;
+    width: 34%;
     float: right;
 }
 
@@ -273,6 +273,18 @@ input[type="button"].apply-button:hover{
         color: #f1f1f1;
     */	
 }
+
+button, 
+a.apply-button, 
+input[type="submit"],
+input[type="button"]{
+	-ms-word-break: normal;
+	     word-break: normal;
+	-webkit-hyphens: none;
+	   -moz-hyphens: none;
+	        hyphens: none;
+}
+
 
 /* MODULES */
 

@@ -12,6 +12,8 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
         var $author = null;
         var $date = null;
         var $type = null;
+		
+		// const TITLE_COURSE_LIST = __( 'Courses', 'cp' );
 
         function __construct( $args ) {
             if ( !isset( $args['slug'] ) )

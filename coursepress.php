@@ -2288,7 +2288,7 @@ if ( !class_exists('CoursePress') ) {
                 'withdraw_class_alert' => __('Please confirm that you want to withdraw all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
                 'setup_gateway' => __("You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp'),
-				'unit_setup_prompt' => __( '<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> ofr your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
+				'unit_setup_prompt' => __( '<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
             ));
 
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');
@@ -2719,8 +2719,7 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
         }
-		
-		
+				
 		function no_comments_template( $template ) {
 			global $post;
 			

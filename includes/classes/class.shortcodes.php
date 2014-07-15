@@ -225,7 +225,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             ob_start();
             ?>
-            <<?php echo $title_tag; ?> class="course-title-<?php echo $course_id; ?> <?php echo $class; ?>">
+            <<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?> <?php echo $class; ?>">
             <?php echo 'yes' == $link ? '<a href="' . get_permalink($course_id) . '" title="' . $title . '">' : ''; ?>
             <?php echo $title; ?>
             <?php echo 'yes' == $link ? '</a>' : ''; ?>

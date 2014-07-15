@@ -1767,6 +1767,10 @@ label.bold-label{
 .course-section.step .course-section-title .status.progress {
     background: url( ../images/ajax-loader.gif ) no-repeat;
 }
+.course-section.step.active .course-section-title .status.progress {
+    background: url( ../images/ajax-loader-blue.gif ) no-repeat 0 0;
+	background-size: 16px 16px;
+}
 
 .course-section.step .course-section-title h3 {
     line-height: 48px;
