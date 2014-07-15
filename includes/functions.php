@@ -55,7 +55,8 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
     $modules_class = new Unit_Module();
 
     if ( !isset($unit_id) ) {// || !is_singular()
-        echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"></div>';
+        //<br clear="all">
+        echo '<div class="navigation module-pagination" id="navigation-pagination"></div>';
         return;
     }
 
@@ -72,13 +73,13 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
             return false;
         }
     }
-
+//<br clear="all">
     if ( $wp_query->max_num_pages <= 1 ) {
-        echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"></div>';
+        echo '<div class="navigation module-pagination" id="navigation-pagination"></div>';
         return;
     }
-
-    echo '<br clear="all"><div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
+//<br clear="all">
+    echo '<div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
 
     for ( $link_num = 1; $link_num <= $max; $link_num++ ) {
         if ( $coursepress->is_preview($unit_id, $link_num) ) {
@@ -1101,6 +1102,7 @@ if ( !function_exists('cp_length') ) {
     function cp_length( $text, $excerpt_length ) {
         $text = strip_shortcodes($text);
         //$text = apply_filters( 'the_content', $text );
+        $excerpt_more = '...';
         $text = str_replace(']]>', ']]&gt;', $text);
         $text = strip_tags($text);
         $words = preg_split("/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);

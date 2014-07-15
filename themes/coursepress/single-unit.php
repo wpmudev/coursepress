@@ -39,21 +39,21 @@ $post = $unit->details;
                 <h2><?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title"]'); ?></h2>
 
                 <div class="entry-content">
-    <?php
-    if ( $paged == 1 ) { //Unit introduction will be shown only on the first page
-        the_content();
-    }
-    ?>
-                </div>
                     <?php
-                    $modules = new Unit_Module();
-
-                    $modules->get_modules_front($unit->details->ID);
+                    if ( $paged == 1 ) { //Unit introduction will be shown only on the first page
+                        the_content();
+                    }
                     ?>
+                </div>
+                <?php
+                $modules = new Unit_Module();
+
+                $modules->get_modules_front($unit->details->ID);
+                ?>
             </article>
-            <?php endwhile; // end of the loop. ?>
+        <?php endwhile; // end of the loop. ?>
     </main><!-- #main -->
 </div><!-- #primary -->
 
-        <?php get_sidebar('footer'); ?>
+<?php get_sidebar('footer'); ?>
 <?php get_footer(); ?>

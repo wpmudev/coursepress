@@ -854,3 +854,7 @@ label > .tree{
     /* Good browsers */
     opacity: 0.3;
 }
+
+.full-width .site-content .has-post-thumbnail .entry-header, .full-width.singular .site-content .hentry.has-post-thumbnail{
+    margin-top: 0px !important;/*fix for twentyfourteen*/
+}

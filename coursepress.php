@@ -30,11 +30,6 @@
 
 if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
-
-
-
-
-    
 // Load the common functions
 require_once( 'includes/functions.php' );
 
@@ -52,13 +47,13 @@ if ( !class_exists('CoursePress') ) {
 
         function __construct() {
 
-            //setup our variables
+//setup our variables
             $this->init_vars();
 
-            //register themes directory
+//register themes directory
             $this->register_theme_directory();
 
-            //Register Globals
+//Register Globals
             $GLOBALS['plugin_dir'] = $this->plugin_dir;
             $GLOBALS['course_slug'] = $this->get_course_slug();
             $GLOBALS['units_slug'] = $this->get_units_slug();
@@ -68,7 +63,7 @@ if ( !class_exists('CoursePress') ) {
             $GLOBALS['enrollment_process_url'] = $this->get_enrollment_process_slug(true);
             $GLOBALS['signup_url'] = $this->get_signup_slug(true);
 
-            //Install plugin
+//Install plugin
             register_activation_hook(__FILE__, array( $this, 'install' ));
 
             global $last_inserted_unit_id; //$last_inserted_module_id
@@ -76,144 +71,148 @@ if ( !class_exists('CoursePress') ) {
 
             add_theme_support('post-thumbnails');
 
-            //Administration area
+//Administration area
             if ( is_admin() ) {
 
-                // Support for WPMU DEV Dashboard plugin
+// Support for WPMU DEV Dashboard plugin
                 include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 
-                // Course search
+// Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
-                // Notificatioon search
+// Notificatioon search
                 require_once( $this->plugin_dir . 'includes/classes/class.notificationsearch.php' );
 
-                // Contextual help
-                //require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
-                // Search Students class
+// Contextual help
+//require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
+// Search Students class
                 require_once( $this->plugin_dir . 'includes/classes/class.studentsearch.php' );
 
-                // Search Instructor class
+// Search Instructor class
                 require_once( $this->plugin_dir . 'includes/classes/class.instructorsearch.php' );
 
-                //Pagination Class
+//Pagination Class
                 require_once( $this->plugin_dir . 'includes/classes/class.pagination.php' );
 
-                //Tooltip Helper
+//Tooltip Helper
                 require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php' );
 
-                // Menu Meta Box
+// Menu Meta Box
                 require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );
 
-                //Listen to dynamic editor requests ( using on unit page in the admin )
+//Listen to dynamic editor requests ( using on unit page in the admin )
                 add_action('wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ));
 
-                //Assing instructor ajax call
-                //add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
-                // Changed to perform an update instead of just assigning capabilities
-                // ::RK::
+//Assing instructor ajax call
+//add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
+// Changed to perform an update instead of just assigning capabilities
+// ::RK::
                 add_action('wp_ajax_add_course_instructor', array( &$this, 'add_course_instructor' ));
 
-                // Using ajax to remove course instructor
+// Using ajax to remove course instructor
                 add_action('wp_ajax_remove_course_instructor', array( &$this, 'remove_course_instructor' ));
 
-                //Assign Course Setup auto-update ajax call
+//Assign Course Setup auto-update ajax call
                 add_action('wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ));
 
-                //Does Course have an active Gateway?
+//Does Course have an active Gateway?
                 add_action('wp_ajax_course_has_gateway', array( &$this, 'course_has_gateway' ));
 
-                //Invite instructor ajax call
+//Invite instructor ajax call
                 add_action('wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ));
 
-                //Change course state (draft / publish)
+//Change course state (draft / publish)
                 add_action('wp_ajax_change_course_state', array( &$this, 'change_course_state' ));
 
-                //Change unit state (draft / publish)
+//Change unit state (draft / publish)
                 add_action('wp_ajax_change_unit_state', array( &$this, 'change_unit_state' ));
 
-                //Remove instructor invite ajax call
+//Remove instructor invite ajax call
                 add_action('wp_ajax_remove_instructor_invite', array( &$this, 'remove_instructor_invite' ));
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
-            //Output buffer hack
+//Output buffer hack
             add_action('init', array( &$this, 'output_buffer' ), 0);
 
-            // Discusson class
+// Discusson class
             require_once( $this->plugin_dir . 'includes/classes/class.discussion.php' );
 
-            // Search Discusson class
+// Search Discusson class
             require_once( $this->plugin_dir . 'includes/classes/class.discussionsearch.php' );
 
-            // Instructor class
+// Instructor class
             require_once( $this->plugin_dir . 'includes/classes/class.instructor.php' );
 
-            // Unit class
+// Unit class
             require_once( $this->plugin_dir . 'includes/classes/class.course.unit.php' );
 
-            // Course class
+// Course class
             require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
-            // Notification class
+// Notification class
             require_once( $this->plugin_dir . 'includes/classes/class.notification.php' );
 
-            // Student class
+// Student class
             require_once( $this->plugin_dir . 'includes/classes/class.student.php' );
 
-            // Unit module class
+// Unit module class
             require_once( $this->plugin_dir . 'includes/classes/class.course.unit.module.php' );
 
-            //Load unit modules
-            //$this->load_modules();
+//Load unit modules
+//$this->load_modules();
 
             add_action('init', array( &$this, 'load_modules' ), 11);
 
-            // Shortcodes class
+//Load Widgets
+
+            add_action('init', array( &$this, 'load_widgets' ), 1);
+
+// Shortcodes class
             require_once( $this->plugin_dir . 'includes/classes/class.shortcodes.php' );
 
-            // Virtual page class
+// Virtual page class
             require_once( $this->plugin_dir . 'includes/classes/class.virtualpage.php' );
 
 
-            //Register custom post types
+//Register custom post types
             add_action('init', array( &$this, 'register_custom_posts' ), 1);
 
-            //Listen to files download requests ( using in file module )
+//Listen to files download requests ( using in file module )
             add_action('init', array( &$this, 'check_for_force_download_file_request' ), 1);
 
-            //Localize the plugin
+//Localize the plugin
             add_action('plugins_loaded', array( &$this, 'localization' ), 9);
 
-            //Check for $_GET actions
+//Check for $_GET actions
             add_action('init', array( &$this, 'check_for_get_actions' ), 98);
 
-            //Add virtual pages
+//Add virtual pages
             add_action('init', array( &$this, 'create_virtual_pages' ), 99);
 
-            //Add custom image sizes
+//Add custom image sizes
             add_action('init', array( &$this, 'add_custom_image_sizes' ));
 
-            //Add custom image sizes to media library
-            //add_filter( 'image_size_names_choose', array( &$this, 'add_custom_media_library_sizes' ) );
-            //Add plugin admin menu - Network
+//Add custom image sizes to media library
+//add_filter( 'image_size_names_choose', array( &$this, 'add_custom_media_library_sizes' ) );
+//Add plugin admin menu - Network
             add_action('network_admin_menu', array( &$this, 'add_admin_menu_network' ));
 
-            //Add plugin admin menu
+//Add plugin admin menu
             add_action('admin_menu', array( &$this, 'add_admin_menu' ));
 
-            //Check for admin notices
+//Check for admin notices
             add_action('admin_notices', array( &$this, 'admin_nopermalink_warning' ));
 
-            //Custom header actions
+//Custom header actions
             add_action('wp_enqueue_scripts', array( &$this, 'header_actions' ));
 
-            //Custom footer actions
+//Custom footer actions
 
             add_action('wp_footer', array( &$this, 'footer_actions' ));
 
-            //add_action( 'admin_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
+//add_action( 'admin_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
             add_action('admin_enqueue_scripts', array( &$this, 'admin_header_actions' ));
 
             add_action('load-coursepress_page_course_details', array( &$this, 'admin_coursepress_page_course_details' ));
@@ -229,14 +228,14 @@ if ( !class_exists('CoursePress') ) {
             add_filter('login_redirect', array( &$this, 'login_redirect' ), 10, 3);
             add_filter('post_type_link', array( &$this, 'check_for_valid_post_type_permalinks' ), 10, 3);
             add_filter('comments_open', array( &$this, 'comments_open_filter' ), 10, 2);
-			
-			add_filter( "comments_template", array( &$this, "no_comments_template" ) );
 
-            // Load payment gateways ( to do )
-            //$this->load_payment_gateways();
-            //Load add-ons ( for future us, to do )
-            //$this->load_addons();
-            //update install script if necessary
+            add_filter("comments_template", array( &$this, "no_comments_template" ));
+
+// Load payment gateways ( to do )
+//$this->load_payment_gateways();
+//Load add-ons ( for future us, to do )
+//$this->load_addons();
+//update install script if necessary
 
             /* if ( get_option( 'coursepress_version' ) != $this->version ) {
               $this->install();
@@ -244,8 +243,8 @@ if ( !class_exists('CoursePress') ) {
 
             add_action('wp', array( &$this, 'load_plugin_templates' ));
             add_filter('rewrite_rules_array', array( &$this, 'add_rewrite_rules' ));
-            //add_filter('generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ));
-            //add_action('init', array( &$this, 'do_rewrite' ));
+//add_filter('generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ));
+//add_action('init', array( &$this, 'do_rewrite' ));
             add_action('pre_get_posts', array( &$this, 'remove_canonical' ));
             add_action('wp_ajax_update_units_positions', array( $this, 'update_units_positions' ));
             add_filter('query_vars', array( $this, 'filter_query_vars' ));
@@ -255,8 +254,8 @@ if ( !class_exists('CoursePress') ) {
             add_action('wp_login', array( &$this, 'set_latest_student_activity_upon_login' ), 10, 2);
             add_action('mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ));
             add_action('parent_file', array( &$this, 'parent_file_correction' ));
-			
-			// Update CoursePress login/logout menu item.
+
+// Update CoursePress login/logout menu item.
             add_filter('wp_nav_menu_objects', array( &$this, 'menu_metabox_navigation_links' ), 10, 2);
 
             if ( get_option('display_menu_items', 1) ) {
@@ -279,7 +278,7 @@ if ( !class_exists('CoursePress') ) {
 
             add_action('template_redirect', array( &$this, 'instructor_invite_confirmation' ));
 
-            // Setup TinyMCE callback
+// Setup TinyMCE callback
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
         }
 
@@ -311,11 +310,11 @@ if ( !class_exists('CoursePress') ) {
             global $post;
 
             if ( isset($post) && $post->post_type == 'virtual_page' ) {
-                //$theme_file = locate_template( array( 'page.php' ) );
-                //if ( $theme_file != '' ) {
+//$theme_file = locate_template( array( 'page.php' ) );
+//if ( $theme_file != '' ) {
                 include( TEMPLATEPATH . "/page.php" );
                 exit;
-                //}
+//}
             }
         }
 
@@ -367,11 +366,11 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function check_access( $course_id, $unit_id = false ) {
-			// $page_num not set...
-			// @TODO: implement $page_num and remove next line.
-			$page_num = false;
+// $page_num not set...
+// @TODO: implement $page_num and remove next line.
+            $page_num = false;
             if ( $this->is_preview($unit_id, $page_num) ) {
-                //have access
+//have access
             } else {
                 if ( !current_user_can('manage_options') ) {
                     $student = new Student(get_current_user_id());
@@ -500,7 +499,7 @@ if ( !class_exists('CoursePress') ) {
             if ( is_admin() )
                 return;
 
-            //stop canonical problems with virtual pages redirecting
+//stop canonical problems with virtual pages redirecting
             $page = get_query_var('pagename');
             $course = get_query_var('course');
 
@@ -549,7 +548,7 @@ if ( !class_exists('CoursePress') ) {
                     $theme_file = locate_template(array( 'archive-discussions.php' ));
 
                     if ( $theme_file != '' ) {
-                        //do_shortcode( '[course_notifications_loop]' );
+//do_shortcode( '[course_notifications_loop]' );
                         require_once( $theme_file );
                         exit;
                     } else {
@@ -576,10 +575,10 @@ if ( !class_exists('CoursePress') ) {
 
                 $theme_file = locate_template(array( 'single-instructor.php' ));
 
-                // $course_count = Instructor::get_courses_number( $vars['user']->ID );
-                // if ( $course_count <= 1 ) {
-                // 	exit;
-                // }
+// $course_count = Instructor::get_courses_number( $vars['user']->ID );
+// if ( $course_count <= 1 ) {
+// 	exit;
+// }
 
                 if ( $theme_file != '' ) {
                     require_once( $theme_file );
@@ -634,7 +633,7 @@ if ( !class_exists('CoursePress') ) {
                     $theme_file = locate_template(array( 'archive-notifications.php' ));
 
                     if ( $theme_file != '' ) {
-                        //do_shortcode( '[course_notifications_loop]' );
+//do_shortcode( '[course_notifications_loop]' );
                         require_once( $theme_file );
                         exit;
                     } else {
@@ -709,7 +708,7 @@ if ( !class_exists('CoursePress') ) {
                     $this->units_archive_subpage = 'workbook';
 
                     $theme_file = locate_template(array( 'archive-unit-workbook.php' ));
-                    //wp_enqueue_style( 'font_awesome', $this->plugin_url . 'css/font-awesome.css' );
+//wp_enqueue_style( 'font_awesome', $this->plugin_url . 'css/font-awesome.css' );
                     if ( $theme_file != '' ) {
                         do_shortcode('[course_units_loop]');
                         require_once( $theme_file );
@@ -741,7 +740,7 @@ if ( !class_exists('CoursePress') ) {
                 $vars['course_id'] = Course::get_course_id_by_name($wp->query_vars['coursename']);
                 $vars['unit_id'] = $unit->get_unit_id_by_name($wp->query_vars['unitname']);
 
-                //$this->set_course_visited( get_current_user_id(), Course::get_course_id_by_name( $wp->query_vars['coursename'] ) );
+//$this->set_course_visited( get_current_user_id(), Course::get_course_id_by_name( $wp->query_vars['coursename'] ) );
 
                 $unit = new Unit($vars['unit_id']);
 
@@ -847,7 +846,7 @@ if ( !class_exists('CoursePress') ) {
             $new_rules['^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug()] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
 
             $new_rules['^' . $this->get_instructor_profile_slug() . '/([^/]*)/?'] = 'index.php?page_id=-1&instructor_username=$matches[1]';
-            //Remove potential conflicts between single and virtual page on single site
+//Remove potential conflicts between single and virtual page on single site
             /* if ( !is_multisite() ) {
               unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
               } */
@@ -859,13 +858,13 @@ if ( !class_exists('CoursePress') ) {
             if ( get_post_type() == 'course' ) {
                 if ( is_single() ) {
                     if ( $theme_file = locate_template(array( 'single-course.php' )) ) {
-                        //template will take control of the look so don't do anything
+//template will take control of the look so don't do anything
                     } else {
 
                         wp_enqueue_style('front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version);
 
                         if ( locate_template(array( 'single-course.php' )) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-                            //just output the content
+//just output the content
                         } else {
                             $prepend_content = $this->get_template_details($this->plugin_dir . 'includes/templates/single-course-before-details.php');
                             $content = do_shortcode($prepend_content . $content);
@@ -905,7 +904,7 @@ if ( !class_exists('CoursePress') ) {
                 update_post_meta($position, 'unit_order', $i);
                 $i++;
             }
-            //echo $response; //just for debugging purposes
+//echo $response; //just for debugging purposes
             die();
         }
 
@@ -920,17 +919,17 @@ if ( !class_exists('CoursePress') ) {
 
         function plugin_activation() {
 
-            // Register types to register the rewrite rules  
+// Register types to register the rewrite rules  
             $this->register_custom_posts();
 
-            // Then flush them  
+// Then flush them  
             flush_rewrite_rules();
 
-            //First install
+//First install
             first_install();
 
-            //Welcome Screen
-            //$this->coursepress_plugin_do_activation_redirect();
+//Welcome Screen
+//$this->coursepress_plugin_do_activation_redirect();
         }
 
         function install() {
@@ -938,16 +937,16 @@ if ( !class_exists('CoursePress') ) {
             $this->coursepress_plugin_activate();
             update_option('coursepress_version', $this->version);
             $this->add_user_roles_and_caps(); //This setting is saved to the database ( in table wp_options, field wp_user_roles ), so it might be better to run this on theme/plugin activation
-            //Set default course groups
+//Set default course groups
             if ( !get_option('course_groups') ) {
                 $default_groups = range('A', 'Z');
                 update_option('course_groups', $default_groups);
             }
 
-            //Redirect to Create New Course page
+//Redirect to Create New Course page
             require( ABSPATH . WPINC . '/pluggable.php' );
 
-            //add_action( 'admin_init', 'my_plugin_redirect' );
+//add_action( 'admin_init', 'my_plugin_redirect' );
 
 
             $this->plugin_activation();
@@ -983,7 +982,7 @@ if ( !class_exists('CoursePress') ) {
                 return get_option('coursepress_course_slug', $default_slug_value);
             } else {
                 return site_url() . '/' . get_option('coursepress_course_slug', $default_slug_value);
-            }			
+            }
         }
 
         function get_module_slug() {
@@ -1072,7 +1071,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function localization() {
-            // Load up the localization file if we're using WordPress in a different language
+// Load up the localization file if we're using WordPress in a different language
             if ( $this->location == 'mu-plugins' ) {
                 load_muplugin_textdomain('cp', '/languages/');
             } else if ( $this->location == 'subfolder-plugins' ) {
@@ -1083,7 +1082,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function init_vars() {
-            //setup proper directories
+//setup proper directories
             if ( defined('WP_PLUGIN_URL') && defined('WP_PLUGIN_DIR') && file_exists(WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename(__FILE__)) ) {
                 $this->location = 'subfolder-plugins';
                 $this->plugin_dir = WP_PLUGIN_DIR . '/' . $this->dir_name . '/';
@@ -1101,7 +1100,7 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 
-        //Load unit elements / modules / building blocks and other add-ons and plugins
+//Load unit elements / modules / building blocks and other add-ons and plugins
         function load_modules() {
             global $mem_modules, $front_page_modules;
 
@@ -1127,18 +1126,35 @@ if ( !class_exists('CoursePress') ) {
             do_action('coursepress_modules_loaded');
         }
 
-        function add_admin_menu_network() {
-            //special menu for network admin
+        function load_widgets() {
+            if ( is_dir($this->plugin_dir . '/includes/widgets') ) {
+                if ( $dh = opendir($this->plugin_dir . '/includes/widgets') ) {
+                    $widgets = array();
+                    while ( ( $widget = readdir($dh) ) !== false )
+                        if ( substr($widget, -4) == '.php' )
+                            $widgets[] = $widget;
+                    closedir($dh);
+                    sort($widgets);
+
+                    foreach ( $widgets as $widget ) {
+                        include_once( $this->plugin_dir . '/includes/widgets/' . $widget );
+                    }
+                }
+            }
         }
 
-        //Add plugin admin menu items
+        function add_admin_menu_network() {
+//special menu for network admin
+        }
+
+//Add plugin admin menu items
         function add_admin_menu() {
 
-            // Add the menu page
+// Add the menu page
             add_menu_page($this->name, $this->name, 'coursepress_dashboard_cap', 'courses', array( &$this, 'coursepress_courses_admin' ), $this->plugin_url . 'images/coursepress-icon.png');
             do_action('coursepress_add_menu_items_up');
 
-            // Add the sub menu items
+// Add the sub menu items
             add_submenu_page('courses', __('Courses', 'cp'), __('Courses', 'cp'), 'coursepress_courses_cap', 'courses', array( &$this, 'coursepress_courses_admin' ));
             do_action('coursepress_add_menu_items_after_courses');
 
@@ -1151,8 +1167,8 @@ if ( !class_exists('CoursePress') ) {
             add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array( &$this, 'coursepress_course_details_admin' ));
             do_action('coursepress_add_menu_items_after_new_courses');
 
-            //add_submenu_page( 'courses', __( 'Categories', 'cp' ), __( 'Categories', 'cp' ), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
-            //do_action( 'coursepress_add_menu_items_after_course_categories' );
+//add_submenu_page( 'courses', __( 'Categories', 'cp' ), __( 'Categories', 'cp' ), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
+//do_action( 'coursepress_add_menu_items_after_course_categories' );
 
             add_submenu_page('courses', __('Instructors', 'cp'), __('Instructors', 'cp'), 'coursepress_instructors_cap', 'instructors', array( &$this, 'coursepress_instructors_admin' ));
             do_action('coursepress_add_menu_items_after_instructors');
@@ -1189,7 +1205,7 @@ if ( !class_exists('CoursePress') ) {
 
         function register_custom_posts() {
 
-            // Register custom taxonomy
+// Register custom taxonomy
             register_taxonomy('course_category', 'course', apply_filters('cp_register_course_category', array(
                 "hierarchical" => true,
                 'label' => __('Course Categories', 'cp'),
@@ -1197,7 +1213,7 @@ if ( !class_exists('CoursePress') ) {
                     )
             );
 
-            //Register Courses post type
+//Register Courses post type
             $args = array(
                 'labels' => array( 'name' => __('Courses', 'cp'),
                     'singular_name' => __('Course', 'cp'),
@@ -1226,8 +1242,8 @@ if ( !class_exists('CoursePress') ) {
             );
 
             register_post_type('course', $args);
-            //add_theme_support( 'post-thumbnails' );
-            //Register Units post type
+//add_theme_support( 'post-thumbnails' );
+//Register Units post type
             $args = array(
                 'labels' => array( 'name' => __('Units', 'cp'),
                     'singular_name' => __('Unit', 'cp'),
@@ -1251,7 +1267,7 @@ if ( !class_exists('CoursePress') ) {
 
             register_post_type('unit', $args);
 
-            //Register Modules ( Unit Module ) post type
+//Register Modules ( Unit Module ) post type
             $args = array(
                 'labels' => array( 'name' => __('Modules', 'cp'),
                     'singular_name' => __('Module', 'cp'),
@@ -1275,7 +1291,7 @@ if ( !class_exists('CoursePress') ) {
 
             register_post_type('module', $args);
 
-            //Register Modules Responses ( Unit Module Responses ) post type
+//Register Modules Responses ( Unit Module Responses ) post type
             $args = array(
                 'labels' => array( 'name' => __('Module Responses', 'cp'),
                     'singular_name' => __('Module Response', 'cp'),
@@ -1299,7 +1315,7 @@ if ( !class_exists('CoursePress') ) {
 
             register_post_type('module_response', $args);
 
-            //Register Notifications post type
+//Register Notifications post type
             $args = array(
                 'labels' => array( 'name' => __('Notifications', 'cp'),
                     'singular_name' => __('Notification', 'cp'),
@@ -1325,7 +1341,7 @@ if ( !class_exists('CoursePress') ) {
 
             register_post_type('notifications', $args);
 
-            //Register Discussion post type
+//Register Discussion post type
             $args = array(
                 'labels' => array( 'name' => __('Discussions', 'cp'),
                     'singular_name' => __('Discussions', 'cp'),
@@ -1388,11 +1404,11 @@ if ( !class_exists('CoursePress') ) {
                   http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
                  */
                 $course = new Course($_POST['course_id']);
-				if ( $course->details ) {
-					$course->data['status'] = $course->details->post_status;
-				} else {
-					$course->data['status'] = 'draft';
-				}
+                if ( $course->details ) {
+                    $course->data['status'] = $course->details->post_status;
+                } else {
+                    $course->data['status'] = 'draft';
+                }
                 $course_id = $course->update_course();
 
                 $response = array(
@@ -1448,12 +1464,12 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
 
-            // User is not yet an instructor
+// User is not yet an instructor
             if ( !$exists ) {
-                // Assign Instructor capabilities
+// Assign Instructor capabilities
 
                 $this->assign_instructor_capabilities($user_id);
-                //
+//
                 $instructors[] = $user_id;
                 update_post_meta($course_id, 'instructors', $instructors);
                 update_user_meta($user_id, 'course_' . $course_id, $course_id);
@@ -1499,7 +1515,7 @@ if ( !class_exists('CoursePress') ) {
 
             $instructor = new Instructor($user_id);
 
-            // If user is no longer an instructor of any courses, remove his capabilities.
+// If user is no longer an instructor of any courses, remove his capabilities.
             $assigned_courses_ids = $instructor->get_assigned_courses_ids();
             if ( empty($assigned_courses_ids) ) {
                 $this->drop_instructor_capabilities($user_id);
@@ -1538,7 +1554,7 @@ if ( !class_exists('CoursePress') ) {
 
                 $ajax_response = array();
                 $ajax_status = 1; //success
-                // Get the invite meta for this course and add the new invite
+// Get the invite meta for this course and add the new invite
                 $invite_exists = false;
                 if ( $instructor_invites = get_post_meta($email_args['course_id'], 'instructor_invites', true) ) {
                     foreach ( $instructor_invites as $i ) {
@@ -1550,13 +1566,13 @@ if ( !class_exists('CoursePress') ) {
 
                 if ( !$invite_exists ) {
 
-                    // Generate invite code.
+// Generate invite code.
                     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                     $invite_code = '';
                     for ( $i = 0; $i < 20; $i++ ) {
                         $invite_code .= $characters[rand(0, strlen($characters) - 1)];
                     }
-                    // Save the invite in the course meta. Hash will be used for user authentication.
+// Save the invite in the course meta. Hash will be used for user authentication.
                     $email_args['invite_code'] = $invite_code;
                     $invite_hash = sha1($email_args['instructor_email'] . $email_args['invite_code']);
 
@@ -1653,12 +1669,12 @@ if ( !class_exists('CoursePress') ) {
                                 foreach ( $instructors as $instructor ) {
                                     if ( $instructor == $current_user->ID ) {
                                         $exists = true;
-                                        //exit;
+//exit;
                                     }
                                 }
 
                                 if ( !$exists ) {
-                                    // Assign Instructor capabilities
+// Assign Instructor capabilities
                                     $this->assign_instructor_capabilities($current_user->ID);
 
                                     $instructors[] = $current_user->ID;
@@ -1678,7 +1694,7 @@ if ( !class_exists('CoursePress') ) {
                             }
                         }
 
-                        //wp_redirect(admin_url('admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']));
+//wp_redirect(admin_url('admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']));
                     } else {
                         echo __('
 							<h3>Invalid Invitation</h3>
@@ -1738,7 +1754,7 @@ if ( !class_exists('CoursePress') ) {
 
             $role = new WP_User($user_id);
 
-            //update_user_meta( $_REQUEST['user_id'], 'role', 'instructor' );
+//update_user_meta( $_REQUEST['user_id'], 'role', 'instructor' );
             update_user_meta($user_id, 'role_ins', 'instructor');
 
             $role->add_cap('can_edit_posts');
@@ -1760,62 +1776,62 @@ if ( !class_exists('CoursePress') ) {
             /* - Courses capabilities */
 
             $role->add_cap('coursepress_create_course_cap'); //create new courses
-            //$role->add_cap( 'coursepress_update_course_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_course_cap' ); //update courses
             $role->add_cap('coursepress_update_my_course_cap'); //update courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
             $role->add_cap('coursepress_delete_my_course_cap'); //delete courses where instructor is an author
-            //$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
+//$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
             $role->add_cap('coursepress_change_my_course_status_cap'); //change course statuses where instructor is author
 
             /* - Courses > Units capabilities */
 
             $role->add_cap('coursepress_create_course_unit_cap'); //create new course units
-            //$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
+//$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
             $role->add_cap('coursepress_update_my_course_unit_cap'); //update course units where the instructor is an author ( of the unit )
-            //$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
+//$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
             $role->add_cap('coursepress_delete_my_course_units_cap'); //delete course units where instructor is an author ( of a the unit )
-            //$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
+//$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
             $role->add_cap('coursepress_change_my_course_unit_status_cap'); //change course unit statuses where instructor is author
 
             /* - Instructors capabilities */
 
-            //$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
+//$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
             $role->add_cap('coursepress_assign_and_assign_instructor_my_course_cap'); //assign and ununassign course instructors where the instructor is an author
 
             /* - Course Classes capabilities */
 
-            //$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
+//$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
             $role->add_cap('coursepress_add_new_my_classes_cap'); //Add new course classes to courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
+//$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
             $role->add_cap('coursepress_delete_my_classes_cap'); //Delete course classes where course author is the instructor
 
             /* - Students capabilities */
 
-            //$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
+//$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author ( of a course )
-            //$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
+//$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
             $role->add_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
+//$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
+//$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
             $role->add_cap('coursepress_change_my_students_group_class_cap'); //Change student's group and class where the instructor is an author of the course
             $role->add_cap('coursepress_add_new_students_cap'); //Add new users with students role to blog
             $role->add_cap('coursepress_delete_students_cap'); //Delete users with Student role
 
             /* - Settings > Groups capabilities */
-            //$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
+//$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
             $role->add_cap('coursepress_settings_shortcode_page_cap'); //View shortcode page
-            //$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
+//$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
             $role->add_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
 
             /* - Notifications capabilities */
 
             $role->add_cap('coursepress_create_notification_cap'); //create new notifications
-            //$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
             $role->add_cap('coursepress_update_my_notification_cap'); //update notifications where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
             $role->add_cap('coursepress_delete_my_notification_cap'); //delete notifications where instructor is an author
-            //$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
+//$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
             $role->add_cap('coursepress_change_my_notification_status_cap'); //change notification statuses where instructor is author
         }
 
@@ -1844,66 +1860,66 @@ if ( !class_exists('CoursePress') ) {
             /* - Courses capabilities */
 
             $role->remove_cap('coursepress_create_course_cap'); //create new courses
-            //$role->add_cap( 'coursepress_update_course_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_course_cap' ); //update courses
             $role->remove_cap('coursepress_update_my_course_cap'); //update courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
             $role->remove_cap('coursepress_delete_my_course_cap'); //delete courses where instructor is an author
-            //$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
+//$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
             $role->remove_cap('coursepress_change_my_course_status_cap'); //change course statuses where instructor is author
 
             /* - Courses > Units capabilities */
 
             $role->remove_cap('coursepress_create_course_unit_cap'); //create new course units
-            //$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
+//$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
             $role->remove_cap('coursepress_update_my_course_unit_cap'); //update course units where the instructor is an author ( of the unit )
-            //$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
+//$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
             $role->remove_cap('coursepress_delete_my_course_units_cap'); //delete course units where instructor is an author ( of a the unit )
-            //$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
+//$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
             $role->remove_cap('coursepress_change_my_course_unit_status_cap'); //change course unit statuses where instructor is author
 
             /* - Instructors capabilities */
 
-            //$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
+//$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
             $role->remove_cap('coursepress_assign_and_assign_instructor_my_course_cap'); //assign and ununassign course instructors where the instructor is an author
 
             /* - Course Classes capabilities */
 
-            //$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
+//$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
             $role->remove_cap('coursepress_add_new_my_classes_cap'); //Add new course classes to courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
+//$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
             $role->remove_cap('coursepress_delete_my_classes_cap'); //Delete course classes where course author is the instructor
 
             /* - Students capabilities */
 
-            //$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
+//$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
             $role->remove_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author ( of a course )
-            //$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
+//$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
             $role->remove_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
+//$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
             $role->remove_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
+//$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
             $role->remove_cap('coursepress_change_my_students_group_class_cap'); //Change student's group and class where the instructor is an author of the course
             $role->remove_cap('coursepress_add_new_students_cap'); //Add new users with students role to blog
             $role->remove_cap('coursepress_delete_students_cap'); //Delete users with Student role
 
             /* - Settings > Groups capabilities */
-            //$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
+//$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
             $role->remove_cap('coursepress_settings_shortcode_page_cap'); //View shortcode page
-            //$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
+//$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
             $role->remove_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
 
             /* - Notifications capabilities */
 
             $role->remove_cap('coursepress_create_notification_cap'); //create new notifications
-            //$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
             $role->remove_cap('coursepress_update_my_notification_cap'); //update notifications where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
             $role->remove_cap('coursepress_delete_my_notification_cap'); //delete notifications where instructor is an author
-            //$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
+//$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
             $role->remove_cap('coursepress_change_my_notification_status_cap'); //change notification statuses where instructor is author
         }
 
-        //Add new roles and user capabilities
+//Add new roles and user capabilities
         function add_user_roles_and_caps() {
             global $user, $wp_roles;
 
@@ -1930,62 +1946,62 @@ if ( !class_exists('CoursePress') ) {
             /* - Courses capabilities */
 
             $role->add_cap('coursepress_create_course_cap'); //create new courses
-            //$role->add_cap( 'coursepress_update_course_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_course_cap' ); //update courses
             $role->add_cap('coursepress_update_my_course_cap'); //update courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_course_cap' ); //delete courses
             $role->add_cap('coursepress_delete_my_course_cap'); //delete courses where instructor is an author
-            //$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
+//$role->add_cap( 'coursepress_change_course_status_cap' ); //change course statuses
             $role->add_cap('coursepress_change_my_course_status_cap'); //change course statuses where instructor is author
 
             /* - Courses > Units capabilities */
 
             $role->add_cap('coursepress_create_course_unit_cap'); //create new course units
-            //$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
+//$role->add_cap( 'coursepress_update_course_unit_cap' ); //update course units
             $role->add_cap('coursepress_update_my_course_unit_cap'); //update course units where the instructor is an author ( of the unit )
-            //$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
+//$role->add_cap( 'coursepress_delete_course_units_cap' ); //delete course units
             $role->add_cap('coursepress_delete_my_course_units_cap'); //delete course units where instructor is an author ( of a the unit )
-            //$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
+//$role->add_cap( 'coursepress_change_course_unit_status_cap' ); //change course unit statuses
             $role->add_cap('coursepress_change_my_course_unit_status_cap'); //change course unit statuses where instructor is author
 
             /* - Instructors capabilities */
 
-            //$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
+//$role->add_cap( 'coursepress_assign_and_assign_instructor_course_cap' ); //assign and unassign instructors to a course
             $role->add_cap('coursepress_assign_and_assign_instructor_my_course_cap'); //assign and ununassign course instructors where the instructor is an author
 
             /* - Course Classes capabilities */
 
-            //$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
+//$role->add_cap( 'coursepress_add_new_classes_cap' ); //Add new course classes
             $role->add_cap('coursepress_add_new_my_classes_cap'); //Add new course classes to courses where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
+//$role->add_cap( 'coursepress_delete_classes_cap' ); //Delete course classes
             $role->add_cap('coursepress_delete_my_classes_cap'); //Delete course classes where course author is the instructor
 
             /* - Students capabilities */
 
-            //$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
+//$role->add_cap( 'coursepress_invite_students_cap' ); //Invite students to a course
             $role->add_cap('coursepress_invite_my_students_cap'); //invite students to courses where the instructor is an author ( of a course )
-            //$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
+//$role->add_cap( 'coursepress_withdraw_students_cap' ); //Withdraw students from classes
             $role->add_cap('coursepress_withdraw_my_students_cap'); //Withdraw students from classes where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
+//$role->add_cap( 'coursepress_add_move_students_cap' ); //Add/Move students from class to class
             $role->add_cap('coursepress_add_move_my_students_cap'); //Add/Move students from class to class where the instructor is an author of the course
-            //$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
+//$role->add_cap( 'coursepress_change_students_group_class_cap' ); //Change student's group and class
             $role->add_cap('coursepress_change_my_students_group_class_cap'); //Change student's group and class where the instructor is an author of the course
             $role->add_cap('coursepress_add_new_students_cap'); //Add new users with students role to blog
             $role->add_cap('coursepress_delete_students_cap'); //Delete users with Student role
 
             /* - Settings > Groups capabilities */
-            //$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
+//$role->add_cap( 'coursepress_settings_groups_page_cap' ); //Access to group settings page
             $role->add_cap('coursepress_settings_shortcode_page_cap'); //View shortcode page
-            //$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
+//$role->add_cap( 'coursepress_send_bulk_my_students_email_cap' ); //Send bulk emails
             $role->add_cap('coursepress_send_bulk_students_email_cap'); //Send bulk emails only to courses made by the instructor
 
             /* - Notifications capabilities */
 
             $role->add_cap('coursepress_create_notification_cap'); //create new notifications
-            //$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
+//$role->add_cap( 'coursepress_update_notification_cap' ); //update courses
             $role->add_cap('coursepress_update_my_notification_cap'); //update notifications where the instructor is an author
-            //$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
+//$role->add_cap( 'coursepress_delete_notification_cap' ); //delete courses
             $role->add_cap('coursepress_delete_my_notification_cap'); //delete notifications where instructor is an author
-            //$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
+//$role->add_cap( 'coursepress_change_notification_status_cap' ); //change notification statuses
             $role->add_cap('coursepress_change_my_notification_status_cap'); //change notification statuses where instructor is author
 
             /* ---------------------------- ADD Role Student and capabilities */
@@ -2074,7 +2090,7 @@ if ( !class_exists('CoursePress') ) {
             $role->add_cap('coursepress_change_my_notification_status_cap'); //change notification statuses where instructor is author
         }
 
-        //Functions for handling admin menu pages
+//Functions for handling admin menu pages
 
         function coursepress_courses_admin() {
             include_once( $this->plugin_dir . 'includes/admin-pages/courses.php' );
@@ -2182,7 +2198,7 @@ if ( !class_exists('CoursePress') ) {
             if ( ( isset($_GET['saved']) && $_GET['saved'] == 'ok' ) ) {
                 ?>
                 <div class="save_elements_message_ok">
-                <?php _e('The data has been saved successfully.', 'cp'); ?>
+                    <?php _e('The data has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }
@@ -2223,8 +2239,8 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
 
-            //wp_enqueue_style( 'open_sans', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' );
-            // wp_enqueue_style( 'font_awesome', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css' );
+//wp_enqueue_style( 'open_sans', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' );
+// wp_enqueue_style( 'font_awesome', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css' );
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_style('admin_general', $this->plugin_url . 'css/admin_general.css', array(), $this->version);
             wp_enqueue_style('admin_general_responsive', $this->plugin_url . 'css/admin_general_responsive.css', array(), $this->version);
@@ -2234,13 +2250,13 @@ if ( !class_exists('CoursePress') ) {
               wp_enqueue_script( 'jquery-ui-resizable' );
               wp_enqueue_script( 'jquery-ui-draggable' );
               wp_enqueue_script( 'jquery-ui-droppable' ); */
-            //add_action( 'wp_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
+//add_action( 'wp_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
             wp_enqueue_script('jquery');
-            //wp_enqueue_script( 'jquery-ui-core' );
+//wp_enqueue_script( 'jquery-ui-core' );
             wp_enqueue_script('jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3'); //need to change this to built-in 
             wp_enqueue_script('jquery-ui-spinner');
 
-            // CryptoJS.MD5
+// CryptoJS.MD5
             wp_enqueue_script('cryptojs-md5', $this->plugin_url . 'js/md5.js');
 
 
@@ -2293,21 +2309,20 @@ if ( !class_exists('CoursePress') ) {
                 'withdraw_class_alert' => __('Please confirm that you want to withdraw all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
                 'setup_gateway' => __("You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp'),
-				'unit_setup_prompt' => __( '<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
-				'required_course_name' => __( '<strong>Course Name</strong> is a required field.', 'cp' ),
-				'required_course_excerpt' => __( '<strong>Course Excerpt</strong> is a required field.', 'cp' ),
-				'required_course_description' => __( '<strong>Course Description</strong> is a required field.', 'cp' ),
-				'required_course_start' => __( '<strong>Course Start Date</strong> is a required field.', 'cp' ),
-				'required_course_end' => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'cp' ),
-				'required_enrollment_start' => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
-				'required_enrollment_end' => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
-				'required_course_class_size' => __( 'Value can not be 0 if "Limit class size" is selected.', 'cp' ),
-				'required_course_passcode' => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'cp' ),
-				'required_gateway' => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'cp' ),
-				'required_price' => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp' ),
-				'required_sale_price' => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
-				'section_error' => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
-				
+                'unit_setup_prompt' => __('<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp'),
+                'required_course_name' => __('<strong>Course Name</strong> is a required field.', 'cp'),
+                'required_course_excerpt' => __('<strong>Course Excerpt</strong> is a required field.', 'cp'),
+                'required_course_description' => __('<strong>Course Description</strong> is a required field.', 'cp'),
+                'required_course_start' => __('<strong>Course Start Date</strong> is a required field.', 'cp'),
+                'required_course_end' => __('<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'cp'),
+                'required_enrollment_start' => __('<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp'),
+                'required_enrollment_end' => __('<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp'),
+                'required_course_class_size' => __('Value can not be 0 if "Limit class size" is selected.', 'cp'),
+                'required_course_passcode' => __('<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'cp'),
+                'required_gateway' => __('<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'cp'),
+                'required_price' => __('<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp'),
+                'required_sale_price' => __('<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp'),
+                'section_error' => __('There is some information missing or incorrect. Please check your input and try again.', 'cp'),
             ));
 
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');
@@ -2378,7 +2393,7 @@ if ( !class_exists('CoursePress') ) {
 
             $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-            //Enrollment process page
+//Enrollment process page
             if ( preg_match('/' . $this->get_enrollment_process_slug() . '/', $url) ) {
 
                 $theme_file = locate_template(array( 'enrollment-process.php' ));
@@ -2401,7 +2416,7 @@ if ( !class_exists('CoursePress') ) {
             }
 
 
-            //Custom login page
+//Custom login page
             if ( preg_match('/' . $this->get_login_slug() . '/', $url) ) {
 
                 $theme_file = locate_template(array( 'student-login.php' ));
@@ -2423,7 +2438,7 @@ if ( !class_exists('CoursePress') ) {
                 $this->set_latest_activity(get_current_user_id());
             }
 
-            //Custom signup page
+//Custom signup page
             if ( preg_match('/' . $this->get_signup_slug() . '/', $url) ) {
 
                 $theme_file = locate_template(array( 'student-signup.php' ));
@@ -2445,7 +2460,7 @@ if ( !class_exists('CoursePress') ) {
                 $this->set_latest_activity(get_current_user_id());
             }
 
-            //Student Dashboard page
+//Student Dashboard page
             if ( preg_match('/' . $this->get_student_dashboard_slug() . '/', $url) ) {
 
                 $theme_file = locate_template(array( 'student-dashboard.php' ));
@@ -2466,7 +2481,7 @@ if ( !class_exists('CoursePress') ) {
                 $this->set_latest_activity(get_current_user_id());
             }
 
-            //Student Settings page
+//Student Settings page
             if ( preg_match('/' . $this->get_student_settings_slug() . '/', $url) ) {
 
                 $theme_file = locate_template(array( 'student-settings.php' ));
@@ -2497,42 +2512,40 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 
-        //shows a warning notice to admins if pretty permalinks are disabled
+//shows a warning notice to admins if pretty permalinks are disabled
         function admin_nopermalink_warning() {
             if ( current_user_can('manage_options') && !get_option('permalink_structure') ) {
                 echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
             }
         }
-		
-		// updates login/logout navigation link
-		function menu_metabox_navigation_links( $sorted_menu_items, $args ) {
-			$is_in = is_user_logged_in();
-			
-			$new_menu_items = array();
-			foreach( $sorted_menu_items as $menu_item ){	
-				// LOGIN / LOGOUT
-				if( CoursePress::instance()->get_login_slug( true ) == $menu_item->url && $is_in ) {
-					$menu_item->post_title = __( 'Log Out', 'cp' );
-					$menu_item->title = $menu_item->post_title;
-					$menu_item->url = wp_logout_url();
-				}
 
-				// Remove personalised items
-				if( ( CoursePress::instance()->get_student_dashboard_slug( true ) == $menu_item->url ||
-					  CoursePress::instance()->get_student_settings_slug( true ) == $menu_item->url ) && 
-					  !$is_in ) {
-					continue;
-				}
-				
-				$new_menu_items[] = $menu_item;
-				
-			}
+// updates login/logout navigation link
+        function menu_metabox_navigation_links( $sorted_menu_items, $args ) {
+            $is_in = is_user_logged_in();
 
-			return $new_menu_items;
-		}
-		
+            $new_menu_items = array();
+            foreach ( $sorted_menu_items as $menu_item ) {
+// LOGIN / LOGOUT
+                if ( CoursePress::instance()->get_login_slug(true) == $menu_item->url && $is_in ) {
+                    $menu_item->post_title = __('Log Out', 'cp');
+                    $menu_item->title = $menu_item->post_title;
+                    $menu_item->url = wp_logout_url();
+                }
 
-        //adds our links to custom theme nav menus using wp_nav_menu()
+// Remove personalised items
+                if ( ( CoursePress::instance()->get_student_dashboard_slug(true) == $menu_item->url ||
+                        CoursePress::instance()->get_student_settings_slug(true) == $menu_item->url ) &&
+                        !$is_in ) {
+                    continue;
+                }
+
+                $new_menu_items[] = $menu_item;
+            }
+
+            return $new_menu_items;
+        }
+
+//adds our links to custom theme nav menus using wp_nav_menu()
         function main_navigation_links( $sorted_menu_items, $args ) {
             if ( !is_admin() ) {
                 if ( $args->theme_location == 'primary' ) {//put extra menu items only in primary ( most likely header ) menu
@@ -2697,15 +2710,15 @@ if ( !class_exists('CoursePress') ) {
                         foreach ( $main_sorted_menu_items as $menu_item ) {
                             ?>
                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                                    <?php if ( $menu_item->db_id !== '' ) { ?>
+                                <?php if ( $menu_item->db_id !== '' ) { ?>
                                     <ul>
                                         <?php
                                         foreach ( $sub_sorted_menu_items as $menu_item ) {
                                             ?>
                                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                    <?php } ?>
+                                            <?php } ?>
                                     </ul>
-                            <?php } ?>
+                                <?php } ?>
                             </li>
                             <?php
                         }
@@ -2738,16 +2751,16 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
         }
-				
-		function no_comments_template( $template ) {
-			global $post;
-			
-			if ( 'virtual_page' == $post->post_type ) {
-				$template = $this->plugin_dir . 'includes/templates/no-comments.php';
-			}
-			
-			return $template;
-		}
+
+        function no_comments_template( $template ) {
+            global $post;
+
+            if ( 'virtual_page' == $post->post_type ) {
+                $template = $this->plugin_dir . 'includes/templates/no-comments.php';
+            }
+
+            return $template;
+        }
 
         function comments_template( $template ) {
             global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
@@ -2896,49 +2909,49 @@ if ( !class_exists('CoursePress') ) {
         /* Make PDF report */
 
         function pdf_report( $report = '', $report_name = '', $report_title = 'Student Report', $preview = false ) {
-            //ob_end_clean();
+//ob_end_clean();
             ob_start();
 
             include_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php' );
             require_once( $this->plugin_dir . 'includes/external/tcpdf/tcpdf.php' );
 
-            // create new PDF document
+// create new PDF document
             $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-            // set document information
+// set document information
             $pdf->SetCreator($this->name);
             $pdf->SetTitle($report_title);
             $pdf->SetKeywords('');
 
-            // remove default header/footer
+// remove default header/footer
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(false);
 
-            // set default monospaced font
+// set default monospaced font
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-            //set margins
+//set margins
             $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
-            //set auto page breaks
+//set auto page breaks
             $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-            //set image scale factor
-            //$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
-            //set some language-dependent strings
+//set image scale factor
+//$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
+//set some language-dependent strings
             $pdf->setLanguageArray($l);
-            // ---------------------------------------------------------
-            // set font
+// ---------------------------------------------------------
+// set font
             $pdf->SetFont('helvetica', '', 12);
-            // add a page
+// add a page
             $pdf->AddPage();
             $html = '';
             $html .= make_clickable(wpautop($report));
-            // output the HTML content
+// output the HTML content
             $pdf->writeHTML($html, true, false, true, false, '');
-            //Close and output PDF document
+//Close and output PDF document
 
             ob_get_clean();
 
