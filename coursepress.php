@@ -1388,6 +1388,11 @@ if ( !class_exists('CoursePress') ) {
                   http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
                  */
                 $course = new Course($_POST['course_id']);
+				if ( $course->details ) {
+					$course->data['status'] = $course->details->post_status;
+				} else {
+					$course->data['status'] = 'draft';
+				}
                 $course_id = $course->update_course();
 
                 $response = array(
@@ -2289,6 +2294,20 @@ if ( !class_exists('CoursePress') ) {
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
                 'setup_gateway' => __("You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp'),
 				'unit_setup_prompt' => __( '<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
+				'required_course_name' => __( '<strong>Course Name</strong> is a required field.', 'cp' ),
+				'required_course_excerpt' => __( '<strong>Course Excerpt</strong> is a required field.', 'cp' ),
+				'required_course_description' => __( '<strong>Course Description</strong> is a required field.', 'cp' ),
+				'required_course_start' => __( '<strong>Course Start Date</strong> is a required field.', 'cp' ),
+				'required_course_end' => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'cp' ),
+				'required_enrollment_start' => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
+				'required_enrollment_end' => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
+				'required_course_class_size' => __( 'Value can not be 0 if "Limit class size" is selected.', 'cp' ),
+				'required_course_passcode' => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'cp' ),
+				'required_gateway' => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'cp' ),
+				'required_price' => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp' ),
+				'required_sale_price' => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
+				'section_error' => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
+				
             ));
 
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');

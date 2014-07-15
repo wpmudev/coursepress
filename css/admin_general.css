@@ -382,6 +382,16 @@
     color: #fff;
 }
 
+span.error {
+	color: #ff0000;
+}
+
+span.required:after,
+label.required:after{
+	content: '*';
+	color: #ff0000;
+}
+
 .unit-control-buttons a.button.button-unpublish,
 .unit-control-buttons a.button.button-publish,
 .unit-control-buttons a.button.button-preview{

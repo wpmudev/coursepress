@@ -10,6 +10,7 @@ if ( !class_exists('Course') ) {
         var $output = 'OBJECT';
         var $course = array();
         var $details;
+		var $data = array();
 
         function __construct( $id = '', $output = 'OBJECT' ) {
             $this->id = $id;
@@ -253,7 +254,7 @@ if ( !class_exists('Course') ) {
 
                     $course = get_post($this->id, $this->output);
 
-                    $post_status = 'publish';
+                    $post_status = empty( $this->data['status'] ) ? 'publish' : $this->data['status'];
 
                     if ( $_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') ) {
                         if ( !empty($course->post_status) && $course->post_status != 'publish' ) {

@@ -257,7 +257,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     ?>
                                     <input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                     <div class="wide">
-                                        <label for='course_name'>
+                                        <label for='course_name' class="required">
                                             <?php _e('Course Name', 'cp'); ?>
                                         </label>
                                         <input class='wide' type='text' name='course_name' id='course_name' value='<?php
@@ -268,7 +268,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     </div>
 
                                     <div class="wide">
-                                        <label for='course_excerpt'>
+                                        <label for='course_excerpt' class="required">
                                             <?php _e('Course Excerpt / Short Overview', 'cp'); ?>
                                             <?php //CP_Helper_Tooltip::tooltip( __( 'Provide a few short sentences to describe the course', 'cp' ) );  ?>
                                         </label>
@@ -400,12 +400,11 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     </div>									
 
                                     <div class="wide">
-                                        <label for='course_description'>
+                                        <label for='course_description' class="required">
                                             <?php _e('Course Description', 'cp'); ?>
                                             <?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );  ?>
-                                            <br />
-                                            <span><?php _e('This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp'); ?></span>
-                                        </label>
+										</label>
+                                        <p><?php _e('This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp'); ?></p>
                                         <?php
                                         $args = array("textarea_name" => "course_description", "textarea_rows" => 10);
 
@@ -781,11 +780,11 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
 
                                         <div class="date-range">
                                             <div class="start-date">
-                                                <label for="meta_course_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
+                                                <label for="meta_course_start_date" class="start-date-label required"><?php _e('Start Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /></div>
                                             </div>
                                             <div class="end-date <?php echo ( $open_ended_course == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_course_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
+                                                <label for="meta_course_end_date" class="end-date-label required"><?php _e('End Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" <?php echo ( $open_ended_course == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                         </div>
@@ -806,11 +805,11 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
 
                                         <div class="date-range">
                                             <div class="start-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_enrollment_start_date" class="start-date-label"><?php _e('Start Date', 'cp'); ?></label>
+                                                <label for="meta_enrollment_start_date" class="start-date-label required"><?php _e('Start Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                             <div class="end-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_enrollment_end_date" class="end-date-label"><?php _e('End Date', 'cp'); ?></label>
+                                                <label for="meta_enrollment_end_date" class="end-date-label required"><?php _e('End Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                         </div>
@@ -839,15 +838,17 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     ?>
                                     <input type='hidden' name='meta_course_setup_progress[step-5]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                     <div class="wide narrow">
-                                        <label for='meta_class-size'>
-                                            <input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
-                                            <?php _e('Limit class size', 'cp'); ?>
-                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );          ?>
-                                            <br />
-                                            <span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp'); ?></span>
-                                        </label>
-                                        <input class='spinners <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled'; ?> class_size' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes(( is_numeric($class_size) ? $class_size : 0))); ?>' <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled="disabled"'; ?> />
-
+										<div>
+	                                        <label for='meta_class-size'>
+	                                            <input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
+	                                            <?php _e('Limit class size', 'cp'); ?>
+	                                            <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );          ?>
+	                                            <br />
+	                                            <span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp'); ?></span>
+	                                        </label>
+	                                        <input class='spinners <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled'; ?> class_size' name='meta_class_size' id='class_size' value='<?php echo esc_attr(stripslashes(( is_numeric($class_size) ? $class_size : 0))); ?>' <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled="disabled"'; ?> />
+											<span class="limit-class-size-required <?php echo ( $limit_class_size == 'on' ) ? 'required' : ''; ?>"></span>
+										</div>
                                         <hr />
 
                                         <label for='meta_allow_course_discussion'>
@@ -858,7 +859,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                             <span><?php _e('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp'); ?></span>
                                         </label>
 
-                                        <label for='meta_class-size'>
+                                        <label for='meta_allow_workbook_page'>
                                             <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
                                             <?php _e('Show student Workbook', 'cp'); ?>
                                             <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );          ?>
@@ -976,6 +977,9 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                             $mp_product_id = $course->mp_product_id();
                                             //var_dump(get_post_custom($course_id));
                                             $mp_product_details = get_post_custom($course_id);
+											
+											$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
+
                                             ?>
 
                                             <input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr(isset($course->details->mp_product_id) ? $course->details->mp_product_id : ''); ?>" />
@@ -991,26 +995,27 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                             </div>
 
                                             <div class="course-sku">
-                                                <p><input type="checkbox" name="meta_auto_sku" <?php echo ( $auto_sku == 'on' ) ? 'checked' : ''; ?> />
+                                                <p><input type="checkbox" name="meta_auto_sku" <?php echo ( $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
                                                     <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
                                                 <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
                                                 if ($auto_sku == 'on') {
                                                     echo esc_attr($mp_product_details["mp_sku"][0]);
                                                 }
-                                                ?>" />
+                                                ?>" <?php echo $input_state; ?> />
                                             </div>
 
                                             <div class="course-price">
-                                                <div><span><?php _e('Price', 'cp'); ?></span>
-                                                    <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" /></div>
+												<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e('Price', 'cp'); ?></span>
+                                                <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" <?php echo $input_state; ?>  />
                                             </div>
 
                                             <div class="clearfix"></div>
 
 											<div class="course-sale-price">
-                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="1"<?php checked($mp_product_details["mp_is_sale"][0], '1'); ?> />
+                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php checked($mp_product_details["mp_is_sale"][0], '1'); ?>" <?php echo $input_state; ?>  />
                                                     <?php _e('Enabled Sale Price', 'cp'); ?></p>
-                                                <p><span><?php _e('Sale Price', 'cp'); ?></span><input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"][0]); ?>" /></p>
+													<span class="price-label <?php checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
+                                                	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"][0]); ?>" <?php echo $input_state; ?>  />
                                             </div>
 
                                             <div class="clearfix"></div>
@@ -1019,6 +1024,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
 
 												<!-- Add both links for JS/CSS toggle -->
                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
+												   <span class="payment-gateway-required <?php echo !$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
 
                                                     <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e('Edit Payment Gateways', 'cp'); ?></a>												
 

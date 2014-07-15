@@ -2076,6 +2076,14 @@ label.bold-label{
     line-height: 2em;
 }
 
+.course-section .course-form div.narrow .course-enable-gateways span.error,
+.course-section .course-form div.narrow .course-sale-price span.error,
+.course-section .course-form div.narrow .course-price span.error {
+	clear: both;
+	width: 100%;
+	float:none;
+}
+
 .course-section .course-form div.narrow .course-price input[type="text"],
 .course-section .course-form div.narrow .course-sale-price input[type="text"] {
     width: 80px;
