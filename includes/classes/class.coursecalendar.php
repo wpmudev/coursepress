@@ -36,7 +36,7 @@ if ( !class_exists('Course_Calendar') ) {
 
 			// If month and/or year not specified, fill in the blanks with current date.
 			
-			if( $course_id ) {
+			if( $course_id && 'false' != $course_id ) {
 
 				// Convert the date using / not - to use American m-d-y conversion					
 				$start_date = get_post_meta( $course_id, 'course_start_date', true);
@@ -73,11 +73,15 @@ if ( !class_exists('Course_Calendar') ) {
    				}
 				
 			} else {
+				$this->course_id = false;
 				$date = getdate();
 				$month = $month ? $month : $date['mon'];
 				$year = $year ? $year : $date['year'];
 				$this->date = ! $month && ! $year ? $date : $this->date;
 				
+				// still needs implementing
+				// $this->previous_month = $this->get_previous_month( $this->date );
+				// $this->next_month = $this->get_next_month( $this->date );
 			}
 			
 			$this->first_day = $this->first_day_of_month( $month, $year );
@@ -131,21 +135,23 @@ if ( !class_exists('Course_Calendar') ) {
 	             $date = "$this->year-$month-$rel_day";
 				 $class = '';
 				 
-				 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) {
-					 $class = 'course-start-date';
+				 if( $this->course_id ) {
+					 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) {
+						 $class = 'course-start-date';
+					 }
+					 if ( $this->course_no_end &&
+					      ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) ) {
+						 $class = 'course-open-date';
+					 }
+					 if ( ( strtotime( str_replace( '-', '/', $date ) ) < strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) &&
+					      ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) ) {
+						 $class = 'course-active-date';
+					 }
+					 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) {
+						 $class = 'course-end-date';
+					 }					 
 				 }
-				 if ( $this->course_no_end &&
-				      ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) ) {
-					 $class = 'course-open-date';
-				 }
-				 if ( ( strtotime( str_replace( '-', '/', $date ) ) < strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) &&
-				      ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) ) {
-					 $class = 'course-active-date';
-				 }
-				 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) {
-					 $class = 'course-end-date';
-				 }
-				 
+				 				 
 				 $today_date = getdate();
 				 if ( $this->month == $today_date['mon'] && $current_day == $today_date['mday'] ) {
 					 $class .= ' today';
@@ -187,7 +193,7 @@ if ( !class_exists('Course_Calendar') ) {
 			return getdate( $this->first_day_of_month( $month, $year ) );
 		}
 
-		function get_previous_month( $date, $start_date ) {
+		function get_previous_month( $date, $start_date = false ) {
 			if ( $date['mon'] > $start_date['mon'] || $date['year'] > $start_date['year'] ) {
 				$pre_year = $date['year'];
 				$pre_month = $date['mon'] - 1;
@@ -202,7 +208,7 @@ if ( !class_exists('Course_Calendar') ) {
 			}
 		}
 		
-		function get_next_month( $date, $end_date ) {
+		function get_next_month( $date, $end_date = false ) {
 			if ( $date['mon'] < $end_date['mon'] || $date['year'] < $end_date['year'] ) {
 				$next_year = $date['year'];
 				$next_month = $date['mon'] + 1;

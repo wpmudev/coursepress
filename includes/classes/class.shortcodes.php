@@ -922,10 +922,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $course_active = true; // NEED CHECK HERE
 
-            $course_started = strtotime($course->course_start_date) >= time() ? true : false;
-            $enrollment_started = strtotime($course->enrollment_start_date) >= time() ? true : false;
-            $course_expired = strtotime($course->course_end_date) <= time() ? true : false;
-            $enrollment_expired = strtotime($course->enrollment_end_date) <= time() ? true : false;
+            $course_started = strtotime($course->course_start_date) <= time() ? true : false;
+            $enrollment_started = strtotime($course->enrollment_start_date) <= time() ? true : false;
+            $course_expired = strtotime($course->course_end_date) < time() ? true : false;
+            $enrollment_expired = strtotime($course->enrollment_end_date) < time() ? true : false;
             $course_full = $course->is_populated();
 
             $button = '';
@@ -1154,15 +1154,34 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
          * @since 1.0.0
          */
         function course_calendar( $atts ) {
+			global $post;
+			
             extract(shortcode_atts(array(
-                'course_id' => in_the_loop() ? get_the_ID() : '',
+                'course_id' => in_the_loop() ? get_the_ID() : false,
 				'month' => false,
 				'year' => false,
 				'pre'  => __( '« Previous', 'cp' ),
 				'next'  => __( 'Next »', 'cp' ),				
             ), $atts, 'course_calendar'));
 
-			$cal = new Course_Calendar( array( 'course_id' => $course_id, 'month' => $month, 'year' => $year ) );
+			if ( empty( $course_id ) ) {
+				if ( $post && 'course' == $post->post_type ) {
+					$course_id = $post->ID;
+				} else {
+					$parent_id = do_shortcode('[get_parent_course_id]');
+					$course_id = 0 != $parent_id ? $parent_id : $course_id;
+				}
+			}
+			
+			$args = array();
+			
+			if ( !empty( $month ) && ! empty( $year ) ) {
+				$args = array( 'course_id' => $course_id, 'month' => $month, 'year' => $year );
+			} else {
+				$args = array( 'course_id' => $course_id );
+			}
+			
+			$cal = new Course_Calendar( $args );
 			return $cal->create_calendar( $pre, $next );
 		}
 
