@@ -62,7 +62,7 @@ if ( !class_exists('Course_Calendar') ) {
 				$this->next_month = $this->get_next_month( $date, $this->course_end );
 				// If today (or given date) is bigger than course end date, then use the course start date
    				if ( ( strtotime( $date['year'] . '/' . $date['mon'] . '/' . $date['mday'] ) > strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) &&
-					$this->course_start['mon'] != $date['mon'] ) {
+					$this->course_start['mon'] != $date['mon'] && ! $this->course_no_end ) {
 
  					$month = $start_date['mon'];
  					$year = $start_date['year'];					
@@ -95,10 +95,9 @@ if ( !class_exists('Course_Calendar') ) {
         }
 		
 		function create_calendar( $pre = '«', $next = '»' ) {
-
 			$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
-			$calendar .= $this->previous_month ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '';
-			$calendar .= $this->next_month ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '';
+			$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
+			$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
 	        $calendar .= "<table class='course-calendar-body'>";
 	        $calendar .= "<caption>";
 			$calendar .= "$this->month_name $this->year";
@@ -147,7 +146,8 @@ if ( !class_exists('Course_Calendar') ) {
 					      ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) ) ) {
 						 $class = 'course-active-date';
 					 }
-					 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) {
+					 if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_end_day ) ) && 
+					      ! $this->course_no_end) {
 						 $class = 'course-end-date';
 					 }					 
 				 }
@@ -209,7 +209,7 @@ if ( !class_exists('Course_Calendar') ) {
 		}
 		
 		function get_next_month( $date, $end_date = false ) {
-			if ( $date['mon'] < $end_date['mon'] || $date['year'] < $end_date['year'] ) {
+			if ( $date['mon'] < $end_date['mon'] || $date['year'] < $end_date['year'] || $this->course_no_end ) {
 				$next_year = $date['year'];
 				$next_month = $date['mon'] + 1;
 				if( $next_month > 12 ) {

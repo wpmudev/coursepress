@@ -1181,8 +1181,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 				$args = array( 'course_id' => $course_id );
 			}
 			
+
 			$cal = new Course_Calendar( $args );
-			return $cal->create_calendar( $pre, $next );
+			return $cal->create_calendar( $pre, $next );				
 		}
 
 
