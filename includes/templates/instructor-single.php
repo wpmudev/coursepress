@@ -9,5 +9,5 @@
 
 <?php
 	// Course List
-	echo do_shortcode('[course_list instructor="' . $user->ID . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes"]');
+	echo do_shortcode('[course_list instructor="' . $user->ID . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes"]');		
 ?>

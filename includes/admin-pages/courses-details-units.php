@@ -36,7 +36,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
     $this->show_unit_details();
 } else {
     $first_unit_id = isset( $units[0]->ID ) ? $units[0]->ID : '';
-    
+    // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     if ( isset( $first_unit_id ) && is_numeric( $first_unit_id ) ) {
         wp_redirect( admin_url( "admin.php?page=course_details&tab=units&course_id=" . $course_id . "&unit_id=" . $first_unit_id . "&action=edit" ) );
         exit;

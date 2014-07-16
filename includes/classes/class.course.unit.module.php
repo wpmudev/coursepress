@@ -261,7 +261,7 @@ if ( !class_exists('Unit_Module') ) {
             //$unit_module_page_number = isset( $_GET['to_elements_page'] ) ? $_GET['to_elements_page'] : 1;
 
             if ( isset($_POST['submit_modules_data_done']) || isset($_POST['submit_modules_data_no_save_done']) ) {
-
+				// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                 if ( isset($_POST['submit_modules_data_done']) ) {
                     //wp_redirect( full_url( $_SERVER ). '?saved=ok' );
                     wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
@@ -274,6 +274,7 @@ if ( !class_exists('Unit_Module') ) {
             }
 
             if ( isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_no_save_save']) ) {
+				// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                 if ( isset($_POST['submit_modules_data_save']) ) {
                     //wp_redirect( $_SERVER['REQUEST_URI'] . '?saved=ok' );
                     wp_redirect(full_url($_SERVER) . '?saved=ok');

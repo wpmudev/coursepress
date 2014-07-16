@@ -38,6 +38,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('get_parent_course_id', array( &$this, 'get_parent_course_id' ));
             add_shortcode('units_dropdown', array( &$this, 'units_dropdown' ));
             add_shortcode('course_list', array( &$this, 'course_list' ));
+			add_shortcode('course_calendar', array( &$this, 'course_calendar' ) );
 
             add_shortcode('course', array( &$this, 'course' ));
             // Sub-shortcodes
@@ -1148,7 +1149,26 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         }
 
         /**
-         * Shows the course cost.
+         * Shows the course calendar.
+         *
+         * @since 1.0.0
+         */
+        function course_calendar( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+				'month' => false,
+				'year' => false,
+				'pre'  => __( '« Previous', 'cp' ),
+				'next'  => __( 'Next »', 'cp' ),				
+            ), $atts, 'course_calendar'));
+
+			$cal = new Course_Calendar( array( 'course_id' => $course_id, 'month' => $month, 'year' => $year ) );
+			return $cal->create_calendar( $pre, $next );
+		}
+
+
+        /**
+         * Shows the course list.
          *
          * @since 1.0.0
          */
@@ -1948,6 +1968,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( $course->details->post_author != get_current_user_id() ) {//check if user is an author of a course ( probably instructor )
                     if ( !current_user_can('coursepress_view_all_units_cap') ) {//check if the instructor, even if it's not the author of the course, maybe has a capability given by the admin
                         if ( !$student->has_access_to_course($course_id) ) {//if it's not an instructor who made the course, check if he is enrolled to course
+							// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                             //ob_start();
                             wp_redirect(get_permalink($course_id)); //if not, redirect him to the course page so he may enroll it if the enrollment is available
                             exit;
@@ -1978,6 +1999,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             if ( count($units) == 1 ) {
                 //ob_start();
+				// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                 wp_redirect($last_unit_url);
                 exit;
             }
@@ -2126,6 +2148,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             //redirect to the parent course page if not enrolled
             if ( !current_user_can('manage_options') ) {
                 if ( !$coursepress->check_access($unit->course_id, $unit_id) ) {
+					// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                     //ob_start();
                     wp_redirect(get_permalink($unit->course_id));
                     exit;
@@ -2545,6 +2568,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                 $auth = wp_authenticate_username_password(null, $_POST['log'], $_POST['pwd']);
                 if ( !is_wp_error($auth) ) {
+					// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                     $user = get_user_by('login', $_POST['log']);
                     $user_id = $user->ID;
                     wp_set_current_user($user_id);
@@ -2641,7 +2665,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                     $form_message = $user->get_error_message();
                                                     $form_message_class = 'red';
                                                 }
-
+												
+												// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                                                 if ( isset($_POST['course_id']) && is_numeric($_POST['course_id']) ) {
                                                     $course = new Course($_POST['course_id']);
                                                     wp_redirect($course->get_permalink());
@@ -2747,6 +2772,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     } else {
                         //if ( isset( $this ) ) {
                         //ob_start();
+						// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
                         wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));
                         exit;
                         //}

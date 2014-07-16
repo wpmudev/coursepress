@@ -198,7 +198,7 @@ class MP_Gateway_GoogleCheckout extends MP_Gateway_API {
 		
 		$response = $this->google_api_request( $param_str, $url );
 		if ( $response['_type'] == 'checkout-redirect' ) {
-      wp_redirect( $response['redirect-url'] );
+			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 			exit;
 		} else {
 			$mp->cart_checkout_error( sprintf( __( 'There was a problem setting up your purchase with Google Checkout. Please try again or <a href="%s">select a different payment method</a>.<br/>%s', 'mp' ), mp_checkout_step_url( 'checkout' ), @$response['error-message'] ) );

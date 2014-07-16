@@ -45,6 +45,7 @@ if (isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['actio
 
         if ($new_post_id != 0) {
             ob_start();
+			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             if (isset($_GET['ms'])) {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']));
                 //exit;

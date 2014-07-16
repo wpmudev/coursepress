@@ -13,6 +13,7 @@
     <?php
 } else {
     //ob_start();
+	// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     wp_redirect( get_option('use_custom_login_form', 1) ? CoursePress::instance()->get_signup_slug( true ) : wp_login_url() );
     exit;
 }

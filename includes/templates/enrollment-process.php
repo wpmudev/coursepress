@@ -52,6 +52,7 @@ if ( is_user_logged_in() ) {
                 _e( 'Passcode is not valid. Please <a href="' . $course->get_permalink() . '">go back</a> and try again.', 'cp' );
             }
         } else {
+			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             // _e( 'You have already enrolled in the course.', 'cp' ); //can't enroll more than once to the same course at the time
 	        wp_redirect( $course->get_permalink() . '/units' );
 	        exit;

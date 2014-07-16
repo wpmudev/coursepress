@@ -858,3 +858,42 @@ label > .tree{
 .full-width .site-content .has-post-thumbnail .entry-header, .full-width.singular .site-content .hentry.has-post-thumbnail{
     margin-top: 0px !important;/*fix for twentyfourteen*/
 }
+
+.course-calendar {
+	position: relative;
+}
+
+.course-calendar .pre-month {
+	position: absolute;
+	bottom: -20px;
+	left: 0;
+	font-size: 0.8em;
+	cursor: pointer;
+}
+.course-calendar .next-month {
+	position: absolute;
+	bottom: -20px;
+	right: 0;
+	font-size: 0.8em;	
+	cursor: pointer;	
+}
+
+
+.course-calendar .day {
+}
+
+.course-calendar .today {
+	font-weight: bold;
+}
+.course-calendar .course-start-date {
+	background-color: #dfdfdf;
+}
+.course-calendar .course-active-date {
+	background-color: #f5f5f5;
+}
+.course-calendar .course-open-date {
+	background-color: #f5f5f5;	
+}
+.course-calendar .course-end-date {
+	background-color: #dfdfdf;	
+}		

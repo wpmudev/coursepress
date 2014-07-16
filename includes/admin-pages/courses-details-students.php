@@ -12,6 +12,7 @@ if ( isset( $_POST['invite_student'] ) ) {
         $email_args['student_last_name'] = $_POST['last_name'];
         $email_args['student_email'] = $_POST['email'];
         $email_args['enroll_type'] = $course->details->enroll_type;
+		// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
         if ( is_email( $_POST['email'] ) ) {
             coursepress_send_email( $email_args );
             //ob_start();
@@ -27,6 +28,7 @@ if ( isset( $_POST['invite_student'] ) ) {
 
 /* Enroll student or move to a different class */
 if ( isset( $_POST['students'] ) && is_numeric( $_POST['students'] ) ) {
+	// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     check_admin_referer( 'student_details' );
     $student = new Student( $_POST['students'] );
     $student->enroll_in_course( $course_id, $_POST['class_name'] );
@@ -77,6 +79,7 @@ if ( isset( $_GET['delete_class'] ) ) {
             update_post_meta( $course_id, 'course_classes', $course_classes );
         }
     }
+	// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     wp_redirect( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=dc' ) );
     exit;
 }
@@ -115,6 +118,7 @@ if ( isset( $_GET['withdraw_all'] ) ) {
             }
         }
     }
+	// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     wp_redirect( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=usl' ) );
     exit;
 }
@@ -128,6 +132,7 @@ if ( isset( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) ) {
         $student = new Student( $_GET['withdraw'] );
         $student->withdraw_from_course( $course_id );
     }
+	// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
     wp_redirect( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=us' ) );
     exit;
 }

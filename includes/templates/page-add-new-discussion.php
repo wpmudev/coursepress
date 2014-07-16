@@ -19,6 +19,7 @@ if ( isset( $_POST['new_question_submit'] ) ) {
         if ( $_POST['question_description'] !== '' ) {
             $discussion = new Discussion();
             $discussion->update_discussion( $_POST['question_title'], $_POST['question_description'], $course_id );
+			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             wp_redirect( get_permalink( $course_id ) . $coursepress->get_discussion_slug() );
             exit;
         } else {
