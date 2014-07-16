@@ -1,4 +1,6 @@
 <?php
+global $coursepress;
+
 $course_id = '';
 
 if ( isset( $_GET['course_id'] ) && is_numeric( $_GET['course_id'] ) ) {
@@ -33,7 +35,8 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'change_status' && isset( $_
 }
 
 if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $_GET['action'] ) && $_GET['action'] == 'edit' && isset( $_GET['unit_id'] ) ) ) {
-    $this->show_unit_details();
+    $coursepress->unit_page_num = $_POST['unit_page_num'];
+    $this->show_unit_details($_POST['unit_page_num']);
 } else {
     $first_unit_id = isset( $units[0]->ID ) ? $units[0]->ID : '';
     // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }

@@ -85,7 +85,9 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
         if ( $coursepress->is_preview($unit_id, $link_num) ) {
             $enabled = 'enabled-link';
         } else {
-            $enabled = 'disabled-link';
+            if ( isset($_GET['try']) ) {
+                $enabled = 'disabled-link';
+            }
         }
 
         $class = ( $paged == $link_num ? ' class="active ' . $enabled . '"' : ' class="' . $enabled . '"' );
@@ -900,30 +902,30 @@ if ( !function_exists('coursepress_register_front_page_module') ) {
 if ( !function_exists('cp_write_log') ) {
 
     function cp_write_log( $message, $echo_file = false ) {
-		$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
-		$exception = new Exception();
-		$debug = array_shift( $trace );
-		$caller = array_shift( $trace );
-		$exception = $exception->getTrace();
-		$callee = array_shift( $exception );
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $exception = new Exception();
+        $debug = array_shift($trace);
+        $caller = array_shift($trace);
+        $exception = $exception->getTrace();
+        $callee = array_shift($exception);
 
-		if ( true === WP_DEBUG ) {
-			if ( is_array( $message ) || is_object( $message ) ) {
-				$class = isset( $caller['class'] ) ? $caller['class'] . '[' . $callee['line'] . '] ' : '';
-				if ( $echo_file ) {
-					error_log( $class . print_r( $message, true ) . 'In ' . $callee['file'] . ' on line ' . $callee['line'] );	
-				} else {
-					error_log( $class . print_r( $message, true ) );	
-				}
-			} else {
-				$class = isset( $caller['class'] ) ? $caller['class'] . '[' . $callee['line'] . ']: ' : '';
-				if ( $echo_file ) {
-					error_log( $class . $message . ' In ' . $callee['file'] . ' on line ' . $callee['line']);					
-				} else {
-					error_log( $class . $message );					
-				}
-			}
-		}
+        if ( true === WP_DEBUG ) {
+            if ( is_array($message) || is_object($message) ) {
+                $class = isset($caller['class']) ? $caller['class'] . '[' . $callee['line'] . '] ' : '';
+                if ( $echo_file ) {
+                    error_log($class . print_r($message, true) . 'In ' . $callee['file'] . ' on line ' . $callee['line']);
+                } else {
+                    error_log($class . print_r($message, true));
+                }
+            } else {
+                $class = isset($caller['class']) ? $caller['class'] . '[' . $callee['line'] . ']: ' : '';
+                if ( $echo_file ) {
+                    error_log($class . $message . ' In ' . $callee['file'] . ' on line ' . $callee['line']);
+                } else {
+                    error_log($class . $message);
+                }
+            }
+        }
     }
 
 }
@@ -1107,15 +1109,15 @@ if ( !function_exists('coursepress_numeric_posts_nav') ) {
 }
 
 function default_args( $pairs, $atts, $shortcode = '' ) {
-	$atts = (array)$atts;
-	$out = array();
-	foreach($pairs as $name => $default) {
-		if ( array_key_exists($name, $atts) )
-			$out[$name] = $atts[$name];
-		else
-			$out[$name] = $default;
-	}
-	return $out;
+    $atts = ( array ) $atts;
+    $out = array();
+    foreach ( $pairs as $name => $default ) {
+        if ( array_key_exists($name, $atts) )
+            $out[$name] = $atts[$name];
+        else
+            $out[$name] = $default;
+    }
+    return $out;
 }
 
 if ( !function_exists('cp_length') ) {

@@ -31,6 +31,11 @@ jQuery(document).ready(function() {
     }
 
     jQuery(".unit-control-buttons .save-unit-button").click(function() {
+        var unit_page_num = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+        jQuery("#unit_page_num").val(unit_page_num);
+
+        //jQuery('#unit-add').attr('action', jQuery('#unit-add').attr('action') + "&unit_page_num=" + unit_page_num);
+
         submit_elements();
     });
 
@@ -320,11 +325,11 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                     set_update_progress(step, 'attention');
                 }
             } else {
-				$(statusElement).addClass('saved');
-				set_update_progress(step, 'saved');
+                $(statusElement).addClass('saved');
+                set_update_progress(step, 'saved');
                 $course_id = $('[name=course_id]').val();
                 $admin_url = $('[name=admin_url]').val();
-                window.location = $admin_url + '&tab=units&course_id=' + $course_id;				
+                window.location = $admin_url + '&tab=units&course_id=' + $course_id;
             }
             // Steps 1 - 5	
         } else {
@@ -548,141 +553,141 @@ function step_6_update(attr) {
 }
 
 function clearCourseErrorMessages() {
-	$( 'span.error' ).remove();
+    $('span.error').remove();
 }
 
-function validateCourseFields( step ) {
-	var valid = true;
+function validateCourseFields(step) {
+    var valid = true;
 
-	$ = jQuery;
+    $ = jQuery;
 
-	clearCourseErrorMessages();
+    clearCourseErrorMessages();
 
-	switch (step) {
-		
-		case 1:
-		case '1':
-			if ( $('[name=course_name]').val() == "" ) {
-				$('[for=course_name]').parent().append('<span class="error">' + coursepress_units.required_course_name + '</span>');
-				valid = false;
-			}
-		
-		    var content = '';
-		    if (tinyMCE.get('course_excerpt')) {
-		        content = tinyMCE.get('course_excerpt').getContent();
-		    } else {
-		        content = $('[name=course_excerpt]').val();
-		    }	
-		
-			break;
-		
-		case 2:
-		case '2':
-		    var content = '';
-		    if (tinyMCE.get('course_description')) {
-		        content = tinyMCE.get('course_description').getContent();
-		    } else {
-		        content = $('[name=course_description]').val();
-		    }
-			if ( content == '' ) {
-				$('[for=course_description]').parent().append('<span class="error">' + coursepress_units.required_course_description + '</span>');
-				valid = false;
-			}
-			break;		
-		
-		case 3:
-		case '3':
-			break;
-	
-		case 4:
-		case '4':
-			
-			if ( $('[name=meta_course_start_date]').val() == "" ) {
-				$('[name=meta_course_start_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_course_start + '<br /></span>');
-				valid = false;
-			}
-			
-			if( ! $('[name=meta_open_ended_course]').is(':checked') ){
-				if ( $('[name=meta_course_end_date]').val() == "" ) {
-					$('[name=meta_course_end_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_course_end + '</span>');
-					valid = false;
-				}				
-			}
-			
-			if( ! $('[name=meta_open_ended_enrollment]').is(':checked') ) {
-				if ( $('[name=meta_enrollment_start_date]').val() == "" ) {
-					$('[name=meta_enrollment_start_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_enrollment_start + '<br /></span>');
-					valid = false;
-				}
-				if ( $('[name=meta_enrollment_end_date]').val() == "" ) {
-					$('[name=meta_enrollment_end_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_enrollment_end + '<br /></span>');
-					valid = false;
-				}
-			}
-			
-			break;
-		
-		case 5:
-		case '5':
-			if( $('[name=meta_limit_class_size]').is(':checked') ) {
-				if( $('[name=meta_class_size]').val() == "" || $('[name=meta_class_size]').val() == "0" || $('[name=meta_class_size]').val() == 0 ) {
-					$('[for=meta_class-size]').parent().append('<span class="error">' + coursepress_units.required_course_class_size + '</span>');
-					valid = false;					
-				}
-			}			
-			
-			break;
-			
-		case 6:
-		case '6':
+    switch (step) {
 
-			var has_gateway = $($('.step-6 .course-enable-gateways')[0]).hasClass('gateway-active');
-			if ( $('[name=meta_enroll_type]').val() == 'passcode') {
-				if ( $('[name=meta_passcode]').val() == "" ) {
-					$('[for=meta_enroll_type]').parent().append('<span class="error">' + coursepress_units.required_course_passcode + '</span>');
-					valid = false;
-				}				
-			}
+        case 1:
+        case '1':
+            if ($('[name=course_name]').val() == "") {
+                $('[for=course_name]').parent().append('<span class="error">' + coursepress_units.required_course_name + '</span>');
+                valid = false;
+            }
 
-			if ( $('[name=meta_paid_course]').is(':checked') ) {
+            var content = '';
+            if (tinyMCE.get('course_excerpt')) {
+                content = tinyMCE.get('course_excerpt').getContent();
+            } else {
+                content = $('[name=course_excerpt]').val();
+            }
 
-				if ( $('[name=mp_price]').val() == "" ) {
-					$('[name=mp_price]').parents('.course-price').append('<span class="error">' + coursepress_units.required_price + '</span>');
-					valid = false;
-				}					
-				
-				if ( ! has_gateway ) {
-					$('.course-enable-gateways').append('<div><span class="error">' + coursepress_units.required_gateway + '</span></div>');
-					valid = false;
-				}
+            break;
 
-				if ( $('[name=mp_is_sale]').is(':checked') ) {
-					if ( $('[name=mp_sale_price]').val() == "" ) {
-						$('.course-sale-price').append('<span class="error">' + coursepress_units.required_sale_price + '</span>');
-						valid = false;
-					}
-				}
-			}
-			
-			break;								
+        case 2:
+        case '2':
+            var content = '';
+            if (tinyMCE.get('course_description')) {
+                content = tinyMCE.get('course_description').getContent();
+            } else {
+                content = $('[name=course_description]').val();
+            }
+            if (content == '') {
+                $('[for=course_description]').parent().append('<span class="error">' + coursepress_units.required_course_description + '</span>');
+                valid = false;
+            }
+            break;
 
-	}
-	
-	
-	if ( ! valid ) {
-		alert( coursepress_units.section_error );
-	} 
-	
-	return valid;
+        case 3:
+        case '3':
+            break;
+
+        case 4:
+        case '4':
+
+            if ($('[name=meta_course_start_date]').val() == "") {
+                $('[name=meta_course_start_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_course_start + '<br /></span>');
+                valid = false;
+            }
+
+            if (!$('[name=meta_open_ended_course]').is(':checked')) {
+                if ($('[name=meta_course_end_date]').val() == "") {
+                    $('[name=meta_course_end_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_course_end + '</span>');
+                    valid = false;
+                }
+            }
+
+            if (!$('[name=meta_open_ended_enrollment]').is(':checked')) {
+                if ($('[name=meta_enrollment_start_date]').val() == "") {
+                    $('[name=meta_enrollment_start_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_enrollment_start + '<br /></span>');
+                    valid = false;
+                }
+                if ($('[name=meta_enrollment_end_date]').val() == "") {
+                    $('[name=meta_enrollment_end_date]').parents('.date-range').parent().append('<span class="error">' + coursepress_units.required_enrollment_end + '<br /></span>');
+                    valid = false;
+                }
+            }
+
+            break;
+
+        case 5:
+        case '5':
+            if ($('[name=meta_limit_class_size]').is(':checked')) {
+                if ($('[name=meta_class_size]').val() == "" || $('[name=meta_class_size]').val() == "0" || $('[name=meta_class_size]').val() == 0) {
+                    $('[for=meta_class-size]').parent().append('<span class="error">' + coursepress_units.required_course_class_size + '</span>');
+                    valid = false;
+                }
+            }
+
+            break;
+
+        case 6:
+        case '6':
+
+            var has_gateway = $($('.step-6 .course-enable-gateways')[0]).hasClass('gateway-active');
+            if ($('[name=meta_enroll_type]').val() == 'passcode') {
+                if ($('[name=meta_passcode]').val() == "") {
+                    $('[for=meta_enroll_type]').parent().append('<span class="error">' + coursepress_units.required_course_passcode + '</span>');
+                    valid = false;
+                }
+            }
+
+            if ($('[name=meta_paid_course]').is(':checked')) {
+
+                if ($('[name=mp_price]').val() == "") {
+                    $('[name=mp_price]').parents('.course-price').append('<span class="error">' + coursepress_units.required_price + '</span>');
+                    valid = false;
+                }
+
+                if (!has_gateway) {
+                    $('.course-enable-gateways').append('<div><span class="error">' + coursepress_units.required_gateway + '</span></div>');
+                    valid = false;
+                }
+
+                if ($('[name=mp_is_sale]').is(':checked')) {
+                    if ($('[name=mp_sale_price]').val() == "") {
+                        $('.course-sale-price').append('<span class="error">' + coursepress_units.required_sale_price + '</span>');
+                        valid = false;
+                    }
+                }
+            }
+
+            break;
+
+    }
+
+
+    if (!valid) {
+        alert(coursepress_units.section_error);
+    }
+
+    return valid;
 }
 
 function courseAutoUpdate(step, nextAction) {
     if (typeof (nextAction) === 'undefined')
         nextAction = false
     $ = jQuery;
-	
-	clearCourseErrorMessages();
-	
+
+    clearCourseErrorMessages();
+
     var theStatus = $($('.course-section.step-' + step + ' .course-section-title h3')[0]).siblings('.status')[0];
 
     var statusNice = '';
@@ -811,28 +816,28 @@ jQuery(document).ready(function($) {
     });
 
 
-	/** If a section is not market as saved, automatically mark it as dirty. */
-	$.each( $('.course-section.step'), function( index, value ) {
- 	   if( ! $( $( $('.course-section.step')[index] ).children('.status')[0] ).hasClass('saved') ) {
- 	   		$( $('.course-section.step')[index] ).addClass('dirty')
- 	   }
-	});
+    /** If a section is not market as saved, automatically mark it as dirty. */
+    $.each($('.course-section.step'), function(index, value) {
+        if (!$($($('.course-section.step')[index]).children('.status')[0]).hasClass('saved')) {
+            $($('.course-section.step')[index]).addClass('dirty')
+        }
+    });
 
     /** Done course setup. */
     $('.course-section.step input.done').click(function(e) {
         var step = 6;
-		if ( validateCourseFields(step) ){
-			courseAutoUpdate(step, 'unit_setup');
-		}
+        if (validateCourseFields(step)) {
+            courseAutoUpdate(step, 'unit_setup');
+        }
     });
 
     /** Inline step update. */
     $('.course-section.step input.update').click(function(e) {
         var course_section = $(this).parents('.course-section.step')[0];
         var step = $(course_section).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
-		if ( validateCourseFields(step) ){
-			courseAutoUpdate(step);	
-		}
+        if (validateCourseFields(step)) {
+            courseAutoUpdate(step);
+        }
     });
 
     /** Proceed to next step. */
@@ -846,39 +851,39 @@ jQuery(document).ready(function($) {
         var course_section = $(this).parents('.course-section.step')[0];
         var step = $(course_section).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
-		if ( validateCourseFields(step) ){
+        if (validateCourseFields(step)) {
 
-	        // Next section
-	        var nextStep = parseInt(step) + 1;
+            // Next section
+            var nextStep = parseInt(step) + 1;
 
-	        // Attempt to get the next section.
-	        var nextSection = $(this).parents('.course-details .course-section').siblings('.step-' + nextStep)[0];
+            // Attempt to get the next section.
+            var nextSection = $(this).parents('.course-details .course-section').siblings('.step-' + nextStep)[0];
 
-	        // If next section exists
-	        if (nextSection) {
-	            // There is a 'next section'. What do you want to do with it?
-	            var newTop = $('.step-' + step).position().top + 130;
+            // If next section exists
+            if (nextSection) {
+                // There is a 'next section'. What do you want to do with it?
+                var newTop = $('.step-' + step).position().top + 130;
 
-	            // Jump first, then animate		
-	            $(document).scrollTop(newTop);
+                // Jump first, then animate		
+                $(document).scrollTop(newTop);
 
-	            $(nextSection).children('.course-form').slideDown(500);
-	            $(nextSection).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
-	            $(nextSection).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
-	            $(this).parents('.course-form').slideUp(500);
-	            $(this).parents('.course-section').children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
-	            $(this).parents('.course-section').children('.course-section-title').animate({color: '#222'}, 500);
+                $(nextSection).children('.course-form').slideDown(500);
+                $(nextSection).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+                $(nextSection).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
+                $(this).parents('.course-form').slideUp(500);
+                $(this).parents('.course-section').children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
+                $(this).parents('.course-section').children('.course-section-title').animate({color: '#222'}, 500);
 
-	            $(nextSection).addClass('active');
-	            $(this).parents('.course-section').removeClass('active');
+                $(nextSection).addClass('active');
+                $(this).parents('.course-section').removeClass('active');
 
-	            /* Time to call some Ajax */
-	            courseAutoUpdate(step);
+                /* Time to call some Ajax */
+                courseAutoUpdate(step);
 
-	        } else {
-	            // There is no 'next sections'. Now what?
-	        }
-		}
+            } else {
+                // There is no 'next sections'. Now what?
+            }
+        }
     });
 
     /** Return to previous step. */
@@ -890,36 +895,36 @@ jQuery(document).ready(function($) {
          * Looks for <div class="course-section step step-[x]"> and extracts the number.
          **/
         var step = $($(this).parents('.course-section.step')[0]).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
-		if ( validateCourseFields(step) ){
-	        // Previous section
-	        var prevStep = parseInt(step) - 1;
+        if (validateCourseFields(step)) {
+            // Previous section
+            var prevStep = parseInt(step) - 1;
 
-	        // Attempt to get the previous section.
-	        var prevSection = $(this).parents('.course-details .course-section').siblings('.step-' + prevStep)[0];
+            // Attempt to get the previous section.
+            var prevSection = $(this).parents('.course-details .course-section').siblings('.step-' + prevStep)[0];
 
-	        // If previous section exists
-	        if (prevSection) {
-	            // There is a 'previous section'. What do you want to do with it?
-	            var newTop = $('.step-' + prevStep).offset().top - 50;
-	            $(prevSection).children('.course-form').slideDown(500);
-	            $(prevSection).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
-	            $(prevSection).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
-	            $(this).parents('.course-form').slideUp(500);
-	            $(this).parents('.course-section').children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
-	            $(this).parents('.course-section').children('.course-section-title').animate({color: '#222'}, 500);
+            // If previous section exists
+            if (prevSection) {
+                // There is a 'previous section'. What do you want to do with it?
+                var newTop = $('.step-' + prevStep).offset().top - 50;
+                $(prevSection).children('.course-form').slideDown(500);
+                $(prevSection).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+                $(prevSection).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
+                $(this).parents('.course-form').slideUp(500);
+                $(this).parents('.course-section').children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
+                $(this).parents('.course-section').children('.course-section-title').animate({color: '#222'}, 500);
 
-	            // Animate first then jump
-	            $(document).scrollTop(newTop);
-	            $(prevSection).addClass('active');
-	            $(this).parents('.course-section').removeClass('active');
+                // Animate first then jump
+                $(document).scrollTop(newTop);
+                $(prevSection).addClass('active');
+                $(this).parents('.course-section').removeClass('active');
 
-	            /* Time to call some Ajax */
-	            courseAutoUpdate(step);
+                /* Time to call some Ajax */
+                courseAutoUpdate(step);
 
-	        } else {
-	            // There is no 'previous sections'. Now what?
-	        }
-		}
+            } else {
+                // There is no 'previous sections'. Now what?
+            }
+        }
     });
 
     $('.course-section.step .course-section-title h3').click(function(e) {
@@ -929,39 +934,39 @@ jQuery(document).ready(function($) {
         var activeStep = $(activeElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
         var thisElement = $(this).parents('.course-section.step')[0];
-		var thisElementFormVisible = $(thisElement).children('.course-form').is(':visible');
+        var thisElementFormVisible = $(thisElement).children('.course-form').is(':visible');
         var thisStep = $(thisElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
         var thisStatus = $(this).siblings('.status')[0];
 
         // Only move to a saved step or a previous step (asuming that it has to be saved)
-        if ( $(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep ) {
+        if ($(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep) {
 
             // There is a 'previous section'. What do you want to do with it?
             if (thisStep < activeStep) {
                 var newTop = $(thisElement).position().top + 130;
-            } else if ( thisStep != 1 ) {
+            } else if (thisStep != 1) {
                 var step = thisStep + 1;
                 var newTop = $(thisElement).prev('.step').offset().top + 20;
-            }	
-				
-			if ( ! thisElementFormVisible ) {
-	            $(thisElement).children('.course-form').slideDown(500);
-	            $(thisElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
-	            $(thisElement).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
-				if( thisStep != activeStep ) {
-		            $(activeElement).children('.course-form').slideUp(500);
-		            $(activeElement).children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
-		            $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);						
-		            // Animate first then jump
-		            $(document).scrollTop(newTop);
-				}
-			} else {
-	            $(activeElement).children('.course-form').slideUp(500);
-  	            $(activeElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
-  	            $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);
-			}
-			
+            }
+
+            if (!thisElementFormVisible) {
+                $(thisElement).children('.course-form').slideDown(500);
+                $(thisElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+                $(thisElement).children('.course-section-title').animate({color: '#FFFFFF'}, 500);
+                if (thisStep != activeStep) {
+                    $(activeElement).children('.course-form').slideUp(500);
+                    $(activeElement).children('.course-section-title').animate({backgroundColor: '#F1F1F1'}, 500);
+                    $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);
+                    // Animate first then jump
+                    $(document).scrollTop(newTop);
+                }
+            } else {
+                $(activeElement).children('.course-form').slideUp(500);
+                $(activeElement).children('.course-section-title').animate({backgroundColor: '#0091cd'}, 500);
+                $(activeElement).children('.course-section-title').animate({color: '#222'}, 500);
+            }
+
             $(activeElement).removeClass('active');
             $(thisElement).addClass('active');
 
@@ -1155,31 +1160,31 @@ jQuery(document).ready(function($) {
 
 // Popup that shows upon 'Course Setup' completed or when 0 units are found.
 jQuery(document).ready(function($) {
-	var unit_count = $('[name="unit_count"]').val();
-	
-	if ( unit_count == 0 ) {
+    var unit_count = $('[name="unit_count"]').val();
+
+    if (unit_count == 0) {
         var content = '<div class="update orange top-right">' + coursepress_units.unit_setup_prompt + '<i class="fa fa-times-circle" /></div>';
 
         $('#wpbody-content').append(content);
-		$('.update.orange.top-right').css({
-			position: 'absolute', 
-			top: '25px', 
-			right: '35px',
-		    'background-color': '#fff',
-		    'border-left': '4px solid #ec8c35',
-		    'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
-		    padding: '15px 25px 15px 15px',
-		});
-		$('.update.orange.top-right .fa-times-circle').css({
-			'font-size': '20px',
-			position: 'absolute', 
-			top: '10px', 
-			right: '10px',
-			cursor: 'pointer',
-		}).click( function( event ) {
-			$( this ).parent().remove();
-		});
-	}
+        $('.update.orange.top-right').css({
+            position: 'absolute',
+            top: '25px',
+            right: '35px',
+            'background-color': '#fff',
+            'border-left': '4px solid #ec8c35',
+            'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
+            padding: '15px 25px 15px 15px',
+        });
+        $('.update.orange.top-right .fa-times-circle').css({
+            'font-size': '20px',
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            cursor: 'pointer',
+        }).click(function(event) {
+            $(this).parent().remove();
+        });
+    }
 });
 
 

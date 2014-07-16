@@ -118,10 +118,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
     </div>
     <div class='mp-settings'><!--course-liquid-left-->
-        <?php
-        //        $fragment = cp_get_fragment();
-        ?>
-        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ))); ?>#unit-page-<?php echo ( isset($fragment) && $fragment !== '' ? $fragment : '1' ); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
+        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
             <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) ? $unit_object->post_status : 'draft')); ?>" />
@@ -129,6 +126,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                 <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                 <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
+                <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
                 <input type="hidden" name="action" value="update_unit" />
             <?php } else { ?>
                 <input type="hidden" name="action" value="add_unit" />

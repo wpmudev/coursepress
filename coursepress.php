@@ -131,10 +131,10 @@ if ( !class_exists('CoursePress') ) {
                 add_action('wp_ajax_remove_instructor_invite', array( &$this, 'remove_instructor_invite' ));
 
 // Using ajax to update course calendar
-				add_action('wp_ajax_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));				
-	            add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));				
+                add_action('wp_ajax_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
+                add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
-				
+
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
@@ -334,7 +334,9 @@ if ( !class_exists('CoursePress') ) {
         /* Fix for the broken images in the Unit elements content */
 
         function redirect_after_logout() {
-			if( defined('DOING_AJAX') && DOING_AJAX ){ cp_write_log('ajax'); }
+            if ( defined('DOING_AJAX') && DOING_AJAX ) {
+                cp_write_log('ajax');
+            }
             if ( get_option('use_custom_login_form', 1) ) {
                 $url = get_option('cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug()));
                 wp_redirect($url);
@@ -352,17 +354,21 @@ if ( !class_exists('CoursePress') ) {
 
         function is_preview( $unit_id, $page_num = false ) {
             if ( isset($_GET['try']) ) {
+
                 $unit = new Unit($unit_id);
                 $course = new Course($unit->details->post_parent);
+
                 if ( $page_num ) {
                     $paged = $page_num;
                 } else {
                     $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
                 }
+
                 $preview_unit = $course->details->preview_unit_boxes;
                 $preview_page = $course->details->preview_page_boxes;
 
                 if ( isset($preview_unit[$unit_id]) && $preview_unit[$unit_id] == 'on' ) {
+
                     if ( isset($preview_page[$unit_id . '_' . $paged]) && $preview_page[$unit_id . '_' . $paged] == 'on' ) {
                         return true;
                     } else {
@@ -375,12 +381,12 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function check_access( $course_id, $unit_id = false ) {
-			
-						// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 // $page_num not set...
 // @TODO: implement $page_num and remove next line.
-            $page_num = false;
-            if ( $this->is_preview($unit_id, $page_num) ) {
+
+            if ( $this->is_preview($unit_id) ) {
 //have access
             } else {
                 if ( !current_user_can('manage_options') ) {
@@ -402,7 +408,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function add_custom_image_sizes() {
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             if ( function_exists('add_image_size') ) {
                 $course_image_width = get_option('course_image_width', 235);
                 $course_image_height = get_option('course_image_height', 225);
@@ -453,9 +459,9 @@ if ( !class_exists('CoursePress') ) {
         /* Force requested file downlaod */
 
         function check_for_force_download_file_request() {
-			
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-			
+
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
             if ( isset($_GET['fdcpf']) ) {
                 ob_start();
 
@@ -968,7 +974,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function coursepress_plugin_do_activation_redirect() {
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             if ( get_option('coursepress_plugin_do_first_activation_redirect', false) ) {
                 ob_start();
                 delete_option('coursepress_plugin_do_first_activation_redirect');
@@ -1119,7 +1125,7 @@ if ( !class_exists('CoursePress') ) {
 //Load unit elements / modules / building blocks and other add-ons and plugins
         function load_modules() {
 
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 
             global $mem_modules, $front_page_modules;
 
@@ -1146,9 +1152,9 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function load_widgets() {
-			
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-			
+
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
             if ( is_dir($this->plugin_dir . '/includes/widgets') ) {
                 if ( $dh = opendir($this->plugin_dir . '/includes/widgets') ) {
                     $widgets = array();
@@ -1772,30 +1778,29 @@ if ( !class_exists('CoursePress') ) {
 
             return $initArray;
         }
-		
-		
+
         function refresh_course_calendar() {
             $ajax_response = array();
             $ajax_status = 1; //success
 
-			if ( ! empty( $_POST['date'] ) && ! empty( $_POST['course_id'] ) ) {
+            if ( !empty($_POST['date']) && !empty($_POST['course_id']) ) {
 
-				$date = getdate( strtotime( str_replace( '-', '/', $_POST['date'] ) ) ) ;
-				$pre = ! empty( $_POST['pre_text'] ) ? $_POST['pre_text'] : false;
-				$next = ! empty( $_POST['next_text'] ) ? $_POST['next_text'] : false;
+                $date = getdate(strtotime(str_replace('-', '/', $_POST['date'])));
+                $pre = !empty($_POST['pre_text']) ? $_POST['pre_text'] : false;
+                $next = !empty($_POST['next_text']) ? $_POST['next_text'] : false;
 
-				$calendar = new Course_Calendar( array( 'course_id' => $_POST['course_id'], 'month' => $date['mon'], 'year' => $date['year'] ) );
+                $calendar = new Course_Calendar(array( 'course_id' => $_POST['course_id'], 'month' => $date['mon'], 'year' => $date['year'] ));
 
-				$html = '';
-				if ( $pre && $next ) {
-					$html = $calendar->create_calendar( $pre, $next );
-				} else {
-					$html = $calendar->create_calendar();
-				}
+                $html = '';
+                if ( $pre && $next ) {
+                    $html = $calendar->create_calendar($pre, $next);
+                } else {
+                    $html = $calendar->create_calendar();
+                }
 
-				$ajax_response['calendar'] = $html;
-			}
-			
+                $ajax_response['calendar'] = $html;
+            }
+
             $response = array(
                 'what' => 'refresh_course_calendar',
                 'action' => 'refresh_course_calendar',
@@ -1804,9 +1809,7 @@ if ( !class_exists('CoursePress') ) {
             );
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
-        }		
-		
-		
+        }
 
         function assign_instructor_capabilities( $user_id ) {
 
@@ -2224,8 +2227,9 @@ if ( !class_exists('CoursePress') ) {
             include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
         }
 
-        function show_unit_details() {
-            include_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
+        function show_unit_details($unit_page_num = 1) {
+            $unit_page_num = $unit_page_num;
+            require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
 
         /* Custom header actions */
@@ -2234,7 +2238,7 @@ if ( !class_exists('CoursePress') ) {
             global $post;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
-			wp_enqueue_script('coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ));	
+            wp_enqueue_script('coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ));
             if ( $post && !$this->is_preview($post->ID) ) {
                 wp_enqueue_script('coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ));
             }
@@ -2356,8 +2360,11 @@ if ( !class_exists('CoursePress') ) {
                     'remove_row' => __('Remove', 'cp'),
                     'empty_class_name' => __('Class name cannot be empty', 'cp'),
                     'duplicated_class_name' => __('Class name already exists', 'cp'),
-                    'course_taxonomy_screen' => ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false )
+                    'course_taxonomy_screen' => ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false ),
+                    'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1)
                 ));
+                
+                
             }
         }
 
@@ -2449,8 +2456,8 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function create_virtual_pages() {
-			
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 
             $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
@@ -2792,8 +2799,10 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function login_redirect( $redirect_to, $request, $user ) {
-			
-			if( defined('DOING_AJAX') && 'DOING_AJAX ') { exit; }
+
+            if ( defined('DOING_AJAX') && 'DOING_AJAX ' ) {
+                exit;
+            }
             global $user;
 
             if ( isset($user->ID) ) {
@@ -2852,7 +2861,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function output_buffer() {
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             ob_start();
         }
 

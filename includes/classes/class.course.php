@@ -10,7 +10,7 @@ if ( !class_exists('Course') ) {
         var $output = 'OBJECT';
         var $course = array();
         var $details;
-		var $data = array();
+        var $data = array();
 
         function __construct( $id = '', $output = 'OBJECT' ) {
             $this->id = $id;
@@ -44,7 +44,7 @@ if ( !class_exists('Course') ) {
             }
         }
 
-        function course_structure_front() {
+        function course_structure_front( $try_title = '', $show_try = true ) {
             $show_unit = $this->details->show_unit_boxes;
             $preview_unit = $this->details->preview_unit_boxes;
 
@@ -82,8 +82,14 @@ if ( !class_exists('Course') ) {
                                             <?php
                                             if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' ) {
                                                 ?>
-                                                <a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php _e('Try Now', 'tc'); ?></a>
-                                            <?php } ?>
+                                                <a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php
+                                                    if ( $try_title == '' ) {
+                                                        _e('Try Now', 'tc');
+                                                    } else {
+                                                        echo $try_title;
+                                                    };
+                                                    ?></a>
+                    <?php } ?>
                                         </div>
                                     </label>
 
@@ -101,7 +107,7 @@ if ( !class_exists('Course') ) {
 
                                                     <label for="page_<?php echo $unit->ID . '_' . $i; ?>">
                                                         <div class="tree-page-left">
-                                                            <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
+                            <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
                                                         </div>
                                                         <div class="tree-page-right">
 
@@ -112,26 +118,32 @@ if ( !class_exists('Course') ) {
                                                             <?php
                                                             if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' ) {
                                                                 ?>
-                                                                <a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php _e('Try Now', 'tc'); ?></a>
-                                                            <?php } ?>
+                                                                <a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php
+                                                                    if ( $try_title == '' ) {
+                                                                        _e('Try Now', 'tc');
+                                                                    } else {
+                                                                        echo $try_title;
+                                                                    };
+                                                                    ?></a>
+                                                    <?php } ?>
 
                                                         </div>
                                                     </label>
 
-                                                    <?php
-                                                    ?>
-                                                </li>
                                                 <?php
-                                            }
-                                        }//page visible 
-                                        ?>
+                                                ?>
+                                                </li>
+                            <?php
+                        }
+                    }//page visible 
+                    ?>
 
                                     </ul>
                                 </li>
-                                <?php
-                            }//unit visible
-                        }
-                        ?>
+                    <?php
+                }//unit visible
+            }
+            ?>
 
                     </ul>
                     <?php
@@ -254,7 +266,7 @@ if ( !class_exists('Course') ) {
 
                     $course = get_post($this->id, $this->output);
 
-                    $post_status = empty( $this->data['status'] ) ? 'publish' : $this->data['status'];
+                    $post_status = empty($this->data['status']) ? 'publish' : $this->data['status'];
 
                     if ( $_POST['course_name'] != '' && $_POST['course_name'] != __('Untitled', 'cp') ) {
                         if ( !empty($course->post_status) && $course->post_status != 'publish' ) {
