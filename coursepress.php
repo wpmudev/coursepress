@@ -212,7 +212,7 @@ if ( !class_exists('CoursePress') ) {
 
 //Check for admin notices
             add_action('admin_notices', array( &$this, 'admin_nopermalink_warning' ));
-
+           
 //Custom header actions
             add_action('wp_enqueue_scripts', array( &$this, 'header_actions' ));
 
@@ -266,12 +266,25 @@ if ( !class_exists('CoursePress') ) {
 // Update CoursePress login/logout menu item.
             add_filter('wp_nav_menu_objects', array( &$this, 'menu_metabox_navigation_links' ), 10, 2);
 
+            //add_filter('wp_nav_menu_args', array( &$this, 'modify_nav_menu_args'), 10);
+
             if ( get_option('display_menu_items', 1) ) {
                 add_filter('wp_nav_menu_objects', array( &$this, 'main_navigation_links' ), 10, 2);
             }
 
             if ( get_option('display_menu_items', 1) ) {
-                if ( !has_nav_menu('primary') ) {
+
+                $theme_location = 'primary';
+
+                if ( !has_nav_menu($theme_location) ) {
+                    $theme_locations = get_nav_menu_locations();
+                    foreach ( ( array ) $theme_locations as $key => $location ) {
+                        $theme_location = $key;
+                        break;
+                    }
+                }
+
+                if ( !has_nav_menu($theme_location) ) {
                     add_filter('wp_page_menu', array( &$this, 'main_navigation_links_fallback' ), 20, 2);
                 }
             }
@@ -318,14 +331,14 @@ if ( !class_exists('CoursePress') ) {
             global $post;
 
             if ( isset($post) && $post->post_type == 'virtual_page' ) {
-//$theme_file = locate_template( array( 'page.php' ) );
-//if ( $theme_file != '' ) {
-                include( TEMPLATEPATH . "/page.php" );
-                exit;
-//}
+                $theme_file = locate_template(array( 'page.php' ));
+                if ( $theme_file != '' ) {
+                    include( TEMPLATEPATH . "/page.php" );
+                    exit;
+                }
             }
         }
-		
+
         function register_theme_directory() {
             global $wp_theme_directories;
             register_theme_directory($this->plugin_dir . '/themes/');
@@ -508,15 +521,18 @@ if ( !class_exists('CoursePress') ) {
 
             if ( get_query_var('course') != '' ) {
                 add_filter('the_content', array( &$this, 'add_custom_before_course_single_content' ), 1);
+                //add_filter('the_excerpt', array( &$this, 'add_custom_before_course_single_content' ), 1);
             }
-
+            //var_dump($wp_query);
             if ( get_post_type() == 'course' && is_archive() ) {
                 add_filter('the_content', array( &$this, 'courses_archive_custom_content' ), 1);
+                add_filter('the_excerpt', array( &$this, 'courses_archive_custom_content' ), 1);
+                add_filter('get_the_excerpt', array( &$this, 'courses_archive_custom_content' ), 1);
             }
-			
-			if( is_post_type_archive( 'course' ) ) {
-				add_filter('post_type_archive_title', array( &$this, 'courses_archive_title' ), 1);
-			}
+
+            if ( is_post_type_archive('course') ) {
+                add_filter('post_type_archive_title', array( &$this, 'courses_archive_title' ), 1);
+            }
         }
 
         function remove_canonical( $wp_query ) {
@@ -902,18 +918,22 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function courses_archive_custom_content( $content ) {
-            global $post;
+            global $post, $content_shown;
             /* if ( locate_template( array( 'archive-course.php' ) ) ) {
               return $post->post_excerpt;
               } else {
 
               } */
-            include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
+
+            if ( $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
+                include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
+                $content_shown[$GLOBALS['post']->ID] ++;
+            }
         }
-		
-		function courses_archive_title( $title ) {
-			return __( 'All Courses', 'cp' );
-		}
+
+        function courses_archive_title( $title ) {
+            return __('All Courses', 'cp');
+        }
 
         function get_template_details( $template, $args = array() ) {
             ob_start();
@@ -2235,7 +2255,7 @@ if ( !class_exists('CoursePress') ) {
             include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
         }
 
-        function show_unit_details($unit_page_num = 1) {
+        function show_unit_details( $unit_page_num = 1 ) {
             $unit_page_num = $unit_page_num;
             require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
@@ -2371,8 +2391,6 @@ if ( !class_exists('CoursePress') ) {
                     'course_taxonomy_screen' => ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false ),
                     'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1)
                 ));
-                
-                
             }
         }
 
@@ -2594,7 +2612,7 @@ if ( !class_exists('CoursePress') ) {
                 echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
             }
         }
-
+        
 // updates login/logout navigation link
         function menu_metabox_navigation_links( $sorted_menu_items, $args ) {
             $is_in = is_user_logged_in();
@@ -2620,11 +2638,22 @@ if ( !class_exists('CoursePress') ) {
 
             return $new_menu_items;
         }
-
+        
 //adds our links to custom theme nav menus using wp_nav_menu()
         function main_navigation_links( $sorted_menu_items, $args ) {
             if ( !is_admin() ) {
-                if ( $args->theme_location == 'primary' ) {//put extra menu items only in primary ( most likely header ) menu
+
+                $theme_location = 'primary';
+//print_r(get_nav_menu_locations());
+                if ( !has_nav_menu($theme_location) ) {
+                    $theme_locations = get_nav_menu_locations();
+                    foreach ( ( array ) $theme_locations as $key => $location ) {
+                        $theme_location = $key;
+                        break;
+                    }
+                }
+
+                if ( $args->theme_location == $theme_location ) {//put extra menu items only in primary ( most likely header ) menu
                     $is_in = is_user_logged_in();
 
                     $courses = new stdClass;

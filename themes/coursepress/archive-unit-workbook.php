@@ -213,7 +213,7 @@ add_thickbox();
                                                     }
                                                     if ( isset($comment) && $comment !== '' ) {
                                                         ?>
-                                                        <a alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>"><i class="fa fa-comment"></i></a>
+                                                        <a alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>" class="assessment-view-response-link button button-units thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID;?>"><i class="fa fa-comment"></i></a>
                                                         <?php
                                                     } else {
                                                         echo '<i class="fa fa-comment-o"></i>';

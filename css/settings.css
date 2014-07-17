@@ -2726,6 +2726,9 @@ label.error:before {
     padding: 8px 30px 8px 10px;
     text-decoration: none;
     min-height: 18px;/*25*/
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .mp-wrap .mp-settings {
     background: #fff;
