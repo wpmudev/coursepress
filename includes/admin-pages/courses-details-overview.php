@@ -1,6 +1,9 @@
 <?php
 global $page, $user_id, $coursepress_admin_notice, $coursepress, $mp;
 
+
+add_editor_style( CoursePress::instance()->plugin_url . 'css/editor_style_fix.css' );
+
 add_thickbox();
 
 if (isset($_GET['course_id'])) {

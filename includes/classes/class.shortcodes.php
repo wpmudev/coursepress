@@ -60,6 +60,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course_featured_video', array( &$this, 'course_featured_video' ));
             add_shortcode('course_join_button', array( &$this, 'course_join_button' ));
             add_shortcode('course_thumbnail', array( &$this, 'course_thumbnail' ));
+			add_shortcode('course_media', array( &$this, 'course_media' ));
             add_shortcode('course_action_links', array( &$this, 'course_action_links' ));
             //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
             // Page Shortcodes
@@ -204,6 +205,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( 'action_links' == trim($section) ) {
                     $content .= do_shortcode('[course_action_links course="' . $encoded . '" course_id="' . $course_id . '"]');
                 }
+				
+                // [course_media]
+                if ( 'media' == trim($section) ) {
+                    $content .= do_shortcode('[course_media course="' . $encoded . '" course_id="' . $course_id . '"]');
+                }
+				
+                // [course_calendar]
+                if ( 'calendar' == trim($section) ) {
+                    $content .= do_shortcode('[course_calendar course="' . $encoded . '" course_id="' . $course_id . '"]');
+                }
+				
             }
 
             return $content;
@@ -1094,7 +1106,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     $content = '<' . $wrapper . ' class="course-thumbnail course-thumbnail-' . $course_id . ' ' . $class . '">';
                 }
                 ?>
-                <img src="<?php echo $thumbnail; ?>" class="course-thumbnail-img" />
+                <img src="<?php echo $thumbnail; ?>" class="course-thumbnail-img"></img>
                 <?php
                 $content .= trim(ob_get_clean());
 
@@ -1103,6 +1115,71 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
             }
 
+            return $content;
+        }
+
+        /**
+         * Shows the course media (video or image).
+         *
+         * @since 1.0.0
+         */
+        function course_media( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+                'course' => false,
+				'type' => 'default',  // default, video, image
+				'priority' => 'video',  // gives priority to video (or image)
+                'class' => '',
+                            ), $atts, 'course_thumbnail'));
+
+            // Saves some overhead by not loading the post again if we don't need to.
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+
+			$course_video = get_post_meta( $course_id, 'course_video_url', true);
+			$course_image = get_post_meta( $course_id, 'featured_url', true);
+
+            $content = '';
+			
+			// If video has priority
+			if( ( 'image' != $type || ( 'default' == $type && 'video' == $priority ) || 'video' == $type || 'video' == $priority || 
+			    ( 'image' == $priority && 'default' == $type && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
+
+                ob_start();
+				?>
+	                <div class="video_player <?php echo 'course-featured-media course-featured-media-' . $course_id . ' ' . $class; ?>">
+	                    <?php
+	                    $video_extension = pathinfo( $course_video, PATHINFO_EXTENSION );
+
+	                    if ( ! empty( $video_extension ) ) {//it's file, most likely on the server
+	                        $attr = array(
+	                            'src' => $course_video,
+	                                //'width' => $data->player_width,
+	                                //'height' => 550//$data->player_height,
+	                        );
+	                        echo wp_video_shortcode( $attr );
+	                    } else {
+	                        $embed_args = array(
+	                                //'width' => $data->player_width,
+	                                //'height' => 550
+	                        );
+
+	                        echo wp_oembed_get( $course_video );
+	                    }
+	                    ?>
+	                </div>
+				<?php
+				$content .= trim(ob_get_clean());
+			} elseif( ( 'video' != $type || ( 'default' == $type && 'image' == $priority ) || 'image' == $type || 'image' == $priority || 
+			    ( 'video' == $priority && 'default' == $type && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
+				
+				$content .= '<div class="course-featured-media course-featured-media-' . $course_id . ' ' . $class . '">';
+                ?>
+	                <img src="<?php echo $course_image; ?>" class="course-media-img"></img>
+                <?php
+                $content .= trim(ob_get_clean());
+				$content .= '</div>';
+			}			
+			
             return $content;
         }
 
@@ -1213,6 +1290,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'show' => 'dates,enrollment_dates,class_size,cost',
                 'show_button' => 'yes',
                 'show_divider' => 'yes',
+				'show_media' => 'false',
                 'limit' => -1,
                 'order' => 'ASC',
                 'class' => '',
@@ -1303,6 +1381,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             foreach ( $courses as $course ) {
                 $content .= '<div class="course-list-item ' . $course_class . '">';
+				if ( 'yes' == $show_media ) {
+					$content .= do_shortcode( '[course_media course_id="' . $course->ID . '"]' );
+				}
                 $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="'.$title_tag.'"]');
 
                 if ( 'yes' == $two_column ) {

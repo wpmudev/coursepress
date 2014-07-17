@@ -8,8 +8,9 @@ if ( ! $course_thumbnail ) {
 ?>
 
 <?php 
-	// Course thumbnail
-	echo do_shortcode( '[course_thumbnail]' );
+
+	// Replaces thumbnail with media
+	echo do_shortcode( '[course_media]' );
 ?>
 
 <?php 

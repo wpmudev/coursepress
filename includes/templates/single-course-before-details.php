@@ -1,4 +1,7 @@
 <?php
+	// Show course media
+	echo do_shortcode( '[course_media]' );
+	
 	// Show course summary/excerpt
 	echo do_shortcode( '[course_summary]' );
 ?>

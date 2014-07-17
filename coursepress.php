@@ -325,7 +325,7 @@ if ( !class_exists('CoursePress') ) {
 //}
             }
         }
-
+		
         function register_theme_directory() {
             global $wp_theme_directories;
             register_theme_directory($this->plugin_dir . '/themes/');
@@ -334,9 +334,9 @@ if ( !class_exists('CoursePress') ) {
         /* Fix for the broken images in the Unit elements content */
 
         function redirect_after_logout() {
-            if ( defined('DOING_AJAX') && DOING_AJAX ) {
-                cp_write_log('ajax');
-            }
+            // if ( defined('DOING_AJAX') && DOING_AJAX ) {
+            //     cp_write_log('ajax');
+            // }
             if ( get_option('use_custom_login_form', 1) ) {
                 $url = get_option('cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug()));
                 wp_redirect($url);
@@ -513,6 +513,10 @@ if ( !class_exists('CoursePress') ) {
             if ( get_post_type() == 'course' && is_archive() ) {
                 add_filter('the_content', array( &$this, 'courses_archive_custom_content' ), 1);
             }
+			
+			if( is_post_type_archive( 'course' ) ) {
+				add_filter('post_type_archive_title', array( &$this, 'courses_archive_title' ), 1);
+			}
         }
 
         function remove_canonical( $wp_query ) {
