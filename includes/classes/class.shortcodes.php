@@ -39,6 +39,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('units_dropdown', array( &$this, 'units_dropdown' ));
             add_shortcode('course_list', array( &$this, 'course_list' ));
 			add_shortcode('course_calendar', array( &$this, 'course_calendar' ) );
+			add_shortcode('course_featured', array( &$this, 'course_featured' ) );
 
             add_shortcode('course', array( &$this, 'course' ));
             // Sub-shortcodes
@@ -1114,6 +1115,47 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     $content .= '</' . $wrapper . '>';
                 }
             }
+
+            return $content;
+        }
+
+        /**
+         * Shows a featured course.
+         *
+         * @since 1.0.0
+         */
+        function course_featured( $atts ) {
+			extract(shortcode_atts(array(
+			    'course_id' => '',
+				'featured_title' => __( 'Featured Course', 'cp' ),
+				'button_title' => __( 'Find out more.', 'cp' ),
+			    'class' => '',
+			), $atts, 'course_featured'));
+ 	
+			$content = '';
+			
+			if( ! empty ( $course_id ) ) {
+	            $course = new Course($course_id);
+
+                ob_start();
+				?>
+					<div class="featured-course featured-course-<?php echo $course_id; ?>">
+						<h2><?php echo $featured_title; ?></h2>
+				        <h3 class="featured-course-title"><?php echo $course->details->post_title; ?></h3>
+				        <?php
+				        echo do_shortcode('[course_media course_id="' . $course_id . '"]');
+				        ?>
+				        <div class="featured-course-summary">
+				        <?php echo do_shortcode('[course_summary course_id="' . $course_id . '" length="30"]'); ?>
+				        </div>
+
+				        <div class="featured-course-link">
+				            <button data-link="<?php echo $course->get_permalink($course_id) ?>"><?php echo $button_title; ?></button>
+				        </div>
+					</div>
+                <?php
+                $content .= trim(ob_get_clean());
+			}
 
             return $content;
         }

@@ -2044,7 +2044,7 @@ label.bold-label{
     position: absolute;
     top: 6px;
     right: 4px;
-    z-index: 9999;
+    z-index: 1;
     color: #c9c9c9;
 }
 

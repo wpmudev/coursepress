@@ -64,7 +64,7 @@ class CP_Featured_Course extends WP_Widget {
         ?>
         <div class="cp_featured_widget_title"><?php echo $course->details->post_title; ?></div>
         <?php
-        echo do_shortcode('[course_thumbnail course_id="' . $course_id . '"]');
+        echo do_shortcode('[course_media course_id="' . $course_id . '"]');
         ?>
         <div class="cp_featured_widget_course_summary">
         <?php echo do_shortcode('[course_summary course_id="' . $course_id . '" length="30"]'); ?>

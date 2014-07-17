@@ -770,6 +770,24 @@ function sanitize_checkbox(checkbox) {
     return checkbox;
 }
 
+function mark_dirty( element ) {
+    $ = jQuery;
+
+    // Mark as dirty
+    var parent_section = $( element ).parents('.course-section.step')[0];
+    if (parent_section) {
+        if (!$(parent_section).hasClass('dirty')) {
+            $(parent_section).addClass('dirty');
+        }
+    }			
+	
+    if ($( element ).parents('.course-section.step').find('.status.saved')) {
+        $( element ).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+    }
+	
+		
+}
+
 /** Handle Course Setup Wizard */
 jQuery(document).ready(function($) {
 
@@ -818,7 +836,7 @@ jQuery(document).ready(function($) {
 
     /** If a section is not market as saved, automatically mark it as dirty. */
     $.each($('.course-section.step'), function(index, value) {
-        if (!$($($('.course-section.step')[index]).children('.status')[0]).hasClass('saved')) {
+        if (!$($($('.course-section.step')[index]).find('.status')[0]).hasClass('saved')) {
             $($('.course-section.step')[index]).addClass('dirty')
         }
     });
@@ -1060,6 +1078,29 @@ jQuery(document).ready(function($) {
         }
     });
 
+	$('.date').click( function( event ) {
+		if( ! $( this ).parents('div').hasClass('disabled') ){
+			$( this ).find('.dateinput').datepicker("show");			
+		}
+	});
+
+	$('.course-section .featured_url_button').click( function() {
+        // Mark as dirty
+		mark_dirty( this );
+	});
+	$('.course-section .course_video_url_button').click( function() {
+        // Mark as dirty
+		mark_dirty( this );
+	});
+    $('.course-form textarea').change(function() {
+        // Mark as dirty		
+		mark_dirty( this );
+    });
+    $('.course-form select').change(function() {
+        // Mark as dirty		
+		mark_dirty( this );
+    });
+	
 
     $('#add-instructor-trigger').click(function() {
 
@@ -1073,13 +1114,8 @@ jQuery(document).ready(function($) {
         var instructor_id = $('#instructors option:selected').val();
 
         // Mark as dirty
-        var parent_section = $(this).parents('.course-section.step')[0];
-        if (parent_section) {
-            if (!$(parent_section).hasClass('dirty')) {
-                $(parent_section).addClass('dirty');
-            }
-        }
-
+		mark_dirty( this );
+		
         $.post(
                 'admin-ajax.php', {
                     action: 'add_course_instructor',
@@ -1118,14 +1154,8 @@ jQuery(document).ready(function($) {
 
     /** Mark "dirty" content */
     $('.course-form input').change(function() {
-        if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
-            $($(this).parents('.course-section.step')[0]).addClass('dirty');
-
-            if ($(this).parents('.course-section.step').children('.status.saved')) {
-                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
-            }
-        }
-
+		mark_dirty( this );
+		
         if ($(this).attr('type') == 'checkbox') {
             if ($(this).attr('checked')) {
                 $(this).val('on');
@@ -1135,23 +1165,6 @@ jQuery(document).ready(function($) {
         }
 
 
-    });
-    $('.course-form textarea').change(function() {
-        if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
-            $($(this).parents('.course-section.step')[0]).addClass('dirty');
-            if ($(this).parents('.course-section.step').children('.status.saved')) {
-                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
-            }
-        }
-    });
-    $('.course-form select').change(function() {
-        if (!$($(this).parents('.course-section.step')[0]).hasClass('dirty')) {
-            $($(this).parents('.course-section.step')[0]).addClass('dirty');
-            if ($(this).parents('.course-section.step').children('.status.saved')) {
-                $(this).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
-            }
-
-        }
     });
 
 

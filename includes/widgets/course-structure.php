@@ -24,6 +24,7 @@ class CP_Course_Structure extends WP_Widget {
 
         <p><label for="<?php echo $this->get_field_id('course'); ?>"><?php _e('Course', 'cp'); ?><br />
                 <select name="<?php echo $this->get_field_name('course'); ?>" class="widefat" id="<?php echo $this->get_field_id('course'); ?>">
+						<option value="false" <?php selected($selected_course, "false", true); ?>><?php _e( '- current -', 'cp' ); ?></option>
                     <?php
                     foreach ( $courses as $course ) {
                         ?>
@@ -46,24 +47,37 @@ class CP_Course_Structure extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
+		global $post;
         extract($args, EXTR_SKIP);
 
-        echo $before_widget;
+		$course_id = false;
+		if( 'false' == $instance['course'] ){
+			if ( $post && 'course' == $post->post_type ) {
+				$course_id = $post->ID;
+			} else {
+				$parent_id = do_shortcode('[get_parent_course_id]');
+				$course_id = 0 != $parent_id ? $parent_id : $course_id;
+			}
+		} else {
+			$course_id = $instance['course'];
+		}
+        
+		if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ){
 
-        $course_id = $instance['course'];
-        $course = new Course($course_id);
+	        echo $before_widget;
+			
+	        $course = new Course($course_id);
 
-        $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+	        $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 
-        if ( !empty($title) ) {
-            echo $before_title . $title . $after_title;
-        }
+	        if ( !empty($title) ) {
+	            echo $before_title . $title . $after_title;
+	        }
 
-        $course->course_structure_front('Free');
-        ?>
-
-        <?php
-        echo $after_widget;
+	        $course->course_structure_front('Free');			
+			
+	        echo $after_widget;
+		}
     }
 
 }

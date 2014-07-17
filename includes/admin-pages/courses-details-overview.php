@@ -785,7 +785,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                         <div class="date-range">
                                             <div class="start-date">
                                                 <label for="meta_course_start_date" class="start-date-label required"><?php _e('Start Date', 'cp'); ?></label>
-                                                <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /></div>
+                                                <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /><i class="calendar"></i></div>
                                             </div>
                                             <div class="end-date <?php echo ( $open_ended_course == 'on' ) ? 'disabled' : ''; ?>">
                                                 <label for="meta_course_end_date" class="end-date-label required"><?php _e('End Date', 'cp'); ?></label>

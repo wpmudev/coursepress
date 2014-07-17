@@ -54,29 +54,29 @@ class CP_Course_Calendar extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
+		global $post;
         extract($args, EXTR_SKIP);
-
-        echo $before_widget;
 
         $course_id = $instance['course'];
 
-        $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+		if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ){
+			
+	        echo $before_widget;
+			
+	        $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 
-        if ( !empty($title) ) {
-            echo $before_title . $title . $after_title;
-        }
-        ?>
-
-        <?php
+	        if ( !empty($title) ) {
+	            echo $before_title . $title . $after_title;
+	        }
+		
 			if ( $course_id && "false" != $course_id ) {
 				echo do_shortcode('[course_calendar course_id="' . $course_id . '" pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');	
 			} else {
 				echo do_shortcode('[course_calendar pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');					
 			}
-        ?>
-
-        <?php
-        echo $after_widget;
+		
+	        echo $after_widget;
+		}
     }
 
 }
