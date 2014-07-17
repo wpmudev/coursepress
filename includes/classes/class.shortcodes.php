@@ -1129,9 +1129,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 			    'course_id' => '',
 				'featured_title' => __( 'Featured Course', 'cp' ),
 				'button_title' => __( 'Find out more.', 'cp' ),
+				'media_type' => 'video', // video, image, thumbnail
+				'media_priority' => 'video', // video, image
 			    'class' => '',
 			), $atts, 'course_featured'));
- 	
 			$content = '';
 			
 			if( ! empty ( $course_id ) ) {
@@ -1143,7 +1144,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 						<h2><?php echo $featured_title; ?></h2>
 				        <h3 class="featured-course-title"><?php echo $course->details->post_title; ?></h3>
 				        <?php
-				        echo do_shortcode('[course_media course_id="' . $course_id . '"]');
+				        echo do_shortcode('[course_media type="' . $media_type . '" priority="' . $media_priority . '" course_id="' . $course_id . '"]');
 				        ?>
 				        <div class="featured-course-summary">
 				        <?php echo do_shortcode('[course_summary course_id="' . $course_id . '" length="30"]'); ?>
@@ -1172,8 +1173,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 				'type' => 'default',  // default, video, image
 				'priority' => 'video',  // gives priority to video (or image)
                 'class' => '',
-                            ), $atts, 'course_thumbnail'));
+            ), $atts, 'course_thumbnail'));
 
+			$priority = 'default' != $type ? false : $priority;
+			
             // Saves some overhead by not loading the post again if we don't need to.
             $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
@@ -1220,6 +1223,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 			    ( 'video' == $priority && 'default' == $type && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
 				
 				$content .= '<div class="course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class . '">';
+				ob_start();
                 ?>
 	                <img src="<?php echo $course_image; ?>" class="course-media-img"></img>
                 <?php
