@@ -451,5 +451,5 @@ a.button.button-units.button-delete-unit{
 a.button.button-units.button-delete-unit:hover{
     background: #E65C52;
     color: #fff;
-    opacity: 0.7;
+    opacity: 1;
 }

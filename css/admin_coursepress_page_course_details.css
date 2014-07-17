@@ -526,13 +526,15 @@ div.buttons a.cancellink {
 
 .coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit {
     background: #0074A2;	
-    border: 1px solid #0093CD;
+    //border: 1px solid #0093CD;
     position: relative;
     top: 5px;
     right:35px;
+    line-height: 26px;
+    height: 26px;
 }
 .coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit:hover {
-    background: #E65C52;
+    background: #be4251;
     color: #fff;
 }
 
@@ -1769,7 +1771,7 @@ label.bold-label{
 }
 .course-section.step.active .course-section-title .status.progress {
     background: url( ../images/ajax-loader-blue.gif ) no-repeat 0 0;
-	background-size: 16px 16px;
+    background-size: 16px 16px;
 }
 
 .course-section.step .course-section-title h3 {
@@ -2079,9 +2081,9 @@ label.bold-label{
 .course-section .course-form div.narrow .course-enable-gateways span.error,
 .course-section .course-form div.narrow .course-sale-price span.error,
 .course-section .course-form div.narrow .course-price span.error {
-	clear: both;
-	width: 100%;
-	float:none;
+    clear: both;
+    width: 100%;
+    float:none;
 }
 
 .course-section .course-form div.narrow .course-price input[type="text"],
