@@ -910,6 +910,10 @@ if ( !class_exists('CoursePress') ) {
               } */
             include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
         }
+		
+		function courses_archive_title( $title ) {
+			return __( 'All Courses', 'cp' );
+		}
 
         function get_template_details( $template, $args = array() ) {
             ob_start();
@@ -2647,7 +2651,7 @@ if ( !class_exists('CoursePress') ) {
                         /* Student Dashboard > Courses page */
 
                         $dashboard_courses = new stdClass;
-                        $dashboard_courses->title = __('Courses', 'cp');
+                        $dashboard_courses->title = __('My Courses', 'cp');
                         $dashboard_courses->menu_item_parent = -9998;
                         $dashboard_courses->ID = 'cp-dashboard-courses';
                         $dashboard_courses->db_id = '';

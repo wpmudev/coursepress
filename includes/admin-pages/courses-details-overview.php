@@ -314,37 +314,37 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                         </div>
                                     </div>
 
-                                    <div class="narrow">
+									<!-- v2 -->
+                                    <!-- <div class="narrow">
                                         <label>
-                                            <?php _e('Course Category', 'cp'); ?>
+                                            <?php // _e('Course Category', 'cp'); ?>
                                             <a class="context-link" href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e('Manage Categories', 'cp'); ?></a>
-                                        </label>
-                                        <?php
-                                        $tax_args = array(
-                                            'show_option_all' => '',
-                                            'show_option_none' => __('-- None --', 'cp'),
-                                            'orderby' => 'ID',
-                                            'order' => 'ASC',
-                                            'show_count' => 0,
-                                            'hide_empty' => 0,
-                                            'echo' => 1,
-                                            'selected' => $course_category,
-                                            'hierarchical' => 0,
-                                            'name' => 'meta_course_category',
-                                            'id' => '',
-                                            'class' => 'postform chosen-select-course',
-                                            'depth' => 0,
-                                            'tab_index' => -1,
-                                            'taxonomy' => 'course_category',
-                                            'hide_if_empty' => false,
-                                            'walker' => ''
-                                        );
-
-                                        $taxonomies = array('course_category');
-                                        wp_dropdown_categories($tax_args);
-                                        ?>
-
-                                    </div>
+                                        </label> -->
+                                        <!-- <?php
+                                        // $tax_args = array(
+                                        //     'show_option_all' => '',
+                                        //     'show_option_none' => __('-- None --', 'cp'),
+                                        //     'orderby' => 'ID',
+                                        //     'order' => 'ASC',
+                                        //     'show_count' => 0,
+                                        //     'hide_empty' => 0,
+                                        //     'echo' => 1,
+                                        //     'selected' => $course_category,
+                                        //     'hierarchical' => 0,
+                                        //     'name' => 'meta_course_category',
+                                        //     'id' => '',
+                                        //     'class' => 'postform chosen-select-course',
+                                        //     'depth' => 0,
+                                        //     'tab_index' => -1,
+                                        //     'taxonomy' => 'course_category',
+                                        //     'hide_if_empty' => false,
+                                        //     'walker' => ''
+                                        // );
+                                        //
+                                        // $taxonomies = array('course_category');
+                                        // wp_dropdown_categories($tax_args);
+                                        ?> -->
+                                    <!-- </div> -->
 
                                     <div class="narrow">
                                         <label for='meta_course_language'><?php _e('Course Language', 'cp'); ?></label>

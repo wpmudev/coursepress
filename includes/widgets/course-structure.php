@@ -73,8 +73,11 @@ class CP_Course_Structure extends WP_Widget {
 	        if ( !empty($title) ) {
 	            echo $before_title . $title . $after_title;
 	        }
-
-	        $course->course_structure_front('Free');			
+			
+			echo '<div class="course_structure_widget">';
+	        $course->course_structure_front('Free');
+			// Strange bug.
+			echo '</div>&nbsp;';
 			
 	        echo $after_widget;
 		}

@@ -1214,7 +1214,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 			} elseif( ( 'video' != $type || ( 'default' == $type && 'image' == $priority ) || 'image' == $type || 'image' == $priority || 
 			    ( 'video' == $priority && 'default' == $type && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
 				
-				$content .= '<div class="course-featured-media course-featured-media-' . $course_id . ' ' . $class . '">';
+				$content .= '<div class="course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class . '">';
                 ?>
 	                <img src="<?php echo $course_image; ?>" class="course-media-img"></img>
                 <?php
