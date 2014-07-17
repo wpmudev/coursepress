@@ -714,11 +714,9 @@ label > .tree{
 }
 
 .tree .tree-unit-right a{
-    background-color: #8bdabc;
     padding: 2px 10px 2px 10px;
     display: inline-block;
     font-size: 13px;
-    color: #fff;
     font-weight: 400;
     text-transform: uppercase;
     margin-left: 3px;
@@ -737,11 +735,9 @@ label > .tree{
 }
 
 .tree .tree-page-right a{
-    background-color: #8bdabc;
     padding: 2px 10px 2px 10px;
     display: inline-block;
     font-size: 13px;
-    color: #fff;
     font-weight: 400;
     text-transform: uppercase;
     float: right;

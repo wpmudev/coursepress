@@ -2512,6 +2512,17 @@ html[xmlns] .clearf {
     margin-top: 10px;
 }
 
+.tree .tree-unit-right a{
+    background-color: #8bdabc;
+    color: #fff;
+}
+
+.tree .tree-page-right a{
+    background-color: #8bdabc;
+    color: #fff;
+}
+
+
 /*
 RESPONSIVE
 */
