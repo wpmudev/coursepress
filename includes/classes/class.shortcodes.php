@@ -1182,6 +1182,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $content = '';
 			
+			// If type is thumbnail, return early
+			if( 'thumbnail' == $type ) {
+				return do_shortcode('[course_thumbnail]');
+			}
+			
 			// If video has priority
 			if( ( 'image' != $type || ( 'default' == $type && 'video' == $priority ) || 'video' == $type || 'video' == $priority || 
 			    ( 'image' == $priority && 'default' == $type && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
