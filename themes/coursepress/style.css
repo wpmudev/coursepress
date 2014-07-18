@@ -1899,12 +1899,6 @@ a[rel="prev"] {
     background-color: #ebeef0;
     border-bottom: 2px solid #dadc23;
     margin-top: 20px;
-
-	/* 16:9 */
-	/* Added to theme here, just incase you are relying on it. */
-    padding-bottom: 56.25%;
-    padding-top: 25px;
-    height: 0;
 }
 
 .video_player iframe{

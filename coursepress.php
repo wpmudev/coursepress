@@ -2352,6 +2352,9 @@ if ( !class_exists('CoursePress') ) {
 
 // CryptoJS.MD5
             wp_enqueue_script('cryptojs-md5', $this->plugin_url . 'js/md5.js');
+			
+			// Responsive Video
+			wp_enqueue_script('responsive-video', $this->plugin_url . 'js/responsive-video.js');
 
 
             if ( isset($_GET['page']) ) {
