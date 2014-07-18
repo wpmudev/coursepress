@@ -823,7 +823,7 @@ if ( !class_exists('CoursePress') ) {
                             'title' => $unit->details->post_title,
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-single.php', $vars),
                             'type' => 'unit',
-                            'is_page' => FALSE,
+                            'is_page' => TRUE,
                             'is_singular' => TRUE,
                             'is_archive' => FALSE
                         );
@@ -2684,6 +2684,7 @@ if ( !class_exists('CoursePress') ) {
                         $dashboard->db_id = -9998;
                         $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
                         $sorted_menu_items[] = $dashboard;
+                        $dashboard->classes[] = 'dropdown';
 
                         /* Student Dashboard > Courses page */
 
@@ -2742,6 +2743,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function main_navigation_links_fallback( $current_menu ) {
+            
             if ( !is_admin() ) {
                 $is_in = is_user_logged_in();
 
@@ -2824,7 +2826,7 @@ if ( !class_exists('CoursePress') ) {
                             ?>
                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
                                 <?php if ( $menu_item->db_id !== '' ) { ?>
-                                    <ul class="sub-menu">
+                                    <ul class="sub-menu dropdown-menu">
                                         <?php
                                         foreach ( $sub_sorted_menu_items as $menu_item ) {
                                             ?>
