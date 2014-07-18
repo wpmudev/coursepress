@@ -176,9 +176,11 @@
                                 if ( current_user_can('manage_options') ) {
                                     $menu_error = true;
                                     $locations = get_theme_mod('nav_menu_locations');
-                                    foreach ( $locations as $location => $value ) {
-                                        if ( $value > 0 ) {
-                                            $menu_error = false; //at least one is defined
+                                    if ( is_array($locations) ) {
+                                        foreach ( $locations as $location => $value ) {
+                                            if ( $value > 0 ) {
+                                                $menu_error = false; //at least one is defined
+                                            }
                                         }
                                     }
                                     //$menu_locations = get_nav_menu_locations();
@@ -232,26 +234,26 @@
                     <tbody>
                         <tr valign="top">
                             <th scope="row"><?php _e('Media Type', 'cp'); ?>
-							<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) );  ?></th>
+                                <?php CP_Helper_Tooltip::tooltip(__('"Priority" - Use the media type below, with the other type as a fallback.', 'cp')); ?></th>
                             <td>
-								<?php $selected_type = get_option('details_media_type', 'default'); ?>
-				                <select name="option_details_media_type" class="widefat" id="option_details_media_type">
-									<option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
-									<option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
-									<option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-									<!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true); ?>><?php // _e( 'Thumbnail', 'cp' ); ?></option> -->
-				                </select>
+                                <?php $selected_type = get_option('details_media_type', 'default'); ?>
+                                <select name="option_details_media_type" class="widefat" id="option_details_media_type">
+                                    <option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e('Priority Mode (default)', 'cp'); ?></option>
+                                    <option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e('Featured Video', 'cp'); ?></option>
+                                    <option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e('List Image', 'cp'); ?></option>					
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);  ?>><?php // _e( 'Thumbnail', 'cp' );  ?></option> -->
+                                </select>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Priority', 'cp'); ?>
-							<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) );  ?></th>
+                                <?php CP_Helper_Tooltip::tooltip(__('Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp')); ?></th>
                             <td>
-								<?php $selected_priority = get_option('details_media_priority', 'video'); ?>
-				                <select name="option_details_media_priority" class="widefat" id="option_details_media_priority">
-									<option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
-									<option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
-				                </select>
+                                <?php $selected_priority = get_option('details_media_priority', 'video'); ?>
+                                <select name="option_details_media_priority" class="widefat" id="option_details_media_priority">
+                                    <option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e('Featured Video (image fallback)', 'cp'); ?></option>
+                                    <option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e('List Image (video fallback)', 'cp'); ?></option>					
+                                </select>
                             </td>
                         </tr>
 
@@ -269,26 +271,26 @@
 
                         <tr valign="top">
                             <th scope="row"><?php _e('Media Type', 'cp'); ?>
-							<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) );  ?></th>
+                                <?php CP_Helper_Tooltip::tooltip(__('"Priority" - Use the media type below, with the other type as a fallback.', 'cp')); ?></th>
                             <td>
-								<?php $selected_type = get_option('listings_media_type', 'image'); ?>
-				                <select name="option_listings_media_type" class="widefat" id="option_listings_media_type">
-									<option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
-									<option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
-									<option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-									<!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true); ?>><?php // _e( 'Thumbnail', 'cp' ); ?></option> -->
-				                </select>
+                                <?php $selected_type = get_option('listings_media_type', 'image'); ?>
+                                <select name="option_listings_media_type" class="widefat" id="option_listings_media_type">
+                                    <option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e('Priority Mode (default)', 'cp'); ?></option>
+                                    <option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e('Featured Video', 'cp'); ?></option>
+                                    <option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e('List Image', 'cp'); ?></option>					
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);  ?>><?php // _e( 'Thumbnail', 'cp' );  ?></option> -->
+                                </select>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Priority', 'cp'); ?>
-							<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) );  ?></th>
+                                <?php CP_Helper_Tooltip::tooltip(__('Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp')); ?></th>
                             <td>
-								<?php $selected_priority = get_option('listings_media_priority', 'image'); ?>
-				                <select name="option_listings_media_priority" class="widefat" id="option_listings_media_priority">
-									<option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
-									<option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
-				                </select>
+                                <?php $selected_priority = get_option('listings_media_priority', 'image'); ?>
+                                <select name="option_listings_media_priority" class="widefat" id="option_listings_media_priority">
+                                    <option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e('Featured Video (image fallback)', 'cp'); ?></option>
+                                    <option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e('List Image (video fallback)', 'cp'); ?></option>					
+                                </select>
                             </td>
                         </tr>
 

@@ -1,5 +1,4 @@
 <?php
-//echo do_shortcode( '[course_breadcrumbs type="unit_archive"]' );
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
 ?>
 

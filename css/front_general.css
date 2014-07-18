@@ -630,6 +630,10 @@ h1.notification-title{
     max-width: 180px;
 }
 
+select.units_dropdown{
+    max-width: 100%;
+}
+
 .course-summary{
     /*    margin-bottom: 25px;
         margin-top: 25px;*/
@@ -765,7 +769,6 @@ label > .tree{
 }
 
 .course_structure_unit_label{
-    background-color: #f3f3f3;
     border-top: 1px solid #ebebeb;
     border-bottom: 1px solid #ebebeb;
 }
@@ -907,3 +910,11 @@ video {
 .course-calendar .course-end-date {
 	background-color: #dfdfdf;	
 }		
+
+#TB_ajaxContent{
+    color: #000;
+}
+
+#TB_ajaxContent label{
+   color: #878786;
+}

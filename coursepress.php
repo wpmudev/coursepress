@@ -212,7 +212,7 @@ if ( !class_exists('CoursePress') ) {
 
 //Check for admin notices
             add_action('admin_notices', array( &$this, 'admin_nopermalink_warning' ));
-           
+
 //Custom header actions
             add_action('wp_enqueue_scripts', array( &$this, 'header_actions' ));
 
@@ -577,13 +577,14 @@ if ( !class_exists('CoursePress') ) {
                             'title' => __('Add New Discussion', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/page-add-new-discussion.php', $vars),
                             'type' => 'discussion',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
                         $pg = new CoursePress_Virtual_Page($args);
                     }
                 } else {
+
                     /* Archive Discussion template */
                     $this->units_archive_subpage = 'discussions';
                     $theme_file = locate_template(array( 'archive-discussions.php' ));
@@ -597,10 +598,10 @@ if ( !class_exists('CoursePress') ) {
                             'slug' => $wp->request,
                             'title' => __('Discussion', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-discussion-archive.php', $vars),
-                            'type' => 'discussion',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'type' => 'discussions',
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
                         $pg = new CoursePress_Virtual_Page($args);
                         do_shortcode('[course_discussion_loop]');
@@ -674,7 +675,7 @@ if ( !class_exists('CoursePress') ) {
                     $theme_file = locate_template(array( 'archive-notifications.php' ));
 
                     if ( $theme_file != '' ) {
-//do_shortcode( '[course_notifications_loop]' );
+                        do_shortcode('[course_notifications_loop]');
                         require_once( $theme_file );
                         exit;
                     } else {
@@ -683,10 +684,11 @@ if ( !class_exists('CoursePress') ) {
                             'title' => __('Notifications', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-notifications-archive.php', $vars),
                             'type' => 'notifications',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
+
                         $pg = new CoursePress_Virtual_Page($args);
                         do_shortcode('[course_notifications_loop]');
                     }
@@ -708,9 +710,9 @@ if ( !class_exists('CoursePress') ) {
                             'title' => __('Course Units', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
                             'type' => 'unit',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
                         $pg = new CoursePress_Virtual_Page($args);
                         do_shortcode('[course_units_loop]');
@@ -734,9 +736,9 @@ if ( !class_exists('CoursePress') ) {
                             'title' => __('Course Grades', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars),
                             'type' => 'unit',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
                         $pg = new CoursePress_Virtual_Page($args);
                         do_shortcode('[course_units_loop]');
@@ -761,9 +763,9 @@ if ( !class_exists('CoursePress') ) {
                             'title' => __('Workbook', 'cp'),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/archive-unit-workbook.php', $vars),
                             'type' => 'unit',
-                            'is_page' => FALSE,
-                            'is_singular' => FALSE,
-                            'is_archive' => TRUE
+                            'is_page' => TRUE,
+                            'is_singular' => TRUE,
+                            'is_archive' => FALSE
                         );
                         $pg = new CoursePress_Virtual_Page($args);
                         do_shortcode('[course_units_loop]');
@@ -938,7 +940,7 @@ if ( !class_exists('CoursePress') ) {
         function get_template_details( $template, $args = array() ) {
             ob_start();
             extract($args);
-            require_once( $template );
+            include_once( $template );
             return ob_get_clean();
         }
 
@@ -1388,9 +1390,8 @@ if ( !class_exists('CoursePress') ) {
                     'view' => __('View Notification', 'cp')
                 ),
                 'public' => false,
-                'has_archive' => true,
                 'show_ui' => false,
-                'publicly_queryable' => true,
+                'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_notifications_slug() )
@@ -1414,9 +1415,9 @@ if ( !class_exists('CoursePress') ) {
                     'view' => __('View Discussion', 'cp')
                 ),
                 'public' => false,
-                'has_archive' => true,
+                //'has_archive' => true,
                 'show_ui' => false,
-                'publicly_queryable' => true,
+                'publicly_queryable' => false,
                 'capability_type' => 'post',
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug() )
@@ -1517,15 +1518,16 @@ if ( !class_exists('CoursePress') ) {
             $exists = false;
             foreach ( $instructors as $instructor ) {
                 if ( $instructor == $user_id ) {
-					if( !empty(get_user_meta($user_id, 'course_' . $course_id) ) ) {
-						$exists = true;	
-					};
+                    $instructor_course_id = get_user_meta($user_id, 'course_' . $course_id);
+                    if ( !empty($instructor_course_id) ) {
+                        $exists = true;
+                    };
                 }
             }
 
-			// User is not yet an instructor
+            // User is not yet an instructor
             if ( !$exists ) {
-			// Assign Instructor capabilities
+                // Assign Instructor capabilities
 
                 $this->assign_instructor_capabilities($user_id);
 
@@ -1564,7 +1566,7 @@ if ( !class_exists('CoursePress') ) {
 
             $instructors = get_post_meta($course_id, 'instructors', true);
 
-			$updated_instructors = array();
+            $updated_instructors = array();
             foreach ( $instructors as $instructor ) {
                 if ( $instructor != $user_id ) {
                     $updated_instructors[] = $instructor;
@@ -2352,9 +2354,9 @@ if ( !class_exists('CoursePress') ) {
 
 // CryptoJS.MD5
             wp_enqueue_script('cryptojs-md5', $this->plugin_url . 'js/md5.js');
-			
-			// Responsive Video
-			wp_enqueue_script('responsive-video', $this->plugin_url . 'js/responsive-video.js');
+
+            // Responsive Video
+            wp_enqueue_script('responsive-video', $this->plugin_url . 'js/responsive-video.js');
 
 
             if ( isset($_GET['page']) ) {
@@ -2618,7 +2620,7 @@ if ( !class_exists('CoursePress') ) {
                 echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
             }
         }
-        
+
 // updates login/logout navigation link
         function menu_metabox_navigation_links( $sorted_menu_items, $args ) {
             $is_in = is_user_logged_in();
@@ -2644,7 +2646,7 @@ if ( !class_exists('CoursePress') ) {
 
             return $new_menu_items;
         }
-        
+
 //adds our links to custom theme nav menus using wp_nav_menu()
         function main_navigation_links( $sorted_menu_items, $args ) {
             if ( !is_admin() ) {
@@ -2822,7 +2824,7 @@ if ( !class_exists('CoursePress') ) {
                             ?>
                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
                                 <?php if ( $menu_item->db_id !== '' ) { ?>
-                                    <ul>
+                                    <ul class="sub-menu">
                                         <?php
                                         foreach ( $sub_sorted_menu_items as $menu_item ) {
                                             ?>
