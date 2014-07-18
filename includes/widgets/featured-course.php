@@ -89,7 +89,7 @@ class CP_Featured_Course extends WP_Widget {
         }
         ?>
 		<div class=fcp_featured_widget cp_featured_widget-course-<?php echo $course_id; ?>">
-	        <div class="cp_featured_widget_title"><?php echo $course->details->post_title; ?></div>
+	        <h3 class="cp_featured_widget_title"><?php echo $course->details->post_title; ?></h3>
 	        <?php
 	        echo do_shortcode('[course_media type="' . $selected_type . '" priority="' . $selected_priority . '" course_id="' . $course_id . '"]');
 	        ?>

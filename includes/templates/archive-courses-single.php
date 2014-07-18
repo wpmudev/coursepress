@@ -10,7 +10,7 @@ if ( ! $course_thumbnail ) {
 <?php 
 
 	// Replaces thumbnail with media
-	echo do_shortcode( '[course_media]' );
+	echo do_shortcode( '[course_media list_page="yes"]' );
 ?>
 
 <?php 

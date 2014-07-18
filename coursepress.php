@@ -2761,7 +2761,7 @@ if ( !class_exists('CoursePress') ) {
                     /* Student Dashboard > Courses page */
 
                     $dashboard_courses = new stdClass;
-                    $dashboard_courses->title = __('Courses', 'cp');
+                    $dashboard_courses->title = __('My Courses', 'cp');
                     $dashboard_courses->menu_item_parent = -9998;
                     $dashboard_courses->ID = 'cp-dashboard-courses';
                     $dashboard_courses->db_id = '';

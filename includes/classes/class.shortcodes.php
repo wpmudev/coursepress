@@ -40,6 +40,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course_list', array( &$this, 'course_list' ));
 			add_shortcode('course_calendar', array( &$this, 'course_calendar' ) );
 			add_shortcode('course_featured', array( &$this, 'course_featured' ) );
+			add_shortcode('course_structure', array( &$this, 'course_structure' ) );
 
             add_shortcode('course', array( &$this, 'course' ));
             // Sub-shortcodes
@@ -1118,6 +1119,51 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             return $content;
         }
+		
+        /**
+         * Shows the course structure.
+         *
+         * @since 1.0.0
+         */
+        function course_structure( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+                'course' => false,
+                'free_text' => __('Free', 'cp'),
+				'free_show' => true,
+				'show_title' => 'yes',
+				'show_label' => 'no',
+				'label_delimeter' => ': ',
+				'label_element' => 'h2',
+				'label' => __( 'Course Structure', 'cp' ),
+                'class' => '',
+        ), $atts, 'course_structure'));
+
+            // Saves some overhead by not loading the post again if we don't need to.
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+
+            $thumbnail = Course::get_course_thumbnail($course_id);
+
+            $content = '';
+
+            if ( !empty( $course_id ) ) {
+
+				echo '<div class="course_structure">';
+                if ( !empty($label) ) {
+					?>
+                    <<?php echo $label_element; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_element; ?>>
+					<?php
+                }
+				
+		        $course->course_structure_front( $free_text, true, 'yes' == $show_title ? false : true );
+				// Strange bug.
+				echo '</div>&nbsp;';
+				
+                $content .= trim(ob_get_clean());
+            }
+
+            return $content;
+        }		
 
         /**
          * Shows a featured course.
@@ -1170,11 +1216,20 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
-				'type' => 'default',  // default, video, image
-				'priority' => 'video',  // gives priority to video (or image)
+				'type' => '',  // default, video, image
+				'priority' => '',  // gives priority to video (or image)
+				'list_page' => 'no',
                 'class' => '',
             ), $atts, 'course_thumbnail'));
-
+			
+			if ( 'yes' != $list_page ) {
+				$type = empty( $type ) ? get_option('details_media_type', 'default') : $type; 
+				$priority = empty( $priority ) ? get_option('details_media_priority', 'video') : $priority;
+			} else {
+				$type = empty( $type ) ? get_option('listings_media_type', 'default') : $type; 
+				$priority = empty( $priority ) ? get_option('listings_media_priority', 'video') : $priority;				
+			}
+			
 			$priority = 'default' != $type ? false : $priority;
 			
             // Saves some overhead by not loading the post again if we don't need to.
@@ -1190,9 +1245,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 				return do_shortcode('[course_thumbnail]');
 			}
 			
-			// If video has priority
-			if( ( 'image' != $type || ( 'default' == $type && 'video' == $priority ) || 'video' == $type || 'video' == $priority || 
-			    ( 'image' == $priority && 'default' == $type && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
+			if( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty ( $course_image ) ) ) && ! empty( $course_video ) ) {
 
                 ob_start();
 				?>
@@ -1219,9 +1272,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 	                </div>
 				<?php
 				$content .= trim(ob_get_clean());
-			} elseif( ( 'video' != $type || ( 'default' == $type && 'image' == $priority ) || 'image' == $type || 'image' == $priority || 
-			    ( 'video' == $priority && 'default' == $type && empty( $course_video ) ) ) && ! empty( $course_image ) ) {
-				
+			}
+
+			if( ( ( 'default' == $type && 'image' == $priority ) || 'image' == $type || ( 'default' == $type && 'video' == $priority && empty ( $course_video ) ) ) && ! empty( $course_image ) ) {			
 				$content .= '<div class="course-thumbnail course-featured-media course-featured-media-' . $course_id . ' ' . $class . '">';
 				ob_start();
                 ?>
@@ -1342,6 +1395,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'show_button' => 'yes',
                 'show_divider' => 'yes',
 				'show_media' => 'false',
+				'media_type' => get_option('listings_media_type', 'image'),  // default, image, video
+				'media_priority' => get_option('listings_media_priority', 'image'), // image, video
                 'limit' => -1,
                 'order' => 'ASC',
                 'class' => '',
@@ -1433,7 +1488,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             foreach ( $courses as $course ) {
                 $content .= '<div class="course-list-item ' . $course_class . '">';
 				if ( 'yes' == $show_media ) {
-					$content .= do_shortcode( '[course_media course_id="' . $course->ID . '"]' );
+					$content .= do_shortcode( '[course_media course_id="' . $course->ID . '" type="' . $media_type . '" priority="' . $media_priority . '"]' );
 				}
                 $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="'.$title_tag.'"]');
 

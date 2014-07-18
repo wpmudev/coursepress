@@ -225,6 +225,80 @@
         </div>
 
         <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('Course Details Page', 'cp'); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e('Media to use when viewing course details', 'cp'); ?></p>
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Media Type', 'cp'); ?>
+							<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) );  ?></th>
+                            <td>
+								<?php $selected_type = get_option('details_media_type', 'default'); ?>
+				                <select name="option_details_media_type" class="widefat" id="option_details_media_type">
+									<option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
+									<option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
+									<option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
+									<!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true); ?>><?php // _e( 'Thumbnail', 'cp' ); ?></option> -->
+				                </select>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Priority', 'cp'); ?>
+							<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) );  ?></th>
+                            <td>
+								<?php $selected_priority = get_option('details_media_priority', 'video'); ?>
+				                <select name="option_details_media_priority" class="widefat" id="option_details_media_priority">
+									<option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
+									<option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
+				                </select>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('Course Listings', 'cp'); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e('Media to use when viewing course listings (e.g. Courses page or Instructor page)', 'cp'); ?></p>				
+                <table class="form-table">
+                    <tbody>
+
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Media Type', 'cp'); ?>
+							<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) );  ?></th>
+                            <td>
+								<?php $selected_type = get_option('listings_media_type', 'image'); ?>
+				                <select name="option_listings_media_type" class="widefat" id="option_listings_media_type">
+									<option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
+									<option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
+									<option value="image" <?php selected($selected_type, 'image', true); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
+									<!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true); ?>><?php // _e( 'Thumbnail', 'cp' ); ?></option> -->
+				                </select>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Priority', 'cp'); ?>
+							<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) );  ?></th>
+                            <td>
+								<?php $selected_priority = get_option('listings_media_priority', 'image'); ?>
+				                <select name="option_listings_media_priority" class="widefat" id="option_listings_media_priority">
+									<option value="video" <?php selected($selected_priority, 'video', true); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
+									<option value="image" <?php selected($selected_priority, 'image', true); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
+				                </select>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Course Images', 'cp'); ?></span></h3>
             <div class="inside">
                 <p class='description'><?php _e('Size for ( newly uploaded ) course images', 'cp'); ?></p>

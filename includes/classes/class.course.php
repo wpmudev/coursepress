@@ -44,7 +44,7 @@ if ( !class_exists('Course') ) {
             }
         }
 
-        function course_structure_front( $try_title = '', $show_try = true ) {
+        function course_structure_front( $try_title = '', $show_try = true, $hide_title = false ) {
             $show_unit = $this->details->show_unit_boxes;
             $preview_unit = $this->details->preview_unit_boxes;
 
@@ -52,8 +52,11 @@ if ( !class_exists('Course') ) {
             $preview_page = $this->details->preview_page_boxes;
 
             $units = $this->get_units();
+			
+            echo $hide_title ? '' : '<label>' . $this->details->post_title . '</label>';
+			
             ?>
-            <label><?php echo $this->details->post_title; ?></label>
+			
             <ul class="tree">
                 <li>
                     <ul>
