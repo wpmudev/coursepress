@@ -262,6 +262,9 @@ input[type="button"].apply-button{
         text-align: center;
         text-decoration: none;
     */
+	min-height: 32px;
+	min-width: 100px;
+	padding: 5px;	
     float:right;
 }
 
@@ -637,10 +640,11 @@ h1.notification-title{
 }
 
 /* CSS Tree menu styles */
-ul.tree
+ul.tree,
+ul.tree ul
 {
     padding: 0 0 0 0px;
-	margin: 0;
+	margin-right: 0;
     /* width: 300px;*/
 }
 
@@ -820,9 +824,13 @@ label > .tree{
 
 .video_player {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+
+	/* 16:9 */
+    /* This is breaking content... commented out for now */
+/*    padding-bottom: 56.25%;
     padding-top: 25px;
-    height: 0;
+    height: 0;*/
+	
 }
 .video_player iframe {
     position: absolute;

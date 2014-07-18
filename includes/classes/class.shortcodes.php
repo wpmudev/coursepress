@@ -1137,30 +1137,118 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 				'label_element' => 'h2',
 				'label' => __( 'Course Structure', 'cp' ),
                 'class' => '',
-        ), $atts, 'course_structure'));
+	        ), $atts, 'course_structure'));
 
-            // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+	        // Saves some overhead by not loading the post again if we don't need to.
+	        $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+		
+			$content = '';
 
-            $thumbnail = Course::get_course_thumbnail($course_id);
+			$show_unit = $course->details->show_unit_boxes;
+			$preview_unit = $course->details->preview_unit_boxes;
 
-            $content = '';
+			$show_page = $course->details->show_page_boxes;
+			$preview_page = $course->details->preview_page_boxes;
 
-            if ( !empty( $course_id ) ) {
+			$units = $course->get_units();
+		
+			$content .= '<div class="course-structure-block course-structure-block-' . $course_id . '">';
+			
+            if ( !empty($label) ) {
+				$content .= '<' . $label_element . ' class="label">' . $label . $label_delimeter . '</' . $label_element . '>';
+			}
+			
+			$content .= 'yes' == $show_title ? '<label>' . $this->details->post_title . '</label>' : '';
 
-				echo '<div class="course_structure">';
-                if ( !empty($label) ) {
-					?>
-                    <<?php echo $label_element; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_element; ?>>
-					<?php
-                }
-				
-		        $course->course_structure_front( $free_text, true, 'yes' == $show_title ? false : true );
-				// Strange bug.
-				echo '</div>&nbsp;';
-				
-                $content .= trim(ob_get_clean());
-            }
+			if ( $units ) {
+				ob_start();
+				?>
+				<ul class="tree">
+					<li>
+						<ul>
+							<?php
+								$module = new Unit_Module();
+
+								foreach ( $units as $unit ) {
+									$unit_class = new Unit($unit->ID);
+									$unit_pages = $unit_class->get_number_of_unit_pages();
+
+									$modules = $module->get_modules($unit->ID);
+
+									if ( isset($show_unit[$unit->ID]) && $show_unit[$unit->ID] == 'on' && $unit->post_status == 'publish' ) {
+										?>
+											<li>
+												<label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
+													<div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+													<div class="tree-unit-right">
+
+														<?php if ( $course->details->course_structure_time_display == 'on' ) { ?>
+															<span><?php echo $unit_class->get_unit_time_estimation($unit->ID); ?></span>
+														<?php } ?>
+
+														<?php
+														if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' ) {
+														?>
+															<a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php echo $free_text; ?></a>
+														<?php } ?>
+													</div>
+												</label>
+
+												<ul>
+													<?php
+													for ( $i = 1; $i <= $unit_pages; $i++ ) {
+														if ( isset($show_page[$unit->ID . '_' . $i]) && $show_page[$unit->ID . '_' . $i] == 'on' ) {
+														?>
+															<li class="course_structure_page_li">
+																<?php
+																$pages_num = 1;
+																$page_title = $unit_class->get_unit_page_name($i);
+																?>
+
+																<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+																	<div class="tree-page-left">
+																		<?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
+																	</div>
+																	<div class="tree-page-right">
+
+																		<?php if ( $course->details->course_structure_time_display == 'on' ) { ?>
+																			<span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i); ?></span>
+																		<?php } ?>
+
+																		<?php
+																		if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' ) {
+																		?>
+																			<a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php echo $free_text; ?></a>
+																		<?php } ?>
+
+																	</div>
+																</label>
+
+																<?php
+																?>
+															</li>
+															<?php
+														}
+													}//page visible 
+													?>
+
+												</ul>
+											</li>
+										<?php
+									}//unit visible
+
+								} // foreach
+							?>
+						</ul>
+					</li>
+				</ul>		
+		
+				<?php
+				$content .= trim(ob_get_clean());
+			} else {
+			}
+			
+			$content .= '</div>';
 
             return $content;
         }		

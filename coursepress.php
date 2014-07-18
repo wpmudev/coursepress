@@ -1517,16 +1517,18 @@ if ( !class_exists('CoursePress') ) {
             $exists = false;
             foreach ( $instructors as $instructor ) {
                 if ( $instructor == $user_id ) {
-                    $exists = true;
+					if( !empty(get_user_meta($user_id, 'course_' . $course_id) ) ) {
+						$exists = true;	
+					};
                 }
             }
 
-// User is not yet an instructor
+			// User is not yet an instructor
             if ( !$exists ) {
-// Assign Instructor capabilities
+			// Assign Instructor capabilities
 
                 $this->assign_instructor_capabilities($user_id);
-//
+
                 $instructors[] = $user_id;
                 update_post_meta($course_id, 'instructors', $instructors);
                 update_user_meta($user_id, 'course_' . $course_id, $course_id);
@@ -1562,12 +1564,13 @@ if ( !class_exists('CoursePress') ) {
 
             $instructors = get_post_meta($course_id, 'instructors', true);
 
+			$updated_instructors = array();
             foreach ( $instructors as $instructor ) {
-                if ( $instructor == $user_id ) {
-                    unset($instructor);
+                if ( $instructor != $user_id ) {
+                    $updated_instructors[] = $instructor;
                 }
             }
-            update_post_meta($course_id, 'instructors', $instructors);
+            update_post_meta($course_id, 'instructors', $updated_instructors);
             delete_user_meta($user_id, 'course_' . $course_id, $course_id);
 
             $instructor = new Instructor($user_id);
@@ -2401,7 +2404,7 @@ if ( !class_exists('CoursePress') ) {
                 'withdraw_class_alert' => __('Please confirm that you want to withdraw all students from this class?', 'cp'),
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
                 'setup_gateway' => __("You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp'),
-                'unit_setup_prompt' => __('<div>You have successfully completed your Basic Course Setup.</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp'),
+                'unit_setup_prompt' => __('<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp'),
                 'required_course_name' => __('<strong>Course Name</strong> is a required field.', 'cp'),
                 'required_course_excerpt' => __('<strong>Course Excerpt</strong> is a required field.', 'cp'),
                 'required_course_description' => __('<strong>Course Description</strong> is a required field.', 'cp'),
