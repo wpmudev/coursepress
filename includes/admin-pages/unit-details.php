@@ -1,4 +1,5 @@
 <?php
+
 global $page, $user_id, $coursepress_admin_notice;
 global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered, $save_elements;
 
@@ -47,7 +48,7 @@ if (isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['actio
             ob_start();
 			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             if (isset($_GET['ms'])) {
-                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms']));
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'].'#unit-page-'.(isset($unit_page_num) ? $unit_page_num : '1')));
                 //exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
@@ -465,6 +466,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
             } else {
                 jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
             }
+            
+            //jQuery('#unit-pages').tabs({active: <?php echo $unit_page_num;?>});
         });
     </script>
 </div> <!-- wrap -->

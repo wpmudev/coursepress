@@ -9,8 +9,12 @@ if ( !class_exists( 'Course_Search' ) ) {
 
         var $courses_per_page = 10;
         var $args = array();
+        var $is_light = false;
 
         function __construct( $search_term = '', $page_num = '' ) {
+            if($this->is_light){
+                $page_num = 1;
+            }
             $this->search_term = $search_term;
             $this->raw_page = ( '' == $page_num ) ? false : ( int ) $page_num;
             $this->page_num = ( int ) ( '' == $page_num ) ? 1 : $page_num;

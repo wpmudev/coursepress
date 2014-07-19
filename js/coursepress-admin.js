@@ -45,7 +45,7 @@ jQuery(document).ready(function($) {
 
     courses_state_toggle.init();//course admin archive page
 
-    jQuery('#unit-pages').tabs({active:(coursepress.unit_page_num - 1)});
+    jQuery('#unit-pages').tabs();//{active:(coursepress.unit_page_num - 1)}
 
     jQuery('#add_new_unit_page').live("click", function(event) {
         event.preventDefault();

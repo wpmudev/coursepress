@@ -2261,7 +2261,6 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function show_unit_details( $unit_page_num = 1 ) {
-            $unit_page_num = $unit_page_num;
             require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
 

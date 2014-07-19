@@ -1,21 +1,29 @@
 <?php
 global $action, $page;
-wp_reset_vars(array('action', 'page'));
+wp_reset_vars(array( 'action', 'page' ));
+
+$wp_course_search = new Course_Search();
+
+if ( $wp_course_search->is_light ) {
+    if ( $wp_course_search->get_count_of_all_courses() >= 10 && !isset($_GET['course_id'])) {
+        wp_redirect(admin_url('admin.php?page=courses'));
+    }
+}
 
 $unit_id = '';
 $course_id = '';
 
-if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
-    $course_id = (int) $_GET['course_id'];
+if ( isset($_GET['course_id']) && is_numeric($_GET['course_id']) ) {
+    $course_id = ( int ) $_GET['course_id'];
 }
 
-if (isset($_GET['unit_id']) && is_numeric($_GET['unit_id'])) {
-    $unit_id = (int) $_GET['unit_id'];
+if ( isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
+    $unit_id = ( int ) $_GET['unit_id'];
 }
 
 $course = new Course($course_id);
 
-if (empty($course)) {
+if ( empty($course) ) {
     $course = new StdClass;
 } else {
     $course_object = $course->get_course();
@@ -29,26 +37,26 @@ $students_count = $course->get_number_of_students();
     <div class="icon32" id="icon-themes"><br></div>
     <?php
     $tab = ( isset($_GET['tab']) ) ? $_GET['tab'] : '';
-    if (empty($tab)) {
+    if ( empty($tab) ) {
         $tab = 'overview';
     }
     ?>
 
     <h2><?php
-        if ($course_id == '') {
+        if ( $course_id == '' ) {
             _e('New Course', 'cp');
         }
-        if ($course_id != '') {
+        if ( $course_id != '' ) {
             _e('Course', 'cp');
         }
 
-        if (!isset($_GET['course_id'])) {
+        if ( !isset($_GET['course_id']) ) {
             $course = new StdClass;
             $course->details = null;
         }
 
-        if ($course_id != '') {
-            if ($tab != 'overview') {
+        if ( $course_id != '' ) {
+            if ( $tab != 'overview' ) {
                 echo ' &raquo; ' . $course->details->post_title . ' &raquo; ' . esc_html(ucfirst($tab));
             } else {
                 echo ' &raquo; ' . $course->details->post_title;
@@ -74,32 +82,32 @@ $students_count = $course->get_number_of_students();
 
     $error_message['wrong_email'] = __('Please enter valid e-mail address', 'cp');
 
-    if (isset($_GET['unit_id']) && isset($_GET['new_status'])) {
+    if ( isset($_GET['unit_id']) && isset($_GET['new_status']) ) {
         $_GET['ms'] = 'usc';
     }
 
-    if (isset($_GET['unit_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_unit') {
+    if ( isset($_GET['unit_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_unit' ) {
         $_GET['ms'] = 'ud';
     }
 
 
     $ms = null;
-    if (isset($_GET['ms'])) {
+    if ( isset($_GET['ms']) ) {
         $ms = $_GET['ms'];
     }
 
     $ems = null;
-    if (isset($_GET['ems'])) {
+    if ( isset($_GET['ems']) ) {
         $ems = $_GET['ems'];
     }
 
-    if (isset($ms)) {
+    if ( isset($ms) ) {
         ?>
         <div id="message" class="updated fade"><p><?php echo $message[$ms]; ?></p></div>
         <?php
     }
 
-    if (isset($ems)) {
+    if ( isset($ems) ) {
         ?>
         <div id="message" class="error fade"><p><?php echo $error_message[$ems]; ?></p></div>
         <?php
@@ -116,11 +124,11 @@ $students_count = $course->get_number_of_students();
 
     <h3 class="nav-tab-wrapper">
         <?php
-        foreach ($menus as $key => $menu) {
-            if ($key == 'overview' || ( $key != 'overview' && $course_id != '' )) {
+        foreach ( $menus as $key => $menu ) {
+            if ( $key == 'overview' || ( $key != 'overview' && $course_id != '' ) ) {
                 ?>
                 <a class="nav-tab<?php
-                if ($tab == $key)
+                if ( $tab == $key )
                     echo ' nav-tab-active';
                 ?>" href="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&amp;tab=' . $key . '&amp;course_id=' . $course_id)); ?>"><?php echo $menu; ?></a>
                    <?php
@@ -148,11 +156,11 @@ $students_count = $course->get_number_of_students();
           }
           } */
         ?>
-        <?php if (isset($course_id) && $course_id !== '') { ?>
+        <?php if ( isset($course_id) && $course_id !== '' ) { ?>
 
             <div class="course-state">
                 <div id="course_state_id" data-id="<?php echo $course_id ?>"></div>
-                <span class="publish-course-message"><?php _e('Publish Course', 'cp');?></span>
+                <span class="publish-course-message"><?php _e('Publish Course', 'cp'); ?></span>
                 <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                 <div class="control <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                     <div class="toggle"></div>
@@ -163,7 +171,7 @@ $students_count = $course->get_number_of_students();
     </h3>
 
     <?php
-    switch ($tab) {
+    switch ( $tab ) {
 
         case 'overview': $this->show_courses_details_overview();
             break;
