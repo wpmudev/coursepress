@@ -684,12 +684,27 @@ function removePendingInstructor(invite_code, course_id) {
 
 jQuery(document).ready(function() {
 
+	// Enable spellcheck on textboxes/textareas
+	jQuery.each( jQuery('[type="text"]') ,function( index, val ) {
+		jQuery( jQuery('[type="text"]')[index] ).attr('spellcheck', true);
+	});
+	jQuery.each( jQuery('textarea') ,function( index, val ) {
+		jQuery( jQuery('textarea')[index] ).attr('spellcheck', true);
+	});
+	
+	// Enable tinyMCE browser spellcheck
+	if( typeof tinyMCE != "undefined" ) {
+	    tinyMCE.init({
+	        browser_spellcheck : true,
+	    });		
+	}
+
     function get_tinymce_content(id) {
 
         tinyMCE.init({
 // General options
             mode: "specific_textareas",
-            editor_selector: "mceEditor"
+            editor_selector: "mceEditor",
         });
         return tinyMCE.get(id).getContent();
     }
