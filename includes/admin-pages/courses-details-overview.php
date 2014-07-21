@@ -963,7 +963,9 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                     <?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////              ?>
                                     <div class="narrow product">
                                         <!-- MarketPress not Active -->
-                                        <?php if (!$coursepress->is_marketpress_lite_active() && !$coursepress->is_cp_marketpress_lite_active() && $coursepress->is_marketpress_active()) : ?>
+
+										<?php // marketpress_active set in marketpress_check() hook ?>
+                                        <?php if ( ! $coursepress->marketpress_active ) : ?>
                                             <label>
                                                 <?php _e('Sell your courses online with MarketPress.', 'cp'); ?>
                                             </label>

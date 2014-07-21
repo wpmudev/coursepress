@@ -16,7 +16,9 @@ if ( is_user_logged_in() ) {
 
         global $coursepress;
         
-        if ( isset( $course->details->marketpress_product ) && $course->details->marketpress_product != '' && $coursepress->is_marketpress_active() ) {
+		$is_paid = get_post_meta($course_id, 'paid_course', true) == 'on' ? true : false;
+		
+        if ( $is_paid && isset( $course->details->marketpress_product ) && $course->details->marketpress_product != '' && $coursepress->marketpress_active ) {
             $course_price = 1; //forces user to purchase course / show purchase form
             $course->is_user_purchased_course( $course->details->marketpress_product, get_current_user_ID() );
         }

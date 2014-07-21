@@ -44,6 +44,8 @@ if ( !class_exists('CoursePress') ) {
         var $location = '';
         var $plugin_dir = '';
         var $plugin_url = '';
+		
+		public $marketpress_active = false;
 
         function __construct() {
 
@@ -140,6 +142,10 @@ if ( !class_exists('CoursePress') ) {
 
 //Output buffer hack
             add_action('init', array( &$this, 'output_buffer' ), 0);
+			
+//MarketPress Check
+            add_action('init', array( &$this, 'marketpress_check' ), 0);
+			
 
 // Course Calendar
             require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
@@ -1172,10 +1178,11 @@ if ( !class_exists('CoursePress') ) {
                         include_once( $this->plugin_dir . 'includes/unit-modules/' . $mem_module );
                 }
             }
-
-            if ( !$this->is_marketpress_active() && !$this->is_marketpress_lite_active() && $this->is_marketpress_lite_active() ) {
-                $this->install_and_activate_plugin('/' . $this->dir_name . '/marketpress.php');
-            }
+			
+			// Not sure if this is a good idea.
+            // if ( !$this->is_marketpress_active() && !$this->is_marketpress_lite_active() && !$this->is_marketpress_lite_active() ) {
+            //     $this->install_and_activate_plugin('/' . $this->dir_name . '/marketpress.php');
+            // }
 
 
             do_action('coursepress_modules_loaded');
@@ -2988,6 +2995,14 @@ if ( !class_exists('CoursePress') ) {
                 return false;
             }
         }
+		
+		function marketpress_check() {
+			if ( CoursePress::instance()->is_marketpress_lite_active() || CoursePress::instance()->is_cp_marketpress_lite_active() || CoursePress::instance()->is_marketpress_active() ) {
+				CoursePress::instance()->marketpress_active = true;
+			} else {
+				CoursePress::instance()->marketpress_active = false;
+			}			
+		}
 
         /* Check if Chat plugin is installed and activated ( using in Chat unit module ) */
 

@@ -635,7 +635,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $content = '';
 
-            if ( $is_paid && ($coursepress->is_marketpress_active() || $coursepress->is_marketpress_lite_active() || $coursepress->is_cp_marketpress_lite_active() ) ) {
+            if ( $is_paid && CoursePress::instance()->marketpress_active ) {
 
                 $mp_product = get_post_meta($course_id, 'marketpress_product', true);
 
@@ -1986,7 +1986,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             if ( $field == 'price' ) {
                 global $coursepress;
-                if ( isset($course->marketpress_product) && $course->marketpress_product != '' && ($coursepress->is_marketpress_active() || $coursepress->is_marketpress_lite_active() || $coursepress->is_cp_marketpress_lite_active()) ) {
+
+	            $is_paid = get_post_meta($course_id, 'paid_course', true) == 'on' ? true : false;
+				
+                if ( $is_paid && isset($course->marketpress_product) && $course->marketpress_product != '' && ($coursepress->marketpress_active) ) {
                     echo do_shortcode('[mp_product_price product_id="' . $course->marketpress_product . '" label=""]');
                 } else {
                     $course->price = __('FREE', 'cp');
