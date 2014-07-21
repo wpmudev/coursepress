@@ -1314,7 +1314,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $priority = empty($priority) ? get_option('details_media_priority', 'video') : $priority;
             } else {
                 $type = empty($type) ? get_option('listings_media_type', 'default') : $type;
-                $priority = empty($priority) ? get_option('listings_media_priority', 'video') : $priority;
+                $priority = empty($priority) ? get_option('listings_media_priority', 'image') : $priority;
             }
 
             $priority = 'default' != $type ? false : $priority;

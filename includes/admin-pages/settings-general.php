@@ -273,7 +273,7 @@
                             <th scope="row"><?php _e('Media Type', 'cp'); ?>
                                 <?php CP_Helper_Tooltip::tooltip(__('"Priority" - Use the media type below, with the other type as a fallback.', 'cp')); ?></th>
                             <td>
-                                <?php $selected_type = get_option('listings_media_type', 'image'); ?>
+                                <?php $selected_type = get_option('listings_media_type', 'default'); ?>
                                 <select name="option_listings_media_type" class="widefat" id="option_listings_media_type">
                                     <option value="default" <?php selected($selected_type, 'default', true); ?>><?php _e('Priority Mode (default)', 'cp'); ?></option>
                                     <option value="video" <?php selected($selected_type, 'video', true); ?>><?php _e('Featured Video', 'cp'); ?></option>
