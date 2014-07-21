@@ -1441,11 +1441,15 @@ if ( !class_exists('CoursePress') ) {
          * ::RK::
          */
         function course_has_gateway() {
-
-            $gateways = !empty(get_option('mp_settings')['gateways']['allowed']) ? true : false;
+			
+			$gateways = get_option('mp_settings', false);
+			if( !empty($gateways) ) {
+				$gateways = !empty( $gateways['gateways']['allowed'] ) ? true : false;
+			}
 
             $ajax_response = array( 'has_gateway' => $gateways );
-
+			$ajax_status = 1;
+			
             $response = array(
                 'what' => 'instructor_invite',
                 'action' => 'instructor_invite',

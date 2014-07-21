@@ -277,6 +277,7 @@ function cp_editor_mouse_move(ed, event) {
 
 function set_update_progress(step, value) {
 
+	$ = jQuery;
     $('input[name="meta_course_setup_progress[' + step + ']"]').val(value);
 
 }
@@ -806,6 +807,7 @@ jQuery(document).ready(function($) {
                     }
             ).done(function(data, status) {
                 if (status == 'success') {
+					var step = 6;
                     var response = $.parseJSON($(data).find('response_data').text());
                     if (response.has_gateway) {
                         $($('.step-6 .course-enable-gateways')[0]).addClass('gateway-active');
