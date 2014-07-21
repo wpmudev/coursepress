@@ -34,13 +34,22 @@ jQuery(document).ready(function() {
         var unit_page_num = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
         jQuery("#unit_page_num").val(unit_page_num);
 
+        var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;
+
+        var page_break_to_delete_id = jQuery("#unit-page-1 .module-holder-page_break_module .element_id").val();
+        //alert(page_break_to_delete_id);
+        if (!isNaN(parseFloat(page_break_to_delete_id)) && isFinite(page_break_to_delete_id)) {
+            prepare_module_for_execution(page_break_to_delete_id)
+        } else {
+            jQuery("#unit-page-1 .module-holder-page_break_module").remove();
+        }
         //jQuery('#unit-add').attr('action', jQuery('#unit-add').attr('action') + "&unit_page_num=" + unit_page_num);
 
-        submit_elements();
+        //submit_elements();
     });
 
     jQuery(".unit-control-buttons .button-publish").click(function() {
-        submit_elements();
+        //submit_elements();
     });
 });
 
@@ -277,7 +286,7 @@ function cp_editor_mouse_move(ed, event) {
 
 function set_update_progress(step, value) {
 
-	$ = jQuery;
+    $ = jQuery;
     $('input[name="meta_course_setup_progress[' + step + ']"]').val(value);
 
 }
@@ -771,22 +780,22 @@ function sanitize_checkbox(checkbox) {
     return checkbox;
 }
 
-function mark_dirty( element ) {
+function mark_dirty(element) {
     $ = jQuery;
 
     // Mark as dirty
-    var parent_section = $( element ).parents('.course-section.step')[0];
+    var parent_section = $(element).parents('.course-section.step')[0];
     if (parent_section) {
         if (!$(parent_section).hasClass('dirty')) {
             $(parent_section).addClass('dirty');
         }
-    }			
-	
-    if ($( element ).parents('.course-section.step').find('.status.saved')) {
-        $( element ).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
     }
-	
-		
+
+    if ($(element).parents('.course-section.step').find('.status.saved')) {
+        $(element).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
+    }
+
+
 }
 
 /** Handle Course Setup Wizard */
@@ -807,7 +816,7 @@ jQuery(document).ready(function($) {
                     }
             ).done(function(data, status) {
                 if (status == 'success') {
-					var step = 6;
+                    var step = 6;
                     var response = $.parseJSON($(data).find('response_data').text());
                     if (response.has_gateway) {
                         $($('.step-6 .course-enable-gateways')[0]).addClass('gateway-active');
@@ -1080,29 +1089,29 @@ jQuery(document).ready(function($) {
         }
     });
 
-	$('.date').click( function( event ) {
-		if( ! $( this ).parents('div').hasClass('disabled') ){
-			$( this ).find('.dateinput').datepicker("show");			
-		}
-	});
+    $('.date').click(function(event) {
+        if (!$(this).parents('div').hasClass('disabled')) {
+            $(this).find('.dateinput').datepicker("show");
+        }
+    });
 
-	$('.course-section .featured_url_button').click( function() {
+    $('.course-section .featured_url_button').click(function() {
         // Mark as dirty
-		mark_dirty( this );
-	});
-	$('.course-section .course_video_url_button').click( function() {
+        mark_dirty(this);
+    });
+    $('.course-section .course_video_url_button').click(function() {
         // Mark as dirty
-		mark_dirty( this );
-	});
+        mark_dirty(this);
+    });
     $('.course-form textarea').change(function() {
         // Mark as dirty		
-		mark_dirty( this );
+        mark_dirty(this);
     });
     $('.course-form select').change(function() {
         // Mark as dirty		
-		mark_dirty( this );
+        mark_dirty(this);
     });
-	
+
 
     $('#add-instructor-trigger').click(function() {
 
@@ -1116,8 +1125,8 @@ jQuery(document).ready(function($) {
         var instructor_id = $('#instructors option:selected').val();
 
         // Mark as dirty
-		mark_dirty( this );
-		
+        mark_dirty(this);
+
         $.post(
                 'admin-ajax.php', {
                     action: 'add_course_instructor',
@@ -1156,8 +1165,8 @@ jQuery(document).ready(function($) {
 
     /** Mark "dirty" content */
     $('.course-form input').change(function() {
-		mark_dirty( this );
-		
+        mark_dirty(this);
+
         if ($(this).attr('type') == 'checkbox') {
             if ($(this).attr('checked')) {
                 $(this).val('on');

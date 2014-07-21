@@ -73,17 +73,40 @@ jQuery(document).ready(function($) {
                 jQuery(this).closest('.module-holder-title').remove();
             });
 
-            jQuery('#unit-page-' + current_page + ' .removable').each(function(i, obj) {
+//jQuery('#unit-page-' + current_page + ' .removable').each(function(i, obj) {
+            jQuery('.removable').each(function(i, obj) {
                 jQuery(this).closest('.module-holder-title').remove();
             });
 
             jQuery('#unit-pages .ui-tabs-nav .ui-state-active').remove();
-            
+
             jQuery('#unit-page-' + current_page).remove();
 
             reenumarate_unit_pages();
 
+            /*if (current_page == 1) {
+             active_num = 1;
+             } else {
+             active_num = 0;
+             }*/
+
+            var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;
+
+            //var elements_count = jQuery('#unit-page-' + current_page + ' .modules_accordion .module-holder-title').length;
+
+            if (unit_pages == 1) {
+                jQuery(".delete_unit_page").hide();
+            } else {
+                jQuery(".delete_unit_page").show();
+            }
+
             jQuery("#unit-pages").tabs({active: 0});
+
+            current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+
+            if (typeof current_page === "undefined") {
+                jQuery("#unit-pages").tabs({active: 1});
+            }
         }
 
         function reenumarate_unit_pages() {
@@ -98,16 +121,16 @@ jQuery(document).ready(function($) {
                     i++;
                 }
             });
-            
+
             i = 1;
-            
+
             jQuery("#unit-pages .ui-tabs-panel").each(function(index) {
                 jQuery(this).attr('id', 'unit-page-' + i);
                 jQuery(this).attr('aria-controls', 'unit-page-' + i);
                 jQuery(this).attr('aria-labelledby', 'ui-id-' + i);
                 i++;
             });
-            
+
         }
 
         function delete_unit_page_and_elements_confirmed() {
@@ -245,6 +268,12 @@ jQuery(document).ready(function($) {
          } else {
          jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
          }*/
+
+        if (unit_pages == 0) {
+            jQuery(".delete_unit_page").hide();
+        } else {
+            jQuery(".delete_unit_page").show();
+        }
 
     }
 });
@@ -684,20 +713,20 @@ function removePendingInstructor(invite_code, course_id) {
 
 jQuery(document).ready(function() {
 
-	// Enable spellcheck on textboxes/textareas
-	jQuery.each( jQuery('[type="text"]') ,function( index, val ) {
-		jQuery( jQuery('[type="text"]')[index] ).attr('spellcheck', true);
-	});
-	jQuery.each( jQuery('textarea') ,function( index, val ) {
-		jQuery( jQuery('textarea')[index] ).attr('spellcheck', true);
-	});
-	
-	// Enable tinyMCE browser spellcheck
-	if( typeof tinyMCE != "undefined" ) {
-	    tinyMCE.init({
-	        browser_spellcheck : true,
-	    });		
-	}
+    // Enable spellcheck on textboxes/textareas
+    jQuery.each(jQuery('[type="text"]'), function(index, val) {
+        jQuery(jQuery('[type="text"]')[index]).attr('spellcheck', true);
+    });
+    jQuery.each(jQuery('textarea'), function(index, val) {
+        jQuery(jQuery('textarea')[index]).attr('spellcheck', true);
+    });
+
+    // Enable tinyMCE browser spellcheck
+    if (typeof tinyMCE != "undefined") {
+        tinyMCE.init({
+            browser_spellcheck: true,
+        });
+    }
 
     function get_tinymce_content(id) {
 
@@ -888,16 +917,16 @@ jQuery(document).ready(function() {
     jQuery('#open_ended_enrollment').change(function() {
         if (this.checked) {
             //jQuery( '#all_course_dates' ).hide( 500 );
-			jQuery(this).parents('.enrollment-dates').find('.start-date label').removeClass('required');
-			jQuery(this).parents('.enrollment-dates').find('.end-date label').removeClass('required');
+            jQuery(this).parents('.enrollment-dates').find('.start-date label').removeClass('required');
+            jQuery(this).parents('.enrollment-dates').find('.end-date label').removeClass('required');
             jQuery(this).parents('.enrollment-dates').find('.start-date').addClass('disabled');
             jQuery(this).parents('.enrollment-dates').find('.start-date input').attr('disabled', 'disabled');
             jQuery(this).parents('.enrollment-dates').find('.end-date').addClass('disabled');
             jQuery(this).parents('.enrollment-dates').find('.end-date input').attr('disabled', 'disabled');
         } else {
             //jQuery( '#all_course_dates' ).show( 500 );
-			jQuery(this).parents('.enrollment-dates').find('.start-date label').addClass('required');
-			jQuery(this).parents('.enrollment-dates').find('.end-date label').addClass('required');			
+            jQuery(this).parents('.enrollment-dates').find('.start-date label').addClass('required');
+            jQuery(this).parents('.enrollment-dates').find('.end-date label').addClass('required');
             jQuery(this).parents('.enrollment-dates').find('.start-date').removeClass('disabled');
             jQuery(this).parents('.enrollment-dates').find('.start-date input').removeAttr('disabled');
             jQuery(this).parents('.enrollment-dates').find('.end-date').removeClass('disabled');
@@ -907,11 +936,11 @@ jQuery(document).ready(function() {
 
     jQuery('#open_ended_course').change(function() {
         if (this.checked) {
-			jQuery(this).parents('.course-dates').find('.end-date label').removeClass('required');
+            jQuery(this).parents('.course-dates').find('.end-date label').removeClass('required');
             jQuery(this).parents('.course-dates').find('.end-date').addClass('disabled');
             jQuery(this).parents('.course-dates').find('.end-date input').attr('disabled', 'disabled');
         } else {
-			jQuery(this).parents('.course-dates').find('.end-date label').addClass('required');
+            jQuery(this).parents('.course-dates').find('.end-date label').addClass('required');
             jQuery(this).parents('.course-dates').find('.end-date').removeClass('disabled');
             jQuery(this).parents('.course-dates').find('.end-date input').removeAttr('disabled');
         }
@@ -919,49 +948,49 @@ jQuery(document).ready(function() {
 
     jQuery('#limit_class_size').change(function() {
         if (this.checked) {
-			jQuery( this ).parents('.wide').find('.limit-class-size-required').addClass('required');
+            jQuery(this).parents('.wide').find('.limit-class-size-required').addClass('required');
             jQuery('input.class_size').removeClass('disabled');
             jQuery('input.class_size').removeAttr('disabled');
         } else {
-			jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
+            jQuery(this).parents('.wide').find('.limit-class-size-required').removeClass('required');
             jQuery('input.class_size').addClass('disabled');
             jQuery('input.class_size').attr('disabled', 'disabled');
         }
     });
-	
+
     jQuery('#paid_course').change(function() {
         if (this.checked) {
-			jQuery( this ).parents('.product').find('.course-sku input').removeClass('disabled');
-			jQuery( this ).parents('.product').find('.course-price input').removeClass('disabled');
-			jQuery( this ).parents('.product').find('.course-sale-price input').removeClass('disabled');
-			jQuery( this ).parents('.product').find('.course-sku input').removeAttr('disabled');
-			jQuery( this ).parents('.product').find('.course-price input').removeAttr('disabled');
-			jQuery( this ).parents('.product').find('.course-sale-price input').removeAttr('disabled');
-			jQuery( this ).parents('.product').find('.course-price .price-label').addClass('required');
-			jQuery( this ).parents('.product').find('.payment-gateway-required').addClass('required');
-			
+            jQuery(this).parents('.product').find('.course-sku input').removeClass('disabled');
+            jQuery(this).parents('.product').find('.course-price input').removeClass('disabled');
+            jQuery(this).parents('.product').find('.course-sale-price input').removeClass('disabled');
+            jQuery(this).parents('.product').find('.course-sku input').removeAttr('disabled');
+            jQuery(this).parents('.product').find('.course-price input').removeAttr('disabled');
+            jQuery(this).parents('.product').find('.course-sale-price input').removeAttr('disabled');
+            jQuery(this).parents('.product').find('.course-price .price-label').addClass('required');
+            jQuery(this).parents('.product').find('.payment-gateway-required').addClass('required');
+
             // jQuery('input.class_size').removeClass('disabled');
             // jQuery('input.class_size').removeAttr('disabled');
         } else {
-			jQuery( this ).parents('.product').find('.course-sku input').addClass('disabled');
-			jQuery( this ).parents('.product').find('.course-price input').addClass('disabled');
-			jQuery( this ).parents('.product').find('.course-sale-price input').addClass('disabled');
-			jQuery( this ).parents('.product').find('.course-sku input').attr('disabled','disabled');
-			jQuery( this ).parents('.product').find('.course-price input').attr('disabled','disabled');
-			jQuery( this ).parents('.product').find('.course-sale-price input').attr('disabled','disabled');
-			jQuery( this ).parents('.product').find('.course-price .price-label').removeClass('required');
-			jQuery( this ).parents('.product').find('.payment-gateway-required').removeClass('required');			
-			// jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
-			//             jQuery('input.class_size').addClass('disabled');
-			//             jQuery('input.class_size').attr('disabled', 'disabled');
+            jQuery(this).parents('.product').find('.course-sku input').addClass('disabled');
+            jQuery(this).parents('.product').find('.course-price input').addClass('disabled');
+            jQuery(this).parents('.product').find('.course-sale-price input').addClass('disabled');
+            jQuery(this).parents('.product').find('.course-sku input').attr('disabled', 'disabled');
+            jQuery(this).parents('.product').find('.course-price input').attr('disabled', 'disabled');
+            jQuery(this).parents('.product').find('.course-sale-price input').attr('disabled', 'disabled');
+            jQuery(this).parents('.product').find('.course-price .price-label').removeClass('required');
+            jQuery(this).parents('.product').find('.payment-gateway-required').removeClass('required');
+            // jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
+            //             jQuery('input.class_size').addClass('disabled');
+            //             jQuery('input.class_size').attr('disabled', 'disabled');
         }
     });
 
     jQuery('.course-section #mp_is_sale').change(function() {
         if (this.checked) {
-			jQuery( this ).parents('.product').find('.course-sale-price .price-label').addClass('required');
+            jQuery(this).parents('.product').find('.course-sale-price .price-label').addClass('required');
         } else {
-			jQuery( this ).parents('.product').find('.course-sale-price .price-label').removeClass('required');
+            jQuery(this).parents('.product').find('.course-sale-price .price-label').removeClass('required');
         }
     });
 
@@ -975,7 +1004,7 @@ jQuery(document).ready(function()
     {
 
         var target_url_field = jQuery(this).prevAll(".featured_url:first");
-        
+
         wp.media.string.props = function(props, attachment)
         {
             //console.log(props);
@@ -983,14 +1012,14 @@ jQuery(document).ready(function()
             jQuery('#thumbnail_id').val('');
             jQuery('#featured_url_size').val('');
         }
-        
+
         wp.media.editor.send.attachment = function(props, attachment)
         {
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
             jQuery('#featured_url_size').val(props.size);
         };
-        
+
         wp.media.editor.open(this);
         return false;
     });

@@ -77,7 +77,7 @@ if ( !class_exists('CoursePress') ) {
             if ( is_admin() ) {
 
 // Support for WPMU DEV Dashboard plugin
-                include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
+                //include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 
 // Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );

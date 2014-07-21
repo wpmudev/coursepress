@@ -179,7 +179,7 @@ function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
 }
 
 function coursepress_unit_pages( $unit_id ) {
-    $pages_num = 1;
+    $pages_num = 0;
 
     $module = new Unit_Module;
     $modules = $module->get_modules($unit_id);
@@ -188,6 +188,10 @@ function coursepress_unit_pages( $unit_id ) {
         if ( $module->get_module_type($mod->ID) == 'page_break_module' ) {
             $pages_num++;
         }
+    }
+    
+    if($pages_num == 0){
+        $pages_num = 1;
     }
 
     return $pages_num;

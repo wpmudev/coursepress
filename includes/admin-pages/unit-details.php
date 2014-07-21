@@ -1,28 +1,26 @@
 <?php
-
 global $page, $user_id, $coursepress_admin_notice;
 global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered, $save_elements;
 
 $course_id = '';
 
-if (isset($_GET['course_id']) && is_numeric($_GET['course_id'])) {
-    $course_id = (int) $_GET['course_id'];
+if ( isset($_GET['course_id']) && is_numeric($_GET['course_id']) ) {
+    $course_id = ( int ) $_GET['course_id'];
     $course = new Course($course_id);
-	
 }
 
-if (!current_user_can('coursepress_view_all_units_cap') && $course->details->post_author != get_current_user_id()) {
+if ( !current_user_can('coursepress_view_all_units_cap') && $course->details->post_author != get_current_user_id() ) {
     die(__('You do not have required persmissions to access this page.', 'cp'));
 }
 
-if (!isset($_POST['force_current_unit_completion'])) {
+if ( !isset($_POST['force_current_unit_completion']) ) {
     $_POST['force_current_unit_completion'] = 'off';
 }
 
-if (isset($_GET['unit_id'])) {
+if ( isset($_GET['unit_id']) ) {
     $unit = new Unit($_GET['unit_id']);
     $unit_details = $unit->get_unit();
-    $unit_id = (int) $_GET['unit_id'];
+    $unit_id = ( int ) $_GET['unit_id'];
     $force_current_unit_completion = $unit->details->force_current_unit_completion;
 } else {
     $unit = new Unit();
@@ -30,25 +28,25 @@ if (isset($_GET['unit_id'])) {
     $force_current_unit_completion = 'off';
 }
 
-if (isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['action'] == 'update_unit' )) {
+if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['action'] == 'update_unit' ) ) {
 
-    if (wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id)) {
+    if ( wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id) ) {
 
         //if ( ( $_POST['action'] == 'add_unit' && current_user_can( 'coursepress_create_course_unit_cap' ) ) || ( $_POST['action'] == 'update_unit' && current_user_can( 'coursepress_update_course_unit_cap' ) ) || ( $unit_id != 0 && current_user_can( 'coursepress_update_my_course_unit_cap' ) && $unit_details->post_author == get_current_user_id() ) ) {
 
         $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0 );
 
-        if (isset($_POST['unit_state'])) {
+        if ( isset($_POST['unit_state']) ) {
             /* Save & Publish */
             $unit = new Unit($new_post_id);
             $unit->change_status($_POST['unit_state']);
         }
 
-        if ($new_post_id != 0) {
+        if ( $new_post_id != 0 ) {
             ob_start();
-			// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-            if (isset($_GET['ms'])) {
-                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'].'#unit-page-'.(isset($unit_page_num) ? $unit_page_num : '1')));
+            // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+            if ( isset($_GET['ms']) ) {
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '#unit-page-' . (isset($unit_page_num) ? $unit_page_num : '1')));
                 //exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
@@ -64,10 +62,10 @@ if (isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['actio
     }
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id'])) {
+if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
     $unit = new Unit($_GET['unit_id']);
     $unit_object = $unit->get_unit();
-    if (( current_user_can('coursepress_change_course_unit_status_cap') ) || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) {
+    if ( ( current_user_can('coursepress_change_course_unit_status_cap') ) || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() ) ) {
         $unit->change_status($_GET['new_status']);
     }
 }
@@ -80,12 +78,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
         <ul id="sortable-units" class="mp-tabs" style="">
             <?php
             $units = $course->get_units();
-			?>
-			<input type="hidden" name="unit_count" value="<?php echo $units ? count( $units ) : 0; ?>">
-			<?php
+            ?>
+            <input type="hidden" name="unit_count" value="<?php echo $units ? count($units) : 0; ?>">
+            <?php
             $list_order = 1;
 
-            foreach ($units as $unit) {
+            foreach ( $units as $unit ) {
 
                 $unit_object = new Unit($unit->ID);
                 $unit_object = $unit_object->get_unit();
@@ -102,14 +100,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 $list_order++;
             }
             ?>
-            <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
+            <?php if ( current_user_can('coursepress_create_course_unit_cap') ) { ?>
                 <li class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : '' ); ?> static">
                     <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit'); ?>" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
                 </li>
             <?php } ?>
         </ul>
 
-        <?php if (current_user_can('coursepress_create_course_unit_cap')) { ?>
+        <?php if ( current_user_can('coursepress_create_course_unit_cap') ) { ?>
             <!--<div class="mp-tabs">
                 <div class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : '' ); ?>">
                     <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
@@ -123,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
             <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) ? $unit_object->post_status : 'draft')); ?>" />
-            <?php if (isset($unit_id)) { ?>
+            <?php if ( isset($unit_id) ) { ?>
 
                 <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                 <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
@@ -142,7 +140,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
-                            <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';?>"></div>
+                            <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : ''; ?>"></div>
                             <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
                             <div class="control <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                 <div class="toggle"></div>
@@ -166,7 +164,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <div class="unit-control-buttons">
 
                     <?php
-                    if (( $unit_id == 0 && current_user_can('coursepress_create_course_unit_cap'))) {//do not show anything
+                    if ( ( $unit_id == 0 && current_user_can('coursepress_create_course_unit_cap') ) ) {//do not show anything
                         ?>
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
@@ -174,13 +172,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                     <?php } ?>
 
                     <?php
-                    if (( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() )) {//do not show anything
+                    if ( ( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() ) ) {//do not show anything
                         ?>
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                     <?php } ?>
 
                     <?php
-                    if (( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() )) {//do not show anything
+                    if ( ( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() ) ) {//do not show anything
                         ?>
                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
@@ -192,7 +190,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                     }
                     ?>
 
-                    <?php if ($unit_id != 0) { ?>
+                    <?php if ( $unit_id != 0 ) { ?>
                         <span class="delete_unit">							
                             <a class="button button-units button-delete-unit" href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_id . '&action=delete_unit'); ?>" onclick="return removeUnit();">
                                 <i class="fa fa-trash-o"></i> <?php _e('Delete Unit', 'cp'); ?>
@@ -214,9 +212,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
 
                                 <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
                             <?php
-                            $args = array("textarea_name" => "unit_description", "textarea_rows" => 10);
+                            $args = array( "textarea_name" => "unit_description", "textarea_rows" => 10 );
 
-                            if (!isset($unit_details->post_content)) {
+                            if ( !isset($unit_details->post_content) ) {
                                 $unit_details = new StdClass;
                                 $unit_details->post_content = '';
                             }
@@ -238,10 +236,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     <li class="unit-pages-title"><span><?php _e('Unit Page(s)', 'cp'); ?></span></li>
                                     <?php
                                     $unit_pages = coursepress_unit_pages($unit_id);
-                                    if ($unit_id == 0) {
+                                    if ( $unit_id == 0 ) {
                                         $unit_pages = 1;
                                     }
-                                    for ($i = 1; $i <= $unit_pages; $i++) {
+                                    for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                         ?>
                                         <li><a href="#unit-page-<?php echo $i; ?>"><?php echo $i; ?></a><span class="arrow-down"></span></li>
                                     <?php } ?>
@@ -249,14 +247,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 </ul>
 
                                 <?php
-                                //$pages_num = 1;
+//$pages_num = 1;
 
                                 $save_elements = true;
 
                                 $module = new Unit_Module();
                                 $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id );
 
-                                for ($i = 1; $i <= $unit_pages; $i++) {
+                                for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                     ?>
                                     <div id="unit-page-<?php echo $i; ?>">
                                         <div class='course-details elements-holder'>
@@ -273,7 +271,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                                 <div class="description"><?php _e('Click to add elements to the page'); ?></div>
                                             </div>
                                             <?php
-                                            foreach ($coursepress_modules_ordered['output'] as $element) {
+                                            foreach ( $coursepress_modules_ordered['output'] as $element ) {
                                                 ?>
                                                 <div class="output-element <?php echo $element; ?>">
                                                     <span class="element-label">
@@ -289,7 +287,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                             ?>
                                             <div class="elements-separator"></div>
                                             <?php
-                                            foreach ($coursepress_modules_ordered['input'] as $element) {
+                                            foreach ( $coursepress_modules_ordered['input'] as $element ) {
                                                 ?>
                                                 <div class="input-element <?php echo $element; ?>">
                                                     <span class="element-label">
@@ -302,7 +300,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                                 </div>
                                                 <?php
                                             }
-                                            foreach ($coursepress_modules_ordered['invisible'] as $element) {
+                                            foreach ( $coursepress_modules_ordered['invisible'] as $element ) {
                                                 ?>
                                                 <div class="input-element <?php echo $element; ?>">
                                                     <span class="element-label">
@@ -334,21 +332,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                             <!--modules will appear here-->
                                             <?php
                                             $pages_num = 1;
-                                            foreach ($modules as $mod) {
+                                            foreach ( $modules as $mod ) {
                                                 $class_name = $mod->module_type;
 
-                                                if (class_exists($class_name)) {
+                                                if ( class_exists($class_name) ) {
                                                     $module = new $class_name();
 
-                                                    if ($module->name == 'page_break_module') {
-                                                        //echo 'page break at tab '.$i.'!<br />';
+                                                    if ( $module->name == 'page_break_module' ) {
                                                         $pages_num++;
-                                                        if ($pages_num == $i) {
+                                                        if ( $pages_num == $i ) {
+                                                            //echo 'page break at tab '.$i.'!<br />';
                                                             $module->admin_main($mod);
+                                                            //echo $module->name;
                                                         }
                                                     } else {
                                                         //echo 'i:'.$i.', pages_num:'.$pages_num.'<br />';
-                                                        if ($pages_num == $i) {
+                                                        if ( $pages_num == $i ) {
                                                             $module->admin_main($mod);
                                                             //print_r( $mod );
                                                         }
@@ -369,7 +368,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                 <div class="unit-control-buttons">
 
                                     <?php
-                                    if (( $unit_id == 0 && current_user_can('coursepress_create_course_unit_cap'))) {//do not show anything
+                                    if ( ( $unit_id == 0 && current_user_can('coursepress_create_course_unit_cap') ) ) {//do not show anything
                                         ?>
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
@@ -377,13 +376,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     <?php } ?>
 
                                     <?php
-                                    if (( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() )) {//do not show anything
+                                    if ( ( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() ) ) {//do not show anything
                                         ?>
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                                     <?php } ?>
 
                                     <?php
-                                    if (( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() )) {//do not show anything
+                                    if ( ( $unit_id != 0 && current_user_can('coursepress_update_course_unit_cap') ) || ( $unit_id != 0 && current_user_can('coursepress_update_my_course_unit_cap') && $unit_object->post_author == get_current_user_id() ) ) {//do not show anything
                                         ?>
                                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
@@ -396,7 +395,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                                     ?>
 
                                     <div class="unit-state">
-                                        <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';?>"></div>
+                                        <div class="unit_state_id" data-id="<?php echo (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : ''; ?>"></div>
                                         <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
                                         <div class="control <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>
@@ -416,9 +415,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
     <div class='level-liquid-right' style="display:none;">
         <div class="level-holder-wrap">
             <?php
-            $sections = array("input" => __('Input Elements', 'cp'), "output" => __('Output Elements', 'cp'), "invisible" => __('Invisible Elements', 'cp'));
+            $sections = array( "input" => __('Input Elements', 'cp'), "output" => __('Output Elements', 'cp'), "invisible" => __('Invisible Elements', 'cp') );
 
-            foreach ($sections as $key => $section) {
+            foreach ( $sections as $key => $section ) {
                 ?>
 
                 <div class="sidebar-name no-movecursor">
@@ -428,10 +427,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
                 <div class="section-holder" id="sidebar-<?php echo $key; ?>" style="min-height: 98px;">
                     <ul class='modules'>
                         <?php
-                        if (isset($coursepress_modules[$key])) {
-                            foreach ($coursepress_modules[$key] as $mmodule => $mclass) {
+                        if ( isset($coursepress_modules[$key]) ) {
+                            foreach ( $coursepress_modules[$key] as $mmodule => $mclass ) {
                                 $module = new $mclass();
-                                if (!array_key_exists($mmodule, $module)) {
+                                if ( !array_key_exists($mmodule, $module) ) {
                                     $module->admin_sidebar(false);
                                 } else {
                                     $module->admin_sidebar(true);
@@ -466,8 +465,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_stat
             } else {
                 jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
             }
-            
-            //jQuery('#unit-pages').tabs({active: <?php echo $unit_page_num;?>});
+
+            var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;
+
+            if (unit_pages == 1) {
+                jQuery(".delete_unit_page").hide();
+            } else {
+                jQuery(".delete_unit_page").show();
+            }
+            //jQuery('#unit-pages').tabs({active: <?php echo $unit_page_num; ?>});
         });
     </script>
 </div> <!-- wrap -->
