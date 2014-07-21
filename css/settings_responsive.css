@@ -12,7 +12,7 @@
         float:right;
         font-size:22px;
         position: relative;
-        top: 28px;
+        top: 18px;
         left:32px;
         z-index: 20;
         color: #ffffff;
@@ -45,6 +45,23 @@
         overflow: hidden;
     }
 
+	.sticky-wrapper #sortable-units-sticky-wrapper {
+		position:relative;
+	}
+	
+	.sticky-wrapper #sortable-units {
+		position: absolute;
+		left: 239px;
+		top: -12px;
+	}
+	
+	.mp-wrap .mp-tab.active .mp-tab-link:after {
+		display: none;
+	}
+	
+	.unit-state-circle {
+		right: 4px;
+	}
 
     .course-holder label { 
         display: inline;
