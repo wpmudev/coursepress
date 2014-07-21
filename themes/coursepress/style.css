@@ -2113,11 +2113,6 @@ select.units_dropdown::-ms-expand {
     margin-top: 5px;
 }
 
-.discussion-controls{
-    margin-top: 20px;
-    float: right;
-}
-
 .new_question input[type="submit"].button_submit,
 .discussion-controls input[type="submit"].button_submit,
 .discussion-controls .button_submit

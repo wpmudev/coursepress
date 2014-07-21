@@ -918,3 +918,9 @@ video {
 #TB_ajaxContent label{
    color: #878786;
 }
+
+.discussion-controls{
+    margin-top: 10px;
+    float: right;
+    width: 100%;
+}
