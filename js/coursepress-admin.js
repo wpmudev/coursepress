@@ -12,6 +12,7 @@ jQuery(document).ready(function($) {
                 {
 					var the_toggle = this;
                     var course_id = $(this).parent().find('.course_state_id').attr('data-id');
+					var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
 					if ($(this).hasClass('disabled')) {
 						return;
 					}
@@ -25,7 +26,8 @@ jQuery(document).ready(function($) {
                             'admin-ajax.php', {
                                 action: 'change_course_state',
                                 course_state: course_state,
-                                course_id: course_id
+                                course_id: course_id,
+								course_nonce: course_nonce,
                             }
                     ).done(function(data, status) {
 		                if (status == 'success') {
@@ -33,6 +35,8 @@ jQuery(document).ready(function($) {
 		                    var response = $.parseJSON($(data).find('response_data').text());
 							// Only toggle if the data is already written
 		                    if (response.toggle) {
+								
+								$(the_toggle).parent().find('.course_state_id').attr('data-nonce', response.nonce)
 			                    if ($(the_toggle).hasClass('on')) {
 			                        $(the_toggle).removeClass('on');
 			                        $(the_toggle).parent().find('.live').removeClass('on');

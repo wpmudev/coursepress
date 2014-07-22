@@ -269,7 +269,7 @@ if ( isset($_GET['quick_setup']) ) {
                                 <td class="column-status <?php echo $style; ?>">
                                     <div class="courses-state">
 										
-                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>"></div>
+                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>" data-nonce="<?php echo wp_create_nonce('toggle-' . $course->ID ); ?>"></div>
                                         <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                                         <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>
