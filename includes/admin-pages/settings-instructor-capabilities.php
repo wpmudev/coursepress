@@ -9,6 +9,8 @@ if ( isset( $_POST['submit'] ) ) {
     $instructor_capabilities = $instructor_role->capabilities;
 
     if ( isset( $_POST['instructor_capability'] ) ) {
+		// Save capabilities as option
+		update_option('coursepress_instructor_capabilities', $_POST['instructor_capability'] );
         foreach ( $instructor_capabilities as $key => $old_cap ) {
             if ( !in_array( $key, $_POST['instructor_capability'] ) && $key != 'read' ) {//making the operation less expensive
                 $instructor_role->remove_cap( $key );
@@ -30,32 +32,36 @@ if ( isset( $_POST['submit'] ) ) {
     
     $wp_user_search = new Instructor_Search( $usersearch, $page_num );
 
-    foreach ( $wp_user_search->get_results() as $user ) {
-        $role = new WP_User( $user->ID );
-        $user_capabilities = $role->wp_capabilities;
-
-        if ( isset( $_POST['instructor_capability'] ) ) {
-            foreach ( $user_capabilities as $key => $old_cap ) {
-                if ( !in_array( $key, $_POST['instructor_capability'] ) && $key != 'read' ) {//making the operation less expensive
-                    $role->remove_cap( $key );
-                }
-            }
-
-            foreach ( $_POST['instructor_capability'] as $new_cap ) {
-                $role->add_cap( $new_cap );
-            }
-        } else {//all unchecked, remove all capabilities except read
-            foreach ( $user_capabilities as $key => $old_cap ) {
-                if ( $key != 'read' ) {
-                    $role->remove_cap( $key );
-                }
-            }
-        }
-    }
+    // foreach ( $wp_user_search->get_results() as $user ) {
+    //     $role = new WP_User( $user->ID );
+    //     $user_capabilities = $role->wp_capabilities;
+    //
+    //     if ( isset( $_POST['instructor_capability'] ) ) {
+    //         foreach ( $user_capabilities as $key => $old_cap ) {
+    //             if ( !in_array( $key, $_POST['instructor_capability'] ) && $key != 'read' ) {//making the operation less expensive
+    //                 $role->remove_cap( $key );
+    //             }
+    //         }
+    //
+    //         foreach ( $_POST['instructor_capability'] as $new_cap ) {
+    //             $role->add_cap( $new_cap );
+    //         }
+    //     } else {//all unchecked, remove all capabilities except read
+    //         foreach ( $user_capabilities as $key => $old_cap ) {
+    //             if ( $key != 'read' ) {
+    //                 $role->remove_cap( $key );
+    //             }
+    //         }
+    //     }
+    // }
 }
 
-$instructor_role = get_role( 'instructor' );
-$instructor_capabilities = $instructor_role->capabilities;
+// $instructor_role = get_role( 'instructor' );
+// $instructor_capabilities = $instructor_role->capabilities;
+
+// The default capabilities for an instructor
+$default_capabilities = array_keys( CoursePress::$capabilities['instructor'], 1 );
+$instructor_capabilities = get_option( 'coursepress_instructor_capabilities', $default_capabilities );
 
 $capability_boxes = array(
     'instructor_capabilities_general' => __( 'General', 'cp' ),
@@ -164,7 +170,8 @@ $instructor_capabilities_notifications = array(
                                 <tr>
                                     <td width="50%"><?php echo $value; ?></td>
                                     <td><input type="checkbox" <?php
-                                        if ( array_key_exists( $key, $instructor_capabilities ) ) {
+                                        // if ( array_key_exists( $key, $instructor_capabilities ) ) {
+										if ( in_array( $key, $instructor_capabilities ) ) {
                                             echo 'checked';
                                         }
                                         ?> name="instructor_capability[]" value="<?php echo $key; ?>"></td>  
