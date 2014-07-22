@@ -10,19 +10,16 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
+					var the_toggle = this;
+                    var course_id = $(this).parent().find('.course_state_id').attr('data-id');
+					if ($(this).hasClass('disabled')) {
+						return;
+					}
                     if ($(this).hasClass('on')) {
-                        $(this).removeClass('on');
-                        $(this).parent().find('.live').removeClass('on');
-                        $(this).parent().find('.draft').addClass('on');
                         var course_state = 'draft';
                     } else {
-                        $(this).addClass('on');
-                        $(this).parent().find('.draft').removeClass('on');
-                        $(this).parent().find('.live').addClass('on');
                         var course_state = 'publish';
                     }
-
-                    var course_id = $(this).parent().find('.course_state_id').attr('data-id');
 
                     $.post(
                             'admin-ajax.php', {
@@ -30,9 +27,25 @@ jQuery(document).ready(function($) {
                                 course_state: course_state,
                                 course_id: course_id
                             }
-                    ).done(function(data) {
-                        //all good
-                    });
+                    ).done(function(data, status) {
+		                if (status == 'success') {
+
+		                    var response = $.parseJSON($(data).find('response_data').text());
+							// Only toggle if the data is already written
+		                    if (response.toggle) {
+			                    if ($(the_toggle).hasClass('on')) {
+			                        $(the_toggle).removeClass('on');
+			                        $(the_toggle).parent().find('.live').removeClass('on');
+			                        $(the_toggle).parent().find('.draft').addClass('on');
+			                    } else {
+			                        $(the_toggle).addClass('on');
+			                        $(the_toggle).parent().find('.draft').removeClass('on');
+			                        $(the_toggle).parent().find('.live').addClass('on');
+			                    }
+
+		                    }
+		                }
+		            });
 
                 });
             }

@@ -9,7 +9,7 @@ if ( isset( $_GET['course_id'] ) && is_numeric( $_GET['course_id'] ) ) {
     $units = $course->get_units();
 }
 
-if ( !current_user_can( 'coursepress_view_all_units_cap' ) && $course->details->post_author != get_current_user_id() ) {
+if ( !current_user_can( 'coursepress_view_all_units_cap' ) && !current_user_can( 'coursepress_update_course_unit_cap' ) && !current_user_can( 'coursepress_update_my_course_unit_cap' ) && $course->details->post_author != get_current_user_id() ) {
     die( __( 'You do not have required persmissions to access this page.', 'cp' ) );
 }
 

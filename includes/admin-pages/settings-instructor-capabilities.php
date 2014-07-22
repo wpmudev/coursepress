@@ -12,7 +12,8 @@ if ( isset( $_POST['submit'] ) ) {
 		// Save capabilities as option
 		update_option('coursepress_instructor_capabilities', $_POST['instructor_capability'] );
         foreach ( $instructor_capabilities as $key => $old_cap ) {
-            if ( !in_array( $key, $_POST['instructor_capability'] ) && $key != 'read' ) {//making the operation less expensive
+            if ( !in_array( $key, $_POST['instructor_capability'] ) && 
+			     in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {//making the operation less expensive
                 $instructor_role->remove_cap( $key );
             }
         }
@@ -30,30 +31,39 @@ if ( isset( $_POST['submit'] ) ) {
     
     /* Set capabilities for each instructor user separately */
     
-    $wp_user_search = new Instructor_Search( $usersearch, $page_num );
+    $wp_user_search = new Instructor_Search();
+	// $wp_user_search = new Instructor_Search( $usersearch, $page_num );
 
-    // foreach ( $wp_user_search->get_results() as $user ) {
-    //     $role = new WP_User( $user->ID );
-    //     $user_capabilities = $role->wp_capabilities;
-    //
-    //     if ( isset( $_POST['instructor_capability'] ) ) {
-    //         foreach ( $user_capabilities as $key => $old_cap ) {
-    //             if ( !in_array( $key, $_POST['instructor_capability'] ) && $key != 'read' ) {//making the operation less expensive
-    //                 $role->remove_cap( $key );
-    //             }
-    //         }
-    //
-    //         foreach ( $_POST['instructor_capability'] as $new_cap ) {
-    //             $role->add_cap( $new_cap );
-    //         }
-    //     } else {//all unchecked, remove all capabilities except read
-    //         foreach ( $user_capabilities as $key => $old_cap ) {
-    //             if ( $key != 'read' ) {
-    //                 $role->remove_cap( $key );
-    //             }
-    //         }
-    //     }
-    // }
+    foreach ( $wp_user_search->get_results() as $user ) {
+		
+		// Don't remove capabilities from administrators
+		if( user_can( $user->ID, 'manage_options' ) ){
+			continue;
+		}
+		
+        $role = new WP_User( $user->ID );
+        $user_capabilities = $role->wp_capabilities;
+
+        if ( isset( $_POST['instructor_capability'] ) ) {
+            foreach ( $user_capabilities as $key => $old_cap ) {
+				// Make sure to only remove CoursePress instructor capabilities
+                if ( !in_array( $key, $_POST['instructor_capability'] ) && 
+				     in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {//making the operation less expensive
+                    $role->remove_cap( $key );
+                }
+            }
+
+            foreach ( $_POST['instructor_capability'] as $new_cap ) {
+                $role->add_cap( $new_cap );
+            }
+        } else {//all unchecked, remove all instructor capabilities
+            foreach ( $user_capabilities as $key => $old_cap ) {
+                if ( in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {
+                    $role->remove_cap( $key );
+                }
+            }
+        }
+    }
 }
 
 // $instructor_role = get_role( 'instructor' );
@@ -130,7 +140,7 @@ $instructor_capabilities_students = array(
     'coursepress_add_new_students_cap' => __( 'Add new users with Student role to the blog', 'cp' ),
     'coursepress_send_bulk_my_students_email_cap' => __( "Send bulk e-mail to students", 'cp' ),
     'coursepress_send_bulk_students_email_cap' => __( "Send bulk e-mail to students within a course made by the instructor only", 'cp' ),
-    'coursepress_delete_students_cap' => __( "Delete Students", 'cp' ),
+    'coursepress_delete_students_cap' => __( "Delete Students (deletes ALL associated course records)", 'cp' ),
 );
 
 $instructor_capabilities_groups = array(

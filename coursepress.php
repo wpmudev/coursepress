@@ -95,7 +95,7 @@ if ( !class_exists('CoursePress') ) {
 			    'coursepress_add_new_students_cap' => 1, 					
 			    'coursepress_send_bulk_my_students_email_cap' => 0, 					
 			    'coursepress_send_bulk_students_email_cap' => 1, 					
-			    'coursepress_delete_students_cap' => 1,				
+			    'coursepress_delete_students_cap' => 0,				
 				/* Groups */
 			    'coursepress_settings_groups_page_cap' => 0, 					
 			    //'coursepress_settings_shortcode_page_cap' => 0,				
@@ -431,13 +431,27 @@ if ( !class_exists('CoursePress') ) {
 			$user->add_cap('edit_posts');
 			$user->add_cap('delete_posts');
 			$user->add_cap('read');
+
+
+			// Fix admin role
+            $role = get_role('administrator');
+            $role->add_cap('read');
+
+			// Add ALL instructor capabilities
+            $admin_capabilities = array_keys( CoursePress::$capabilities['instructor'] );
+			foreach( $admin_capabilities as $cap ) {
+				$role->add_cap( $cap );
+				$user->add_cap( $cap );
+			}
+			
 		}
 		
 		function debugging() {
-			$user = wp_get_current_user();
+			// $user = wp_get_current_user();
 			// $this->restore_capabilities( $user );
 			// $this->assign_instructor_capabilities( $user->ID );
-			cp_write_log( $user->allcaps );
+			// cp_write_log( $user->allcaps );
+			// cp_write_log( get_role('administrator')->capabilities['coursepress_settings_cap'] );
 			
 		}
 
@@ -1624,13 +1638,25 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function change_course_state() {
-
-            if ( isset($_POST['course_state']) && isset($_POST['course_id']) && current_user_can('manage_options') ) {
+			cp_write_log( $_POST );
+			// current_user_can('manage_options') may not always be accurate because its an ajax request
+            if ( isset($_POST['course_state']) && isset($_POST['course_id']) && defined('DOING_AJAX') && DOING_AJAX ) {
 
                 if ( $_POST['course_id'] ) {
                     $course = new Course(( int ) $_POST['course_id']);
                     $course->change_status($_POST['course_state']);
-                }
+                
+		            $response = array(
+		                'what' => 'instructor_invite',
+		                'action' => 'instructor_invite',
+		                'id' => 1, // success status
+		                'data' => json_encode(array('toggle' => true)),
+		            );
+		            $xmlResponse = new WP_Ajax_Response($response);
+		            $xmlResponse->send();
+				
+				}
+								
             }
         }
 

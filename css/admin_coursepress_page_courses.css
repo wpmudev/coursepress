@@ -163,6 +163,10 @@ a .remove-btn{
     background: rgb(107,187,26);
 }
 
+.courses-state .control.disabled {
+	background: #ccc;
+}
+
 .courses-state .publish-course-message{
     display: inline-block;
     font-size: 14px;
