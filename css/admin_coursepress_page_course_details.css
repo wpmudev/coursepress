@@ -63,10 +63,10 @@
     text-align: center;
     padding-bottom: 5px;
     margin-bottom: 10px;
-/*    border: 1px solid #fff;*/
+    /*    border: 1px solid #fff;*/
     cursor: pointer;
     position: relative;
-	
+
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; /* IE8 */
     filter: alpha(opacity=70); /* IE 5-7 */
     opacity: 0.7;	
@@ -74,15 +74,15 @@
 
 .elements-holder .input-element:hover,
 .elements-holder .output-element:hover{
-/*    border: 1px solid #dddddd;
-    -moz-box-shadow:    1px 1px 1px 1px #f3f3f3;
-    -webkit-box-shadow: 1px 1px 1px 1px #f3f3f3;
-    box-shadow:         1px 1px 1px 1px #f3f3f3; */
+    /*    border: 1px solid #dddddd;
+        -moz-box-shadow:    1px 1px 1px 1px #f3f3f3;
+        -webkit-box-shadow: 1px 1px 1px 1px #f3f3f3;
+        box-shadow:         1px 1px 1px 1px #f3f3f3; */
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; /* IE8 */
     filter: alpha(opacity=100); /* IE 5-7 */
     opacity: 1.0;
 
-	
+
 }
 
 .elements-holder .element-label{
@@ -645,6 +645,17 @@ div.buttons a.cancellink {
     width: 100%;
     margin: 5px 0px 10px 0px;
 }
+
+.module-content input[type="text"].radio_answer{
+    width: 95%;
+    margin: 5px 0px 10px 0px;
+}
+
+.module-content input[type="text"].checkbox_answer{
+    width: 95%;
+    margin: 5px 0px 10px 0px;
+}
+
 
 /* END UNIT MODULES*/
 
@@ -1317,6 +1328,8 @@ div.levelinformation {
 
 .audio_url_holder input.audio_url_button{
     width: 9%;
+    float: right;
+    margin-top: 4px;
 }
 
 .audio_additional_controls label{
@@ -1341,6 +1354,8 @@ div.levelinformation {
 
 .video_url_holder input.video_url_button{
     width: 9%;
+    float: right;
+    margin-top: 4px;
 }
 
 .video_additional_controls label{
@@ -1360,6 +1375,8 @@ div.levelinformation {
 
 .file_url_holder input.file_url_button{
     width: 9%;
+    float: right;
+    margin-top: 4px;
 }
 
 
@@ -1480,16 +1497,21 @@ a.delete_module_link:hover, a.remove_module_link:hover {
 }
 
 .form-table input[type=radio].radio_answer_check{
-    margin-left: 10px;
+    margin-left: 1%;
     margin-top: 9px;
-    margin-right: 30px;
+    margin-right: 2.3%;
     float: left;
 }
 
 
 .radio_answer{
     float: left;
-    width: 90% !important;
+    width: 95%;
+}
+
+.radio_remove .fa,
+.checkbox_remove .fa{
+    padding-top: 10px;
 }
 
 .checkbox_answer_check,
@@ -1499,15 +1521,15 @@ a.delete_module_link:hover, a.remove_module_link:hover {
 }
 
 .form-table input[type=checkbox].checkbox_answer_check{
-    margin-left: 10px;
+    margin-left: 1%;
     margin-top: 9px;
-    margin-right: 30px;
+    margin-right: 2.3%;
     float: left;
 }
 
 .checkbox_answer{
     float: left;
-    width: 90% !important;
+    width: 95%;
 }
 
 #students_accordion .sidebar-name h3{
@@ -1652,7 +1674,7 @@ a .remove-btn:hover{
 
 .delete_unit{
     float: right;
-    margin-right: -15px;
+    margin-right: -35px;
     margin-top: -5px;
 }
 
@@ -1690,7 +1712,7 @@ label.bold-label{
 
 .coursepress_page_course_details .mp-wrap .mp-settings .section.static,
 .coursepress_page_course_details .mp-wrap .mp-settings .section{
-    padding: 20px;
+    padding: 27px;
 }
 
 .coursepress_page_course_details .mp-wrap .mp-settings .section.elements-section{
@@ -2203,6 +2225,9 @@ label.bold-label{
 
 .unit_page_title input{
     width: 99%;
+    width: -webkit-calc(100% - 27px);
+    width: -moz-calc(100% - 27px);
+    width: calc(100% - 27px);
     margin-bottom: 20px;
 }
 

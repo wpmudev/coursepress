@@ -233,12 +233,12 @@ class checkbox_input_module extends Unit_Module {
                         <tbody class="ci_items">
                             <tr>
 
-                                <th width="90%">
+                                <th width="96%">
                         <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
                         <div class="checkbox_answer"></div>
                         </th>
 
-                        <th width="10%">
+                        <th width="3%">
                             <!--<a class="checkbox_new_link"><?php _e('Add New', 'cp'); ?></a>-->
                         </th>
 
@@ -261,7 +261,7 @@ class checkbox_input_module extends Unit_Module {
                                 foreach ( $data->answers as $answer ) {
                                     ?>
                                     <tr>
-                                        <td width="90%">
+                                        <td width="96%">
                                             <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr(( isset($answer) ? $answer : '')); ?>' <?php
                                             if ( is_array($data->checked_answers) && in_array($answer, $data->checked_answers) ) {
                                                 echo 'checked';
@@ -270,11 +270,11 @@ class checkbox_input_module extends Unit_Module {
                                             <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr(( isset($answer) ? $answer : '')); ?>' />
                                         </td>
                                         <?php if ( $answer_cnt >= 2 ) { ?>
-                                            <td width="10%">    
-                                                <a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
+                                            <td width="3%">    
+                                                <a class="checkbox_remove" onclick="jQuery(this).parent().parent().remove();"><i class="fa fa-trash-o"></i></a>
                                             </td>
                                         <?php } else { ?>
-                                            <td width="10%">&nbsp;</td>
+                                            <td width="3%">&nbsp;</td>
                                         <?php } ?>
                                     </tr>
                                     <?php
@@ -284,19 +284,19 @@ class checkbox_input_module extends Unit_Module {
                         } else {
                             ?>
                             <tr>
-                                <td width="90%">
+                                <td width="96%">
                                     <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" checked />
                                     <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                 </td>
-                                <td width="10%">&nbsp;</td>  
+                                <td width="3%">&nbsp;</td>  
                             </tr>
 
                             <tr>
-                                <td width="90%">
+                                <td width="96%">
                                     <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_checkbox_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                     <input class="checkbox_answer" type="text" name="<?php echo $this->name . '_checkbox_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                 </td>
-                                <td width="10%">&nbsp;</td>  
+                                <td width="3%">&nbsp;</td>  
                             </tr>
                             <?php
                         }

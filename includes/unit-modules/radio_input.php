@@ -226,11 +226,11 @@ class radio_input_module extends Unit_Module {
                     <table class="form-table">
                         <tbody class="ri_items">
                             <tr>
-                                <th width="90%">
+                                <th width="96%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
                         <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                      ?></div>
                         </th>
-                        <th width="10%">
+                        <th width="3%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
                         </th>
                         </tr>
@@ -250,7 +250,7 @@ class radio_input_module extends Unit_Module {
                             foreach ( $data->answers as $answer ) {
                                 ?>
                                 <tr>
-                                    <td width="90%">
+                                    <td width="96%">
                                         <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" <?php
                                         if ( $data->checked_answer == $answer ) {
                                             echo 'checked';
@@ -260,11 +260,11 @@ class radio_input_module extends Unit_Module {
 
                                     </td>
                                     <?php if ( $answer_cnt >= 2 ) { ?>
-                                        <td width="10%">    
-                                            <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();">Remove</a>
+                                        <td width="3%">    
+                                            <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();"><i class="fa fa-trash-o"></i></a>
                                         </td>
                                     <?php } else { ?>
-                                        <td width="10%">&nbsp;</td>
+                                        <td width="3%">&nbsp;</td>
                                     <?php } ?>
                                 </tr>
                                 <?php
@@ -273,19 +273,19 @@ class radio_input_module extends Unit_Module {
                         } else {
                             ?>
                             <tr>
-                                <td width="90%">
+                                <td width="96%">
                                     <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" checked />
                                     <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                 </td>
-                                <td width="10%">&nbsp;</td>  
+                                <td width="3%">&nbsp;</td>  
                             </tr>
 
                             <tr>
-                                <td width="90%">
+                                <td width="96%">
                                     <input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                     <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" />
                                 </td>
-                                <td width="10%">&nbsp;</td>  
+                                <td width="3%">&nbsp;</td>  
                             </tr>
 
                             <?php

@@ -193,7 +193,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                     <?php if ( $unit_id != 0 ) { ?>
                         <span class="delete_unit">							
                             <a class="button button-units button-delete-unit" href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_id . '&action=delete_unit'); ?>" onclick="return removeUnit();">
-                                <i class="fa fa-trash-o"></i> <?php _e('Delete Unit', 'cp'); ?>
+                                <i class="fa fa-trash-o"></i>&nbsp;&nbsp;&nbsp;<?php _e('Delete Unit', 'cp'); ?>
                             </a>
                         </span>
                     <?php } ?>
@@ -261,7 +261,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                             <div class="unit_page_title">
                                                 <label><?php _e('Page Title', 'cp'); ?>
                                                     <span class="delete_unit_page">							
-                                                        <a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e('Delete Unit Page and Elements', 'cp'); ?></a>
+                                                        <a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e('Delete Page', 'cp'); ?></a>
                                                     </span>
                                                 </label>
                                                 <div class="description"><?php _e('The title will be displayed on the Course Overview and Unit page'); ?></div>

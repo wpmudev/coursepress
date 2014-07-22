@@ -1,3 +1,35 @@
+@media only screen and ( max-width: 1250px ) {
+    .column-status{
+        width: 15%;
+    }
+    
+    .column-course{
+        width: 40%;
+    }
+}
+
+@media only screen and ( max-width: 1150px ) {
+    .column-units{
+        width: 13%;
+    }
+    
+    .column-status{
+        width: 17%;
+    }
+}
+
+@media only screen and ( max-width: 960px ) {
+    .column-units{
+        width: 15%;
+    }
+    
+    .column-status{
+        width: 17%;
+    }
+}
+
+
+
 /* Left side navifation ( Admin Menu ) is collapsed */
 @media only screen and ( max-width: 900px ) {
 }

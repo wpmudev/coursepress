@@ -2839,9 +2839,8 @@ label.error:before {
 
 .cp-move-icon{
     font-size: 14px;
-    padding: 0px 5px 0px 5px;
-	z-index: 9999;
-        
+    padding: 0px 6px 0px 5px;
+    z-index: 9999;
 }
 
 .x{

@@ -1,86 +1,187 @@
+@media only screen and ( max-width: 1480px ) {
+    .module-content input[type="text"].radio_answer{
+        width: 94%;
+        margin: 5px 0px 10px 0px;
+    }
+
+    .module-content input[type="text"].checkbox_answer{
+        width: 94%;
+        margin: 5px 0px 10px 0px;
+    }
+}
+
+@media only screen and ( max-width: 1200px ) {
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 88%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 10%;
+    }
+}
+
+@media only screen and ( max-width: 1150px ) {
+    .module-content input[type="text"].radio_answer{
+        width: 93%;
+        margin: 5px 0px 10px 0px;
+    }
+
+    .module-content input[type="text"].checkbox_answer{
+        width: 93%;
+        margin: 5px 0px 10px 0px;
+    }
+
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 86%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 11%;
+    }
+}
+
 @media only screen and ( max-width: 1039px ) {
-	.student-invitation fieldset label,
-	.student-invitation label {
-		display: block;
-		margin-bottom: 10px;
-	}
-	.student-invitation fieldset label span,
-	.student-invitation label span {
-		display: block;
-		min-width: 200px;
-	}
-	.student-invitation fieldset label input,
-	.student-invitation label input {
-/*		width: 100%;*/
-	}	
-	
+    .student-invitation fieldset label,
+    .student-invitation label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .student-invitation fieldset label span,
+    .student-invitation label span {
+        display: block;
+        min-width: 200px;
+    }
+    .student-invitation fieldset label input,
+    .student-invitation label input {
+        /*		width: 100%;*/
+    }	
+
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 84%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 12%;
+    }
+
+}
+
+@media only screen and ( max-width: 960px ) {
+    .module-content input[type="text"].radio_answer{
+        width: 91%;
+        margin: 5px 0px 10px 0px;
+    }
+
+    .module-content input[type="text"].checkbox_answer{
+        width: 91%;
+        margin: 5px 0px 10px 0px;
+    }
+
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 84%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 14%;
+    }
 }
 
 /* Left side navifation ( Admin Menu ) is collapsed */
 @media only screen and ( max-width: 900px ) {
-	.student-invitation fieldset label,
-	.student-invitation label {
-		display: block;
-		margin-bottom: 10px;
-	}
-	.student-invitation fieldset label span,
-	.student-invitation label span {
-		display: block;
-		min-width: 200px;
-	}
-	.student-invitation fieldset label input,
-	.student-invitation label input {
-/*		width: 100%;*/
-	}	
-	
+    .student-invitation fieldset label,
+    .student-invitation label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .student-invitation fieldset label span,
+    .student-invitation label span {
+        display: block;
+        min-width: 200px;
+    }
+    .student-invitation fieldset label input,
+    .student-invitation label input {
+        /*		width: 100%;*/
+    }	
+
 }
 
 /* Menu bar goes responsive */
 @media only screen and ( max-width: 782px ) {
-	.sidebar-name{
-		/*clear: both;*/
-	}
+    .sidebar-name{
+        /*clear: both;*/
+    }
+}
+
+@media ( max-width: 570px ) {
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 81%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 17%;
+    }
+}
+
+
+@media ( max-width: 450px ) {
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 79%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 18%;
+    }
 }
 
 /* List table anomalies */
 @media ( max-width: 439px ) {
-	.coursepress_page_course_details .nav-tab{
-		padding: 10px;
-	}
-
-
+    .coursepress_page_course_details .nav-tab{
+        padding: 10px;
+    }
 }
 
 
 /* List table anomalies */
 @media ( max-width: 555px ) {
-	#students_accordion .additional_class_actions_add_student,
-	#students_accordion .additional_class_actions { 
-		width: 100%; 
-	}
-	
+    #students_accordion .additional_class_actions_add_student,
+    #students_accordion .additional_class_actions { 
+        width: 100%; 
+    }
+
 }
 
 /* For extra small devices */
 @media ( max-width: 480px ) {
-	
-	.student-invitation fieldset label,
-	.student-invitation label {
-		display: block;
-		margin-bottom: 10px;
-	}
-	.student-invitation fieldset label span,
-	.student-invitation label span {
-		display: block;
-		min-width: 200px;
-	}
-	.student-invitation fieldset label input,
-	.student-invitation label input {
-		width: 100%;
-	}	
-	
-	.coursepress_page_course_details .nav-tab{
-		font-size: 0.8em;
-		padding: 13px;
-	}
+
+    .student-invitation fieldset label,
+    .student-invitation label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .student-invitation fieldset label span,
+    .student-invitation label span {
+        display: block;
+        min-width: 200px;
+    }
+    .student-invitation fieldset label input,
+    .student-invitation label input {
+        width: 100%;
+    }	
+
+    .coursepress_page_course_details .nav-tab{
+        font-size: 0.8em;
+        padding: 13px;
+    }
 }
