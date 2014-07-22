@@ -159,7 +159,7 @@ $students_count = $course->get_number_of_students();
         <?php if ( isset($course_id) && $course_id !== '' ) { ?>
 
             <div class="course-state">
-                <div id="course_state_id" data-id="<?php echo $course_id ?>"></div>
+                <div id="course_state_id" data-id="<?php echo $course_id ?>" data-nonce="<?php echo wp_create_nonce('toggle-' . $course_id ); ?>"></div>
                 <span class="publish-course-message"><?php _e('Publish Course', 'cp'); ?></span>
                 <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                 <div class="control <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">

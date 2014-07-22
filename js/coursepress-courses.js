@@ -1240,17 +1240,44 @@ jQuery(document).ready(function($) {
                     }
 
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
+					var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
 
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
                                 'admin-ajax.php', {
                                     action: 'change_unit_state',
                                     unit_state: unit_state,
-                                    unit_id: unit_id
+                                    unit_id: unit_id,
+									unit_nonce: unit_nonce,
                                 }
-                        ).done(function(data) {
-                            //all good
-                        });
+                        ).done(function(data, status) {
+			                if (status == 'success') {
+
+			                    var response = $.parseJSON($(data).find('response_data').text());
+								console.log(response);
+								// Apply a new nonce when returning
+			                    if (response.toggle) {								
+									$(selector).parent().find('.unit_state_id').attr('data-nonce', response.nonce);
+							
+								// Else, toggle back.	
+								} else {
+				                    if ($(selector).hasClass('on')) {
+				                        $(selector).removeClass('on');
+				                        $(selector).parent().find('.live').removeClass('on');
+				                        $(selector).parent().find('.draft').addClass('on');
+				                        $('#unit_state').val('draft');
+				                        $('.mp-tab.active .unit-state-circle').removeClass('active');
+				                    } else {
+				                        $(selector).addClass('on');
+				                        $(selector).parent().find('.draft').removeClass('on');
+				                        $(selector).parent().find('.live').addClass('on');
+				                        $('#unit_state').val('publish');
+				                        $('.mp-tab.active .unit-state-circle').addClass('active');
+				                    }
+								}
+		                	}
+		            	});
+					
                     }
                 });
             }
@@ -1285,16 +1312,39 @@ jQuery(document).ready(function($) {
                     }
 
                     var course_id = $('#course_state_id').attr('data-id');
+					var course_nonce = $('#course_state_id').attr('data-nonce');
 
                     $.post(
                             'admin-ajax.php', {
                                 action: 'change_course_state',
                                 course_state: course_state,
-                                course_id: course_id
+                                course_id: course_id,
+								course_nonce: course_nonce,								
                             }
-                    ).done(function(data) {
-                        //all good
-                    });
+                    ).done(function(data, status) {
+		                if (status == 'success') {
+
+		                    var response = $.parseJSON($(data).find('response_data').text());
+							console.log(response);
+							// Apply a new nonce when returning
+		                    if (response.toggle) {								
+								$('#course_state_id').attr('data-nonce', response.nonce);
+							
+							// Else, toggle back.	
+							} else {
+			                    if ($(selector).hasClass('on')) {
+			                        $(selector).removeClass('on');
+			                        $(selector).parent().find('.live').removeClass('on');
+			                        $(selector).parent().find('.draft').addClass('on');
+			                        $('#course_state').val('draft');
+			                    } else {
+			                        $(selector).addClass('on');
+			                        $(selector).parent().find('.draft').removeClass('on');
+			                        $(selector).parent().find('.live').addClass('on');
+			                    }
+							}
+		                }
+		            });
 
                 });
             }

@@ -10,6 +10,7 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
+
 					var the_toggle = this;
                     var course_id = $(this).parent().find('.course_state_id').attr('data-id');
 					var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
@@ -17,9 +18,15 @@ jQuery(document).ready(function($) {
 						return;
 					}
                     if ($(this).hasClass('on')) {
+                        $(the_toggle).removeClass('on');
+                        $(the_toggle).parent().find('.live').removeClass('on');
+                        $(the_toggle).parent().find('.draft').addClass('on');						
                         var course_state = 'draft';
                     } else {
-                        var course_state = 'publish';
+                        $(the_toggle).addClass('on');
+                        $(the_toggle).parent().find('.draft').removeClass('on');
+                        $(the_toggle).parent().find('.live').addClass('on');
+						var course_state = 'publish';
                     }
 
                     $.post(
@@ -33,10 +40,12 @@ jQuery(document).ready(function($) {
 		                if (status == 'success') {
 
 		                    var response = $.parseJSON($(data).find('response_data').text());
-							// Only toggle if the data is already written
-		                    if (response.toggle) {
-								
+							// Apply a new nonce when returning
+		                    if (response.toggle) {								
 								$(the_toggle).parent().find('.course_state_id').attr('data-nonce', response.nonce)
+							
+							// Else, toggle back.	
+							} else {
 			                    if ($(the_toggle).hasClass('on')) {
 			                        $(the_toggle).removeClass('on');
 			                        $(the_toggle).parent().find('.live').removeClass('on');
@@ -46,8 +55,7 @@ jQuery(document).ready(function($) {
 			                        $(the_toggle).parent().find('.draft').removeClass('on');
 			                        $(the_toggle).parent().find('.live').addClass('on');
 			                    }
-
-		                    }
+							}
 		                }
 		            });
 
