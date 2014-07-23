@@ -24,7 +24,7 @@ if ( isset($_GET['quick_setup']) ) {
 
                 switch ( addslashes($action) ) {
                     case 'publish':
-                        if ( CoursePress_Capabilities::can_change_course_status( $couse_id ) ) {
+                        if ( CoursePress_Capabilities::can_change_course_status( $course_id ) ) {
                             $course->change_status('publish');
                             $message = __('Selected courses have been published successfully.', 'cp');
 							$some_success = true;
@@ -38,7 +38,7 @@ if ( isset($_GET['quick_setup']) ) {
                         break;
 
                     case 'unpublish':
-                        if ( CoursePress_Capabilities::can_change_course_status( $couse_id ) ) {
+                        if ( CoursePress_Capabilities::can_change_course_status( $course_id ) ) {
                             $course->change_status('private');
                             $message = __('Selected courses have been unpublished successfully.', 'cp');
 							$some_success = true;
@@ -52,7 +52,7 @@ if ( isset($_GET['quick_setup']) ) {
                         break;
 
                     case 'delete':
-                        if ( CoursePress_Capabilities::can_delete_course( $couse_id ) ) {
+                        if ( CoursePress_Capabilities::can_delete_course( $course_id ) ) {
                             $course->delete_course();
                             $message = __('Selected courses have been deleted successfully.', 'cp');
 							$some_success = true;
