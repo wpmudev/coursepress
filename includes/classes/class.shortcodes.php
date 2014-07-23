@@ -1613,7 +1613,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
-                $content .= sprintf(__('You have not yet enrolled in a course. Browse courses %s', 'cp'), '<a target="_blank" href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
+                $content .= sprintf(__('You have not yet enrolled in a course. Browse courses %s', 'cp'), '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
             }
 
             $content .= '</div>'; //course-list

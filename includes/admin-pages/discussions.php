@@ -27,7 +27,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                             $discussion->delete_discussion();
                             $message = __( 'Selected discussions have been deleted successfully.', 'cp' );
                         } else {
-                            $message = __( "You don't have right persmissions to delete the discussion.", 'cp' );
+                            $message = __( "You don't have right permissions to delete the discussion.", 'cp' );
                         }
                         break;
                 }
@@ -65,7 +65,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             $discussion->delete_discussion( $force_delete = true );
             $message = __( 'Selected discussion has been deleted successfully.', 'cp' );
         } else {
-            $message = __( "You don't have right persmissions to delete the discussion.", 'cp' );
+            $message = __( "You don't have right permissions to delete the discussion.", 'cp' );
         }
     }
     ?>

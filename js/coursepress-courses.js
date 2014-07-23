@@ -1223,6 +1223,10 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
+					if ($(this).hasClass('disabled')) {
+						return;
+					}
+					
                     if ($(selector).hasClass('on')) {
                         $(selector).removeClass('on');
                         $(selector).parent().find('.live').removeClass('on');
@@ -1241,7 +1245,8 @@ jQuery(document).ready(function($) {
 
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
 					var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
-
+					var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');					
+					
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
                                 'admin-ajax.php', {
@@ -1249,6 +1254,7 @@ jQuery(document).ready(function($) {
                                     unit_state: unit_state,
                                     unit_id: unit_id,
 									unit_nonce: unit_nonce,
+									required_cap: required_cap,
                                 }
                         ).done(function(data, status) {
 			                if (status == 'success') {
@@ -1256,9 +1262,9 @@ jQuery(document).ready(function($) {
 			                    var response = $.parseJSON($(data).find('response_data').text());
 								console.log(response);
 								// Apply a new nonce when returning
-			                    if (response.toggle) {								
-									$(selector).parent().find('.unit_state_id').attr('data-nonce', response.nonce);
-							
+			                    if (response && response.toggle) {								
+									$( $(selector).parents('form')[0] ).find('.unit_state_id').attr('data-nonce', response.nonce);
+									$( $(selector).parents('form')[0] ).find('.unit_state_id').attr('data-cap', response.cap);
 								// Else, toggle back.	
 								} else {
 				                    if ($(selector).hasClass('on')) {
@@ -1298,6 +1304,10 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
+					if ($(this).hasClass('disabled')) {
+						return;
+					}
+					
                     if ($(selector).hasClass('on')) {
                         $(selector).removeClass('on');
                         $(selector).parent().find('.live').removeClass('on');
@@ -1313,13 +1323,15 @@ jQuery(document).ready(function($) {
 
                     var course_id = $('#course_state_id').attr('data-id');
 					var course_nonce = $('#course_state_id').attr('data-nonce');
-
+					var required_cap = $('#course_state_id').attr('data-cap');
+					
                     $.post(
                             'admin-ajax.php', {
                                 action: 'change_course_state',
                                 course_state: course_state,
                                 course_id: course_id,
 								course_nonce: course_nonce,								
+								required_cap: required_cap,								
                             }
                     ).done(function(data, status) {
 		                if (status == 'success') {
@@ -1327,9 +1339,9 @@ jQuery(document).ready(function($) {
 		                    var response = $.parseJSON($(data).find('response_data').text());
 							console.log(response);
 							// Apply a new nonce when returning
-		                    if (response.toggle) {								
+		                    if (response && response.toggle) {								
 								$('#course_state_id').attr('data-nonce', response.nonce);
-							
+								$('#course_state_id').attr('data-cap', response.cap);
 							// Else, toggle back.	
 							} else {
 			                    if ($(selector).hasClass('on')) {

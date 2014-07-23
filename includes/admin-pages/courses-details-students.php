@@ -5,7 +5,7 @@ $course = new Course( $course_id );
 /* Invite a Student */
 if ( isset( $_POST['invite_student'] ) ) {
     check_admin_referer( 'student_invitation' );
-    if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+    if ( CoursePress_Capabilities::can_assign_course_student( $course_id ) ) {
         $email_args['email_type'] = 'student_invitation';
         $email_args['course_id'] = $course_id;
         $email_args['student_first_name'] = $_POST['first_name'];

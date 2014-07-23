@@ -21,13 +21,81 @@
 */
 
 /**
- * Helper class for getting capabilities.
+ * Helper class for working with CoursePress capabilities.
  *
  * @since 1.0.0
  *
  * @return object
  */
-class CP_Helper_Capabilities {
+class CoursePress_Capabilities {
+	public static $capabilities = array(
+		'instructor' => array(
+			/* General */
+		    'coursepress_dashboard_cap' => 1, 					
+		    'coursepress_courses_cap' => 1, 					
+		    'coursepress_instructors_cap' => 1, 					
+		    'coursepress_students_cap' => 1, 					
+		    'coursepress_assessment_cap' => 1, 					
+		    'coursepress_reports_cap' => 1, 					
+		    'coursepress_notifications_cap' => 1, 					
+		    'coursepress_settings_cap' => 1, 									
+			/* Courses */
+		    'coursepress_create_course_cap' => 1, 					
+		    'coursepress_update_course_cap' => 0, 					
+		    'coursepress_update_my_course_cap' => 1,
+		    'coursepress_update_all_courses_cap' => 0, // NOT IMPLEMENTED YET				
+		    'coursepress_delete_course_cap' => 0,			
+		    'coursepress_delete_my_course_cap' => 1,
+		    'coursepress_delete_all_courses_cap' => 0, // NOT IMPLEMENTED YET
+		    'coursepress_change_course_status_cap' => 0, 
+		    'coursepress_change_my_course_status_cap' => 1,
+			'coursepress_change_all_courses_status_cap' => 0, // NOT IMPLEMENTED YET
+			/* Units */
+		    'coursepress_create_course_unit_cap' => 1, 					
+		    'coursepress_view_all_units_cap' => 0, 					
+		    'coursepress_update_course_unit_cap' => 1, 													
+		    'coursepress_update_my_course_unit_cap' => 1, 				
+		    'coursepress_update_all_courses_unit_cap' => 0, // NOT IMPLEMENTED YET					
+		    'coursepress_delete_course_units_cap' => 1, 					
+		    'coursepress_delete_my_course_units_cap' => 1, 					
+			'coursepress_delete_all_courses_units_cap' => 0, // NOT IMPLEMENTED YET
+		    'coursepress_change_course_unit_status_cap' => 1, 					
+		    'coursepress_change_my_course_unit_status_cap' => 1,
+		    'coursepress_change_all_courses_unit_status_cap' => 0,  // NOT IMPLEMENTED YET				
+			/* Instructors */
+		    'coursepress_assign_and_assign_instructor_course_cap' => 0, 					
+		    'coursepress_assign_and_assign_instructor_my_course_cap' => 1,
+			/* Classes */
+		    'coursepress_add_new_classes_cap' => 0, 					
+		    'coursepress_add_new_my_classes_cap' => 0, 					
+		    'coursepress_delete_classes_cap' => 0, 					
+		    'coursepress_delete_my_classes_cap' => 0,
+			/* Students */
+		    'coursepress_invite_students_cap' => 0, 					
+		    'coursepress_invite_my_students_cap' => 1, 					
+		    'coursepress_withdraw_students_cap' => 0, 					
+		    'coursepress_withdraw_my_students_cap' => 1, 					
+		    //'coursepress_add_move_students_cap' => 0, 					
+		    //'coursepress_add_move_my_students_cap' => 0, 					
+		    //'coursepress_change_students_group_class_cap' => 0, 					
+		    //'coursepress_change_my_students_group_class_cap' => 0, 					
+		    'coursepress_add_new_students_cap' => 1, 					
+		    'coursepress_send_bulk_my_students_email_cap' => 0, 					
+		    'coursepress_send_bulk_students_email_cap' => 1, 					
+		    'coursepress_delete_students_cap' => 0,				
+			/* Groups */
+		    'coursepress_settings_groups_page_cap' => 0, 					
+		    //'coursepress_settings_shortcode_page_cap' => 0,				
+			/* Notifications */
+		    'coursepress_create_notification_cap' => 1, 					
+		    'coursepress_update_notification_cap' => 0, 					
+		    'coursepress_update_my_notification_cap' => 1, 					
+		    'coursepress_delete_notification_cap' => 0, 					
+		    'coursepress_delete_my_notification_cap' => 1, 					
+		    'coursepress_change_notification_status_cap' => 0, 					
+		    'coursepress_change_my_notification_status_cap' => 1,
+		),
+	);
 
 	/**
 	 * Can the user create a course?  
@@ -55,10 +123,12 @@ class CP_Helper_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-				
+		
+		$course_creator = self::is_course_creator( $course_id, $user_id );			
 		$my_course = self::is_course_instructor( $course_id, $user_id );	
 		
-		return ($my_course && user_can( $user_id, 'coursepress_update_my_course_cap' ) ) || user_can( $user_id, 'coursepress_update_course_cap' ) ? true : false;
+		// return ($my_course && user_can( $user_id, 'coursepress_update_my_course_cap' ) ) || user_can( $user_id, 'coursepress_update_course_cap' ) ? true : false;
+		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_update_my_course_cap' ) ) || user_can( $user_id, 'coursepress_update_course_cap' ) ) ) || user_can( $user_id, 'coursepress_update_all_courses_cap' ) ? true : false;
 	}
 
 	/**
@@ -73,9 +143,11 @@ class CP_Helper_Capabilities {
 			$user_id = get_current_user_id();
 		}
 				
+		$course_creator = self::is_course_creator( $course_id, $user_id );					
 		$my_course = self::is_course_instructor( $course_id, $user_id );	
 		
-		return ($my_course && user_can( $user_id, 'coursepress_delete_my_course_cap' ) ) || user_can( $user_id, 'coursepress_delete_course_cap' ) ? true : false;
+		// return ($my_course && user_can( $user_id, 'coursepress_delete_my_course_cap' ) ) || user_can( $user_id, 'coursepress_delete_course_cap' ) ? true : false;
+		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_delete_my_course_cap' ) ) || user_can( $user_id, 'coursepress_delete_course_cap' ) ) ) || user_can( $user_id, 'coursepress_delete_all_courses_cap' ) ? true : false;		
 	}
 
 	/**
@@ -89,10 +161,11 @@ class CP_Helper_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-				
+						
+		$course_creator = self::is_course_creator( $course_id, $user_id );	
 		$my_course = self::is_course_instructor( $course_id, $user_id );	
 		
-		return ($my_course && user_can( $user_id, 'coursepress_change_my_course_status_cap' ) ) || user_can( $user_id, 'coursepress_change_course_status_cap' ) ? true : false;
+		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_change_my_course_status_cap' ) ) || user_can( $user_id, 'coursepress_change_course_status_cap' ) ) ) || user_can( $user_id, 'coursepress_change_all_courses_status_cap' ) ? true : false;
 	}	
 
 	/**
@@ -203,6 +276,40 @@ class CP_Helper_Capabilities {
 		return ( $my_course && ( ( $my_unit && user_can( $user_id, 'coursepress_change_my_course_unit_status_cap' ) ) || user_can( $user_id, 'coursepress_change_course_unit_status_cap' ) ) ) || user_can( $user_id, 'coursepress_change_all_courses_unit_status_cap' ) ? true : false;
 	}		
 
+	/**
+	 * Can the user assign a course instructor? 
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */	
+	public static function can_assign_course_instructor( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+			
+		$my_course = self::is_course_instructor( $course_id, $user_id );	
+	
+		return ($my_course && user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) ) || user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' ) ? true : false;
+	}
+
+	/**
+	 * Can the user invite students? 
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */	
+	public static function can_assign_course_student( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+			
+		$my_course = self::is_course_instructor( $course_id, $user_id );	
+	
+		return ($my_course && user_can( $user_id, 'coursepress_invite_my_students_cap' ) ) || user_can( $user_id, 'coursepress_invite_students_cap' ) ? true : false;
+	}
+
 
 	/**
 	 * Is the user an instructor of this course?
@@ -238,6 +345,25 @@ class CP_Helper_Capabilities {
 			return false;
 		} else {
 			return $user_id == get_post_field( 'post_author', $unit_id ) ? true : false;
+		}
+	}
+
+	/**
+	 * Is the user the course author?
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */	
+	public static function is_course_creator( $course_id = '', $user_id = '' ){
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		
+		if( empty( $course_id ) ) {
+			return false;
+		} else {
+			return $course_id == get_post_field( 'post_author', $course_id ) ? true : false;
 		}
 	}
 	

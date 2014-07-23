@@ -27,7 +27,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                             $notification->change_status( 'publish' );
                             $message = __( 'Selected notifications have been published successfully.', 'cp' );
                         } else {
-                            $message = __( "You don't have right persmissions to change notification status.", 'cp' );
+                            $message = __( "You don't have right permissions to change notification status.", 'cp' );
                         }
                         break;
 
@@ -36,7 +36,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                             $notification->change_status( 'private' );
                             $message = __( 'Selected notifications have been set to private successfully.', 'cp' );
                         } else {
-                            $message = __( "You don't have right persmissions to change notification status.", 'cp' );
+                            $message = __( "You don't have right permissions to change notification status.", 'cp' );
                         }
                         break;
 
@@ -45,7 +45,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
                             $notification->delete_notification();
                             $message = __( 'Selected notifications have been deleted successfully.', 'cp' );
                         } else {
-                            $message = __( "You don't have right persmissions to delete the notification.", 'cp' );
+                            $message = __( "You don't have right permissions to delete the notification.", 'cp' );
                         }
                         break;
                 }
@@ -84,7 +84,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
             $notification->delete_notification( $force_delete = true );
             $message = __( 'Selected notification has been deleted successfully.', 'cp' );
         } else {
-            $message = __( "You don't have right persmissions to delete the notification.", 'cp' );
+            $message = __( "You don't have right permissions to delete the notification.", 'cp' );
         }
     }
 

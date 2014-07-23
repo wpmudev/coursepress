@@ -178,8 +178,9 @@ if (isset($_GET['course_id'])) {
 }
 
 // Detect gateways for MarketPress
-// MarketPress 2.x and MarketPress Lite 
-$gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : false;
+// MarketPress 2.x and MarketPress Lite
+$mp_settings = get_option('mp_settings');
+$gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
 
 
 
@@ -197,7 +198,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                 <?php if (isset($course_id)) { ?>
                     <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                     <?php
-                    if ( current_user_can('coursepress_update_course_cap') || current_user_can('coursepress_update_my_course_cap') ) {
+                    if ( CoursePress_Capabilities::can_update_course( $course_id ) ) {
                         ?>
                         <input type="hidden" name="admin_url" value="<?php echo admin_url('admin.php?page=course_details'); ?>" />
                     <?php } ?>
@@ -232,7 +233,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                             <?php }*/ ?>
 
                             <?php
-                            if (( $course_id != 0 && current_user_can('coursepress_update_course_cap') ) || ( $course_id != 0 && current_user_can('coursepress_update_my_course_cap') && $course_details->post_author == get_current_user_id() )) {//do not show anything
+                            if ( $course_id != 0 && CoursePress_Capabilities::can_update_course( $course_id ) ) {//do not show anything
                                 ?>
                                 <a class="button button-preview" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('Preview', 'cp');?></a>
 
@@ -688,7 +689,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                             <span><?php _e('Select one or more instructor to facilitate this course', 'cp'); ?></span>
                                         </label>
 
-                                        <?php if (( current_user_can('coursepress_assign_and_assign_instructor_course_cap') ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id() ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && !isset($_GET['course_id']) )) { ?>
+                                        <?php if ( CoursePress_Capabilities::can_assign_course_instructor( $course_id ) ) { ?>
                                             <?php coursepress_instructors_avatars_array(); ?>
 
                                             <div class="clearfix"></div>
@@ -711,11 +712,7 @@ $gateways = ! empty(get_option('mp_settings')['gateways']['allowed']) ? true : f
                                             <?php endif ?>
 
                                             <?php
-                                            if (( current_user_can('coursepress_assign_and_assign_instructor_course_cap') ) || ( current_user_can('coursepress_assign_and_assign_instructor_my_course_cap') && $course->details->post_author == get_current_user_id() )) {
-                                                $can_manage_instructors = true;
-                                            } else {
-                                                $can_manage_instructors = false;
-                                            }
+												$can_manage_instructors = CoursePress_Capabilities::can_assign_course_instructor( $course_id );
                                             ?>
 
                                             <?php coursepress_instructors_avatars($course_id, $can_manage_instructors); ?>

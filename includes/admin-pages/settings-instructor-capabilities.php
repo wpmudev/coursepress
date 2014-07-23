@@ -13,7 +13,7 @@ if ( isset( $_POST['submit'] ) ) {
 		update_option('coursepress_instructor_capabilities', $_POST['instructor_capability'] );
         foreach ( $instructor_capabilities as $key => $old_cap ) {
             if ( !in_array( $key, $_POST['instructor_capability'] ) && 
-			     in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {//making the operation less expensive
+			     in_array( $key, array_keys( CoursePress_Capabilities::$capabilities['instructor'] ) ) ) {//making the operation less expensive
                 $instructor_role->remove_cap( $key );
             }
         }
@@ -48,7 +48,7 @@ if ( isset( $_POST['submit'] ) ) {
             foreach ( $user_capabilities as $key => $old_cap ) {
 				// Make sure to only remove CoursePress instructor capabilities
                 if ( !in_array( $key, $_POST['instructor_capability'] ) && 
-				     in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {//making the operation less expensive
+				     in_array( $key, array_keys( CoursePress_Capabilities::$capabilities['instructor'] ) ) ) {//making the operation less expensive
                     $role->remove_cap( $key );
                 }
             }
@@ -58,7 +58,7 @@ if ( isset( $_POST['submit'] ) ) {
             }
         } else {//all unchecked, remove all instructor capabilities
             foreach ( $user_capabilities as $key => $old_cap ) {
-                if ( in_array( $key, array_keys( CoursePress::$capabilities['instructor'] ) ) ) {
+                if ( in_array( $key, array_keys( CoursePress_Capabilities::$capabilities['instructor'] ) ) ) {
                     $role->remove_cap( $key );
                 }
             }
@@ -70,7 +70,7 @@ if ( isset( $_POST['submit'] ) ) {
 // $instructor_capabilities = $instructor_role->capabilities;
 
 // The default capabilities for an instructor
-$default_capabilities = array_keys( CoursePress::$capabilities['instructor'], 1 );
+$default_capabilities = array_keys( CoursePress_Capabilities::$capabilities['instructor'], 1 );
 $instructor_capabilities = get_option( 'coursepress_instructor_capabilities', $default_capabilities );
 
 $capability_boxes = array(
@@ -97,12 +97,15 @@ $instructor_capabilities_general = array(
 
 $instructor_capabilities_courses = array(
     'coursepress_create_course_cap' => __( 'Create new courses', 'cp' ),
-    'coursepress_update_course_cap' => __( 'Update every course', 'cp' ),
+    'coursepress_update_course_cap' => __( 'Update any assigned course', 'cp' ),
     'coursepress_update_my_course_cap' => __( 'Update courses made by the instructor only', 'cp' ),
-    'coursepress_delete_course_cap' => __( 'Delete every course', 'cp' ),
+    // 'coursepress_update_all_courses_cap' => __( 'Update ANY course', 'cp' ),
+    'coursepress_delete_course_cap' => __( 'Delete any assigned course', 'cp' ),
     'coursepress_delete_my_course_cap' => __( 'Delete courses made by the instructor only', 'cp' ),
-    'coursepress_change_course_status_cap' => __( 'Change status of every course', 'cp' ),
-    'coursepress_change_my_course_status_cap' => __( 'Change statuses of courses made by the instructor only', 'cp' )
+    // 'coursepress_delete_all_courses_cap' => __( 'Delete ANY course', 'cp' ),
+    'coursepress_change_course_status_cap' => __( 'Change status of any assigned course', 'cp' ),
+    'coursepress_change_my_course_status_cap' => __( 'Change status of courses made by the instructor only', 'cp' ),
+	// 'coursepress_change_all_courses_status_cap' => __( 'Change status of ALL course', 'cp' ),
 );
 
 $instructor_capabilities_units = array(

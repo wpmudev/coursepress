@@ -15,6 +15,7 @@ if ( isset($_GET['quick_setup']) ) {
 
         $action = $_POST['action'];
 
+		$some_success = false;
         foreach ( $_POST['courses'] as $course_value ) {
             if ( is_numeric($course_value) ) {
                 $course_id = ( int ) $course_value;
@@ -23,29 +24,44 @@ if ( isset($_GET['quick_setup']) ) {
 
                 switch ( addslashes($action) ) {
                     case 'publish':
-                        if ( current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() ) ) {
+                        if ( CoursePress_Capabilities::can_change_course_status( $couse_id ) ) {
                             $course->change_status('publish');
                             $message = __('Selected courses have been published successfully.', 'cp');
+							$some_success = true;
                         } else {
-                            $message = __("You don't have right persmissions to change course status.", 'cp');
+							if( $some_success ) {
+								$message = __("Your selected courses have been published successfully. Courses where you don't have access remain unchaged.", 'cp');	
+							} else {
+								$message = __("You don't have right permissions to change course status.", 'cp');	
+							}
                         }
                         break;
 
                     case 'unpublish':
-                        if ( current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_object->post_author == get_current_user_id() ) ) {
+                        if ( CoursePress_Capabilities::can_change_course_status( $couse_id ) ) {
                             $course->change_status('private');
                             $message = __('Selected courses have been unpublished successfully.', 'cp');
+							$some_success = true;
                         } else {
-                            $message = __("You don't have right persmissions to change course status.", 'cp');
+							if( $some_success ) {
+								$message = __("Your selected courses have been unpublished successfully. Courses where you don't have access remain unchaged.", 'cp');	
+							} else {
+	                            $message = __("You don't have right permissions to change course status.", 'cp');
+							}
                         }
                         break;
 
                     case 'delete':
-                        if ( current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id() ) ) {
+                        if ( CoursePress_Capabilities::can_delete_course( $couse_id ) ) {
                             $course->delete_course();
                             $message = __('Selected courses have been deleted successfully.', 'cp');
+							$some_success = true;
                         } else {
-                            $message = __("You don't have right persmissions to delete the course.", 'cp');
+							if( $some_success ) {
+								$message = __("Your selected courses have been deleted successfully. Courses where you don't have access remain unchaged.", 'cp');	
+							} else {
+	                            $message = __("You don't have right permissions to delete the course.", 'cp');
+							}							
                         }
                         break;
                 }
@@ -77,11 +93,11 @@ if ( isset($_GET['quick_setup']) ) {
             die(__('Cheating huh?', 'cp'));
         }
         $course_object = $course->get_course();
-        if ( current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') && $course_object->post_author == get_current_user_id() ) ) {
+        if ( CoursePress_Capabilities::can_delete_course( $couse_id ) ) {
             $course->delete_course($force_delete = true);
             $message = __('Selected course has been deleted successfully.', 'cp');
         } else {
-            $message = __("You don't have right persmissions to delete the course.", 'cp');
+            $message = __("You don't have right permissions to delete the course.", 'cp');
         }
     }
 
@@ -97,7 +113,7 @@ if ( isset($_GET['quick_setup']) ) {
         <div class="icon32" id="icon-themes"><br></div>
         <h2><?php _e('Courses', 'cp'); ?>
             <?php
-            if ( current_user_can('coursepress_create_course_cap') ) {
+            if ( CoursePress_Capabilities::can_create_course() ) {
                 if ( $wp_course_search->is_light ) {
                     if ( $wp_course_search->get_count_of_all_courses() <= 9 ) {
                         ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=course_details'); ?>"><?php _e('Add New', 'cp'); ?></a>
@@ -133,7 +149,7 @@ if ( isset($_GET['quick_setup']) ) {
             </div><!--/alignright-->
 
             <form method="post" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" id="posts-filter">
-
+				<?php // Use broad capability checking here, specific course capabilities will be checked when attempting to perform the actions. ?>
                 <?php if ( current_user_can('coursepress_change_course_status_cap') || current_user_can('coursepress_delete_course_cap') ) { ?>
                     <div class="alignleft actions">
                         <select name="action">
@@ -205,16 +221,16 @@ if ( isset($_GET['quick_setup']) ) {
 							$my_course = in_array( $course->ID, $instructor_courses );
 
 							$can_list = false;
-							// $can_create = CP_Helper_Capabilities::can_creare_course();
-							$can_update = CP_Helper_Capabilities::can_update_course( $course->ID );
-						    $can_delete = CP_Helper_Capabilities::can_delete_course( $course->ID );
-							$can_publish = CP_Helper_Capabilities::can_change_course_status( $course->ID );
-							$can_create_unit = CP_Helper_Capabilities::can_create_course_unit( $course->ID );
-							$can_update_unit = CP_Helper_Capabilities::can_update_course_unit( $course->ID );
-							$can_view_unit = CP_Helper_Capabilities::can_view_course_units( $course->ID );
-							$can_delete_unit = CP_Helper_Capabilities::can_delete_course_unit( $course->ID );
-							$can_publish_unit = CP_Helper_Capabilities::can_change_course_unit_status( $course->ID );
-							$my_course = CP_Helper_Capabilities::is_course_instructor( $course->ID );
+							// $can_create = CoursePress_Capabilities::can_creare_course();
+							$can_update = CoursePress_Capabilities::can_update_course( $course->ID );
+						    $can_delete = CoursePress_Capabilities::can_delete_course( $course->ID );
+							$can_publish = CoursePress_Capabilities::can_change_course_status( $course->ID );
+							$can_create_unit = CoursePress_Capabilities::can_create_course_unit( $course->ID );
+							$can_update_unit = CoursePress_Capabilities::can_update_course_unit( $course->ID );
+							$can_view_unit = CoursePress_Capabilities::can_view_course_units( $course->ID );
+							$can_delete_unit = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
+							$can_publish_unit = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
+							$my_course = CoursePress_Capabilities::is_course_instructor( $course->ID );
 													
 							if( !$my_course && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
 								continue;
@@ -268,8 +284,11 @@ if ( isset($_GET['quick_setup']) ) {
                                 <td class="center column-students <?php echo $style; ?>"><?php if( $can_update || $my_course) { ?><a href="<?php echo admin_url('admin.php?page=course_details&tab=students&course_id=' . $course_object->ID); ?>"><?php } ?><?php echo $course_obj->get_number_of_students(); ?><?php if( $can_update || $my_course) { ?></a> <?php } ?></td>
                                 <td class="column-status <?php echo $style; ?>">
                                     <div class="courses-state">
-										
-                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>" data-nonce="<?php echo wp_create_nonce('toggle-' . $course->ID ); ?>"></div>
+										<?php 
+											$data_nonce = wp_create_nonce('toggle-' . $course->ID ); 
+											$data_cap = $can_publish ? sha1( 'can_change_course_state' . $data_nonce ) : '';
+										?>
+                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
                                         <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                                         <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>

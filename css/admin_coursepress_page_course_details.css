@@ -2497,6 +2497,10 @@ li.disabled_unit{
     float: left;
 }
 
+.course-state .control.disabled {
+	background: #eaeaea;
+}
+
 .course-state .control:hover {
     cursor: pointer;
     opacity:1;
@@ -2525,6 +2529,12 @@ li.disabled_unit{
 .course-state .control.on {
     background: rgb(107,187,26);
 }
+
+.course-state .control.on.disabled,
+.course-state .control.disabled {
+	background: #eaeaea;
+}
+
 
 .course-state .publish-course-message{
     display: inline-block;
@@ -2610,6 +2620,10 @@ li.disabled_unit{
 
 .unit-state .control.on {
     background: rgb(107,187,26);
+}
+
+.unit-state .control.disabled {
+	background: #eaeaea;
 }
 
 .unit-state .live,

@@ -123,10 +123,10 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                     '5', '15', '15', '20', '15', '15'
                 );
 
-                if ( current_user_can( 'manage_options' ) ) {
-                    $columns["delete"] = __( 'Delete', 'cp' );
-                    $col_sizes[] = '6';
-                }
+
+                $columns["delete"] = __( 'Delete', 'cp' );
+                $col_sizes[] = '6';
+
                 ?>
 
                 <table cellspacing="0" class="widefat fixed shadow-table unit-control-buttons">

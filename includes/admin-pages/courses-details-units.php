@@ -2,6 +2,7 @@
 global $coursepress;
 
 $course_id = '';
+$unit_id = '';
 
 if ( isset( $_GET['course_id'] ) && is_numeric( $_GET['course_id'] ) ) {
     $course_id = ( int )$_GET['course_id'];
@@ -9,18 +10,19 @@ if ( isset( $_GET['course_id'] ) && is_numeric( $_GET['course_id'] ) ) {
     $units = $course->get_units();
 }
 
-if ( !current_user_can( 'coursepress_view_all_units_cap' ) && !current_user_can( 'coursepress_update_course_unit_cap' ) && !current_user_can( 'coursepress_update_my_course_unit_cap' ) && $course->details->post_author != get_current_user_id() ) {
-    die( __( 'You do not have required persmissions to access this page.', 'cp' ) );
+if ( ! empty( $course_id ) && ! CoursePress_Capabilities::can_view_course_units( $_GET['course_id'] ) ) {
+    die( __( 'You do not have required permissions to access this page.', 'cp' ) );
 }
 
 if ( isset( $_GET['unit_id'] ) ) {
-    $unit = new Unit( $_GET['unit_id'] );
+	$unit_id = (int) $_GET['unit_id'];
+    $unit = new Unit( $unit_id );
 }
 
 if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete_unit' && isset( $_GET['unit_id'] ) && is_numeric( $_GET['unit_id'] ) ) {
-    $unit = new Unit( $_GET['unit_id'] );
+    $unit = new Unit( $unit_id );
     $unit_object = $unit->get_unit();
-    if ( ( current_user_can( 'coursepress_delete_course_units_cap' ) ) || ( current_user_can( 'coursepress_delete_my_course_units_cap' ) && $unit_object->post_author == get_current_user_id() ) ) {
+    if ( CoursePress_Capabilities::can_delete_course_unit( $course_id, $unit_id ) ) {
         $unit->delete_unit( $force_delete = true );
     }
     $units = $course->get_units();
@@ -29,7 +31,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete_unit' && isset( $_GE
 if ( isset( $_GET['action'] ) && $_GET['action'] == 'change_status' && isset( $_GET['unit_id'] ) && is_numeric( $_GET['unit_id'] ) ) {
     $unit = new Unit( $_GET['unit_id'] );
     $unit_object = $unit->get_unit();
-    if ( ( current_user_can( 'coursepress_change_course_unit_status_cap' ) ) || ( current_user_can( 'coursepress_change_my_course_unit_status_cap' ) && $unit_object->post_author == get_current_user_id() ) ) {
+    if ( CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id ) ) {
         $unit->change_status( $_GET['new_status'] );
     }
 }
@@ -62,14 +64,14 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
                 <div class="unit-title"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_object->ID.'&action=edit' )?>"><?php echo $unit_object->post_title; ?></a></div>
                 <div class="unit-description"><?php echo get_the_course_excerpt( $unit_object->ID, 28 ); ?></div>
 
-        <?php if ( ( current_user_can( 'coursepress_delete_course_units_cap' ) ) || ( current_user_can( 'coursepress_delete_my_course_units_cap' ) && $unit_object->post_author == get_current_user_id() ) ) { ?>
+        <?php if ( CoursePress_Capabilities::can_delete_course_unit( $course_id, $unit_object->ID ) ) { ?>
                     <div class="unit-remove"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_object->ID.'&action=delete_unit' );?>" onClick="return removeUnit();">
                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                         </a></div>
         <?php } ?>
 
                 <div class="unit-buttons unit-control-buttons"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_object->ID.'&action=edit' );?>" class="button button-units save-unit-button"><?php _e( 'Settings', 'cp' ); ?></a>
-                <?php if ( ( current_user_can( 'coursepress_change_course_unit_status_cap' ) ) || ( current_user_can( 'coursepress_change_my_course_unit_status_cap' ) && $unit_object->post_author == get_current_user_id() ) ) { ?>
+	                <?php if ( CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_object->ID ) ) { ?>
                         <a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id='.$course_id.'&unit_id='.$unit_object->ID.'&action=change_status&new_status='.( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'private' );?>" class="button button-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>"><?php echo ( $unit_object->post_status == 'unpublished' ) ? __( 'Publish', 'cp' ) : __( 'Unpublish', 'cp' ); ?></a>
                     <?php } ?>
                 </div>
@@ -82,7 +84,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
     }
     ?>
     </ul>
-        <?php if ( current_user_can( 'coursepress_create_course_unit_cap' ) ) { ?>   
+        <?php if ( CoursePress_Capabilities::can_create_course_unit( $course_id ) ) { ?>   
         <ul>
             <li class="postbox ui-state-fixed ui-state-highlight add-new-unit-box">
                 <div class="add-new-unit-title">
