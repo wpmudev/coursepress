@@ -41,7 +41,7 @@ class CoursePress_Capabilities {
 		    'coursepress_settings_cap' => 1, 									
 			/* Courses */
 		    'coursepress_create_course_cap' => 1, 					
-		    'coursepress_update_course_cap' => 0, 					
+		    'coursepress_update_course_cap' => 1, 					
 		    'coursepress_update_my_course_cap' => 1,
 		    'coursepress_update_all_courses_cap' => 0, // NOT IMPLEMENTED YET				
 		    'coursepress_delete_course_cap' => 0,			
