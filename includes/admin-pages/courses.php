@@ -172,10 +172,9 @@ if ( isset($_GET['quick_setup']) ) {
                     '3', '55', '10', '4', '10'
                 );
 
-                if ( current_user_can('coursepress_delete_course_cap') || ( current_user_can('coursepress_delete_my_course_cap') ) ) {
-                    $columns["remove"] = __('Delete', 'cp');
-                    $col_sizes[] = '7';
-                }
+                $columns["remove"] = __('Delete', 'cp');
+                $col_sizes[] = '7';
+
                 ?>
 
                 <table cellspacing="0" class="widefat shadow-table unit-control-buttons">
@@ -206,17 +205,18 @@ if ( isset($_GET['quick_setup']) ) {
 							$my_course = in_array( $course->ID, $instructor_courses );
 
 							$can_list = false;
-							// $can_create = current_user_can('coursepress_create_course_cap') ? true : false;
-							$can_update = ($my_course && current_user_can('coursepress_update_my_course_cap') ) || current_user_can('coursepress_update_course_cap') ? true : false;
-						    $can_delete = ($my_course && current_user_can('coursepress_delete_my_course_cap') ) || current_user_can('coursepress_delete_course_cap') ? true : false;
-							$can_publish = ($my_course && current_user_can('coursepress_change_my_course_status_cap') ) || current_user_can('coursepress_change_course_status_cap') ? true : false;
-							$can_create_unit = current_user_can('coursepress_create_course_unit_cap') ? true : false;
-							$can_update_unit = ($my_course && current_user_can('coursepress_update_my_course_unit_cap') ) ||current_user_can('coursepress_update_course_unit_cap') ? true : false;
-							$can_view_unit = current_user_can('coursepress_view_all_units_cap') ? true : false;
-							$can_delete_unit = ($my_course && current_user_can('coursepress_delete_my_course_units_cap') ) || current_user_can('coursepress_delete_course_units_cap') ? true : false;
-							$can_publish_unit = ($my_course && current_user_can('coursepress_change_my_course_unit_status_cap') ) ||current_user_can('coursepress_change_course_unit_status_cap') ? true : false;
+							// $can_create = CP_Helper_Capabilities::can_creare_course();
+							$can_update = CP_Helper_Capabilities::can_update_course( $course->ID );
+						    $can_delete = CP_Helper_Capabilities::can_delete_course( $course->ID );
+							$can_publish = CP_Helper_Capabilities::can_change_course_status( $course->ID );
+							$can_create_unit = CP_Helper_Capabilities::can_create_course_unit( $course->ID );
+							$can_update_unit = CP_Helper_Capabilities::can_update_course_unit( $course->ID );
+							$can_view_unit = CP_Helper_Capabilities::can_view_course_units( $course->ID );
+							$can_delete_unit = CP_Helper_Capabilities::can_delete_course_unit( $course->ID );
+							$can_publish_unit = CP_Helper_Capabilities::can_change_course_unit_status( $course->ID );
+							$my_course = CP_Helper_Capabilities::is_course_instructor( $course->ID );
 													
-							if( !in_array( $course->ID, $instructor_courses ) && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
+							if( !$my_course && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
 								continue;
 							} else {
 								$can_list = true;

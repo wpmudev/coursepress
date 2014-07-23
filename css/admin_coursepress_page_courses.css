@@ -164,7 +164,7 @@ a .remove-btn{
 }
 
 .courses-state .control.disabled {
-	background: #ccc;
+	background: #eaeaea;
 }
 
 .courses-state .publish-course-message{

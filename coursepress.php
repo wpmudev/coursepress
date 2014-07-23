@@ -68,13 +68,16 @@ if ( !class_exists('CoursePress') ) {
 			    'coursepress_change_my_course_status_cap' => 1,				
 				/* Units */
 			    'coursepress_create_course_unit_cap' => 1, 					
-			    'coursepress_update_course_unit_cap' => 0, 					
 			    'coursepress_view_all_units_cap' => 0, 					
-			    'coursepress_update_my_course_unit_cap' => 1, 					
-			    'coursepress_delete_course_units_cap' => 0, 					
+			    'coursepress_update_course_unit_cap' => 1, 													
+			    'coursepress_update_my_course_unit_cap' => 1, 				
+			    'coursepress_update_all_courses_unit_cap' => 0, // NOT IMPLEMENTED YET					
+			    'coursepress_delete_course_units_cap' => 1, 					
 			    'coursepress_delete_my_course_units_cap' => 1, 					
-			    'coursepress_change_course_unit_status_cap' => 0, 					
+				'coursepress_delete_all_courses_units_cap' => 0, // NOT IMPLEMENTED YET
+			    'coursepress_change_course_unit_status_cap' => 1, 					
 			    'coursepress_change_my_course_unit_status_cap' => 1,
+			    'coursepress_change_all_courses_unit_status_cap' => 0,  // NOT IMPLEMENTED YET				
 				/* Instructors */
 			    'coursepress_assign_and_assign_instructor_course_cap' => 0, 					
 			    'coursepress_assign_and_assign_instructor_my_course_cap' => 1,
@@ -161,6 +164,9 @@ if ( !class_exists('CoursePress') ) {
 
 //Tooltip Helper
                 require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php' );
+
+//Capabilities Helper
+                require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-capabilities.php' );				
 
 // Menu Meta Box
                 require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );

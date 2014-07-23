@@ -107,13 +107,16 @@ $instructor_capabilities_courses = array(
 
 $instructor_capabilities_units = array(
     'coursepress_create_course_unit_cap' => __( 'Create new course units', 'cp' ),
-    'coursepress_update_course_unit_cap' => __( 'Update every course unit', 'cp' ),
     'coursepress_view_all_units_cap' => __( 'View units in every course ( can view from other Instructors as well )', 'cp' ),
+    'coursepress_update_course_unit_cap' => __( 'Update any unit (within assigned courses)', 'cp' ),	
     'coursepress_update_my_course_unit_cap' => __( 'Update units made by the instructor only', 'cp' ),
-    'coursepress_delete_course_units_cap' => __( 'Delete every course unit', 'cp' ),
+    // 'coursepress_update_all_courses_unit_cap' => __( 'Update units of ALL courses', 'cp' ),	
+    'coursepress_delete_course_units_cap' => __( 'Delete any unit (within assigned courses)', 'cp' ),
     'coursepress_delete_my_course_units_cap' => __( 'Delete course units made by the instructor only', 'cp' ),
-    'coursepress_change_course_unit_status_cap' => __( 'Change status of every course unit', 'cp' ),
-    'coursepress_change_my_course_unit_status_cap' => __( 'Change statuses of course units made by the instructor only', 'cp' )
+    // 'coursepress_delete_all_courses_units_cap' => __( 'Delete units of ALL courses', 'cp' ),
+    'coursepress_change_course_unit_status_cap' => __( 'Change status of any unit (within assigned courses)', 'cp' ),
+    'coursepress_change_my_course_unit_status_cap' => __( 'Change statuses of course units made by the instructor only', 'cp' ),
+    // 'coursepress_change_all_courses_unit_status_cap' => __( 'Change status of any unit of ALL courses', 'cp' ),
 );
 
 $instructor_capabilities_instructors = array(
