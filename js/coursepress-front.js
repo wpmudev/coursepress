@@ -18,11 +18,15 @@ jQuery(document).ready(function() {
 });
 
 
-jQuery(document).ready( function( $ ) {
-	// Use data-link attribute to follow links
-	$('button').click( function( event ) {
-		if( $( this ).data( 'link' ) ) {
-			window.location.href = $( this ).data( 'link' );			
-		}
-	});
+jQuery(document).ready(function($) {
+    // Use data-link attribute to follow links
+    $('button').click(function(event) {
+        if ($(this).data('link')) {
+            window.location.href = $(this).data('link');
+        }
+    });
+});
+
+jQuery(document).ready(function($) {
+    jQuery(".knob").knob();
 });

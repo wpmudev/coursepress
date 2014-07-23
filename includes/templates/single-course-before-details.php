@@ -31,10 +31,8 @@ echo do_shortcode('[course_summary]');
 //List of instructors
 echo do_shortcode('[course_instructors show_label="yes" label_element="h2" label_delimeter="" class="instructors-box"]');
 ?>
-<div class="divider"></div>
 
 <?php
 // Course Structure
-echo do_shortcode('[course_structure show_label="yes" label_element="h2" label_delimeter="" show_title="no"]');
+echo do_shortcode('[course_structure show_label="yes" label_element="h2" label_delimeter="" show_title="no" show_devider="yes"]');
 ?>
-<div class="divider"></div>

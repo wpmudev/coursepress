@@ -8,7 +8,6 @@ global $coursepress, $wp;
 $course_id = do_shortcode('[get_parent_course_id]');
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
-
 get_header();
 ?>
 <div id="primary" class="content-area">
@@ -33,7 +32,6 @@ get_header();
 
         <ul class="discussion-archive-list">
             <?php
-            //print_r( get_query_var( 'paged' ) );
             //do_shortcode( '[course_discussion_loop]' ); //required to get good results
 
             $page = ( isset($wp->query_vars['paged']) ) ? $wp->query_vars['paged'] : 1;

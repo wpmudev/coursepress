@@ -17,29 +17,17 @@ do_shortcode('[course_unit_archive_submenu]');
     <button data-link="<?php echo get_permalink($course_id); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e('Ask a Question', 'coursepress'); ?></button>
 </div>
 
-<!--<div class="clearfix"></div>-->
-
 <ul class="discussion-archive-list">
     <?php
-    //print_r( get_query_var( 'paged' ) );
-    //do_shortcode( '[course_discussion_loop]' ); //required to get good results
-
+                
     $page = ( isset($wp->query_vars['paged']) ) ? $wp->query_vars['paged'] : 1;
-    $query_args = array(
-        'order' => 'DESC',
-        'post_type' => 'discussions',
-        'post_status' => 'publish',
-        'meta_key' => 'course_id',
-        'meta_value' => $course_id,
-        'paged' => $page,
-    );
-
-    query_posts($query_args);
+    do_shortcode('[course_discussion_loop]');
 
     if ( have_posts() ) {
         ?>
         <?php
         while ( have_posts() ) : the_post();
+        //foreach ( $myposts as $post ) : setup_postdata($post);
             $discussion = new Discussion(get_the_ID());
             ?>
             <li>
@@ -69,9 +57,8 @@ do_shortcode('[course_unit_archive_submenu]');
                 </div>
 
             </li>
-            <?php
-        endwhile;
-    } else {
+        <?php endwhile;
+        } else {
         ?>
         <h1 class="zero-course-units"><?php _e("0 discussions. Start one, ask a question."); ?></h1>
         <?php

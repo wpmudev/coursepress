@@ -108,8 +108,6 @@ $course_language = $course->details->course_language;
                         heightStyle: "content"
                     });
                 });
-
-
             </script>
             <div id="instructor-profiles">
                 <?php

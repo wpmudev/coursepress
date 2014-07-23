@@ -150,7 +150,7 @@ if (isset($_GET['course_id'])) {
     $enroll_type = '';
     $passcode = '';
     $prerequisite = '';
-    $course_start_date = '';
+    $course_start_date = date('Y-m-d', current_time('timestamp', 0));
     $course_end_date = '';
     $enrollment_start_date = '';
     $enrollment_end_date = '';

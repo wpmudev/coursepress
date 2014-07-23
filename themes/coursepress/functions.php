@@ -153,7 +153,7 @@ function coursepress_scripts() {
       wp_enqueue_script( 'fitvids' ); */
 
     //if ( get_post_type( $post ) == 'unit' ) {
-    wp_enqueue_script('coursepress-knob', get_template_directory_uri() . '/js/jquery.knob.js', array(), '20120207', true);
+    
     //}
 
     wp_register_style('google_fonts_lato', 'http://fonts.googleapis.com/css?family=Lato:300,400');

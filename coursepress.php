@@ -2172,6 +2172,8 @@ if ( !class_exists('CoursePress') ) {
             if ( !is_admin() ) {
                 wp_enqueue_style('front_general', $this->plugin_url . 'css/front_general.css', array(), $this->version);
             }
+            
+            wp_enqueue_script('coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), '20120207', true);
         }
 
         /* Custom footer actions */

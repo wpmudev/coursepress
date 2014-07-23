@@ -12,11 +12,6 @@ $coursepress->check_access($course_id);
 
 get_header();
 ?>
-<script>
-    jQuery(function($) {
-        jQuery(".knob").knob();
-    });
-</script>
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
         <h1><?php echo do_shortcode('[course_title course_id="' . $course_id . '"]'); ?></h1>
