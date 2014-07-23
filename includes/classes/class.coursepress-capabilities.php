@@ -359,11 +359,12 @@ class CoursePress_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+	
 		
 		if( empty( $course_id ) ) {
 			return false;
 		} else {
-			return $course_id == get_post_field( 'post_author', $course_id ) ? true : false;
+			return $user_id == get_post_field( 'post_author', $course_id );
 		}
 	}
 	

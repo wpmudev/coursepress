@@ -93,7 +93,7 @@ if ( isset($_GET['quick_setup']) ) {
             die(__('Cheating huh?', 'cp'));
         }
         $course_object = $course->get_course();
-        if ( CoursePress_Capabilities::can_delete_course( $couse_id ) ) {
+        if ( CoursePress_Capabilities::can_delete_course( $_GET['course_id'] ) ) {
             $course->delete_course($force_delete = true);
             $message = __('Selected course has been deleted successfully.', 'cp');
         } else {
@@ -231,8 +231,9 @@ if ( isset($_GET['quick_setup']) ) {
 							$can_delete_unit = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
 							$can_publish_unit = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
 							$my_course = CoursePress_Capabilities::is_course_instructor( $course->ID );
+							$creator = CoursePress_Capabilities::is_course_creator( $course->ID );
 													
-							if( !$my_course && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
+							if( !$my_course && ! $creator && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
 								continue;
 							} else {
 								$can_list = true;

@@ -1560,19 +1560,24 @@ if ( !class_exists('CoursePress') ) {
                  */
 				
 				$ajax_response = array();
-				
-                if ( $_POST['course_id'] && wp_verify_nonce( $_POST['course_nonce'], 'auto-update-' . $_POST['course_id'] ) &&
+
+                if ( ( $_POST['course_id'] || 0 == $_POST['course_id'] ) && wp_verify_nonce( $_POST['course_nonce'], 'auto-update-' . $_POST['course_id'] ) &&
 				sha1( 'can_update_course' . $_POST['course_nonce'] ) == $_POST['required_cap'] ) {
-					
+
 	                $course = new Course( (int) $_POST['course_id'] );
 	                if ( $course->details ) {
 	                    $course->data['status'] = $course->details->post_status;
 	                } else {
 	                    $course->data['status'] = 'draft';
 	                }
-					
+
+					if( !empty( $_POST['uid'] ) && 0 == (int) $_POST['course_id'] ){
+						$course->data['uid'] = (int) $_POST['uid'];
+						$ajax_response['instructor'] = (int) $_POST['uid'];
+					}
+
 	                $course_id = $course->update_course();
-					
+										
 					$ajax_response['success'] = true;
 					$ajax_response['course_id'] = $course_id;
 					$ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id );

@@ -292,7 +292,7 @@ if ( !class_exists('Course') ) {
                     }
 
                     $post = array(
-                        'post_author' => $user_id,
+                        'post_author' => !empty( $this->data['uid'] ) ? $this_data['uid'] : $user_id,
                         // 'post_excerpt' => $_POST['course_excerpt'],
                         // 'post_content' => $_POST['course_description'],
                         'post_status' => $post_status,

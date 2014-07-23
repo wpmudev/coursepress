@@ -315,6 +315,30 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
         if ( response && response.success ) {								
 			$('#course-ajax-check').data('nonce', response.nonce);
 			$('#course-ajax-check').data('cap', response.cap);
+			$('#course-ajax-check').data('id', response.course_id);
+            $('[name=course_id]').val(response.course_id);
+			
+			// Add user as instructor
+			if ( step == 'step-1' && response.instructor ){
+		        $.post(
+		                'admin-ajax.php', {
+		                    action: 'add_course_instructor',
+		                    user_id: response.instructor,
+		                    course_id: response.course_id,
+		                }
+		        ).done(function(data, status) {
+					
+					
+					var instructor_id = response.instructor;
+	                var response2 = $.parseJSON($(data).find('response_data').text());
+	                var response_type = $($.parseHTML(response2.content));
+					
+					window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
+
+				});
+				return;
+			}
+			
 		// Else, toggle back.	
 		} else {
 	        $(statusElement).removeClass('progress');
@@ -345,7 +369,7 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                     set_update_progress(step, 'saved');
                     // Gateway is not set	
                 } else {
-                    alert(coursepress_units.setup_gateway);
+                    // alert(coursepress_units.setup_gateway);
                     $(statusElement).addClass('attention');
                     set_update_progress(step, 'attention');
                 }
@@ -393,6 +417,7 @@ function step_1_update(attr) {
         course_name: initialVars['course_name'],
 		course_nonce: initialVars['course_nonce'],
 		required_cap: initialVars['required_cap'],
+		uid: initialVars['uid'],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
@@ -763,6 +788,7 @@ function courseAutoUpdate(step, nextAction) {
 
 		var course_nonce = $('#course-ajax-check').data('nonce');
 		var required_cap = $('#course-ajax-check').data('cap');
+		var uid = $('#course-ajax-check').data('uid');
 
         var initial_vars = {
             action: 'autoupdate_course_settings',
@@ -770,10 +796,11 @@ function courseAutoUpdate(step, nextAction) {
             course_name: $('[name=course_name]').val(),
 			course_nonce: course_nonce,
 			required_cap: required_cap,
+			uid: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
         }
-		console.log( initial_vars );
+		// console.log( initial_vars );
         var func = 'step_' + step + '_update';
         // Get the AJAX post vars from step_[x]_update();
         var post_vars = window[func]({status: theStatus, initialVars: initial_vars});
@@ -782,12 +809,6 @@ function courseAutoUpdate(step, nextAction) {
         $.post(
                 'admin-ajax.php', post_vars
                 ).done(function(data, status) {
-            // Set a course_id if its still empty
-            course_id = $(data).find('response_data').text();
-
-            if ($('[name=course_id]').val() == 0 && course_id) {
-                $('[name=course_id]').val(course_id);
-            }
             // Handle return
             autosave_course_setup_done(data, status, 'step-' + step, theStatus, nextAction);
         }).fail(function(data) {
