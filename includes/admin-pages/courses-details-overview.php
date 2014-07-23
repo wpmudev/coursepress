@@ -188,7 +188,14 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
 
 <div class='wrap nocoursesub'>
     <form action='<?php esc_attr_e(admin_url('admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ( $course_id !== 0 ) ? '&ms=cu' : '&ms=ca' ))); ?>' name='course-add' method='post'>
-
+		
+		<?php
+			$can_update = CoursePress_Capabilities::can_update_course( $course_id );
+			$data_nonce = wp_create_nonce('auto-update-' . $course_id ); 
+			$data_cap = $can_update ? sha1( 'can_update_course' . $data_nonce ) : '';
+		?>
+		
+		<input type='hidden' name='course-ajax-check' id="course-ajax-check" data-id="$course_id" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>" value="" />
         <div class='course-liquid-left'>
 
             <div id='course'>
@@ -248,7 +255,6 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
 
                         <!-- COURSE DETAILS -->
                         <div class='course-details'>
-
 
                             <!-- Course Overview -->
                             <div class="course-section step step-1 <?php echo 'step-1' == $course_setup_marker ? 'save-marker active' : ''; ?>">

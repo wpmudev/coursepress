@@ -308,6 +308,21 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
     if (typeof (nextAction) === 'undefined')
         nextAction = false;
     if (status == 'success') {
+		
+        var response = $.parseJSON($(data).find('response_data').text());
+		console.log(response);
+		// Apply a new nonce when returning
+        if ( response && response.success ) {								
+			$('#course-ajax-check').data('nonce', response.nonce);
+			$('#course-ajax-check').data('cap', response.cap);
+		// Else, toggle back.	
+		} else {
+	        $(statusElement).removeClass('progress');
+	        $(statusElement).addClass('invalid');
+	        set_update_progress(step, 'invalid');
+			return;
+		}
+		
         $($('.' + step + '.dirty')[0]).removeClass('dirty')
         $(statusElement).removeClass('progress');
 
@@ -376,6 +391,8 @@ function step_1_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
@@ -440,6 +457,8 @@ function step_2_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],		
         // Alter as required
         meta_course_video_url: $('[name=meta_course_video_url]').val(),
         course_description: content,
@@ -473,6 +492,8 @@ function step_3_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],		
         // Alter as required
         instructor: instructors,
         // Don't remove
@@ -490,6 +511,8 @@ function step_4_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],		
         // Alter as required
         meta_open_ended_course: $('[name=meta_open_ended_course]').is(':checked') ? 'on' : 'off',
         meta_course_start_date: $('[name=meta_course_start_date]').val(),
@@ -512,6 +535,8 @@ function step_5_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],		
         // Alter as required
         meta_limit_class_size: $('[name=meta_limit_class_size]').is(':checked') ? 'on' : 'off',
         meta_class_size: $('[name=meta_class_size]').val(),
@@ -544,6 +569,8 @@ function step_6_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
+		course_nonce: initialVars['course_nonce'],
+		required_cap: initialVars['required_cap'],		
         // Alter as required
         meta_enroll_type: $('[name=meta_enroll_type]').val(),
         meta_prerequisite: prerequisite_val,
@@ -734,14 +761,19 @@ function courseAutoUpdate(step, nextAction) {
         set_update_progress('step-' + step, 'saved');
         var meta_course_setup_progress = get_meta_course_setup_progress();
 
+		var course_nonce = $('#course-ajax-check').data('nonce');
+		var required_cap = $('#course-ajax-check').data('cap');
+
         var initial_vars = {
             action: 'autoupdate_course_settings',
             course_id: course_id,
             course_name: $('[name=course_name]').val(),
+			course_nonce: course_nonce,
+			required_cap: required_cap,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
         }
-
+		console.log( initial_vars );
         var func = 'step_' + step + '_update';
         // Get the AJAX post vars from step_[x]_update();
         var post_vars = window[func]({status: theStatus, initialVars: initial_vars});

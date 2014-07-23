@@ -1552,28 +1552,45 @@ if ( !class_exists('CoursePress') ) {
          * ::RK::
          */
         function autoupdate_course_settings() {
-
-            if ( is_admin() && ( current_user_can('manage_options') || current_user_can('coursepress_create_course_cap') || current_user_can('coursepress_update_my_course_cap') ) ) {
+			
+			if ( isset($_POST['course_id']) && isset( $_POST['course_nonce'] ) && isset( $_POST['required_cap'] ) && defined('DOING_AJAX') && DOING_AJAX ) {	
                 /*
                   http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
                   http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
                  */
-                $course = new Course($_POST['course_id']);
-                if ( $course->details ) {
-                    $course->data['status'] = $course->details->post_status;
-                } else {
-                    $course->data['status'] = 'draft';
-                }
-                $course_id = $course->update_course();
+				
+				$ajax_response = array();
+				
+                if ( $_POST['course_id'] && wp_verify_nonce( $_POST['course_nonce'], 'auto-update-' . $_POST['course_id'] ) &&
+				sha1( 'can_update_course' . $_POST['course_nonce'] ) == $_POST['required_cap'] ) {
+					
+	                $course = new Course( (int) $_POST['course_id'] );
+	                if ( $course->details ) {
+	                    $course->data['status'] = $course->details->post_status;
+	                } else {
+	                    $course->data['status'] = 'draft';
+	                }
+					
+	                $course_id = $course->update_course();
+					
+					$ajax_response['success'] = true;
+					$ajax_response['course_id'] = $course_id;
+					$ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id );
+					$ajax_response['cap'] = sha1( 'can_update_course' . $ajax_response['nonce'] );
+					
+				} else {
+					$ajax_response['success'] = false;
+					$ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
+				}
 
-                $response = array(
-                    'what' => 'course_settings',
-                    'action' => 'autoupdate_course_settings',
-                    'id' => 1,
-                    'data' => $course_id,
-                );
-                $xmlResponse = new WP_Ajax_Response($response);
-                $xmlResponse->send();
+	            $response = array(
+	                'what' => 'instructor_invite',
+	                'action' => 'instructor_invite',
+	                'id' => 1, // success status
+	                'data' => json_encode( $ajax_response ),
+	            );
+	            $xmlResponse = new WP_Ajax_Response($response);
+	            $xmlResponse->send();
             }
         }
 
