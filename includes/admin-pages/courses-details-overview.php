@@ -457,7 +457,7 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
                                                         <td colspan="4">
                                                             <ol class="tree">
                                                                 <li>
-                                                                    <label for="course_<?php echo $course->details->ID; ?>"><?php echo ($course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __('Course', 'cp')); ?></label> <input type="checkbox" checked disabled id="course_<?php echo $course->details->ID; ?>" class="hidden_checkbox" /> 
+                                                                    <label for="course_<?php echo ! empty( $course->details ) ? $course->details->ID : '0'; ?>"><?php echo ( ! empty( $course->details ) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __('Course', 'cp')); ?></label> <input type="checkbox" checked disabled id="course_<?php echo $course->details->ID; ?>" class="hidden_checkbox" /> 
                                                                     <?php
                                                                     $units = $course->get_units();
 

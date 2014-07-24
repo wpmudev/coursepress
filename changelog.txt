@@ -1,5 +1,5 @@
 Plugin Name: CoursePress
-Author: Marko Miljus ( Incsub )
+Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
 1.0.2b - 30/MAY/2014
 - Security fortification

@@ -906,7 +906,7 @@ if ( !function_exists('coursepress_register_front_page_module') ) {
 if ( !function_exists('cp_write_log') ) {
 
     function cp_write_log( $message, $echo_file = false ) {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $trace = debug_backtrace('DEBUG_BACKTRACE_IGNORE_ARGS');
         $exception = new Exception();
         $debug = array_shift($trace);
         $caller = array_shift($trace);

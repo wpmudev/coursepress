@@ -1675,14 +1675,16 @@ if ( !class_exists('CoursePress') ) {
             $course_id = $_POST['course_id'];
 
             $exists = false;
-            foreach ( $instructors as $instructor ) {
-                if ( $instructor == $user_id ) {
-                    $instructor_course_id = get_user_meta($user_id, 'course_' . $course_id);
-                    if ( !empty($instructor_course_id) ) {
-                        $exists = true;
-                    };
-                }
-            }
+			if( is_array( $instructors ) ) {
+	            foreach ( $instructors as $instructor ) {
+	                if ( $instructor == $user_id ) {
+	                    $instructor_course_id = get_user_meta($user_id, 'course_' . $course_id);
+	                    if ( !empty($instructor_course_id) ) {
+	                        $exists = true;
+	                    };
+	                }
+	            }
+			}
 
             // User is not yet an instructor
             if ( !$exists ) {
@@ -2785,16 +2787,18 @@ if ( !class_exists('CoursePress') ) {
 
         function check_for_valid_post_type_permalinks( $permalink, $post, $leavename ) {
             if ( get_post_type($post->ID) == 'discussions' ) {
-				if ( ! empty( get_post_meta($post->ID, 'course_id', true) ) ){
-	                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+				$course_id = get_post_meta($post->ID, 'course_id', true);
+				if ( ! empty( $course_id ) ){
+	                $course_obj = new Course( $course_id );
 	                $course = $course_obj->get_course();
 	                return str_replace('%course%', $course->post_name, $permalink);					
 				} else {
 					return $permalink;
 				}
             } else if ( get_post_type($post->ID) == 'notifications' ) {
-				if ( ! empty( get_post_meta($post->ID, 'course_id', true) ) ){
-	                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+				$course_id = get_post_meta($post->ID, 'course_id', true);
+				if ( ! empty( $course_id ) ){
+	                $course_obj = new Course( $course_id );
 	                $course = $course_obj->get_course();
 	                return str_replace('%course%', $course->post_name, $permalink);					
 				} else {
@@ -3013,4 +3017,5 @@ if ( !class_exists('CoursePress') ) {
 CoursePress::instance(new CoursePress());
 global $coursepress;
 $coursepress = CoursePress::instance();
+
 ?>

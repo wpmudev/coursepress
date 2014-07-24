@@ -264,15 +264,17 @@ if ( !class_exists('Course') ) {
                     if ( $automatic_sku == 'on' ) {
                         $sku = $automatic_sku_number;
                     } else {
-                        $sku = $_POST['mp_sku'];
+                        $sku = ! empty( $_POST['mp_sku'] ) ? $_POST['mp_sku'] : '';
                     }
 
                     update_post_meta($this->id, 'mp_product_id', $post_id);
                     update_post_meta($this->id, 'marketpress_product', $post_id);
 
+					$price = ! empty( $_POST['mp_price'] ) ? $_POST['mp_price'] : 0;
+					$sale_price = ! empty( $_POST['mp_sale_price'] ) ? $_POST['mp_sale_price'] : 0;
                     update_post_meta($post_id, 'mp_sku', $sku);
-                    update_post_meta($post_id, 'mp_price', $_POST['mp_price']);
-                    update_post_meta($post_id, 'mp_sale_price', $_POST['mp_sale_price']);
+                    update_post_meta($post_id, 'mp_price', $price);
+                    update_post_meta($post_id, 'mp_sale_price', $sale_price);
                     update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
                 }
 
@@ -292,7 +294,7 @@ if ( !class_exists('Course') ) {
                     }
 
                     $post = array(
-                        'post_author' => !empty( $this->data['uid'] ) ? $this_data['uid'] : $user_id,
+                        'post_author' => !empty( $this->data['uid'] ) ? $this->data['uid'] : $user_id,
                         // 'post_excerpt' => $_POST['course_excerpt'],
                         // 'post_content' => $_POST['course_description'],
                         'post_status' => $post_status,
