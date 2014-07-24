@@ -1,36 +1,46 @@
-<div id="poststuff" class="metabox-holder m-settings">
+<div id="poststuff" class="metabox-holder m-settings cp-shortcode-box">
     <form action='' method='post'>
 
 
         <div class="postbox">
-            <h3 class='hndle'><span><?php _e( 'Shortcodes', 'cp' ) ?></span></h3>
+            <h3 class='hndle cp-shortcode-heading'><span><?php _e( 'Shortcodes', 'cp' ) ?></span></h3>
             <div class="inside">
                 <p><?php _e( 'Shortcodes allow you to include dynamic content in posts and pages on your site. Simply type or paste them into your post or page content where you would like them to appear. Optional attributes can be added in a format like <em>[shortcode attr1="value" attr2="value"]</em>. ', 'cp' ) ?></p>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><?php _e( 'Instructors List', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Instructors List', 'cp' ) ?></th>
                         <td>
-                            <strong>[course_instructors]</strong> -
-                            <span class="description"><?php _e( 'Display a list or count of Instructors ( gravatar, name and link to profile page )', 'cp' ) ?></span>
+                            <span class="cp-shortcode-code">[course_instructors]</span><br />
+                            <span class=""><?php _e( 'Display a list or count of Instructors ( gravatar, name and link to profile page )', 'cp' ) ?></span>
 
-                            <p><strong><?php _e( 'Optional Attributes:', 'cp' ) ?></strong></p>
-
-                            <ul class="cp-shortcode-options">
-                                <li><?php _e( '"course_id" - ID of the course instructors are assign to ( required if use it outside of a loop )', 'cp' ) ?></li>
-                            </ul>
+                            <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ) ?></p>
 
                             <ul class="cp-shortcode-options">
-                                <li><?php _e( '"count" - If this attribute is used, only number of instructors will be returned without list', 'cp' ) ?></li>
-
-                                <li><?php _e( 'Examples:', 'cp' ) ?> <em>[course_instructors], [course_instructors course_id="5"], [course_instructors count="true"]</em></li>
+								<li><span>course_id</span> – <?php _e( 'ID of the course instructors are assign to ( required if use it outside of a loop )', 'cp' ) ?></li>
+								<li><span>style</span> – <?php _e( 'How to display the instructors. Options: <em>block</em> (default), <em>list</em>, <em>list-flat</em>, <em>count</em> (counts instructors for the course).', 'cp' ) ?></li>
+								<li><span>label</span> – <?php _e( 'Label used to group instructors. Default: Instructor', 'cp' ) ?></li>
+								<li><span>label_plural</span> – <?php _e( 'Plural if more than one instructor. Default: Instructors', 'cp' ) ?></li>
+								<li><span>label_delimeter</span> – <?php _e( 'Symbol to put after label. Default is colon (<strong>:</strong>)', 'cp' ) ?></li>
+								<li><span>label_element</span> – <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'cp' ) ?></li>
+								<li><span>link_text</span> – <?php _e( 'Text to click to link to full profiles. Default: "View Full Profile".', 'cp' ) ?></li>
+								<li><span>show_label</span> – <?php _e( 'Show the label. Options: <em>yes</em>, <em>no</em>.', 'cp' ) ?></li>
+								<li><span>summary_length</span> – <?php _e( 'Length of instructor bio to show when style is "blocl". Default: 50', 'cp' ) ?></li>
+								<li><span>list_separator</span> – <?php _e( 'Symbol to use to separate instructors when styl is "list" or "list-flat". Default: comma (,)', 'cp' ) ?></li>
+								<li><span>avatar_size</span> – <?php _e( 'Pixel size of the avatars when viewing in block mode. Default: 80', 'cp' ) ?></li>
+								<li><span>default_avatar</span> – <?php _e( 'URL to a default image if the user avatar cannot be found.', 'cp' ) ?></li>
+								<li><span>show_divider</span> – <?php _e( 'Put a divider between instructor profiles when style is "block".', 'cp' ) ?></li>
+								<li><span>link_all</span> – <?php _e( 'Make the entire instructor profile a link to the full profile.', 'cp' ) ?></li>
+								<li><span>class</span> – <?php _e( 'Additional CSS classes to use for further styling.', 'cp' ) ?></li>
                             </ul>
-
+							
+                            <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ) ?></p>
+							<code>[course_instructors], [course_instructors course_id="5"], [course_instructors style="list"]</code>
                             <span class="description"></span>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Instructor Avatar', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Instructor Avatar', 'cp' ) ?></th>
                         <td>
                             <strong>[course_instructor_avatar]</strong> -
                             <span class="description"><?php _e( "Display instructor's gravatar", 'cp' ) ?></span>
@@ -50,7 +60,7 @@
                     </tr>
 				
                     <tr>
-                        <th scope="row"><?php _e( 'Course Details', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Course Details', 'cp' ) ?></th>
                         <td>
                             <strong>[course_details]</strong> -
                             <span class="description"><?php _e( 'Display additional course information like start date, end date, price etc.', 'cp' ) ?></span>
@@ -67,7 +77,7 @@
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Student Dashboard', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Student Dashboard', 'cp' ) ?></th>
                         <td>
                             <strong>[courses_student_dashboard]</strong> -
                             <span class="description"><?php _e( 'Display content of the student dashboard including enrolled courses', 'cp' ) ?></span>
@@ -75,7 +85,7 @@
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Student Settings', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Student Settings', 'cp' ) ?></th>
                         <td>
                             <strong>[courses_student_settings]</strong> -
                             <span class="description"><?php _e( 'Display content of the student settings page where they can change username, password etc.', 'cp' ) ?></span>
@@ -83,7 +93,7 @@
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Student Registration Form', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Student Registration Form', 'cp' ) ?></th>
                         <td>
                             <strong>[student_registration_form]</strong> -
                             <span class="description"><?php _e( 'Display custom registration form for students', 'cp' ) ?></span>
@@ -91,7 +101,7 @@
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Course Units', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Course Units', 'cp' ) ?></th>
                         <td>
                             <strong>[course_units]</strong> -
                             <span class="description"><?php _e( 'Display list of the Units for the course ( Units Archive )', 'cp' ) ?></span>
@@ -104,7 +114,7 @@
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php _e( 'Units Details', 'cp' ) ?></th>
+                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Units Details', 'cp' ) ?></th>
                         <td>
                             <strong>[course_unit_details]</strong> -
                             <span class="description"><?php _e( 'Display list of the Units for the course ( Units Archive )', 'cp' ) ?></span>

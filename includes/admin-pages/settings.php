@@ -129,7 +129,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
               break; */
 
             case 'shortcodes':
-                if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
+                if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) || current_user_can( 'manage_options' ) ) {
                     $this->show_settings_shortcodes();
                 }
                 break;

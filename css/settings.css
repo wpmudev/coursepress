@@ -2871,3 +2871,37 @@ wrap mp-wrap nocoursesub mp-wrap{
     float: left;
     margin: -5px 5px 0 0;
 }
+
+
+#poststuff .cp-shortcode-heading { 
+	font-size: 18pt;
+}
+#poststuff .cp-shortcode-title {
+	padding-top:14px;
+	color: #0074a2;
+}
+
+#poststuff .cp-shortcode-subheading {
+	margin: 10px 0 0;
+	padding: 0;
+	text-decoration: underline;	
+}
+
+#poststuff ul.cp-shortcode-options {
+	margin: 5px 0;
+	
+}
+
+#poststuff ul.cp-shortcode-options li span {
+	color: #D54E21;
+}
+
+#poststuff .cp-shortcode-code {
+	font-size:16px;
+	font-weight: 600;
+/*	font-family: monospace;*/
+}
+
+#poststuff.cp-shortcode-box code {
+	display: block;
+}

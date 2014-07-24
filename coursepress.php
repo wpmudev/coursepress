@@ -1254,9 +1254,11 @@ if ( !class_exists('CoursePress') ) {
             if ( is_dir($this->plugin_dir . 'includes/unit-modules') ) {
                 if ( $dh = opendir($this->plugin_dir . 'includes/unit-modules') ) {
                     $mem_modules = array();
-                    while ( ( $module = readdir($dh) ) !== false )
-                        if ( substr($module, -4) == '.php' )
-                            $mem_modules[] = $module;
+                    while ( ( $module = readdir($dh) ) !== false ) {
+                        if ( substr($module, -4) == '.php' ) {
+							$mem_modules[] = $module;                    	                        	
+                        }
+                    }
                     closedir($dh);
                     sort($mem_modules);
 

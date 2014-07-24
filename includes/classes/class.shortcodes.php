@@ -1134,7 +1134,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'show_label' => 'no',
                 'label_delimeter' => ': ',
                 'label_element' => 'h2',
-                'show_devider' => 'yes',
+                'show_divider' => 'yes',
                 'label' => __('Course Structure', 'cp'),
                 'class' => '',
                             ), $atts, 'course_structure'));
@@ -1243,7 +1243,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </li>
                     </ul>
 
-                    <?php if ( $show_devider == 'yes' ) { ?>
+                    <?php if ( $show_divider == 'yes' ) { ?>
                         <div class="divider"></div>
                     <?php } ?>
 
@@ -1662,14 +1662,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'list' => false, // deprecated
                 'link' => false,
                 'link_text' => __('View Full Profile', 'cp'),
-                'show_summary' => 'no',
                 'show_label' => false, // yes, no
                 'summary_length' => 50,
                 'style' => 'block', //list, list-flat, block, count
                 'list_separator' => ', ',
                 'avatar_size' => 80,
                 'default_avatar' => '',
-                'show_devider' => 'yes',
+                'show_divider' => 'yes',
                 'link_all' => 'no',
                 'class' => '',
                             ), $atts, 'course_instructors'));
@@ -1748,7 +1747,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                 case 'block':
                     $content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
-                    if ( $show_devider == 'yes' && (0 < count($instructors)) ) {
+                    if ( $show_divider == 'yes' && (0 < count($instructors)) ) {
                         $content .= '<div class="divider"></div>';
                     }
                     break;
