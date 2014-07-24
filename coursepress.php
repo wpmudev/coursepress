@@ -2785,13 +2785,21 @@ if ( !class_exists('CoursePress') ) {
 
         function check_for_valid_post_type_permalinks( $permalink, $post, $leavename ) {
             if ( get_post_type($post->ID) == 'discussions' ) {
-                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
-                $course = $course_obj->get_course();
-                return str_replace('%course%', $course->post_name, $permalink);
+				if ( ! empty( get_post_meta($post->ID, 'course_id', true) ) ){
+	                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+	                $course = $course_obj->get_course();
+	                return str_replace('%course%', $course->post_name, $permalink);					
+				} else {
+					return $permalink;
+				}
             } else if ( get_post_type($post->ID) == 'notifications' ) {
-                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
-                $course = $course_obj->get_course();
-                return str_replace('%course%', $course->post_name, $permalink);
+				if ( ! empty( get_post_meta($post->ID, 'course_id', true) ) ){
+	                $course_obj = new Course(get_post_meta($post->ID, 'course_id', true));
+	                $course = $course_obj->get_course();
+	                return str_replace('%course%', $course->post_name, $permalink);					
+				} else {
+					return $permalink;
+				}
             } else if ( get_post_type($post->ID) == 'unit' ) {
                 $unit = new Unit($post->ID);
                 return $unit->get_permalink();

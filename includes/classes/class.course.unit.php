@@ -245,7 +245,7 @@ if ( !class_exists('Unit') ) {
         }
 
         function get_unit_page_name( $page_number ) {
-            return $this->details->page_title[( int ) ($page_number - 1)];
+            return ! empty( $this->details->page_title ) ? $this->details->page_title[( int ) ($page_number - 1)] : '';
         }
 
         function delete_unit( $force_delete ) {

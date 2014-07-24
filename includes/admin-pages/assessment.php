@@ -193,15 +193,15 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                             }
                             ?>
                             <!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                <option value="all" <?php selected( $classes, 'all', true ); ?>><?php _e( 'All Classes', 'cp' ); ?></option>
-                                <option value="" <?php selected( $classes, '', true ); ?>><?php _e( 'Default', 'cp' ); ?></option>
+                                <option value="all" <?php // selected( $classes, 'all', true ); ?>><?php // _e( 'All Classes', 'cp' ); ?></option>
+                                <option value="" <?php // selected( $classes, '', true ); ?>><?php // _e( 'Default', 'cp' ); ?></option>
                                 <?php
-                                $course_classes = get_post_meta( $current_course_id, 'course_classes', true );
-                                foreach ( $course_classes as $course_class ) {
+                                //$course_classes = get_post_meta( $current_course_id, 'course_classes', true );
+                                //foreach ( $course_classes as $course_class ) {
                                     ?>
-                                    <option value="<?php echo $course_class; ?>" <?php selected( $classes, $course_class, true ); ?>><?php echo $course_class; ?></option>
+                                    <option value="<?php // echo $course_class; ?>" <?php // selected( $classes, $course_class, true ); ?>><?php // echo $course_class; ?></option>
                                     <?php
-                                }
+                                //}
                                 ?>
                             </select>-->
 
