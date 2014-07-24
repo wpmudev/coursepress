@@ -2,7 +2,7 @@
 
 class file_module extends Unit_Module {
 
-    var $order = 10;
+    var $order = 5;
     var $name = 'file_module';
     var $label = 'File Download';
     var $description = '';
@@ -129,6 +129,7 @@ class file_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

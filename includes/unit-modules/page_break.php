@@ -2,7 +2,7 @@
 
 class page_break_module extends Unit_Module {
 
-    var $order = 1;
+    var $order = 12;
     var $name = 'page_break_module';
     var $label = 'Page Break';
     var $description = '';
@@ -88,6 +88,7 @@ class page_break_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Breaks the Unit into more pages', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

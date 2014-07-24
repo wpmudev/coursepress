@@ -2,7 +2,7 @@
 
 class checkbox_input_module extends Unit_Module {
 
-    var $order = 7;
+    var $order = 8;
     var $name = 'checkbox_input_module';
     var $label = 'Multiple Choice';
     var $description = '';
@@ -325,6 +325,7 @@ class checkbox_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Multiple choice question where multiple options can be selected', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

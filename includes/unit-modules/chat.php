@@ -3,7 +3,7 @@ if (is_chat_plugin_active()) {
 
     class chat_module extends Unit_Module {
 
-        var $order = 9;
+        var $order = 7;
         var $name = 'chat_module';
         var $label = 'Live Chat';
         var $description = '';
@@ -108,6 +108,7 @@ if (is_chat_plugin_active()) {
         }
 
         function on_create() {
+            $this->order = apply_filters($this->name.'_order', $this->order);
             $this->description = __('Add a chat box from the Wordpress Chat plugin', 'cp');
             $this->save_module_data();
             parent::additional_module_actions();

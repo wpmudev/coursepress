@@ -22,10 +22,17 @@ if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'
 
     $new_post_id = $discussion->update_discussion();
 
+    if ( $_POST['action'] == 'update' ) {
+        wp_redirect(admin_url('admin.php?page=' . $page . '&ms=du'));
+    }
+
     if ( $new_post_id !== 0 ) {
         ob_start();
-					// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-        wp_redirect( admin_url( 'admin.php?page=' . $page . '&discussion_id=' . $new_post_id . '&action=edit' ) );
+        // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+        if ( $_POST['action'] == 'add' ) {
+            wp_redirect(admin_url('admin.php?page=' . $page . '&ms=da'));
+            exit;
+        }
         exit;
     } else {
         //an error occured
@@ -44,13 +51,8 @@ if ( isset( $_GET['discussion_id'] ) ) {
 
     <h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'coursepress_create_discussion_cap' ) ) { ?><a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' );?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
-    <?php
-    $message['ca'] = __( 'New Discussion added successfully!', 'cp' );
-    $message['cu'] = __( 'Discussion updated successfully.', 'cp' );
-    ?>
-
     <div class='wrap nocoursesub'>
-        <form action='<?php echo esc_attr( admin_url( 'admin.php?page='.$page.''.( ( $discussion_id !== 0 ) ? '&discussion_id=' . $discussion_id : '' ) . '&action=' . $action. ( $discussion_id !== 0 ) ? '&ms=cu' : '&ms=ca' ) );?>' name='discussion-add' method='post'>
+        <form action='<?php echo esc_attr(admin_url('admin.php?page=' . $page . ( ( $discussion_id !== 0 ) ? '&discussion_id=' . $discussion_id : '' ) . '&action=' . $action . ( ( $discussion_id !== 0 ) ? '&ms=du' : '&ms=da' ))); ?>' name='discussion-add' method='post'>
 
             <div class='course-liquid-left'>
 
@@ -58,7 +60,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 
                     <?php wp_nonce_field( 'discussion_details' ); ?>
 
-                    <?php if ( isset( $discussion_id ) ) { ?>
+                    <?php if ( isset( $discussion_id ) && $discussion_id > 0 ) { ?>
                         <input type="hidden" name="discussion_id" value="<?php echo esc_attr( $discussion_id ); ?>" />
                         <input type="hidden" name="action" value="update" />
                     <?php } else { ?>

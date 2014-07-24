@@ -2,7 +2,7 @@
 
 class text_module extends Unit_Module {
 
-    var $order = 4;
+    var $order = 1;
     var $name = 'text_module';
     var $label = 'Text';
     var $description = '';
@@ -110,6 +110,7 @@ class text_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Add text block to the unit.', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

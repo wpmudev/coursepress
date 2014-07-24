@@ -2,7 +2,7 @@
 
 class text_input_module extends Unit_Module {
 
-    var $order = 5;
+    var $order = 11;
     var $name = 'text_input_module';
     var $label = 'Answer Field';
     var $description = '';
@@ -266,6 +266,7 @@ class text_input_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Allow students to enter a single line of text', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

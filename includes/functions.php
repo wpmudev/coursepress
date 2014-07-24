@@ -873,6 +873,7 @@ if ( !function_exists('coursepress_register_module') ) {
             $coursepress_modules_descriptions[$module_name] = $class->description;
             $coursepress_modules[$section][$module_name] = $class_name;
             $coursepress_modules_ordered[$section][$class->order] = $class_name;
+            ksort($coursepress_modules_ordered[$section]);
         } else {
             return false;
         }

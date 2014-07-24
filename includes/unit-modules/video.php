@@ -164,6 +164,7 @@ class video_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         add_filter('wp_video_shortcode', array(&$this, 'cp_video_shortcode'));
         $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
         $this->save_module_data();

@@ -2,7 +2,7 @@
 
 class image_module extends Unit_Module {
 
-    var $order = 12;
+    var $order = 2;
     var $name = 'image_module';
     var $label = 'Image';
     var $description = '';
@@ -120,6 +120,7 @@ class image_module extends Unit_Module {
     }
 
     function on_create() {
+        $this->order = apply_filters($this->name.'_order', $this->order);
         $this->description = __('Image, 100% width', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

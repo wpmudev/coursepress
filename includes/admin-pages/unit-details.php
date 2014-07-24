@@ -121,7 +121,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) ? $unit_object->post_status : 'draft')); ?>" />
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'draft')); ?>" />
             <?php if ( isset($unit_id) ) { ?>
 
                 <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
@@ -148,11 +148,11 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-                            <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
+                            <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
+                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
+                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
                         </div>
                     </h3>
 
@@ -403,11 +403,11 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
                                     <div class="unit-state">
                                         <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-                                        <span class="draft <?php echo ( $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                                        <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
+                                        <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
+                                        <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>
                                         </div>
-                                        <span class="live <?php echo ( $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
+                                        <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
                                     </div>
                                 </div>
                             </div>

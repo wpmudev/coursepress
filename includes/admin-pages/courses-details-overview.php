@@ -1,4 +1,4 @@
-<?php
+open_ended_course<?php
 global $page, $user_id, $coursepress_admin_notice, $coursepress, $mp;
 
 
@@ -791,7 +791,7 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
                                                 <div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr($course_start_date); ?>" /><i class="calendar"></i></div>
                                             </div>
                                             <div class="end-date <?php echo ( $open_ended_course == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_course_end_date" class="end-date-label required"><?php _e('End Date', 'cp'); ?></label>
+                                                <label for="meta_course_end_date" class="end-date-label <?php echo ($open_ended_course == 'on') ? '' : 'required';?>"><?php _e('End Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr($course_end_date); ?>" <?php echo ( $open_ended_course == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                         </div>
@@ -812,11 +812,11 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
 
                                         <div class="date-range">
                                             <div class="start-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_enrollment_start_date" class="start-date-label required"><?php _e('Start Date', 'cp'); ?></label>
+                                                <label for="meta_enrollment_start_date" class="start-date-label <?php echo ( $open_ended_enrollment == 'on' ) ? '' : 'required'; ?>"><?php _e('Start Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr($enrollment_start_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                             <div class="end-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
-                                                <label for="meta_enrollment_end_date" class="end-date-label required"><?php _e('End Date', 'cp'); ?></label>
+                                                <label for="meta_enrollment_end_date" class="end-date-label <?php echo ( $open_ended_enrollment == 'on' ) ? '' : 'required'; ?>"><?php _e('End Date', 'cp'); ?></label>
                                                 <div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr($enrollment_end_date); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
                                             </div>
                                         </div>
