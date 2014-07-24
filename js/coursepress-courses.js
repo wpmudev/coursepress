@@ -310,7 +310,7 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
     if (status == 'success') {
 		
         var response = $.parseJSON($(data).find('response_data').text());
-		console.log(response);
+		// console.log(response);
 		// Apply a new nonce when returning
         if ( response && response.success ) {								
 			$('#course-ajax-check').data('nonce', response.nonce);
@@ -328,15 +328,20 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
 		                }
 		        ).done(function(data, status) {
 					
-					
 					var instructor_id = response.instructor;
 	                var response2 = $.parseJSON($(data).find('response_data').text());
 	                var response_type = $($.parseHTML(response2.content));
-					
-					window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
+
+	                if ($("#instructor_holder_" + instructor_id).length == 0 && response2.instructor_added) {
+	                    $('.instructor-avatar-holder.empty').hide();
+	                    $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+	                } 
+						
+
+					//window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
 
 				});
-				return;
+				// return;
 			}
 			
 		// Else, toggle back.	

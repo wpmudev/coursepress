@@ -1,4 +1,4 @@
-open_ended_course<?php
+<?php
 global $page, $user_id, $coursepress_admin_notice, $coursepress, $mp;
 
 
@@ -725,8 +725,8 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
                                             <?php coursepress_instructors_pending($course_id, $can_manage_instructors); ?>
                                         </div>
 
-                                        <?php if ($can_manage_instructors) : ?>						
-                                            <div class="clearfix"></div>
+										<div class="clearfix"></div>
+                                        <?php if ($can_manage_instructors || 0 == $course_id ) : ?>						
                                             <hr />
                                             <!-- INVITE INSTRUCTOR -->
 

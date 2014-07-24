@@ -287,6 +287,10 @@ class CoursePress_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		
+		if( 0 == $course_id && user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) ) {
+			return true;
+		}
 			
 		$my_course = self::is_course_instructor( $course_id, $user_id );	
 	

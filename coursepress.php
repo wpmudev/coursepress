@@ -1700,6 +1700,11 @@ if ( !class_exists('CoursePress') ) {
 
                 $ajax_response['instructors'] = json_encode($instructors);
                 $ajax_response['instructor_added'] = true;
+				
+				$user_info = get_userdata( $user_id );
+				
+				$ajax_response['instructor_gravatar'] = get_avatar($user_id, 80, "", $user_info->display_name);
+				$ajax_response['instructor_name'] = $user_info->display_name;
             } else {
                 $ajax_response['instructor_added'] = false;
                 $ajax_response['reason'] = __('Instructor already added.', 'cp');
