@@ -205,7 +205,7 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
                 <?php if (isset($course_id)) { ?>
                     <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                     <?php
-                    if ( CoursePress_Capabilities::can_update_course( $course_id ) ) {
+                    if ( CoursePress_Capabilities::can_update_course( $course_id ) || 0 == $course_id ) {
                         ?>
                         <input type="hidden" name="admin_url" value="<?php echo admin_url('admin.php?page=course_details'); ?>" />
                     <?php } ?>
@@ -1021,10 +1021,10 @@ $gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
                                             <div class="clearfix"></div>
 
 											<div class="course-sale-price">
-                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php checked($mp_product_details["mp_is_sale"][0], '1'); ?>" <?php echo $input_state; ?>  />
+                                                <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php if ( ! empty( $mp_product_details["mp_is_sale"] ) ) { checked($mp_product_details["mp_is_sale"][0], '1'); } ?>" <?php echo $input_state; ?>  />
                                                     <?php _e('Enabled Sale Price', 'cp'); ?></p>
-													<span class="price-label <?php checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
-                                                	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo esc_attr($mp_product_details["mp_sale_price"][0]); ?>" <?php echo $input_state; ?>  />
+													<span class="price-label <?php ! empty( $mp_product_details["mp_is_sale"] ) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
+                                                	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo ! empty( $mp_product_details['mp_sale_price'] ) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0; ?>" <?php echo $input_state; ?>  />
                                             </div>
 
                                             <div class="clearfix"></div>

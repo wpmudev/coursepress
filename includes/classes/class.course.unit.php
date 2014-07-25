@@ -291,13 +291,12 @@ if ( !class_exists('Unit') ) {
             global $course_slug;
             global $units_slug;
 
-            if ( $course_id == '' ) {
+            if ( empty ( $course_id ) ) {
                 $course_id = get_post_meta($this->id, 'course_id', true);
             }
-
             $course = new Course($course_id);
             $course = $course->get_course();
-
+			
             $unit_permalink = trailingslashit(site_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit($course->post_name . '/') . trailingslashit($units_slug . '/') . trailingslashit($this->details->post_name . '/');
 
             return $unit_permalink;
