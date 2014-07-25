@@ -17,7 +17,7 @@
                             <ul class="cp-shortcode-options">
 								<li><span>course_id</span> – <?php _e( 'ID of the course instructors are assign to ( required if use it outside of a loop )', 'cp' ); ?></li>
 								<li><span>style</span> – <?php _e( 'How to display the instructors. Options: <em>block</em> (default), <em>list</em>, <em>list-flat</em>, <em>count</em> (counts instructors for the course).', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label used to group instructors. Default: Instructor', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_plural</span> – <?php _e( 'Plural if more than one instructor. Default: Instructors', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to put after label. Default is colon (<strong>:</strong>)', 'cp' ); ?></li>
 								<li><span>label_element</span> – <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'cp' ); ?></li>
@@ -204,7 +204,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
@@ -233,7 +233,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'cp' ); ?></li>
@@ -261,7 +261,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>								
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'cp' ); ?></li>
@@ -292,7 +292,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if the course has no defined enrollment start date. Default: Enroll Anytime', 'cp' ); ?></li>								
@@ -322,7 +322,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if there is no enrollment end date. Default: Enroll Anytime', 'cp' ); ?></li>
@@ -351,7 +351,7 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>date_format</span> – <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>								
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if there is no enrollment start or end dates. Default: Enroll Anytime', 'cp' ); ?></li>
@@ -380,7 +380,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>manual_text</span> – <?php _e( 'Text to display for manual enrollments. Default: Students are added by instructors.', 'cp' ); ?></li>
@@ -410,7 +410,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>show_no_limit</span> – <?php _e( 'If “yes” it will show the no_limit_text. If “no” then nothing will display for unlimited courses. Default: no', 'cp' ); ?></li>
@@ -440,7 +440,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_cost_text</span> – <?php _e( 'Text to display for unpaid courses. Default: FREE', 'cp' ); ?></li>
@@ -467,7 +467,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
@@ -745,7 +745,7 @@
 						        <li><span>show_title</span> – <?php _e( 'Show course title in structure, “yes” or “no”. Default: “no"', 'cp' ); ?></li>
 								<li><span>show_label</span> – <?php _e( 'Show label text as tree heading, “yes” or “no”. Default: no', 'cp' ); ?></li>
 								<li><span>show_divider</span> – <?php _e( 'Show divider between major items in the tree, “yes” or “no”. Default: yes', 'cp' ); ?></li>
-								<li><span>label</span> – <?php _e( 'Label to display next to date (defaul: Course Start Date). Set label to "" to hide the label completely.', 'cp' ); ?></li>
+								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
