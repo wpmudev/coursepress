@@ -7,7 +7,7 @@
 }
 
 #students_accordion .widefat td{
-    padding: 14px 7px 12px;
+    padding: 14px 7px 12px 11px;
 }
 
 .add-student-class-area{
@@ -508,6 +508,11 @@ div.buttons a.cancellink {
 
 .coursepress_page_course_details .unit-control-buttons a.button.button-preview {
     position:relative;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -ms-filter: none;
+    filter: none;
 }
 .coursepress_page_course_details .unit-control-buttons a.button.button-preview:after {
     position: absolute;
@@ -521,7 +526,11 @@ div.buttons a.cancellink {
 }
 
 .unit-control-buttons .button.button-preview{
+    -moz-box-shadow: none;
     -webkit-box-shadow: none;
+    box-shadow: none;
+    -ms-filter: none;
+    filter: none;
     height: 27px;
 }
 
@@ -678,6 +687,10 @@ div.buttons a.cancellink {
 #students_accordion.ui-accordion .ui-accordion-header, .modules_accordion.ui-accordion .ui-accordion-header{
     padding: 0px;
     padding-left: 16px;
+}
+
+#students_accordion .zero-students{
+    padding: 0px 0px 0px 10px;
 }
 
 .modules_accordion.ui-accordion .ui-accordion-header{
@@ -2498,7 +2511,7 @@ li.disabled_unit{
 }
 
 .course-state .control.disabled {
-	background: #eaeaea;
+    background: #eaeaea;
 }
 
 .course-state .control:hover {
@@ -2532,7 +2545,7 @@ li.disabled_unit{
 
 .course-state .control.on.disabled,
 .course-state .control.disabled {
-	background: #eaeaea;
+    background: #eaeaea;
 }
 
 
@@ -2623,7 +2636,7 @@ li.disabled_unit{
 }
 
 .unit-state .control.disabled {
-	background: #eaeaea;
+    background: #eaeaea;
 }
 
 .unit-state .live,
@@ -2673,5 +2686,5 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
 }
 
 /*#add_new_student_to_class .chosen-container {
-	min-width: 350px;
+        min-width: 350px;
 }*/

@@ -196,7 +196,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
         <div class='course-liquid-left'>
 
             <div id='course'>
-                <?php if ( 0 !== $course_id && CoursePress_Capabilities::can_create_course() || CoursePress_Capabilities::can_update_course($course_id) ) { ?>
+                <?php if ( 0 == $course_id && CoursePress_Capabilities::can_create_course() || CoursePress_Capabilities::can_update_course($course_id) ) { ?>
                     <?php wp_nonce_field('course_details_overview'); ?>
 
                     <?php if ( isset($course_id) ) { ?>
@@ -685,7 +685,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                         <input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                         <div class="wide narrow">
                                             <label>
-                                                <?php _e('Course Instructor( s )', 'cp'); ?>
+                                                <?php _e('Course Instructor(s)', 'cp'); ?>
                                                 <?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );           ?>
                                                 <br />
                                                 <span><?php _e('Select one or more instructor to facilitate this course', 'cp'); ?></span>
@@ -707,7 +707,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             }
                                             ?>
 
-                                            <p>Assigned Instructors:</p>
+                                            <p><?php _e('Assigned Instructors:', 'cp');?></p>
                                             <div class="instructors-info" id="instructors-info">
                                                 <?php if ( 0 >= coursepress_instructors_avatars($course_id, true, true) ) : ?> 
                                                     <div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e('Please Assign Instructor', 'cp'); ?></span></div>											

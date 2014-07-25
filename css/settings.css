@@ -908,7 +908,7 @@ x:-o-prefocus,
     .chosen-container .chosen-results-scroll-down span,
     .chosen-container .chosen-results-scroll-up span {
         background-image: url( chosen-sprite@2x.png ) !important;
-        background-size: 52px 37px!important;
+        background-size: 52px 37px !important;
         background-repeat: no-repeat !important;
     }
 }
@@ -2716,7 +2716,7 @@ label.error:before {
     position: absolute;
     pointer-events: none;
     border-color: rgba( 0, 144, 207, 0 );
-    border-right-color: #0074A2;
+    /*border-right-color: #0074A2;*/
     border-width: 15px;
     margin-top: -15px;
 }
