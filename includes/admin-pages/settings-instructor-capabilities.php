@@ -156,6 +156,7 @@ $instructor_capabilities_groups = array(
 
 $instructor_capabilities_notifications = array(
     'coursepress_create_notification_cap' => __( 'Create new notifications', 'cp' ),
+    'coursepress_create_my_notification_cap' => __( 'Create new notifications for courses created by the instructor only', 'cp' ),
     'coursepress_update_notification_cap' => __( 'Update every notification', 'cp' ),
     'coursepress_update_my_notification_cap' => __( 'Update notifications made by the instructor only', 'cp' ),
     'coursepress_delete_notification_cap' => __( 'Delete every notification', 'cp' ),

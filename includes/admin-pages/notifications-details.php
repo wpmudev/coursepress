@@ -4,7 +4,6 @@ global $page, $user_id, $coursepress_admin_notice;
 global $coursepress;
 
 $notification_id = '';
-
 if ( isset($_GET['notification_id']) ) {
     $notification = new Notification($_GET['notification_id']);
     $notification_details = $notification->get_notification();
@@ -50,7 +49,7 @@ if ( isset($_GET['notification_id']) ) {
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-themes"><br></div>
 
-    <h2><?php _e('Notification', 'cp'); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_create_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+    <h2><?php _e('Notification', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
     <?php
     $message['ca'] = __('New Notification added successfully!', 'cp');
@@ -82,7 +81,9 @@ if ( isset($_GET['notification_id']) ) {
                                 <div class="full">
                                     <label><?php _e('Course', 'cp'); ?></label>
                                     <select name="meta_course_id" class="chosen-select">
-                                        <option value="" <?php selected($meta_course_id, ''); ?>><?php _e('All Courses', 'cp'); ?></option>
+                                        <?php if ( current_user_can('coursepress_create_notification_cap') ) { ?>
+                                            <option value="" <?php selected($meta_course_id, ''); ?>><?php _e('All Courses', 'cp'); ?></option>
+                                        <?php } ?>
                                         <?php
                                         $args = array(
                                             'post_type' => 'course',
@@ -91,14 +92,25 @@ if ( isset($_GET['notification_id']) ) {
                                         );
 
                                         $courses = get_posts($args);
+                                        $available_course_options = 0;
 
                                         foreach ( $courses as $course ) {
-                                            ?>
-                                            <option value="<?php echo $course->ID; ?>" <?php selected($meta_course_id, $course->ID); ?>><?php echo $course->post_title; ?></option>
-                                            <?php
+                                            if ( current_user_can('coursepress_create_notification_cap') || (current_user_can('coursepress_create_my_notification_cap') && $course->post_author == get_current_user_ID()) ) {
+                                                ?>
+                                                <option value="<?php echo $course->ID; ?>" <?php selected($meta_course_id, $course->ID); ?>><?php echo $course->post_title; ?></option>
+                                                <?php
+                                                $available_course_options++;
+                                            }
                                         }
                                         ?>
                                     </select>
+                                    <?php
+                                    if ( $available_course_options == 0 ) {
+                                        ?>
+                                    <p><?php _e("You have not been assigned to a course yet.");?></p>
+                                    <?php
+                                    }
+                                    ?>
 
                                 </div>
                                 <br clear="all" />
@@ -123,7 +135,7 @@ if ( isset($_GET['notification_id']) ) {
 
                                 <div class="buttons">
                                     <?php
-                                    if ( current_user_can( 'manage_options' ) || ( $notification_id == 0 && current_user_can('coursepress_create_notification_cap') ) || ( $notification_id != 0 && current_user_can('coursepress_update_notification_cap') ) || ( $notification_id != 0 && current_user_can('coursepress_update_my_notification_cap') && $notification_details->post_author == get_current_user_id() ) ) {//do not show anything
+                                    if ( current_user_can('manage_options') || ( $notification_id == 0 && current_user_can('coursepress_create_notification_cap') ) || ( $notification_id != 0 && current_user_can('coursepress_update_notification_cap') ) || ( $notification_id != 0 && current_user_can('coursepress_update_my_notification_cap') && $notification_details->post_author == get_current_user_id() ) || (current_user_can('coursepress_create_my_notification_cap') && $available_course_options > 0) ) {//do not show anything
                                         ?>
                                         <input type="submit" value = "<?php ( $notification_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp') ); ?>" class = "button-primary" />
                                         <?php

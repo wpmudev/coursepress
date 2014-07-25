@@ -87,13 +87,16 @@ class CoursePress_Capabilities {
 		    'coursepress_settings_groups_page_cap' => 0, 					
 		    //'coursepress_settings_shortcode_page_cap' => 0,				
 			/* Notifications */
-		    'coursepress_create_notification_cap' => 1, 					
+		    'coursepress_create_notification_cap' => 1, 
+                    'coursepress_create_my_notification_cap' => 1,
 		    'coursepress_update_notification_cap' => 0, 					
 		    'coursepress_update_my_notification_cap' => 1, 					
 		    'coursepress_delete_notification_cap' => 0, 					
 		    'coursepress_delete_my_notification_cap' => 1, 					
 		    'coursepress_change_notification_status_cap' => 0, 					
 		    'coursepress_change_my_notification_status_cap' => 1,
+                    
+                    
 		),
 	);
 
