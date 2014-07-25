@@ -257,7 +257,7 @@ $wp_user_search = new WP_User_Query( $args );
 
             <div class="additional_class_actions_add_student">
                 <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-                    <form name="add_new_student_to_class_<?php
+                    <form id="add_new_student_to_class" name="add_new_student_to_class_<?php
                     echo ( isset( $class ) ? $class : '' );
                     ;
                     ?>" action="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=as' ); ?>" method="post">
@@ -287,7 +287,7 @@ $wp_user_search = new WP_User_Query( $args );
 
             <div class="additional_class_actions_add_student">
                 <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_add_move_students_cap' ) ) || ( current_user_can( 'coursepress_add_move_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-                    <form name="add_new_student_to_class_<?php echo ( isset( $class ) ? $class : '' ); ?>" action="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=as' ) ?>" method="post">
+                    <form id="add_new_student_to_class" name="add_new_student_to_class_<?php echo ( isset( $class ) ? $class : '' ); ?>" action="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=as' ) ?>" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php if ( $students->total_users > 0 ) { ?>

@@ -235,7 +235,7 @@ class CoursePress_Capabilities {
 		}
 		
 		$my_unit = self::is_unit_creator( $unit_id, $user_id );				
-		$my_course = self::is_course_instructor( $course_id, $user_id );	
+		$my_course = self::is_course_instructor( $course_id, $user_id );
 		
 		return ( $my_course && ( ( $my_unit && user_can( $user_id, 'coursepress_update_my_course_unit_cap' ) ) || user_can( $user_id, 'coursepress_update_course_unit_cap' ) ) ) || user_can( $user_id, 'coursepress_update_all_courses_unit_cap' ) ? true : false;
 	}		
