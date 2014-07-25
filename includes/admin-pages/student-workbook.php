@@ -96,7 +96,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                 <?php
                                                 $assessment_page = 1;
 
-                                                $courses = get_posts( $args );
+                                                //$courses = get_posts( $args );
                                                 $courses_with_students = 0;
                                                 $course_num = 0;
                                                 $first_course_id = 0;

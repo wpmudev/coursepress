@@ -1733,14 +1733,6 @@ li.submenu-active{
     padding: 20px;
 }
 
-.knob-holder{
-    /*float: left;
-    margin-right: 25px;*/
-    float: right;
-    margin-right: 5px;
-
-}
-
 .mandatory_answer{
     display: block;
     text-align: right;
@@ -1768,13 +1760,6 @@ li.submenu-active{
 
 .grade-inactive{
     color:#ddd;
-}
-
-.unit-archive-single .knob{
-    display: inline;
-    width: 70px;
-    height: 70px;
-    float: left;
 }
 
 .unit-archive-single a.unit-archive-single-title{
@@ -2303,37 +2288,6 @@ h1.discussion-title{
 .passcode-box input[type="password"]{
     padding: 6px;
     margin-top: 6px;
-}
-
-/* TOOLTIPS */
-
-.tooltip{
-    display: block;
-    position: relative;
-}
-
-.tooltip:hover:after{
-    background: #24bde6;
-    border-radius: 1px;
-    bottom: 6px;
-    color: #fff;
-    content: attr( alt );
-    right: 1%;
-    padding: 5px 15px;
-    position: absolute;
-    z-index: 98;
-    width: 220px;
-}
-
-.tooltip:hover:before{
-    border: solid;
-    border-color: #24bde6 transparent;
-    border-width: 6px 6px 0 6px;
-    bottom: 0px;
-    content: "";
-    right: 3.8%;
-    position: absolute;
-    z-index: 99;
 }
 
 .total_grade{
