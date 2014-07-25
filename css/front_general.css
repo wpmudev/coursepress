@@ -835,18 +835,18 @@ video {
 
 /* Now using a jQuery solution */
 .video_player {
-	/*position: relative;*/
+	position: relative;
 	/* 16:9 */
-	/*padding-bottom: 56.25%;
+	padding-bottom: 56.25%;
 	padding-top: 25px;
-	height: 0;*/
+	height: 0;
 }
 .video_player iframe {
-	/*position: absolute;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 100%;*/
+	height: 100%;
 }
 
 #navigation-pagination.navigation li.disabled-link a{
