@@ -88,6 +88,7 @@ class CoursePress_Capabilities {
 		    //'coursepress_settings_shortcode_page_cap' => 0,				
 			/* Notifications */
 		    'coursepress_create_notification_cap' => 1, 
+                    'coursepress_create_my_assigned_notification_cap' => 1,
                     'coursepress_create_my_notification_cap' => 1,
 		    'coursepress_update_notification_cap' => 0, 					
 		    'coursepress_update_my_notification_cap' => 1, 					

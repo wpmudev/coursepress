@@ -100,7 +100,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
     ?>
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-themes"><br></div>
-        <h2><?php _e('Notifications', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+        <h2><?php _e('Notifications', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') || current_user_can('coursepress_create_my_assigned_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
         <?php
         $ms['add'] = __('New notification added successfully!', 'cp');
         $ms['nu'] = __('Notification updated successfully.', 'cp');
