@@ -76,11 +76,13 @@ if ( !class_exists( 'Instructor' ) ) {
         }
 
         function delete_instructor( $delete_user = true ) {
-            if ( $delete_user ) {
+            /*if ( $delete_user ) {
                 wp_delete_user( $this->ID ); //without reassign
-            }else{//just delete the meta which says that user is an instructor
-                delete_user_meta( $this->ID, 'role_ins', 'instructor' ); 
-            }
+            }else{//just delete the meta which says that user is an instructor*/
+                delete_user_meta( $this->ID, 'role_ins', 'instructor' );
+                $this->unassign_from_all_courses();
+                CoursePress::instance()->drop_instructor_capabilities( $this->ID );
+            //}
         }
 
     }
