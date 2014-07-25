@@ -39,7 +39,7 @@ if ( isset( $_POST['students'] ) && is_numeric( $_POST['students'] ) ) {
 /* Add new course class */
 if ( isset( $_POST['add_student_class'] ) ) {
     check_admin_referer( 'add_student_class' );
-    if ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+    if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         sort( $_POST['course_classes'] );
         $groups = $_POST['course_classes'];
         update_post_meta( $course_id, 'course_classes', $groups );
@@ -49,7 +49,7 @@ if ( isset( $_POST['add_student_class'] ) ) {
 /* Delete a Class and Change student's group to Default */
 if ( isset( $_GET['delete_class'] ) ) {
 
-    if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+    if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $old_class = urldecode( $_GET['delete_class'] );
         if ( $old_class == 'Default' ) {
             $old_class = '';
@@ -94,7 +94,7 @@ if ( isset( $_GET['withdraw_all'] ) ) {
         die( __( 'Cheating huh?', 'cp' ) );
     }
 
-    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+    if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $old_class = urldecode( $_GET['withdraw_all'] );
 
         if ( $old_class == 'Default' ) {
@@ -128,7 +128,7 @@ if ( isset( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) ) {
     if ( !isset( $_GET['cp_nonce'] ) || !wp_verify_nonce( $_GET['cp_nonce'], 'withdraw_student_'.$_GET['withdraw'] ) ) {
         die( __( 'Cheating huh?', 'cp' ) );
     }
-    if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+    if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
         $student = new Student( $_GET['withdraw'] );
         $student->withdraw_from_course( $course_id );
     }
@@ -149,7 +149,7 @@ $col_sizes = array(
     '8', '26', '26', '27', '6'
 );
 
-if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
+if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
     $columns["delete"] = __( 'Withdraw', 'cp' );
     $col_sizes[] = '12';
 }
@@ -232,9 +232,9 @@ $wp_user_search = new WP_User_Query( $args );
                                     <i class="fa fa-user cp-move-icon remove-btn"></i>
                                 </a>
                             </td>
-                            <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                                 <td class="<?php echo $style . ' edit-button-student-td'; ?>">
-                                    <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+                                    <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                                         <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw=' . $user_object->ID ), 'withdraw_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return withdrawStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a>
@@ -250,7 +250,7 @@ $wp_user_search = new WP_User_Query( $args );
             </table>
 
             <div class="additional_class_actions">
-                <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+                <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
                     <a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw_all=' . urlencode( ( isset( $class ) ? $class : '' ) ) ), 'withdraw_students', 'cp_nonce' ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', 'cp' ); ?>"><?php _e( 'Withdraw all students', 'cp' ); ?></a>
                 <?php } ?>
             </div>
@@ -477,7 +477,7 @@ $wp_user_search = new WP_User_Query( $args );
 <?php
 if ( $course->details->enroll_type != 'manually' ) {//There shouldn't be invitations functionality if enrollment type is only Manually
     ?>
-    <?php if ( ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
+    <?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_invite_students_cap' ) ) || ( current_user_can( 'coursepress_invite_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
         <div class="invite_student_area">
             <form name="student_invitation" method="post" class='student-invitation'>
                 <?php wp_nonce_field( 'student_invitation' ); ?>

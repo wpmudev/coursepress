@@ -1,5 +1,5 @@
 <?php
-if ( !current_user_can( 'coursepress_add_new_students_cap' ) ) {
+if ( !current_user_can( 'manage_options' ) || !current_user_can( 'coursepress_add_new_students_cap' )  ) {
     die( 'You do not have required permissions to access this page.' );
 }
 ?>

@@ -49,7 +49,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 <div class="wrap nosubsub">
     <div class="icon32" id="icon-themes"><br></div>
 
-    <h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'coursepress_create_discussion_cap' ) ) { ?><a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' );?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
+    <h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) ) { ?><a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' );?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
     <div class='wrap nocoursesub'>
         <form action='<?php echo esc_attr(admin_url('admin.php?page=' . $page . ( ( $discussion_id !== 0 ) ? '&discussion_id=' . $discussion_id : '' ) . '&action=' . $action . ( ( $discussion_id !== 0 ) ? '&ms=du' : '&ms=da' ))); ?>' name='discussion-add' method='post'>
@@ -113,7 +113,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 
                                 <div class="buttons">
                                     <?php
-                                    if ( ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id() ) ) {//do not show anything
+                                    if ( current_user_can( 'manage_options' ) || ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id() ) ) {//do not show anything
                                         ?>
                                         <input type="submit" value = "<?php ( $discussion_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class = "button-primary" />
                                         <?php

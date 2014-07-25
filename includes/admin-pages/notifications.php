@@ -23,7 +23,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
 
                 switch ( addslashes($action) ) {
                     case 'publish':
-                        if ( current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_course_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
+                        if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_course_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
                             $notification->change_status('publish');
                             $message = __('Selected notifications have been published successfully.', 'cp');
                         } else {
@@ -32,7 +32,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                         break;
 
                     case 'unpublish':
-                        if ( current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id() ) ) {
+                        if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id() ) ) {
                             $notification->change_status('private');
                             $message = __('Selected notifications have been set to private successfully.', 'cp');
                         } else {
@@ -41,7 +41,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                         break;
 
                     case 'delete':
-                        if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
+                        if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
                             $notification->delete_notification();
                             $message = __('Selected notifications have been deleted successfully.', 'cp');
                         } else {
@@ -80,7 +80,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
 
         $notification_object = $notification->get_notification();
 
-        if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
+        if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) {
             $notification->delete_notification($force_delete = true);
             $message = __('Selected notification has been deleted successfully.', 'cp');
         } else {
@@ -131,15 +131,15 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
 
             <form method="post" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" id="posts-filter">
 
-                <?php if ( current_user_can('coursepress_change_notification_status_cap') || current_user_can('coursepress_delete_notification_cap') ) { ?>
+                <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') || current_user_can('coursepress_delete_notification_cap') ) { ?>
                     <div class="alignleft actions">
                         <select name="action">
                             <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
-                            <?php if ( current_user_can('coursepress_change_notification_status_cap') ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') ) { ?>
                                 <option value="publish"><?php _e('Publish', 'cp'); ?></option>
                                 <option value="unpublish"><?php _e('Private', 'cp'); ?></option>
                             <?php } ?>
-                            <?php if ( current_user_can('coursepress_delete_notification_cap') ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') ) { ?>
                                 <option value="delete"><?php _e('Delete', 'cp'); ?></option>
                             <?php } ?>
                         </select>
@@ -167,7 +167,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                     '3', '57', '25', '10', '5'
                 );
 
-                if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') ) ) {
+                if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') ) ) {
                     $columns["remove"] = __('Remove', 'cp');
                     $col_sizes[] = '7';
                 }
@@ -217,19 +217,19 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                                     <div class="course_excerpt"><?php echo get_the_course_excerpt($notification_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_notification"><a href="<?php echo admin_url('admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID); ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
-                                        <?php if ( current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
+                                        <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
                                             <span class="notification_publish_unpublish"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=notifications&notification_id=' . $notification_object->ID . '&action=change_status&new_status=' . ( ( $notification_object->post_status == 'private' ) ? 'publish' : 'private' )), 'change_status_' . $notification_object->ID, 'cp_nonce'); ?>"><?php ( $notification_object->post_status == 'private' ) ? _e('Publish', 'cp') : _e('Private', 'cp'); ?></a> | </span>
                                         <?php } ?>
-                                        <?php if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
+                                        <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
                                             <span class="course_remove"><a href="<?php echo wp_nonce_url(admin_url('admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID), 'delete_notification_' . $notification_object->ID, 'cp_nonce'); ?>" onClick="return removeNotification();"><?php _e('Delete', 'cp'); ?></a> | </span>
                                         <?php } ?>
                                     </div>
                                 </td>
                                 <td class="column-course <?php echo $style; ?>"> <?php echo $course_name; ?> </td>
                                 <td class="column-status <?php echo $style; ?>"><?php echo ( $notification_object->post_status == 'publish' ) ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></td>
-                                <?php if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') ) ) { ?>
+                                <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') ) ) { ?>
                                     <td class="<?php echo $style; ?>">
-                                        <?php if ( current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
+                                        <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_notification_cap') || ( current_user_can('coursepress_delete_my_notification_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>
                                             <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID), 'delete_notification_' . $notification_object->ID, 'cp_nonce'); ?>" onClick="return removeNotification();">
                                                 <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                             </a>

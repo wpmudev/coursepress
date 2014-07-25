@@ -8,9 +8,9 @@ $tab = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : '';
 if ( empty( $tab ) ) {
     if ( current_user_can( 'manage_options' ) ) {
         $tab = 'general';
-    } else if ( current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
+    } else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
         $tab = 'groups';
-    } else if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
+    } else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
         $tab = 'shortcodes';
     } else {
         die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
@@ -65,11 +65,11 @@ if ( isset( $_POST['_wpnonce'] ) ) {
         $menus['general'] = __( 'General', 'cp' );
     }
 
-    if ( current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
+    if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
         //$menus['groups'] = __( 'Class Groups', 'cp' ); //to do in the next release
     }
 
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_options' ) ) {
         /* $menus['payment'] = __( 'Payment Settings', 'cp' ); */
         $menus['email'] = __( 'E-mail Settings', 'cp' );
     }
@@ -117,7 +117,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
 
 
             case 'groups':
-                if ( current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
+                if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
                     $this->show_settings_groups();
                 }
                 break;

@@ -235,14 +235,14 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
 
             switch ( addslashes( $action ) ) {
                 case 'delete':
-                    if ( current_user_can( 'coursepress_delete_students_cap' ) ) {
+                    if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
                         $student->delete_student();
                         $message = __( 'Selected students has been removed successfully.', 'cp' );
                     }
                     break;
 
                 case 'withdraw':
-                    if ( current_user_can( 'coursepress_withdraw_students_cap' ) ) {
+                    if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) {
                         $student->withdraw_from_all_courses();
                         $message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }

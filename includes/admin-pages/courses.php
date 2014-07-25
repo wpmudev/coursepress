@@ -150,15 +150,15 @@ if ( isset($_GET['quick_setup']) ) {
 
             <form method="post" action="<?php echo esc_attr(admin_url('admin.php?page=' . $page)); ?>" id="posts-filter">
 				<?php // Use broad capability checking here, specific course capabilities will be checked when attempting to perform the actions. ?>
-                <?php if ( current_user_can('coursepress_change_course_status_cap') || current_user_can('coursepress_delete_course_cap') ) { ?>
+                <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_course_status_cap') || current_user_can('coursepress_delete_course_cap') ) { ?>
                     <div class="alignleft actions">
                         <select name="action">
                             <option selected="selected" value=""><?php _e('Bulk Actions', 'cp'); ?></option>
-                            <?php if ( current_user_can('coursepress_change_course_status_cap') ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_course_status_cap') ) { ?>
                                 <option value="publish"><?php _e('Publish', 'cp'); ?></option>
                                 <option value="unpublish"><?php _e('Unpublish', 'cp'); ?></option>
                             <?php } ?>
-                            <?php if ( current_user_can('coursepress_delete_course_cap') ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_delete_course_cap') ) { ?>
                                 <option value="delete"><?php _e('Delete', 'cp'); ?></option>
                             <?php } ?>
                         </select>

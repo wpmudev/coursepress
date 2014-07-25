@@ -17,14 +17,14 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
 
             switch ( addslashes( $action ) ) {
                 case 'delete':
-                    if ( current_user_can( 'coursepress_delete_students_cap' ) ) {
+                    if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
                         $student->delete_student();
                         $message = __( 'Selected students has been removed successfully.', 'cp' );
                     }
                     break;
 
                 case 'withdraw':
-                    if ( current_user_can( 'coursepress_withdraw_students_cap' ) ) {
+                    if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) {
                         $student->withdraw_from_all_courses();
                         $message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }
@@ -95,13 +95,13 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                 <?php wp_nonce_field( 'bulk-students' ); ?>
 
                 <div class="alignleft actions">
-                    <?php if ( current_user_can( 'coursepress_withdraw_students_cap' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
+                    <?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
                         <select name="action">
                             <option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
-                            <?php if ( current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
                                 <option value="delete"><?php _e( 'Delete', 'cp' ); ?></option>
                             <?php } ?>
-                            <?php if ( current_user_can( 'coursepress_withdraw_students_cap' ) ) { ?>
+                            <?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) { ?>
                                 <option value="withdraw"><?php _e( 'Withdraw from all courses', 'cp' ); ?></option>
                             <?php } ?>
                         </select>
@@ -133,7 +133,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                     '8', '10', '10', '15', '15', '10', '7', '7'
                 );
 
-                if ( current_user_can( 'coursepress_delete_students_cap' ) ) {
+                if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
                     $columns["delete"] = __( 'Remove', 'cp' );
                     $col_sizes[] = '5';
                 }
@@ -206,7 +206,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                                         <i class="fa fa-user cp-move-icon remove-btn"></i>
                                     </a>
                                 </td>
-                                <?php if ( current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
+                                <?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
                                     <td class="column-delete <?php echo $style; ?>" style="padding-top:13px;"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=students&action=delete&student_id=' . $user_object->ID ), 'delete_student_'.$user_object->ID, 'cp_nonce' ); ?>" onclick="return removeStudent();">
                                             <i class="fa fa-times-circle cp-move-icon remove-btn"></i>
                                         </a></td>
