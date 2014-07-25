@@ -120,26 +120,26 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 
 
                 $col_sizes = array(
-                    '5', '15', '15', '20', '15', '15'
+                    '4', '10', '10', '15', '15', '15', '5'
                 );
 
 
                 $columns["delete"] = __( 'Delete', 'cp' );
-                $col_sizes[] = '6';
+                $col_sizes[] = '5';
 
                 ?>
 
                 <table cellspacing="0" class="widefat fixed shadow-table unit-control-buttons">
                     <thead>
                         <tr>
-                            <th class="manage-column column-cb check-column" id="cb" scope="col" style="width:5%;">
+                            <th class="manage-column column-cb check-column" id="cb" scope="col" style="width:2%;">
                                 <input type="checkbox">
                             </th>
                             <?php
                             $n = 0;
                             foreach ( $columns as $key => $col ) {
                                 ?>
-                                <th style="" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
+                                <th style="width:<?php echo $col_sizes[$n] . '%'; ?>" class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
                                 <?php
                                 $n++;
                             }

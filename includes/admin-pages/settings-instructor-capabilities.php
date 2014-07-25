@@ -83,7 +83,7 @@ $capability_boxes = array(
     //'instructor_capabilities_classes' => __( 'Classes', 'cp' ),
     'instructor_capabilities_students' => __( 'Students', 'cp' ),
     'instructor_capabilities_notifications' => __( 'Notifications', 'cp' ),
-    'instructor_capabilities_groups' => __( 'Settings Pages', 'cp' ),
+    //'instructor_capabilities_groups' => __( 'Settings Pages', 'cp' ),
 );
 
 $instructor_capabilities_general = array(
@@ -141,8 +141,9 @@ $instructor_capabilities_students = array(
     'coursepress_invite_my_students_cap' => __( 'Invite students to courses made by the instructor only', 'cp' ),
     'coursepress_withdraw_students_cap' => __( 'Withdraw students from any course', 'cp' ),
     'coursepress_withdraw_my_students_cap' => __( 'Withdraw students from courses made by the instructor only', 'cp' ),
-    //'coursepress_add_move_students_cap' => __( 'Add or Move students from class to class within any course', 'cp' ),
-    //'coursepress_add_move_my_students_cap' => __( 'Add or Move students from class to class within courses made by the instructor only', 'cp' ),
+    'coursepress_add_move_students_cap' => __( 'Add students to any course', 'cp' ),
+    'coursepress_add_move_my_students_cap' => __( 'Add students to courses made by the instructor only', 'cp' ),
+    'coursepress_add_move_my_assigned_students_cap' => __( 'Add students to courses assigned to the instructor only', 'cp' ),
     //'coursepress_change_students_group_class_cap' => __( "Change student's group", 'cp' ),
     //'coursepress_change_my_students_group_class_cap' => __( "Change student's group within a class made by the instructor only", 'cp' ),
     'coursepress_add_new_students_cap' => __( 'Add new users with Student role to the blog', 'cp' ),
