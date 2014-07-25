@@ -136,8 +136,8 @@ if ( !class_exists('CoursePress') ) {
 
 // Using ajax to update course calendar
                 add_action('wp_ajax_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
-                add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
+                add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
@@ -311,6 +311,45 @@ if ( !class_exists('CoursePress') ) {
 
 // Setup TinyMCE callback
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
+
+            add_action('show_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
+            add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
+            add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+            add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+        }
+
+        function instructor_save_extra_profile_fields( $user_id ) {
+            if ( !current_user_can('edit_user', $user_id) )
+                return false;
+            
+            if($_POST['cp_instructor_capabilities'] == 'grant'){
+                update_user_meta($user_id, 'role_ins', 'instructor');
+                CoursePress::instance()->assign_instructor_capabilities( $user_id );
+            }else{
+                delete_user_meta($user_id, 'role_ins', 'instructor');
+                CoursePress::instance()->drop_instructor_capabilities( $user_id );
+            }
+        }
+
+        function instructor_extra_profile_fields( $user ) {
+            ?>
+            <h3><?php _e('Instructor Capabilities'); ?></h3>
+
+            <?php
+            $has_instructor_role = get_user_meta($user->ID, 'role_ins', true);
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th><label for="instructor_capabilities"><?php _e('Capabilities', 'cp'); ?></label></th>
+
+                    <td>
+                        <input type="radio" name="cp_instructor_capabilities" value="grant" <?php echo ($has_instructor_role ? 'checked' : ''); ?>><?php _e('Granted Instructor Capabilities') ?><br /><br />
+                        <input type="radio" name="cp_instructor_capabilities" value="revoke" <?php echo (!$has_instructor_role ? 'checked' : ''); ?>><?php _e('Revoked Instructor Capabilities') ?><br />
+                    </td>
+                </tr>
+
+            </table>
+            <?php
         }
 
         function restore_capabilities( $user ) {
@@ -1403,7 +1442,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => true,
                 'capability_type' => 'course',
-				'map_meta_cap' => true,
+                'map_meta_cap' => true,
                 'query_var' => true,
                 'rewrite' => array(
                     'slug' => $this->get_course_slug(),
@@ -1433,7 +1472,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'unit',
-				'map_meta_cap' => true,				
+                'map_meta_cap' => true,
                 'query_var' => true
             );
 
@@ -1458,7 +1497,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'module',
-				'map_meta_cap' => true,				
+                'map_meta_cap' => true,
                 'query_var' => true
             );
 
@@ -1483,7 +1522,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'module_response',
-				'map_meta_cap' => true,				
+                'map_meta_cap' => true,
                 'query_var' => true
             );
 
@@ -1508,7 +1547,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'notification',
-				'map_meta_cap' => true,
+                'map_meta_cap' => true,
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_notifications_slug() )
             );
@@ -1535,7 +1574,7 @@ if ( !class_exists('CoursePress') ) {
                 'show_ui' => false,
                 'publicly_queryable' => false,
                 'capability_type' => 'discussion',
-				'map_meta_cap' => true,				
+                'map_meta_cap' => true,
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug() )
             );
@@ -2047,16 +2086,14 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $instructor_capabilities as $cap ) {
                 $role->add_cap($cap);
             }
-			
-			
         }
 
         function drop_instructor_capabilities( $user_id ) {
 
-			if ( user_can( $user_id, 'manage_options' ) ) {
-				exit;
-			}
-			
+            if ( user_can($user_id, 'manage_options') ) {
+                exit;
+            }
+
             $role = new Instructor($user_id);
 
             delete_user_meta($user_id, 'role_ins', 'instructor');
@@ -2068,8 +2105,8 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $capabilities as $cap ) {
                 $role->remove_cap($cap);
             }
-			
-			CoursePress_Capabilities::grant_private_caps( $user_id );
+
+            CoursePress_Capabilities::grant_private_caps($user_id);
         }
 
 //Add new roles and user capabilities
@@ -2104,8 +2141,8 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $admin_capabilities as $cap ) {
                 $role->add_cap($cap);
             }
-			
-			CoursePress_Capabilities::drop_private_caps( $user_id );
+
+            CoursePress_Capabilities::drop_private_caps($user_id);
         }
 
 //Functions for handling admin menu pages
