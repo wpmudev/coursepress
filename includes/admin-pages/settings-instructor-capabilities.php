@@ -3,33 +3,7 @@ global $wp_roles;
 
 if ( isset( $_POST['submit'] ) ) {
     
-    /* Set capabilities for the instructor role */
-    
-    $instructor_role = get_role( 'instructor' );
-    $instructor_capabilities = $instructor_role->capabilities;
-
-    if ( isset( $_POST['instructor_capability'] ) ) {
-		// Save capabilities as option
-		update_option('coursepress_instructor_capabilities', $_POST['instructor_capability'] );
-        foreach ( $instructor_capabilities as $key => $old_cap ) {
-            if ( !in_array( $key, $_POST['instructor_capability'] ) && 
-			     in_array( $key, array_keys( CoursePress_Capabilities::$capabilities['instructor'] ) ) ) {//making the operation less expensive
-                $instructor_role->remove_cap( $key );
-            }
-        }
-
-        foreach ( $_POST['instructor_capability'] as $new_cap ) {
-            $instructor_role->add_cap( $new_cap );
-        }
-    } else {//all unchecked, remove all capabilities except read
-        foreach ( $instructor_capabilities as $key => $old_cap ) {
-            if ( $key != 'read' ) {
-                $instructor_role->remove_cap( $key );
-            }
-        }
-    }
-    
-    /* Set capabilities for each instructor user separately */
+    /* Set capabilities for each instructor user */
     
     $wp_user_search = new Instructor_Search();
 	// $wp_user_search = new Instructor_Search( $usersearch, $page_num );
@@ -67,9 +41,6 @@ if ( isset( $_POST['submit'] ) ) {
         }
     }
 }
-
-// $instructor_role = get_role( 'instructor' );
-// $instructor_capabilities = $instructor_role->capabilities;
 
 // The default capabilities for an instructor
 $default_capabilities = array_keys( CoursePress_Capabilities::$capabilities['instructor'], 1 );

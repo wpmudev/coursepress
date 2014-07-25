@@ -2113,25 +2113,6 @@ if ( !class_exists('CoursePress') ) {
         function add_user_roles_and_caps() {
             global $user, $wp_roles;
 
-            /* ------------------------- Add Instructor role and capabilities */
-
-            add_role('instructor', 'Instructor');
-
-            $role = get_role('instructor');
-            $role->add_cap('read');
-
-            // Add default instructor capabilities
-            $instructor_capabilities = array_keys(CoursePress_Capabilities::$capabilities['instructor'], 1);
-            foreach ( $instructor_capabilities as $cap ) {
-                $role->add_cap($cap);
-            }
-
-            /* ---------------------------- ADD Role Student and capabilities */
-            add_role('student', 'Student');
-
-            $role = get_role('student');
-            $role->add_cap('read');
-
             /* ---------------------- Add initial capabilities for the admins */
             $role = get_role('administrator');
             $role->add_cap('read');
