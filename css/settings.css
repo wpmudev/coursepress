@@ -2892,11 +2892,16 @@ wrap mp-wrap nocoursesub mp-wrap{
 	
 }
 
+#poststuff ul.cp-shortcode-options li {
+	line-height: 1.4em;
+}
+
 #poststuff ul.cp-shortcode-options li span {
 	color: #D54E21;
 }
 
 #poststuff .cp-shortcode-code {
+	line-height: 1.4em;	
 	font-size:16px;
 	font-weight: 600;
 /*	font-family: monospace;*/
@@ -2904,4 +2909,10 @@ wrap mp-wrap nocoursesub mp-wrap{
 
 #poststuff.cp-shortcode-box code {
 	display: block;
+}
+
+#poststuff .cp-shortcode-alt {
+	border: 1px solid #efefef;
+	border-style: solid none;
+	padding: 5px 0;
 }

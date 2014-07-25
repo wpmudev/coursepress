@@ -78,8 +78,8 @@ if ( isset( $_POST['_wpnonce'] ) ) {
         $menus['instructor_capabilities'] = __( 'Instructor Capabilities', 'cp' );
     }
 
-    if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
-        //$menus['shortcodes'] = __( 'Shortcodes', 'cp' );
+    if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) || current_user_can( 'manage_options' ) ) {
+        $menus['shortcodes'] = __( 'Shortcodes', 'cp' );
     }
     
 

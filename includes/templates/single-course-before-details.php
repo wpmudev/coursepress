@@ -10,7 +10,7 @@ echo do_shortcode('[course_summary]');
 <div class="enroll-box">
     <div class="enroll-box-left">
         <div class="course-box">
-            <?php echo do_shortcode('[course_dates]'); ?>
+            <?php echo do_shortcode('[course_dates show_alt_display="yes"]'); ?>
             <?php echo do_shortcode('[course_enrollment_dates]'); ?>
             <?php echo do_shortcode('[course_class_size]'); ?>
             <?php echo do_shortcode('[course_enrollment_type]'); ?>

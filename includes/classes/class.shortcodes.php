@@ -401,7 +401,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'label_delimeter' => ':',
                 'no_date_text' => __('No End Date', 'cp'),
                 'alt_display_text' => __('Open-ended', 'cp'),
-                'show_alt_display' => 'yes',
+                'show_alt_display' => 'no',
                 'class' => '',
                             ), $atts, 'course_dates'));
 
@@ -1130,10 +1130,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course' => false,
                 'free_text' => __('Free', 'cp'),
                 'free_show' => true,
-                'show_title' => 'yes',
+                'show_title' => 'no',
                 'show_label' => 'no',
                 'label_delimeter' => ': ',
-                'label_element' => 'h2',
+                'label_tag' => 'h2',
                 'show_divider' => 'yes',
                 'label' => __('Course Structure', 'cp'),
                 'class' => '',
@@ -1156,7 +1156,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $content .= '<div class="course-structure-block course-structure-block-' . $course_id . '">';
 
                 if ( !empty($label) ) {
-                    $content .= '<' . $label_element . ' class="label">' . $label . $label_delimeter . '</' . $label_element . '>';
+                    $content .= '<' . $label_tag . ' class="label">' . $label . $label_delimeter . '</' . $label_tag . '>';
                 }
 
                 $content .= 'yes' == $show_title ? '<label>' . $this->details->post_title . '</label>' : '';
@@ -1269,7 +1269,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => '',
                 'featured_title' => __('Featured Course', 'cp'),
                 'button_title' => __('Find out more.', 'cp'),
-                'media_type' => 'video', // video, image, thumbnail
+                'media_type' => '', // video, image, thumbnail
                 'media_priority' => 'video', // video, image
                 'class' => '',
                             ), $atts, 'course_featured'));
@@ -1473,10 +1473,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'status' => 'publish',
                 'instructor' => '', // Note, one or the other
                 'student' => '', // If both student and instructor is specified only student will be used			
-                'label' => __('Price', 'cp'),
-                'label_tag' => 'strong',
-                'label_delimeter' => ':',
-                'no_cost_text' => __('FREE', 'cp'),
                 'two_column' => 'yes',
                 'left_class' => '',
                 'right_class' => '',
@@ -1657,7 +1653,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'label' => __('Instructor', 'cp'),
                 'label_plural' => __('Instructors', 'cp'),
                 'label_delimeter' => ': ',
-                'label_element' => '',
+                'label_tag' => '',
                 'count' => false, // deprecated
                 'list' => false, // deprecated
                 'link' => false,
@@ -1686,14 +1682,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $content = '';
 
             if ( 0 < count($instructors) && 'yes' == $show_label ) {
-                if ( !empty($label_element) ) {
-                    $content .= '<' . $label_element . '>';
+                if ( !empty($label_tag) ) {
+                    $content .= '<' . $label_tag . '>';
                 }
 
                 $content .= count($instructors) > 1 ? $label_plural . $label_delimeter : $label . $label_delimeter;
 
-                if ( !empty($label_element) ) {
-                    $content .= '</' . $label_element . '>';
+                if ( !empty($label_tag) ) {
+                    $content .= '</' . $label_tag . '>';
                 }
             }
 
