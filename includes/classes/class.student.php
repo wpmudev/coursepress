@@ -140,8 +140,12 @@ if ( !class_exists( 'Student' ) ) {
             return $courses_count;
         }
 
-        function delete_student() {
-            wp_delete_user( $this->ID ); //without reassign
+        function delete_student( $delete_user = false ) {
+			if( $delete_user) {
+	            wp_delete_user( $this->ID ); //without reassign				
+			} else {
+				$this->withdraw_from_all_courses();
+			}
         }
 
         function has_access_to_course( $course_id = '', $user_id = '' ) {

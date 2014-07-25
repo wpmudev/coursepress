@@ -237,7 +237,8 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
                 case 'delete':
                     if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
                         $student->delete_student();
-                        $message = __( 'Selected students has been removed successfully.', 'cp' );
+                        // $message = __( 'Selected students has been removed successfully.', 'cp' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }
                     break;
 

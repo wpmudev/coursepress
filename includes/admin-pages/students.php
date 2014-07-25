@@ -19,7 +19,8 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
                 case 'delete':
                     if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
                         $student->delete_student();
-                        $message = __( 'Selected students has been removed successfully.', 'cp' );
+                        // $message = __( 'Selected students has been removed successfully.', 'cp' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
                     }
                     break;
 
@@ -52,7 +53,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['st
     }
     $student = new Student( $_GET['student_id'] );
     $student->delete_student();
-    $message = __( 'Selected student has been removed successfully.', 'cp' );
+    $message = __( 'Selected student has been withdrawn from all courses successfully.', 'cp' );
 }
 
 if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'view' ) && isset( $_GET['student_id'] ) && is_numeric( $_GET['student_id'] ) ) {
