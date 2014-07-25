@@ -36,6 +36,8 @@ if ( isset( $_POST['submit'] ) ) {
 
     foreach ( $wp_user_search->get_results() as $user ) {
 		
+		CoursePress_Capabilities::grant_private_caps( $user_id );
+		
 		// Don't remove capabilities from administrators
 		if( user_can( $user->ID, 'manage_options' ) ){
 			continue;

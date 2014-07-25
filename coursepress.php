@@ -1402,7 +1402,8 @@ if ( !class_exists('CoursePress') ) {
                 'has_archive' => true,
                 'show_ui' => false,
                 'publicly_queryable' => true,
-                'capability_type' => 'post',
+                'capability_type' => 'course',
+				'map_meta_cap' => true,
                 'query_var' => true,
                 'rewrite' => array(
                     'slug' => $this->get_course_slug(),
@@ -1431,7 +1432,8 @@ if ( !class_exists('CoursePress') ) {
                 'public' => false,
                 'show_ui' => false,
                 'publicly_queryable' => false,
-                'capability_type' => 'post',
+                'capability_type' => 'unit',
+				'map_meta_cap' => true,				
                 'query_var' => true
             );
 
@@ -1455,7 +1457,8 @@ if ( !class_exists('CoursePress') ) {
                 'public' => false,
                 'show_ui' => false,
                 'publicly_queryable' => false,
-                'capability_type' => 'post',
+                'capability_type' => 'module',
+				'map_meta_cap' => true,				
                 'query_var' => true
             );
 
@@ -1479,7 +1482,8 @@ if ( !class_exists('CoursePress') ) {
                 'public' => false,
                 'show_ui' => false,
                 'publicly_queryable' => false,
-                'capability_type' => 'post',
+                'capability_type' => 'module_response',
+				'map_meta_cap' => true,				
                 'query_var' => true
             );
 
@@ -1503,7 +1507,8 @@ if ( !class_exists('CoursePress') ) {
                 'public' => false,
                 'show_ui' => false,
                 'publicly_queryable' => false,
-                'capability_type' => 'post',
+                'capability_type' => 'notification',
+				'map_meta_cap' => true,
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_notifications_slug() )
             );
@@ -1529,7 +1534,8 @@ if ( !class_exists('CoursePress') ) {
                 //'has_archive' => true,
                 'show_ui' => false,
                 'publicly_queryable' => false,
-                'capability_type' => 'post',
+                'capability_type' => 'discussion',
+				'map_meta_cap' => true,				
                 'query_var' => true,
                 'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug() )
             );
@@ -2041,10 +2047,16 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $instructor_capabilities as $cap ) {
                 $role->add_cap($cap);
             }
+			
+			
         }
 
         function drop_instructor_capabilities( $user_id ) {
 
+			if ( user_can( $user_id, 'manage_options' ) ) {
+				exit;
+			}
+			
             $role = new Instructor($user_id);
 
             delete_user_meta($user_id, 'role_ins', 'instructor');
@@ -2056,6 +2068,8 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $capabilities as $cap ) {
                 $role->remove_cap($cap);
             }
+			
+			CoursePress_Capabilities::grant_private_caps( $user_id );
         }
 
 //Add new roles and user capabilities
@@ -2090,6 +2104,8 @@ if ( !class_exists('CoursePress') ) {
             foreach ( $admin_capabilities as $cap ) {
                 $role->add_cap($cap);
             }
+			
+			CoursePress_Capabilities::drop_private_caps( $user_id );
         }
 
 //Functions for handling admin menu pages
