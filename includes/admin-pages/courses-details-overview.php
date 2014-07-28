@@ -480,7 +480,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                     <li class="<?php echo ($unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit'); ?>">
 
                                                                                         <label for="unit_<?php echo $unit->ID; ?>">
-                                                                                            <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+                                                                                            <div class="tree-unit-left"><?php echo ($unit->post_status != 'publish' ? __('[draft] ', 'cp') : ''); ?><?php echo $unit->post_title; ?></div>
                                                                                             <div class="tree-unit-right">
                                                                                                 <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
                                                                                                 if ( isset($show_unit[$unit->ID]) ) {
