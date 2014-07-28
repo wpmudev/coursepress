@@ -966,15 +966,26 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <?php // marketpress_active set in marketpress_check() hook  ?>
                                             <?php if ( !$coursepress->marketpress_active ) : ?>
                                                 <label>
-                                                    <?php _e('Sell your courses online with MarketPress.', 'cp'); ?>
+                                                    <?php _e('Cost to participate in this course', 'cp'); ?>
                                                 </label>
+												
+                                                <div class="course-paid">
+                                                    <p><input type="checkbox" id="marketpressprompt" />
+                                                        <?php _e('This is a Paid Course', 'cp'); ?></p>
+                                                </div>
+												
+												<div id="marketpressprompt-box">
+	                                                <label>
+	                                                    <?php _e('Sell your courses online with MarketPress.', 'cp'); ?>
+	                                                </label>
 
-                                                <?php
-                                                _e(
-                                                        '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
-                                                        '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
-                                                        '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp');
-                                                ?>
+	                                                <?php
+	                                                _e(
+	                                                        '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
+	                                                        '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
+	                                                        '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp');
+	                                                ?>
+												</div>
 
                                                 <!-- MarketPress Active -->
                                             <?php else: ?>

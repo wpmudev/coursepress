@@ -1269,6 +1269,14 @@ jQuery(document).ready(function($) {
     }
 });
 
+jQuery(document).ready(function($) {
+
+	$('#marketpressprompt').click( function( event ) {
+		$('#marketpressprompt-box').toggle();
+	});
+	
+});
+
 
 jQuery(document).ready(function($) {
     var unit_state_toggle = {

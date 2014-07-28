@@ -2685,6 +2685,11 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     display: none;
 }
 
+
+#marketpressprompt-box {
+	display: none;
+}
+
 /*#add_new_student_to_class .chosen-container {
         min-width: 350px;
 }*/
