@@ -25,7 +25,7 @@ if (is_chat_plugin_active()) {
                     <h2 class="module_title"><?php echo $data->post_title; ?></h2>
                 <?php } ?>
                 <?php if ($data->post_content != '') { ?>  
-                    <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+                    <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
                 <?php } ?>
                 <?php echo do_shortcode('[chat id="' . $data->ID . '"]'); ?>
             </div>

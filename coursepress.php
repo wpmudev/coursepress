@@ -261,6 +261,7 @@ if ( !class_exists('CoursePress') ) {
 
             add_action('wp', array( &$this, 'load_plugin_templates' ));
             add_filter('rewrite_rules_array', array( &$this, 'add_rewrite_rules' ));
+            //add_action('wp_loaded', array( &$this, 'flush_rules' ));
 //add_filter('generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ));
 //add_action('init', array( &$this, 'do_rewrite' ));
             add_action('pre_get_posts', array( &$this, 'remove_canonical' ));
@@ -299,9 +300,9 @@ if ( !class_exists('CoursePress') ) {
                 }
             }
 
-            add_filter('element_content_filter', array( &$this, 'element_content_img_filter' ), 10, 1);
+            add_filter('element_content_filter', array( &$this, 'element_content_img_filter' ), 98, 1);
 
-            add_filter('element_content_filter', array( &$this, 'element_content_link_filter' ), 11, 1);
+            add_filter('element_content_filter', array( &$this, 'element_content_link_filter' ), 99, 1);
 
             add_action('wp_logout', array( &$this, 'redirect_after_logout' ));
 
@@ -318,16 +319,21 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
+        function flush_rules() {
+            global $wp_rewrite;
+            $wp_rewrite->flush_rules();
+        }
+
         function instructor_save_extra_profile_fields( $user_id ) {
             if ( !current_user_can('edit_user', $user_id) )
                 return false;
-            
-            if($_POST['cp_instructor_capabilities'] == 'grant'){
+
+            if ( $_POST['cp_instructor_capabilities'] == 'grant' ) {
                 update_user_meta($user_id, 'role_ins', 'instructor');
-                CoursePress::instance()->assign_instructor_capabilities( $user_id );
-            }else{
+                CoursePress::instance()->assign_instructor_capabilities($user_id);
+            } else {
                 delete_user_meta($user_id, 'role_ins', 'instructor');
-                CoursePress::instance()->drop_instructor_capabilities( $user_id );
+                CoursePress::instance()->drop_instructor_capabilities($user_id);
             }
         }
 
@@ -485,11 +491,11 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function element_content_img_filter( $content ) {
-            return preg_replace_callback('#( <img\s[^>]*src )="( [^"]+ )"#', "callback_img", $content);
+            return preg_replace_callback('#(<img\s[^>]*src)="([^"]+)"#', "callback_img", $content);
         }
 
         function element_content_link_filter( $content ) {
-            return preg_replace_callback('#( <a\s[^>]*href )="( [^"]+ )".*<img#', "callback_link", $content);
+            return preg_replace_callback('#(<a\s[^>]*href)="([^"]+)".*<img#', "callback_link", $content);
         }
 
         function is_preview( $unit_id, $page_num = false ) {

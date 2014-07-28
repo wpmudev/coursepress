@@ -103,7 +103,7 @@ class checkbox_input_module extends Unit_Module {
             <?php } ?>
 
             <?php if ( $data->post_content != '' ) { ?>  
-                <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+                <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
             <?php } ?>
 
             <ul class='radio_answer_check_li checkbox_answer_group' <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?>>

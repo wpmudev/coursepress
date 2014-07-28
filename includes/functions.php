@@ -179,7 +179,8 @@ function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
 }
 
 function coursepress_unit_pages( $unit_id ) {
-    $pages_num = 0;
+    
+    $pages_num = 1;
 
     $module = new Unit_Module;
     $modules = $module->get_modules($unit_id);
@@ -189,11 +190,7 @@ function coursepress_unit_pages( $unit_id ) {
             $pages_num++;
         }
     }
-    
-    if($pages_num == 0){
-        $pages_num = 1;
-    }
-
+   
     return $pages_num;
 }
 
@@ -994,13 +991,13 @@ function cp_replace_img_src( $original_img_tag, $new_src_url ) {
     return false;
 }
 
-function callback_img( $match ) {
-    list(, $img, $src ) = $match;
+function callback_img($match) {
+    list(,$img,$src) = $match;
     $new_src = str_replace('../wp-content', WP_CONTENT_URL, $src);
     return "$img=\"$new_src\" ";
 }
 
-function callback_link( $match ) {
+function callback_link($match) {
     $new_url = str_replace('../wp-content', WP_CONTENT_URL, $match[0]);
     return $new_url;
 }

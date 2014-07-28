@@ -101,7 +101,7 @@ class text_input_module extends Unit_Module {
                 <?php } ?>
 
                 <?php if ( $data->post_content != '' ) { ?>  
-                    <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
+                    <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
                 <?php } ?>
 
                 <?php if ( is_object($response) && count($response) >= 1 && trim($response->post_content) !== '' ) { ?>

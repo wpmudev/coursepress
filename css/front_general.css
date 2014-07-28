@@ -980,3 +980,12 @@ embed, iframe, object, video {
     height: 70px;
     float: left;
 }
+
+.module_description p{
+    display: block;
+}
+
+.module_description .wp-video{
+    display: inline-block;
+    margin-top: 10px;
+}

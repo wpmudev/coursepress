@@ -10,7 +10,7 @@ if ( isset($_GET['course_id']) && is_numeric($_GET['course_id']) ) {
     $course = new Course($course_id);
 }
 
-if ( ! empty( $course_id ) && ! CoursePress_Capabilities::can_view_course_units( $_GET['course_id'] ) ) {
+if ( !empty($course_id) && !CoursePress_Capabilities::can_view_course_units($_GET['course_id']) ) {
     die(__('You do not have required permissions to access this page.', 'cp'));
 }
 
@@ -20,7 +20,7 @@ if ( !isset($_POST['force_current_unit_completion']) ) {
 
 if ( isset($_GET['unit_id']) ) {
     $unit_id = ( int ) $_GET['unit_id'];
-    $unit = new Unit( $unit_id );
+    $unit = new Unit($unit_id);
     $unit_details = $unit->get_unit();
     $force_current_unit_completion = $unit->details->force_current_unit_completion;
 } else {
@@ -66,7 +66,7 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
 if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
     $unit = new Unit($_GET['unit_id']);
     $unit_object = $unit->get_unit();
-    if ( CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id ) ) {
+    if ( CoursePress_Capabilities::can_change_course_unit_status($course_id, $unit_id) ) {
         $unit->change_status($_GET['new_status']);
     }
 }
@@ -101,14 +101,14 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                 $list_order++;
             }
             ?>
-            <?php if ( CoursePress_Capabilities::can_create_course_unit( $course_id ) ) { ?>
+            <?php if ( CoursePress_Capabilities::can_create_course_unit($course_id) ) { ?>
                 <li class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : '' ); ?> static">
                     <a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit'); ?>" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
                 </li>
             <?php } ?>
         </ul>
 
-        <?php if ( CoursePress_Capabilities::can_create_course_unit( $course_id ) ) { ?>
+        <?php if ( CoursePress_Capabilities::can_create_course_unit($course_id) ) { ?>
             <!--<div class="mp-tabs">
                 <div class="mp-tab <?php echo (!isset($_GET['unit_id']) ? 'active' : '' ); ?>">
                     <a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset($_GET['unit_id']) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e('Add new Unit', 'cp'); ?></a>
@@ -135,12 +135,11 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
             <?php
             $unit = new Unit($unit_id);
             $unit_object = $unit->get_unit();
-			$unit_id = (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';
-			
-			$can_publish = CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id );
-			$data_nonce = wp_create_nonce('toggle-' . $unit_id ); 
-			$data_cap = $can_publish ? sha1( 'can_change_course_unit_state' . $data_nonce ) : '';
-			
+            $unit_id = (isset($unit_object->ID) && $unit_object->ID !== '') ? $unit_object->ID : '';
+
+            $can_publish = CoursePress_Capabilities::can_change_course_unit_status($course_id, $unit_id);
+            $data_nonce = wp_create_nonce('toggle-' . $unit_id);
+            $data_cap = $can_publish ? sha1('can_change_course_unit_state' . $data_nonce) : '';
             ?>
 
             <div class='section static'>
@@ -171,7 +170,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                 <div class="unit-control-buttons">
 
                     <?php
-                    if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit( $course_id ) ) {//do not show anything
+                    if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                         ?>
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
@@ -179,13 +178,13 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                     <?php } ?>
 
                     <?php
-                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
+                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                         ?>
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                     <?php } ?>
 
                     <?php
-                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
+                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                         ?>
                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
@@ -375,7 +374,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                 <div class="unit-control-buttons">
 
                                     <?php
-                                    if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit( $course_id ) ) {//do not show anything
+                                    if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                                         ?>
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
@@ -383,13 +382,13 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                     <?php } ?>
 
                                     <?php
-                                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
+                                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                                     <?php } ?>
 
                                     <?php
-                                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
+                                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
                                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 

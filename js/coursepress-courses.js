@@ -44,8 +44,7 @@ jQuery(document).ready(function() {
             jQuery("#unit-page-1 .module-holder-page_break_module").remove();
         }
         //jQuery('#unit-add').attr('action', jQuery('#unit-add').attr('action') + "&unit_page_num=" + unit_page_num);
-
-        //submit_elements();
+        submit_elements();
     });
 
     jQuery(".unit-control-buttons .button-publish").click(function() {
