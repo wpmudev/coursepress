@@ -995,6 +995,7 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.product').find('.course-sale-price input').removeAttr('disabled');
             jQuery(this).parents('.product').find('.course-price .price-label').addClass('required');
             jQuery(this).parents('.product').find('.payment-gateway-required').addClass('required');
+			jQuery(this).parents('.product').find('.course-paid-course-details').removeClass('hidden');
 
             // jQuery('input.class_size').removeClass('disabled');
             // jQuery('input.class_size').removeAttr('disabled');
@@ -1007,6 +1008,7 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.product').find('.course-sale-price input').attr('disabled', 'disabled');
             jQuery(this).parents('.product').find('.course-price .price-label').removeClass('required');
             jQuery(this).parents('.product').find('.payment-gateway-required').removeClass('required');
+			jQuery(this).parents('.product').find('.course-paid-course-details').addClass('hidden');			
             // jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
             //             jQuery('input.class_size').addClass('disabled');
             //             jQuery('input.class_size').attr('disabled', 'disabled');

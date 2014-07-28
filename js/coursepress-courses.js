@@ -1274,7 +1274,7 @@ jQuery(document).ready(function($) {
 	$('#marketpressprompt').click( function( event ) {
 		$('#marketpressprompt-box').toggle();
 	});
-	
+		
 });
 
 
