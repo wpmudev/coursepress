@@ -92,21 +92,11 @@ class audio_module extends Unit_Module {
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);
                     ?></label>
+                    <?php echo $this->element_title_description(); ?>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
-
-                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
-                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-                    <a class="help-icon" href="javascript:;"></a>
-                    <div class="tooltip">
-                        <div class="tooltip-before"></div>
-                        <div class="tooltip-button">&times;</div>
-                        <div class="tooltip-content">
-                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
-                        </div>
-                    </div>
-                </label>
-
+                <?php echo $this->show_title_on_front_element($data);?>
+                
                 <!-- <label class="bold-label"><?php // _e('Content', 'cp'); ?></label> -->
                 <!-- <div class="editor_in_place">
                     <?php

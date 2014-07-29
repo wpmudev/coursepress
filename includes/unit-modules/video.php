@@ -64,7 +64,7 @@ class video_module extends Unit_Module {
         wp_enqueue_media();
         wp_enqueue_script('media-upload');
 
-        $supported_video_extensions = implode(",", wp_get_video_extensions());
+        $supported_video_extensions = implode(", ", wp_get_video_extensions());
 
         ?>
 
@@ -96,20 +96,11 @@ class video_module extends Unit_Module {
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);
                     ?></label>
+                    <?php echo $this->element_title_description(); ?>
+                    
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
-
-                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
-                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-                    <a class="help-icon" href="javascript:;"></a>
-                    <div class="tooltip">
-                        <div class="tooltip-before"></div>
-                        <div class="tooltip-button">&times;</div>
-                        <div class="tooltip-content">
-        <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
-                        </div>
-                    </div>
-                </label>
+                <?php echo $this->show_title_on_front_element($data);?>
 
                 <!-- <label class="bold-label"><?php // _e('Content', 'cp'); ?></label>
                 <div class="editor_in_place">
@@ -127,15 +118,8 @@ class video_module extends Unit_Module {
                 </div> -->
 
                 <div class="video_url_holder">
-                    <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?>
-                        <a class="help-icon" href="javascript:;"></a>
-                        <div class="tooltip">
-                            <div class="tooltip-before"></div>
-                            <div class="tooltip-button">&times;</div>
-                            <div class="tooltip-content">
-        <?php printf(__('You can enter a Youtube or Vimeo link e.g. %s  ( oEmbed support is required ). Alternatively you can Browse for a file - supported video extensions ( %s )', 'cp'), 'https://www.youtube.com/watch?v=y_bIr1yAELw', $supported_video_extensions); ?> 
-                            </div>
-                        </div>
+                    <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?><br />
+                        <span class="element_title_description"><?php printf(__('You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), $supported_video_extensions); ?> </span>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr(( isset($data->video_url) ? $data->video_url : '')); ?>" />
                         <input class="video_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
                     </label>

@@ -139,7 +139,7 @@ class radio_input_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo ! empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo ! empty( $data->panel ) ? $data->panel : ''; ?>" data-id="<?php echo ! empty( $data->ID ) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -166,44 +166,13 @@ class radio_input_module extends Unit_Module {
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);
                     ?></label>
+                <?php echo $this->element_title_description(); ?>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
                 <div class="group-check">
-                    <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
-                        <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-                        <a class="help-icon" href="javascript:;"></a>
-                        <div class="tooltip">
-                            <div class="tooltip-before"></div>
-                            <div class="tooltip-button">&times;</div>
-                            <div class="tooltip-content">
-                                <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
-                            </div>
-                        </div>
-                    </label>
-
-                    <label class="mandatory_answer"><?php _e('Mandatory Answer', 'cp'); ?>
-                        <input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo ( isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset($data->mandatory_answer) ) ? 'checked' : '' ) ?> />
-                        <a class="help-icon" href="javascript:;"></a>
-                        <div class="tooltip">
-                            <div class="tooltip-before"></div>
-                            <div class="tooltip-button">&times;</div>
-                            <div class="tooltip-content">
-                                <?php _e('Student will need to provide a response on this question in order to continue the unit.', 'cp'); ?>
-                            </div>
-                        </div>
-                    </label>
-
-                    <label class="mandatory_answer"><?php _e('Assessable', 'cp'); ?>
-                        <input type="checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer) ) ? 'checked' : '' ) ?> />
-                        <a class="help-icon" href="javascript:;"></a>
-                        <div class="tooltip">
-                            <div class="tooltip-before"></div>
-                            <div class="tooltip-button">&times;</div>
-                            <div class="tooltip-content">
-                                <?php _e('If checked, this question will be graded. If not checked, the response can still be viewed within the Assessment section but listed as Non-assessable.', 'cp'); ?>
-                            </div>
-                        </div>
-                    </label>
+                    <?php echo $this->show_title_on_front_element($data); ?>
+                    <?php echo $this->mandatory_answer_element($data); ?>
+                    <?php echo $this->assessable_answer_element($data); ?>
                 </div>
 
                 <label class="bold-label"><?php _e('Question', 'cp'); ?></label>
@@ -228,7 +197,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="96%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                      ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                         ?></div>
                         </th>
                         <th width="3%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
@@ -314,7 +283,7 @@ class radio_input_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name.'_order', $this->order);
+        $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Multiple choice question where only one option can be selected', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright ( c ) 2013, MasterCard International Incorporated
+ * Copyright (c) 2013, MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -18,15 +18,15 @@
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
  * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
- * IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR OTHERWISE ) ARISING 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE.
  */
 
-require_once( dirname( __FILE__ ) . '/Simplify/Constants.php' );
+require_once(dirname(__FILE__) . '/Simplify/Constants.php');
 
 class Simplify
 {
@@ -59,21 +59,21 @@ class Simplify
 }
 
 
-require_once( dirname( __FILE__ ) . '/Simplify/PaymentsApi.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Exceptions.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Http.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Object.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/ResourceList.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/CardToken.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Chargeback.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Coupon.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Customer.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Deposit.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Event.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Invoice.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/InvoiceItem.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Payment.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Plan.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Refund.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Subscription.php' );
-require_once( dirname( __FILE__ ) . '/Simplify/Webhook.php' );
+require_once(dirname(__FILE__) . '/Simplify/PaymentsApi.php');
+require_once(dirname(__FILE__) . '/Simplify/Exceptions.php');
+require_once(dirname(__FILE__) . '/Simplify/Http.php');
+require_once(dirname(__FILE__) . '/Simplify/Object.php');
+require_once(dirname(__FILE__) . '/Simplify/ResourceList.php');
+require_once(dirname(__FILE__) . '/Simplify/CardToken.php');
+require_once(dirname(__FILE__) . '/Simplify/Chargeback.php');
+require_once(dirname(__FILE__) . '/Simplify/Coupon.php');
+require_once(dirname(__FILE__) . '/Simplify/Customer.php');
+require_once(dirname(__FILE__) . '/Simplify/Deposit.php');
+require_once(dirname(__FILE__) . '/Simplify/Event.php');
+require_once(dirname(__FILE__) . '/Simplify/Invoice.php');
+require_once(dirname(__FILE__) . '/Simplify/InvoiceItem.php');
+require_once(dirname(__FILE__) . '/Simplify/Payment.php');
+require_once(dirname(__FILE__) . '/Simplify/Plan.php');
+require_once(dirname(__FILE__) . '/Simplify/Refund.php');
+require_once(dirname(__FILE__) . '/Simplify/Subscription.php');
+require_once(dirname(__FILE__) . '/Simplify/Webhook.php');

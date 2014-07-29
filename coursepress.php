@@ -2208,7 +2208,7 @@ if ( !class_exists('CoursePress') ) {
             include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
         }
 
-        function show_unit_details( $unit_page_num = 1 ) {
+        function show_unit_details( $unit_page_num = 1, $active_element = 1 ) {
             require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
 

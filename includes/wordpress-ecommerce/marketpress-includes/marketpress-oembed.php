@@ -3,7 +3,7 @@
 /**
  * Marketpress Oembed Enpoint
  */
-if( !class_exists( 'MP_Oembed' ) ): 
+if(!class_exists('MP_Oembed') ): 
 class MP_Oembed {
 	
 	const TRANSIENT_TITLE_BASE = 'mp_oembed_cache_';
@@ -18,65 +18,36 @@ class MP_Oembed {
 	 * Construct
 	 */
 	function __construct() {
-		//
-		add_filter( 'rewrite_rules_array', array( &$this, 'add_oembed_rewrite_filter' ) );
-		add_filter( 'query_vars', array( &$this, 'add_oembed_queryvars_filter' ) );
-		
-		add_action( 'wp', array( &$this, 'process_oembed_request_action' ) );
+		add_action('wp_ajax_mp_oembed', array(&$this, 'process_oembed_request_action'));
+		add_action('wp_ajax_no_priv_mp_oembed', array(&$this, 'process_oembed_request_action'));
 		
 		// we'll need to invalidate the cache on post save for products
-		add_action( 'save_post', array( &$this, 'check_for_invalid_cache_action' ) );
+		add_action('save_post', array(&$this, 'check_for_invalid_cache_action' ));
 		
 		//hook into the footer for the pinit script
-		add_action( 'wp_footer', array( &$this, 'inject_pinterest_js_action' ) );
+		add_action('wp_footer', array(&$this, 'inject_pinterest_js_action') );
 	}
 	
-	
-	
-	/**
-	 * filter the rules to create the endpoint
-	 */
-	function add_oembed_rewrite_filter( $rules ) {
-    	$oembed_rules = array();
-		
-		$oembed_rules['services/([^/]+ )/?$'] = 'index.php?service=$matches[1]';
-		return array_merge( $oembed_rules, $rules );
-	}
-	
-	
-	/**
-	 * filter the query vars to add services
-	 */
-	function add_oembed_queryvars_filter( $vars ) {
-		
-	 if( !in_array( 'service', $vars ) ) {
-	 	$vars[] = 'service';
-	 }
-	 return $vars;
-	}
 	
 	
 	/**
 	 * parses the request to look for the service type and act accordingly
-	 * @todo take the concept below and allow for other kinds of services
 	 */
 	function process_oembed_request_action() {
-		global $wp_query;
-		if( array_key_exists( 'service', $wp_query->query_vars ) ) {
+		$type = isset($_GET['type']) ? $_GET['type'] : '';
+		
+		switch ( $type ) {
+			case 'pinterest' :
+				$results = $this->process();
+				echo $results->package;
+			break;
 			
-			switch( $wp_query->query_vars['service'] ) {
-				case 'oembed':
-					$results = $this->process();
-					echo $results->package;
-					exit;
-				break;
-				
-				default:
-					echo __( 'Service Unavailable','mp' );
-					exit;
-			}
-			
+			default :
+				_e('Service Unavailable', 'mp');
+			break;
 		}
+		
+		exit;
 	}
 	
 	
@@ -84,13 +55,13 @@ class MP_Oembed {
 	 * Checks on post save for invalid caches
 	 */
 	function check_for_invalid_cache_action( $post_id ) {
-		global $post_type;
 		//we only want this running on product pages
-		if(  $post_type != 'product' ) {
+		if ( get_post_type() != 'product' ) {
 			return $post_id;
 		}
+		
 		$this->_cache_identifier = $post_id;
-		if( $cache = $this->checkForCache() ) {
+		if ( $cache = $this->checkForCache() ) {
 			$this->removeCache();
 		}
 	}
@@ -100,20 +71,20 @@ class MP_Oembed {
 	 * Injects the pinterest js into the footer if enabled
 	 */
 	function inject_pinterest_js_action() {
-		global $post_type, $mp;
+		global $mp;
 		
-		$show_pinit_button = ( $show = $mp->get_setting( 'show_pinit_button' ) ) ? $show : 'off';
+		$show_pinit_button = ($show = $mp->get_setting('social->pinterest->show_pinit_button') ) ? $show : 'off';
 		
-		if( $post_type == 'product' && $show_pinit_button != 'off' ) {
+		if ( get_post_type() == 'product' && $show_pinit_button != 'off' ){
 		?>
         <script type="text/javascript">
-		( function( d ) {
-		  var f = d.getElementsByTagName( 'SCRIPT' )[0], p = d.createElement( 'SCRIPT' );
+		(function(d){
+		  var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');
 		  p.type = 'text/javascript';
 		  p.async = true;
 		  p.src = '//assets.pinterest.com/js/pinit.js';
-		  f.parentNode.insertBefore( p, f );
-		}( document ) );
+		  f.parentNode.insertBefore(p, f);
+		}(document));
 		</script>
         <?php
 		}
@@ -129,11 +100,11 @@ class MP_Oembed {
 		global $mp;
 		//no get - get out, get it?
 		if( !isset( $_GET['url'] ) ) {
-			$this->_package = __( 'url parameter required','mp' );
+			$this->_package = __('url parameter required','mp');
 		}else{
 			//get the url
 			$this->_passed_url = $_GET['url'];
-			$product_post_object = get_page_by_path( basename( untrailingslashit( $_GET['url'] ) ) , OBJECT, 'product' );
+			$product_post_object = get_page_by_path( basename( untrailingslashit( $_GET['url'] ) ) , OBJECT, 'product');
 			if( !is_null( $product_post_object ) ) {
 				//post id
 				$ID = $product_post_object->ID;
@@ -151,10 +122,10 @@ class MP_Oembed {
 					
 					//grab some items that we will need
 					$common_elements = array(
-						'provider_name' => get_bloginfo( 'title' ),
-						'url' => get_permalink( $ID ),
+						'provider_name' => get_bloginfo('title'),
+						'url' => get_permalink($ID),
 						'title' => get_the_title( $ID ),
-						'currency_code' => $mp->get_setting( 'currency' ),
+						'currency_code' => $mp->get_setting('currency'),
 						'description' => $product_post_object->post_content,
 					);
 					
@@ -170,36 +141,36 @@ class MP_Oembed {
 				}
 			}else{
 				//if it's not a single page - lets try for one of the taxonomies
-				$cats_url = '/'.$mp->get_setting( 'slugs->products' ) .'/'.$mp->get_setting( 'slugs->category' );
-				$tags_url = '/'.$mp->get_setting( 'slugs->products' ) .'/'.$mp->get_setting( 'slugs->tag' );
+				$cats_url = '/'.$mp->get_setting('slugs->products') .'/'.$mp->get_setting('slugs->category');
+				$tags_url = '/'.$mp->get_setting('slugs->products') .'/'.$mp->get_setting('slugs->tag');
 			
-				if( strpos( $this->_passed_url, $cats_url ) || strpos( $this->_passed_url, $tags_url ) ) {
+				if( strpos( $this->_passed_url, $cats_url) || strpos( $this->_passed_url, $tags_url) ) {
 					
 					//get the tax we're displaying
-					preg_match( '/\/( \w+ )\/$/', $this->_passed_url , $matches );
+					preg_match('/\/(\w+)\/$/', $this->_passed_url , $matches);
 					
 					
 					//check for cache
-					$this->_cache_identifier = ( strpos( $this->_passed_url, $cats_url )  ) ? 'category_'. $matches[1] : 'tag_'. $matches[1];
+					$this->_cache_identifier = ( strpos( $this->_passed_url, $cats_url)  ) ? 'category_'. $matches[1] : 'tag_'. $matches[1];
 					if( $cache = $this->checkForCache() ) {
 						$this->_package = $cache;
 					}else{
 						//no cache - build it
-						$tax =  ( strpos( $this->_passed_url, $cats_url )  ) ? 'product_category' : 'product_tag'; 
+						$tax =  ( strpos( $this->_passed_url, $cats_url)  ) ? 'product_category' : 'product_tag'; 
 						//setup the query vars
 						$args = array(
 							'post_type' => 'product',
 							$tax  => $matches[1],
-							'posts_per_page' => ( $mp->get_setting( 'paginate' ) ) ? $mp->get_setting( 'per_page' ) : -1 ,
+							'posts_per_page' => ( $mp->get_setting('paginate') ) ? $mp->get_setting('per_page') : -1 ,
 						);
 						
-						$all_products = new WP_Query( $args );
+						$all_products = new WP_Query($args);
 						
 						$this->processTaxonomyPage( $all_products->posts );
 					}
 				}else{
 					//we don't know what to do with this url
-					$this->_package = __( "Please check the url",'mp' );
+					$this->_package = __("Please check the url",'mp');
 				}
 				
 			}
@@ -220,19 +191,19 @@ class MP_Oembed {
 		$specific_items = array();
 		
 		//get the product_id
-		if( isset( $post_meta['mp_sku'][0] ) && !empty( $post_meta['mp_sku'][0] )  ) {
+		if( isset( $post_meta['mp_sku'][0]) && !empty($post_meta['mp_sku'][0])  ) {
 			$specific_items['product_id'] = $post_meta['mp_sku'][0];
 		}
 		
 		//get the price 
-		if( isset( $post_meta['mp_price'][0] ) ) {	
-			$specific_items['price'] = ( @$post_meta['mp_is_sale'] ) ? floatval( $post_meta['mp_sale_price'][0] ):  floatval( $post_meta['mp_price'][0] );
+		if( isset( $post_meta['mp_price'][0]) ) {	
+			$specific_items['price'] = ( @$post_meta['mp_is_sale']) ? floatval( $post_meta['mp_sale_price'][0] ):  floatval( $post_meta['mp_price'][0] );
 		}
 		
 		$specific_items['availability'] = ( $post_meta['mp_track_inventory'] && @$post_meta['mp_inventory'][0]  < 1 ) ? 'out of stock' : 'in stock';
 		
 		$final_array = array_merge(	 $common, $specific_items );
-		$this->_package = json_encode( $final_array );
+		$this->_package = json_encode($final_array);
 	}
 	
 	
@@ -251,11 +222,11 @@ class MP_Oembed {
 		$specific_data['products'][] = array(
 				'title' => $common['title'],
 				'description' => $common['description'],
-				'product_id' => ( isset( $post_meta['mp_sku'][0] ) && !empty( $post_meta['mp_sku'][0] ) ) ? $post_meta['mp_sku'][0] : '',
+				'product_id' => ( isset( $post_meta['mp_sku'][0]) && !empty($post_meta['mp_sku'][0]) ) ? $post_meta['mp_sku'][0] : '',
 				'offers' => $offers,
 		);
 		
-		$this->_package = json_encode( $specific_data );
+		$this->_package = json_encode($specific_data);
 	}
 	
 	
@@ -268,16 +239,16 @@ class MP_Oembed {
 	private function processTaxonomyPage( $posts ) {
 		global $mp;
 		$package = array(
-					'provider_name' => get_bloginfo( 'title' ),
+					'provider_name' => get_bloginfo('title'),
 					'url' => $this->_passed_url,
 					'products' => array()
 				);
 		//loop the products
-		foreach( $posts as $post ) {
+		foreach( $posts as $post) {
 			$package['products'][] = $this->_processProductNode( $post );
 		}
 		
-		$this->_package = json_encode( $package );
+		$this->_package = json_encode($package);
 	}
 	
 	
@@ -316,7 +287,7 @@ class MP_Oembed {
 		
 		$product = array(
 			'title' => $post->post_title,
-			'description' => strip_tags( $post->post_content ),
+			'description' => strip_tags($post->post_content),
 			'product_id' => '',
 			'offers' => $offers,
 		);
@@ -335,13 +306,13 @@ class MP_Oembed {
 		//build the offers list
 		$offers = array();
 		
-		for( $i = 0; $i < count( $post_meta['mp_var_name'] ) ; $i++ ) {
+		for($i = 0; $i < count( $post_meta['mp_var_name'] ) ; $i++) {
 			$offers[] = array(
 				'description' => $post_meta['mp_var_name'][$i],
-				'price' => ( @$post_meta['mp_is_sale'] ) ? floatval( $post_meta['mp_sale_price'][$i] ):  floatval( $post_meta['mp_price'][$i] ),
-				'currency_code' => $mp->get_setting( 'currency' ),
+				'price' => ( @$post_meta['mp_is_sale']) ? floatval( $post_meta['mp_sale_price'][$i] ):  floatval( $post_meta['mp_price'][$i] ),
+				'currency_code' => $mp->get_setting('currency'),
 				'availability' =>  ( $post_meta['mp_track_inventory'] && @$post_meta['mp_inventory'][$i]  < 1 ) ? 'out of stock' : 'in stock',	
-				'offer_id' => ( isset( $post_meta['mp_sku'][$i] ) && !empty( $post_meta['mp_sku'][$i] ) ) ? $post_meta['mp_sku'][$i] : '',
+				'offer_id' => ( isset( $post_meta['mp_sku'][$i]) && !empty($post_meta['mp_sku'][$i]) ) ? $post_meta['mp_sku'][$i] : '',
 			);
 		}
 		
@@ -358,7 +329,7 @@ class MP_Oembed {
 		
 		$rtn = false;
 		$transient_title = self::TRANSIENT_TITLE_BASE . $this->_cache_identifier;
-		if( $cache = get_transient( $transient_title ) ) {
+		if( $cache = get_transient($transient_title) ) {
 			$rtn =  $cache;
 		}
 		
@@ -370,7 +341,7 @@ class MP_Oembed {
 	 */
 	private function createCache() {	
 		$transient_title = self::TRANSIENT_TITLE_BASE . $this->_cache_identifier;
-		set_transient( $transient_title, $this->_package, self::CACHE_TIMEOUT );
+		set_transient( $transient_title, $this->_package, self::CACHE_TIMEOUT);
 	}
 	
 	/**

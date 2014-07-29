@@ -284,7 +284,7 @@ if ( !class_exists('Unit_Module') ) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );               ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                      ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -341,7 +341,7 @@ if ( !class_exists('Unit_Module') ) {
                                 <p class="form-info-regular"><?php echo $form_message; ?></p>
                             <?php } ?>
 
-                            <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                    ?>
+                            <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                           ?>
                             <?php
                         } else {
                             ?>
@@ -506,6 +506,53 @@ if ( !class_exists('Unit_Module') ) {
 
                 return count($ungraded_responses);
             }
+        }
+
+        function element_title_description() {
+            ?>
+            <span class="element_title_description"><?php _e('The title is used to identify this module element and is useful for assessment.', 'cp'); ?></span>
+            <?php
+        }
+
+        function mandatory_answer_element( $data ) {
+            ?>
+            <label class="mandatory_answer">
+                <input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo ( isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset($data->mandatory_answer) ) ? 'checked' : '' ) ?> />
+                <?php _e('Mandatory Answer', 'cp'); ?><br />
+                <span class="element_title_description"><?php _e('A response is required to continue', 'cp'); ?></span>
+            </label>
+            <?php
+        }
+
+        function assessable_answer_element( $data ) {
+            ?>
+            <label class="mandatory_answer">
+                <input type="checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer) ) ? 'checked' : '' ) ?> />
+                <?php _e('Assessable', 'cp'); ?><br />
+                <span class="element_title_description"><?php _e('The answer will be graded', 'cp'); ?></span>
+            </label>
+            <?php
+        }
+
+        function placeholder_element( $data ) {
+            ?>
+            <div class="placeholder_holder">
+                <label><?php _e('Placeholder Text') ?><br />
+                    <span class="element_title_description"><?php _e('Additional instructions visible in the input field as a placeholder', 'cp'); ?></span>
+                </label>
+                <input type="text" class="placeholder_text" name="<?php echo $this->name; ?>_placeholder_text[]" value="<?php echo esc_attr(isset($data->placeholder_text) ? $data->placeholder_text : '' ); ?>" />
+            </div>
+            <?php
+        }
+
+        function show_title_on_front_element( $data ) {
+            ?>
+            <label class="show_title_on_front">
+                <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
+                <?php _e('Show Title', 'cp'); ?><br />
+                <span class="element_title_description"><?php _e('The title is displayed as a heading', 'cp'); ?></span>
+            </label>
+            <?php
         }
 
         function time_estimation( $data ) {

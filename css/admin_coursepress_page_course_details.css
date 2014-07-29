@@ -1674,7 +1674,15 @@ a .remove-btn:hover{
 
 .module-content .show_title_on_front{
     margin-bottom: 15px;
-    width: 140px;
+    width: 20%;
+    display: inline-block;
+}
+
+
+.mandatory_answer, .group-check label.mandatory_answer{
+    width: 20%;
+    display: inline-block;
+    margin-top: -10px;
 }
 
 .module-content .show_title_on_front .mp-help-icon{
@@ -2690,6 +2698,12 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
 	display: none;
 }
 
-/*#add_new_student_to_class .chosen-container {
-        min-width: 350px;
-}*/
+.element_title_description{
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #72788c;
+    font-weight: normal;
+}

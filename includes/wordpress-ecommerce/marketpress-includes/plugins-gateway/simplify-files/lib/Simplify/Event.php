@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright ( c ) 2013, MasterCard International Incorporated
+ * Copyright (c) 2013, MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -18,10 +18,10 @@
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
  * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
- * IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR OTHERWISE ) ARISING 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE.
  */
@@ -39,17 +39,17 @@ class Simplify_Event extends Simplify_Object {
      * @param     string $privateKey Private key. If null, the value of static Simplify::$privateKey will be used
      * @return    Payments_Event an Event object.
      */
-    static public function createEvent( $hash, $publicKey = null, $privateKey = null ) {
+    static public function createEvent($hash, $publicKey = null, $privateKey = null) {
 
         $paymentsApi = new Simplify_PaymentsApi();
 
-        $jsonObject = $paymentsApi->jwsDecode( $hash, $publicKey, $privateKey );
+        $jsonObject = $paymentsApi->jwsDecode($hash, $publicKey, $privateKey);
 
-        if ( $jsonObject['event'] == null ) {
-            throw new InvalidArgumentException( "Incorect data in webhook event" );
+        if ($jsonObject['event'] == null) {
+            throw new InvalidArgumentException("Incorect data in webhook event");
         }   
 
-        return  $paymentsApi->convertFromHashToObject( $jsonObject['event'], self::getClazz() );
+        return  $paymentsApi->convertFromHashToObject($jsonObject['event'], self::getClazz());
     }
 
     /**

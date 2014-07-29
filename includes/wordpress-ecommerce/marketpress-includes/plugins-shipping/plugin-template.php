@@ -5,7 +5,7 @@ MarketPress Example Shipping Plugin Template
 
 class My_Plugin_Name extends MP_Shipping_API {
 
-  //private shipping method name. Lowercase alpha ( a-z ) and dashes ( - ) only please!
+  //private shipping method name. Lowercase alpha (a-z) and dashes (-) only please!
   var $plugin_name = 'my-plugin-name';
   
   //public name of your method, for lists and such.
@@ -23,27 +23,27 @@ class My_Plugin_Name extends MP_Shipping_API {
    */
   function on_creation() {
     //declare here for translation
-    $this->public_name = __( 'My Plugin', 'mp' );
+    $this->public_name = __('My Plugin', 'mp');
 	}
 
   /**
    * Echo anything you want to add to the top of the shipping screen
    */
-	function before_shipping_form( $content ) {
+	function before_shipping_form($content) {
 		return $content;
   }
   
   /**
    * Echo anything you want to add to the bottom of the shipping screen
    */
-	function after_shipping_form( $content ) {
+	function after_shipping_form($content) {
 		return $content;
   }
   
   /**
    * Echo a table row with any extra shipping fields you need to add to the shipping checkout form
    */
-	function extra_shipping_field( $content ) {
+	function extra_shipping_field($content) {
 		return $content;
   }
   
@@ -60,7 +60,7 @@ class My_Plugin_Name extends MP_Shipping_API {
    *  Form field names should be prefixed with mp[shipping][plugin_name], like "mp[shipping][plugin_name][mysetting]".
    *  You can access saved settings via $settings array.
    */
-	function shipping_settings_box( $settings ) {
+	function shipping_settings_box($settings) {
 
   }
   
@@ -68,7 +68,7 @@ class My_Plugin_Name extends MP_Shipping_API {
    * Filters posted data from your form. Do anything you need to the $settings['shipping']['plugin_name']
    *  array. Don't forget to return!
    */
-	function process_shipping_settings( $settings ) {
+	function process_shipping_settings($settings) {
 
     return $settings;
   }
@@ -79,7 +79,7 @@ class My_Plugin_Name extends MP_Shipping_API {
    * @param array $shipping_meta, the contents of the post meta. Use to retrieve any previously saved product meta
    * @param array $settings, access saved settings via $settings array.
    */
-	function shipping_metabox( $shipping_meta, $settings ) {
+	function shipping_metabox($shipping_meta, $settings) {
 
   }
 
@@ -89,7 +89,7 @@ class My_Plugin_Name extends MP_Shipping_API {
    * @param array $shipping_meta, save anything from the $_POST global
    * return array $shipping_meta
    */
-	function save_shipping_metabox( $shipping_meta ) {
+	function save_shipping_metabox($shipping_meta) {
 
     return $shipping_meta;
   }
@@ -110,7 +110,7 @@ class My_Plugin_Name extends MP_Shipping_API {
 		*
 		* return float $price
 		*/
-	function calculate_shipping( $price, $total, $cart, $address1, $address2, $city, $state, $zip, $country, $selected_option ) {
+	function calculate_shipping($price, $total, $cart, $address1, $address2, $city, $state, $zip, $country, $selected_option) {
     return $price;
   }
 	
@@ -128,7 +128,7 @@ class My_Plugin_Name extends MP_Shipping_API {
 		*
 		* return array $shipping_options 
 		*/
-	function shipping_options( $cart, $address1, $address2, $city, $state, $zip, $country ) {
+	function shipping_options($cart, $address1, $address2, $city, $state, $zip, $country) {
 		
 		$shipping_options = array();
 		
@@ -138,4 +138,4 @@ class My_Plugin_Name extends MP_Shipping_API {
 }
 
 //register plugin - uncomment to register
-//mp_register_shipping_plugin( 'My_Plugin_Name', 'my-plugin-name', __( 'My Plugin', 'mp' ), false );
+//mp_register_shipping_plugin( 'My_Plugin_Name', 'my-plugin-name', __('My Plugin', 'mp'), false );

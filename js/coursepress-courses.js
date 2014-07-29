@@ -1,5 +1,11 @@
 jQuery(document).ready(function() {
 
+    jQuery('.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button').live('click', function() {
+        var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+        var active_element = jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active");
+        jQuery('#active_element').val(active_element);
+    });
+
     jQuery('#add_student_class').live('input', function() {
         return false;
     });
@@ -44,6 +50,7 @@ jQuery(document).ready(function() {
             jQuery("#unit-page-1 .module-holder-page_break_module").remove();
         }
         //jQuery('#unit-add').attr('action', jQuery('#unit-add').attr('action') + "&unit_page_num=" + unit_page_num);
+
         submit_elements();
     });
 
@@ -267,23 +274,13 @@ function cp_editor_key_down(ed, page, tab) {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
             $('#' + ed.id).parents('.course-section').addClass('dirty');
-			if ( $($('#' + ed.id).parents('.course-section.step').children('.status.saved')[0]).hasClass('saved') ) {
+            if ($($('#' + ed.id).parents('.course-section.step').children('.status.saved')[0]).hasClass('saved')) {
                 $('#' + ed.id).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
             }
 
             active_editor = ed.id;
 
         }
-        if (tab == '' || tab == 'units') {
-
-            var module = $('#' + ed.id).parents('.module-content');
-			var mod_id = $( module ).siblings('.module-title').attr('data-id');
-			$('[name="active_mod"]').val( mod_id );
-
-            active_editor = ed.id;
-
-        }
-		
     }
 
 }
@@ -317,50 +314,50 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
     if (typeof (nextAction) === 'undefined')
         nextAction = false;
     if (status == 'success') {
-		
+
         var response = $.parseJSON($(data).find('response_data').text());
-		// console.log(response);
-		// Apply a new nonce when returning
-        if ( response && response.success ) {								
-			$('#course-ajax-check').data('nonce', response.nonce);
-			$('#course-ajax-check').data('cap', response.cap);
-			$('#course-ajax-check').data('id', response.course_id);
+        // console.log(response);
+        // Apply a new nonce when returning
+        if (response && response.success) {
+            $('#course-ajax-check').data('nonce', response.nonce);
+            $('#course-ajax-check').data('cap', response.cap);
+            $('#course-ajax-check').data('id', response.course_id);
             $('[name=course_id]').val(response.course_id);
-			
-			// Add user as instructor
-			if ( step == 'step-1' && response.instructor ){
-		        $.post(
-		                'admin-ajax.php', {
-		                    action: 'add_course_instructor',
-		                    user_id: response.instructor,
-		                    course_id: response.course_id,
-		                }
-		        ).done(function(data, status) {
-					
-					var instructor_id = response.instructor;
-	                var response2 = $.parseJSON($(data).find('response_data').text());
-	                var response_type = $($.parseHTML(response2.content));
 
-	                if ($("#instructor_holder_" + instructor_id).length == 0 && response2.instructor_added) {
-	                    $('.instructor-avatar-holder.empty').hide();
-	                    $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
-	                } 
-						
+            // Add user as instructor
+            if (step == 'step-1' && response.instructor) {
+                $.post(
+                        'admin-ajax.php', {
+                            action: 'add_course_instructor',
+                            user_id: response.instructor,
+                            course_id: response.course_id,
+                        }
+                ).done(function(data, status) {
 
-					//window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
+                    var instructor_id = response.instructor;
+                    var response2 = $.parseJSON($(data).find('response_data').text());
+                    var response_type = $($.parseHTML(response2.content));
 
-				});
-				// return;
-			}
-			
-		// Else, toggle back.	
-		} else {
-	        $(statusElement).removeClass('progress');
-	        $(statusElement).addClass('invalid');
-	        set_update_progress(step, 'invalid');
-			return;
-		}
-		
+                    if ($("#instructor_holder_" + instructor_id).length == 0 && response2.instructor_added) {
+                        $('.instructor-avatar-holder.empty').hide();
+                        $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
+                    }
+
+
+                    //window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
+
+                });
+                // return;
+            }
+
+            // Else, toggle back.	
+        } else {
+            $(statusElement).removeClass('progress');
+            $(statusElement).addClass('invalid');
+            set_update_progress(step, 'invalid');
+            return;
+        }
+
         $($('.' + step + '.dirty')[0]).removeClass('dirty')
         $(statusElement).removeClass('progress');
 
@@ -429,9 +426,9 @@ function step_1_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],
-		uid: initialVars['uid'],
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
+        uid: initialVars['uid'],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
@@ -496,8 +493,8 @@ function step_2_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],		
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
         // Alter as required
         meta_course_video_url: $('[name=meta_course_video_url]').val(),
         course_description: content,
@@ -531,8 +528,8 @@ function step_3_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],		
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
         // Alter as required
         instructor: instructors,
         // Don't remove
@@ -550,8 +547,8 @@ function step_4_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],		
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
         // Alter as required
         meta_open_ended_course: $('[name=meta_open_ended_course]').is(':checked') ? 'on' : 'off',
         meta_course_start_date: $('[name=meta_course_start_date]').val(),
@@ -574,8 +571,8 @@ function step_5_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],		
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
         // Alter as required
         meta_limit_class_size: $('[name=meta_limit_class_size]').is(':checked') ? 'on' : 'off',
         meta_class_size: $('[name=meta_class_size]').val(),
@@ -608,8 +605,8 @@ function step_6_update(attr) {
         action: initialVars['action'],
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
-		course_nonce: initialVars['course_nonce'],
-		required_cap: initialVars['required_cap'],		
+        course_nonce: initialVars['course_nonce'],
+        required_cap: initialVars['required_cap'],
         // Alter as required
         meta_enroll_type: $('[name=meta_enroll_type]').val(),
         meta_prerequisite: prerequisite_val,
@@ -800,21 +797,21 @@ function courseAutoUpdate(step, nextAction) {
         set_update_progress('step-' + step, 'saved');
         var meta_course_setup_progress = get_meta_course_setup_progress();
 
-		var course_nonce = $('#course-ajax-check').data('nonce');
-		var required_cap = $('#course-ajax-check').data('cap');
-		var uid = $('#course-ajax-check').data('uid');
+        var course_nonce = $('#course-ajax-check').data('nonce');
+        var required_cap = $('#course-ajax-check').data('cap');
+        var uid = $('#course-ajax-check').data('uid');
 
         var initial_vars = {
             action: 'autoupdate_course_settings',
             course_id: course_id,
             course_name: $('[name=course_name]').val(),
-			course_nonce: course_nonce,
-			required_cap: required_cap,
-			uid: uid,
+            course_nonce: course_nonce,
+            required_cap: required_cap,
+            uid: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
         }
-		// console.log( initial_vars );
+        // console.log( initial_vars );
         var func = 'step_' + step + '_update';
         // Get the AJAX post vars from step_[x]_update();
         var post_vars = window[func]({status: theStatus, initialVars: initial_vars});
@@ -857,8 +854,8 @@ function mark_dirty(element) {
             $(parent_section).addClass('dirty');
         }
     }
-	
-    if ( $($(element).parents('.course-section.step').find('.course-section-title .status')[0]).hasClass('saved') ) {
+
+    if ($($(element).parents('.course-section.step').find('.course-section-title .status')[0]).hasClass('saved')) {
         $(element).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
     }
 
@@ -1278,56 +1275,14 @@ jQuery(document).ready(function($) {
     }
 });
 
-function cp_set_active_module(){
-	$ = jQuery;
-	$.each( $('.is_active_module'), function( key, value ){
-	  
-	  	var panel =  parseInt( $( $('.is_active_module')[key] ).attr('data-panel') );
-		var mod_id = parseInt( $( $('.is_active_module')[key] ).attr('data-id') );
-		$($( $('.is_active_module')[key] ).parents('.modules_accordion')[0]).accordion( { 
-            heightStyle: "content",
-            header: "> div > h3",
-            collapsible: true,
-			active: panel, 
-		} );		
-		
-		$('[name="active_mod"]').val( mod_id );
-		
-	});
-	
-}
-
 jQuery(document).ready(function($) {
 
-	$('#marketpressprompt').click( function( event ) {
-		$('#marketpressprompt-box').toggle();
-	});
-	
-	// Set the active module on page load.
-	cp_set_active_module();
+    $('#marketpressprompt').click(function(event) {
+        $('#marketpressprompt-box').toggle();
+    });
 
-	// When opening tab, don't let it refresh the accordion, but set the active module.
-	$( '#unit-pages' ).tabs({
-		activate: function( event, ui ) {
-			event.stopPropagation();
-			cp_set_active_module();			
-		}
-	});
-		
-	$('.module-content textarea').keydown(function() {
-		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
-		$('[name="active_mod"]').val( mod_id );
-    });
-    $('.module-content select').change(function() {
-		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
-		$('[name="active_mod"]').val( mod_id );
-    });
-    $('.module-content input').keydown(function() {
-		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
-		$('[name="active_mod"]').val( mod_id );
-    });	
-	
 });
+
 
 jQuery(document).ready(function($) {
     var unit_state_toggle = {
@@ -1340,10 +1295,10 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
-					if ($(this).hasClass('disabled')) {
-						return;
-					}
-					
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
+
                     if ($(selector).hasClass('on')) {
                         $(selector).removeClass('on');
                         $(selector).parent().find('.live').removeClass('on');
@@ -1361,46 +1316,46 @@ jQuery(document).ready(function($) {
                     }
 
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
-					var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
-					var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');					
-					
+                    var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
+                    var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');
+
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
                                 'admin-ajax.php', {
                                     action: 'change_unit_state',
                                     unit_state: unit_state,
                                     unit_id: unit_id,
-									unit_nonce: unit_nonce,
-									required_cap: required_cap,
+                                    unit_nonce: unit_nonce,
+                                    required_cap: required_cap,
                                 }
                         ).done(function(data, status) {
-			                if (status == 'success') {
+                            if (status == 'success') {
 
-			                    var response = $.parseJSON($(data).find('response_data').text());
-								console.log(response);
-								// Apply a new nonce when returning
-			                    if (response && response.toggle) {								
-									$( $(selector).parents('form')[0] ).find('.unit_state_id').attr('data-nonce', response.nonce);
-									$( $(selector).parents('form')[0] ).find('.unit_state_id').attr('data-cap', response.cap);
-								// Else, toggle back.	
-								} else {
-				                    if ($(selector).hasClass('on')) {
-				                        $(selector).removeClass('on');
-				                        $(selector).parent().find('.live').removeClass('on');
-				                        $(selector).parent().find('.draft').addClass('on');
-				                        $('#unit_state').val('draft');
-				                        $('.mp-tab.active .unit-state-circle').removeClass('active');
-				                    } else {
-				                        $(selector).addClass('on');
-				                        $(selector).parent().find('.draft').removeClass('on');
-				                        $(selector).parent().find('.live').addClass('on');
-				                        $('#unit_state').val('publish');
-				                        $('.mp-tab.active .unit-state-circle').addClass('active');
-				                    }
-								}
-		                	}
-		            	});
-					
+                                var response = $.parseJSON($(data).find('response_data').text());
+                                console.log(response);
+                                // Apply a new nonce when returning
+                                if (response && response.toggle) {
+                                    $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-nonce', response.nonce);
+                                    $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-cap', response.cap);
+                                    // Else, toggle back.	
+                                } else {
+                                    if ($(selector).hasClass('on')) {
+                                        $(selector).removeClass('on');
+                                        $(selector).parent().find('.live').removeClass('on');
+                                        $(selector).parent().find('.draft').addClass('on');
+                                        $('#unit_state').val('draft');
+                                        $('.mp-tab.active .unit-state-circle').removeClass('active');
+                                    } else {
+                                        $(selector).addClass('on');
+                                        $(selector).parent().find('.draft').removeClass('on');
+                                        $(selector).parent().find('.live').addClass('on');
+                                        $('#unit_state').val('publish');
+                                        $('.mp-tab.active .unit-state-circle').addClass('active');
+                                    }
+                                }
+                            }
+                        });
+
                     }
                 });
             }
@@ -1421,10 +1376,10 @@ jQuery(document).ready(function($) {
                 //console.log('requested');
                 $(selector).click(function()
                 {
-					if ($(this).hasClass('disabled')) {
-						return;
-					}
-					
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
+
                     if ($(selector).hasClass('on')) {
                         $(selector).removeClass('on');
                         $(selector).parent().find('.live').removeClass('on');
@@ -1439,41 +1394,41 @@ jQuery(document).ready(function($) {
                     }
 
                     var course_id = $('#course_state_id').attr('data-id');
-					var course_nonce = $('#course_state_id').attr('data-nonce');
-					var required_cap = $('#course_state_id').attr('data-cap');
-					
+                    var course_nonce = $('#course_state_id').attr('data-nonce');
+                    var required_cap = $('#course_state_id').attr('data-cap');
+
                     $.post(
                             'admin-ajax.php', {
                                 action: 'change_course_state',
                                 course_state: course_state,
                                 course_id: course_id,
-								course_nonce: course_nonce,								
-								required_cap: required_cap,								
+                                course_nonce: course_nonce,
+                                required_cap: required_cap,
                             }
                     ).done(function(data, status) {
-		                if (status == 'success') {
+                        if (status == 'success') {
 
-		                    var response = $.parseJSON($(data).find('response_data').text());
-							console.log(response);
-							// Apply a new nonce when returning
-		                    if (response && response.toggle) {								
-								$('#course_state_id').attr('data-nonce', response.nonce);
-								$('#course_state_id').attr('data-cap', response.cap);
-							// Else, toggle back.	
-							} else {
-			                    if ($(selector).hasClass('on')) {
-			                        $(selector).removeClass('on');
-			                        $(selector).parent().find('.live').removeClass('on');
-			                        $(selector).parent().find('.draft').addClass('on');
-			                        $('#course_state').val('draft');
-			                    } else {
-			                        $(selector).addClass('on');
-			                        $(selector).parent().find('.draft').removeClass('on');
-			                        $(selector).parent().find('.live').addClass('on');
-			                    }
-							}
-		                }
-		            });
+                            var response = $.parseJSON($(data).find('response_data').text());
+                            console.log(response);
+                            // Apply a new nonce when returning
+                            if (response && response.toggle) {
+                                $('#course_state_id').attr('data-nonce', response.nonce);
+                                $('#course_state_id').attr('data-cap', response.cap);
+                                // Else, toggle back.	
+                            } else {
+                                if ($(selector).hasClass('on')) {
+                                    $(selector).removeClass('on');
+                                    $(selector).parent().find('.live').removeClass('on');
+                                    $(selector).parent().find('.draft').addClass('on');
+                                    $('#course_state').val('draft');
+                                } else {
+                                    $(selector).addClass('on');
+                                    $(selector).parent().find('.draft').removeClass('on');
+                                    $(selector).parent().find('.live').addClass('on');
+                                }
+                            }
+                        }
+                    });
 
                 });
             }

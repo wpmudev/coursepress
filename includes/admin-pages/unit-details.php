@@ -4,7 +4,6 @@ global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_d
 
 $course_id = '';
 $unit_id = '';
-$active_mod = -1;
 
 if ( isset($_GET['course_id']) && is_numeric($_GET['course_id']) ) {
     $course_id = ( int ) $_GET['course_id'];
@@ -34,7 +33,6 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
 
     if ( wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id) ) {
 
-		
         //if ( ( $_POST['action'] == 'add_unit' && current_user_can( 'coursepress_create_course_unit_cap' ) ) || ( $_POST['action'] == 'update_unit' && current_user_can( 'coursepress_update_course_unit_cap' ) ) || ( $unit_id != 0 && current_user_can( 'coursepress_update_my_course_unit_cap' ) && $unit_details->post_author == get_current_user_id() ) ) {
 
         $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0 );
@@ -49,7 +47,7 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
             ob_start();
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
             if ( isset($_GET['ms']) ) {
-                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '#unit-page-' . (isset($unit_page_num) ? $unit_page_num : '1')));
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . '&unit_page_num='.(isset($unit_page_num) ? $unit_page_num : '1').'#unit-page-' . (isset($unit_page_num) ? $unit_page_num : '1')));
                 //exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
@@ -58,10 +56,6 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
         } else {
             //an error occured
         }
-
-		if ( ! empty( $_POST['active_mod'] ) ) {
-			update_post_meta( $new_post_id, 'active_mod', (int) $_POST['active_mod'] );
-		}
 
         /* }else{
           die( __( 'You don\'t have right permissions for the requested action', 'cp' ) );
@@ -77,7 +71,6 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
     }
 }
 ?>
-
 <div class='wrap mp-wrap nocoursesub'>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
@@ -128,20 +121,16 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
             <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'draft')); ?>" />
-            <?php if ( isset($unit_id) ) { 
-				
-				$active_mod = ! empty( get_post_meta( $unit_id, 'active_mod', true ) ) ? get_post_meta( $unit_id, 'active_mod', true ) : $active_mod;
-			?>
+            <?php if ( isset($unit_id) ) { ?>
 
                 <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
                 <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
                 <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
-				<input type="hidden" name="active_mod" value="<?php echo $active_mod; ?>" />
                 <input type="hidden" name="action" value="update_unit" />
+                <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? $_GET['active_element'] : 1); ?>" />
             <?php } else { ?>
                 <input type="hidden" name="action" value="add_unit" />
             <?php } ?>
-				
 
             <?php
             $unit = new Unit($unit_id);
@@ -335,9 +324,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
                                             <hr />
 
-											<?php if( empty( $modules ) || ( is_array( $modules ) && count( $modules ) < 1 ) ) {  ?>
-	                                            <span class="no-elements"><?php _e('No elements have been added to this page yet'); ?></span>
-											<?php } ?>
+                                            <span class="no-elements"><?php _e('No elements have been added to this page yet'); ?></span>
 
                                         </div>
 
@@ -351,74 +338,28 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                             <!--modules will appear here-->
                                             <?php
                                             $pages_num = 1;
-											$active_mod_set = false;
-											$end_of_page = false;
-											$panel = 0;
-											$module_count = count( $modules );
-											$counter = 0;
-											
-											$other_page = true;
-											if ( ! wp_get_referer() || strpos( wp_get_referer() , 'page=course_details&tab=units') ) {
-												$other_page = false;
-											}
-
                                             foreach ( $modules as $mod ) {
                                                 $class_name = $mod->module_type;
-												$counter += 1;
-												
+
                                                 if ( class_exists($class_name) ) {
                                                     $module = new $class_name();
-													
-                                                    if ( $module->name == 'page_break_module' ) {
-														
-														// If on a new page, reset the active module, just in case.
-														if( ! $active_mod_set ){
-															$active_mod =  -1;															
-														}
-														
-														$panel = 1;
 
+                                                    if ( $module->name == 'page_break_module' ) {
                                                         $pages_num++;
                                                         if ( $pages_num == $i ) {
                                                             //echo 'page break at tab '.$i.'!<br />';
-															// ::RK:: Do we need to output an invisible page break?
                                                             $module->admin_main($mod);
                                                             //echo $module->name;
                                                         }
                                                     } else {
                                                         //echo 'i:'.$i.', pages_num:'.$pages_num.'<br />';
                                                         if ( $pages_num == $i ) {
-															$mod->panel = $panel;
-															
-															if ( $counter < $module_count ){
-																$next_mod = $modules[ $counter ];
-																$next_class = $next_mod->module_type;
-																if ( class_exists( $next_class ) ) {
-																	$next_mod = new $next_class;
-																	$end_of_page = 'page_break_module' == $next_mod->name ? true : false;
-																}																
-															}
-																														
-															if( $active_mod < 0 && ! empty( $mod->module_type ) && 'page_break_module' != $mod->module_type && $other_page ) {
-																$active_mod = $mod->ID;
-																$mod->active_module = true;
-															} else {
-																if( $mod->ID == $active_mod ) { 
-																	$mod->active_module = true;
-																	$active_mod_set = true;
-																} elseif ( ! $active_mod_set && ( $module_count == $counter || $end_of_page ) ) {
-																	$mod->active_module = true;																	
-																}
-															}															
-															
                                                             $module->admin_main($mod);
-															
-															$panel += 1;
+                                                            //print_r( $mod );
                                                         }
                                                     }
                                                 }
                                             }
-
                                             //$module->get_modules_admin_forms( isset( $_GET['unit_id'] ) ? $_GET['unit_id'] : '-1' );
                                             ?>
                                         </div>
@@ -530,6 +471,10 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
             } else {
                 jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();
             }
+
+            var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
+            
+            jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", <?php echo ($unit_page_num == 1) ? ($active_element) : $active_element; ?>);
 
             var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;
 

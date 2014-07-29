@@ -17,15 +17,15 @@ class file_module extends Unit_Module {
         $this->__construct();
     }
 
-    function front_main($data) {
+    function front_main( $data ) {
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
-            <?php if ($data->post_title != '' && $this->display_title_on_front($data)) { ?>
+            <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
             <?php
-            if ($data->file_url != '') {
+            if ( $data->file_url != '' ) {
                 global $coursepress;
 
                 require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
@@ -41,16 +41,16 @@ class file_module extends Unit_Module {
         <?php
     }
 
-    function admin_main($data) {
+    function admin_main( $data ) {
         wp_enqueue_style('thickbox');
         wp_enqueue_script('thickbox');
         wp_enqueue_media();
         wp_enqueue_script('media-upload');
         ?>
 
-        <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
+        <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo ! empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo ! empty( $data->panel ) ? $data->panel : ''; ?>" data-id="<?php echo ! empty( $data->ID ) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -65,27 +65,17 @@ class file_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if (isset($data->ID)) { ?>
+                <?php if ( isset($data->ID) ) { ?>
                     <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
                 <?php } else { ?>
                     <input type="hidden" class="removable" />
                 <?php } ?>
 
                 <label class="bold-label"><?php _e('Element Title', 'cp'); ?></label>
+                <?php echo $this->element_title_description(); ?>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
-
-                <label class="show_title_on_front"><?php _e('Show Title', 'cp'); ?>
-                    <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-                    <a class="help-icon" href="javascript:;"></a>
-                    <div class="tooltip">
-                        <div class="tooltip-before"></div>
-                        <div class="tooltip-button">&times;</div>
-                        <div class="tooltip-content">
-                            <?php _e('The title is used to identify this element – useful for assessment. If checked, the title is displayed as a heading for this element for the student as well.', 'cp'); ?>
-                        </div>
-                    </div>
-                </label>
+                <?php echo $this->show_title_on_front_element($data); ?>
 
                 <div class="editor_in_place" style="display:none;">
 
@@ -115,7 +105,7 @@ class file_module extends Unit_Module {
                 </div>
 
                 <?php
-                if (isset($data->ID)) {
+                if ( isset($data->ID) ) {
                     parent::get_module_delete_link($data->ID);
                 } else {
                     parent::get_module_remove_link();
@@ -129,7 +119,7 @@ class file_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name.'_order', $this->order);
+        $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
@@ -138,11 +128,11 @@ class file_module extends Unit_Module {
     function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
-        if (isset($_POST['module_type']) && ( $save_elements == true )) {
+        if ( isset($_POST['module_type']) && ( $save_elements == true ) ) {
 
-            foreach (array_keys($_POST['module_type']) as $module_type => $module_value) {
+            foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
 
-                if ($module_value == $this->name) {
+                if ( $module_value == $this->name ) {
                     $data = new stdClass();
                     $data->ID = '';
                     $data->unit_id = '';
@@ -153,8 +143,8 @@ class file_module extends Unit_Module {
                     $data->metas['module_type'] = $this->name;
                     $data->post_type = 'module';
 
-                    if (isset($_POST[$this->name . '_id'])) {
-                        foreach ($_POST[$this->name . '_id'] as $key => $value) {
+                    if ( isset($_POST[$this->name . '_id']) ) {
+                        foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
                             $data->title = $_POST[$this->name . '_title'][$key];
@@ -162,7 +152,7 @@ class file_module extends Unit_Module {
                             $data->metas['link_text'] = $_POST[$this->name . '_link_text'][$key];
                             $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
-                            if (isset($_POST[$this->name . '_show_title_on_front'][$key])) {
+                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {
                                 $data->metas['show_title_on_front'] = 'no';

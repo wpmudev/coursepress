@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright ( c ) 2013, MasterCard International Incorporated
+ * Copyright (c) 2013, MasterCard International Incorporated
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are 
@@ -18,10 +18,10 @@
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
  * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
- * IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR OTHERWISE ) ARISING 
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE.
  */
@@ -37,8 +37,8 @@ class Simplify_Object {
     /**
      * @ignore
      */
-    public function __get( $key ) {
-        if ( array_key_exists( $key, $this->properties ) ) {
+    public function __get($key) {
+        if (array_key_exists($key, $this->properties)) {
             return $this->properties[$key];
         } else {
             return null;
@@ -48,7 +48,7 @@ class Simplify_Object {
     /**
      * @ignore
      */
-    public function __set( $key, $value ) {
+    public function __set($key, $value) {
         $this->properties[$key] = $value;
     }
 
@@ -56,8 +56,8 @@ class Simplify_Object {
      * Updates the object's properties with the values in the specified map.
      * @param $hash array Map of values to set.
      */
-    public function setAll( $hash ) {
-        foreach ( $hash as $key => $value ) {
+    public function setAll($hash) {
+        foreach ($hash as $key => $value) {
             $this->$key = $value;
         }
     }
@@ -66,7 +66,7 @@ class Simplify_Object {
      * @ignore
      */
     public function __toString() {
-        return json_encode( $this->properties );
+        return json_encode($this->properties);
     }
 
     /**

@@ -11,23 +11,23 @@ jQuery(document).ready(function($) {
                 $(selector).click(function()
                 {
 
-					var the_toggle = this;
+                    var the_toggle = this;
                     var course_id = $(this).parent().find('.course_state_id').attr('data-id');
-					var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
-					var required_cap = $(this).parent().find('.course_state_id').attr('data-cap');
-					if ($(this).hasClass('disabled')) {
-						return;
-					}
+                    var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
+                    var required_cap = $(this).parent().find('.course_state_id').attr('data-cap');
+                    if ($(this).hasClass('disabled')) {
+                        return;
+                    }
                     if ($(this).hasClass('on')) {
                         $(the_toggle).removeClass('on');
                         $(the_toggle).parent().find('.live').removeClass('on');
-                        $(the_toggle).parent().find('.draft').addClass('on');						
+                        $(the_toggle).parent().find('.draft').addClass('on');
                         var course_state = 'draft';
                     } else {
                         $(the_toggle).addClass('on');
                         $(the_toggle).parent().find('.draft').removeClass('on');
                         $(the_toggle).parent().find('.live').addClass('on');
-						var course_state = 'publish';
+                        var course_state = 'publish';
                     }
 
                     $.post(
@@ -35,31 +35,31 @@ jQuery(document).ready(function($) {
                                 action: 'change_course_state',
                                 course_state: course_state,
                                 course_id: course_id,
-								course_nonce: course_nonce,
-								required_cap: required_cap,
+                                course_nonce: course_nonce,
+                                required_cap: required_cap,
                             }
                     ).done(function(data, status) {
-		                if (status == 'success') {
+                        if (status == 'success') {
 
-		                    var response = $.parseJSON($(data).find('response_data').text());
-							// Apply a new nonce when returning
-		                    if ( response && response.toggle) {								
-								$(the_toggle).parent().find('.course_state_id').attr('data-nonce', response.nonce);
-								$(the_toggle).parent().find('.course_state_id').attr('data-cap', response.cap);
-							// Else, toggle back.	
-							} else {
-			                    if ($(the_toggle).hasClass('on')) {
-			                        $(the_toggle).removeClass('on');
-			                        $(the_toggle).parent().find('.live').removeClass('on');
-			                        $(the_toggle).parent().find('.draft').addClass('on');
-			                    } else {
-			                        $(the_toggle).addClass('on');
-			                        $(the_toggle).parent().find('.draft').removeClass('on');
-			                        $(the_toggle).parent().find('.live').addClass('on');
-			                    }
-							}
-		                }
-		            });
+                            var response = $.parseJSON($(data).find('response_data').text());
+                            // Apply a new nonce when returning
+                            if (response && response.toggle) {
+                                $(the_toggle).parent().find('.course_state_id').attr('data-nonce', response.nonce);
+                                $(the_toggle).parent().find('.course_state_id').attr('data-cap', response.cap);
+                                // Else, toggle back.	
+                            } else {
+                                if ($(the_toggle).hasClass('on')) {
+                                    $(the_toggle).removeClass('on');
+                                    $(the_toggle).parent().find('.live').removeClass('on');
+                                    $(the_toggle).parent().find('.draft').addClass('on');
+                                } else {
+                                    $(the_toggle).addClass('on');
+                                    $(the_toggle).parent().find('.draft').removeClass('on');
+                                    $(the_toggle).parent().find('.live').addClass('on');
+                                }
+                            }
+                        }
+                    });
 
                 });
             }
@@ -290,12 +290,6 @@ jQuery(document).ready(function($) {
 
         jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
 
-        /*  if ((current_unit_page == 1 && accordion_elements_count == 0) || (current_unit_page >= 2 && accordion_elements_count == 1)) {
-         jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
-         } else {
-         jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
-         }*/
-
         if (unit_pages == 0) {
             jQuery(".delete_unit_page").hide();
         } else {
@@ -456,24 +450,15 @@ function coursepress_modules_ready() {
 
         var accordion_elements_count = (jQuery(this).parents('.elements-holder').siblings('.modules_accordion').find('div.module-holder-title').length);//find('.modules_accordion').length
 
-		jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr( 'data-panel', accordion_elements_count );
-		jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr( 'data-id', -1 );
-		$('[name="active_mod"]').val( -1 );
-
-        //alert(jQuery(this).parent().parent().find('.elements-holder .no-elements').attr('class'));
+        jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr('data-panel', accordion_elements_count);
+        jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr('data-id', -1);
+        //$('[name="active_mod"]').val(-1);
 
         if ((current_unit_page == 1 && accordion_elements_count == 0) || (current_unit_page >= 2 && accordion_elements_count == 1)) {
             jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
         } else {
             jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
         }
-		
-
-        /*if (accordion_elements_count >= 1) {
-         jQuery(this).parent().parent().find('.elements-holder .no-elements').hide();
-         } else {
-         jQuery(this).parent().parent().find('.elements-holder .no-elements').show();
-         }*/
 
     });
     /* Drag & Drop */
@@ -1000,7 +985,7 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.product').find('.course-sale-price input').removeAttr('disabled');
             jQuery(this).parents('.product').find('.course-price .price-label').addClass('required');
             jQuery(this).parents('.product').find('.payment-gateway-required').addClass('required');
-			jQuery(this).parents('.product').find('.course-paid-course-details').removeClass('hidden');
+            jQuery(this).parents('.product').find('.course-paid-course-details').removeClass('hidden');
 
             // jQuery('input.class_size').removeClass('disabled');
             // jQuery('input.class_size').removeAttr('disabled');
@@ -1013,7 +998,7 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.product').find('.course-sale-price input').attr('disabled', 'disabled');
             jQuery(this).parents('.product').find('.course-price .price-label').removeClass('required');
             jQuery(this).parents('.product').find('.payment-gateway-required').removeClass('required');
-			jQuery(this).parents('.product').find('.course-paid-course-details').addClass('hidden');			
+            jQuery(this).parents('.product').find('.course-paid-course-details').addClass('hidden');
             // jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
             //             jQuery('input.class_size').addClass('disabled');
             //             jQuery('input.class_size').attr('disabled', 'disabled');
