@@ -403,9 +403,11 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 																$active_mod = $mod->ID;
 																$mod->active_module = true;
 															} else {
-																if( $mod->ID == $active_mod || $module_count == $counter || $end_of_page ) {
+																if( $mod->ID == $active_mod ) { 
 																	$mod->active_module = true;
 																	$active_mod_set = true;
+																} elseif ( ! $active_mod_set && ( $module_count == $counter || $end_of_page ) ) {
+																	$mod->active_module = true;																	
 																}
 															}															
 															

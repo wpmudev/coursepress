@@ -200,7 +200,9 @@ class video_module extends Unit_Module {
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
                             $data->title = $_POST[$this->name . '_title'][$key];
-                            $data->content = $_POST[$this->name . '_content'][$key];
+							if( ! empty( $_POST[$this->name . '_content'] ) ) {
+	                            $data->content = $_POST[$this->name . '_content'][$key];
+							}
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
 							if( ! empty( $_POST[$this->name . '_player_width'] ) ) {
