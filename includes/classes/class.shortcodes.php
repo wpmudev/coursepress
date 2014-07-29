@@ -46,6 +46,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course', array( &$this, 'course' ));
 // Sub-shortcodes
             add_shortcode('course_title', array( &$this, 'course_title' ));
+			add_shortcode('course_link', array( &$this, 'course_link' ));
             add_shortcode('course_summary', array( &$this, 'course_summary' ));
             add_shortcode('course_description', array( &$this, 'course_description' ));
             add_shortcode('course_start', array( &$this, 'course_start' ));
@@ -249,6 +250,25 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $content = ob_get_clean();
 
 // Return the html in the buffer.
+            return $content;
+        }
+
+        /**
+         * Shows the course title.
+         *
+         * @since 1.0.0
+         */
+        function course_link( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+                'element' => 'span',
+                'class' => '',
+                            ), $atts, 'course_link'));
+
+            $title = get_the_title($course_id);
+
+			$content = do_shortcode( '[course_title course_id="' . $course_id . '" title_tag="' . $element . '" link="yes" class="' . $class . '"]');
+
             return $content;
         }
 

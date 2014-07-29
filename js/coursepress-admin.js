@@ -454,7 +454,11 @@ function coursepress_modules_ready() {
             menubar: false
         });
 
-        var accordion_elements_count = (jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').length);//find('.modules_accordion').length
+        var accordion_elements_count = (jQuery(this).parents('.elements-holder').siblings('.modules_accordion').find('div.module-holder-title').length);//find('.modules_accordion').length
+
+		jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr( 'data-panel', accordion_elements_count );
+		jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr( 'data-id', -1 );
+		$('[name="active_mod"]').val( -1 );
 
         //alert(jQuery(this).parent().parent().find('.elements-holder .no-elements').attr('class'));
 
@@ -463,6 +467,7 @@ function coursepress_modules_ready() {
         } else {
             jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
         }
+		
 
         /*if (accordion_elements_count >= 1) {
          jQuery(this).parent().parent().find('.elements-holder .no-elements').hide();

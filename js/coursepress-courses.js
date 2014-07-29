@@ -274,6 +274,16 @@ function cp_editor_key_down(ed, page, tab) {
             active_editor = ed.id;
 
         }
+        if (tab == '' || tab == 'units') {
+
+            var module = $('#' + ed.id).parents('.module-content');
+			var mod_id = $( module ).siblings('.module-title').attr('data-id');
+			$('[name="active_mod"]').val( mod_id );
+
+            active_editor = ed.id;
+
+        }
+		
     }
 
 }
@@ -1268,14 +1278,56 @@ jQuery(document).ready(function($) {
     }
 });
 
+function cp_set_active_module(){
+	$ = jQuery;
+	$.each( $('.is_active_module'), function( key, value ){
+	  
+	  	var panel =  parseInt( $( $('.is_active_module')[key] ).attr('data-panel') );
+		var mod_id = parseInt( $( $('.is_active_module')[key] ).attr('data-id') );
+		$($( $('.is_active_module')[key] ).parents('.modules_accordion')[0]).accordion( { 
+            heightStyle: "content",
+            header: "> div > h3",
+            collapsible: true,
+			active: panel, 
+		} );		
+		
+		$('[name="active_mod"]').val( mod_id );
+		
+	});
+	
+}
+
 jQuery(document).ready(function($) {
 
 	$('#marketpressprompt').click( function( event ) {
 		$('#marketpressprompt-box').toggle();
 	});
-		
-});
+	
+	// Set the active module on page load.
+	cp_set_active_module();
 
+	// When opening tab, don't let it refresh the accordion, but set the active module.
+	$( '#unit-pages' ).tabs({
+		activate: function( event, ui ) {
+			event.stopPropagation();
+			cp_set_active_module();			
+		}
+	});
+		
+	$('.module-content textarea').keydown(function() {
+		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
+		$('[name="active_mod"]').val( mod_id );
+    });
+    $('.module-content select').change(function() {
+		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
+		$('[name="active_mod"]').val( mod_id );
+    });
+    $('.module-content input').keydown(function() {
+		var mod_id = $( this ).parents('.module-content').siblings('.module-title').attr('data-id');
+		$('[name="active_mod"]').val( mod_id );
+    });	
+	
+});
 
 jQuery(document).ready(function($) {
     var unit_state_toggle = {

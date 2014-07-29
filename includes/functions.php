@@ -82,6 +82,7 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
     echo '<div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
 
     for ( $link_num = 1; $link_num <= $max; $link_num++ ) {
+		$enabled = "";
         if ( $coursepress->is_preview($unit_id, $link_num) ) {
             $enabled = 'enabled-link';
         } else {
@@ -904,7 +905,7 @@ if ( !function_exists('coursepress_register_front_page_module') ) {
 if ( !function_exists('cp_write_log') ) {
 
     function cp_write_log( $message, $echo_file = false ) {
-        $trace = debug_backtrace('DEBUG_BACKTRACE_IGNORE_ARGS');
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $exception = new Exception();
         $debug = array_shift($trace);
         $caller = array_shift($trace);

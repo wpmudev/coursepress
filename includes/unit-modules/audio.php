@@ -24,9 +24,9 @@ class audio_module extends Unit_Module {
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
-            <?php if ($data->post_content != '') { ?>  
-                <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
-            <?php } ?>
+            <?php //if ($data->post_content != '') { ?>  
+                <!-- <div class="module_description"><?php // echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div> -->
+            <?php //} ?>
 
             <?php if ($data->audio_url != '') { ?>  
                 <div class="audio_player">
@@ -66,7 +66,7 @@ class audio_module extends Unit_Module {
 
         <div class="<?php if (empty($data)) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if (empty($data)) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name">
+            <h3 class="module-title sidebar-name <?php echo ! empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo ! empty( $data->panel ) ? $data->panel : ''; ?>" data-id="<?php echo ! empty( $data->ID ) ? $data->ID : ''; ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -107,22 +107,20 @@ class audio_module extends Unit_Module {
                     </div>
                 </label>
 
-                <label class="bold-label"><?php _e('Content', 'cp'); ?></label>
-
-                <div class="editor_in_place">
-
+                <!-- <label class="bold-label"><?php // _e('Content', 'cp'); ?></label> -->
+                <!-- <div class="editor_in_place">
                     <?php
-                    $args = array(
-                        "textarea_name" => $this->name . "_content[]",
-                        "textarea_rows" => 5,
-                        "quicktags" => false,
-                        "teeny" => true,
-                    );
-
-                    $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                    wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                    // $args = array(
+                    //     "textarea_name" => $this->name . "_content[]",
+                    //     "textarea_rows" => 5,
+                    //     "quicktags" => false,
+                    //     "teeny" => true,
+                    // );
+                    //
+                    // $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+                    // wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
-                </div>
+                </div> -->
 
                 <div class="audio_url_holder">
                     <label><?php _e('Put a URL or Browse for an audio file. Supported audio extensions ( ' . $supported_audio_extensions . ' )', 'cp'); ?>
