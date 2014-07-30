@@ -120,7 +120,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'draft')); ?>" />
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'live')); ?>" />
             <?php if ( isset($unit_id) ) { ?>
 
                 <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
