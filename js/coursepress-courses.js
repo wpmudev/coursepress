@@ -1287,6 +1287,25 @@ jQuery(document).ready(function($) {
     $('#marketpressprompt').click(function(event) {
         $('#marketpressprompt-box').toggle();
     });
+	
+	$('[name="meta_course_structure_options"]').change( function(event){
+
+		if ( $( this ).prop('checked') ) {
+			$('.course-structure [name^="meta_show_unit"]').attr('checked', 'checked');
+			$('.course-structure [name^="meta_show_unit"]').val( 'on' );
+
+			$('.course-structure [name^="meta_show_page"]').attr('checked', 'checked');
+			$('.course-structure [name^="meta_show_page"]').val( 'on' );
+		} else {
+			$('.course-structure [name^="meta_show_unit"]').removeAttr('checked');
+			$('.course-structure [name^="meta_show_unit"]').val( 'off' );
+
+			$('.course-structure [name^="meta_show_page"]').removeAttr('checked');
+			$('.course-structure [name^="meta_show_page"]').val( 'off' );
+		}
+
+
+	});
 
 });
 
