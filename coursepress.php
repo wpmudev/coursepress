@@ -1646,9 +1646,11 @@ if ( !class_exists('CoursePress') ) {
                     }
 
                     $course_id = $course->update_course();
+					$mp_product_id = $course->mp_product_id();
 
                     $ajax_response['success'] = true;
                     $ajax_response['course_id'] = $course_id;
+					$ajax_response['mp_product_id'] = $mp_product_id;
                     $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
                     $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
                 } else {

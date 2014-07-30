@@ -323,7 +323,10 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
             $('#course-ajax-check').data('cap', response.cap);
             $('#course-ajax-check').data('id', response.course_id);
             $('[name=course_id]').val(response.course_id);
-
+			if( response.mp_product_id ) {
+				$('[name=meta_mp_product_id]').val(response.mp_product_id);
+			}
+			
             // Add user as instructor
             if (step == 'step-1' && response.instructor) {
                 $.post(
@@ -389,7 +392,11 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                 set_update_progress(step, 'saved');
                 $course_id = $('[name=course_id]').val();
                 $admin_url = $('[name=admin_url]').val();
-                window.location = $admin_url + '&tab=units&course_id=' + $course_id;
+				
+				if( 'unit_setup' == nextAction ) {
+	                window.location = $admin_url + '&tab=units&course_id=' + $course_id;					
+				}
+
             }
             // Steps 1 - 5	
         } else {

@@ -991,10 +991,16 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <?php else: ?>
                                                 <?php
                                                 $mp_product_id = $course->mp_product_id();
+
+												$product_exists = 0 != $mp_product_id ? true : false;
+												
+												$paid_course = ! $product_exists ? 'off' : $paid_course;
+												
                                                 //var_dump(get_post_custom($course_id));
                                                 $mp_product_details = get_post_custom($course_id);
 
                                                 $input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
+
                                                 ?>
 
                                                 <input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr(isset($course->details->mp_product_id) ? $course->details->mp_product_id : ''); ?>" />
