@@ -1060,9 +1060,13 @@ if ( !class_exists('CoursePress') ) {
 
               } */
 
-            if ( $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
+            if ( ! isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
                 include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
-                $content_shown[$GLOBALS['post']->ID] ++;
+				if( ! isset($content_shown[$GLOBALS['post']->ID]) ) {
+	                $content_shown[$GLOBALS['post']->ID] = 1;
+				} else {
+	                $content_shown[$GLOBALS['post']->ID] ++;	
+				}
             }
         }
 
@@ -1646,9 +1650,11 @@ if ( !class_exists('CoursePress') ) {
                     }
 
                     $course_id = $course->update_course();
+					$mp_product_id = $course->mp_product_id();
 
                     $ajax_response['success'] = true;
                     $ajax_response['course_id'] = $course_id;
+					$ajax_response['mp_product_id'] = $mp_product_id;
                     $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
                     $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
                 } else {
@@ -2659,16 +2665,16 @@ if ( !class_exists('CoursePress') ) {
 
                     /* Sign up page */
 
-                    $signup = new stdClass;
-
-                    if ( !$is_in ) {
-                        $signup->title = __('Sign Up', 'cp');
-                        $signup->menu_item_parent = 0;
-                        $signup->ID = 'cp-signup';
-                        $signup->db_id = '';
-                        $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
-                        $sorted_menu_items[] = $signup;
-                    }
+                    // $signup = new stdClass;
+                    //
+                    // if ( !$is_in ) {
+                    //     $signup->title = __('Sign Up', 'cp');
+                    //     $signup->menu_item_parent = 0;
+                    //     $signup->ID = 'cp-signup';
+                    //     $signup->db_id = '';
+                    //     $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
+                    //     $sorted_menu_items[] = $signup;
+                    // }
 
                     /* Log in / Log out links */
 
@@ -2741,16 +2747,16 @@ if ( !class_exists('CoursePress') ) {
 
                 /* Sign up page */
 
-                $signup = new stdClass;
-
-                if ( !$is_in ) {
-                    $signup->title = __('Sign Up', 'cp');
-                    $signup->menu_item_parent = 0;
-                    $signup->ID = 'cp-signup';
-                    $signup->db_id = '';
-                    $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
-                    $main_sorted_menu_items[] = $signup;
-                }
+                // $signup = new stdClass;
+                //
+                // if ( !$is_in ) {
+                //     $signup->title = __('Sign Up', 'cp');
+                //     $signup->menu_item_parent = 0;
+                //     $signup->ID = 'cp-signup';
+                //     $signup->db_id = '';
+                //     $signup->url = trailingslashit(site_url() . '/' . $this->get_signup_slug());
+                //     $main_sorted_menu_items[] = $signup;
+                // }
 
                 /* Log in / Log out links */
 

@@ -145,6 +145,7 @@ if ( !class_exists( 'Student' ) ) {
 	            wp_delete_user( $this->ID ); //without reassign				
 			} else {
 				$this->withdraw_from_all_courses();
+				delete_user_meta( $this->ID, 'role' );
 			}
         }
 

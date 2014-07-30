@@ -597,7 +597,7 @@ h1.notification-title{
 }
 
 .post-type-archive-course .quick-course-info .course-lang{
-    width: 18%;
+    width: 25%;
     float: left;
     font-size: 12px;
     font-weight: 400;
@@ -608,6 +608,28 @@ h1.notification-title{
     margin-top: 13px;
     display: block;
     margin-left: 2%;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price {
+	background-image: url( "../images/Assets.svg" );
+	background-position: -873px -232px;
+	background-repeat: no-repeat;
+	line-height: 0px;
+    margin-right: 0px;
+    padding: 0 0 0 20px;
+}
+.post-type-archive-course .quick-course-info .course-cost {	
+    width: 25%;
+    float: left;
+    font-size: 12px;
+    font-weight: 400;
+    color: #828282;
+    margin-top: 13px;
+    display: block;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;

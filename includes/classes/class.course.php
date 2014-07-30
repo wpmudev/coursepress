@@ -236,7 +236,7 @@ if ( !class_exists('Course') ) {
 
                 function mp_product_id() {
                     $mp_product_id = get_post_meta($this->id, 'mp_product_id', true);
-                    return $mp_product_id;
+                    return get_post($mp_product_id) ? $mp_product_id : 0;
                 }
 
                 function update_mp_product( $course_id = false ) {
@@ -251,31 +251,44 @@ if ( !class_exists('Course') ) {
                         'post_type' => 'product',
                         'post_parent' => $course_id
                     );
+					
+					// Add or Update a product if its a paid course
+                    if ( isset($_POST['meta_paid_course']) && 'on' == $_POST['meta_paid_course'] ) {
 
-                    if ( $mp_product_id ) {
-                        $post['ID'] = $mp_product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-                        $post_id = wp_update_post($post);
-                    } else {
-                        $post_id = wp_insert_post($post);
+	                    if ( $mp_product_id && 0 != $mp_product_id ) {
+	                        $post['ID'] = $mp_product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+	                        $post_id = wp_update_post($post);
+	                    } else {
+	                        $post_id = wp_insert_post($post);
+	                    }
+
+	                    $automatic_sku = $_POST['meta_auto_sku'];
+
+	                    if ( $automatic_sku == 'on' ) {
+	                        $sku = $automatic_sku_number;
+	                    } else {
+	                        $sku = ! empty( $_POST['mp_sku'] ) ? $_POST['mp_sku'] : '';
+	                    }
+
+	                    update_post_meta($this->id, 'mp_product_id', $post_id);
+	                    update_post_meta($this->id, 'marketpress_product', $post_id);
+
+						$price = ! empty( $_POST['mp_price'] ) ? $_POST['mp_price'] : 0;
+						$sale_price = ! empty( $_POST['mp_sale_price'] ) ? $_POST['mp_sale_price'] : 0;
+	                    update_post_meta($post_id, 'mp_sku', $sku);
+	                    update_post_meta($post_id, 'mp_price', $price);
+	                    update_post_meta($post_id, 'mp_sale_price', $sale_price);
+	                    update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
+
+					// Remove product if its not a paid course (clean up MarketPress products)
+                    } elseif( isset($_POST['meta_paid_course']) && 'off' == $_POST['meta_paid_course'] ) {
+						if ( $mp_product_id && 0 != $mp_product_id ) {
+							wp_delete_post( $mp_product_id );
+		                    delete_post_meta($this->id, 'mp_product_id');
+		                    delete_post_meta($this->id, 'marketpress_product');
+						}
                     }
 
-                    $automatic_sku = $_POST['meta_auto_sku'];
-
-                    if ( $automatic_sku == 'on' ) {
-                        $sku = $automatic_sku_number;
-                    } else {
-                        $sku = ! empty( $_POST['mp_sku'] ) ? $_POST['mp_sku'] : '';
-                    }
-
-                    update_post_meta($this->id, 'mp_product_id', $post_id);
-                    update_post_meta($this->id, 'marketpress_product', $post_id);
-
-					$price = ! empty( $_POST['mp_price'] ) ? $_POST['mp_price'] : 0;
-					$sale_price = ! empty( $_POST['mp_sale_price'] ) ? $_POST['mp_sale_price'] : 0;
-                    update_post_meta($post_id, 'mp_sku', $sku);
-                    update_post_meta($post_id, 'mp_price', $price);
-                    update_post_meta($post_id, 'mp_sale_price', $sale_price);
-                    update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
                 }
 
                 function update_course() {

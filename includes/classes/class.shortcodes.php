@@ -3084,7 +3084,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             <?php do_action('after_all_signup_fields'); ?>
 
                             <label class="full">
-                                <a href="<?php echo $login_url; ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
+								<?php printf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . $login_url . '">', __( 'Login to your account', 'cp' ), '</a>' ); ?>
                             </label>
 
                             <label class="full-right">
@@ -3135,7 +3135,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         <?php do_action('cp_form_fields'); ?>
 
                         <label class="full">
-                            <a href="<?php echo $signup_url; ?>"><?php _e("Don't have an account? Go to Signup!", 'cp'); ?></a>
+							<?php printf( __( 'Don\'t have an account? %s%s%s now!', 'cp' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'cp' ), '</a>' ); ?>
                         </label>
 
                         <label class="full-right"><br>
