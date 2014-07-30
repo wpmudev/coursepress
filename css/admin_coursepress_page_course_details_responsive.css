@@ -118,6 +118,98 @@
     .sidebar-name{
         /*clear: both;*/
     }
+
+    .widefat .course-structure th input[type=checkbox]:before, .course-structure input[type=checkbox]:checked:before {
+        font: 400 20px/1 Dashicons;
+        margin: -3px -4px;
+    }
+}
+
+@media only screen and ( max-width: 730px ) {
+    .tree .tree-unit-right .module_preview,
+    .tree .tree-page-right .module_preview{
+        margin-left: 23%;
+    }
+}
+
+@media only screen and ( max-width: 690px ) {
+    .tree .tree-unit-left{
+        width: 57.5%;
+    }
+
+    .tree .tree-page-left{
+        width: 53.5%;
+    }
+
+    .tree .tree-unit-right{
+        width: 41%;
+    }
+
+    .tree .tree-page-right {
+        width: 43.2%;
+    }
+}
+
+@media only screen and ( max-width: 660px ) {
+    .tree .tree-unit-left{
+        width: 55.5%;
+    }
+
+    .tree .tree-unit-right{
+        width: 43%;
+    }
+
+    .tree .tree-page-left{
+        width: 51.5%;
+    }
+
+    .tree .tree-page-right {
+        width: 45.4%;
+    }
+}
+
+@media only screen and ( max-width: 630px ) {
+    .tree .tree-unit-left{
+        width: 50%;
+    }
+
+    .tree .tree-unit-right{
+        width: 47%;
+    }
+
+    .tree .tree-page-left{
+        width: 45%;
+    }
+
+    .tree .tree-page-right {
+        width: 50.1%;
+    }
+}
+
+@media only screen and ( max-width: 600px ) {
+    .tree .tree-unit-left{
+        width: 58%;
+    }
+
+    .tree .tree-unit-right{
+        width: 39%;
+    }
+
+    .tree .tree-page-left{
+        width: 57%;
+    }
+
+    .tree .tree-page-right {
+        width: 41%;
+    }
+
+    .course-section .course-form {
+        padding: 5% 0% 0%;
+    }
+
+    .course-section .course-form .course-structure table{
+        margin: 20px 0 20px 0px;
+    }
 }
 
 @media ( max-width: 570px ) {
@@ -129,6 +221,42 @@
     .video_url_holder input.video_url_button,
     .file_url_holder input.file_url_button{
         width: 17%;
+    }
+}
+
+@media only screen and ( max-width: 550px ) {
+    .tree .tree-unit-left{
+        width: 53%;
+    }
+
+    .tree .tree-unit-right{
+        width: 45%;
+    }
+
+    .tree .tree-page-left{
+        width: 51%;
+    }
+
+    .tree .tree-page-right {
+        width: 47.6%;
+    }
+}
+
+@media only screen and ( max-width: 520px ) {
+    .tree .tree-unit-left{
+        width: 50%;
+    }
+
+    .tree .tree-unit-right{
+        width: 46%;
+    }
+
+    .tree .tree-page-left{
+        width: 45%;
+    }
+
+    .tree .tree-page-right {
+        width: 48.8%;
     }
 }
 

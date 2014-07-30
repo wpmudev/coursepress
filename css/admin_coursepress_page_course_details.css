@@ -2285,7 +2285,12 @@ span.no-elements {
 ol.tree
 {
     padding: 0 0 0 0px;
-    /* width: 300px;*/
+    width: 100%;
+}
+
+ol.tree input[type=checkbox], ol.tree input[type=radio]{
+    width: 16px;
+    height: 16px;
 }
 
 .tree li 
@@ -2323,7 +2328,7 @@ ol.tree
 
 .tree .tree-page-left{
     display: inline-block;
-    width: 284px;
+    width: 56.5%;
     text-overflow:ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -2331,12 +2336,13 @@ ol.tree
 
 .tree .tree-page-right{
     display: inline-block;
-    width: 184px;
+    width: 40.8%;
+    float: right;
 }
 
 .tree .tree-unit-left{
     display: inline-block;
-    width: 307px;
+    width: 59.5%;
     text-overflow:ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -2344,7 +2350,8 @@ ol.tree
 
 .tree .tree-unit-right{
     display: inline-block;
-    width: 184px;
+    width: 39%;
+    float: right;
 }
 
 .tree .tree-element-right .module_show {
@@ -2417,7 +2424,8 @@ ol.tree
 {
     cursor: pointer;
     display: block;
-    padding-left: 10px;
+    padding-left: 20px;
+    margin-left: -10px;
     font-weight: bold;
 }
 
@@ -2427,7 +2435,7 @@ ol.tree
 
 .tree li input:checked + ol
 {
-    background: url(../images/toggle-small-expand.png) 40px 5px no-repeat;
+    background: url(../images/toggle-small-expand.png) 39px 3px no-repeat;
     margin: -1.25em 0 0 -44px; /* 20px */
     padding: 1.563em 0 0 80px;
     height: auto;
@@ -2695,7 +2703,7 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
 
 
 #marketpressprompt-box {
-	display: none;
+    display: none;
 }
 
 .element_title_description{
