@@ -999,7 +999,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         } else {
                             // "SIGN UP NOW"
                             $button_url = $signup_url;
-                            $button .= '<button data-link="' . $button_url . '?course_id=' . $course_id . '" class="apply-button ' . $class . '">' . $signup_text . '</button>';
+                            $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="'.$course_id.'" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
                             // cp_write_log( 'SIX');	
                         }
                     }

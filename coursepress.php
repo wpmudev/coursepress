@@ -139,6 +139,10 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
+                add_action('wp_ajax_cp_popup_step', array( &$this, 'popup_step' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_step', array( &$this, 'popup_step' ));
+
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
@@ -317,6 +321,13 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+        }
+
+        function popup_step() {
+            if ( isset($_POST['step']) ) {
+                include($this->plugin_dir . 'includes/templates/popup-window-' . $_POST['step'] . '.php');
+                exit;
+            }
         }
 
         function flush_rules() {
@@ -1060,13 +1071,13 @@ if ( !class_exists('CoursePress') ) {
 
               } */
 
-            if ( ! isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
+            if ( !isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
                 include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
-				if( ! isset($content_shown[$GLOBALS['post']->ID]) ) {
-	                $content_shown[$GLOBALS['post']->ID] = 1;
-				} else {
-	                $content_shown[$GLOBALS['post']->ID] ++;	
-				}
+                if ( !isset($content_shown[$GLOBALS['post']->ID]) ) {
+                    $content_shown[$GLOBALS['post']->ID] = 1;
+                } else {
+                    $content_shown[$GLOBALS['post']->ID] ++;
+                }
             }
         }
 
@@ -1650,11 +1661,11 @@ if ( !class_exists('CoursePress') ) {
                     }
 
                     $course_id = $course->update_course();
-					$mp_product_id = $course->mp_product_id();
+                    $mp_product_id = $course->mp_product_id();
 
                     $ajax_response['success'] = true;
                     $ajax_response['course_id'] = $course_id;
-					$ajax_response['mp_product_id'] = $mp_product_id;
+                    $ajax_response['mp_product_id'] = $mp_product_id;
                     $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
                     $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
                 } else {
@@ -2223,6 +2234,11 @@ if ( !class_exists('CoursePress') ) {
         function header_actions() {//front
             global $post;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
+            wp_enqueue_script('enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ));
+            wp_localize_script('enrollment_process', 'cp_vars', array(
+                'admin_ajax_url' => admin_url('admin-ajax.php')
+            ));
+            //admin_url('admin-ajax.php')
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
             wp_enqueue_script('coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ));
             if ( $post && !$this->is_preview($post->ID) ) {
@@ -2238,6 +2254,7 @@ if ( !class_exists('CoursePress') ) {
 
             if ( !is_admin() ) {
                 wp_enqueue_style('front_general', $this->plugin_url . 'css/front_general.css', array(), $this->version);
+                wp_enqueue_style('front_enrollment_process', $this->plugin_url . 'css/front-enrollment-process.css', array(), $this->version);
             }
 
             wp_enqueue_script('coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), '20120207', true);
@@ -2253,6 +2270,11 @@ if ( !class_exists('CoursePress') ) {
                 </div>
                 <?php
             }
+            $this->load_popup_window();
+        }
+
+        function load_popup_window() {
+            include_once( $this->plugin_dir . 'includes/templates/popup-window.php' );
         }
 
         /* Add required jQuery scripts */
