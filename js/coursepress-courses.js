@@ -1304,8 +1304,12 @@ jQuery(document).ready(function($) {
 			$('.course-structure [name^="meta_show_page"]').val( 'off' );
 		}
 
-
 	});
+	
+	// If inheriting course show options then force save
+	if ( $('[name="section_dirty"]') ) {
+		mark_dirty( $('[name="section_dirty"]') );
+	}
 
 });
 

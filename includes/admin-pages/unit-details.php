@@ -148,10 +148,10 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                         <div class="unit-state">
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
                             <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
+                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'off' : ! empty( $unit_id ) && $unit_id > 0 ? 'on' : 'off'; ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
+                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : ! empty( $unit_id ) && $unit_id > 0 ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
                         </div>
                     </h3>
 
