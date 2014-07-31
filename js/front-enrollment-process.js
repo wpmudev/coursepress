@@ -44,10 +44,16 @@ jQuery(document).ready(function($) {
                 }
         ).done(function(data, status) {
             if (status == 'success') {
-				$('.cp_popup_content').html(data);
-				$('.cp_popup_window').autoHeight();
-				$('.cp_popup_window').center();
-                $('.cp_popup_loading').hide();
+				
+                var response = $.parseJSON($(data).find('response_data').text());
+				if( response ) {
+					console.log( response );
+					$('.cp_popup_content').html(response.html);
+					$('.cp_popup_window').autoHeight();
+					$('.cp_popup_window').center();
+	                $('.cp_popup_loading').hide();
+				}
+				
             } else {
             }
         }).fail(function(data) {
