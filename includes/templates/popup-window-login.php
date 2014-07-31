@@ -1,5 +1,5 @@
 <div class="cp_popup_title"><?php _e('Login', 'cp');?></div>
-
+<input type="hidden" name="signup-next-step" value="" />
 <p class="cp_popup_required"><?php _e('Login with your existing username and password'); ?></p>
 
 <label class="cp_popup_col_1">

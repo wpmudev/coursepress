@@ -325,7 +325,11 @@ if ( !class_exists('CoursePress') ) {
         }
 
 		// Popup Signup Process
-		function popup_signup() {
+		function popup_signup( $step = false ) {
+			
+			if( ! $step && isset( $_POST['step'] ) ) {
+				$step = $_POST['step'];
+			}
 			
 			$ajax_response = array();
 				
@@ -339,32 +343,59 @@ if ( !class_exists('CoursePress') ) {
 			}
 			
 			// cp_write_log( $_POST );
-			
 			$signup_steps = apply_filters( 'coursepress_signup_steps', array(
 				'login' => array(
+					'action' => 'template',
 					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
+					'on_success' => 'process_login',
+				),
+				'process_login' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_login_user' ),
+					'on_success' => 'enrollment',
 				),
 				'signup' => array(
+					'action' => 'template',
 					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
+					'on_success' => 'process_signup',
+				),
+				'process_signup' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_create_user' ),
+					'on_success' => 'enrollment',
+				),				
+				'enrollment' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_enroll_student' ),
+					'on_success' => 'success-enrollment',
 				),
 			) );
 			
 			$signup_steps = array_merge( $signup_steps, array(
-				'success' => array(
+				'success-enrollment' => array(
+					'action' => 'template',
 					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
+					'on_success' => 'done',
 				),
 			));
 						
-            if ( isset($_POST['step']) ) {
-				
-				ob_start();
-					include( $signup_steps[ $_POST['step'] ]['template'] );
-				$html = ob_get_clean();
-				
-				$ajax_response['html'] = $html;
-				$ajax_response['current_step'] = $_POST['step'];
+            if ( !empty( $step ) ) {
+
+				if ( 'template' == $signup_steps[ $step ]['action'] ) {
+					ob_start();
+						include( $signup_steps[ $step ]['template'] );
+					$html = ob_get_clean();
+					$ajax_response['html'] = $html;
+				} elseif ( 'callback' == $signup_steps[ $step ]['action'] ) {
+					$classname = get_class( $signup_steps[ $step ]['callback'][0] );
+					$method = $signup_steps[ $step ]['callback'][1];
+					call_user_func( $classname . '::' . $method );
+				}
+
+				$ajax_response['current_step'] = $step;
+				$ajax_response['next_step'] = $signup_steps[ $step ]['on_success'];
 				$ajax_response['all_steps'] = array_keys( $signup_steps );
-				
+
                 $response = array(
                     'what' => 'instructor_invite',
                     'action' => 'instructor_invite',
@@ -373,9 +404,36 @@ if ( !class_exists('CoursePress') ) {
                 );
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
-				
+			
                 exit;
+				
             }
+			
+		}
+
+		function signup_login_user() {
+			cp_write_log( 'logging in....' );
+			
+			// Handle login stuff
+			$this->popup_signup( 'enrollment' );
+		}
+
+		function signup_create_user() {
+			cp_write_log( 'creating user....' );
+			
+			// Handle creation stuff
+			
+			$this->popup_signup( 'enrollment' );
+		}
+		
+		function signup_enroll_student() {
+			cp_write_log( 'enrolling user (or passing them on to payment)....' );
+			
+			// Handle enrolment stuff
+
+			$this->popup_signup( 'success-enrollment' );
+			
+			// popup_signup( 'payment_checkout' );
 			
 		}
 		
