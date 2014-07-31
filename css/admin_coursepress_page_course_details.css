@@ -989,6 +989,7 @@ div.course-liquid-left {
     clear: left;
     width: 100%;
     margin-right: -325px;
+    min-width: 320px;
 }
 div.course-liquid-right {
     float: right;
@@ -2007,6 +2008,9 @@ label.bold-label{
     clear: both;
 }
 
+.course-section .course-form .course-structure{
+    min-width: 320px;
+}
 
 .course-section .course-form .course-structure table {
     margin: 20px 0 20px 20px;
@@ -2342,7 +2346,7 @@ ol.tree input[type=checkbox], ol.tree input[type=radio]{
 
 .tree .tree-unit-left{
     display: inline-block;
-    width: 59.5%;
+    width: 58.5%;
     text-overflow:ellipsis;
     white-space: nowrap;
     overflow: hidden;
