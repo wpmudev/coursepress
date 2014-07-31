@@ -470,10 +470,13 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                 <?php
                                                                                 $module = new Unit_Module();
 
+																				// Cheking for inhertited "show" status and forces a save.
+																				$section_dirty = false;
+																				
                                                                                 foreach ( $units as $unit ) {
                                                                                     $unit_class = new Unit($unit->ID);
                                                                                     $unit_pages = $unit_class->get_number_of_unit_pages();
-
+																					
                                                                                     $modules = $module->get_modules($unit->ID);
                                                                                     ?>
 
@@ -485,6 +488,9 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                 <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr($unit->ID); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
                                                                                                 if ( isset($show_unit[$unit->ID]) ) {
                                                                                                     echo ( $show_unit[$unit->ID] == 'on' ) ? 'checked' : '';
+                                                                                                } else {
+                                                                                                	echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+																									$section_dirty = true;
                                                                                                 }
                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
 
@@ -524,7 +530,11 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                 <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
                                                                                                                 if ( isset($show_page[$unit->ID . '_' . $i]) ) {
                                                                                                                     echo ( $show_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
-                                                                                                                }
+                                                                                                                }  else {
+				                                                                                                	echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+																													$section_dirty = true;
+				                                                                                                }
+																												
                                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
 
                                                                                                                 <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
@@ -596,7 +606,15 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                     </li>
 
 
-                                                                                <?php }
+                                                                                <?php
+																				}
+																				
+																				if( $section_dirty ) {
+																					?>
+																					<input type="hidden" name="section_dirty" value="true" />
+																					<?php
+																				}
+																				
                                                                                 ?>
                                                                             </ol>
                                                                             <?php

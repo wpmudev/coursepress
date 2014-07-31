@@ -2495,6 +2495,11 @@ li.disabled_unit{
     color: #dedede;
 }
 
+li.disabled_unit .tree-unit-left{
+    padding-left: 5px;
+}
+
+
 /* ---- */
 
 
