@@ -417,7 +417,7 @@ if ( !class_exists('CoursePress') ) {
                 ),
                 'enrollment' => array(
                     'action' => 'callback',
-                    'callback' => array( &$this, 'signup_enroll_student', $args ),
+                    'callback' => array( &$this, 'signup_enroll_student', !empty($args) ? $args : array() ),
                     'on_success' => 'success-enrollment',
                 ),
             ));
@@ -516,18 +516,27 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 
-        function signup_enroll_student( $args ) {
+        function signup_enroll_student( $args = array() ) {
             cp_write_log('enrolling user (or passing them on to payment)....');
             // Handle enrolment stuff
-            if ( isset($args['course_id']) ) {
-                $student = new Student($args['student_id']);
-                $student->enroll_in_course(( int ) $args['course_id']);
 
+            $student_id = get_current_user_id();
+            $student_id = $student_id > 0 ? $student_id : $args['student_id'];
+
+            $course_id = isset($args['course_id']) ? $args['course_id'] : $_POST['course_id'];
+
+            if ( isset($course_id) ) {
+
+                $student = new Student($student_id);
+                if ( !$student->has_access_to_course($course_id) ) {//only if he don't have access already
+                    $student->enroll_in_course($course_id);
+                }
+                $args['course_id'] = $course_id;
                 //show success message
                 $this->popup_signup('success-enrollment', $args);
                 // popup_signup( 'payment_checkout' );
             } else {
-                //echo 'not enrolled!';
+                echo 'course id not set';
             }
         }
 

@@ -60,7 +60,7 @@ a.cp_login_step{
 }
 
 .cp_popup_success_message {
-    margin-top: 75px;
+    margin-top: 50px;
 }
 
 label.cp_popup_col_2.second-child{
@@ -174,4 +174,33 @@ label.cp_popup_col_2.second-child{
     background-image:url(../images/popup-validate-correct.png);
     background-repeat:no-repeat;
     background-position: 98.1% 11px;
+}
+
+button.apply-button-green{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: #61b616;
+    background-color: #61b616;
+    min-height: 32px;
+    min-width: 100px;
+    padding: 5px;
+    float: right;
+    display: block;
+    color: #fff;
+    text-align: center;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    border: none;
+    text-shadow: none;
+    font-weight: 300;
+    box-shadow: none;
 }

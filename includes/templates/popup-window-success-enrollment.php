@@ -15,3 +15,13 @@ $course_link = '<a href="' . get_permalink($course_id) . '">' . $course->details
     <br /><br />
     <?php echo sprintf(__('You course will be available at any time in your %s', 'cp'), $dashboard_link); ?>
 </div>
+
+<?php
+if ( ( $course->details->course_start_date !== '' && $course->details->course_end_date !== '' ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
+    if ( ( strtotime($course->details->course_start_date) <= time() && strtotime($course->details->course_end_date) >= time() ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
+        ?>
+        <button class="apply-button apply-button-green" data-link="<?php echo get_permalink($course_id) . 'units'; ?>"><?php _e('Start Learning Now'); ?></button>
+        <?php
+    }
+}
+?>

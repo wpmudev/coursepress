@@ -1,5 +1,11 @@
 jQuery(document).ready(function($) {
 
+    $('.apply-button-green').live('click', function(event) {
+        if ($(this).data('link')) {
+            window.location.href = $(this).data('link');
+        }
+    });
+
     // Functions/handlers to apply to newly loaded content.
     function init_popup(element) {
         $ = jQuery;
@@ -34,6 +40,7 @@ jQuery(document).ready(function($) {
         open_popup('login', $(this).attr('data-course-id'));
     });
 
+
     $('.cp_popup_close_button').click(function(e) {//.cp_popup_overall, 
         close_popup();
     });
@@ -66,13 +73,13 @@ jQuery(document).ready(function($) {
             ).done(function(data, status) {
                 if (status == 'success') {
                     if (data == 'success') {//user logged in successfully
-                        alert('logged in!');
+                        var step = 'enrollment';
+                        open_popup(step, $('.apply-button.login').attr('data-course-id'));
                     } else {//show some error
                         $('.validation_errors').html(cp_vars.message_login_error);
                         validate_mark_error_field('cp_popup_username');
                         validate_mark_error_field('cp_popup_password');
-                        var step = $('.cp_popup_content [name="signup-next-step"]').val();
-                        open_popup(step, $('#data-course-id').attr('data-course-id'));
+
                     }
                 }
             });
@@ -151,7 +158,6 @@ jQuery(document).ready(function($) {
                                                 } else {//valid data, continue with submit
                                                     var step = $('.cp_popup_content [name="signup-next-step"]').val();
                                                     open_popup(step, $('#data-course-id').attr('data-course-id'), $('#popup_signup_form').serialize());
-                                                    //console.log($('#popup_signup_form').serialize());
                                                 }
                                             }
                                         }
