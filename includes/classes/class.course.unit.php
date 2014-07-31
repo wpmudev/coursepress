@@ -245,6 +245,7 @@ if ( !class_exists('Unit') ) {
         }
 
         function get_unit_page_name( $page_number ) {
+			cp_write_log($this->details->page_title);
             return ! empty( $this->details->page_title ) ? $this->details->page_title[( int ) ($page_number - 1)] : '';
         }
 
