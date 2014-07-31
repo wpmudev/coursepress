@@ -1,73 +1,80 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function($) {
     /* Signup */
-    jQuery('button.apply-button.signup, .cp_signup_step').live('click', function(e) {
+    $('button.apply-button.signup, .cp_signup_step').live('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        open_popup('signup', jQuery(this).attr('data-course-id'));
+        open_popup('signup', $(this).attr('data-course-id'));
     });
     
     /* Login */
     
-    jQuery('.cp_login_step').live('click', function(e) {
+    $('.cp_login_step').live('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        open_popup('login', jQuery(this).attr('data-course-id'));
+        open_popup('login', $(this).attr('data-course-id'));
     });
    
-    jQuery('.cp_popup_close_button').click(function(e) {//.cp_popup_overall, 
+    $('.cp_popup_close_button').click(function(e) {//.cp_popup_overall, 
         close_popup();
     });
 
     function open_popup(step, course_id) {
         cp_popup_load_content(step, course_id);
-        jQuery("body > div").not(jQuery(".cp_popup_window")).addClass('cp_blur');
-        jQuery('.cp_popup_overall').show();
-        jQuery('.cp_popup_window').show();
+        $("body > div").not($(".cp_popup_window")).addClass('cp_blur');
+        $('.cp_popup_overall').show();
+		$('.cp_popup_window').center();
+        $('.cp_popup_window').show();
+		
     }
 
     function close_popup() {
-        jQuery("body > div").not(jQuery(".cp_popup_window")).removeClass('cp_blur');
-        jQuery('.cp_popup_overall').hide();
-        jQuery('.cp_popup_window').hide();
+        $("body > div").not($(".cp_popup_window")).removeClass('cp_blur');
+        $('.cp_popup_overall').hide();
+        $('.cp_popup_window').hide();
     }
 
     function cp_popup_load_content(step, course_id) {
-        jQuery('.cp_popup_loading').show();
-        jQuery('.cp_popup_content').html('');
-        jQuery.post(
+        $('.cp_popup_loading').show();
+        $('.cp_popup_content').html('');
+        $.post(
                 cp_vars.admin_ajax_url, {
-                    action: 'cp_popup_step',
+                    action: 'cp_popup_signup',
                     course_id: course_id,
                     step: step
                 }
         ).done(function(data, status) {
             if (status == 'success') {
-                jQuery('.cp_popup_content').html(data);
-                jQuery('.cp_popup_loading').hide();
+				$('.cp_popup_content').html(data);
+				$('.cp_popup_window').autoHeight();
+				$('.cp_popup_window').center();
+                $('.cp_popup_loading').hide();
             } else {
             }
         }).fail(function(data) {
         });
     }
-});
+	
+	// Extend jQuery with $.center() function to center elements in the middle of the screen
+	jQuery.fn.center = function() {
+		this.css( 'position', 'fixed' );
+		this.css( 'top', ( $( window ).height() / 2 ) - ( this.outerHeight() / 2 ) );
+	    this.css( 'left', ( $( window ).width() / 2 ) - ( this.outerWidth() / 2 ) );
+	    return this;
+	}
 
-jQuery(document).ready(function() {
-
-    jQuery('.cp_popup_window').css({
-        position: 'absolute',
-        left: (jQuery('#wpcontent').width() - jQuery('.cp_popup_window').outerWidth()) / 2,
-        top: (jQuery(window).height() - jQuery('.cp_popup_window').outerHeight()) / 2
-    });
-
-    jQuery(window).resize(function() {
-        jQuery('.cp_popup_window').css({
-            position: 'absolute',
-            left: (jQuery(window).width() - jQuery('.cp_popup_window').outerWidth()) / 2,
-            top: (jQuery(window).height() - jQuery('.cp_popup_window').outerHeight()) / 2
-        });
-        jQuery(".cp_popup_overall").height(jQuery(document).height());
-    });
-
-    jQuery(".cp_popup_overall").height(jQuery(document).height());
-    jQuery(window).resize();
+	// Extend jQuery with $.autoHeight() function to adjust the height of an element to its contents.
+	jQuery.fn.autoHeight = function() {
+		var new_height = $($( this ).find('*').last()).position().top + $($( this ).find('*').last()).outerHeight();
+		this.css( 'height', new_height );
+		return this;
+	}
+	
+	// When the window scrolls, make sure we keep the popup in the center.
+	$( window ).resize( function() {
+		$('.cp_popup_window').center();
+		$(".cp_popup_overall").height($(document).height());
+	});
+	
+	$(".cp_popup_overall").height($(document).height());
+	
 });

@@ -139,9 +139,9 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
-                add_action('wp_ajax_cp_popup_step', array( &$this, 'popup_step' ));
+                add_action('wp_ajax_cp_popup_signup', array( &$this, 'popup_signup' ));
 
-                add_action('wp_ajax_nopriv_cp_popup_step', array( &$this, 'popup_step' ));
+                add_action('wp_ajax_nopriv_cp_popup_signup', array( &$this, 'popup_signup' ));
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
@@ -323,12 +323,31 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
-        function popup_step() {
+		// Popup Signup Process
+		function popup_signup() {
+			
+			$signup_steps = apply_filters( 'coursepress_signup_steps', array(
+				'login' => array(
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php';
+				),
+				'signup' => array(
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php';
+				),
+			) );
+			
+			array_merge( $signup_steps, array(
+				'success' => array(
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php';
+				),
+			));
+			
+			
             if ( isset($_POST['step']) ) {
                 include($this->plugin_dir . 'includes/templates/popup-window-' . $_POST['step'] . '.php');
                 exit;
             }
-        }
+			
+		}
 
         function flush_rules() {
             global $wp_rewrite;
