@@ -2307,7 +2307,9 @@ if ( !class_exists('CoursePress') ) {
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ));
             wp_localize_script('enrollment_process', 'cp_vars', array(
-                'admin_ajax_url' => admin_url('admin-ajax.php')
+                'admin_ajax_url' => admin_url('admin-ajax.php'),
+                'message_all_fields_are_required' => __('All fields are required', 'cp'),
+                'message_username_minimum_length' => __('Username must be at least 4 characters in length', 'cp')
             ));
             //admin_url('admin-ajax.php')
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));

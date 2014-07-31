@@ -135,3 +135,12 @@ label.cp_popup_col_2.second-child{
 .cp_popup_required{
     font-size: 16px;
 }
+
+.validation_errors{
+    font-weight: normal;
+    color: #d0021b;
+}
+
+.cp_error_field{
+    border-color: #d0021b !important;
+}
