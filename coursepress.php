@@ -321,33 +321,85 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+			
         }
 
 		// Popup Signup Process
 		function popup_signup() {
 			
+			$ajax_response = array();
+				
+			$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+			$is_paid = get_post_meta( $course_id, 'paid_course', true );
+			$is_paid = $is_paid && 'on' == $is_paid ? true : false;
+			
+			// If its a paid course, add the extra steps
+			if ( $is_paid ) {
+				add_filter( 'coursepress_signup_steps', array( &$this, 'popup_signup_payment' ) );
+			}
+			
+			// cp_write_log( $_POST );
+			
 			$signup_steps = apply_filters( 'coursepress_signup_steps', array(
 				'login' => array(
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php';
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
 				),
 				'signup' => array(
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php';
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
 				),
 			) );
 			
-			array_merge( $signup_steps, array(
+			$signup_steps = array_merge( $signup_steps, array(
 				'success' => array(
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php';
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
 				),
 			));
-			
-			
+						
             if ( isset($_POST['step']) ) {
-                include($this->plugin_dir . 'includes/templates/popup-window-' . $_POST['step'] . '.php');
+				
+				ob_start();
+					include( $signup_steps[ $_POST['step'] ]['template'] );
+				$html = ob_get_clean();
+				
+				$ajax_response['html'] = $html;
+				$ajax_response['current_step'] = $_POST['step'];
+				$ajax_response['all_steps'] = array_keys( $signup_steps );
+				
+                $response = array(
+                    'what' => 'instructor_invite',
+                    'action' => 'instructor_invite',
+                    'id' => 1, // success status
+                    'data' => json_encode($ajax_response),
+                );
+                $xmlResponse = new WP_Ajax_Response($response);
+                $xmlResponse->send();
+				
                 exit;
             }
 			
 		}
+		
+		// Add Payment Steps to Signup Process
+		function popup_signup_payment( $signup_steps ) {
+			
+			$payment_steps = array(
+				'payment_checkout' => array(
+					'template' => '',
+				),
+				'payment_confirmed' => array(
+					'template' => '',
+				),
+				'payment_pending' => array(
+					'template' => '',
+				),
+			);
+			
+			$signup_steps = array_merge( $signup_steps, $payment_steps );
+			
+		    return $signup_steps;
+		}
+		// add_filter( 'coursepress_signup_steps', 'popup_signup_payment' );  in __construct for now, needs conditional check
+		
 
         function flush_rules() {
             global $wp_rewrite;
