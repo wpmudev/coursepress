@@ -81,6 +81,9 @@ label.cp_popup_col_2.second-child{
 .cp_popup_window label input[type="text"],
 .cp_popup_window label input[type="password"]{
     width: 96%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .cp_popup_window label{
@@ -139,8 +142,36 @@ label.cp_popup_col_2.second-child{
 .validation_errors{
     font-weight: normal;
     color: #d0021b;
+    margin-bottom: 10px;
+    position: relative;
 }
 
 .cp_error_field{
-    border-color: #d0021b !important;
+    //border-color: #d0021b !important;
+    border: none !important;
+    border: 1px solid #d0021b !important;
+}
+
+.cp_popup_col_2 input.cp_error_field{
+    background-image:url(../images/popup-validate-incorrect.png);
+    background-repeat:no-repeat;
+    background-position: 95.9% 11px;
+}
+
+.cp_popup_col_1 input.cp_error_field{
+    background-image:url(../images/popup-validate-incorrect.png);
+    background-repeat:no-repeat;
+    background-position: 98.1% 11px;
+}
+
+.cp_popup_col_2 input.cp_no_error_field{
+    background-image:url(../images/popup-validate-correct.png);
+    background-repeat:no-repeat;
+    background-position: 95.9% 11px;
+}
+
+.cp_popup_col_1 input.cp_no_error_field{
+    background-image:url(../images/popup-validate-correct.png);
+    background-repeat:no-repeat;
+    background-position: 98.1% 11px;
 }

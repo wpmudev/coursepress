@@ -143,6 +143,18 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_nopriv_cp_popup_signup', array( &$this, 'popup_signup' ));
 
+                add_action('wp_ajax_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ));
+
+                add_action('wp_ajax_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ));
+
+                add_action('wp_ajax_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ));
+
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
@@ -321,80 +333,123 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
-			
         }
 
-		// Popup Signup Process
-		function popup_signup( $step = false ) {
-			
-			if( ! $step && isset( $_POST['step'] ) ) {
-				$step = $_POST['step'];
-			}
-			
-			$ajax_response = array();
-				
-			$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
-			$is_paid = get_post_meta( $course_id, 'paid_course', true );
-			$is_paid = $is_paid && 'on' == $is_paid ? true : false;
-			
-			// If its a paid course, add the extra steps
-			if ( $is_paid ) {
-				add_filter( 'coursepress_signup_steps', array( &$this, 'popup_signup_payment' ) );
-			}
-			
-			// cp_write_log( $_POST );
-			$signup_steps = apply_filters( 'coursepress_signup_steps', array(
-				'login' => array(
-					'action' => 'template',
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
-					'on_success' => 'process_login',
-				),
-				'process_login' => array(
-					'action' => 'callback',
-					'callback' => array( &$this, 'signup_login_user' ),
-					'on_success' => 'enrollment',
-				),
-				'signup' => array(
-					'action' => 'template',
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
-					'on_success' => 'process_signup',
-				),
-				'process_signup' => array(
-					'action' => 'callback',
-					'callback' => array( &$this, 'signup_create_user' ),
-					'on_success' => 'enrollment',
-				),				
-				'enrollment' => array(
-					'action' => 'callback',
-					'callback' => array( &$this, 'signup_enroll_student' ),
-					'on_success' => 'success-enrollment',
-				),
-			) );
-			
-			$signup_steps = array_merge( $signup_steps, array(
-				'success-enrollment' => array(
-					'action' => 'template',
-					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
-					'on_success' => 'done',
-				),
-			));
-						
-            if ( !empty( $step ) ) {
+        function cp_popup_login_user() {
 
-				if ( 'template' == $signup_steps[ $step ]['action'] ) {
-					ob_start();
-						include( $signup_steps[ $step ]['template'] );
-					$html = ob_get_clean();
-					$ajax_response['html'] = $html;
-				} elseif ( 'callback' == $signup_steps[ $step ]['action'] ) {
-					$classname = get_class( $signup_steps[ $step ]['callback'][0] );
-					$method = $signup_steps[ $step ]['callback'][1];
-					call_user_func( $classname . '::' . $method );
-				}
+            $creds = array();
+            $creds['user_login'] = $_POST['username'];
+            $creds['user_password'] = $_POST['password'];
+            $creds['remember'] = true;
 
-				$ajax_response['current_step'] = $step;
-				$ajax_response['next_step'] = $signup_steps[ $step ]['on_success'];
-				$ajax_response['all_steps'] = array_keys( $signup_steps );
+            $user = wp_signon($creds, false);
+
+            if ( is_wp_error($user) ) {
+                echo 'failed';
+            } else {
+                echo 'success';
+            }
+            exit;
+        }
+
+        function cp_popup_user_exists() {
+            if ( isset($_POST['username']) ) {
+                if ( !validate_username($_POST['username']) ) {//username is not valid
+                    echo 1;
+                    exit;
+                }
+                echo username_exists($_POST['username']);
+                exit;
+            }
+        }
+
+        function cp_popup_email_exists() {
+            if ( isset($_POST['email']) ) {
+                if ( !is_email($_POST['email']) ) {//username is not valid
+                    echo 1;
+                    exit;
+                }
+                echo email_exists($_POST['email']);
+                exit;
+            }
+        }
+
+        // Popup Signup Process
+        function popup_signup( $step = false, $args = array() ) {
+
+            if ( !$step && isset($_POST['step']) ) {
+                $step = $_POST['step'];
+            }
+
+            $ajax_response = array();
+
+            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+
+            $is_paid = get_post_meta($course_id, 'paid_course', true);
+            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
+
+            // If its a paid course, add the extra steps
+            if ( $is_paid ) {
+                add_filter('coursepress_signup_steps', array( &$this, 'popup_signup_payment' ));
+            }
+
+            // cp_write_log( $_POST );
+            $signup_steps = apply_filters('coursepress_signup_steps', array(
+                'login' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
+                    'on_success' => 'process_login',
+                ),
+                'process_login' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_login_user' ),
+                    'on_success' => 'enrollment',
+                ),
+                'signup' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
+                    'on_success' => 'process_signup',
+                ),
+                'process_signup' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_create_user' ),
+                    'on_success' => 'enrollment',
+                ),
+                'enrollment' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_enroll_student', $args ),
+                    'on_success' => 'success-enrollment',
+                ),
+            ));
+
+            $signup_steps = array_merge($signup_steps, array(
+                'success-enrollment' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
+                    'on_success' => 'done',
+                ),
+            ));
+
+            if ( !empty($step) ) {
+                if ( 'template' == $signup_steps[$step]['action'] ) {
+                    ob_start();
+                    include( $signup_steps[$step]['template'] );
+                    $html = ob_get_clean();
+                    $ajax_response['html'] = $html;
+                } elseif ( 'callback' == $signup_steps[$step]['action'] ) {
+                    $classname = get_class($signup_steps[$step]['callback'][0]);
+                    $method = $signup_steps[$step]['callback'][1];
+
+                    if ( isset($signup_steps[$step]['callback'][2]) ) {//args
+                        call_user_func($classname . '::' . $method, $signup_steps[$step]['callback'][2]);
+                    } else {
+                        call_user_func($classname . '::' . $method);
+                    }
+                }
+
+                $ajax_response['current_step'] = $step;
+                $ajax_response['next_step'] = $signup_steps[$step]['on_success'];
+                $ajax_response['all_steps'] = array_keys($signup_steps);
 
                 $response = array(
                     'what' => 'instructor_invite',
@@ -404,60 +459,100 @@ if ( !class_exists('CoursePress') ) {
                 );
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
-			
+
                 exit;
-				
             }
-			
-		}
+        }
 
-		function signup_login_user() {
-			cp_write_log( 'logging in....' );
-			
-			// Handle login stuff
-			$this->popup_signup( 'enrollment' );
-		}
+        function signup_login_user() {
+            cp_write_log('logging in....');
 
-		function signup_create_user() {
-			cp_write_log( 'creating user....' );
-			
-			// Handle creation stuff
-			
-			$this->popup_signup( 'enrollment' );
-		}
-		
-		function signup_enroll_student() {
-			cp_write_log( 'enrolling user (or passing them on to payment)....' );
-			
-			// Handle enrolment stuff
+            // Handle login stuff
+            $this->popup_signup('enrollment');
+        }
 
-			$this->popup_signup( 'success-enrollment' );
-			
-			// popup_signup( 'payment_checkout' );
-			
-		}
-		
-		// Add Payment Steps to Signup Process
-		function popup_signup_payment( $signup_steps ) {
-			
-			$payment_steps = array(
-				'payment_checkout' => array(
-					'template' => '',
-				),
-				'payment_confirmed' => array(
-					'template' => '',
-				),
-				'payment_pending' => array(
-					'template' => '',
-				),
-			);
-			
-			$signup_steps = array_merge( $signup_steps, $payment_steps );
-			
-		    return $signup_steps;
-		}
-		// add_filter( 'coursepress_signup_steps', 'popup_signup_payment' );  in __construct for now, needs conditional check
-		
+        function signup_create_user() {
+            cp_write_log('creating user....');
+
+            parse_str($_POST['data'], $posted_data);
+
+            if ( wp_verify_nonce($posted_data['submit_signup_data'], 'popup_signup_nonce') ) {
+
+                $student = new Student(0);
+                $student_data = array();
+
+                $student_data['role'] = 'subscriber';
+                $student_data['user_login'] = $posted_data['username'];
+                $student_data['user_pass'] = $posted_data['cp_popup_password'];
+                $student_data['user_email'] = $posted_data['email'];
+                $student_data['first_name'] = $posted_data['student_first_name'];
+                $student_data['last_name'] = $posted_data['student_last_name'];
+
+                $student_id = $student->add_student($student_data);
+
+                if ( $student_id !== 0 ) {
+
+                    $email_args['email_type'] = 'student_registration';
+                    $email_args['student_id'] = $student_id;
+                    $email_args['student_email'] = $student_data['user_email'];
+                    $email_args['student_first_name'] = $student_data['first_name'];
+                    $email_args['student_last_name'] = $student_data['last_name'];
+
+                    coursepress_send_email($email_args);
+
+                    $creds = array();
+                    $creds['user_login'] = $student_data['user_login'];
+                    $creds['user_password'] = $student_data['user_pass'];
+                    $creds['remember'] = true;
+
+                    $user = wp_signon($creds, false);
+
+                    $args['student_id'] = $student_id;
+                    $args['course_id'] = $posted_data['course_id'];
+
+                    $this->popup_signup('enrollment', $args);
+                    exit;
+                }
+            }
+        }
+
+        function signup_enroll_student( $args ) {
+            cp_write_log('enrolling user (or passing them on to payment)....');
+            // Handle enrolment stuff
+            if ( isset($args['course_id']) ) {
+                $student = new Student($args['student_id']);
+                $student->enroll_in_course(( int ) $args['course_id']);
+
+                //show success message
+                $this->popup_signup('success-enrollment', $args);
+                // popup_signup( 'payment_checkout' );
+            } else {
+                //echo 'not enrolled!';
+            }
+        }
+
+        // Add Payment Steps to Signup Process
+        function popup_signup_payment( $signup_steps ) {
+
+            $payment_steps = array(
+                'payment_checkout' => array(
+                    'template' => '',
+                ),
+                'payment_confirmed' => array(
+                    'template' => '',
+                ),
+                'payment_pending' => array(
+                    'template' => '',
+                ),
+            );
+
+            $signup_steps = array_merge($signup_steps, $payment_steps);
+
+            return $signup_steps;
+        }
+
+        // add_filter( 'coursepress_signup_steps', 'popup_signup_payment' );  in __construct for now, needs conditional check
+
 
         function flush_rules() {
             global $wp_rewrite;
@@ -2366,8 +2461,15 @@ if ( !class_exists('CoursePress') ) {
             wp_enqueue_script('enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ));
             wp_localize_script('enrollment_process', 'cp_vars', array(
                 'admin_ajax_url' => admin_url('admin-ajax.php'),
-                'message_all_fields_are_required' => __('All fields are required', 'cp'),
-                'message_username_minimum_length' => __('Username must be at least 4 characters in length', 'cp')
+                'message_all_fields_are_required' => __('All fields are required.', 'cp'),
+                'message_username_minimum_length' => __('Username must be at least 4 characters in length', 'cp'),
+                'message_username_exists' => __('Username already exists or invalid. Please choose another one.'),
+                'message_email_exists' => __('E-mail already exists or invalid. Please choose another one.'),
+                'message_emails_dont_match' => __("E-mails mismatch."),
+                'message_passwords_dont_match' => __("Passwords mismatch."),
+                'message_password_minimum_length' => sprintf(__('Password must be at least %d characters in length.', 'cp'), apply_filters('cp_min_password_length', 6)),
+                'minimum_password_lenght' => apply_filters('cp_min_password_length', 6),
+                'message_login_error' => __('Username and/or password is not valid.', 'cp'),
             ));
             //admin_url('admin-ajax.php')
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
