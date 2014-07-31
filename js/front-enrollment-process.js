@@ -1,4 +1,20 @@
 jQuery(document).ready(function($) {
+	
+	// Functions/handlers to apply to newly loaded content.
+	function init_popup( element ) {
+		$ = jQuery;
+	
+		$('.cp_popup_content .apply-button').click( function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var step = $('.cp_popup_content [name="signup-next-step"]').val();
+			open_popup( step , $(this).attr('data-course-id'));
+		});
+	
+	}
+	
+	
     /* Signup */
     $('button.apply-button.signup, .cp_signup_step').live('click', function(e) {
         e.preventDefault();
@@ -17,6 +33,7 @@ jQuery(document).ready(function($) {
     $('.cp_popup_close_button').click(function(e) {//.cp_popup_overall, 
         close_popup();
     });
+
 
     function open_popup(step, course_id) {
         cp_popup_load_content(step, course_id);
@@ -40,7 +57,7 @@ jQuery(document).ready(function($) {
                 cp_vars.admin_ajax_url, {
                     action: 'cp_popup_signup',
                     course_id: course_id,
-                    step: step
+                    step: step,
                 }
         ).done(function(data, status) {
             if (status == 'success') {
@@ -49,6 +66,8 @@ jQuery(document).ready(function($) {
 				if( response ) {
 					console.log( response );
 					$('.cp_popup_content').html(response.html);
+					$('.cp_popup_content [name="signup-next-step"]').val( response.next_step );
+					init_popup( $('.cp_popup_content') );
 					$('.cp_popup_window').autoHeight();
 					$('.cp_popup_window').center();
 	                $('.cp_popup_loading').hide();
