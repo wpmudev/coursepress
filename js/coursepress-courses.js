@@ -168,6 +168,13 @@ jQuery(document).ready(function()
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
         wp.media.editor.open(this);
@@ -177,7 +184,7 @@ jQuery(document).ready(function()
 
 /* Native WP media browser for video module (unit module) */
 
-jQuery(document).ready(function()
+jQuery(document).ready(function($)
 {
     jQuery('.video_url_button').live('click', function()
     {
@@ -185,6 +192,13 @@ jQuery(document).ready(function()
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
 
@@ -198,11 +212,25 @@ jQuery(document).ready(function()
 
         wp.media.string.props = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(props.url);
         }
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
 
@@ -222,6 +250,25 @@ jQuery(document).ready(function()
         var target_url_field = jQuery(this).prevAll(".file_url:first");
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            jQuery(target_url_field).val(attachment.url);
+        };
+        wp.media.editor.open(this);
+        return false;
+    });
+
+    jQuery('.image_url_button').live('click', function()
+    {
+
+        var target_url_field = jQuery(this).prevAll(".image_url:first");
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
         wp.media.editor.open(this);

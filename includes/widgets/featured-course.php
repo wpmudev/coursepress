@@ -79,8 +79,8 @@ class CP_Featured_Course extends WP_Widget {
 
         $course_id = $instance['course'];
         $course = new Course($course_id);
-		$selected_type = $instance['type'];
-		$selected_priority = $instance['priority'];
+		$selected_type = isset($instance['type']) ? $instance['type'] : 'image';
+		$selected_priority = isset($instance['priority']) ? $instance['priority'] : 'image';
 
         $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 

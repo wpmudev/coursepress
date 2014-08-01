@@ -453,3 +453,12 @@ a.button.button-units.button-delete-unit:hover{
     color: #fff;
     opacity: 1;
 }
+
+.invalid_extension_field{
+    border: 1px red solid !important;
+}
+
+.invalid_extension_message{
+    color: red;
+    display: none;
+}

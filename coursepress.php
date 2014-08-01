@@ -1060,13 +1060,13 @@ if ( !class_exists('CoursePress') ) {
 
               } */
 
-            if ( ! isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
+            if ( !isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
                 include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
-				if( ! isset($content_shown[$GLOBALS['post']->ID]) ) {
-	                $content_shown[$GLOBALS['post']->ID] = 1;
-				} else {
-	                $content_shown[$GLOBALS['post']->ID] ++;	
-				}
+                if ( !isset($content_shown[$GLOBALS['post']->ID]) ) {
+                    $content_shown[$GLOBALS['post']->ID] = 1;
+                } else {
+                    $content_shown[$GLOBALS['post']->ID] ++;
+                }
             }
         }
 
@@ -1650,11 +1650,11 @@ if ( !class_exists('CoursePress') ) {
                     }
 
                     $course_id = $course->update_course();
-					$mp_product_id = $course->mp_product_id();
+                    $mp_product_id = $course->mp_product_id();
 
                     $ajax_response['success'] = true;
                     $ajax_response['course_id'] = $course_id;
-					$ajax_response['mp_product_id'] = $mp_product_id;
+                    $ajax_response['mp_product_id'] = $mp_product_id;
                     $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
                     $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
                 } else {
@@ -2352,7 +2352,10 @@ if ( !class_exists('CoursePress') ) {
                     'empty_class_name' => __('Class name cannot be empty', 'cp'),
                     'duplicated_class_name' => __('Class name already exists', 'cp'),
                     'course_taxonomy_screen' => ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false ),
-                    'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1)
+                    'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1),
+                    'allowed_video_extensions' => wp_get_video_extensions(),
+                    'allowed_audio_extensions' => wp_get_audio_extensions(),
+                    'allowed_image_extensions' => wp_get_image_extensions()
                 ));
             }
         }
@@ -2992,7 +2995,7 @@ if ( !class_exists('CoursePress') ) {
             $product_id = key($purchase_order->mp_cart_info);
 
             $course_details = Course::get_course_by_marketpress_product_id($product_id);
-           
+
             if ( $course_details && !empty($course_details) ) {
                 $student = new Student($order->post_author);
                 $student->enroll_in_course($course_details->ID);

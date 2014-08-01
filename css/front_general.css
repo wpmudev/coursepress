@@ -615,10 +615,10 @@ h1.notification-title{
 }
 
 .post-type-archive-course .quick-course-info .course-cost .mp_product_price {
-	background-image: url( "../images/Assets.svg" );
-	background-position: -873px -232px;
-	background-repeat: no-repeat;
-	line-height: 0px;
+    background-image: url( "../images/Assets.svg" );
+    background-position: -873px -233px;
+    background-repeat: no-repeat;
+    line-height: 0px;
     margin-right: 0px;
     padding: 0 0 0 20px;
 }

@@ -948,6 +948,12 @@ if ( !function_exists('cp_write_log') ) {
 
 }
 
+if( !function_exists('wp_get_image_extensions')){
+    function wp_get_image_extensions(){
+        return array('jpg', 'jpeg', 'jpe',  'gif',  'png',  'bmp',   'tif',  'tiff', 'ico');
+    }
+}
+
 if ( !function_exists('is_plugin_network_active') ) {
 
     function is_plugin_network_active( $plugin_file ) {

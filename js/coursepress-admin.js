@@ -1,5 +1,15 @@
 jQuery(document).ready(function($) {
 
+    $('input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url').live('input propertychange paste change', function() {
+        if (cp_is_extension_allowed($(this).val(), $(this))) {//extension is allowed
+            $(this).removeClass('invalid_extension_field');
+            $(this).parent().find('.invalid_extension_message').hide();
+        } else {//extension is not allowed
+            $(this).addClass('invalid_extension_field');
+            $(this).parent().find('.invalid_extension_message').show();
+        }
+    });
+
     var courses_state_toggle = {
         init: function() {
             this.attachHandlers('.courses-state .control');
@@ -981,6 +991,14 @@ jQuery(document).ready(function()
             jQuery(target_url_field).val(props.url);
             jQuery('#thumbnail_id').val('');
             jQuery('#featured_url_size').val('');
+
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
         }
 
         wp.media.editor.send.attachment = function(props, attachment)
@@ -988,7 +1006,17 @@ jQuery(document).ready(function()
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
             jQuery('#featured_url_size').val(props.size);
+
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
         };
+
+
 
         wp.media.editor.open(this);
         return false;
@@ -1075,3 +1103,60 @@ jQuery(function() {
     }
 
 });
+
+function cp_is_extension_allowed(filename, type) {
+    type = jQuery(type).attr('class').split(' ')[0];
+    var extension = filename.split('.').pop();
+    var audio_extensions = coursepress.allowed_audio_extensions;
+    var video_extensions = coursepress.allowed_video_extensions;
+    var image_extensions = coursepress.allowed_image_extensions;
+
+    if(type == 'featured_url'){
+        type = 'image_url';
+    }
+    
+    if(type == 'course_video_url'){
+        type = 'video_url';
+    }
+
+    if (type == 'audio_url') {
+        if (cp_is_value_in_array(extension, audio_extensions)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if (type == 'video_url') {
+        if (cp_is_value_in_array(extension, video_extensions)) {
+            return true;
+        } else {
+            if (cp_is_valid_url(filename)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    if (type == 'image_url') {
+        if (cp_is_value_in_array(extension, image_extensions)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
+function cp_is_valid_url(str) {
+    if (str.indexOf("http://") >-1 || str.indexOf("https://") >-1) {
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function cp_is_value_in_array(value, array) {
+    return array.indexOf(value) > -1;
+}

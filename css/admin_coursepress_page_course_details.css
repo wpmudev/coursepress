@@ -1393,6 +1393,16 @@ div.levelinformation {
     margin-top: 4px;
 }
 
+.file_url_holder input.image_url{
+    width: 90%;
+}
+
+.file_url_holder input.image_url_button{
+    width: 9%;
+    float: right;
+    margin-top: 4px;
+}
+
 
 .featured_url_holder{
     margin-top: 10px;

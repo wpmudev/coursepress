@@ -24,10 +24,6 @@ class audio_module extends Unit_Module {
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
 
-            <?php //if ($data->post_content != '') { ?>  
-                        <!-- <div class="module_description"><?php // echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content));  ?></div> -->
-            <?php //} ?>
-
             <?php if ( $data->audio_url != '' ) { ?>  
                 <div class="audio_player">
                     <?php
@@ -97,25 +93,11 @@ class audio_module extends Unit_Module {
 
                 <?php echo $this->show_title_on_front_element($data); ?>
 
-        <!-- <label class="bold-label"><?php // _e('Content', 'cp');  ?></label> -->
-                <!-- <div class="editor_in_place">
-                <?php
-                // $args = array(
-                //     "textarea_name" => $this->name . "_content[]",
-                //     "textarea_rows" => 5,
-                //     "quicktags" => false,
-                //     "teeny" => true,
-                // );
-                //
-                    // $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                // wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
-                ?>
-                </div> -->
-
                 <div class="audio_url_holder">
                     <label><?php _e('Put a URL or Browse for an audio file. Supported audio extensions ( ' . $supported_audio_extensions . ' )', 'cp'); ?>
                         <input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr(( isset($data->audio_url) ? $data->audio_url : '')); ?>" />
                         <input class="audio_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_audio_extensions);?></div>
                     </label>
                 </div>
 
