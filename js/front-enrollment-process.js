@@ -5,22 +5,40 @@ jQuery(document).ready(function($) {
             window.location.href = $(this).data('link');
         }
     });
-
+	
+	// Create specific click-handlers to double check if they are already assigned
+	function signup_click( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+        validate_signup_data_and_submit();	
+	}
+	function login_click( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+        validate_login_data_and_submit();	
+	}
+	function payment_click( e ) {
+        e.preventDefault();
+        e.stopPropagation();
+        prepare_payment_data_and_submit( this );	
+	}
+	
     // Functions/handlers to apply to newly loaded content.
     function init_popup(element) {
         $ = jQuery;
+		
+		// Prevent duplicate handling by unbinding before binding... uses non-anonymous signatures
+		$( 'body' ).off( 'click', '.cp_popup_content .apply-button.login', login_click )
+		$( 'body' ).on( 'click', '.cp_popup_content .apply-button.login', login_click )
 
-        $('.cp_popup_content .apply-button.signup-data').live('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            validate_signup_data_and_submit();
-        });
+		$( 'body' ).off( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
+		$( 'body' ).on( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
 
-        $('.cp_popup_content .apply-button.login').live('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            validate_login_data_and_submit();
-        });
+		$( 'body' ).off( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
+		$( 'body' ).on( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
+		
+		$( 'body' ).off( 'click', '.cp_popup_content .popup-payment-button', payment_click )
+		$( 'body' ).on( 'click', '.cp_popup_content .popup-payment-button', payment_click )		
 
     }
 
@@ -73,7 +91,7 @@ jQuery(document).ready(function($) {
             ).done(function(data, status) {
                 if (status == 'success') {
                     if (data == 'success') {//user logged in successfully
-                        var step = 'enrollment';
+                        var step = 'process_login';
                         open_popup(step, $('.apply-button.login').attr('data-course-id'));
                     } else {//show some error
                         $('.validation_errors').html(cp_vars.message_login_error);
@@ -174,6 +192,19 @@ jQuery(document).ready(function($) {
         }
     }
 
+    function prepare_payment_data_and_submit( element ) {
+
+        var course_id  = $( element ).attr('data-course-id');
+		var course_data = {
+			product_id: $( element ).attr('data-product-id'),
+			gateway: $( element ).attr('data-gateway'),
+		}
+
+		cp_popup_load_content( 'process_payment', course_id, course_data);
+		
+    }
+
+
     function validate_mark_error_field(field) {
         $('#' + field).removeClass('cp_no_error_field');
         $('#' + field).addClass('cp_error_field');
@@ -218,7 +249,7 @@ jQuery(document).ready(function($) {
             action: 'cp_popup_signup',
             course_id: course_id,
             step: step,
-            data: data
+            data: data,
         }).done(function(data, status) {
             if (status == 'success') {
                 var response = $.parseJSON($(data).find('response_data').text());

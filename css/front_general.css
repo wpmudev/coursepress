@@ -1011,3 +1011,18 @@ embed, iframe, object, video {
     display: inline-block;
     margin-top: 10px;
 }
+
+table.popup-payment-info,
+table.popup-payment-info td,
+table.popup-payment-info th {
+	border: none;
+	text-align: left;
+}
+table.popup-payment-info th {
+	font-size:0.9em;
+}
+
+
+.popup-payment-button {
+	width: 100%;
+}

@@ -45,6 +45,9 @@ if ( !class_exists('CoursePress') ) {
         var $plugin_dir = '';
         var $plugin_url = '';
         public $marketpress_active = false;
+		
+		public static $gateway = array();
+		
 
         function __construct() {
 
@@ -157,6 +160,9 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
+
+			//Setup Gatewat Array
+			add_action('init', array( $this, 'setup_gateway_array' ) );
 
 //Output buffer hack
             add_action('init', array( &$this, 'output_buffer' ), 0);
@@ -335,6 +341,28 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
+		function setup_gateway_array() {
+			
+			$array = array(
+				'paypal-express' => array(
+					'class' => 'MP_Gateway_Paypal_Express',
+					'friendly' => __( 'Pay with PayPal', 'cp' ),
+				),
+				'manual-payments' => array(
+					'class' => 'MP_Gateway_ManualPayments',
+					'friendly' => __( 'Bank Transfer', 'cp' ),					
+				),
+				'simplify' => array(
+					'class' => 'MP_Gateway_Simplify',
+					'friendly' => __( 'Pay by Credit Card', 'cp' ),					
+				),
+			);
+			
+			CoursePress::$gateway = $array;
+		}
+
+
+
         function cp_popup_login_user() {
 
             $creds = array();
@@ -388,11 +416,6 @@ if ( !class_exists('CoursePress') ) {
             $is_paid = get_post_meta($course_id, 'paid_course', true);
             $is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
-            // If its a paid course, add the extra steps
-            if ( $is_paid ) {
-                add_filter('coursepress_signup_steps', array( &$this, 'popup_signup_payment' ));
-            }
-
             // cp_write_log( $_POST );
             $signup_steps = apply_filters('coursepress_signup_steps', array(
                 'login' => array(
@@ -404,6 +427,7 @@ if ( !class_exists('CoursePress') ) {
                     'action' => 'callback',
                     'callback' => array( &$this, 'signup_login_user' ),
                     'on_success' => 'enrollment',
+					'on_fail' => 'login',
                 ),
                 'signup' => array(
                     'action' => 'template',
@@ -420,6 +444,24 @@ if ( !class_exists('CoursePress') ) {
                     'callback' => array( &$this, 'signup_enroll_student', !empty($args) ? $args : array() ),
                     'on_success' => 'success-enrollment',
                 ),
+                'payment_checkout' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+                    'on_success' => 'process_payment',
+                ),
+                'process_payment' => array(
+                    // 'action' => 'callback',
+					'action' => 'render',
+                    // 'callback' => array( &$this, 'signup_payment_processing' ),
+					'data' => $this->signup_payment_processing(),
+                    'on_success' => 'payment_confirmed',
+                ),				
+                'payment_confirmed' => array(
+                    'template' => '',
+                ),
+                'payment_pending' => array(
+                    'template' => '',
+                ),				
             ));
 
             $signup_steps = array_merge($signup_steps, array(
@@ -445,6 +487,10 @@ if ( !class_exists('CoursePress') ) {
                     } else {
                         call_user_func($classname . '::' . $method);
                     }
+                } elseif ( 'render' == $signup_steps[$step]['action'] ) {
+					$data = $signup_steps[$step]['data'];
+                	$ajax_response['html'] = $data['html'];
+					$ajax_response['gateway'] = $data['gateway'];
                 }
 
                 $ajax_response['current_step'] = $step;
@@ -465,10 +511,9 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_login_user() {
-            cp_write_log('logging in....');
-
-            // Handle login stuff
-            $this->popup_signup('enrollment');
+			cp_write_log('logging in....');
+			// Handle login stuff
+			$this->popup_signup('enrollment');				
         }
 
         function signup_create_user() {
@@ -518,49 +563,86 @@ if ( !class_exists('CoursePress') ) {
 
         function signup_enroll_student( $args = array() ) {
             cp_write_log('enrolling user (or passing them on to payment)....');
-            // Handle enrolment stuff
 
+            // Handle enrolment stuff
             $student_id = get_current_user_id();
             $student_id = $student_id > 0 ? $student_id : $args['student_id'];
 
-            $course_id = isset($args['course_id']) ? $args['course_id'] : $_POST['course_id'];
+            $course_id = isset($args['course_id']) ? $args['course_id'] : ! empty($_POST['course_id']) ? (int) $_POST['course_id'] : false;
 
             if ( isset($course_id) ) {
+				
+	            $is_paid = get_post_meta($course_id, 'paid_course', true);
+	            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
                 $student = new Student($student_id);
                 if ( !$student->has_access_to_course($course_id) ) {//only if he don't have access already
                     $student->enroll_in_course($course_id);
                 }
                 $args['course_id'] = $course_id;
-                //show success message
-                $this->popup_signup('success-enrollment', $args);
-                // popup_signup( 'payment_checkout' );
+				
+				$this->enrollment_processed = true;
+				
+				if ( $is_paid ) {
+					// Start to use the methods in the popup_signup_payment hook
+					$this->popup_signup( 'payment_checkout', $args );	
+				} else {
+	                //show success message
+	                $this->popup_signup('success-enrollment', $args);					
+				}
+				
             } else {
                 echo 'course id not set';
             }
         }
+		
+	    function signup_payment_processing( $args = array() ) {
+            cp_write_log('processing payment....');		
+			
+			global $mp;
+			$return_data = array( 'html' => '' );
+						
+			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+			$product_id = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['product_id'] : 0;
+			$gateway = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['gateway'] : '';
+			$product = false;
+			$product_meta = false;
+				
+			// if( 0 != $product_id ){
+			// 	$product = get_post( $product_id );
+			// 	$product_meta = $mp->get_meta_details( $product_id );
+			// }
+		
 
-        // Add Payment Steps to Signup Process
-        function popup_signup_payment( $signup_steps ) {
+			// This method had a lot of promise.... but was a dead end :(
+			// $return_data['html'] = _mp_cart_payment('form');
+				
+			switch ( $gateway ) {
 
-            $payment_steps = array(
-                'payment_checkout' => array(
-                    'template' => '',
-                ),
-                'payment_confirmed' => array(
-                    'template' => '',
-                ),
-                'payment_pending' => array(
-                    'template' => '',
-                ),
-            );
+				case 'paypal-express':
 
-            $signup_steps = array_merge($signup_steps, $payment_steps);
+					break;
 
-            return $signup_steps;
-        }
+				default:
 
-        // add_filter( 'coursepress_signup_steps', 'popup_signup_payment' );  in __construct for now, needs conditional check
+					break;
+			}
+			
+			// If successful... get payment status (pending if waiting for IPN) and redirect accordingly...
+			
+			// $this->popup_signup('payment_confirmed');
+			// $this->popup_signup('payment_pending');
+			// others if needed
+			
+			// TODO: Use above commented methods and turn this back into a callback (not 'render')
+			//       Or create some logic below and return some html... to deal with on frontend
+			
+			// $return_data['html'] = something_to_render_or_template();
+			// $return_data['gateway'] = $gateway;
+			
+			
+			return $return_data;
+		}
 
 
         function flush_rules() {
