@@ -19,6 +19,8 @@
         <?php wp_nonce_field('popup_login_nonce', 'submit_login_data'); ?>
         <div class="validation_errors"></div>
 
+        <input type="hidden" name="data-course-id" id="data-course-id" value="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>" />
+        
         <label class="cp_popup_col_2">
             <a href="" class="cp_signup_step" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>"><?php _e('Create an Account', 'cp'); ?></a>
         </label>

@@ -1,6 +1,6 @@
 <form id="popup_signup_form">
     <div class="cp_popup_title"><?php _e('Sign Up', 'cp'); ?></div>
-    <input type="hidden" name="signup-next-step" value="" />
+    <input type="hidden" name="signup-next-step" value="enrollment" />
     <p class="cp_popup_required"><?php _e('All fields are required'); ?></p>
 
     <label class="cp_popup_col_2">

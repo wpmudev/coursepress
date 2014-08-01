@@ -2,11 +2,14 @@
 
 /* MarketPress customizations */
 
-add_filter('mp_checkout_step_url', 'mp_checkout_step_url');
+add_filter('mp_checkout_step_url', 'mp_checkout_step_url', 10, 1);
 
 function mp_checkout_step_url($step){
+    $url = '';
     if($step == 'shipping'){
         $url = mp_cart_link(false, true) . trailingslashit('checkout');//skip shipping step
+    }else{
+        $url = $step;
     }
     return $url;
 }
