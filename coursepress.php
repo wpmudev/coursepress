@@ -2992,10 +2992,10 @@ if ( !class_exists('CoursePress') ) {
             $product_id = key($purchase_order->mp_cart_info);
 
             $course_details = Course::get_course_by_marketpress_product_id($product_id);
-
+           
             if ( $course_details && !empty($course_details) ) {
                 $student = new Student($order->post_author);
-                $student->enroll_in_course($course->details->ID);
+                $student->enroll_in_course($course_details->ID);
             }
         }
 
