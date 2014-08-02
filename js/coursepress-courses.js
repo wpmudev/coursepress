@@ -1367,8 +1367,34 @@ jQuery(document).ready(function($) {
     if ($('[name="section_dirty"]')) {
         mark_dirty($('[name="section_dirty"]'));
     }
+	
+
+	// Attempt at preview redirect
+	// // Phase 1: Redirect if 'Preview' triggered a save.
+	// if ( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'yes' ) {
+	// 	alert('reload: yes');
+	// 	// Now proceed with normal click.
+	// 	$('.unit-control-buttons .button-preview').attr( 'href', $('.unit-control-buttons .button-preview').attr('data-href') );
+	// 	$('.unit-control-buttons .button-preview').click();
+	// 	$('[name="preview_redirect"]').val('no');
+	// } else if ( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'no' ) {
+	// 	$('.unit-control-buttons .button-preview').removeAttr( 'href' );
+	// }
+	//
+	// // $('.unit-control-buttons .button-preview').off();
+	// // Phase 2: Preview clicked, so save the unit first.
+	// $('.unit-control-buttons .button-preview').click( function( e ) {
+	// 	if( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'no' ) {
+	// 		alert('click: no');
+	// 		e.stopPropagation();
+	// 		$('[name="preview_redirect"]').first().val('yes');
+	// 		$('.unit-control-buttons .save-unit-button').first().click();
+	// 	}
+	// });
+		
 
 });
+
 
 
 jQuery(document).ready(function($) {

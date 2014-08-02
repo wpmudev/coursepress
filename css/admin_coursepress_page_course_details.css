@@ -506,7 +506,7 @@ div.buttons a.cancellink {
     cursor: auto !Important;
 }
 
-.coursepress_page_course_details .unit-control-buttons a.button.button-preview {
+.coursepress_page_course_details .unit-control-buttons .button.button-preview {
     position:relative;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -514,7 +514,7 @@ div.buttons a.cancellink {
     -ms-filter: none;
     filter: none;
 }
-.coursepress_page_course_details .unit-control-buttons a.button.button-preview:after {
+.coursepress_page_course_details .unit-control-buttons .button.button-preview:after {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -534,7 +534,7 @@ div.buttons a.cancellink {
     height: 27px;
 }
 
-.coursepress_page_course_details .section.static .unit-control-buttons a.button.button-preview:after {
+.coursepress_page_course_details .section.static .unit-control-buttons .button.button-preview:after {
     background: #0074A2;	
 }
 
@@ -2356,7 +2356,7 @@ ol.tree input[type=checkbox], ol.tree input[type=radio]{
 
 .tree .tree-unit-left{
     display: inline-block;
-    width: 58.5%;
+    width: 57%;
     text-overflow:ellipsis;
     white-space: nowrap;
     overflow: hidden;

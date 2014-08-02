@@ -59,7 +59,7 @@
 		padding: 4px 14px 6px 14px;
 	}	
 	
-	.unit-control-buttons a.button.button-preview {
+	.unit-control-buttons .button.button-preview {
 		height: 31px;
 	    margin: 3px 0 4px;
 	}	
@@ -123,7 +123,7 @@
 	.unit-control-buttons input[type="submit"].button.button-units,
 	.unit-control-buttons a.button.button-publish,
 	.unit-control-buttons a.button.button-unpublish,
-	.unit-control-buttons a.button.button-preview,
+	.unit-control-buttons .button.button-preview,
 	.unit-control-buttons a.button.button-settings{
 	    width: 100px;
 	}
