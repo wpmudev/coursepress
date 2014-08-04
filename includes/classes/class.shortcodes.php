@@ -954,6 +954,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $course->prerequisite = get_post_meta($course_id, 'prerequisite', true);
 
             $course_active = true; // NEED CHECK HERE
+			
+            $is_paid = get_post_meta($course_id, 'paid_course', true);
+            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
             $course_started = strtotime($course->course_start_date) <= time() ? true : false;
             $enrollment_started = strtotime($course->enrollment_start_date) <= time() ? true : false;
@@ -1056,7 +1059,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // No passcodes, so lets join.
                     } else {
                         // ENROLL
-                        $button .= '<input type="submit" class="apply-button ' . $class . '" value="' . $enroll_text . '" />';
+						// if ( $is_paid ) {
+						//                             $button_url = $signup_url;
+                            $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="'.$course_id.'" class="apply-button enroll' . $class . '">' . $enroll_text . '</button>';
+						// } else {
+						// 	                        $button .= '<input type="submit" class="apply-button ' . $class . '" value="' . $enroll_text . '" />';
+						// }
+						
                         $is_form = true;
                         // cp_write_log( 'FOURTEEN');	
                     }

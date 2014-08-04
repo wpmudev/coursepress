@@ -1,7 +1,15 @@
 <?php
 	global $coursepress;
 	global $mp;
-	$course_id = $args['course_id'];
+	$course_id = 0;
+	if ( ! empty ( $args ) ) {
+		$course_id = $args['course_id'];		
+	} else {
+		if( isset( $_REQUEST['course_id'] ) ) {
+			$course_id = (int) $_REQUEST['course_id'];		
+		}
+	}
+
 	$course = new Course($course_id);
 	$product_id = $course->mp_product_id();
 

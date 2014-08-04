@@ -441,7 +441,7 @@ if ( !class_exists('CoursePress') ) {
                 ),
                 'enrollment' => array(
                     'action' => 'callback',
-                    'callback' => array( &$this, 'signup_enroll_student', !empty($args) ? $args : array() ),
+                    'callback' => array( &$this, 'signup_enroll_student', $args ),
                     'on_success' => 'success-enrollment',
                 ),
                 'payment_checkout' => array(
@@ -462,6 +462,10 @@ if ( !class_exists('CoursePress') ) {
                 'payment_pending' => array(
                     'template' => '',
                 ),				
+                'redirect_to_course' => array(
+                    'action' => 'redirect',
+                    'url' => get_permalink( $course_id ) . '/units' . '/',
+                ),
             ));
 
             $signup_steps = array_merge($signup_steps, array(
@@ -491,6 +495,8 @@ if ( !class_exists('CoursePress') ) {
 					$data = $signup_steps[$step]['data'];
                 	$ajax_response['html'] = $data['html'];
 					$ajax_response['gateway'] = $data['gateway'];
+                } elseif( 'redirect' == $signup_steps[$step]['action'] ) {
+					$ajax_response['redirect_url'] = $signup_steps[$step]['url'];
                 }
 
                 $ajax_response['current_step'] = $step;
@@ -567,28 +573,39 @@ if ( !class_exists('CoursePress') ) {
             // Handle enrolment stuff
             $student_id = get_current_user_id();
             $student_id = $student_id > 0 ? $student_id : $args['student_id'];
+			$course_id = false;
+			if ( !empty( $args ) ) {
+				$course_id = isset($args['course_id']) ? $args['course_id'] : false;
+			} else {
+				$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
+			}
 
-            $course_id = isset($args['course_id']) ? $args['course_id'] : ! empty($_POST['course_id']) ? (int) $_POST['course_id'] : false;
-
-            if ( isset($course_id) ) {
+            if ( isset($course_id) ) {	
 				
 	            $is_paid = get_post_meta($course_id, 'paid_course', true);
 	            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
-
-                $student = new Student($student_id);
-                if ( !$student->has_access_to_course($course_id) ) {//only if he don't have access already
-                    $student->enroll_in_course($course_id);
-                }
-                $args['course_id'] = $course_id;
 				
-				$this->enrollment_processed = true;
+				$student = new Student($student_id);
+				$existing_student = $student->has_access_to_course($course_id);
 				
-				if ( $is_paid ) {
+				// If it is a paid course we have a different path.
+				if ( $is_paid && ! $existing_student ) {
 					// Start to use the methods in the popup_signup_payment hook
 					$this->popup_signup( 'payment_checkout', $args );	
-				} else {
+					return;
+				}
+
+                if ( ! $existing_student ) {//only if he don't have access already
+                    $student->enroll_in_course($course_id);
+                
+	                $args['course_id'] = $course_id;
+				
+					$this->enrollment_processed = true;
+				
 	                //show success message
 	                $this->popup_signup('success-enrollment', $args);					
+				} else {
+					$this->popup_signup('redirect_to_course');
 				}
 				
             } else {

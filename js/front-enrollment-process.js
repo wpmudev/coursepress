@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-    $('.apply-button-green').live('click', function(event) {
+    $('.apply-button.enroll-success').live('click', function(event) {
         if ($(this).data('link')) {
             window.location.href = $(this).data('link');
         }
@@ -25,7 +25,6 @@ jQuery(document).ready(function($) {
 	
     // Functions/handlers to apply to newly loaded content.
     function init_popup(element) {
-        $ = jQuery;
 		
 		// Prevent duplicate handling by unbinding before binding... uses non-anonymous signatures
 		$( 'body' ).off( 'click', '.cp_popup_content .apply-button.login', login_click )
@@ -48,8 +47,14 @@ jQuery(document).ready(function($) {
         e.stopPropagation();
         open_popup('signup', $(this).attr('data-course-id'));
     });
-
-
+	
+    /* Enroll (logged in users) */
+    $('button.apply-button.enroll').click( function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        open_popup('enrollment', $(this).attr('data-course-id') );
+    });
+	
     /* Login Step */
 
     $('.cp_login_step').live('click', function(e) {
@@ -255,6 +260,10 @@ jQuery(document).ready(function($) {
                 var response = $.parseJSON($(data).find('response_data').text());
                 if (response) {
                     console.log(response);
+					if( response.redirect_url && response.redirect_url != '' ) {
+						window.location.href = response.redirect_url;
+						return;
+					}
                     $('.cp_popup_content').html(response.html);
                     $('.cp_popup_content [name="signup-next-step"]').val(response.next_step);
                     init_popup($('.cp_popup_content'));
@@ -262,7 +271,6 @@ jQuery(document).ready(function($) {
                     $('.cp_popup_window').center();
                     $('.cp_popup_loading').hide();
                 }
-
             } else {
             }
         }).fail(function(data) {

@@ -42,7 +42,7 @@
         </label>
 
         <label class="cp_popup_col_2 second-child">
-            <button class="apply-button signup-data"><?php _e('Create Account', 'cp'); ?></button>
+            <button class="apply-button signup-data" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>"><?php _e('Create Account', 'cp'); ?></button>
         </label>
     </div>
 
