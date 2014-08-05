@@ -87,9 +87,23 @@ if ( !class_exists( 'Notification' ) ) {
             return $post_id;
         }
 
-        function delete_notification( $force_delete = true ) {
-            wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
-            /* Delete all usermeta associated to the notification? */
+        function delete_notification( $force_delete = true, $parent_course_id = false ) {
+            $wpdb;
+            if ( $parent_course_id ) {//delete all discussion with parent course id
+                $args = array(
+                    'meta_key' => 'course_id',
+                    'meta_value' => $parent_course_id,
+                    'post_type' => 'notifications',
+                );
+                
+                $notifications_to_delete = get_posts($args);
+                
+                foreach($notifications_to_delete as $notification_to_delete){
+                    wp_delete_post($notification_to_delete->ID, $force_delete);
+                }
+            } else {
+                wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
+            }
         }
 
         function change_status( $post_status ) {

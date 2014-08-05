@@ -441,10 +441,19 @@ if ( !class_exists('Course') ) {
 
             $course_units = get_posts($args);
 
+            //Delete course units
             foreach ( $course_units as $course_unit ) {
                 $unit = new Unit($course_unit->ID);
                 $unit->delete_unit(true);
             }
+            
+            //Delete course discussions
+            $discussion = new Discussion();
+            $discussion->delete_discussion( true, $this->id );
+            
+            //Delete course notification
+            $notification = new Notification();
+            $notification->delete_notification(true, $this->id);
         }
 
         function can_show_permalink() {

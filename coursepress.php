@@ -319,6 +319,8 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
+       
+
         function flush_rules() {
             global $wp_rewrite;
             $wp_rewrite->flush_rules();
@@ -2214,7 +2216,7 @@ if ( !class_exists('CoursePress') ) {
             include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
         }
 
-        function show_unit_details( $unit_page_num = 1, $active_element = 1 ) {
+        function show_unit_details( $unit_page_num = 1, $active_element = 1, $preview_redirect_url ) {
             require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
 
