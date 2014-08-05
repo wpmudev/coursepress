@@ -3361,7 +3361,7 @@ if ( !class_exists('CoursePress') ) {
 
             if ( $course_details && !empty($course_details) ) {
                 $student = new Student($order->post_author);
-                $student->enroll_in_course($course_details->ID);
+                $student->enroll_in_course($course->details->ID);
             }
         }
 
