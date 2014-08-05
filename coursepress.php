@@ -2715,7 +2715,10 @@ if ( !class_exists('CoursePress') ) {
                     'empty_class_name' => __('Class name cannot be empty', 'cp'),
                     'duplicated_class_name' => __('Class name already exists', 'cp'),
                     'course_taxonomy_screen' => ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ? true : false ),
-                    'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1)
+                    'unit_page_num' => (isset($_GET['unit_page_num']) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1),
+                    'allowed_video_extensions' => wp_get_video_extensions(),
+                    'allowed_audio_extensions' => wp_get_audio_extensions(),
+                    'allowed_image_extensions' => wp_get_image_extensions()
                 ));
             }
         }
@@ -3358,7 +3361,7 @@ if ( !class_exists('CoursePress') ) {
 
             if ( $course_details && !empty($course_details) ) {
                 $student = new Student($order->post_author);
-                $student->enroll_in_course($course->details->ID);
+                $student->enroll_in_course($course_details->ID);
             }
         }
 

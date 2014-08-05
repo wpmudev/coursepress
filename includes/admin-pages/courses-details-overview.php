@@ -289,6 +289,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                             $desc = '';
                                             wp_editor(htmlspecialchars_decode(( isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
+                                            $supported_image_extensions = implode(", ", wp_get_image_extensions());
                                             ?>
                                         </div>
 
@@ -314,6 +315,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                        //echo wp_get_attachment_image( get_post_meta( $course_id, '_thumbnail_id', true ), array( 100, 100 ) );
                                                        //echo 'asdads'.get_post_meta( $course_id, '_thumbnail_id', true );
                                                        ?>
+                                                <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_image_extensions); ?></div>
                                             </div>
                                         </div>
 
@@ -402,7 +404,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                 ?>" />
 
                                                 <input type="button" class="course_video_url_button button-secondary" value="<?php _e('Browse', 'cp'); ?>" />
-
+                                                <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_video_extensions); ?></div>
                                             </div>
                                         </div>									
 
@@ -470,13 +472,13 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                 <?php
                                                                                 $module = new Unit_Module();
 
-																				// Cheking for inhertited "show" status and forces a save.
-																				$section_dirty = false;
-																				
+                                                                                // Cheking for inhertited "show" status and forces a save.
+                                                                                $section_dirty = false;
+
                                                                                 foreach ( $units as $unit ) {
                                                                                     $unit_class = new Unit($unit->ID);
                                                                                     $unit_pages = $unit_class->get_number_of_unit_pages();
-																					
+
                                                                                     $modules = $module->get_modules($unit->ID);
                                                                                     ?>
 
@@ -489,8 +491,8 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                 if ( isset($show_unit[$unit->ID]) ) {
                                                                                                     echo ( $show_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                                 } else {
-                                                                                                	echo ( 'on' == $course_structure_options ) ? 'checked' : '';
-																									$section_dirty = true;
+                                                                                                    echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+                                                                                                    $section_dirty = true;
                                                                                                 }
                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
 
@@ -530,17 +532,16 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                 <input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
                                                                                                                 if ( isset($show_page[$unit->ID . '_' . $i]) ) {
                                                                                                                     echo ( $show_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
-                                                                                                                }  else {
-				                                                                                                	echo ( 'on' == $course_structure_options ) ? 'checked' : '';
-																													$section_dirty = true;
-				                                                                                                }
-																												
+                                                                                                                } else {
+                                                                                                                    echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+                                                                                                                    $section_dirty = true;
+                                                                                                                }
                                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
 
                                                                                                                 <input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-                                                                                                                if ( isset($preview_page[$unit->ID . '_' . $i]) ) {
-                                                                                                                    echo ( $preview_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
-                                                                                                                }
+                                                                                            if ( isset($preview_page[$unit->ID . '_' . $i]) ) {
+                                                                                                echo ( $preview_page[$unit->ID . '_' . $i] == 'on' ) ? 'checked' : '';
+                                                                                            }
                                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
 
                                                                                                                 <span><?php echo $unit_class->get_unit_page_time_estimation($unit->ID, $i); ?></span>
@@ -606,73 +607,72 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                     </li>
 
 
-                                                                                <?php
-																				}
-																				
-																				if( $section_dirty ) {
-																					?>
-																					<input type="hidden" name="section_dirty" value="true" />
-																					<?php
-																				}
-																				
+                                                                                    <?php
+                                                                                }
+
+                                                                                if ( $section_dirty ) {
+                                                                                    ?>
+                                                                                    <input type="hidden" name="section_dirty" value="true" />
+                                                                                    <?php
+                                                                                }
                                                                                 ?>
                                                                             </ol>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
+                                                                                <?php
+                                                                            }
+                                                                            ?>
                                                                     </li>
 
                                                                 </ol>
                                                             </td>
                                                         </tr>
-                                                        <?php
-                                                        /* $units = $course->get_units();
+    <?php
+    /* $units = $course->get_units();
 
-                                                          if (0 == count($units)) {
-                                                          ?>
-                                                          <tr>
-                                                          <th colspan="4"><?php _e('There are currently no Units to Display', 'cp'); ?></th>
-                                                          </tr>
-                                                          <?php
-                                                          } else { */
-                                                        /* foreach ($units as $unit) {
-                                                          ?>
-                                                          <tr>
-                                                          <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
-                                                          </tr>
-                                                          <?php
-                                                          $module = new Unit_Module();
-                                                          $modules = $module->order_modules($module->get_modules($unit->ID));
+      if (0 == count($units)) {
+      ?>
+      <tr>
+      <th colspan="4"><?php _e('There are currently no Units to Display', 'cp'); ?></th>
+      </tr>
+      <?php
+      } else { */
+    /* foreach ($units as $unit) {
+      ?>
+      <tr>
+      <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
+      </tr>
+      <?php
+      $module = new Unit_Module();
+      $modules = $module->order_modules($module->get_modules($unit->ID));
 
-                                                          foreach ($modules as $module) {
-                                                          if (!empty($module->post_title)) {
-                                                          ?>
-                                                          <tr>
-                                                          <td>
-                                                          <?php echo $module->post_title; ?>
-                                                          <input type="hidden" name="module_element[<?php echo $module->ID; ?>]" value="<?php echo $module->ID; ?>" />
-                                                          </td>
-                                                          <td><input type='checkbox' id='show-<?php echo $module->ID; ?>' name='meta_show_module[<?php echo $module->ID; ?>]' <?php
-                                                          if (isset($show_module[$module->ID])) {
-                                                          echo ( $show_module[$module->ID] == 'on' ) ? 'checked' : '';
-                                                          }
-                                                          ?> /></td>
-                                                          <td><input type='checkbox' id='preview-<?php echo $module->ID; ?>' name='meta_preview_module[<?php echo $module->ID; ?>]' <?php
-                                                          if (isset($preview_module[$module->ID])) {
-                                                          echo ( $preview_module[$module->ID] == 'on' ) ? 'checked' : '';
-                                                          }
-                                                          ?> /></td>
+      foreach ($modules as $module) {
+      if (!empty($module->post_title)) {
+      ?>
+      <tr>
+      <td>
+      <?php echo $module->post_title; ?>
+      <input type="hidden" name="module_element[<?php echo $module->ID; ?>]" value="<?php echo $module->ID; ?>" />
+      </td>
+      <td><input type='checkbox' id='show-<?php echo $module->ID; ?>' name='meta_show_module[<?php echo $module->ID; ?>]' <?php
+      if (isset($show_module[$module->ID])) {
+      echo ( $show_module[$module->ID] == 'on' ) ? 'checked' : '';
+      }
+      ?> /></td>
+      <td><input type='checkbox' id='preview-<?php echo $module->ID; ?>' name='meta_preview_module[<?php echo $module->ID; ?>]' <?php
+      if (isset($preview_module[$module->ID])) {
+      echo ( $preview_module[$module->ID] == 'on' ) ? 'checked' : '';
+      }
+      ?> /></td>
 
-                                                          <td>10 min</td>
-                                                          </tr>
-                                                          <?php
-                                                          } // if not empty post title
-                                                          } // foreach ( $modules as $modul )
-                                                          ?>
-                                                          <?php
-                                                          } */ // foreach ( $units as $unit )
+      <td>10 min</td>
+      </tr>
+      <?php
+      } // if not empty post title
+      } // foreach ( $modules as $modul )
+      ?>
+      <?php
+      } */ // foreach ( $units as $unit )
 //}
-                                                        ?>
+    ?>
 
                                                     </tbody>
                                                 </table>
@@ -697,37 +697,37 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                         <h3><?php _e('Step 3 - Instructors', 'cp') ?></h3>									
                                     </div>
                                     <div class='course-form'>
-                                        <?php
-                                        $set_status = $course_setup_progress['step-3'];
-                                        ?>
+    <?php
+    $set_status = $course_setup_progress['step-3'];
+    ?>
                                         <input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                         <div class="wide narrow">
                                             <label>
-                                                <?php _e('Course Instructor(s)', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );           ?>
+    <?php _e('Course Instructor(s)', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );            ?>
                                                 <br />
                                                 <span><?php _e('Select one or more instructor to facilitate this course', 'cp'); ?></span>
                                             </label>
 
-                                            <?php if ( CoursePress_Capabilities::can_assign_course_instructor($course_id) ) { ?>
+    <?php if ( CoursePress_Capabilities::can_assign_course_instructor($course_id) ) { ?>
                                                 <?php coursepress_instructors_avatars_array(); ?>
 
                                                 <div class="clearfix"></div>
-                                                <?php coursepress_instructors_drop_down('postform chosen-select-course course-instructors'); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
+        <?php coursepress_instructors_drop_down('postform chosen-select-course course-instructors'); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
                                                 <!-- <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p> -->
 
 
-                                                <?php
-                                            } else {
-                                                if ( coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
-                                                    _e('You do not have required permissions to assign instructors to a course.', 'cp');
-                                                }
-                                            }
-                                            ?>
+        <?php
+    } else {
+        if ( coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+            _e('You do not have required permissions to assign instructors to a course.', 'cp');
+        }
+    }
+    ?>
 
-                                            <p><?php _e('Assigned Instructors:', 'cp');?></p>
+                                            <p><?php _e('Assigned Instructors:', 'cp'); ?></p>
                                             <div class="instructors-info" id="instructors-info">
-                                                <?php if ( 0 >= coursepress_instructors_avatars($course_id, true, true) ) : ?> 
+    <?php if ( 0 >= coursepress_instructors_avatars($course_id, true, true) ) : ?> 
                                                     <div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e('Please Assign Instructor', 'cp'); ?></span></div>											
                                                 <?php endif ?>
 
@@ -740,13 +740,13 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             </div>
 
                                             <div class="clearfix"></div>
-                                            <?php if ( $can_manage_instructors || 0 == $course_id ) : ?>						
+    <?php if ( $can_manage_instructors || 0 == $course_id ) : ?>						
                                                 <hr />
                                                 <!-- INVITE INSTRUCTOR -->
 
                                                 <label>
-                                                    <?php _e('Invite New Instructor', 'cp'); ?>
-                                                    <?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );           ?>
+        <?php _e('Invite New Instructor', 'cp'); ?>
+                                                    <?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );            ?>
                                                     <br />
                                                     <span><?php _e('If the instructor can not be found in the list above, you will need to invite them via email.', 'cp'); ?></span>
                                                 </label>										
@@ -761,7 +761,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                         <input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
                                                     </div>
                                                 </div>
-                                            <?php endif; ?>
+    <?php endif; ?>
 
 
                                         </div>
@@ -783,14 +783,14 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                         <h3><?php _e('Step 4 - Course Dates', 'cp') ?></h3>									
                                     </div>
                                     <div class='course-form'>
-                                        <?php
-                                        $set_status = $course_setup_progress['step-4'];
-                                        ?>
+    <?php
+    $set_status = $course_setup_progress['step-4'];
+    ?>
                                         <input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                         <div class="wide course-dates"> 
                                             <label>
-                                                <?php _e('Course Dates', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );           ?>
+    <?php _e('Course Dates', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );            ?>
                                             </label>	
 
                                             <div class="course-date-override">    
@@ -814,8 +814,8 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                         <div class="wide enrollment-dates">                             
                                             <label>
-                                                <?php _e('Enrollment Dates', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );           ?>
+    <?php _e('Enrollment Dates', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );            ?>
                                             </label>	
 
                                             <div class="enrollment-date-override">    
@@ -854,16 +854,16 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                         <h3><?php _e('Step 5 - Classes, Discussion & Workbook', 'cp') ?></h3>						
                                     </div>
                                     <div class='course-form'>
-                                        <?php
-                                        $set_status = $course_setup_progress['step-5'];
-                                        ?>
+    <?php
+    $set_status = $course_setup_progress['step-5'];
+    ?>
                                         <input type='hidden' name='meta_course_setup_progress[step-5]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
                                         <div class="wide narrow">
                                             <div>
                                                 <label for='meta_class-size'>
                                                     <input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
-                                                    <?php _e('Limit class size', 'cp'); ?>
-                                                    <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );           ?>
+    <?php _e('Limit class size', 'cp'); ?>
+                                                    <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );            ?>
                                                     <br />
                                                     <span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp'); ?></span>
                                                 </label>
@@ -874,16 +874,16 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                             <label for='meta_allow_course_discussion'>
                                                 <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
-                                                <?php _e('Allow Course Discussion', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );           ?>
+    <?php _e('Allow Course Discussion', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );            ?>
                                                 <br />
                                                 <span><?php _e('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp'); ?></span>
                                             </label>
 
                                             <label for='meta_allow_workbook_page'>
                                                 <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
-                                                <?php _e('Show student Workbook', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );           ?>
+    <?php _e('Show student Workbook', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );            ?>
                                                 <br />
                                                 <span><?php _e('If checked, students can see their progress and grades.', 'cp'); ?></span>
                                             </label>										
@@ -902,23 +902,23 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                 <!-- Enrollment & Course Cost -->
                                 <div class="course-section step step-6 <?php echo 'step-6' == $course_setup_marker ? 'save-marker active' : ''; ?>">
                                     <div class='course-section-title'>
-                                        <?php
-                                        $step_6_status = empty($course_setup_progress['step-6']) ? '' : $course_setup_progress['step-6'];
-                                        $step_6_status = !$gateways ? 'attention' : $step_6_status;
-                                        ?>
+    <?php
+    $step_6_status = empty($course_setup_progress['step-6']) ? '' : $course_setup_progress['step-6'];
+    $step_6_status = !$gateways ? 'attention' : $step_6_status;
+    ?>
                                         <div class="status <?php echo $step_6_status; ?> "></div>									
                                         <h3><?php _e('Step 6 - Enrollment & Course Cost', 'cp') ?></h3>						
                                     </div>
                                     <div class='course-form'>
-                                        <?php
-                                        $set_status = $course_setup_progress['step-6'];
-                                        ?>
+    <?php
+    $set_status = $course_setup_progress['step-6'];
+    ?>
                                         <input type='hidden' name='meta_course_setup_progress[step-6]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 
                                         <div class="narrow">
                                             <label for='meta_enroll_type'>
-                                                <?php _e('Who can Enroll in this course', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );           ?>
+    <?php _e('Who can Enroll in this course', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );            ?>
                                                 <br />
                                                 <span><?php _e('Select the limitations on accessing and enrolling in this course.', 'cp'); ?></span>
                                             </label>
@@ -937,26 +937,26 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                         <div class="wide" id="enroll_type_prerequisite_holder" <?php echo ( $enroll_type <> 'prerequisite' ? 'style="display:none"' : '' ) ?>>
                                             <label for='meta_enroll_type'>
-                                                <?php _e('Prerequisite Course', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );           ?>
+    <?php _e('Prerequisite Course', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );            ?>
                                             </label>
                                             <p><?php _e('Students will need to complete the following prerequisite course in order to enroll.', 'cp'); ?></p>
                                             <select name="meta_prerequisite" class="chosen-select">
-                                                <?php
-                                                $args = array(
-                                                    'post_type' => 'course',
-                                                    'post_status' => 'any',
-                                                    'posts_per_page' => -1,
-                                                    'exclude' => $course_id
-                                                );
+    <?php
+    $args = array(
+        'post_type' => 'course',
+        'post_status' => 'any',
+        'posts_per_page' => -1,
+        'exclude' => $course_id
+    );
 
-                                                $pre_courses = get_posts($args);
+    $pre_courses = get_posts($args);
 
-                                                foreach ( $pre_courses as $pre_course ) {
+    foreach ( $pre_courses as $pre_course ) {
 
-                                                    $pre_course_obj = new Course($pre_course->ID);
-                                                    $pre_course_object = $pre_course_obj->get_course();
-                                                    ?>
+        $pre_course_obj = new Course($pre_course->ID);
+        $pre_course_object = $pre_course_obj->get_course();
+        ?>
                                                     <option value="<?php echo $pre_course->ID; ?>" <?php selected($prerequisite, $pre_course->ID, true); ?>><?php echo $pre_course->post_title; ?></option>
                                                     <?php
                                                 }
@@ -967,8 +967,8 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                         <div class="narrow" id="enroll_type_holder" <?php echo ( $enroll_type <> 'passcode' ? 'style="display:none"' : '' ) ?>>
                                             <label for='meta_enroll_type'>
-                                                <?php _e('Pass Code', 'cp'); ?>
-                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );           ?>
+    <?php _e('Pass Code', 'cp'); ?>
+                                                <?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );            ?>
                                             </label>
                                             <p><?php _e('Students will need to enter this pass code in order to enroll.', 'cp'); ?></p>
 
@@ -977,108 +977,107 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                         </div>
 
                                         <hr />
-                                        <?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////               ?>
+    <?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////                ?>
                                         <div class="narrow product">
                                             <!-- MarketPress not Active -->
 
-                                            <?php // marketpress_active set in marketpress_check() hook  ?>
+    <?php // marketpress_active set in marketpress_check() hook   ?>
                                             <?php if ( !$coursepress->marketpress_active ) : ?>
                                                 <label>
-                                                    <?php _e('Cost to participate in this course', 'cp'); ?>
+                                                <?php _e('Cost to participate in this course', 'cp'); ?>
                                                 </label>
-												
+
                                                 <div class="course-paid">
                                                     <p><input type="checkbox" id="marketpressprompt" />
-                                                        <?php _e('This is a Paid Course', 'cp'); ?></p>
+        <?php _e('This is a Paid Course', 'cp'); ?></p>
                                                 </div>
-												
-												<div id="marketpressprompt-box">
-	                                                <label>
-	                                                    <?php _e('Sell your courses online with MarketPress.', 'cp'); ?>
-	                                                </label>
 
-	                                                <?php
-	                                                _e(
-	                                                        '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
-	                                                        '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
-	                                                        '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp');
-	                                                ?>
-												</div>
+                                                <div id="marketpressprompt-box">
+                                                    <label>
+        <?php _e('Sell your courses online with MarketPress.', 'cp'); ?>
+                                                    </label>
+
+        <?php
+        _e(
+                '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
+                '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
+                '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp');
+        ?>
+                                                </div>
 
                                                 <!-- MarketPress Active -->
-                                            <?php else: ?>
+    <?php else: ?>
                                                 <?php
                                                 $mp_product_id = $course->mp_product_id();
 
-												$product_exists = 0 != $mp_product_id ? true : false;
-												
-												$paid_course = ! $product_exists ? 'off' : $paid_course;
-												
+                                                $product_exists = 0 != $mp_product_id ? true : false;
+
+                                                $paid_course = !$product_exists ? 'off' : $paid_course;
+
                                                 //var_dump(get_post_custom($course_id));
                                                 $mp_product_details = get_post_custom($course_id);
 
                                                 $input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
-
                                                 ?>
 
                                                 <input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr(isset($course->details->mp_product_id) ? $course->details->mp_product_id : ''); ?>" />
 
 
                                                 <label>
-                                                    <?php _e('Cost to participate in this course', 'cp'); ?>
+        <?php _e('Cost to participate in this course', 'cp'); ?>
                                                 </label>
 
                                                 <div class="course-paid">
                                                     <p><input type="checkbox" name="meta_paid_course" <?php echo ( $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course" />
-                                                        <?php _e('This is a Paid Course', 'cp'); ?></p>
+        <?php _e('This is a Paid Course', 'cp'); ?></p>
                                                 </div>
 
-												<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
-	                                                <div class="course-sku">
-	                                                    <p><input type="checkbox" name="meta_auto_sku" <?php echo ( $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
-	                                                        <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
-	                                                    <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
-	                                                    if ( $auto_sku == 'on' ) {
-	                                                        echo esc_attr($mp_product_details["mp_sku"][0]);
-	                                                    }
-	                                                    ?>" <?php echo $input_state; ?> />
-	                                                </div>
+                                                <div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
+                                                    <div class="course-sku">
+                                                        <p><input type="checkbox" name="meta_auto_sku" <?php echo ( $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
+        <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
+                                                        <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
+        if ( $auto_sku == 'on' ) {
+            echo esc_attr($mp_product_details["mp_sku"][0]);
+        }
+        ?>" <?php echo $input_state; ?> />
+                                                    </div>
 
-	                                                <div class="course-price">
-	                                                    <span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e('Price', 'cp'); ?></span>
-	                                                    <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" <?php echo $input_state; ?>  />
-	                                                </div>
+                                                    <div class="course-price">
+                                                        <span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e('Price', 'cp'); ?></span>
+                                                        <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" <?php echo $input_state; ?>  />
+                                                    </div>
 
-	                                                <div class="clearfix"></div>
+                                                    <div class="clearfix"></div>
 
-	                                                <div class="course-sale-price">
-	                                                    <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php
-	                                                        if ( !empty($mp_product_details["mp_is_sale"]) ) {
-	                                                            checked($mp_product_details["mp_is_sale"][0], '1');
-	                                                        }
-	                                                        ?>" <?php echo $input_state; ?>  />
-	                                                        <?php _e('Enabled Sale Price', 'cp'); ?></p>
-	                                                    <span class="price-label <?php !empty($mp_product_details["mp_is_sale"]) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
-	                                                    <input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo!empty($mp_product_details['mp_sale_price']) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0; ?>" <?php echo $input_state; ?>  />
-	                                                </div>
+                                                    <div class="course-sale-price">
+                                                        <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php
+                                                if ( !empty($mp_product_details["mp_is_sale"]) ) {
+                                                    checked($mp_product_details["mp_is_sale"][0], '1');
+                                                }
+        ?>" <?php echo $input_state; ?>  />
+                                                            <?php _e('Enabled Sale Price', 'cp'); ?></p>
+                                                        <span class="price-label <?php !empty($mp_product_details["mp_is_sale"]) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
+                                                        <input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo!empty($mp_product_details['mp_sale_price']) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0; ?>" <?php echo $input_state; ?>  />
+                                                    </div>
 
-	                                                <div class="clearfix"></div>
+                                                    <div class="clearfix"></div>
 
-	                                                <div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
+                                                    <div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
 
-	                                                    <!-- Add both links for JS/CSS toggle -->
-	                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
-	                                                    <span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
+                                                        <!-- Add both links for JS/CSS toggle -->
+                                                        <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
+                                                        <span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
 
-	                                                    <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e('Edit Payment Gateways', 'cp'); ?></a>												
+                                                        <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e('Edit Payment Gateways', 'cp'); ?></a>												
 
-	                                                </div>
-												</div>
+                                                    </div>
+                                                </div>
 
-                                            <?php endif; ?>
+    <?php endif; ?>
                                         </div>
 
-                                        <?php // END ///////////////////////////////               ?>
+                                            <?php // END ///////////////////////////////               ?>
                                         <div class="course-step-buttons">
                                             <input type="button" class="button button-units prev" value="<?php _e('Previous', 'cp'); ?>" />
                                             <input type="button" class="button button-units update" value="<?php _e('Update', 'cp'); ?>" />										
@@ -1094,9 +1093,9 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                 <div class="half">
                                                                     <h3><?php _e('Cost to enroll in the course', 'cp'); ?></h3>
                                                                     
-                                <?php
-                                if ( $coursepress->is_marketpress_active() ) {
-                                    ?>
+    <?php
+    if ( $coursepress->is_marketpress_active() ) {
+        ?>
                                                                                                                                                                                                                 
                                     <?php _e('MarketPress product'); ?>
                                                                                                                                                                                                                 
@@ -1105,29 +1104,29 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                                                                                                                 <div class="tooltip-before"></div>
                                                                                                                                                                                                                 <div class="tooltip-button">&times;</div>
                                                                                                                                                                                                                 <div class="tooltip-content">
-                                    <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
+        <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
                                                                                                                                                                                                                 </div>
                                                                                                                                                                                                                 </div>
                                                                                                                                                                                                                 
                                                                                                                                                                                                                 <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
                                                                                                                                                                                                                 <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
-                                    <?php
-                                    global $post;
-                                    $args = array(
-                                        'numberposts' => -1,
-                                        'post_type' => 'product'
-                                    );
-                                    $posts = get_posts($args);
-                                    foreach ( $posts as $post ) {
-                                        setup_postdata($post);
-                                        ?>
+        <?php
+        global $post;
+        $args = array(
+            'numberposts' => -1,
+            'post_type' => 'product'
+        );
+        $posts = get_posts($args);
+        foreach ( $posts as $post ) {
+            setup_postdata($post);
+            ?>
                                                                                                                                                                                                                     <option value="<?php echo $post->ID; ?>" <?php selected($marketpress_product, $post->ID, true); ?>><?php the_title(); ?></option>
                                     <?php } ?>
                                                                                                                                                                                                                 </select>
                                                                                                                                                                                                                 
                                                                                                                                                                                                                 <p><?php _e('NOTE: If you wish to sell a course and have not set up a product in MarketPress, please finish creating your course and save it. Once you have saved your course, you can create a product in MarketPress to sell this course, then come back to this "Course Overview" page and select the product you have created. Click <a href="post-new.php?post_type=product" target="_blank">here</a> to open a new window that takes you to the "MarketPress Product page"', 'cp'); ?></p>
                                                                                                                                                                                                                 
-                                <?php } else { ?>
+    <?php } else { ?>
                                                                                                                                                                                                                 <p><?php printf(__('%s integrates with the <a href="https://premium.wpmudev.org/project/e-commerce/?ref=wordpress.org">MarketPress</a> plugin. Install it it to sell this course online.', 'cp'), $coursepress->name); ?></p>
                                 <?php } ?>
                                 
@@ -1143,7 +1142,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                         <div class="tooltip-before"></div>
                                                                         <div class="tooltip-button">&times;</div>
                                                                         <div class="tooltip-content">
-                                <?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?>
+    <?php _e('If checked, students can see their course performance and grades by units.', 'cp') ?>
                                                                         </div>
                                                                     </div>
                                 
@@ -1157,20 +1156,22 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                             <!-- /COURSE DETAILS -->
 
+                            <!--
                             <div class="buttons course-add-units-button">
-                                <?php
-                                if ( $course_id !== 0 ) {
-                                    ?>
-                                    <a href="<?php echo admin_url('admin.php?page=' . ( int ) $_GET['page'] . '&tab=units&course_id=' . ( int ) $_GET['course_id']); ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
-                                <?php } ?>
+    <?php
+    if ( $course_id !== 0 ) {
+        ?>
+                                        <a href="<?php echo admin_url('admin.php?page=' . ( int ) $_GET['page'] . '&tab=units&course_id=' . ( int ) $_GET['course_id']); ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
+                            <?php } ?>
                             </div>
+                            -->
 
                         </div>
                     </div>
-                <?php } else {//can update or create course
-                    ?>
-                        <p><?php _e("You don't have required permissions for this action.");?></p>
-                    <?php }
+<?php } else {//can update or create course
+    ?>
+                    <p><?php _e("You don't have required permissions for this action."); ?></p>
+                <?php }
                 ?>
             </div>
         </div> <!-- course-liquid-left -->

@@ -1,5 +1,15 @@
 jQuery(document).ready(function($) {
 
+    $('input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url').live('input propertychange paste change', function() {
+        if (cp_is_extension_allowed($(this).val(), $(this))) {//extension is allowed
+            $(this).removeClass('invalid_extension_field');
+            $(this).parent().find('.invalid_extension_message').hide();
+        } else {//extension is not allowed
+            $(this).addClass('invalid_extension_field');
+            $(this).parent().find('.invalid_extension_message').show();
+        }
+    });
+
     var courses_state_toggle = {
         init: function() {
             this.attachHandlers('.courses-state .control');
@@ -385,7 +395,6 @@ function coursepress_modules_ready() {
         var stamp = new Date().getTime();
         var module_count = 0;
 
-
         jQuery('input#beingdragged').val(jQuery(this).find('.add-element').attr('id'));//jQuery( "#unit-page-" + current_unit_page + " .unit-module-list option:selected" ).val()
 
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
@@ -412,15 +421,26 @@ function coursepress_modules_ready() {
 
         module_count = module_count - jQuery(".unit-module-list option").size();
 
+        jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
+
+        jQuery("input[name*='audio_module_autoplay']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_autoplay[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
+
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
+
         jQuery("input[name*='radio_check']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
+
         jQuery("input[name*='checkbox_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
+
         jQuery("input[name*='checkbox_check']").each(function(i, obj) {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
@@ -452,7 +472,6 @@ function coursepress_modules_ready() {
 
         jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr('data-panel', accordion_elements_count);
         jQuery(this).parent().parent().find('.modules_accordion div.module-holder-title').last().find('.module-title').attr('data-id', -1);
-        //$('[name="active_mod"]').val(-1);
 
         if ((current_unit_page == 1 && accordion_elements_count == 0) || (current_unit_page >= 2 && accordion_elements_count == 1)) {
             jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
@@ -461,63 +480,6 @@ function coursepress_modules_ready() {
         }
 
     });
-    /* Drag & Drop */
-
-    /*jQuery( '.module-droppable' ).droppable( {
-     hoverClass: 'hoveringover',
-     drop: function( event, ui ) {
-     var stamp = new Date().getTime();
-     
-     var cloned = jQuery( '.draggable-module-holder-' + jQuery( 'input#beingdragged' ).val() ).html();
-     cloned = '<div class="module-holder-' + jQuery( 'input#beingdragged' ).val() + ' module-holder-title">' + cloned + '</div>';
-     
-     jQuery( '.modules_accordion' ).prepend( cloned );
-     
-     var data = '';
-     
-     jQuery( '#modules_accordion' ).accordion();
-     jQuery( '#modules_accordion' ).accordion( "refresh" );
-     
-     moving = jQuery( 'input#beingdragged' ).val();
-     
-     if ( moving != '' ) {
-     
-     }
-     
-     jQuery( '.module_order' ).each( function( i, obj ) {
-     jQuery( this ).val( i + 1 );
-     } );
-     
-     jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
-     jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-     } );
-     
-     jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
-     jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-     } );
-     
-     jQuery( "input[name*='checkbox_answers']" ).each( function( i, obj ) {
-     jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-     } );
-     
-     jQuery( "input[name*='checkbox_check']" ).each( function( i, obj ) {
-     jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-     } );
-     
-     jQuery( '#modules_accordion' ).accordion( "option", "active", 0 );
-     
-     // Dynamic WP Editor 
-     var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
-     
-     jQuery.get( 'admin-ajax.php', {action: 'dynamic_wp_editor', rand_id: rand_id, module_name: moving} )
-     .success( function( editor ) {
-     jQuery( '#modules_accordion .editor_in_place' ).last().html( editor )
-     tinymce.execCommand( 'mceAddEditor', false, rand_id );
-     quicktags( {id: rand_id} );
-     } );
-     }
-     } );*/
-
 }
 
 jQuery(document).ready(coursepress_modules_ready);
@@ -541,6 +503,15 @@ function update_sortable_module_indexes() {
     jQuery('.module_order').each(function(i, obj) {
         jQuery(this).val(i + 1);
     });
+
+    jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
+        jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
+
+    jQuery("input[name*='audio_module_autoplay']").each(function(i, obj) {
+        jQuery(this).attr("name", "audio_module_autoplay[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+    });
+
     jQuery("input[name*='radio_answers']").each(function(i, obj) {
         jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
     });
@@ -810,39 +781,29 @@ jQuery(document).ready(function() {
         }
     });
 
-    // MOVED TO: coursepress-courses.js
-    // jQuery('#add-instructor-trigger').click(function() {
-    //
-    //     var instructor_id = jQuery('#instructors option:selected').val();
-    //
-    //     // Mark as dirty
-    //     var parent_section = jQuery(this).parents('.course-section.step')[0];
-    //     if (parent_section) {
-    //         if (!jQuery(parent_section).hasClass('dirty')) {
-    //             jQuery(parent_section).addClass('dirty');
-    //         }
-    //     }
-    //
-    //     if (jQuery("#instructor_holder_" + instructor_id).length == 0) {
-    //         jQuery('.instructor-avatar-holder.empty').hide();
-    //         jQuery('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery('#instructors option:selected').text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
-    //     }
-    //
-    //     jQuery.get('admin-ajax.php', {action: 'assign_instructor_capabilities', user_id: instructor_id})
-    //             .success(function(data) {
-    //                 //alert( data );
-    //             });
-    // });
     var ct = 2;
+
     jQuery('a.radio_new_link').live('click', function() {
+
         var unique_group_id = jQuery(this).closest(".module-content").find('.module_order').val();
+
         var r = '<tr><td><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
+
         jQuery(this).parent().find(".ri_items").append(r);
         //jQuery( this ).parent().parent().parent().append( r );
+
+        jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
+
+        jQuery("input[name*='audio_module_autoplay']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_autoplay[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
 
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
+
         jQuery("input[name*='radio_check']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
@@ -1030,6 +991,14 @@ jQuery(document).ready(function()
             jQuery(target_url_field).val(props.url);
             jQuery('#thumbnail_id').val('');
             jQuery('#featured_url_size').val('');
+
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
         }
 
         wp.media.editor.send.attachment = function(props, attachment)
@@ -1037,7 +1006,17 @@ jQuery(document).ready(function()
             jQuery(target_url_field).val(attachment.url);
             jQuery('#thumbnail_id').val(attachment.id);
             jQuery('#featured_url_size').val(props.size);
+
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
         };
+
+
 
         wp.media.editor.open(this);
         return false;
@@ -1123,5 +1102,61 @@ jQuery(function() {
         jQuery('.coursepress_page_instructors div.course-liquid-left').after(jQuery('.coursepress_page_instructors div.course-liquid-right'));
     }
 
-
 });
+
+function cp_is_extension_allowed(filename, type) {
+    type = jQuery(type).attr('class').split(' ')[0];
+    var extension = filename.split('.').pop();
+    var audio_extensions = coursepress.allowed_audio_extensions;
+    var video_extensions = coursepress.allowed_video_extensions;
+    var image_extensions = coursepress.allowed_image_extensions;
+
+    if(type == 'featured_url'){
+        type = 'image_url';
+    }
+    
+    if(type == 'course_video_url'){
+        type = 'video_url';
+    }
+
+    if (type == 'audio_url') {
+        if (cp_is_value_in_array(extension, audio_extensions)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    if (type == 'video_url') {
+        if (cp_is_value_in_array(extension, video_extensions)) {
+            return true;
+        } else {
+            if (cp_is_valid_url(filename)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    if (type == 'image_url') {
+        if (cp_is_value_in_array(extension, image_extensions)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
+function cp_is_valid_url(str) {
+    if (str.indexOf("http://") >-1 || str.indexOf("https://") >-1) {
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function cp_is_value_in_array(value, array) {
+    return array.indexOf(value) > -1;
+}

@@ -40,6 +40,7 @@ class image_module extends Unit_Module {
         wp_enqueue_script('thickbox');
         wp_enqueue_media();
         wp_enqueue_script('media-upload');
+        $supported_image_extensions = implode(", ", wp_get_image_extensions());
         ?>
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
@@ -91,8 +92,9 @@ class image_module extends Unit_Module {
 
                 <div class="file_url_holder">
                     <label><?php _e('Enter a URL or Browse for an image.', 'cp'); ?>
-                        <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_image_url[]" value="<?php echo esc_attr(( isset($data->image_url) ? $data->image_url : '')); ?>" />
-                        <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <input class="image_url" type="text" size="36" name="<?php echo $this->name; ?>_image_url[]" value="<?php echo esc_attr(( isset($data->image_url) ? $data->image_url : '')); ?>" />
+                        <input class="image_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_image_extensions);?></div>
                     </label>
                 </div>
                 <?php

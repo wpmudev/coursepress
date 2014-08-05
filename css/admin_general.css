@@ -338,7 +338,7 @@
     color: #fff;
 }
 
-.unit-control-buttons a.button.button-preview{
+.unit-control-buttons .button.button-preview{
     background: none repeat scroll 0 0 #ec8c35;
     text-shadow: none;
     color: #fff;
@@ -351,7 +351,7 @@
     border-width: 0px;
 }
 
-.unit-control-buttons a.button.button-preview:hover{
+.unit-control-buttons .button.button-preview:hover{
     background: #e99a53;
     color: #fff;
 }
@@ -375,7 +375,7 @@
 .unit-control-buttons input[type="submit"].button.button-units,
 .unit-control-buttons a.button.button-publish,
 .unit-control-buttons a.button.button-unpublish,
-.unit-control-buttons a.button.button-preview,
+.unit-control-buttons .button.button-preview,
 .unit-control-buttons a.button.button-settings{
     display: inline-block;
     width: 120px;
@@ -394,7 +394,7 @@ label.required:after{
 
 .unit-control-buttons a.button.button-unpublish,
 .unit-control-buttons a.button.button-publish,
-.unit-control-buttons a.button.button-preview{
+.unit-control-buttons .button.button-preview{
     /*margin-left: 5px;*/
 }
 
@@ -452,4 +452,13 @@ a.button.button-units.button-delete-unit:hover{
     background: #E65C52;
     color: #fff;
     opacity: 1;
+}
+
+.invalid_extension_field{
+    border: 1px red solid !important;
+}
+
+.invalid_extension_message{
+    color: red;
+    display: none;
 }

@@ -197,7 +197,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="96%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                         ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                          ?></div>
                         </th>
                         <th width="3%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->

@@ -20,14 +20,24 @@ jQuery(document).ready(function() {
 
     function submit_elements() {
 
+
         jQuery("input[name*='radio_input_module_radio_check']:checked").each(function() {
             var vl = jQuery(this).parent().find('.radio_answer').val();
             jQuery(this).closest(".module-content").find('.checked_index').val(vl);
         });
 
+        jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
+
+        jQuery("input[name*='audio_module_autoplay']").each(function(i, obj) {
+            jQuery(this).attr("name", "audio_module_autoplay[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
+        });
+
         jQuery("input[name*='radio_answers']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_answers[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
+
 
         jQuery("input[name*='radio_check']").each(function(i, obj) {
             jQuery(this).attr("name", "radio_input_module_radio_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
@@ -158,6 +168,13 @@ jQuery(document).ready(function()
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
         wp.media.editor.open(this);
@@ -167,7 +184,7 @@ jQuery(document).ready(function()
 
 /* Native WP media browser for video module (unit module) */
 
-jQuery(document).ready(function()
+jQuery(document).ready(function($)
 {
     jQuery('.video_url_button').live('click', function()
     {
@@ -175,6 +192,13 @@ jQuery(document).ready(function()
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
 
@@ -188,11 +212,25 @@ jQuery(document).ready(function()
 
         wp.media.string.props = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(props.url);
         }
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
 
@@ -212,6 +250,25 @@ jQuery(document).ready(function()
         var target_url_field = jQuery(this).prevAll(".file_url:first");
         wp.media.editor.send.attachment = function(props, attachment)
         {
+            jQuery(target_url_field).val(attachment.url);
+        };
+        wp.media.editor.open(this);
+        return false;
+    });
+
+    jQuery('.image_url_button').live('click', function()
+    {
+
+        var target_url_field = jQuery(this).prevAll(".image_url:first");
+        wp.media.editor.send.attachment = function(props, attachment)
+        {
+            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+                $(target_url_field).removeClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').hide();
+            } else {//extension is not allowed
+                $(target_url_field).addClass('invalid_extension_field');
+                $(target_url_field).parent().find('.invalid_extension_message').show();
+            }
             jQuery(target_url_field).val(attachment.url);
         };
         wp.media.editor.open(this);
@@ -323,10 +380,10 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
             $('#course-ajax-check').data('cap', response.cap);
             $('#course-ajax-check').data('id', response.course_id);
             $('[name=course_id]').val(response.course_id);
-			if( response.mp_product_id ) {
-				$('[name=meta_mp_product_id]').val(response.mp_product_id);
-			}
-			
+            if (response.mp_product_id) {
+                $('[name=meta_mp_product_id]').val(response.mp_product_id);
+            }
+
             // Add user as instructor
             if (step == 'step-1' && response.instructor) {
                 $.post(
@@ -392,10 +449,10 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                 set_update_progress(step, 'saved');
                 $course_id = $('[name=course_id]').val();
                 $admin_url = $('[name=admin_url]').val();
-				
-				if( 'unit_setup' == nextAction ) {
-	                window.location = $admin_url + '&tab=units&course_id=' + $course_id;					
-				}
+
+                if ('unit_setup' == nextAction) {
+                    window.location = $admin_url + '&tab=units&course_id=' + $course_id;
+                }
 
             }
             // Steps 1 - 5	
@@ -1287,31 +1344,57 @@ jQuery(document).ready(function($) {
     $('#marketpressprompt').click(function(event) {
         $('#marketpressprompt-box').toggle();
     });
+
+    $('[name="meta_course_structure_options"]').change(function(event) {
+
+        if ($(this).prop('checked')) {
+            $('.course-structure [name^="meta_show_unit"]').attr('checked', 'checked');
+            $('.course-structure [name^="meta_show_unit"]').val('on');
+
+            $('.course-structure [name^="meta_show_page"]').attr('checked', 'checked');
+            $('.course-structure [name^="meta_show_page"]').val('on');
+        } else {
+            $('.course-structure [name^="meta_show_unit"]').removeAttr('checked');
+            $('.course-structure [name^="meta_show_unit"]').val('off');
+
+            $('.course-structure [name^="meta_show_page"]').removeAttr('checked');
+            $('.course-structure [name^="meta_show_page"]').val('off');
+        }
+
+    });
+
+    // If inheriting course show options then force save
+    if ($('[name="section_dirty"]')) {
+        mark_dirty($('[name="section_dirty"]'));
+    }
 	
-	$('[name="meta_course_structure_options"]').change( function(event){
 
-		if ( $( this ).prop('checked') ) {
-			$('.course-structure [name^="meta_show_unit"]').attr('checked', 'checked');
-			$('.course-structure [name^="meta_show_unit"]').val( 'on' );
-
-			$('.course-structure [name^="meta_show_page"]').attr('checked', 'checked');
-			$('.course-structure [name^="meta_show_page"]').val( 'on' );
-		} else {
-			$('.course-structure [name^="meta_show_unit"]').removeAttr('checked');
-			$('.course-structure [name^="meta_show_unit"]').val( 'off' );
-
-			$('.course-structure [name^="meta_show_page"]').removeAttr('checked');
-			$('.course-structure [name^="meta_show_page"]').val( 'off' );
-		}
-
-	});
-	
-	// If inheriting course show options then force save
-	if ( $('[name="section_dirty"]') ) {
-		mark_dirty( $('[name="section_dirty"]') );
-	}
+	// Attempt at preview redirect
+	// // Phase 1: Redirect if 'Preview' triggered a save.
+	// if ( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'yes' ) {
+	// 	alert('reload: yes');
+	// 	// Now proceed with normal click.
+	// 	$('.unit-control-buttons .button-preview').attr( 'href', $('.unit-control-buttons .button-preview').attr('data-href') );
+	// 	$('.unit-control-buttons .button-preview').click();
+	// 	$('[name="preview_redirect"]').val('no');
+	// } else if ( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'no' ) {
+	// 	$('.unit-control-buttons .button-preview').removeAttr( 'href' );
+	// }
+	//
+	// // $('.unit-control-buttons .button-preview').off();
+	// // Phase 2: Preview clicked, so save the unit first.
+	// $('.unit-control-buttons .button-preview').click( function( e ) {
+	// 	if( $('[name="preview_redirect"]') && $('[name="preview_redirect"]').val() == 'no' ) {
+	// 		alert('click: no');
+	// 		e.stopPropagation();
+	// 		$('[name="preview_redirect"]').first().val('yes');
+	// 		$('.unit-control-buttons .save-unit-button').first().click();
+	// 	}
+	// });
+		
 
 });
+
 
 
 jQuery(document).ready(function($) {
