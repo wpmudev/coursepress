@@ -70,6 +70,11 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
         $unit->change_status($_GET['new_status']);
     }
 }
+
+// cp_write_log(' preview redir: ' . $_POST['preview_redirect'] );
+
+$preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_redirect'] : 'no';
+
 ?>
 <div class='wrap mp-wrap nocoursesub'>
 
@@ -79,7 +84,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
             <?php
             $units = $course->get_units();
             ?>
-            <input type="hidden" name="unit_count" value="<?php echo $units ? count($units) : 0; ?>">
+            <input type="hidden" name="unit_count" value="<?php echo $units ? count($units) : 0; ?>" />
             <?php
             $list_order = 1;
 
@@ -172,6 +177,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                     <?php
                     if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                         ?>
+						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
 
@@ -180,13 +186,14 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                     <?php
                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                         ?>
+						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                     <?php } ?>
 
                     <?php
                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                         ?>
-                        <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
+                        <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
                         <?php
                         /* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
@@ -376,6 +383,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                     <?php
                                     if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                                         ?>
+										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
 
@@ -384,13 +392,14 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
                                     <?php
                                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
+										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                                     <?php } ?>
 
                                     <?php
                                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
-                                        <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
+                                            <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
                                         <?php
                                         /* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
