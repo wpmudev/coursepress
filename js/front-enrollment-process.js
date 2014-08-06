@@ -198,7 +198,6 @@ jQuery(document).ready(function($) {
     }
 
     function prepare_payment_data_and_submit( element ) {
-
         var course_id  = $( element ).attr('data-course-id');
 		var course_data = {
 			product_id: $( element ).attr('data-product-id'),
@@ -249,7 +248,7 @@ jQuery(document).ready(function($) {
         if (typeof data === 'undefined') {//data not set
             data = '';
         }
-
+		
         $.post(cp_vars.admin_ajax_url, {
             action: 'cp_popup_signup',
             course_id: course_id,

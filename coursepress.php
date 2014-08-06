@@ -404,11 +404,15 @@ if ( !class_exists('CoursePress') ) {
 
         // Popup Signup Process
         function popup_signup( $step = false, $args = array() ) {
-
+			global $mp;
             if ( !$step && isset($_POST['step']) ) {
                 $step = $_POST['step'];
             }
-
+			
+			if ( empty( $args ) && isset( $_POST['data'] ) ) {
+				$args = $_POST['data'];
+			}
+			
             $ajax_response = array();
 
             $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
@@ -450,10 +454,13 @@ if ( !class_exists('CoursePress') ) {
                     'on_success' => 'process_payment',
                 ),
                 'process_payment' => array(
+					// MP3 integration
                     // 'action' => 'callback',
-					'action' => 'render',
+					// 'action' => 'render',
                     // 'callback' => array( &$this, 'signup_payment_processing' ),
-					'data' => $this->signup_payment_processing(),
+					'data' => $this->signup_payment_processing( $args ),
+					'action' => 'redirect',
+					'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),										
                     'on_success' => 'payment_confirmed',
                 ),				
                 'payment_confirmed' => array(
@@ -621,10 +628,12 @@ if ( !class_exists('CoursePress') ) {
 						
 			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
 			$product_id = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['product_id'] : 0;
-			$gateway = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['gateway'] : '';
+			$gateway = $args['gateway'];
 			$product = false;
 			$product_meta = false;
-				
+			
+			cp_write_log( $gateway );
+			$_SESSION['mp_payment_method'] = $gateway;
 			// if( 0 != $product_id ){
 			// 	$product = get_post( $product_id );
 			// 	$product_meta = $mp->get_meta_details( $product_id );
@@ -2557,7 +2566,7 @@ if ( !class_exists('CoursePress') ) {
             include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
         }
 
-        function show_unit_details( $unit_page_num = 1, $active_element = 1 ) {
+        function show_unit_details( $unit_page_num = 1, $active_element = 1, $preview_redirect_url ) {
             require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
         }
 

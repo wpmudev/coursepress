@@ -936,6 +936,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'passcode_text' => __('Passcode Required', 'cp'),
                 'not_started_text' => __('Not Available', 'cp'),
                 'access_text' => __('Start Learning', 'cp'),
+				'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
 
@@ -972,7 +973,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( !is_user_logged_in() ) {
 
                 if ( 'manually' != $course->enroll_type ) {
-                    if ( $course_full ) {
+                    if ( $course_full && ! "yes" == $list_page ) {
                         // "COURSE FULL"
                         $button .= '<span class="apply-button apply-button-full ' . $class . '">' . $course_full_text . '</span>';
                         // cp_write_log( 'ONE');
@@ -2343,6 +2344,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'knob_data_thickness' => '.35',
                 'knob_data_width' => '70',
                 'knob_data_height' => '70',
+                'unit_page_title_tag' => 'h2',
+                'unit_page_title_tag_class' => '',
                 'student_id' => get_current_user_ID(),
                             ), $atts));
 
@@ -2363,7 +2366,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             if ( $field == 'unit_page_title' ) {
                 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
-                $unit->details->$field = $unit->get_unit_page_name($paged);
+                $unit->details->$field = '<'.$unit_page_title_tag.' '.($unit_page_title_tag_class !== '' ? $unit_page_title_tag_class : '').'>'.$unit->get_unit_page_name($paged).'</'.$unit_page_title_tag.'>';
             }
 
             /* ------------ */

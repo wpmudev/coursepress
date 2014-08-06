@@ -44,10 +44,12 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
         }
 
         if ( $new_post_id != 0 ) {
-            ob_start();
+            //ob_start();
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
+
             if ( isset($_GET['ms']) ) {
-                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . '&unit_page_num='.(isset($unit_page_num) ? $unit_page_num : '1').'#unit-page-' . (isset($unit_page_num) ? $unit_page_num : '1')));
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ) . '&unit_page_num=' . (isset($unit_page_num) ? $unit_page_num : 1) . '#unit-page-'.(isset($unit_page_num) ? $unit_page_num : 1)));
                 //exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
@@ -63,6 +65,11 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
     }
 }
 
+if ( isset($_GET['preview_redirect_url']) && $_GET['preview_redirect_url'] !== '' ) {
+    wp_redirect(trailingslashit(get_permalink($unit_id)).'page/'.(isset($unit_page_num) ? $unit_page_num : 1));
+    exit;
+}
+
 if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
     $unit = new Unit($_GET['unit_id']);
     $unit_object = $unit->get_unit();
@@ -73,8 +80,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
 // cp_write_log(' preview redir: ' . $_POST['preview_redirect'] );
 
-$preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_redirect'] : 'no';
-
+$preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_redirect'] : 'no';
 ?>
 <div class='wrap mp-wrap nocoursesub'>
 
@@ -122,7 +128,7 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
 
     </div>
     <div class='mp-settings'><!--course-liquid-left-->
-        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
+        <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ) . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
             <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'live')); ?>" />
@@ -153,10 +159,10 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
                         <div class="unit-state">
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
                             <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'off' : ! empty( $unit_id ) && $unit_id > 0 ? 'on' : 'off'; ?>">
+                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'off' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : ! empty( $unit_id ) && $unit_id > 0 ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
+                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
                         </div>
                     </h3>
 
@@ -177,7 +183,7 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
                     <?php
                     if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                         ?>
-						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
+                        <input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
 
@@ -186,12 +192,12 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
                     <?php
                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                         ?>
-						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
+                        <input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                     <?php } ?>
 
                     <?php
-                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
+                    if ( CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything if user can't update course unit
                         ?>
                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
@@ -383,7 +389,7 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
                                     <?php
                                     if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit($course_id) ) {//do not show anything
                                         ?>
-										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
+                                        <input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e('Save', 'cp'); ?>">
                                         <!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e('Publish', 'cp'); ?>">-->
 
@@ -392,14 +398,14 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
                                     <?php
                                     if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
-										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
+                                        <input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
                                         <input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Save', 'cp') : __('Save', 'cp'); ?>">
                                     <?php } ?>
 
                                     <?php
-                                    if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
+                                    if (CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
-                                            <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
+                                        <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
                                         <?php
                                         /* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
@@ -467,10 +473,11 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            //coursepress_no_elements();
+
             jQuery('.modules_accordion .switch-tmce').each(function() {
                 jQuery(this).trigger('click');
             });
+            
             var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
             var elements_count = jQuery('#unit-page-1 .modules_accordion .module-holder-title').length;
             //jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
@@ -482,7 +489,7 @@ $preview_redirect = isset( $_REQUEST['preview_redirect'] ) ? $_REQUEST['preview_
             }
 
             var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
-            
+
             jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').accordion("option", "active", <?php echo ($unit_page_num == 1) ? ($active_element) : $active_element; ?>);
 
             var unit_pages = jQuery("#unit-pages .ui-tabs-nav li").size() - 2;

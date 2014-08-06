@@ -1012,6 +1012,12 @@ embed, iframe, object, video {
     margin-top: 10px;
 }
 
+span.apply-button {
+	text-align: right;
+	display: block;
+	float:right;
+}
+
 table.popup-payment-info,
 table.popup-payment-info td,
 table.popup-payment-info th {
@@ -1026,3 +1032,4 @@ table.popup-payment-info th {
 .popup-payment-button {
 	width: 100%;
 }
+

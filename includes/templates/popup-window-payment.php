@@ -42,17 +42,17 @@
 <hr />
 
 <?php
+			global $mp_gateway_active_plugins;
+			cp_write_log( $mp_gateway_active_plugins );
+	// MP3 integration
+	foreach( $mp_gateway_active_plugins as $gateway ){
 
-	foreach( $gateways as $gateway ){
-		
-		if( in_array( $gateway, array_keys( CoursePress::$gateway ) ) ) { 
 		?>
 
-			<button data-course-id="<?php echo $course_id; ?>" data-product-id="<?php echo $product_id; ?>" data-gateway="<?php echo $gateway; ?>" name="<?php echo $gateway; ?>-button" class="popup-payment-button"><?php echo CoursePress::$gateway[ $gateway ]['friendly']; ?></button>
+			<button data-course-id="<?php echo $course_id; ?>" data-product-id="<?php echo $product_id; ?>" data-gateway="<?php echo $gateway->plugin_name; ?>" name="<?php echo $gateway->plugin_name; ?>-button" class="popup-payment-button"><?php echo $gateway->public_name; ?></button>
 		
 		<?php
-		}
-		
+
 	}
 	
 ?>

@@ -36,7 +36,7 @@ $post = $unit->details;
 
                 <div class="clearfix"></div>
 
-                <h2><?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title"]'); ?></h2>
+                <?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title"]'); ?>
 
                 <div class="entry-content">
                     <?php
