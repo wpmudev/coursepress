@@ -52,6 +52,51 @@
             </div><!--/inside-->
 
         </div><!--/postbox-->
+        
+        
+        <div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Course Enrollment Confirmation E-mail', 'cp' ); ?></span></h3>
+            <div class="inside">
+                <p class="description"><?php _e( 'Settings for an e-mail student get upon enrollment', 'cp' ); ?></p>
+                <table class="form-table">
+                    <tbody id="items">
+                        <tr>
+                            <th><?php _e( 'From Name', 'cp' ); ?></th>
+                            <td>
+                                <input type="text" name="option_enrollment_from_name" value="<?php echo esc_attr( coursepress_get_enrollment_from_name() ); ?>" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th><?php _e( 'From E-mail', 'cp' ); ?></th>
+                            <td>
+                                <input type="text" name="option_enrollment_from_email" value="<?php echo esc_attr( coursepress_get_enrollment_from_email() ); ?>" />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?php _e( 'E-mail Subject', 'cp' ); ?></th>
+                            <td>
+                                <input type="text" name="option_enrollment_email_subject" value="<?php echo esc_attr( coursepress_get_enrollment_email_subject() ); ?>" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th><?php _e( 'E-mail Content', 'cp' ); ?></th>
+                            <td>
+                                <p class="description"><?php _e( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS', 'cp' );?></p>
+                                <?php
+                                $args = array( "textarea_name" => "option_enrollment_content_email", "textarea_rows" => 10, 'wpautop' => true );
+                                wp_editor( stripslashes( coursepress_get_enrollment_content_email() ), "option_enrollment_content_email", $args );
+                                ?>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div><!--/inside-->
+
+        </div><!--/postbox-->
 
 
         <div class="postbox">

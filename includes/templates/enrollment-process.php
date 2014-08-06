@@ -35,6 +35,7 @@ if ( is_user_logged_in() ) {
                     //Enroll student in
                     if ( $student->enroll_in_course($course_id) ) {
                         printf(__('Congratulations, you have successfully enrolled in "%s" course! Check your <a href="' . $this->get_student_dashboard_slug(true) . '">Dashboard</a> for more info.', 'cp'), '<strong>' . $course->details->post_title . '</strong>');
+                       
                     } else {
                         _e('Something went wrong during the enrollment process. Please try again later.', 'cp');
                     }

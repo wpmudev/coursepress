@@ -238,6 +238,34 @@ function coursepress_send_email( $email_args = array() ) {
         function my_mail_from_name_function( $name ) {
             return coursepress_get_registration_from_name();
         }
+    }
+    
+    if ( $email_args['email_type'] == 'enrollment_confirmation' ) {
+        global $course_slug;
+        $email_address = $email_args['student_email'];
+        $dashboard_address = $email_args['dashboard_address'];
+        $subject = coursepress_get_enrollment_email_subject();
+        $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
+        $course = new Course($email_args['course_id']);
+        
+        $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'STUDENT_DASHBOARD' );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url(), $course->get_permalink(), $course->details->post_title, $email_args['dashboard_address'] );
+
+        $message = coursepress_get_enrollment_content_email();
+
+        $message = str_replace($tags, $tags_replaces, $message);
+
+        add_filter('wp_mail_from', 'my_mail_from_function');
+
+        function my_mail_from_function( $email ) {
+            return coursepress_get_enrollment_from_email();
+        }
+
+        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+
+        function my_mail_from_name_function( $name ) {
+            return coursepress_get_enrollment_from_name();
+        }
 
     }
 
@@ -425,6 +453,35 @@ Yours sincerely,
 %5$s Team'), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>');
 
     return get_option('registration_content_email', $default_registration_content_email);
+}
+
+/* Get enrollment email data */
+
+function coursepress_get_enrollment_from_name() {
+    return get_option('enrollment_from_name', get_option('blogname'));
+}
+
+function coursepress_get_enrollment_from_email() {
+    return get_option('enrollment_from_email', get_option('admin_email'));
+}
+
+function coursepress_get_enrollment_email_subject() {
+    return get_option('enrollment_email_subject', 'Enrollment Confirmation');
+}
+
+function coursepress_get_enrollment_content_email() {
+    $default_enrollment_content_email = sprintf(__('Hi %1$s,
+
+Congratulations! You have enrolled in course "%2$s" successfully! 
+
+You may check all courses you enrolled in here: %3$s.
+
+Or you can expore other courses in your %4$s
+
+Yours sincerely,
+%5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">'.__('Dashboard', 'cp').'</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
+
+    return get_option('enrollment_content_email', $default_enrollment_content_email);
 }
 
 /* Get instructor invite email data */
