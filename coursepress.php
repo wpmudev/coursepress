@@ -449,8 +449,12 @@ if ( !class_exists('CoursePress') ) {
                     'on_success' => 'success-enrollment',
                 ),
                 'payment_checkout' => array(
-                    'action' => 'template',
-                    'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+					// MP3 integration
+                    // 'action' => 'template',
+                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+					'data' => $this->signup_pre_redirect_to_cart( $args ),
+					'action' => 'redirect',
+					'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
                     'on_success' => 'process_payment',
                 ),
                 'process_payment' => array(
@@ -458,10 +462,10 @@ if ( !class_exists('CoursePress') ) {
                     // 'action' => 'callback',
 					// 'action' => 'render',
                     // 'callback' => array( &$this, 'signup_payment_processing' ),
-					'data' => $this->signup_payment_processing( $args ),
-					'action' => 'redirect',
-					'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),										
-                    'on_success' => 'payment_confirmed',
+					// 'data' => $this->signup_payment_processing( $args ),
+					// 'action' => 'redirect',
+					// 'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
+                    // 'on_success' => 'payment_confirmed',
                 ),				
                 'payment_confirmed' => array(
                     'template' => '',
@@ -620,6 +624,26 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 		
+		// Current MP integration
+		function signup_pre_redirect_to_cart( $args = array() ) {
+			global $mp;
+
+			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+			$course = new Course($course_id);
+			$product_id = $course->mp_product_id();
+
+			// Add course to cart
+			$product = get_post($product_id);
+			$quantity = 1;
+			$variation = 0;
+
+			// $cart = $mp->get_cart_cookie();
+			$cart = array(); // remove all cart items
+			$cart[ $product_id ][ $variation ] = $quantity;
+			$mp->set_cart_cookie( $cart );			
+		}
+		
+		// Future MP3 integration 
 	    function signup_payment_processing( $args = array() ) {
             cp_write_log('processing payment....');		
 			
@@ -632,39 +656,9 @@ if ( !class_exists('CoursePress') ) {
 			$product = false;
 			$product_meta = false;
 			
-			cp_write_log( $gateway );
+
 			$_SESSION['mp_payment_method'] = $gateway;
-			// if( 0 != $product_id ){
-			// 	$product = get_post( $product_id );
-			// 	$product_meta = $mp->get_meta_details( $product_id );
-			// }
-		
-
-			// This method had a lot of promise.... but was a dead end :(
-			// $return_data['html'] = _mp_cart_payment('form');
-				
-			switch ( $gateway ) {
-
-				case 'paypal-express':
-
-					break;
-
-				default:
-
-					break;
-			}
-			
-			// If successful... get payment status (pending if waiting for IPN) and redirect accordingly...
-			
-			// $this->popup_signup('payment_confirmed');
-			// $this->popup_signup('payment_pending');
-			// others if needed
-			
-			// TODO: Use above commented methods and turn this back into a callback (not 'render')
-			//       Or create some logic below and return some html... to deal with on frontend
-			
-			// $return_data['html'] = something_to_render_or_template();
-			// $return_data['gateway'] = $gateway;
+			$_SESSION['mp_shipping_info'] = '';
 			
 			
 			return $return_data;
@@ -900,7 +894,7 @@ if ( !class_exists('CoursePress') ) {
 
         function comments_open_filter( $open, $post_id ) {
             $current_post = get_post($post_id);
-            if ( $current_post->post_type == 'discussions' ) {
+            if ( $current_post && $current_post->post_type == 'discussions' ) {
                 return true;
             }
         }

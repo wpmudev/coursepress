@@ -221,15 +221,17 @@ jQuery(document).ready(function($) {
 
     function open_popup(step, course_id, data) {
         if (typeof data === 'undefined') {//data not set
-            cp_popup_load_content(step, course_id);
+            content_loaded = cp_popup_load_content(step, course_id);
         } else {
-            cp_popup_load_content(step, course_id, data);
+            content_loaded = cp_popup_load_content(step, course_id, data);
         }
 
         $("body > div").not($(".cp_popup_window")).addClass('cp_blur');
         $('.cp_popup_overall').show();
         $('.cp_popup_window').center();
-        $('.cp_popup_window').show();
+		if ( step != 'enrollment' ) {
+	        $('.cp_popup_window').show();			
+		}
 
     }
 
@@ -266,6 +268,7 @@ jQuery(document).ready(function($) {
                     $('.cp_popup_content').html(response.html);
                     $('.cp_popup_content [name="signup-next-step"]').val(response.next_step);
                     init_popup($('.cp_popup_content'));
+			        $('.cp_popup_window').show();
                     $('.cp_popup_window').autoHeight();
                     $('.cp_popup_window').center();
                     $('.cp_popup_loading').hide();
