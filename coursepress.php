@@ -448,36 +448,44 @@ if ( !class_exists('CoursePress') ) {
                     'callback' => array( &$this, 'signup_enroll_student', $args ),
                     'on_success' => 'success-enrollment',
                 ),
-                'payment_checkout' => array(
-					// MP3 integration
-                    // 'action' => 'template',
-                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-					'data' => $this->signup_pre_redirect_to_cart( $args ),
-					'action' => 'redirect',
-					'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
-                    'on_success' => 'process_payment',
-                ),
-                'process_payment' => array(
-					// MP3 integration
-                    // 'action' => 'callback',
-					// 'action' => 'render',
-                    // 'callback' => array( &$this, 'signup_payment_processing' ),
-					// 'data' => $this->signup_payment_processing( $args ),
-					// 'action' => 'redirect',
-					// 'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
-                    // 'on_success' => 'payment_confirmed',
-                ),				
-                'payment_confirmed' => array(
-                    'template' => '',
-                ),
-                'payment_pending' => array(
-                    'template' => '',
-                ),				
-                'redirect_to_course' => array(
-                    'action' => 'redirect',
-                    'url' => get_permalink( $course_id ) . '/units' . '/',
-                ),
             ));
+			
+			global $mp;
+			
+			if ( $mp ) {
+				$signup_steps = array_merge($signup_steps, array(
+	                'payment_checkout' => array(
+						// MP3 integration
+	                    // 'action' => 'template',
+	                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+						// 'data' => $this->signup_pre_redirect_to_cart( $args ),
+						'action' => 'redirect',
+						'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
+	                    'on_success' => 'process_payment',
+	                ),
+	                'process_payment' => array(
+						// MP3 integration
+	                    // 'action' => 'callback',
+						// 'action' => 'render',
+	                    // 'callback' => array( &$this, 'signup_payment_processing' ),
+						'data' => $this->signup_payment_processing( $args ),
+						'action' => 'redirect',
+						'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
+	                    // 'on_success' => 'payment_confirmed',
+	                ),				
+	                'payment_confirmed' => array(
+	                    'template' => '',
+	                ),
+	                'payment_pending' => array(
+	                    'template' => '',
+	                ),				
+	                'redirect_to_course' => array(
+	                    'action' => 'redirect',
+	                    'url' => get_permalink( $course_id ) . '/units' . '/',
+	                ),
+				));				
+				
+			}
 
             $signup_steps = array_merge($signup_steps, array(
                 'success-enrollment' => array(
@@ -627,6 +635,10 @@ if ( !class_exists('CoursePress') ) {
 		// Current MP integration
 		function signup_pre_redirect_to_cart( $args = array() ) {
 			global $mp;
+			
+			if ( !$mp ) {
+				return;
+			}
 
 			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
 			$course = new Course($course_id);
