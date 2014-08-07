@@ -259,6 +259,9 @@ if ( !class_exists('Course') ) {
                 } else {
                     $post_id = wp_insert_post($post);
                 }
+				
+				// Only works if the course actually has a thumbnail.
+				set_post_thumbnail( $mp_product_id, get_post_thumbnail_id( $course_id ) );
 
                 $automatic_sku = $_POST['meta_auto_sku'];
 

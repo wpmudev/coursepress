@@ -45,6 +45,9 @@ if ( !class_exists('CoursePress') ) {
         var $plugin_dir = '';
         var $plugin_url = '';
         public $marketpress_active = false;
+		
+		public static $gateway = array();
+		
 
         function __construct() {
 
@@ -139,8 +142,27 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ));
 
+                add_action('wp_ajax_cp_popup_signup', array( &$this, 'popup_signup' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_signup', array( &$this, 'popup_signup' ));
+
+                add_action('wp_ajax_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ));
+
+                add_action('wp_ajax_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ));
+
+                add_action('wp_ajax_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ));
+
+                add_action('wp_ajax_nopriv_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ));
+
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
+
+			//Setup Gatewat Array
+			add_action('init', array( $this, 'setup_gateway_array' ) );
 
 //Output buffer hack
             add_action('init', array( &$this, 'output_buffer' ), 0);
@@ -318,6 +340,330 @@ if ( !class_exists('CoursePress') ) {
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
+
+		function setup_gateway_array() {
+			
+			$array = array(
+				'paypal-express' => array(
+					'class' => 'MP_Gateway_Paypal_Express',
+					'friendly' => __( 'Pay with PayPal', 'cp' ),
+				),
+				'manual-payments' => array(
+					'class' => 'MP_Gateway_ManualPayments',
+					'friendly' => __( 'Bank Transfer', 'cp' ),					
+				),
+				'simplify' => array(
+					'class' => 'MP_Gateway_Simplify',
+					'friendly' => __( 'Pay by Credit Card', 'cp' ),					
+				),
+			);
+			
+			CoursePress::$gateway = $array;
+		}
+
+
+
+        function cp_popup_login_user() {
+
+            $creds = array();
+            $creds['user_login'] = $_POST['username'];
+            $creds['user_password'] = $_POST['password'];
+            $creds['remember'] = true;
+
+            $user = wp_signon($creds, false);
+
+            if ( is_wp_error($user) ) {
+                echo 'failed';
+            } else {
+                echo 'success';
+            }
+            exit;
+        }
+
+        function cp_popup_user_exists() {
+            if ( isset($_POST['username']) ) {
+                if ( !validate_username($_POST['username']) ) {//username is not valid
+                    echo 1;
+                    exit;
+                }
+                echo username_exists($_POST['username']);
+                exit;
+            }
+        }
+
+        function cp_popup_email_exists() {
+            if ( isset($_POST['email']) ) {
+                if ( !is_email($_POST['email']) ) {//username is not valid
+                    echo 1;
+                    exit;
+                }
+                echo email_exists($_POST['email']);
+                exit;
+            }
+        }
+
+        // Popup Signup Process
+        function popup_signup( $step = false, $args = array() ) {
+			global $mp;
+            if ( !$step && isset($_POST['step']) ) {
+                $step = $_POST['step'];
+            }
+			
+			if ( empty( $args ) && isset( $_POST['data'] ) ) {
+				$args = $_POST['data'];
+			}
+			
+            $ajax_response = array();
+
+            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+
+            $is_paid = get_post_meta($course_id, 'paid_course', true);
+            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
+
+            // cp_write_log( $_POST );
+            $signup_steps = apply_filters('coursepress_signup_steps', array(
+                'login' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
+                    'on_success' => 'process_login',
+                ),
+                'process_login' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_login_user' ),
+                    'on_success' => 'enrollment',
+					'on_fail' => 'login',
+                ),
+                'signup' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
+                    'on_success' => 'process_signup',
+                ),
+                'process_signup' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_create_user' ),
+                    'on_success' => 'enrollment',
+                ),
+                'enrollment' => array(
+                    'action' => 'callback',
+                    'callback' => array( &$this, 'signup_enroll_student', $args ),
+                    'on_success' => 'success-enrollment',
+                ),
+                'payment_checkout' => array(
+					// MP3 integration
+                    // 'action' => 'template',
+                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+					'data' => $this->signup_pre_redirect_to_cart( $args ),
+					'action' => 'redirect',
+					'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
+                    'on_success' => 'process_payment',
+                ),
+                'process_payment' => array(
+					// MP3 integration
+                    // 'action' => 'callback',
+					// 'action' => 'render',
+                    // 'callback' => array( &$this, 'signup_payment_processing' ),
+					// 'data' => $this->signup_payment_processing( $args ),
+					// 'action' => 'redirect',
+					// 'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
+                    // 'on_success' => 'payment_confirmed',
+                ),				
+                'payment_confirmed' => array(
+                    'template' => '',
+                ),
+                'payment_pending' => array(
+                    'template' => '',
+                ),				
+                'redirect_to_course' => array(
+                    'action' => 'redirect',
+                    'url' => get_permalink( $course_id ) . '/units' . '/',
+                ),
+            ));
+
+            $signup_steps = array_merge($signup_steps, array(
+                'success-enrollment' => array(
+                    'action' => 'template',
+                    'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
+                    'on_success' => 'done',
+                ),
+            ));
+
+            if ( !empty($step) ) {
+                if ( 'template' == $signup_steps[$step]['action'] ) {
+                    ob_start();
+                    include( $signup_steps[$step]['template'] );
+                    $html = ob_get_clean();
+                    $ajax_response['html'] = $html;
+                } elseif ( 'callback' == $signup_steps[$step]['action'] ) {
+                    $classname = get_class($signup_steps[$step]['callback'][0]);
+                    $method = $signup_steps[$step]['callback'][1];
+
+                    if ( isset($signup_steps[$step]['callback'][2]) ) {//args
+                        call_user_func($classname . '::' . $method, $signup_steps[$step]['callback'][2]);
+                    } else {
+                        call_user_func($classname . '::' . $method);
+                    }
+                } elseif ( 'render' == $signup_steps[$step]['action'] ) {
+					$data = $signup_steps[$step]['data'];
+                	$ajax_response['html'] = $data['html'];
+					$ajax_response['gateway'] = $data['gateway'];
+                } elseif( 'redirect' == $signup_steps[$step]['action'] ) {
+					$ajax_response['redirect_url'] = $signup_steps[$step]['url'];
+                }
+
+                $ajax_response['current_step'] = $step;
+                $ajax_response['next_step'] = $signup_steps[$step]['on_success'];
+                $ajax_response['all_steps'] = array_keys($signup_steps);
+
+                $response = array(
+                    'what' => 'instructor_invite',
+                    'action' => 'instructor_invite',
+                    'id' => 1, // success status
+                    'data' => json_encode($ajax_response),
+                );
+                $xmlResponse = new WP_Ajax_Response($response);
+                $xmlResponse->send();
+
+                exit;
+            }
+        }
+
+        function signup_login_user() {
+			cp_write_log('logging in....');
+			// Handle login stuff
+			$this->popup_signup('enrollment');				
+        }
+
+        function signup_create_user() {
+            cp_write_log('creating user....');
+
+            parse_str($_POST['data'], $posted_data);
+
+            if ( wp_verify_nonce($posted_data['submit_signup_data'], 'popup_signup_nonce') ) {
+
+                $student = new Student(0);
+                $student_data = array();
+
+                $student_data['role'] = 'subscriber';
+                $student_data['user_login'] = $posted_data['username'];
+                $student_data['user_pass'] = $posted_data['cp_popup_password'];
+                $student_data['user_email'] = $posted_data['email'];
+                $student_data['first_name'] = $posted_data['student_first_name'];
+                $student_data['last_name'] = $posted_data['student_last_name'];
+
+                $student_id = $student->add_student($student_data);
+
+                if ( $student_id !== 0 ) {
+
+                    $email_args['email_type'] = 'student_registration';
+                    $email_args['student_id'] = $student_id;
+                    $email_args['student_email'] = $student_data['user_email'];
+                    $email_args['student_first_name'] = $student_data['first_name'];
+                    $email_args['student_last_name'] = $student_data['last_name'];
+
+                    coursepress_send_email($email_args);
+
+                    $creds = array();
+                    $creds['user_login'] = $student_data['user_login'];
+                    $creds['user_password'] = $student_data['user_pass'];
+                    $creds['remember'] = true;
+
+                    $user = wp_signon($creds, false);
+
+                    $args['student_id'] = $student_id;
+                    $args['course_id'] = $posted_data['course_id'];
+
+                    $this->popup_signup('enrollment', $args);
+                    exit;
+                }
+            }
+        }
+
+        function signup_enroll_student( $args = array() ) {
+            cp_write_log('enrolling user (or passing them on to payment)....');
+
+            // Handle enrolment stuff
+            $student_id = get_current_user_id();
+            $student_id = $student_id > 0 ? $student_id : $args['student_id'];
+			$course_id = false;
+			if ( !empty( $args ) ) {
+				$course_id = isset($args['course_id']) ? $args['course_id'] : false;
+			} else {
+				$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
+			}
+
+            if ( isset($course_id) ) {	
+				
+	            $is_paid = get_post_meta($course_id, 'paid_course', true);
+	            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
+				
+				$student = new Student($student_id);
+				$existing_student = $student->has_access_to_course($course_id);
+				
+				// If it is a paid course we have a different path.
+				if ( $is_paid && ! $existing_student ) {
+					// Start to use the methods in the popup_signup_payment hook
+					$this->popup_signup( 'payment_checkout', $args );	
+					return;
+				}
+
+                if ( ! $existing_student ) {//only if he don't have access already
+                    $student->enroll_in_course($course_id);
+                
+	                $args['course_id'] = $course_id;
+				
+					$this->enrollment_processed = true;
+				
+	                //show success message
+	                $this->popup_signup('success-enrollment', $args);					
+				} else {
+					$this->popup_signup('redirect_to_course');
+				}
+				
+            } else {
+                echo 'course id not set';
+            }
+        }
+		
+		// Current MP integration
+		function signup_pre_redirect_to_cart( $args = array() ) {
+			global $mp;
+
+			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+			$course = new Course($course_id);
+			$product_id = $course->mp_product_id();
+
+			// Add course to cart
+			$product = get_post($product_id);
+			$quantity = 1;
+			$variation = 0;
+
+			// $cart = $mp->get_cart_cookie();
+			$cart = array(); // remove all cart items
+			$cart[ $product_id ][ $variation ] = $quantity;
+			$mp->set_cart_cookie( $cart );			
+		}
+		
+		// Future MP3 integration 
+	    function signup_payment_processing( $args = array() ) {
+            cp_write_log('processing payment....');		
+			
+			global $mp;
+			$return_data = array( 'html' => '' );
+						
+			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
+			$product_id = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['product_id'] : 0;
+			$gateway = $args['gateway'];
+			$product = false;
+			$product_meta = false;
+			
+
+			$_SESSION['mp_payment_method'] = $gateway;
+			$_SESSION['mp_shipping_info'] = '';
+			
+			
+			return $return_data;
+		}
+
 
         function flush_rules() {
             global $wp_rewrite;
@@ -555,7 +901,7 @@ if ( !class_exists('CoursePress') ) {
 
         function comments_open_filter( $open, $post_id ) {
             $current_post = get_post($post_id);
-            if ( $current_post->post_type == 'discussions' ) {
+            if ( $current_post && $current_post->post_type == 'discussions' ) {
                 return true;
             }
         }
@@ -2230,6 +2576,20 @@ if ( !class_exists('CoursePress') ) {
         function header_actions() {//front
             global $post;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
+            wp_enqueue_script('enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ));
+            wp_localize_script('enrollment_process', 'cp_vars', array(
+                'admin_ajax_url' => admin_url('admin-ajax.php'),
+                'message_all_fields_are_required' => __('All fields are required.', 'cp'),
+                'message_username_minimum_length' => __('Username must be at least 4 characters in length', 'cp'),
+                'message_username_exists' => __('Username already exists or invalid. Please choose another one.'),
+                'message_email_exists' => __('E-mail already exists or invalid. Please choose another one.'),
+                'message_emails_dont_match' => __("E-mails mismatch."),
+                'message_passwords_dont_match' => __("Passwords mismatch."),
+                'message_password_minimum_length' => sprintf(__('Password must be at least %d characters in length.', 'cp'), apply_filters('cp_min_password_length', 6)),
+                'minimum_password_lenght' => apply_filters('cp_min_password_length', 6),
+                'message_login_error' => __('Username and/or password is not valid.', 'cp'),
+            ));
+            //admin_url('admin-ajax.php')
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
             wp_enqueue_script('coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ));
             if ( $post && !$this->is_preview($post->ID) ) {
@@ -2245,6 +2605,7 @@ if ( !class_exists('CoursePress') ) {
 
             if ( !is_admin() ) {
                 wp_enqueue_style('front_general', $this->plugin_url . 'css/front_general.css', array(), $this->version);
+                wp_enqueue_style('front_enrollment_process', $this->plugin_url . 'css/front-enrollment-process.css', array(), $this->version);
             }
 
             wp_enqueue_script('coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), '20120207', true);
@@ -2260,6 +2621,11 @@ if ( !class_exists('CoursePress') ) {
                 </div>
                 <?php
             }
+            $this->load_popup_window();
+        }
+
+        function load_popup_window() {
+            include_once( $this->plugin_dir . 'includes/templates/popup-window.php' );
         }
 
         /* Add required jQuery scripts */
@@ -3005,7 +3371,7 @@ if ( !class_exists('CoursePress') ) {
 
             if ( $course_details && !empty($course_details) ) {
                 $student = new Student($order->post_author);
-                $student->enroll_in_course($course_details->ID);
+                $student->enroll_in_course($course->details->ID);
             }
         }
 

@@ -45,7 +45,10 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
 
         if ( $new_post_id != 0 ) {
             //ob_start();
+<<<<<<< HEAD
+=======
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+>>>>>>> signup-process
 
 
             if ( isset($_GET['ms']) ) {

@@ -20,4 +20,8 @@ if ( $paged == 1 ) {
 
 $module = new Unit_Module();
 $module->get_modules_front($unit_id);
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> signup-process

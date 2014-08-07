@@ -85,7 +85,7 @@ if ( !class_exists('Student') ) {
 
             $email_args['email_type'] = 'enrollment_confirmation';
             $email_args['course_id'] = $course_id;
-            $email_args['dashboard_address'] = $cp->get_student_dashboard_slug(true);
+            $email_args['dashboard_address'] = CoursePress::instance()->get_student_dashboard_slug(true);
             $email_args['student_first_name'] = $this->user_firstname;
             $email_args['student_last_name'] = $this->user_lastname;
             $email_args['student_email'] = $this->user_email;

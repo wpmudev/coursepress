@@ -936,6 +936,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'passcode_text' => __('Passcode Required', 'cp'),
                 'not_started_text' => __('Not Available', 'cp'),
                 'access_text' => __('Start Learning', 'cp'),
+				'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
 
@@ -954,6 +955,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $course->prerequisite = get_post_meta($course_id, 'prerequisite', true);
 
             $course_active = true; // NEED CHECK HERE
+			
+            $is_paid = get_post_meta($course_id, 'paid_course', true);
+            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
             $course_started = strtotime($course->course_start_date) <= time() ? true : false;
             $enrollment_started = strtotime($course->enrollment_start_date) <= time() ? true : false;
@@ -969,7 +973,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( !is_user_logged_in() ) {
 
                 if ( 'manually' != $course->enroll_type ) {
-                    if ( $course_full ) {
+                    if ( $course_full && ! "yes" == $list_page ) {
                         // "COURSE FULL"
                         $button .= '<span class="apply-button apply-button-full ' . $class . '">' . $course_full_text . '</span>';
                         // cp_write_log( 'ONE');
@@ -999,7 +1003,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         } else {
                             // "SIGN UP NOW"
                             $button_url = $signup_url;
-                            $button .= '<button data-link="' . $button_url . '?course_id=' . $course_id . '" class="apply-button ' . $class . '">' . $signup_text . '</button>';
+                            $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="'.$course_id.'" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
                             // cp_write_log( 'SIX');	
                         }
                     }
@@ -1056,7 +1060,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // No passcodes, so lets join.
                     } else {
                         // ENROLL
-                        $button .= '<input type="submit" class="apply-button ' . $class . '" value="' . $enroll_text . '" />';
+						// if ( $is_paid ) {
+						//                             $button_url = $signup_url;
+                            $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="'.$course_id.'" class="apply-button enroll' . $class . '">' . $enroll_text . '</button>';
+						// } else {
+						// 	                        $button .= '<input type="submit" class="apply-button ' . $class . '" value="' . $enroll_text . '" />';
+						// }
+						
                         $is_form = true;
                         // cp_write_log( 'FOURTEEN');	
                     }
@@ -1074,7 +1084,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // "NOT YET AVAILABLE"
                         $button .= '<span class="apply-button apply-button-not-started ' . $class . '">' . $not_started_text . '</span>';
                         // cp_write_log( 'SIXTEEN');			
-                    } elseif ( !is_single() && false === strpos($_SERVER['REQUEST_URI'], CoursePress::get_student_dashboard_slug()) ) {
+                    } elseif ( !is_single() && false === strpos($_SERVER['REQUEST_URI'], CoursePress::instance()->get_student_dashboard_slug() ) ) {
                         // GO TO COURSE
                         $button_url = get_permalink($course_id);
                         $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
