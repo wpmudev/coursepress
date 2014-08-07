@@ -4,14 +4,70 @@
 
 //add_filter('mp_checkout_step_url', 'mp_checkout_step_url');
 
-/*function mp_checkout_step_url($step){
-    if($step == 'shipping'){
-        $url = mp_cart_link(false, true) . trailingslashit('checkout');//skip shipping step
-    }else{
-        $url = mp_cart_link(false, true) . trailingslashit($step);
+/* function mp_checkout_step_url($step){
+  if($step == 'shipping'){
+  $url = mp_cart_link(false, true) . trailingslashit('checkout');//skip shipping step
+  }else{
+  $url = mp_cart_link(false, true) . trailingslashit($step);
+  }
+  return $url;
+  } */
+
+function cp_get_order_course_id( $order_id ) {
+    global $mp;
+    $cart_info = $mp->get_order($order_id)->mp_cart_info;
+    $mp_product_id = key($cart_info);
+    $post_parent = get_post_ancestors($mp_product_id);
+    if ( is_array($post_parent) ) {
+        return $post_parent[0];
+    } else {
+        return false;
     }
-    return $url;
-}*/
+}
+
+add_filter('mp_order_notification_subject', 'cp_mp_order_notification_subject', 10, 2);
+
+function cp_mp_order_notification_subject( $subject, $order ) {
+    if ( cp_get_order_course_id($order->ID) ) {
+        return coursepress_get_mp_order_email_subject();
+    } else {
+        return $subject;
+    }
+}
+
+add_filter('mp_order_notification_body', 'cp_mp_order_notification_body', 10, 2);
+
+function cp_mp_order_notification_body( $content, $order ) {
+    if ( cp_get_order_course_id($order->ID) ) {
+        $course_id = cp_get_order_course_id($order->ID);
+        $course = new Course($course_id);
+
+        $tracking_url = apply_filters('wpml_marketpress_tracking_url', mp_orderstatus_link(false, true) . $order->post_title . '/');
+
+        $tags = array( 'CUSTOMER_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'ORDER_ID', 'ORDER_STATUS_URL' );
+        $tags_replaces = array( $order->mp_shipping_info['name'], get_bloginfo(), wp_login_url(), site_url(), $course->get_permalink(), $course->details->post_title, $order->ID, $tracking_url );
+
+        $message = coursepress_get_mp_order_content_email();
+
+        $message = str_replace($tags, $tags_replaces, $message);
+
+        add_filter('wp_mail_from', 'my_mail_from_function', 99);
+
+        function my_mail_from_function( $email ) {
+            return coursepress_get_mp_order_from_email();
+        }
+
+        add_filter('wp_mail_from_name', 'my_mail_from_name_function', 99);
+
+        function my_mail_from_name_function( $name ) {
+            return coursepress_get_mp_order_from_name();
+        }
+
+        return $message;
+    } else {
+        return $content;
+    }
+}
 
 /* End MarketPress customizations */
 
@@ -97,7 +153,7 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
     echo '<div class="navigation module-pagination" id="navigation-pagination"><ul>' . "\n";
 
     for ( $link_num = 1; $link_num <= $max; $link_num++ ) {
-		$enabled = "";
+        $enabled = "";
         if ( $coursepress->is_preview($unit_id, $link_num) ) {
             $enabled = 'enabled-link';
         } else {
@@ -195,7 +251,7 @@ function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
 }
 
 function coursepress_unit_pages( $unit_id ) {
-    
+
     $pages_num = 1;
 
     $module = new Unit_Module;
@@ -206,7 +262,7 @@ function coursepress_unit_pages( $unit_id ) {
             $pages_num++;
         }
     }
-   
+
     return $pages_num;
 }
 
@@ -227,19 +283,20 @@ function coursepress_send_email( $email_args = array() ) {
 
         $message = str_replace($tags, $tags_replaces, $message);
 
-        add_filter('wp_mail_from', 'my_mail_from_function');
+        add_filter('wp_mail_from', 'my_registration_from_function');
 
-        function my_mail_from_function( $email ) {
+        function my_registration_from_function( $email ) {
             return coursepress_get_registration_from_email();
         }
 
-        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+        add_filter('wp_mail_from_name', 'my_registration_from_name_function');
 
-        function my_mail_from_name_function( $name ) {
+        function my_registration_from_name_function( $name ) {
             return coursepress_get_registration_from_name();
         }
+
     }
-    
+
     if ( $email_args['email_type'] == 'enrollment_confirmation' ) {
         global $course_slug;
         $email_address = $email_args['student_email'];
@@ -247,7 +304,7 @@ function coursepress_send_email( $email_args = array() ) {
         $subject = coursepress_get_enrollment_email_subject();
         $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
         $course = new Course($email_args['course_id']);
-        
+
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'STUDENT_DASHBOARD' );
         $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url(), $course->get_permalink(), $course->details->post_title, $email_args['dashboard_address'] );
 
@@ -255,15 +312,15 @@ function coursepress_send_email( $email_args = array() ) {
 
         $message = str_replace($tags, $tags_replaces, $message);
 
-        add_filter('wp_mail_from', 'my_mail_from_function');
+        add_filter('wp_mail_from', 'my_enrollment_from_function');
 
-        function my_mail_from_function( $email ) {
+        function my_enrollment_from_function( $email ) {
             return coursepress_get_enrollment_from_email();
         }
 
-        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+        add_filter('wp_mail_from_name', 'my_enrollment_from_name_function');
 
-        function my_mail_from_name_function( $name ) {
+        function my_enrollment_from_name_function( $name ) {
             return coursepress_get_enrollment_from_name();
         }
 
@@ -291,15 +348,15 @@ function coursepress_send_email( $email_args = array() ) {
 
         $message = str_replace($tags, $tags_replaces, $message);
 
-        add_filter('wp_mail_from', 'my_mail_from_function');
+        add_filter('wp_mail_from', 'my_passcode_from_function');
 
-        function my_mail_from_function( $email ) {
+        function my_passcode_from_function( $email ) {
             return coursepress_get_invitation_passcode_from_email();
         }
 
-        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+        add_filter('wp_mail_from_name', 'my_passcode_from_name_function');
 
-        function my_mail_from_name_function( $name ) {
+        function my_passcode_from_name_function( $name ) {
             return coursepress_get_invitation_passcode_from_name();
         }
 
@@ -334,30 +391,39 @@ function coursepress_send_email( $email_args = array() ) {
 
         $message = str_replace($tags, $tags_replaces, $message);
 
-        add_filter('wp_mail_from', 'my_mail_from_function');
+        add_filter('wp_mail_from', 'my_instructor_invitation_from_function');
 
-        function my_mail_from_function( $email ) {
+        function my_instructor_invitation_from_function( $email ) {
             return coursepress_get_instructor_invitation_from_email();
         }
 
-        add_filter('wp_mail_from_name', 'my_mail_from_name_function');
+        add_filter('wp_mail_from_name', 'my_instructor_invitation_from_name_function');
 
-        function my_mail_from_name_function( $name ) {
+        function my_instructor_invitation_from_name_function( $name ) {
             return coursepress_get_instructor_invitation_from_name();
         }
 
     }
 
-    add_filter('wp_mail_content_type', 'set_content_type');
+    add_filter('wp_mail_content_type', 'cp_email_set_content_type');
 
-    function set_content_type( $content_type ) {
-        return 'text/html';
+    if ( !function_exists('cp_email_set_content_type') ) {
+
+        function cp_email_set_content_type( $content_type ) {
+            return 'text/html';
+        }
+
     }
+
 
     add_filter('wp_mail_charset', 'set_charset');
 
-    function set_charset( $charset ) {
-        return get_option('blog_charset');
+    if ( !function_exists('set_charset') ) {
+
+        function set_charset( $charset ) {
+            return get_option('blog_charset');
+        }
+
     }
 
     return wp_mail($email_address, stripslashes($subject), stripslashes(nl2br($message)));
@@ -455,6 +521,35 @@ Yours sincerely,
     return get_option('registration_content_email', $default_registration_content_email);
 }
 
+/* Get MarketPress order email data */
+
+function coursepress_get_mp_order_from_name() {
+    return get_option('mp_order_from_name', get_option('blogname'));
+}
+
+function coursepress_get_mp_order_from_email() {
+    return get_option('mp_order_from_email', get_option('admin_email'));
+}
+
+function coursepress_get_mp_order_email_subject() {
+    return get_option('mp_order_email_subject', 'Order Confirmation');
+}
+
+function coursepress_get_mp_order_content_email() {
+    $default_mp_order_content_email = sprintf(__('Thank you for your order %1$s,
+
+Your order for course "%2$s" has been received! 
+
+Please refer to your Order ID (ORDER_ID) whenever contacting us.
+
+You can track the latest status of your order here: ORDER_STATUS_URL
+
+Yours sincerely,
+%5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __('Dashboard', 'cp') . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
+
+    return get_option('mp_order_content_email', $default_mp_order_content_email);
+}
+
 /* Get enrollment email data */
 
 function coursepress_get_enrollment_from_name() {
@@ -479,7 +574,7 @@ You may check all courses you enrolled in here: %3$s.
 Or you can expore other courses in your %4$s
 
 Yours sincerely,
-%5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">'.__('Dashboard', 'cp').'</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
+%5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __('Dashboard', 'cp') . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
 
     return get_option('enrollment_content_email', $default_enrollment_content_email);
 }
@@ -1005,10 +1100,12 @@ if ( !function_exists('cp_write_log') ) {
 
 }
 
-if( !function_exists('wp_get_image_extensions')){
-    function wp_get_image_extensions(){
-        return array('jpg', 'jpeg', 'jpe',  'gif',  'png',  'bmp',   'tif',  'tiff', 'ico');
+if ( !function_exists('wp_get_image_extensions') ) {
+
+    function wp_get_image_extensions() {
+        return array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico' );
     }
+
 }
 
 if ( !function_exists('is_plugin_network_active') ) {
@@ -1070,13 +1167,13 @@ function cp_replace_img_src( $original_img_tag, $new_src_url ) {
     return false;
 }
 
-function callback_img($match) {
-    list(,$img,$src) = $match;
+function callback_img( $match ) {
+    list(, $img, $src) = $match;
     $new_src = str_replace('../wp-content', WP_CONTENT_URL, $src);
     return "$img=\"$new_src\" ";
 }
 
-function callback_link($match) {
+function callback_link( $match ) {
     $new_url = str_replace('../wp-content', WP_CONTENT_URL, $match[0]);
     return $new_url;
 }

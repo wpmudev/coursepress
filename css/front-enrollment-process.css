@@ -13,7 +13,7 @@
 .cp_popup_window{
     /*display: none;*/
     width: 450px;
-/*    height: 390px;*/
+    /*    height: 390px;*/
     background: #f4f4f4;
     z-index: 999999;
     display: none;
@@ -31,6 +31,12 @@
     color: #737373;
     padding: 8px;
     border: 1px solid #e0e0e0;
+}
+
+.cp_popup_window button.apply-button.enroll-success {
+    position: absolute;
+    right: 17px;
+    bottom: 20px;
 }
 
 label.cp_popup_col_2 {
@@ -141,9 +147,11 @@ label.cp_popup_col_2.second-child{
 
 .validation_errors{
     font-weight: normal;
-    color: #d0021b;
+    color: #D0021B;
     margin-bottom: 10px;
     position: relative;
+    min-height: 24px;
+    display: block;
 }
 
 .cp_error_field{

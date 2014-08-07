@@ -45,9 +45,7 @@ if ( !class_exists('CoursePress') ) {
         var $plugin_dir = '';
         var $plugin_url = '';
         public $marketpress_active = false;
-		
-		public static $gateway = array();
-		
+        public static $gateway = array();
 
         function __construct() {
 
@@ -161,8 +159,8 @@ if ( !class_exists('CoursePress') ) {
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
-			//Setup Gatewat Array
-			add_action('init', array( $this, 'setup_gateway_array' ) );
+            //Setup Gatewat Array
+            add_action('init', array( $this, 'setup_gateway_array' ));
 
 //Output buffer hack
             add_action('init', array( &$this, 'output_buffer' ), 0);
@@ -341,27 +339,25 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
-		function setup_gateway_array() {
-			
-			$array = array(
-				'paypal-express' => array(
-					'class' => 'MP_Gateway_Paypal_Express',
-					'friendly' => __( 'Pay with PayPal', 'cp' ),
-				),
-				'manual-payments' => array(
-					'class' => 'MP_Gateway_ManualPayments',
-					'friendly' => __( 'Bank Transfer', 'cp' ),					
-				),
-				'simplify' => array(
-					'class' => 'MP_Gateway_Simplify',
-					'friendly' => __( 'Pay by Credit Card', 'cp' ),					
-				),
-			);
-			
-			CoursePress::$gateway = $array;
-		}
+        function setup_gateway_array() {
 
+            $array = array(
+                'paypal-express' => array(
+                    'class' => 'MP_Gateway_Paypal_Express',
+                    'friendly' => __('Pay with PayPal', 'cp'),
+                ),
+                'manual-payments' => array(
+                    'class' => 'MP_Gateway_ManualPayments',
+                    'friendly' => __('Bank Transfer', 'cp'),
+                ),
+                'simplify' => array(
+                    'class' => 'MP_Gateway_Simplify',
+                    'friendly' => __('Pay by Credit Card', 'cp'),
+                ),
+            );
 
+            CoursePress::$gateway = $array;
+        }
 
         function cp_popup_login_user() {
 
@@ -404,15 +400,15 @@ if ( !class_exists('CoursePress') ) {
 
         // Popup Signup Process
         function popup_signup( $step = false, $args = array() ) {
-			global $mp;
+            global $mp;
             if ( !$step && isset($_POST['step']) ) {
                 $step = $_POST['step'];
             }
-			
-			if ( empty( $args ) && isset( $_POST['data'] ) ) {
-				$args = $_POST['data'];
-			}
-			
+
+            if ( empty($args) && isset($_POST['data']) ) {
+                $args = $_POST['data'];
+            }
+
             $ajax_response = array();
 
             $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
@@ -431,7 +427,7 @@ if ( !class_exists('CoursePress') ) {
                     'action' => 'callback',
                     'callback' => array( &$this, 'signup_login_user' ),
                     'on_success' => 'enrollment',
-					'on_fail' => 'login',
+                    'on_fail' => 'login',
                 ),
                 'signup' => array(
                     'action' => 'template',
@@ -450,43 +446,41 @@ if ( !class_exists('CoursePress') ) {
                 ),
                 'redirect_to_course' => array(
                     'action' => 'redirect',
-                    'url' => get_permalink( $course_id ) . '/units' . '/',
+                    'url' => get_permalink($course_id) . '/units' . '/',
                 ),
-				
             ));
-			
-			global $mp;
-			
-			if ( $mp ) {
-				$signup_steps = array_merge($signup_steps, array(
-	                'payment_checkout' => array(
-						// MP3 integration
-	                    // 'action' => 'template',
-	                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-						'data' => $this->signup_pre_redirect_to_cart( $args ),
-						'action' => 'redirect',
-						'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
-	                    'on_success' => 'process_payment',
-	                ),
-	                'process_payment' => array(
-						// MP3 integration
-	                    // 'action' => 'callback',
-						// 'action' => 'render',
-	                    // 'callback' => array( &$this, 'signup_payment_processing' ),
-						'data' => $this->signup_payment_processing( $args ),
-						'action' => 'redirect',
-						'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
-	                    // 'on_success' => 'payment_confirmed',
-	                ),				
-	                'payment_confirmed' => array(
-	                    'template' => '',
-	                ),
-	                'payment_pending' => array(
-	                    'template' => '',
-	                ),				
-				));				
-				
-			}
+
+            global $mp;
+
+            if ( $mp ) {
+                $signup_steps = array_merge($signup_steps, array(
+                    'payment_checkout' => array(
+                        // MP3 integration
+                        // 'action' => 'template',
+                        // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+                        'data' => $this->signup_pre_redirect_to_cart($args),
+                        'action' => 'redirect',
+                        'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
+                        'on_success' => 'process_payment',
+                    ),
+                    'process_payment' => array(
+                        // MP3 integration
+                        // 'action' => 'callback',
+                        // 'action' => 'render',
+                        // 'callback' => array( &$this, 'signup_payment_processing' ),
+                        'data' => $this->signup_payment_processing($args),
+                        'action' => 'redirect',
+                        'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/confirm-checkout'),
+                    // 'on_success' => 'payment_confirmed',
+                    ),
+                    'payment_confirmed' => array(
+                        'template' => '',
+                    ),
+                    'payment_pending' => array(
+                        'template' => '',
+                    ),
+                ));
+            }
 
             $signup_steps = array_merge($signup_steps, array(
                 'success-enrollment' => array(
@@ -512,11 +506,11 @@ if ( !class_exists('CoursePress') ) {
                         call_user_func($classname . '::' . $method);
                     }
                 } elseif ( 'render' == $signup_steps[$step]['action'] ) {
-					$data = $signup_steps[$step]['data'];
-                	$ajax_response['html'] = $data['html'];
-					$ajax_response['gateway'] = $data['gateway'];
-                } elseif( 'redirect' == $signup_steps[$step]['action'] ) {
-					$ajax_response['redirect_url'] = $signup_steps[$step]['url'];
+                    $data = $signup_steps[$step]['data'];
+                    $ajax_response['html'] = $data['html'];
+                    $ajax_response['gateway'] = $data['gateway'];
+                } elseif ( 'redirect' == $signup_steps[$step]['action'] ) {
+                    $ajax_response['redirect_url'] = $signup_steps[$step]['url'];
                 }
 
                 $ajax_response['current_step'] = $step;
@@ -537,9 +531,9 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_login_user() {
-			cp_write_log('logging in....');
-			// Handle login stuff
-			$this->popup_signup('enrollment');				
+            cp_write_log('logging in....');
+            // Handle login stuff
+            $this->popup_signup('enrollment');
         }
 
         function signup_create_user() {
@@ -593,90 +587,86 @@ if ( !class_exists('CoursePress') ) {
             // Handle enrolment stuff
             $student_id = get_current_user_id();
             $student_id = $student_id > 0 ? $student_id : $args['student_id'];
-			$course_id = false;
-			if ( !empty( $args ) ) {
-				$course_id = isset($args['course_id']) ? $args['course_id'] : false;
-			} else {
-				$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
-			}
+            $course_id = false;
+            if ( !empty($args) ) {
+                $course_id = isset($args['course_id']) ? $args['course_id'] : false;
+            } else {
+                $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : false;
+            }
 
-            if ( isset($course_id) ) {	
-				
-	            $is_paid = get_post_meta($course_id, 'paid_course', true);
-	            $is_paid = $is_paid && 'on' == $is_paid ? true : false;
-				
-				$student = new Student($student_id);
-				$existing_student = $student->has_access_to_course($course_id);
-				
-				// If it is a paid course we have a different path.
-				if ( $is_paid && ! $existing_student ) {
-					// Start to use the methods in the popup_signup_payment hook
-					$this->popup_signup( 'payment_checkout', $args );	
-					return;
-				}
+            if ( isset($course_id) ) {
 
-                if ( ! $existing_student ) {//only if he don't have access already
+                $is_paid = get_post_meta($course_id, 'paid_course', true);
+                $is_paid = $is_paid && 'on' == $is_paid ? true : false;
+
+                $student = new Student($student_id);
+                $existing_student = $student->has_access_to_course($course_id);
+
+                // If it is a paid course we have a different path.
+                if ( $is_paid && !$existing_student ) {
+                    // Start to use the methods in the popup_signup_payment hook
+                    $this->popup_signup('payment_checkout', $args);
+                    return;
+                }
+
+                if ( !$existing_student ) {//only if he don't have access already
                     $student->enroll_in_course($course_id);
-                
-	                $args['course_id'] = $course_id;
-				
-					$this->enrollment_processed = true;
-				
-	                //show success message
-	                $this->popup_signup('success-enrollment', $args);					
-				} else {
-					$this->popup_signup('redirect_to_course');
-				}
-				
+
+                    $args['course_id'] = $course_id;
+
+                    $this->enrollment_processed = true;
+
+                    //show success message
+                    $this->popup_signup('success-enrollment', $args);
+                } else {
+                    $this->popup_signup('redirect_to_course');
+                }
             } else {
                 echo 'course id not set';
             }
         }
-		
-		// Current MP integration
-		function signup_pre_redirect_to_cart( $args = array() ) {
-			global $mp;
-			
-			if ( !$mp ) {
-				return;
-			}
 
-			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
-			$course = new Course($course_id);
-			$product_id = $course->mp_product_id();
+        // Current MP integration
+        function signup_pre_redirect_to_cart( $args = array() ) {
+            global $mp;
 
-			// Add course to cart
-			$product = get_post($product_id);
-			$quantity = 1;
-			$variation = 0;
+            if ( !$mp ) {
+                return;
+            }
 
-			// $cart = $mp->get_cart_cookie();
-			$cart = array(); // remove all cart items
-			$cart[ $product_id ][ $variation ] = $quantity;
-			$mp->set_cart_cookie( $cart );			
-		}
-		
-		// Future MP3 integration 
-	    function signup_payment_processing( $args = array() ) {
-            cp_write_log('processing payment....');		
-			
-			global $mp;
-			$return_data = array( 'html' => '' );
-						
-			$course_id = !empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : 0;
-			$product_id = !empty( $_POST['data'] ) && is_array( $_POST['data'] ) ? (int) $_POST['data']['product_id'] : 0;
-			$gateway = $args['gateway'];
-			$product = false;
-			$product_meta = false;
-			
+            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+            $course = new Course($course_id);
+            $product_id = $course->mp_product_id();
 
-			$_SESSION['mp_payment_method'] = $gateway;
-			$_SESSION['mp_shipping_info'] = '';
-			
-			
-			return $return_data;
-		}
+            // Add course to cart
+            $product = get_post($product_id);
+            $quantity = 1;
+            $variation = 0;
 
+            // $cart = $mp->get_cart_cookie();
+            $cart = array(); // remove all cart items
+            $cart[$product_id][$variation] = $quantity;
+            $mp->set_cart_cookie($cart);
+        }
+
+        // Future MP3 integration 
+        function signup_payment_processing( $args = array() ) {
+            cp_write_log('processing payment....');
+
+            global $mp;
+            $return_data = array( 'html' => '' );
+
+            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+            $product_id = !empty($_POST['data']) && is_array($_POST['data']) ? ( int ) $_POST['data']['product_id'] : 0;
+            $gateway = $args['gateway'];
+            $product = false;
+            $product_meta = false;
+
+            $_SESSION['mp_payment_method'] = $gateway;
+            $_SESSION['mp_shipping_info'] = '';
+            
+            return $return_data;
+        }
 
         function flush_rules() {
             global $wp_rewrite;
@@ -831,7 +821,7 @@ if ( !class_exists('CoursePress') ) {
             }
 
             if ( isset($post) && $post->post_type == 'product' && $wp_query->is_page ) {
-                if(isset($post->post_parent)){//parent course
+                if ( isset($post->post_parent) ) {//parent course
                     $course = new Course($post->post_parent);
                     wp_redirect($course->get_permalink());
                 }
@@ -3295,9 +3285,7 @@ if ( !class_exists('CoursePress') ) {
                 $active_sitewide_plugins = array();
             }
 
-            $required_plugin = 'marketpress/marketpress.php';
-
-            if ( in_array($required_plugin, $plugins) || is_plugin_network_active($required_plugin) || preg_grep('/^marketpress.*/', $plugins) || preg_array_key_exists('/^marketpress.*/', $active_sitewide_plugins) ) {
+            if ( preg_grep('/marketpress.php/', $plugins) || preg_grep('/marketpress.php/', $active_sitewide_plugins) ) {
                 return true;
             } else {
                 return false;
