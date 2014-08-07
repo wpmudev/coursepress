@@ -463,7 +463,7 @@ if ( !class_exists('CoursePress') ) {
 						// MP3 integration
 	                    // 'action' => 'template',
 	                    // 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-						// 'data' => $this->signup_pre_redirect_to_cart( $args ),
+						'data' => $this->signup_pre_redirect_to_cart( $args ),
 						'action' => 'redirect',
 						'url' => home_url($mp->get_setting('slugs->store') . '/' . $mp->get_setting('slugs->cart') . '/'),
 	                    'on_success' => 'process_payment',
