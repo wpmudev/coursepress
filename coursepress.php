@@ -448,6 +448,11 @@ if ( !class_exists('CoursePress') ) {
                     'callback' => array( &$this, 'signup_enroll_student', $args ),
                     'on_success' => 'success-enrollment',
                 ),
+                'redirect_to_course' => array(
+                    'action' => 'redirect',
+                    'url' => get_permalink( $course_id ) . '/units' . '/',
+                ),
+				
             ));
 			
 			global $mp;
@@ -479,10 +484,6 @@ if ( !class_exists('CoursePress') ) {
 	                'payment_pending' => array(
 	                    'template' => '',
 	                ),				
-	                'redirect_to_course' => array(
-	                    'action' => 'redirect',
-	                    'url' => get_permalink( $course_id ) . '/units' . '/',
-	                ),
 				));				
 				
 			}
