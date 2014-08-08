@@ -998,10 +998,10 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     </label>
 
         <?php
-        _e(
-                '<p>To start selling your courses online, you will need to install and activate <strong>MarketPress</strong> - the most powerful premium WordPress eCommerce plugin available, full stop.</p>' .
-                '<p>If you\'re an active WPMU Dev subscriber you can access <strong>MarketPress</strong> from your <strong>WPMU Dev Dashboard</strong>.</p>' .
-                '<p>If you\'re not a subscriber, you can find MarketPress at: <a href="https://premium.wpmudev.org/project/e-commerce/">MarketPress eCommerce</a>.', 'cp');
+        echo sprintf(__('MarketPress Lite has been bundled with %s.<br />' .
+                'To start selling your course, you will need to activate the MarketPress Lite plugin %s.<br />' .
+                'Once activated, return here to complete setting up the course pricing and payment gateway.<br />' .
+                'If you require other payment gateways, you will need to upgrade to %s.', 'cp'), $coursepress->name, '<a href="'.admin_url('plugins.php').'">'.__('here', 'cp').'</a>',  '<a href="https://premium.wpmudev.org/project/e-commerce/">'.__('MarketPress', 'cp').'</a>');
         ?>
                                                 </div>
 
