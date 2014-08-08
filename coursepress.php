@@ -664,7 +664,7 @@ if ( !class_exists('CoursePress') ) {
 
             $_SESSION['mp_payment_method'] = $gateway;
             $_SESSION['mp_shipping_info'] = '';
-            
+
             return $return_data;
         }
 
@@ -2381,15 +2381,16 @@ if ( !class_exists('CoursePress') ) {
          */
         function init_tiny_mce_listeners( $initArray ) {
 
-            $detect_pages = array(
-                'coursepress_page_course_details',
-            );
+            if ( is_admin() ) {
+                $detect_pages = array(
+                    'coursepress_page_course_details',
+                );
 
-            $page = get_current_screen()->id;
-            $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
+                $page = get_current_screen()->id;
+                $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
 
-            if ( in_array($page, $detect_pages) ) {
-                $initArray['setup'] = 'function( ed ) {
+                if ( in_array($page, $detect_pages) ) {
+                    $initArray['setup'] = 'function( ed ) {
 							ed.on( \'init\', function( args ) {
 								jQuery( \'#\' + ed.id + \'_parent\' ).bind( \'mousemove\',function ( evt ) {
 																		cp_editor_mouse_move( ed, evt );
@@ -2399,6 +2400,7 @@ if ( !class_exists('CoursePress') ) {
 								cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
 							} );
 						}';
+                }
             }
 
             return $initArray;

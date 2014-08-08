@@ -203,8 +203,8 @@ class text_input_module extends Unit_Module {
 
                 <div class="answer_length">  
                     <label class="bold-label"><?php _e('Answer Length', 'cp'); ?></label>
-                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="single" <?php ?> <?php echo ( isset($data->answer_length) && $data->answer_length == 'single' ? 'checked' : (!isset($data->answer_length) ) ? 'checked' : '' ) ?> /> <?php _e('Single Line', 'tc'); ?><br /><br />
-                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="multi" <?php echo ( isset($data->answer_length) && $data->answer_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e('Multiple Lines', 'tc'); ?>
+                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="single" <?php ?> <?php echo ( isset($data->answer_length) && $data->answer_length == 'single' ? 'checked' : (!isset($data->answer_length) ) ? 'checked' : '' ) ?> /> <?php _e('Single Line', 'cp'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="multi" <?php echo ( isset($data->answer_length) && $data->answer_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e('Multiple Lines', 'cp'); ?>
                 </div>
 
                 <?php echo $this->placeholder_element($data); ?>
