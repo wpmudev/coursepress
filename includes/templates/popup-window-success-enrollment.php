@@ -8,20 +8,22 @@
 	$course_link = '<a href="' . get_permalink($course_id) . '">' . $course->details->post_title . '</a>';
 	?>
 	<div class="cp_popup_success_message">
-	    <?php echo sprintf(__('You have successfully enrolled in %s', 'cp'), $course_link); ?>
-	    <br />
+	    <p><?php echo sprintf(__('You have successfully enrolled in %s', 'cp'), $course_link); ?>
+		<br />
 	    <?php
 	    _e('You will receive an e-mail confirmation shortly.');
 	    ?>
-	    <br /><br />
-	    <?php echo sprintf(__('You course will be available at any time in your %s', 'cp'), $dashboard_link); ?>
+		</p>
+	    <p><?php echo sprintf(__('You course will be available at any time in your %s', 'cp'), $dashboard_link); ?></p>
 	</div>
 	
 	<?php
 	if ( ( $course->details->course_start_date !== '' && $course->details->course_end_date !== '' ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
 	    if ( ( strtotime($course->details->course_start_date) <= time() && strtotime($course->details->course_end_date) >= time() ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
 	        ?>
-	        <button class="apply-button enroll-success" data-link="<?php echo get_permalink($course_id) . 'units'; ?>"><?php _e('Start Learning Now'); ?></button>
+			<div class="cp_popup_button_container">
+		        <button class="apply-button enroll-success" data-link="<?php echo get_permalink($course_id) . 'units'; ?>"><?php _e('Start Learning Now'); ?></button>
+			</div>
 	        <?php
 	    }
 	} ?>

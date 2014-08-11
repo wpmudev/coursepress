@@ -33,10 +33,16 @@
     border: 1px solid #e0e0e0;
 }
 
+.cp_popup_button_container {
+	text-align: right;
+}
+
 .cp_popup_window button.apply-button.enroll-success {
-    position: absolute;
-    right: 17px;
-    bottom: 20px;
+	clear: both;
+    float: none;
+	margin: 0;
+	position: relative;
+	top: 25px;
 }
 
 label.cp_popup_col_2 {
