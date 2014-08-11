@@ -190,6 +190,23 @@ if ( !class_exists('Unit') ) {
             }
         }
 
+        function create_auto_draft($course_id){
+            global $user_id;
+            
+            $post = array(
+                'post_author' => $user_id,
+                'post_content' => '',
+                'post_status' => 'auto-draft', //$post_status
+                'post_title' => __('Untitled', ''),
+                'post_type' => 'unit',
+                'post_parent' => $course_id
+            );
+            
+            $post_id = wp_insert_post($post);
+            
+            return $post_id;
+        }
+        
         function update_unit() {
             global $user_id, $last_inserted_unit_id;
 

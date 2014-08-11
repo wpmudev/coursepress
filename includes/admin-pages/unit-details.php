@@ -29,11 +29,14 @@ if ( isset($_GET['unit_id']) ) {
     $force_current_unit_completion = 'off';
 }
 
-if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['action'] == 'update_unit' ) ) {
+if ( $unit_id == 0 ) {
+    $unit_id = $unit->create_auto_draft($course_id); //create auto draft and get unit id
+    //wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $unit_id));
+}
+
+if ( isset($_POST['action']) && $_POST['action'] == 'update_unit' ) {
 
     if ( wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id) ) {
-
-        //if ( ( $_POST['action'] == 'add_unit' && current_user_can( 'coursepress_create_course_unit_cap' ) ) || ( $_POST['action'] == 'update_unit' && current_user_can( 'coursepress_update_course_unit_cap' ) ) || ( $unit_id != 0 && current_user_can( 'coursepress_update_my_course_unit_cap' ) && $unit_details->post_author == get_current_user_id() ) ) {
 
         $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0 );
 
@@ -43,13 +46,13 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
             $unit->change_status($_POST['unit_state']);
         }
 
-        if ( $new_post_id != 0 ) {
+        if ( $new_post_id !== 0 ) {
             //ob_start();
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 
 
             if ( isset($_GET['ms']) ) {
-                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ) . '&unit_page_num=' . (isset($unit_page_num) ? $unit_page_num : 1) . '#unit-page-'.(isset($unit_page_num) ? $unit_page_num : 1)));
+                wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ) . '&unit_page_num=' . (isset($unit_page_num) ? $unit_page_num : 1) . '#unit-page-' . (isset($unit_page_num) ? $unit_page_num : 1)));
                 //exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
@@ -66,8 +69,8 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add_unit' || $_POST['acti
 }
 
 if ( isset($_GET['preview_redirect_url']) && $_GET['preview_redirect_url'] !== '' ) {
-    wp_redirect(trailingslashit(get_permalink($unit_id)).'page/'.(isset($unit_page_num) ? $unit_page_num : 1));
-    exit;
+    //wp_redirect(trailingslashit(get_permalink($unit_id)) . 'page/' . (isset($unit_page_num) ? $unit_page_num : 1));
+    //exit;
 }
 
 if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
@@ -131,17 +134,13 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ) . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'draft')); ?>" />
-            <?php if ( isset($unit_id) ) { ?>
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'live')); ?>" />
 
-                <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
-                <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
-                <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
-                <input type="hidden" name="action" value="update_unit" />
-                <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? $_GET['active_element'] : 1); ?>" />
-            <?php } else { ?>
-                <input type="hidden" name="action" value="add_unit" />
-            <?php } ?>
+            <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
+            <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
+            <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
+            <input type="hidden" name="action" value="update_unit" />
+            <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? $_GET['active_element'] : 1); ?>" />
 
             <?php
             $unit = new Unit($unit_id);
@@ -157,18 +156,12 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
-							<?php
-							   $control_position = 'off';
-							   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
-								   $control_position = 'on';
-							   }
-							?>
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
-                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
+                            <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
+                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'off' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
+                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
                         </div>
                     </h3>
 
@@ -409,7 +402,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                     <?php } ?>
 
                                     <?php
-                                    if (CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
+                                    if ( CoursePress_Capabilities::can_update_course_unit($course_id, $unit_id) ) {//do not show anything
                                         ?>
                                         <a class="button button-preview" href="<?php echo get_permalink($unit_id); ?>" data-href="<?php echo get_permalink($unit_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
@@ -420,20 +413,15 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                           } */
                                     }
                                     ?>
-			                        <div class="unit-state">
-										<?php
-										   $control_position = 'off';
-										   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
-											   $control_position = 'on';
-										   }
-										?>
-			                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-			                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
-			                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
-			                                <div class="toggle"></div>
-			                            </div>
-			                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
-			                        </div>
+
+                                    <div class="unit-state">
+                                        <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+                                        <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
+                                        <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
+                                            <div class="toggle"></div>
+                                        </div>
+                                        <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -488,7 +476,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
             jQuery('.modules_accordion .switch-tmce').each(function() {
                 jQuery(this).trigger('click');
             });
-            
+
             var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
             var elements_count = jQuery('#unit-page-1 .modules_accordion .module-holder-title').length;
             //jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();

@@ -156,6 +156,10 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_nopriv_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ));
 
+                add_action('wp_ajax_nopriv_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
+
+                add_action('wp_ajax_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
+
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
 
@@ -337,6 +341,20 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+        }
+
+        function get_last_inserted_id() {
+            global $wpdb;
+            return $wpdb->get_var( 'SELECT MAX(ID) FROM '.$wpdb->prefix.'posts');
+        }
+
+        function get_next_unit_url() {
+            global $wpdb;
+
+            $course_id = $_POST['course_id'];
+            $next_unit_id = $this->get_last_inserted_id();
+            echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $next_unit_id . '&action=edit');
+            exit;
         }
 
         function setup_gateway_array() {
