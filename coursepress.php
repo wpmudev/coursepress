@@ -159,6 +159,12 @@ if ( !class_exists('CoursePress') ) {
                 add_action('wp_ajax_nopriv_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
 
                 add_action('wp_ajax_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
+                
+                add_action('wp_ajax_nopriv_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
+
+                add_action('wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
+                
+                
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
@@ -343,6 +349,17 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
 
+        function create_unit_element_draft(){
+            $unit_id = $_POST['unit_id'];
+            $temp_unit_id = $_POST['temp_unit_id'];
+            $data['temp_unit_id'] = $temp_unit_id;
+            //$data['temp_unit_id'] = $temp_unit_id;
+            $unit_module = new Unit_Module();
+            $unit_id = $unit_module->create_auto_draft($unit_id);
+            echo $unit_id;
+            exit;
+        }
+        
         function get_last_inserted_id() {
             global $wpdb;
             return $wpdb->get_var( 'SELECT MAX(ID) FROM '.$wpdb->prefix.'posts');

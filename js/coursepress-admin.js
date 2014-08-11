@@ -399,7 +399,10 @@ function coursepress_modules_ready() {
 
         var cloned = jQuery('.draggable-module-holder-' + jQuery('input#beingdragged').val()).html();
 
-        cloned = '<div class="module-holder-' + jQuery('input#beingdragged').val() + ' module-holder-title">' + cloned + '</div>';
+        var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
+
+        cloned = '<div class="module-holder-' + jQuery('input#beingdragged').val() + ' module-holder-title" id="' + rand_id + '_temp">' + cloned + '</div>';
+
         jQuery('#unit-page-' + current_unit_page + ' .modules_accordion').append(cloned);
 
         var data = '';
@@ -448,7 +451,6 @@ function coursepress_modules_ready() {
         /* Dynamic WP Editor */
         moving = jQuery('input#beingdragged').val();
 
-        var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
         var text_editor = '<textarea name="' + moving + '_content[]" id="' + rand_id + '"></textarea>';
 
         var text_editor_whole =
@@ -478,6 +480,17 @@ function coursepress_modules_ready() {
         } else {
             jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').hide();
         }
+
+        jQuery.post(
+                'admin-ajax.php', {
+                    action: 'create_unit_element_draft',
+                    unit_id: jQuery('#unit_id').val(),
+                    temp_unit_id: rand_id,
+                }
+        ).done(function(data, status) {
+            jQuery('#'+rand_id+'_temp').find('.unit_element_id').val(data);
+            jQuery('#'+rand_id+'_temp').find('.element_id').val(data);
+        });
 
     });
 }
@@ -1111,11 +1124,11 @@ function cp_is_extension_allowed(filename, type) {
     var video_extensions = coursepress.allowed_video_extensions;
     var image_extensions = coursepress.allowed_image_extensions;
 
-    if(type == 'featured_url'){
+    if (type == 'featured_url') {
         type = 'image_url';
     }
-    
-    if(type == 'course_video_url'){
+
+    if (type == 'course_video_url') {
         type = 'video_url';
     }
 
@@ -1158,9 +1171,9 @@ function cp_is_extension_allowed(filename, type) {
 
 
 function cp_is_valid_url(str) {
-    if (str.indexOf("http://") >-1 || str.indexOf("https://") >-1) {
+    if (str.indexOf("http://") > -1 || str.indexOf("https://") > -1) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }

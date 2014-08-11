@@ -154,13 +154,9 @@ class radio_input_module extends Unit_Module {
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-                <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
+                <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if ( isset($data->ID) ) { ?>
-                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
-                <?php } else { ?>
-                    <input type="hidden" class="removable" />
-                <?php } ?>
+                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID)); ?>" />
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
@@ -197,7 +193,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="96%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                          ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                             ?></div>
                         </th>
                         <th width="3%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
@@ -267,11 +263,7 @@ class radio_input_module extends Unit_Module {
 
                 </div>
                 <?php
-                if ( isset($data->ID) ) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
+                parent::get_module_delete_link();
                 ?>
             </div>
 

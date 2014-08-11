@@ -568,7 +568,23 @@ if ( !class_exists('Unit_Module') ) {
             <?php
         }
 
-        function get_module_delete_link( $module_id ) {
+        function create_auto_draft($unit_id){
+            global $user_id;
+            
+            $post = array(
+                'post_author' => $user_id,
+                'post_content' => '',
+                'post_status' => 'auto-draft',
+                'post_type' => 'module',
+                'post_parent' => $unit_id
+            );
+            
+            $post_id = wp_insert_post($post);
+            
+            return $post_id;
+        }
+        
+        function get_module_delete_link( $module_id = '' ) {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
                                     //alert(jQuery(this).parent().parent().parent().attr('class'));

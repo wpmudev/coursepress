@@ -76,13 +76,9 @@ class audio_module extends Unit_Module {
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-                <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
+                <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if ( isset($data->ID) ) { ?>
-                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
-                <?php } else { ?>
-                    <input type="hidden" class="removable" />
-                <?php } ?>
+                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
@@ -97,7 +93,7 @@ class audio_module extends Unit_Module {
                     <label><?php _e('Put a URL or Browse for an audio file. Supported audio extensions ( ' . $supported_audio_extensions . ' )', 'cp'); ?>
                         <input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr(( isset($data->audio_url) ? $data->audio_url : '')); ?>" />
                         <input class="audio_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
-                        <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_audio_extensions);?></div>
+                        <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_audio_extensions); ?></div>
                     </label>
                 </div>
 
@@ -116,11 +112,7 @@ class audio_module extends Unit_Module {
                 </div>
 
                 <?php
-                if ( isset($data->ID) ) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
+                parent::get_module_delete_link();
                 ?>
 
             </div>
@@ -143,7 +135,7 @@ class audio_module extends Unit_Module {
         if ( isset($_POST['module_type']) && ( $save_elements == true ) ) {
 
             foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
-                
+
                 if ( $module_value == $this->name ) {
                     $data = new stdClass();
                     $data->ID = '';
@@ -156,13 +148,13 @@ class audio_module extends Unit_Module {
                     $data->post_type = 'module';
 
                     if ( isset($_POST[$this->name . '_id']) ) {
-                        
+
                         foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
-                            
+
                             //cp_write_log($key);
                             cp_write_log($_POST[$this->name . '_autoplay'][$_POST[$this->name . '_module_order']]);
-                            
-                            
+
+
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
                             $data->title = $_POST[$this->name . '_title'][$key];
@@ -172,7 +164,7 @@ class audio_module extends Unit_Module {
                             $data->metas['autoplay'] = $_POST[$this->name . '_autoplay'][$data->metas['module_order']];
                             $data->metas['loop'] = $_POST[$this->name . '_loop'][$data->metas['module_order']];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
-                            
+
                             if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {

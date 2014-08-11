@@ -69,8 +69,8 @@ if ( isset($_POST['action']) && $_POST['action'] == 'update_unit' ) {
 }
 
 if ( isset($_GET['preview_redirect_url']) && $_GET['preview_redirect_url'] !== '' ) {
-    //wp_redirect(trailingslashit(get_permalink($unit_id)) . 'page/' . (isset($unit_page_num) ? $unit_page_num : 1));
-    //exit;
+    wp_redirect(trailingslashit(get_permalink($unit_id)) . 'page/' . (isset($unit_page_num) ? $unit_page_num : 1));
+    exit;
 }
 
 if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_status']) && isset($_GET['unit_id']) && is_numeric($_GET['unit_id']) ) {
@@ -137,7 +137,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
             <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'live')); ?>" />
 
             <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
-            <input type="hidden" name="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
+            <input type="hidden" name="unit_id" id="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
             <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
             <input type="hidden" name="action" value="update_unit" />
             <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? $_GET['active_element'] : 1); ?>" />

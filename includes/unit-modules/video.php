@@ -76,13 +76,9 @@ class video_module extends Unit_Module {
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-                <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
+                <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if ( isset($data->ID) ) { ?>
-                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
-                <?php } else { ?>
-                    <input type="hidden" class="removable" />
-                <?php } ?>
+                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
@@ -94,8 +90,8 @@ class video_module extends Unit_Module {
 
                 <?php echo $this->show_title_on_front_element($data); ?>
 
-                                <!-- <label class="bold-label"><?php // _e('Content', 'cp');   ?></label>
-                                <div class="editor_in_place">
+                                                        <!-- <label class="bold-label"><?php // _e('Content', 'cp');      ?></label>
+                                                        <div class="editor_in_place">
                 <?php
                 // $args = array(
                 //     "textarea_name" => $this->name . "_content[]",
@@ -107,7 +103,7 @@ class video_module extends Unit_Module {
                     // $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
                 // wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                 ?>
-                                </div> -->
+                                                        </div> -->
 
                 <div class="video_url_holder">
                     <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?><br />
@@ -125,11 +121,7 @@ class video_module extends Unit_Module {
 
                 </div>-->
                 <?php
-                if ( isset($data->ID) ) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
+                parent::get_module_delete_link();
                 ?>
             </div>
 

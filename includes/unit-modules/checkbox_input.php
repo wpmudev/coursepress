@@ -120,19 +120,6 @@ class checkbox_input_module extends Unit_Module {
                 ?>
             </ul>
 
-            <?php
-            /* $unit_module_main = new Unit_Module();
-
-              if ( is_object( $response ) && !empty( $response ) ) {
-
-              $comment = $unit_module_main->get_response_comment( $response->ID );
-              if ( !empty( $comment ) ) {
-              ?>
-              <div class="response_comment_front"><?php echo $comment; ?></div>
-              <?php
-              }
-              } */
-            ?>
             <?php if ( $data->mandatory_answer == 'yes' ) { ?>
                 <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
             <?php } ?>
@@ -159,13 +146,9 @@ class checkbox_input_module extends Unit_Module {
 
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-                <input type="hidden" name="<?php echo $this->name; ?>_id[]" value="<?php echo ( isset($data->ID) ? $data->ID : '' ); ?>" />
+                <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <?php if ( isset($data->ID) ) { ?>
-                    <input type="hidden" class="element_id" value="<?php echo esc_attr($data->ID); ?>" />
-                <?php } else { ?>
-                    <input type="hidden" class="removable" />
-                <?php } ?>
+                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');
@@ -175,9 +158,9 @@ class checkbox_input_module extends Unit_Module {
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
                 <div class="group-check">
-                    <?php echo $this->show_title_on_front_element($data);?>
-                    <?php echo $this->mandatory_answer_element($data);?>
-                    <?php echo $this->assessable_answer_element($data);?>
+                    <?php echo $this->show_title_on_front_element($data); ?>
+                    <?php echo $this->mandatory_answer_element($data); ?>
+                    <?php echo $this->assessable_answer_element($data); ?>
                 </div>
 
                 <label class="bold-label"><?php _e('Question', 'cp'); ?></label>
@@ -278,11 +261,7 @@ class checkbox_input_module extends Unit_Module {
                 </div>
 
                 <?php
-                if ( isset($data->ID) ) {
-                    parent::get_module_delete_link($data->ID);
-                } else {
-                    parent::get_module_remove_link();
-                }
+                parent::get_module_delete_link();
                 ?>
 
             </div>
