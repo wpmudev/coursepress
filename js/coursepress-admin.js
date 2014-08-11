@@ -1123,7 +1123,11 @@ function cp_is_extension_allowed(filename, type) {
         if (cp_is_value_in_array(extension, audio_extensions)) {
             return true;
         } else {
-            return false;
+            if (cp_is_valid_url(filename) && extension.length > 5) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1131,7 +1135,7 @@ function cp_is_extension_allowed(filename, type) {
         if (cp_is_value_in_array(extension, video_extensions)) {
             return true;
         } else {
-            if (cp_is_valid_url(filename)) {
+            if (cp_is_valid_url(filename) && extension.length > 5) {
                 return true;
             } else {
                 return false;
@@ -1143,7 +1147,11 @@ function cp_is_extension_allowed(filename, type) {
         if (cp_is_value_in_array(extension, image_extensions)) {
             return true;
         } else {
-            return false;
+            if (cp_is_valid_url(filename) && extension.length > 5) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
