@@ -144,7 +144,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                             <?php
                                             if ( $current_course_id !== 0 ) {//courses exists, at least one 
                                                 $course = new Course( $current_course_id );
-                                                $course_units = $course->get_units();
+                                                $course_units = $course->get_units( $current_course_id, 'publish' );
 
                                                 if ( count( $course_units ) >= 1 ) {
                                                     ?>
