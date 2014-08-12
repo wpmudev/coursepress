@@ -601,13 +601,13 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_login_user() {
-            cp_write_log('logging in....');
+            // cp_write_log('logging in....');
             // Handle login stuff
             $this->popup_signup('enrollment');
         }
 
         function signup_create_user() {
-            cp_write_log('creating user....');
+            // cp_write_log('creating user....');
 
             parse_str($_POST['data'], $posted_data);
 
@@ -652,7 +652,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_enroll_student( $args = array() ) {
-            cp_write_log('enrolling user (or passing them on to payment)....');
+            // cp_write_log('enrolling user (or passing them on to payment)....');
 
             // Handle enrolment stuff
             $student_id = get_current_user_id();
@@ -723,7 +723,7 @@ if ( !class_exists('CoursePress') ) {
 
         // Future MP3 integration 
         function signup_payment_processing( $args = array() ) {
-            cp_write_log('processing payment....');
+            // cp_write_log('processing payment....');
 
             // global $mp;
             $return_data = array( 'html' => '' );
