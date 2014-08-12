@@ -688,17 +688,17 @@ if ( !class_exists('CoursePress') ) {
         function signup_payment_processing( $args = array() ) {
             cp_write_log('processing payment....');
 
-            global $mp;
+            // global $mp;
             $return_data = array( 'html' => '' );
 
-            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
-            $product_id = !empty($_POST['data']) && is_array($_POST['data']) ? ( int ) $_POST['data']['product_id'] : 0;
-            $gateway = $args['gateway'];
-            $product = false;
-            $product_meta = false;
-
-            $_SESSION['mp_payment_method'] = $gateway;
-            $_SESSION['mp_shipping_info'] = '';
+            // $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+            // $product_id = !empty($_POST['data']) && is_array($_POST['data']) ? ( int ) $_POST['data']['product_id'] : 0;
+            // $gateway =  empty( $args['gateway'] ) ? '' : $args['gateway'];
+            // $product = false;
+            // $product_meta = false;
+            //
+            // $_SESSION['mp_payment_method'] = $gateway;
+            // $_SESSION['mp_shipping_info'] = '';
 
             return $return_data;
         }
