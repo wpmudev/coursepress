@@ -46,7 +46,7 @@ if ( !class_exists('CoursePress') ) {
         var $plugin_url = '';
         public $marketpress_active = false;
         public static $gateway = array();
-		public static $last_product_id = 0;
+        public static $last_product_id = 0;
 
         function __construct() {
 
@@ -160,12 +160,12 @@ if ( !class_exists('CoursePress') ) {
                 add_action('wp_ajax_nopriv_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
 
                 add_action('wp_ajax_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
-                
+
                 add_action('wp_ajax_nopriv_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
 
                 add_action('wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
-                
-                
+
+
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
             }
@@ -344,33 +344,36 @@ if ( !class_exists('CoursePress') ) {
 // Setup TinyMCE callback
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
 
-			add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ),20,3);
+            add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3);
 
-	        add_action('show_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
-	        add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
-	        add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
-	        add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
-	    }
+            add_action('show_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
+            add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
+            add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+            add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+        }
 
-		function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
-	        $cookie_id = 'mp_globalcart_' . COOKIEHASH;
-			$cookie = '';
-			if (isset($_COOKIE[$cookie_id]))
-					$cookie = unserialize($_COOKIE[$cookie_id]);
-			// Get product ID
-			$product_id = (int) array_keys(end($cookie))[0];
+        function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
+            $cookie_id = 'mp_globalcart_' . COOKIEHASH;
+            $cookie = '';
+            if ( isset($_COOKIE[$cookie_id]) ) {
+                $cookie = unserialize($_COOKIE[$cookie_id]);
+                // Get product ID
+                if ( count($cookie) > 0 ) {
+                    $product_id = ( int ) array_keys(end($cookie))[0];
+                    $cp_course_id = get_post_meta($product_id, 'cp_course_id');
+                    if ( !empty($cp_course_id) ) {
+                        switch ( $text ) {
+                            case 'Shipping' :
+                                $translated_text = __('E-Mail', 'cp');
+                        }
+                    }
+                }
+            }
 
-			if( ! empty( get_post_meta( $product_id, 'cp_course_id' ) ) ) {
-				switch( $text ) {
-					case 'Shipping' :
-					$translated_text = __( 'E-Mail', 'cp' );
-				}
-			}
+            return $translated_text;
+        }
 
-		    return $translated_text;
-		}
-
-        function create_unit_element_draft(){
+        function create_unit_element_draft() {
             $unit_id = $_POST['unit_id'];
             $temp_unit_id = $_POST['temp_unit_id'];
             $data['temp_unit_id'] = $temp_unit_id;
@@ -380,10 +383,10 @@ if ( !class_exists('CoursePress') ) {
             echo $unit_id;
             exit;
         }
-        
+
         function get_last_inserted_id() {
             global $wpdb;
-            return $wpdb->get_var( 'SELECT MAX(ID) FROM '.$wpdb->prefix.'posts');
+            return $wpdb->get_var('SELECT MAX(ID) FROM ' . $wpdb->prefix . 'posts');
         }
 
         function get_next_unit_url() {
@@ -695,14 +698,14 @@ if ( !class_exists('CoursePress') ) {
             $product_id = $course->mp_product_id();
 
             // Add course to cart
-			CoursePress::$last_product_id = $product_id;
+            CoursePress::$last_product_id = $product_id;
             $product = get_post($product_id);
             $quantity = 1;
             $variation = 0;
 
             // $cart = $mp->get_cart_cookie();
             $cart = array(); // remove all cart items
-            $cart[$product_id][$variation] = $quantity;	
+            $cart[$product_id][$variation] = $quantity;
 
             $mp->set_cart_cookie($cart);
         }
