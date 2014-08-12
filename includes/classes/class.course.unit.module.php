@@ -284,7 +284,7 @@ if ( !class_exists('Unit_Module') ) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                      ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                         ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
@@ -341,7 +341,7 @@ if ( !class_exists('Unit_Module') ) {
                                 <p class="form-info-regular"><?php echo $form_message; ?></p>
                             <?php } ?>
 
-                            <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                           ?>
+                            <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                              ?>
                             <?php
                         } else {
                             ?>
@@ -568,9 +568,9 @@ if ( !class_exists('Unit_Module') ) {
             <?php
         }
 
-        function create_auto_draft($unit_id){
+        function create_auto_draft( $unit_id ) {
             global $user_id;
-            
+
             $post = array(
                 'post_author' => $user_id,
                 'post_content' => '',
@@ -578,37 +578,19 @@ if ( !class_exists('Unit_Module') ) {
                 'post_type' => 'module',
                 'post_parent' => $unit_id
             );
-            
+
             $post_id = wp_insert_post($post);
-            
+
             return $post_id;
         }
-        
-        function get_module_delete_link( $module_id = '' ) {
-            ?>
-            <a class="delete_module_link" onclick="if (deleteModule(<?php echo $module_id; ?>)) {
-                                    //alert(jQuery(this).parent().parent().parent().attr('class'));
-                                    //alert(jQuery(this).parent().parent().attr('class'));
 
+        function get_module_delete_link() {
+            ?>
+            <a class="delete_module_link" onclick="if (deleteModule(jQuery(this).parent().find('.element_id').val())) {
                                     jQuery(this).parent().parent().remove();
                                     update_sortable_module_indexes();
-                                    /* jQuery(this).parent().parent().remove();*/
-
-
                                 }
                                 ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
-               <?php
-           }
-
-           function get_module_remove_link() {
-               ?>
-            <a class="remove_module_link" onclick="if (removeModule()) {
-
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                    /* jQuery(this).parent().parent().remove();*/
-
-                                }"><i class="fa fa-trash-o"></i> <?php _e('Remove') ?></a>
             <?php
         }
 

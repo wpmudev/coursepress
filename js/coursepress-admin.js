@@ -282,8 +282,9 @@ jQuery(document).ready(function($) {
 //e.stopPropagation();
         });
 
+        var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
         var cloned = jQuery('.draggable-module-holder-page_break_module').html();
-        cloned = '<div class="module-holder-page_break_module module-holder-title">' + cloned + '</div>';
+        cloned = '<div class="module-holder-page_break_module module-holder-title" id="' + rand_id + '_temp">' + cloned + '</div>';
 
         jQuery('#unit-page-' + next_page + ' .modules_accordion').append(cloned);
 
@@ -294,6 +295,17 @@ jQuery(document).ready(function($) {
         });
 
         jQuery('#unit-pages').tabs({active: unit_pages}); //set last added page active
+
+        jQuery.post(
+                'admin-ajax.php', {
+                    action: 'create_unit_element_draft',
+                    unit_id: jQuery('#unit_id').val(),
+                    temp_unit_id: rand_id,
+                }
+        ).done(function(data, status) {
+            jQuery('#' + rand_id + '_temp').find('.unit_element_id').val(data);
+            jQuery('#' + rand_id + '_temp').find('.element_id').val(data);
+        });
 
         var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
         var accordion_elements_count = jQuery('#unit-pages-' + current_unit_page + ' .modules_accordion').find('div.module-holder-title').length;
@@ -488,8 +500,8 @@ function coursepress_modules_ready() {
                     temp_unit_id: rand_id,
                 }
         ).done(function(data, status) {
-            jQuery('#'+rand_id+'_temp').find('.unit_element_id').val(data);
-            jQuery('#'+rand_id+'_temp').find('.element_id').val(data);
+            jQuery('#' + rand_id + '_temp').find('.unit_element_id').val(data);
+            jQuery('#' + rand_id + '_temp').find('.element_id').val(data);
         });
 
     });

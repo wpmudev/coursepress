@@ -207,6 +207,25 @@ if ( !class_exists('Unit') ) {
             return $post_id;
         }
         
+        function delete_all_elements_auto_drafts( $unit_id = false ) {
+            global $wpdb;
+
+            if(!$unit_id){
+                $unit_id = $this->id;
+            }
+            
+            $unit_id = ( int ) $unit_id;
+
+            $wpdb->query(
+                    $wpdb->prepare("
+                DELETE FROM $wpdb->posts
+		 WHERE post_parent = %d
+                 AND post_status = 'auto-draft'
+		", $unit_id
+                    )
+            );
+        }
+        
         function update_unit() {
             global $user_id, $last_inserted_unit_id;
 
@@ -257,7 +276,7 @@ if ( !class_exists('Unit') ) {
             if ( !get_post_meta($post_id, 'unit_order', true) ) {
                 update_post_meta($post_id, 'unit_order', $post_id);
             }
-
+           
             return $post_id;
         }
 

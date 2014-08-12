@@ -69,7 +69,6 @@ class page_break_module extends Unit_Module {
             <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
                                                                                                 <!--<p><?php echo $this->description; ?></p>-->
-
             <!--</div>-->
             <?php
             parent::get_module_delete_link();

@@ -55,7 +55,7 @@ jQuery(document).ready(function() {
         var page_break_to_delete_id = jQuery("#unit-page-1 .module-holder-page_break_module .element_id").val();
         //alert(page_break_to_delete_id);
         if (!isNaN(parseFloat(page_break_to_delete_id)) && isFinite(page_break_to_delete_id)) {
-            prepare_module_for_execution(page_break_to_delete_id)
+            prepare_module_for_execution(page_break_to_delete_id);
         } else {
             jQuery("#unit-page-1 .module-holder-page_break_module").remove();
         }
