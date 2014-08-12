@@ -345,12 +345,23 @@ if ( !class_exists('CoursePress') ) {
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
 
             add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3);
+			
+			// Filter Product Image for courses
+			add_filter('mp_product_image', array( &$this, 'course_product_image' ), 10, 4);
 
             add_action('show_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
         }
+		
+		function course_product_image( $image, $context, $post_id, $size ) {
+            $course_id = get_post_meta($post_id, 'cp_course_id', true);
+			if ( ! empty( $course_id ) ) {
+				$image = do_shortcode('[course_list_image course_id="' . $course_id . '" width="' . $size[0] . '" height="' . $size[0] . '"]');				
+			}
+			return $image;
+		}
 
         function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
             $cookie_id = 'mp_globalcart_' . COOKIEHASH;
