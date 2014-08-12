@@ -156,12 +156,18 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
+							<?php
+							   $control_position = 'off';
+							   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
+								   $control_position = 'on';
+							   }
+							?>
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-                            <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'off' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>">
+                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
+                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : !empty($unit_id) && $unit_id > 0 ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
+                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
                         </div>
                     </h3>
 
@@ -414,14 +420,21 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                     }
                                     ?>
 
-                                    <div class="unit-state">
-                                        <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
-                                        <span class="draft <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><?php _e('Draft', 'cp'); ?></span>
-                                        <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
-                                            <div class="toggle"></div>
-                                        </div>
-                                        <span class="live <?php echo ( ($unit_id > 0) && $unit_object->post_status == 'unpublished' ) ? '' : 'on' ?>"><?php _e('Live', 'cp'); ?></span>
-                                    </div>
+			                        <div class="unit-state">
+										<?php
+										   $control_position = 'off';
+										   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
+											   $control_position = 'on';
+										   }
+										?>
+			                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+			                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
+			                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
+			                                <div class="toggle"></div>
+			                            </div>
+			                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
+			                        </div>
+
                                 </div>
                             </div>
 
