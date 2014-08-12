@@ -281,6 +281,7 @@ if ( !class_exists('Course') ) {
                         update_post_meta($post_id, 'mp_sale_price', $sale_price);
                         update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
 						update_post_meta($post_id, 'mp_file', get_permalink( $this->id ) );
+						update_post_meta($post_id, 'cp_course_id', $this->id );
 
                         // Remove product if its not a paid course (clean up MarketPress products)
                     } elseif ( isset($_POST['meta_paid_course']) && 'off' == $_POST['meta_paid_course'] ) {
