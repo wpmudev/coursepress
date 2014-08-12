@@ -425,6 +425,8 @@ td.label {
 .group-check label{
     display: inline;
     margin-left: 30px;
+	margin-top:0;
+	vertical-align: top;
 }
 
 .group-check label:first-child{
