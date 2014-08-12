@@ -1064,7 +1064,10 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     <div class="clearfix"></div>
 
                                                     <div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
-
+														<?php
+															//Try to dequeue need-help script to avoid need-help popup
+															wp_dequeue_script( 'mp-need-help' );
+														?>
                                                         <!-- Add both links for JS/CSS toggle -->
                                                         <a href="<?php echo admin_url('edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page') ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e('Setup Payment Gateways', 'cp'); ?></a>
                                                         <span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
