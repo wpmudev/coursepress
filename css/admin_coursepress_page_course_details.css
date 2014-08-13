@@ -1693,7 +1693,6 @@ a .remove-btn:hover{
 .mandatory_answer, .group-check label.mandatory_answer{
     width: 20%;
     display: inline-block;
-    margin-top: -10px;
 }
 
 .module-content .show_title_on_front .mp-help-icon{

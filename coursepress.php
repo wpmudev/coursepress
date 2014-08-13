@@ -345,22 +345,99 @@ if ( !class_exists('CoursePress') ) {
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
 
             add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3);
+			add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
+			
+			// Filter Product Image for courses
+			add_filter('mp_product_image', array( &$this, 'course_product_image' ), 10, 4);
 
             add_action('show_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+			
+			// Handle MP payment confirmation
+            $gateways = get_option('mp_settings', false);
+            if ( !empty($gateways) && !empty($gateways['gateways']['allowed']) ) {
+                $gateways = $gateways['gateways']['allowed'];
+				foreach( $gateways as $gateway ){
+					// Don't enroll students automatically with manual payments. 
+					if ( 'manual-payments' != $gateway ) {
+						add_action( 'mp_payment_confirm_' . $gateway, array(&$this, 'enroll_on_payment_confirmation'), 10, 2 );						
+					}
+				}
+				
+            }
+			
+			// Override order success page for courses
+			add_filter('mp_show_cart', 'course_checkout_success', 10, 3 );
+			// apply_filters('mp_show_cart', $content, $context, $checkoutstep);
+			add_filter('mp_setting_success', 'course_checkout_success_msg', 10, 2 );
+			// apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
+		
+		function course_checkout_success( $setting, $default ) {
+			cp_write_log( 'MP Success Setting: ' . $setting );
+			return $setting;
+		}
+				
+		function course_checkout_success( $content, $context, $checkoutstep ) {
+			cp_write_log( 'MP Success Content: ' . $content );
+			return $content;
+		}
+		
+				
+		function alter_tracking_text( $translated_text, $text, $domain ) {
+			// "You may track the latest status of your order(s) here:<br />%s"
+			// switch( $text ) {
+			// 	case "You may track the latest status of your order(s) here:<br />%s":
+			// 	break;
+			// }
+			
+			return $translated_text;
+		}
+		
+		function enroll_on_payment_confirmation( $cart, $session ) {
+			if ( count( $cart ) > 0 ) {
+				$product_id = array_keys( $cart );
+				$product_id = end( $product_id );
+				
+				$course_id = get_post_meta($product_id, 'cp_course_id', true);
+				
+				if ( ! empty( $course_id ) ) {
+					$student = new Student( get_current_user_id() );
+					$student->enroll_in_course( $course_id );
+				}
+				
+			} else {
+				cp_write_log( 'Error in cart. This should not happen.' );
+			}
+		}
+		
+		function course_product_image( $image, $context, $post_id, $size ) {
+            $course_id = get_post_meta($post_id, 'cp_course_id', true);
+			if ( ! empty( $course_id ) ) {
+				$image = do_shortcode('[course_list_image course_id="' . $course_id . '" width="' . $size[0] . '" height="' . $size[0] . '"]');				
+			}
+			return $image;
+		}
 
         function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
             $cookie_id = 'mp_globalcart_' . COOKIEHASH;
             $cookie = '';
+
             if ( isset($_COOKIE[$cookie_id]) ) {
                 $cookie = unserialize($_COOKIE[$cookie_id]);
                 // Get product ID
                 if ( count($cookie) > 0 ) {
-                    $product_id = ( int ) array_keys(end($cookie))[0];
-                    $cp_course_id = get_post_meta($product_id, 'cp_course_id');
+
+					$product_id = end($cookie);  // Get first cookie that match
+					$product_id = array_keys($product_id); // Get the first product (will be an array)
+                    $product_id = end($product_id); // Get the actual product id
+
+					if ( $product_id == 0 ) {
+						return $translated_text;
+					}
+                    $cp_course_id = get_post_meta($product_id, 'cp_course_id', true );
                     if ( !empty($cp_course_id) ) {
                         switch ( $text ) {
                             case 'Shipping' :
@@ -590,13 +667,13 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_login_user() {
-            cp_write_log('logging in....');
+            // cp_write_log('logging in....');
             // Handle login stuff
             $this->popup_signup('enrollment');
         }
 
         function signup_create_user() {
-            cp_write_log('creating user....');
+            // cp_write_log('creating user....');
 
             parse_str($_POST['data'], $posted_data);
 
@@ -641,7 +718,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function signup_enroll_student( $args = array() ) {
-            cp_write_log('enrolling user (or passing them on to payment)....');
+            // cp_write_log('enrolling user (or passing them on to payment)....');
 
             // Handle enrolment stuff
             $student_id = get_current_user_id();
@@ -692,8 +769,14 @@ if ( !class_exists('CoursePress') ) {
             if ( !$mp ) {
                 return;
             }
-
-            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+			
+			$course_id = 0;
+            if ( !empty($args) ) {
+                $course_id = isset($args['course_id']) ? $args['course_id'] : false;
+            } else {
+                $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : false;
+            }
+			
             $course = new Course($course_id);
             $product_id = $course->mp_product_id();
 
@@ -712,7 +795,7 @@ if ( !class_exists('CoursePress') ) {
 
         // Future MP3 integration 
         function signup_payment_processing( $args = array() ) {
-            cp_write_log('processing payment....');
+            // cp_write_log('processing payment....');
 
             // global $mp;
             $return_data = array( 'html' => '' );
@@ -3517,4 +3600,3 @@ if ( !class_exists('CoursePress') ) {
 CoursePress::instance(new CoursePress());
 global $coursepress;
 $coursepress = CoursePress::instance();
-?>

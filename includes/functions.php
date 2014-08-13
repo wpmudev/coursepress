@@ -53,15 +53,19 @@ function cp_mp_order_notification_body( $content, $order ) {
 
         add_filter('wp_mail_from', 'my_mail_from_function', 99);
 
-        function my_mail_from_function( $email ) {
-            return coursepress_get_mp_order_from_email();
-        }
+		if( ! function_exists('my_mail_from_function') ) {
+	        function my_mail_from_function( $email ) {
+	            return coursepress_get_mp_order_from_email();
+	        }
+		}
 
         add_filter('wp_mail_from_name', 'my_mail_from_name_function', 99);
 
-        function my_mail_from_name_function( $name ) {
-            return coursepress_get_mp_order_from_name();
-        }
+		if( ! function_exists('my_mail_from_name_function') ) {
+	        function my_mail_from_name_function( $name ) {
+	            return coursepress_get_mp_order_from_name();
+	        }
+		}
 
         return $message;
     } else {
@@ -285,15 +289,19 @@ function coursepress_send_email( $email_args = array() ) {
 
         add_filter('wp_mail_from', 'my_registration_from_function');
 
-        function my_registration_from_function( $email ) {
-            return coursepress_get_registration_from_email();
-        }
+		if( ! function_exists( 'my_registration_from_function' ) ) {
+	        function my_registration_from_function( $email ) {
+	            return coursepress_get_registration_from_email();
+	        }
+		}
 
         add_filter('wp_mail_from_name', 'my_registration_from_name_function');
 
-        function my_registration_from_name_function( $name ) {
-            return coursepress_get_registration_from_name();
-        }
+		if( ! function_exists( 'my_registration_from_name_function' ) ) {
+	        function my_registration_from_name_function( $name ) {
+	            return coursepress_get_registration_from_name();
+	        }
+		}
 
     }
 
@@ -314,15 +322,19 @@ function coursepress_send_email( $email_args = array() ) {
 
         add_filter('wp_mail_from', 'my_enrollment_from_function');
 
-        function my_enrollment_from_function( $email ) {
-            return coursepress_get_enrollment_from_email();
-        }
+		if( ! function_exists('my_enrollment_from_function') ) {
+	        function my_enrollment_from_function( $email ) {
+	            return coursepress_get_enrollment_from_email();
+	        }
+		}
 
         add_filter('wp_mail_from_name', 'my_enrollment_from_name_function');
 
-        function my_enrollment_from_name_function( $name ) {
-            return coursepress_get_enrollment_from_name();
-        }
+		if( ! function_exists('my_enrollment_from_name_function') ) {
+	        function my_enrollment_from_name_function( $name ) {
+	            return coursepress_get_enrollment_from_name();
+	        }
+		}
 
     }
 
@@ -350,15 +362,19 @@ function coursepress_send_email( $email_args = array() ) {
 
         add_filter('wp_mail_from', 'my_passcode_from_function');
 
-        function my_passcode_from_function( $email ) {
-            return coursepress_get_invitation_passcode_from_email();
-        }
+		if( ! function_exists( 'my_passcode_from_function' ) ) {
+	        function my_passcode_from_function( $email ) {
+	            return coursepress_get_invitation_passcode_from_email();
+	        }
+		}
 
         add_filter('wp_mail_from_name', 'my_passcode_from_name_function');
 
-        function my_passcode_from_name_function( $name ) {
-            return coursepress_get_invitation_passcode_from_name();
-        }
+		if( ! function_exists( 'my_passcode_from_name_function' ) ) {
+	        function my_passcode_from_name_function( $name ) {
+	            return coursepress_get_invitation_passcode_from_name();
+	        }
+		}
 
     }
 
@@ -393,15 +409,19 @@ function coursepress_send_email( $email_args = array() ) {
 
         add_filter('wp_mail_from', 'my_instructor_invitation_from_function');
 
-        function my_instructor_invitation_from_function( $email ) {
-            return coursepress_get_instructor_invitation_from_email();
-        }
+		if( ! function_exists( 'my_instructor_invitation_from_function' ) ) {
+	        function my_instructor_invitation_from_function( $email ) {
+	            return coursepress_get_instructor_invitation_from_email();
+	        }
+		}
 
         add_filter('wp_mail_from_name', 'my_instructor_invitation_from_name_function');
 
-        function my_instructor_invitation_from_name_function( $name ) {
-            return coursepress_get_instructor_invitation_from_name();
-        }
+		if( ! function_exists( 'my_instructor_invitation_from_name_function' ) ) {
+	        function my_instructor_invitation_from_name_function( $name ) {
+	            return coursepress_get_instructor_invitation_from_name();
+	        }
+		}
 
     }
 

@@ -5,7 +5,8 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
 
 <div class="wrap nosubsub">
     <?php if ( $user_id !== '' && $course_id !== '' ) { ?>
-        <a href="<?php echo admin_url( 'admin.php?action=workbook&student_id='.$user_id.'&page=students&course_id='.$course_id ); ?>' );?>" class="back_link">« <?php _e( 'Back to Workbook', 'cp' ); ?></a>
+        <?php _e('Go to:', 'cp'); ?> <a href="<?php echo admin_url( 'admin.php?action=workbook&student_id='.$user_id.'&page=students&course_id='.$course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'cp' ); ?></a> | 
+		<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id='.$course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'cp' ); ?></a>
     <?php } ?>
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e( 'Assessment', 'cp' ); ?></h2>

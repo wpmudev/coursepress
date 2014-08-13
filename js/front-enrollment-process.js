@@ -284,7 +284,7 @@ jQuery(document).ready(function($) {
             if (status == 'success') {
                 var response = $.parseJSON($(data).find('response_data').text());
                 if (response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response.redirect_url && response.redirect_url != '') {
                         window.location.href = response.redirect_url;
                         return;

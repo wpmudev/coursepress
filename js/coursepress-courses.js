@@ -693,8 +693,11 @@ function clearCourseErrorMessages() {
     $('span.error').remove();
 }
 
-function validateCourseFields(step) {
+function validateCourseFields(step, ignore) {
     var valid = true;
+
+    if (typeof (ignore) === 'undefined')
+        ignore = false;
 
     $ = jQuery;
 
@@ -811,9 +814,13 @@ function validateCourseFields(step) {
     }
 
 
-    if (!valid) {
+    if (!valid && !ignore) {
         alert(coursepress_units.section_error);
     }
+	
+	if( ignore ) {
+		return true;
+	}
 
     return valid;
 }
@@ -925,6 +932,29 @@ function mark_dirty(element) {
 
 
 }
+
+function section_touched( element ) {
+    $ = jQuery;
+
+    var parent_section = $(element).parents('.course-section.step')[0];
+    if (parent_section) {
+        if (!$(parent_section).hasClass('touched')) {
+            $(parent_section).addClass('touched');
+        }
+    }	
+}
+
+function is_section_touched( element ) {
+    $ = jQuery;
+
+	if ( $( element ).hasClass('course-section') ){
+		return $( element ).hasClass( 'touched' );
+	} else {
+		var parent_section = $(element).parents('.course-section.step')[0];
+		return $(parent_section).hasClass('touched');
+	}
+}
+
 
 /** Handle Course Setup Wizard */
 jQuery(document).ready(function($) {
@@ -1052,7 +1082,8 @@ jQuery(document).ready(function($) {
          * Looks for <div class="course-section step step-[x]"> and extracts the number.
          **/
         var step = $($(this).parents('.course-section.step')[0]).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
-        if (validateCourseFields(step)) {
+
+        if (validateCourseFields(step, !is_section_touched( this )) ) {
             // Previous section
             var prevStep = parseInt(step) - 1;
 
@@ -1076,12 +1107,14 @@ jQuery(document).ready(function($) {
                 $(this).parents('.course-section').removeClass('active');
 
                 /* Time to call some Ajax */
-                courseAutoUpdate(step);
+				if (is_section_touched( this )){
+	                courseAutoUpdate(step);					
+				}
 
             } else {
                 // There is no 'previous sections'. Now what?
             }
-        }
+        } // Validate fields
     });
 
     $('.course-section.step .course-section-title h3').click(function(e) {
@@ -1089,15 +1122,18 @@ jQuery(document).ready(function($) {
         // Get current "active" step
         var activeElement = $('.course-section.step.active')[0];
         var activeStep = $(activeElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
-
+		
         var thisElement = $(this).parents('.course-section.step')[0];
         var thisElementFormVisible = $(thisElement).children('.course-form').is(':visible');
         var thisStep = $(thisElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
 
+		var preceedingElement = $('.course-section.step-' + (thisStep - 1) )[0];
+		var preceedingStatus = $( preceedingElement ).find('.status')[0];
+
         var thisStatus = $(this).siblings('.status')[0];
 
         // Only move to a saved step or a previous step (asuming that it has to be saved)
-        if ($(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep) {
+        if ($(thisStatus).hasClass('saved') || $(thisStatus).hasClass('attention') || thisStep < activeStep || ( thisStep > 1 && $( preceedingStatus ).hasClass('saved') ) ) {
 
             // There is a 'previous section'. What do you want to do with it?
             if (thisStep < activeStep) {
@@ -1226,18 +1262,22 @@ jQuery(document).ready(function($) {
     $('.course-section .featured_url_button').click(function() {
         // Mark as dirty
         mark_dirty(this);
+		section_touched(this);
     });
     $('.course-section .course_video_url_button').click(function() {
         // Mark as dirty
         mark_dirty(this);
+		section_touched(this);
     });
     $('.course-form textarea').change(function() {
         // Mark as dirty		
         mark_dirty(this);
+		section_touched(this);
     });
     $('.course-form select').change(function() {
         // Mark as dirty		
         mark_dirty(this);
+		section_touched(this);
     });
 
 
@@ -1294,6 +1334,7 @@ jQuery(document).ready(function($) {
     /** Mark "dirty" content */
     $('.course-form input').change(function() {
         mark_dirty(this);
+		section_touched(this);
 
         if ($(this).attr('type') == 'checkbox') {
             if ($(this).attr('checked')) {
@@ -1454,7 +1495,7 @@ jQuery(document).ready(function($) {
                             if (status == 'success') {
 
                                 var response = $.parseJSON($(data).find('response_data').text());
-                                console.log(response);
+                                // console.log(response);
                                 // Apply a new nonce when returning
                                 if (response && response.toggle) {
                                     $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-nonce', response.nonce);

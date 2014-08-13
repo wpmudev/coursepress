@@ -43,7 +43,7 @@
 
 <?php
 			global $mp_gateway_active_plugins;
-			cp_write_log( $mp_gateway_active_plugins );
+			// cp_write_log( $mp_gateway_active_plugins );
 	// MP3 integration
 	foreach( $mp_gateway_active_plugins as $gateway ){
 

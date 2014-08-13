@@ -152,8 +152,7 @@ class audio_module extends Unit_Module {
                         foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
 
                             //cp_write_log($key);
-                            cp_write_log($_POST[$this->name . '_autoplay'][$_POST[$this->name . '_module_order']]);
-
+                            // cp_write_log($_POST[$this->name . '_autoplay'][$_POST[$this->name . '_module_order']]);
 
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );

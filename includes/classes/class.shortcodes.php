@@ -646,6 +646,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'label_tag' => 'strong',
                 'label_delimeter' => ': ',
                 'no_cost_text' => __('FREE', 'cp'),
+				'show_icon' => false,
                 'class' => '',
                             ), $atts, 'course_cost'));
 
@@ -662,7 +663,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                 $content .= do_shortcode('[mp_product_price product_id="' . $mp_product . '" label=""]');
             } else {
-                $content .= $no_cost_text;
+				if ( $show_icon ) {
+	                $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';					
+				} else {
+	                $content .= $no_cost_text;
+				}
             }
 
             if ( !empty($content) ) {
