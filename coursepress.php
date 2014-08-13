@@ -46,7 +46,6 @@ if ( !class_exists('CoursePress') ) {
         var $plugin_url = '';
         public $marketpress_active = false;
         public static $gateway = array();
-        public static $last_product_id = 0;
 
         function __construct() {
 
@@ -368,7 +367,6 @@ if ( !class_exists('CoursePress') ) {
             }
 
             // Override order success page for courses
-            add_filter('mp_show_cart', 'course_checkout_success_setting', 10, 3);
             add_filter('mp_show_cart', 'course_checkout_success_content', 10, 3);
             // apply_filters('mp_show_cart', $content, $context, $checkoutstep);
             add_filter('mp_setting_success', 'course_checkout_success_msg', 10, 2);
@@ -385,13 +383,27 @@ if ( !class_exists('CoursePress') ) {
             return $in;
         }
 
-        function course_checkout_success_setting( $setting, $default ) {
+        function course_checkout_success_msg( $setting, $default ) {
             cp_write_log('MP Success Setting: ' . $setting);
+            $cookie_id = 'mp_globalcart_' . COOKIEHASH;
+            $cookie = '';
+
+            if ( isset($_COOKIE[$cookie_id]) ) {
+                $cookie = unserialize($_COOKIE[$cookie_id]);
+			}
+			cp_write_log( $cookie );
             return $setting;
         }
 
         function course_checkout_success_content( $content, $context, $checkoutstep ) {
             cp_write_log('MP Success Content: ' . $content);
+            $cookie_id = 'mp_globalcart_' . COOKIEHASH;
+            $cookie = '';
+
+            if ( isset($_COOKIE[$cookie_id]) ) {
+                $cookie = unserialize($_COOKIE[$cookie_id]);
+			}
+			cp_write_log( $cookie );			
             return $content;
         }
 
@@ -787,8 +799,10 @@ if ( !class_exists('CoursePress') ) {
             $course = new Course($course_id);
             $product_id = $course->mp_product_id();
 
+			
+
+
             // Add course to cart
-            CoursePress::$last_product_id = $product_id;
             $product = get_post($product_id);
             $quantity = 1;
             $variation = 0;
