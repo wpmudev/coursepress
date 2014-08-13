@@ -369,18 +369,19 @@ if ( !class_exists('CoursePress') ) {
             }
 			
 			// Override order success page for courses
-			add_filter('mp_show_cart', 'course_checkout_success', 10, 3 );
+			add_filter('mp_show_cart', 'course_checkout_success_setting', 10, 3 );
+                        add_filter('mp_show_cart', 'course_checkout_success_content', 10, 3 );
 			// apply_filters('mp_show_cart', $content, $context, $checkoutstep);
 			add_filter('mp_setting_success', 'course_checkout_success_msg', 10, 2 );
 			// apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
 		
-		function course_checkout_success( $setting, $default ) {
+		function course_checkout_success_setting( $setting, $default ) {
 			cp_write_log( 'MP Success Setting: ' . $setting );
 			return $setting;
 		}
 				
-		function course_checkout_success( $content, $context, $checkoutstep ) {
+		function course_checkout_success_content( $content, $context, $checkoutstep ) {
 			cp_write_log( 'MP Success Content: ' . $content );
 			return $content;
 		}
