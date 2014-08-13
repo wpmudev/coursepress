@@ -98,7 +98,7 @@ class CP_Featured_Course extends WP_Widget {
 	        </div>
 
 	        <div class="cp_featured_widget_course_link">
-	            <a href="<?php echo $course->get_permalink($course_id) ?>"><?php echo $instance['button_title']; ?></a>
+				<button data-link="<?php echo $course->get_permalink($course_id) ?>"><?php echo $instance['button_title']; ?></button>
 	        </div>
 		</div>
         <?php
