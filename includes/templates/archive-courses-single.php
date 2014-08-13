@@ -26,6 +26,6 @@ if ( ! $course_thumbnail ) {
 <div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
     <?php echo do_shortcode( '[course_start label="" class="course-time"]' ); ?> 
 	<?php echo do_shortcode( '[course_language label="" class="course-lang"]' ); ?>
-	<?php echo do_shortcode( '[course_cost label="" class="course-cost"]' ); ?>
+	<?php echo do_shortcode( '[course_cost label="" class="course-cost" show_icon="true"]' ); ?>
     <?php echo do_shortcode( '[course_join_button list_page="yes"]' ); ?>
 </div>
