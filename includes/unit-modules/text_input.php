@@ -111,8 +111,8 @@ class text_input_module extends Unit_Module {
                     <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
                 <?php } ?>
             </div>
-            <?php
-        } else { ?>
+            <?php } else {
+            ?>
             <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
                 <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                     <h2 class="module_title"><?php echo $data->post_title; ?></h2>
@@ -180,7 +180,7 @@ class text_input_module extends Unit_Module {
                         "textarea_name" => $this->name . "_content[]",
                         "textarea_rows" => 5,
                         "quicktags" => false,
-                        "teeny" => true,
+                        "teeny" => false
                     );
 
                     $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );

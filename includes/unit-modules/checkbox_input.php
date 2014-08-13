@@ -172,7 +172,7 @@ class checkbox_input_module extends Unit_Module {
                         "textarea_name" => $this->name . "_content[]",
                         "textarea_rows" => 5,
                         "quicktags" => false,
-                        "teeny" => true,
+                        "teeny" => false
                     );
 
                     $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );

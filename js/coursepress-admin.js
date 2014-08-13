@@ -268,7 +268,8 @@ jQuery(document).ready(function($) {
                 tinyMCE.init({
                     mode: "exact",
                     elements: rand_id,
-                    toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+                    plugins: 'wplink',
+                    toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
                     menubar: false
                 });
 
@@ -478,7 +479,8 @@ function coursepress_modules_ready() {
         tinyMCE.init({
             mode: "exact",
             elements: rand_id,
-            toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+            plugins: 'wplink',
+            toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
             menubar: false
         });
 
@@ -748,6 +750,7 @@ jQuery(document).ready(function() {
             mode: "specific_textareas",
             editor_selector: "mceEditor",
         });
+
         return tinyMCE.get(id).getContent();
     }
 
@@ -901,7 +904,8 @@ jQuery(document).ready(function() {
             tinyMCE.init({
                 mode: "exact",
                 elements: rand_id,
-                toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo",
+                plugins: 'wplink',
+                toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
                 menubar: false
             });
 
