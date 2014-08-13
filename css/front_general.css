@@ -414,6 +414,8 @@ span.percentage{
 
 #navigation-pagination.navigation{
     text-align: right;
+    float: right;
+    margin-top: -18px;
 }
 
 #navigation-pagination.navigation li a,
@@ -436,7 +438,7 @@ span.percentage{
     background-color: #fff;
     border: 1px solid #ddd;
     cursor: pointer;
-    padding: 5px 10px 7px 10px;
+    padding: 5px 13px 6px 13px;
     font-family: 'Dosis', sans-serif;
     font-size: 15px;
 }
@@ -1013,23 +1015,27 @@ embed, iframe, object, video {
 }
 
 span.apply-button {
-	text-align: right;
-	display: block;
-	float:right;
+    text-align: right;
+    display: block;
+    float:right;
 }
 
 table.popup-payment-info,
 table.popup-payment-info td,
 table.popup-payment-info th {
-	border: none;
-	text-align: left;
+    border: none;
+    text-align: left;
 }
 table.popup-payment-info th {
-	font-size:0.9em;
+    font-size:0.9em;
 }
 
 
 .popup-payment-button {
-	width: 100%;
+    width: 100%;
 }
 
+#modules_form input[type="submit"].apply-button-enrolled.submit-elements-data-button{
+    position: relative;
+    float: left;
+}

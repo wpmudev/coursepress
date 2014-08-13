@@ -92,18 +92,14 @@ class text_input_module extends Unit_Module {
             $enabled = 'disabled';
         }
         ?>
-
         <?php if ( ( isset($data->answer_length) && $data->answer_length == 'single' ) || (!isset($data->answer_length) ) ) { ?>
-
             <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
                 <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                     <h2 class="module_title"><?php echo $data->post_title; ?></h2>
                 <?php } ?>
-
                 <?php if ( $data->post_content != '' ) { ?>  
                     <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
                 <?php } ?>
-
                 <?php if ( is_object($response) && count($response) >= 1 && trim($response->post_content) !== '' ) { ?>
                     <div class="front_response_content">
                         <?php echo $response->post_content; ?>
@@ -111,23 +107,19 @@ class text_input_module extends Unit_Module {
                 <?php } else { ?>
                     <div class="module_textarea_input"><input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> /></div>
                 <?php } ?>
-
                 <?php if ( $data->mandatory_answer == 'yes' ) { ?>
                     <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
                 <?php } ?>
             </div>
             <?php
-        } else {
-            ?>
+        } else { ?>
             <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
                 <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                     <h2 class="module_title"><?php echo $data->post_title; ?></h2>
                 <?php } ?>
-
                 <?php if ( $data->post_content != '' ) { ?>  
                     <div class="module_description"><?php echo apply_filters('element_content_filter', $data->post_content); ?></div>
                 <?php } ?>
-
                 <div class="module_textarea_input">
                     <?php if ( count($response) >= 1 && trim($response->post_content) !== '' ) { ?>
                         <div class="front_response_content">
@@ -137,7 +129,6 @@ class text_input_module extends Unit_Module {
                         <textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" <?php echo $enabled; ?>></textarea>
                     <?php } ?>
                 </div>
-
                 <?php if ( $data->mandatory_answer == 'yes' ) { ?>
                     <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
                 <?php } ?>
@@ -209,9 +200,7 @@ class text_input_module extends Unit_Module {
                 parent::get_module_delete_link();
                 ?>
             </div>
-
         </div>
-
         <?php
     }
 

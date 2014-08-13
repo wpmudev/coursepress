@@ -284,47 +284,34 @@ if ( !class_exists('Unit_Module') ) {
                 }
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                         ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                              ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
                 <?php
                 $pages_num = 1;
-
                 foreach ( $modules as $mod ) {
                     $class_name = $mod->module_type;
-
                     if ( class_exists($class_name) ) {
                         $module = new $class_name();
-
                         if ( $module->name == 'page_break_module' ) {
                             $pages_num++;
                         } else {
                             if ( $pages_num == $paged ) {
-
                                 $module->front_main($mod);
-
                                 if ( $module->front_save ) {
                                     $front_save = true;
-
                                     if ( method_exists($module, 'get_response') ) {
                                         $response = $module->get_response(get_current_user_id(), $mod->ID);
-
                                         if ( count($response) > 0 ) {
                                             $responses++;
-                                        }
-                                        $input_modules++;
+                                        }$input_modules++;
                                     }
                                 }
-                                ?>
-                                <?php
                             }
                         }
                     }
                 }
-
                 wp_nonce_field('modules_nonce');
-
                 $is_last_page = coursepress_unit_module_pagination($unit_id, $pages_num, true); //check if current unit page is last page
-
                 if ( !$coursepress->is_preview($unit_id) ) {
                     if ( $front_save ) {
                         if ( $input_modules !== $responses ) {
@@ -332,29 +319,24 @@ if ( !class_exists('Unit_Module') ) {
                             <div class="mandatory_message"><?php _e('All questions marked with "* Mandatory" require your input.', 'cp'); ?></div><div class="clearf"></div>
                             <input type="hidden" name="unit_id" value="<?php echo $unit_id; ?>" />
                             <a id="submit_bottom"></a>
-                            <?php
-                            if ( isset($_POST['submit_modules_data']) ) {
-                                $form_message = __('The module data has been submitted successfully.', 'coursepress');
-                            }
-                            if ( isset($form_message) ) {
-                                ?>
-                                <p class="form-info-regular"><?php echo $form_message; ?></p>
-                            <?php } ?>
-
-                            <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next                              ?>
-                            <?php
-                        } else {
-                            ?>
-                            <input type="submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value = "<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
-                            <?php
+                        <?php
+                        if ( isset($_POST['submit_modules_data']) ) {
+                            $form_message = __('The module data has been submitted successfully.', 'coursepress');
                         }
+                        if ( isset($form_message) ) {
+                            ?><p class="form-info-regular"><?php echo $form_message; ?></p>
+                        <?php } ?><input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>"><?php //Save & Next ?>
+                        <?php
                     } else {
-                        ?>
-                        <input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
+                        ?><input type="submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value = "<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
                         <?php
                     }
+                } else {
+                    ?><input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
+                    <?php
                 }
-                ?>
+            }
+            ?>
             </form>
             <?php
             coursepress_unit_module_pagination($unit_id, $pages_num);
@@ -518,7 +500,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="mandatory_answer">
                 <input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo ( isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset($data->mandatory_answer) ) ? 'checked' : '' ) ?> />
-                <?php _e('Mandatory Answer', 'cp'); ?><br />
+            <?php _e('Mandatory Answer', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('A response is required to continue', 'cp'); ?></span>
             </label>
             <?php
@@ -549,7 +531,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="show_title_on_front">
                 <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-                <?php _e('Show Title', 'cp'); ?><br />
+            <?php _e('Show Title', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('The title is displayed as a heading', 'cp'); ?></span>
             </label>
             <?php

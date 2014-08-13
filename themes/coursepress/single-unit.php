@@ -25,9 +25,11 @@ $post = $unit->details;
     <main id="main" class="site-main" role="main">
         <?php while ( have_posts() ) : the_post(); ?>
             <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                <?php //echo do_shortcode( '[course_breadcrumbs type="unit_single"]' );  ?>
                 <header class="entry-header">
-                    <h1 class="entry-title"><?php the_title(); ?></h1>
+                    <h3 class="entry-title"><?php the_title(); ?></h3>
+                    <?php
+                    echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="parent_course"]');
+                    ?>
                 </header><!-- .entry-header -->
                 <div class="instructors-content"></div>
                 <?php

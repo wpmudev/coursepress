@@ -986,8 +986,8 @@ a.rsswidget{
     padding-bottom: 10px;
 }
 
-.type-course .instructors-content, .instructors-content a,
-.type-course .instructors-content, .instructors-content a:visited{
+.type-course .instructors-content, .instructors-content a, a.course-name-content,
+.type-course .instructors-content, .instructors-content a:visited,  a.course-name-content:visited{
     color: #c0c21e;
     font-size: 16px;
     padding-bottom: 10px;
@@ -1105,6 +1105,7 @@ a.rsswidget{
 
 #navigation-pagination.navigation{
     text-align: right;
+    margin-top: 1px;
 }
 
 #navigation-pagination.navigation li a,
@@ -2360,8 +2361,6 @@ li.submenu-active a, li.submenu-item a:hover{
 }
 
 #modules_form input[type="submit"].apply-button-enrolled.submit-elements-data-button{
-    /*position: absolute;
-    bottom: 84px;*/
     position: relative;
     float: left;
 }
