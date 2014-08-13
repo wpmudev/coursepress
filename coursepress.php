@@ -353,7 +353,39 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+			
+			// Handle MP payment confirmation
+            $gateways = get_option('mp_settings', false);
+            if ( !empty($gateways) && !empty($gateways['gateways']['allowed']) ) {
+                $gateways = $gateways['gateways']['allowed'];
+				foreach( $gateways as $gateway ){
+					// Don't enroll students automatically with manual payments. 
+					if ( 'manual-payments' != $gateway ) {
+						add_action( 'mp_payment_confirm_' . $gateway, array(&$this, 'enroll_on_payment_confirmation'), 10, 2 );						
+					}
+				}
+				
+            }
+
+			
         }
+		
+		function enroll_on_payment_confirmation( $cart, $session ) {
+			if ( count( $cart ) > 0 ) {
+				$product_id = array_keys( $cart );
+				$product_id = end( $product_id );
+				
+				$course_id = get_post_meta($product_id, 'cp_course_id', true);
+				
+				if ( ! empty( $course_id ) ) {
+					$student = new Student( get_current_user_id() );
+					$student->enroll_in_course( $course_id );
+				}
+				
+			} else {
+				cp_write_log( 'Error in cart. This should not happen.' );
+			}
+		}
 		
 		function course_product_image( $image, $context, $post_id, $size ) {
             $course_id = get_post_meta($post_id, 'cp_course_id', true);
@@ -370,8 +402,12 @@ if ( !class_exists('CoursePress') ) {
                 $cookie = unserialize($_COOKIE[$cookie_id]);
                 // Get product ID
                 if ( count($cookie) > 0 ) {
-                    $product_id = ( int ) array_keys(end($cookie))[0];
-                    $cp_course_id = get_post_meta($product_id, 'cp_course_id');
+                    $product_id = ( int ) array_keys(end($cookie));
+					$product_id = count( $product_id ) > 0 ? $product_id[0] : 0;
+					if ( $product_id == 0 ) {
+						return $translated_text;
+					}
+                    $cp_course_id = get_post_meta($product_id, 'cp_course_id', true );
                     if ( !empty($cp_course_id) ) {
                         switch ( $text ) {
                             case 'Shipping' :
@@ -3528,4 +3564,3 @@ if ( !class_exists('CoursePress') ) {
 CoursePress::instance(new CoursePress());
 global $coursepress;
 $coursepress = CoursePress::instance();
-?>
