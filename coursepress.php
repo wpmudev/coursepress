@@ -345,6 +345,7 @@ if ( !class_exists('CoursePress') ) {
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
 
             add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3);
+			add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
 			
 			// Filter Product Image for courses
 			add_filter('mp_product_image', array( &$this, 'course_product_image' ), 10, 4);
@@ -366,9 +367,34 @@ if ( !class_exists('CoursePress') ) {
 				}
 				
             }
-
 			
+			// Override order success page for courses
+			add_filter('mp_show_cart', 'course_checkout_success', 10, 3 );
+			// apply_filters('mp_show_cart', $content, $context, $checkoutstep);
+			add_filter('mp_setting_success', 'course_checkout_success_msg', 10, 2 );
+			// apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
+		
+		function course_checkout_success( $setting, $default ) {
+			cp_write_log( 'MP Success Setting: ' . $setting );
+			return $setting;
+		}
+				
+		function course_checkout_success( $content, $context, $checkoutstep ) {
+			cp_write_log( 'MP Success Content: ' . $content );
+			return $content;
+		}
+		
+				
+		function alter_tracking_text( $translated_text, $text, $domain ) {
+			// "You may track the latest status of your order(s) here:<br />%s"
+			// switch( $text ) {
+			// 	case "You may track the latest status of your order(s) here:<br />%s":
+			// 	break;
+			// }
+			
+			return $translated_text;
+		}
 		
 		function enroll_on_payment_confirmation( $cart, $session ) {
 			if ( count( $cart ) > 0 ) {
