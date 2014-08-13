@@ -16,7 +16,7 @@ function update_calendar( date, course_calendar ) {
         // Set a course_id if its still empty
         var response = $.parseJSON($(data).find('response_data').text());
 		html = $.parseHTML( response.calendar );
-		console.log( course_calendar );
+		// console.log( course_calendar );
 		$( course_calendar ).find('.course-calendar-body').replaceWith( $( html ).find('.course-calendar-body') );
 		
 		if ( $( html ).find('.pre-month').data('date') == 'empty' ) {

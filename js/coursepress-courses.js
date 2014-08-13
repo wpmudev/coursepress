@@ -1454,7 +1454,7 @@ jQuery(document).ready(function($) {
                             if (status == 'success') {
 
                                 var response = $.parseJSON($(data).find('response_data').text());
-                                console.log(response);
+                                // console.log(response);
                                 // Apply a new nonce when returning
                                 if (response && response.toggle) {
                                     $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-nonce', response.nonce);

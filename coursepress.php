@@ -743,8 +743,14 @@ if ( !class_exists('CoursePress') ) {
             if ( !$mp ) {
                 return;
             }
-
-            $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : 0;
+			
+			$course_id = 0;
+            if ( !empty($args) ) {
+                $course_id = isset($args['course_id']) ? $args['course_id'] : false;
+            } else {
+                $course_id = !empty($_POST['course_id']) ? ( int ) $_POST['course_id'] : false;
+            }
+			
             $course = new Course($course_id);
             $product_id = $course->mp_product_id();
 
