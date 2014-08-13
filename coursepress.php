@@ -398,12 +398,16 @@ if ( !class_exists('CoursePress') ) {
         function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
             $cookie_id = 'mp_globalcart_' . COOKIEHASH;
             $cookie = '';
+
             if ( isset($_COOKIE[$cookie_id]) ) {
                 $cookie = unserialize($_COOKIE[$cookie_id]);
                 // Get product ID
                 if ( count($cookie) > 0 ) {
-                    $product_id = ( int ) array_keys(end($cookie));
-					$product_id = count( $product_id ) > 0 ? $product_id[0] : 0;
+
+					$product_id = end($cookie);  // Get first cookie that match
+					$product_id = array_keys($product_id); // Get the first product (will be an array)
+                    $product_id = end($product_id); // Get the actual product id
+
 					if ( $product_id == 0 ) {
 						return $translated_text;
 					}
