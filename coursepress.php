@@ -1012,7 +1012,8 @@ if ( !class_exists('CoursePress') ) {
             //     cp_write_log('ajax');
             // }
             if ( get_option('use_custom_login_form', 1) ) {
-                $url = get_option('cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug()));
+                //$url = get_option('cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug()));
+                $url = trailingslashit(site_url() . '/' . $this->get_login_slug()).'<br />';
                 wp_redirect($url);
                 exit;
             }
