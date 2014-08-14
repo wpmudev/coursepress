@@ -800,7 +800,6 @@ label > .tree{
 
 .tree li label
 {
-    cursor: pointer;
     display: block;
     float: left;
     width: 99%;
