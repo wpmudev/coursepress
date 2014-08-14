@@ -2927,6 +2927,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 				$signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
 				$login_url = $login_url . $login_prefix . 'redirect_url=' . urlencode( $redirect_url );
 			}
+			if( ! empty( $_POST['redirect_url'] )  ) {
+				$signup_url = CoursePress::instance()->get_signup_slug( true ) . '?redirect_url=' . $_POST['redirect_url'];
+				$login_url = CoursePress::instance()->get_login_slug( true ) . '?redirect_url=' . $_POST['redirect_url'];				
+			}
 
 //Set a cookie now to see if they are supported by the browser.
             setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
@@ -3096,7 +3100,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             <?php do_action('cp_before_all_signup_fields'); ?>
 
                             <input type="hidden" name="course_id" value="<?php esc_attr_e(isset($_GET['course_id']) ? $_GET['course_id'] : '' ); ?>" />
-
+                            <input type="hidden" name="redirect_url" value="<?php echo $redirect_url; ?>" />
+							
                             <label>
                                 <?php _e('First Name', 'cp'); ?>:
                                 <input type="text" name="first_name" value="<?php echo ( isset($_POST['first_name']) ? $_POST['first_name'] : '' ); ?>" />
