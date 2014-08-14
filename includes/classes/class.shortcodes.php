@@ -1590,8 +1590,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
             }
 
-//cp_write_log($include_ids);
-
             $post_args = array(
                 'order' => $order,
                 'post_type' => 'course',
@@ -2926,8 +2924,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $login_url = empty($login_url) ? CoursePress::instance()->get_login_slug( true ) : $login_url;
 			
 			if( !empty( $redirect_url ) ) {
-				// $signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
-				// $login_url = $login_url . $login_prefix . 'redirect_url=' . urlencode( $redirect_url );
+				$signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
+				$login_url = $login_url . $login_prefix . 'redirect_url=' . urlencode( $redirect_url );
 			}
 
 //Set a cookie now to see if they are supported by the browser.
