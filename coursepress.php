@@ -2477,7 +2477,8 @@ if ( !class_exists('CoursePress') ) {
 
         function instructor_invite_confirmation() {
 			$pg = false;
-            if ( isset($_GET['action']) && 'course_invite' == $_GET['action'] ) {
+			
+            if ( ( isset($_GET['action']) && 'course_invite' == $_GET['action'] ) ) {
 
                 // get_header();
 				$content = '';
@@ -2556,9 +2557,8 @@ if ( !class_exists('CoursePress') ) {
                     'is_archive' => FALSE
                 );
                 $pg = new CoursePress_Virtual_Page($args);				
-			
+
             }
-			
 			return $pg;
         }
 

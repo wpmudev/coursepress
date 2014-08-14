@@ -385,16 +385,27 @@ function coursepress_send_email( $email_args = array() ) {
         $course_summary = '';
         $course_name = '';
         $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
-
+		$bugfix = false;
+				
         if ( isset($email_args['course_id']) ) {
             $course = new Course($email_args['course_id']);
 
             $course_name = $course->details->post_title;
             $course_summary = $course->details->post_excerpt;
-            $course_address = $course->get_permalink();
+
+			// For unpublished courses.
+			$permalink = '';
+			if ( in_array($course->details->post_status, array('draft', 'pending', 'auto-draft') ) ) {
+			    $permalink = CoursePress::instance()->get_course_slug(true) . '/' . $course->details->post_name . '/';
+			} else {
+			    $permalink = get_permalink($email_args['course_id']);
+			}
+			
+            $course_address = $permalink;
+
         }
 
-        $confirm_link = $course_address . '?action=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'];
+        $confirm_link = $course_address . '?action=course_invite&course_id=' . $email_args['course_id'] . '&c=' . $email_args['invite_code'] . '&h=' . $email_args['invite_hash'];			
 
         $email_address = $email_args['instructor_email'];
         $subject = coursepress_get_instructor_invitation_email_subject();
