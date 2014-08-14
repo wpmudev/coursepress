@@ -344,7 +344,6 @@ if ( !class_exists('CoursePress') ) {
             add_filter('tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ));
 
             add_filter('gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3);
-            add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
 
             // Filter Product Image for courses
             add_filter('mp_product_image', array( &$this, 'course_product_image' ), 10, 4);
@@ -367,10 +366,9 @@ if ( !class_exists('CoursePress') ) {
             }
 
             // Override order success page for courses
-            add_filter('mp_show_cart', 'course_checkout_success_content', 10, 3);
-            // apply_filters('mp_show_cart', $content, $context, $checkoutstep);
-            add_filter('mp_setting_success', 'course_checkout_success_msg', 10, 2);
+            add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
+			
         }
 
         function cp_format_TinyMCE( $in ) {
@@ -385,34 +383,33 @@ if ( !class_exists('CoursePress') ) {
 
         function course_checkout_success_msg( $setting, $default ) {
             cp_write_log('MP Success Setting: ' . $setting);
-            $cookie_id = 'mp_globalcart_' . COOKIEHASH;
+			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
             $cookie = '';
-
+			
             if ( isset($_COOKIE[$cookie_id]) ) {
                 $cookie = unserialize($_COOKIE[$cookie_id]);
 			}
-			cp_write_log( $cookie );
+			
+			if ( 2 == count( $cookie ) ) {
+				// Thank you for signing up for Course Name Here. We hope you enjoy your experience.				
+				$setting = sprintf( __( '<p>Thank you for signing up for <a href="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp' ), get_permalink( $cookie[1] ), get_the_title( $cookie[1] ) );
+				
+				setcookie($cookie_id, array());
+	            add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
+			}
+			
             return $setting;
         }
 
-        function course_checkout_success_content( $content, $context, $checkoutstep ) {
-            cp_write_log('MP Success Content: ' . $content);
-            $cookie_id = 'mp_globalcart_' . COOKIEHASH;
-            $cookie = '';
-
-            if ( isset($_COOKIE[$cookie_id]) ) {
-                $cookie = unserialize($_COOKIE[$cookie_id]);
-			}
-			cp_write_log( $cookie );			
-            return $content;
-        }
-
         function alter_tracking_text( $translated_text, $text, $domain ) {
+
             // "You may track the latest status of your order(s) here:<br />%s"
-            // switch( $text ) {
-            // 	case "You may track the latest status of your order(s) here:<br />%s":
-            // 	break;
-            // }
+            switch( $text ) {
+            	case "You may track the latest status of your order(s) here:<br />%s":
+					$translated_text = __( 'You may track the status of this order here:<br />%s', 'cp' );
+					remove_filter( 'gettext', array( &$this, 'alter_tracking_text' ) );
+            		break;
+            }			
 
             return $translated_text;
         }
@@ -455,13 +452,19 @@ if ( !class_exists('CoursePress') ) {
                     $product_id = end($product_id); // Get the actual product id
 
                     if ( $product_id == 0 ) {
-                        return $translated_text;
+						// If we're on the success message.
+						if ( 2 == count( $cookie ) ) {
+							$product_id = $cookie[0];
+						} else {
+	                        return $translated_text;							
+						}
                     }
                     $cp_course_id = get_post_meta($product_id, 'cp_course_id', true);
                     if ( !empty($cp_course_id) ) {
                         switch ( $text ) {
                             case 'Shipping' :
                                 $translated_text = __('E-Mail', 'cp');
+								break;
                         }
                     }
                 }
@@ -799,8 +802,12 @@ if ( !class_exists('CoursePress') ) {
             $course = new Course($course_id);
             $product_id = $course->mp_product_id();
 
-			
-
+			// Set ID's to be used in final step of checkout
+			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
+			$post_keys = array( (int) $product_id, (int) $course_id );
+	        $expire = time() + 2592000; //1 month expire
+	        setcookie($cookie_id, serialize($post_keys), $expire, COOKIEPATH, COOKIE_DOMAIN);
+	        $_COOKIE[$cookie_id] = serialize($post_keys);			
 
             // Add course to cart
             $product = get_post($product_id);
