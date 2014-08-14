@@ -166,7 +166,7 @@ jQuery(document).ready(function($) {
                                 validate_mark_error_field('cp_popup_email');
                                 validate_mark_error_field('cp_popup_email_confirmation');
                             } else {
-                                
+
                                 $.post(
                                         cp_vars.admin_ajax_url, {
                                             action: 'cp_popup_email_exists',
@@ -293,7 +293,7 @@ jQuery(document).ready(function($) {
                     $('.cp_popup_content [name="signup-next-step"]').val(response.next_step);
                     init_popup($('.cp_popup_content'));
                     $('.cp_popup_window').show();
-                    $('.cp_popup_window').autoHeight( '.cp_popup_content' );
+                    $('.cp_popup_window').autoHeight('.cp_popup_content');
                     $('.cp_popup_window').center();
                     $('.cp_popup_loading').hide();
                 }
@@ -312,18 +312,18 @@ jQuery(document).ready(function($) {
     }
 
     // Extend jQuery with $.autoHeight() function to adjust the height of an element to its contents.
-    jQuery.fn.autoHeight = function( child ) {
-		
-        if ( typeof child === 'undefined' ) { // child element not set
+    jQuery.fn.autoHeight = function(child) {
+
+        if (typeof child === 'undefined') { // child element not set
             child = '';
         }
-		
-		var new_height = 0;
-		if ( child == '' ) {
-	        new_height = $($(this).find('*').last()).position().top + $($(this).find('*').last()).outerHeight();			
-		} else {
-			new_height = $( this ).find( child ).outerHeight() + $( child ).find( '*' ).last().outerHeight();
-		}
+
+        var new_height = 0;
+        if (child == '') {
+            new_height = $($(this).find('*').last()).position().top + $($(this).find('*').last()).outerHeight();
+        } else {
+            new_height = $(this).find(child).outerHeight() + $(child).find('*').last().outerHeight();
+        }
 
         this.css('height', new_height);
         return this;
