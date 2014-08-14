@@ -1039,3 +1039,7 @@ table.popup-payment-info th {
     position: relative;
     float: left;
 }
+
+.enrolled-courses-title {
+	padding-top: 50px;
+}

@@ -239,15 +239,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $title = get_the_title($course_id);
 
-            ob_start();
-            ?>
-            <<?php echo $title_tag; ?> class="course-title course-title-<?php echo $course_id; ?> <?php echo $class; ?>">
-            <?php echo 'yes' == $link ? '<a href="' . get_permalink($course_id) . '" title="' . $title . '">' : ''; ?>
-            <?php echo $title; ?>
-            <?php echo 'yes' == $link ? '</a>' : ''; ?>
-            </<?php echo $title_tag; ?>>
-            <?php
-            $content = ob_get_clean();
+			$content = '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">';
+			$content .= 'yes' == $link ? '<a href="' . get_permalink($course_id) . '" title="' . $title . '">' : '';
+			$content .= $title;
+			$content .= 'yes' == $link ? '</a>' : '';
+			$content .= '</' . $title_tag . '>';
 
 // Return the html in the buffer.
             return $content;
@@ -1507,8 +1503,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => '',
                 'status' => 'publish',
                 'instructor' => '', // Note, one or the other
+				'instructor_msg' => __('The Instructor does not have any courses assigned yet.', 'cp'),
                 'student' => '', // If both student and instructor is specified only student will be used			
+				'student_msg' => __('You have not yet enrolled in a course. Browse courses %s', 'cp'),
                 'two_column' => 'yes',
+				'title_column' => 'none',
                 'left_class' => '',
                 'right_class' => '',
                 'course_class' => '',
@@ -1519,8 +1518,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'show_button' => 'yes',
                 'show_divider' => 'yes',
                 'show_media' => 'false',
+				'show_title' => 'yes',
                 'media_type' => get_option('listings_media_type', 'image'), // default, image, video
                 'media_priority' => get_option('listings_media_priority', 'image'), // image, video
+				'admin_links' => false,
+				'manage_link_title' => __( 'Manage Course', 'cp' ),
                 'limit' => -1,
                 'order' => 'ASC',
                 'class' => '',
@@ -1607,30 +1609,45 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $courses = get_posts($post_args);
             }
 
-            $content .= '<div class="course-list ' . $class . '">';
+            $content .= 0 < count( $courses ) ? '<div class="course-list ' . $class . '">' : '';	
 
             foreach ( $courses as $course ) {
                 $content .= '<div class="course-list-item ' . $course_class . '">';
                 if ( 'yes' == $show_media ) {
                     $content .= do_shortcode('[course_media course_id="' . $course->ID . '" type="' . $media_type . '" priority="' . $media_priority . '"]');
                 }
-                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="' . $title_tag . '"]');
+				
+				if ( 'none' == $title_column ) {
+	                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="' . $title_tag . '"]');					
+				}
 
                 if ( 'yes' == $two_column ) {
                     $content .= '<div class="course-list-box-left ' . $left_class . '">';
                 }
 
-// One liner...
+
+				if ( 'left' == $title_column ) {
+	                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="' . $title_tag . '"]');					
+				}
+// One liner..
                 $content .= do_shortcode('[course show="' . $show . '" show_title="yes" course_id="' . $course->ID . '"]');
 
                 if ( 'yes' == $two_column ) {
                     $content .= '</div>';
                     $content .= '<div class="course-list-box-right ' . $right_class . '">';
                 }
+				
+				if ( 'right' == $title_column ) {
+	                $content .= do_shortcode('[course_title course_id="' . $course->ID . '" link="' . $title_link . '" class="' . $title_class . '" title_tag="' . $title_tag . '"]');					
+				}
 
                 if ( 'yes' == $show_button ) {
                     $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
                 }
+				
+				if ( $admin_links ) {
+					$content .= '<button class="manage-course" data-link="' . admin_url( 'admin.php?page=course_details&course_id=' . $course->ID ) . '">' . $manage_link_title . '</button>';
+				}				
 
 // Add action links if student
                 if ( !empty($student) ) {
@@ -1644,18 +1661,19 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( 'yes' == $show_divider ) {
                     $content .= '<div class="divider" ></div>';
                 }
+				
             } // foreach
 
             if ( (!$courses || 0 == count($courses) ) && !empty($instructor) ) {
-                $content .= __('The Instructor does not have any courses assigned yet.', 'cp');
+                $content .= $instructor_msg;
             }
 
             if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
-                $content .= sprintf(__('You have not yet enrolled in a course. Browse courses %s', 'cp'), '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
+                $content .= sprintf( $student_msg, '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
             }
 
-            $content .= '</div>'; //course-list
-
+            $content .= 0 < count( $courses ) ? '</div>' : '';	//course-list
+			
             return $content;
         }
 
@@ -2897,12 +2915,20 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'login_title' => __('<h3>Login</h3>', 'cp'),
                 'signup_url' => '',
                 'login_url' => '',
+				'redirect_url' => '', // redirect on successful login or signup
                             ), $atts, 'course_signup'));
 
             $page = in_array($page, $allowed) ? $page : 'signup';
 
-            $signup_url = empty($signup_url) ? '?page=signup' : $signup_url;
-            $login_url = empty($login_url) ? '?page=login' : $login_url;
+			$signup_prefix = empty($signup_url) ? '&' : '?';
+			$login_prefix = empty($login_url) ? '&' : '?';
+            $signup_url = empty($signup_url) ? CoursePress::instance()->get_signup_slug( true ) : $signup_url;
+            $login_url = empty($login_url) ? CoursePress::instance()->get_login_slug( true ) : $login_url;
+			
+			if( !empty( $redirect_url ) ) {
+				// $signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
+				// $login_url = $login_url . $login_prefix . 'redirect_url=' . urlencode( $redirect_url );
+			}
 
 //Set a cookie now to see if they are supported by the browser.
             setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
@@ -2927,7 +2953,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     $user_id = $user->ID;
                     wp_set_current_user($user_id);
                     wp_set_auth_cookie($user_id);
-                    wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));
+					if ( !empty( $redirect_url ) ) {
+						wp_redirect( urldecode($redirect_url) );
+					} else {
+	                    wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));	
+					}
                     exit;
                 } else {
                     $form_message = $failed_login_text;
@@ -3025,7 +3055,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                     $course = new Course($_POST['course_id']);
                                                     wp_redirect($course->get_permalink());
                                                 } else {
-                                                    wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));
+													if ( !empty( $redirect_url ) ) {
+														wp_redirect( urldecode($redirect_url) );
+													} else {
+									                    wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));	
+													}
                                                 }
                                                 exit;
                                             } else {
@@ -3127,7 +3161,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 //if ( isset( $this ) ) {
 //ob_start();
 // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-                        wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));
+						if ( !empty( $redirect_url ) ) {
+							wp_redirect( urldecode($redirect_url) );
+						} else {
+						    wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));	
+						}
                         exit;
 //}
                     }

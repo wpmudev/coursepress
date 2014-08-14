@@ -99,9 +99,6 @@ if ( !class_exists('CoursePress') ) {
 //Tooltip Helper
                 require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php' );
 
-//CoursePress Capabilities Class
-                require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
-
 // Menu Meta Box
                 require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );
 
@@ -180,6 +177,10 @@ if ( !class_exists('CoursePress') ) {
 
 
             add_action('init', array( &$this, 'debugging' ));
+
+//CoursePress Capabilities Class
+                require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
+			
 
 // Course Calendar
             require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
@@ -1209,6 +1210,9 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function action_parse_request( &$wp ) {
+
+			/* Show instructor invite pages */
+			$pg = $this->instructor_invite_confirmation();
 
             /* Show Discussion single template */
             if ( array_key_exists('discussion_name', $wp->query_vars) ) {
@@ -2472,9 +2476,12 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function instructor_invite_confirmation() {
+			$pg = false;
             if ( isset($_GET['action']) && 'course_invite' == $_GET['action'] ) {
 
-                get_header();
+                // get_header();
+				$content = '';
+				$title = '';
 
                 if ( is_user_logged_in() ) {
 
@@ -2483,6 +2490,8 @@ if ( !class_exists('CoursePress') ) {
 
                     if ( $hash == $_GET['h'] ) {
 
+						$course_id = (int) $_GET['course_id'];
+						$user_id = get_current_user_id();
                         $instructors = get_post_meta($_GET['course_id'], 'instructors', true);
                         $invites = get_post_meta($_GET['course_id'], 'instructor_invites', true);
 
@@ -2491,7 +2500,7 @@ if ( !class_exists('CoursePress') ) {
 
                                 $exists = false;
                                 foreach ( $instructors as $instructor ) {
-                                    if ( $instructor == $current_user->ID ) {
+                                    if ( $instructor == $user_id ) {
                                         $exists = true;
 //exit;
                                     }
@@ -2499,50 +2508,58 @@ if ( !class_exists('CoursePress') ) {
 
                                 if ( !$exists ) {
 // Assign Instructor capabilities
-                                    $this->assign_instructor_capabilities($current_user->ID);
+                                    $this->assign_instructor_capabilities( $user_id );
 
-                                    $instructors[] = $current_user->ID;
-                                    update_post_meta($_GET['course_id'], 'instructors', $instructors);
-                                    update_user_meta($current_user->ID, 'course_' . $_GET['course_id'], $_GET['course_id']);
+					                $instructors[] = $user_id;
+					                update_post_meta($course_id, 'instructors', $instructors);
+					                update_user_meta($user_id, 'course_' . $course_id, $course_id);
                                     unset($invites[$key]);
-                                    update_post_meta($_GET['course_id'], 'instructor_invites', $invites);
+                                    update_post_meta($course_id, 'instructor_invites', $invites);
 
-                                    $course_link = '<a href="' . admin_url('admin.php?page=course_details&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']) . '</a>';
+                                    $course_link = '<a href="' . admin_url('admin.php?page=course_details&course_id=' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
 
-                                    echo sprintf(__('<h3>Invitation activated.</h3>
-										<p>Congratulations. You are now an instructor in the following course:</p>
+									$title = __( '<h3>Invitation activated.</h3>', 'cp' );
+                                    $content = do_shortcode( sprintf(__('<p>Congratulations. You are now an instructor in the following course:</p>
 										<p>%s</p>
-									', 'cp'), $course_link);
+									', 'cp'), $course_link) );
                                 }
                                 break;
                             }
                         }
-
-//wp_redirect(admin_url('admin.php?page=course_details&tab=overview&course_id=' . $_GET['course_id']) . '">' . get_the_title($_GET['course_id']));
                     } else {
-                        echo __('
-							<h3>Invalid Invitation</h3>
+						$title = __( '<h3>Invalid Invitation</h3>', 'cp' );
+                        $content = do_shortcode( __('
 							<p>This invitation link is not associated with your email address.</p>
 							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
-						', 'cp');
+						', 'cp'));
                     }
                 } else {
-                    echo __('
-						<h3>Login Required</h3>
+					$title = __( '<h3>Login Required</h3>', 'cp' );
+                    $content = do_shortcode( __('
 						<p>To accept your invitation request you will need to be logged in.</p>
 						<p>Please login with the account associated with this email.</p>
-					', 'cp');
-
-                    wp_login_form();
-
-                    echo sprintf(__('
-						<p>If you do not have an account please click on the %s link to create a new account. When you have registered for your new account, please click on the invitation link in the original email again.</p>
-					', 'cp'), wp_register('', '', false));
+					', 'cp') );
+					
+					ob_start();
+					do_shortcode('[course_signup page="login" login_title="" redirect_url="' . urlencode(site_url( $_SERVER['REQUEST_URI'] )) .  '" signup_url="' . CoursePress::instance()->get_signup_slug(true) . '" logout_url="' . CoursePress::instance()->get_signup_slug(true) . '"]');
+					$content .= ob_get_clean();
                 }
-
-                get_footer();
-                exit;
+				// get_sidebar();
+				//                 get_footer();
+                $args = array(
+                    'slug' => 'instructor_invite',
+                    'title' => $title,
+                    'content' => $content,
+                    'type' => 'virtual_page',
+                    'is_page' => TRUE,
+                    'is_singular' => TRUE,
+                    'is_archive' => FALSE
+                );
+                $pg = new CoursePress_Virtual_Page($args);				
+			
             }
+			
+			return $pg;
         }
 
         /**
