@@ -9,7 +9,7 @@
 	
 		// Instructor Course List
 		$show = 'dates,class_size';
-		$course_list = do_shortcode('[course_list instructor="' . get_current_user_id() . '" status="all" title_column="left" title_tag="h4" show_divider="yes" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no" show="' . $show . '" show_title="no" admin_links="true" show_button="no" show_media="no"]');
+		$course_list = do_shortcode('[course_list instructor="' . get_current_user_id() . '" instructor_msg="" status="all" title_column="left" title_tag="h4" show_divider="yes" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no" show="' . $show . '" show_title="no" admin_links="true" show_button="no" show_media="no"]');
 
 		if ( ! empty( $course_list ) ) {
 			echo __('<h1 class="title">You manage the following courses:</h1>', 'cp');
