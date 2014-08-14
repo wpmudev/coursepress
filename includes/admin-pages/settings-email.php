@@ -130,7 +130,7 @@
                             <tr>
                                 <th><?php _e('E-mail Content', 'cp'); ?></th>
                                 <td>
-                                    <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'cp'); ?></p>
+                                    <p class="description"><?php _e('These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'cp'); ?></p>
                                     <?php
                                     $args = array( "textarea_name" => "option_mp_order_content_email", "textarea_rows" => 10, 'wpautop' => true );
                                     wp_editor(stripslashes(coursepress_get_mp_order_content_email()), "option_mp_order_content_email", $args);

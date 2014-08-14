@@ -576,7 +576,7 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 Yours sincerely,
-%5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __('Dashboard', 'cp') . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
+%5$s Team'), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __('Dashboard', 'cp') . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
 
     return get_option('mp_order_content_email', $default_mp_order_content_email);
 }
