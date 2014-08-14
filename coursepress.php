@@ -374,8 +374,8 @@ if ( !class_exists('CoursePress') ) {
 
         function cp_format_TinyMCE( $in ) {
             $in['menubar'] = false;
-            $in['plugins'] = 'wplink';
-            $in['toolbar1'] = 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo';
+            $in['plugins'] = 'wplink, textcolor, hr';
+            $in['toolbar1'] = 'bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect';
             $in['toolbar2'] = '';
             $in['toolbar3'] = '';
             $in['toolbar4'] = '';

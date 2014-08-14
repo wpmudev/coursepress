@@ -268,8 +268,8 @@ jQuery(document).ready(function($) {
                 tinyMCE.init({
                     mode: "exact",
                     elements: rand_id,
-                    plugins: 'wplink',
-                    toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
+                    plugins: 'wplink, textcolor, hr',
+                    toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
                     menubar: false
                 });
 
@@ -479,8 +479,8 @@ function coursepress_modules_ready() {
         tinyMCE.init({
             mode: "exact",
             elements: rand_id,
-            plugins: 'wplink',
-            toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
+            plugins: 'wplink, textcolor, hr',
+            toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
             menubar: false
         });
 
@@ -904,8 +904,8 @@ jQuery(document).ready(function() {
             tinyMCE.init({
                 mode: "exact",
                 elements: rand_id,
-                plugins: 'wplink',
-                toolbar: "bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,link,unlink,undo,redo",
+                plugins: 'wplink, textcolor, hr',
+                toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
                 menubar: false
             });
 
