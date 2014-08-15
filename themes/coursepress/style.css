@@ -2474,6 +2474,11 @@ html[xmlns] .clearf {
     background-color: #f3f3f3;
 }
 
+li.current-menu-item a,
+li.current_page_item a{
+    color: #74d1d4 !important;
+}
+
 
 /*
 RESPONSIVE

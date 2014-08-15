@@ -179,8 +179,8 @@ if ( !class_exists('CoursePress') ) {
             add_action('init', array( &$this, 'debugging' ));
 
 //CoursePress Capabilities Class
-                require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
-			
+            require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
+
 
 // Course Calendar
             require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
@@ -369,7 +369,6 @@ if ( !class_exists('CoursePress') ) {
             // Override order success page for courses
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
-			
         }
 
         function cp_format_TinyMCE( $in ) {
@@ -384,33 +383,33 @@ if ( !class_exists('CoursePress') ) {
 
         function course_checkout_success_msg( $setting, $default ) {
             cp_write_log('MP Success Setting: ' . $setting);
-			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
+            $cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
             $cookie = '';
-			
+
             if ( isset($_COOKIE[$cookie_id]) ) {
                 $cookie = unserialize($_COOKIE[$cookie_id]);
-			}
-			
-			if ( 2 == count( $cookie ) ) {
-				// Thank you for signing up for Course Name Here. We hope you enjoy your experience.				
-				$setting = sprintf( __( '<p>Thank you for signing up for <a href="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp' ), get_permalink( $cookie[1] ), get_the_title( $cookie[1] ) );
-				
-				setcookie($cookie_id, array());
-	            add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
-			}
-			
+            }
+
+            if ( 2 == count($cookie) ) {
+                // Thank you for signing up for Course Name Here. We hope you enjoy your experience.				
+                $setting = sprintf(__('<p>Thank you for signing up for <a href="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp'), get_permalink($cookie[1]), get_the_title($cookie[1]));
+
+                setcookie($cookie_id, array());
+                add_filter('gettext', array( &$this, 'alter_tracking_text' ), 20, 3);
+            }
+
             return $setting;
         }
 
         function alter_tracking_text( $translated_text, $text, $domain ) {
 
             // "You may track the latest status of your order(s) here:<br />%s"
-            switch( $text ) {
-            	case "You may track the latest status of your order(s) here:<br />%s":
-					$translated_text = __( 'You may track the status of this order here:<br />%s', 'cp' );
-					remove_filter( 'gettext', array( &$this, 'alter_tracking_text' ) );
-            		break;
-            }			
+            switch ( $text ) {
+                case "You may track the latest status of your order(s) here:<br />%s":
+                    $translated_text = __('You may track the status of this order here:<br />%s', 'cp');
+                    remove_filter('gettext', array( &$this, 'alter_tracking_text' ));
+                    break;
+            }
 
             return $translated_text;
         }
@@ -453,19 +452,19 @@ if ( !class_exists('CoursePress') ) {
                     $product_id = end($product_id); // Get the actual product id
 
                     if ( $product_id == 0 ) {
-						// If we're on the success message.
-						if ( 2 == count( $cookie ) ) {
-							$product_id = $cookie[0];
-						} else {
-	                        return $translated_text;							
-						}
+                        // If we're on the success message.
+                        if ( 2 == count($cookie) ) {
+                            $product_id = $cookie[0];
+                        } else {
+                            return $translated_text;
+                        }
                     }
                     $cp_course_id = get_post_meta($product_id, 'cp_course_id', true);
                     if ( !empty($cp_course_id) ) {
                         switch ( $text ) {
                             case 'Shipping' :
                                 $translated_text = __('E-Mail', 'cp');
-								break;
+                                break;
                         }
                     }
                 }
@@ -803,12 +802,12 @@ if ( !class_exists('CoursePress') ) {
             $course = new Course($course_id);
             $product_id = $course->mp_product_id();
 
-			// Set ID's to be used in final step of checkout
-			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
-			$post_keys = array( (int) $product_id, (int) $course_id );
-	        $expire = time() + 2592000; //1 month expire
-	        setcookie($cookie_id, serialize($post_keys), $expire, COOKIEPATH, COOKIE_DOMAIN);
-	        $_COOKIE[$cookie_id] = serialize($post_keys);			
+            // Set ID's to be used in final step of checkout
+            $cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
+            $post_keys = array( ( int ) $product_id, ( int ) $course_id );
+            $expire = time() + 2592000; //1 month expire
+            setcookie($cookie_id, serialize($post_keys), $expire, COOKIEPATH, COOKIE_DOMAIN);
+            $_COOKIE[$cookie_id] = serialize($post_keys);
 
             // Add course to cart
             $product = get_post($product_id);
@@ -1013,7 +1012,7 @@ if ( !class_exists('CoursePress') ) {
             // }
             if ( get_option('use_custom_login_form', 1) ) {
                 //$url = get_option('cp_custom_login_url', trailingslashit(site_url() . '/' . $this->get_login_slug()));
-                $url = trailingslashit(site_url() . '/' . $this->get_login_slug()).'<br />';
+                $url = trailingslashit(site_url() . '/' . $this->get_login_slug()) . '<br />';
                 wp_redirect($url);
                 exit;
             }
@@ -1212,8 +1211,8 @@ if ( !class_exists('CoursePress') ) {
 
         function action_parse_request( &$wp ) {
 
-			/* Show instructor invite pages */
-			$pg = $this->instructor_invite_confirmation();
+            /* Show instructor invite pages */
+            $pg = $this->instructor_invite_confirmation();
 
             /* Show Discussion single template */
             if ( array_key_exists('discussion_name', $wp->query_vars) ) {
@@ -2477,13 +2476,13 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function instructor_invite_confirmation() {
-			$pg = false;
-			
+            $pg = false;
+
             if ( ( isset($_GET['action']) && 'course_invite' == $_GET['action'] ) ) {
 
                 // get_header();
-				$content = '';
-				$title = '';
+                $content = '';
+                $title = '';
 
                 if ( is_user_logged_in() ) {
 
@@ -2492,8 +2491,8 @@ if ( !class_exists('CoursePress') ) {
 
                     if ( $hash == $_GET['h'] ) {
 
-						$course_id = (int) $_GET['course_id'];
-						$user_id = get_current_user_id();
+                        $course_id = ( int ) $_GET['course_id'];
+                        $user_id = get_current_user_id();
                         $instructors = get_post_meta($_GET['course_id'], 'instructors', true);
                         $invites = get_post_meta($_GET['course_id'], 'instructor_invites', true);
 
@@ -2510,44 +2509,44 @@ if ( !class_exists('CoursePress') ) {
 
                                 if ( !$exists ) {
 // Assign Instructor capabilities
-                                    $this->assign_instructor_capabilities( $user_id );
+                                    $this->assign_instructor_capabilities($user_id);
 
-					                $instructors[] = $user_id;
-					                update_post_meta($course_id, 'instructors', $instructors);
-					                update_user_meta($user_id, 'course_' . $course_id, $course_id);
+                                    $instructors[] = $user_id;
+                                    update_post_meta($course_id, 'instructors', $instructors);
+                                    update_user_meta($user_id, 'course_' . $course_id, $course_id);
                                     unset($invites[$key]);
                                     update_post_meta($course_id, 'instructor_invites', $invites);
 
-                                    $course_link = '<a href="' . admin_url('admin.php?page=course_details&course_id=' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
+                                    $course_link = '<a href="' . admin_url('admin.php?page=course_details&course_id=' . $course_id) . '">' . get_the_title($course_id) . '</a>';
 
-									$title = __( '<h3>Invitation activated.</h3>', 'cp' );
-                                    $content = do_shortcode( sprintf(__('<p>Congratulations. You are now an instructor in the following course:</p>
+                                    $title = __('<h3>Invitation activated.</h3>', 'cp');
+                                    $content = do_shortcode(sprintf(__('<p>Congratulations. You are now an instructor in the following course:</p>
 										<p>%s</p>
-									', 'cp'), $course_link) );
+									', 'cp'), $course_link));
                                 }
                                 break;
                             }
                         }
                     } else {
-						$title = __( '<h3>Invalid Invitation</h3>', 'cp' );
-                        $content = do_shortcode( __('
+                        $title = __('<h3>Invalid Invitation</h3>', 'cp');
+                        $content = do_shortcode(__('
 							<p>This invitation link is not associated with your email address.</p>
 							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
 						', 'cp'));
                     }
                 } else {
-					$title = __( '<h3>Login Required</h3>', 'cp' );
-                    $content = do_shortcode( __('
+                    $title = __('<h3>Login Required</h3>', 'cp');
+                    $content = do_shortcode(__('
 						<p>To accept your invitation request you will need to be logged in.</p>
 						<p>Please login with the account associated with this email.</p>
-					', 'cp') );
-					
-					ob_start();
-					do_shortcode('[course_signup page="login" login_title="" redirect_url="' . urlencode(site_url( $_SERVER['REQUEST_URI'] )) .  '" signup_url="' . CoursePress::instance()->get_signup_slug(true) . '" logout_url="' . CoursePress::instance()->get_signup_slug(true) . '"]');
-					$content .= ob_get_clean();
+					', 'cp'));
+
+                    ob_start();
+                    do_shortcode('[course_signup page="login" login_title="" redirect_url="' . urlencode(site_url($_SERVER['REQUEST_URI'])) . '" signup_url="' . CoursePress::instance()->get_signup_slug(true) . '" logout_url="' . CoursePress::instance()->get_signup_slug(true) . '"]');
+                    $content .= ob_get_clean();
                 }
-				// get_sidebar();
-				//                 get_footer();
+                // get_sidebar();
+                //                 get_footer();
                 $args = array(
                     'slug' => 'instructor_invite',
                     'title' => $title,
@@ -2557,10 +2556,9 @@ if ( !class_exists('CoursePress') ) {
                     'is_singular' => TRUE,
                     'is_archive' => FALSE
                 );
-                $pg = new CoursePress_Virtual_Page($args);				
-
+                $pg = new CoursePress_Virtual_Page($args);
             }
-			return $pg;
+            return $pg;
         }
 
         /**
@@ -2767,7 +2765,7 @@ if ( !class_exists('CoursePress') ) {
         /* Custom header actions */
 
         function header_actions() {//front
-            global $post;
+            global $post, $wp_query, $mp;
             wp_enqueue_style('font_awesome', $this->plugin_url . 'css/font-awesome.css');
             wp_enqueue_script('enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ));
             wp_localize_script('enrollment_process', 'cp_vars', array(
@@ -2802,6 +2800,21 @@ if ( !class_exists('CoursePress') ) {
             }
 
             wp_enqueue_script('coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), '20120207', true);
+
+            if ( isset($wp_query->query_vars['order_id']) || isset($_GET['order_id']) ) {
+                $order_id = isset($wp_query->query_vars['order_id']) ? $wp_query->query_vars['order_id'] : (isset($_GET['order_id']) ? $_GET['order_id'] : '');
+                if ( !empty($order_id) && isset($mp) ) {
+                    $order = $mp->get_order($order_id);
+                    if ( count($order) == 1 ) {//CP supports only one item in the cart per order so there is no reason to do the check otherwise
+                        if ( cp_get_order_course_id($order_id) ) {
+                            wp_enqueue_style('front_mp_fix', $this->plugin_url . 'css/front_mp_fix.css', array(), $this->version);
+                            add_filter('mp_order_status_section_title_shipping_info', function() {
+                                return '';
+                            });
+                        }
+                    }
+                }
+            }
         }
 
         /* Custom footer actions */
@@ -2899,9 +2912,9 @@ if ( !class_exists('CoursePress') ) {
             }
 
             if ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || ( isset($_GET['taxonomy']) && $_GET['taxonomy'] == 'course_category' ) ) {
-                
+
                 add_filter('tiny_mce_before_init', array( &$this, 'cp_format_TinyMCE' ));
-                
+
                 wp_enqueue_script('courses_bulk', $this->plugin_url . 'js/coursepress-admin.js');
                 wp_enqueue_script('wplink');
                 wp_enqueue_style('editor-buttons');
@@ -3200,6 +3213,9 @@ if ( !class_exists('CoursePress') ) {
                     $courses->ID = 'cp-courses';
                     $courses->db_id = '';
                     $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
+                    if ( curPageURL() == $courses->url ) {
+                        $courses->classes[] = 'current_page_item';
+                    }
                     $sorted_menu_items[] = $courses;
 
                     /* Student Dashboard page */
@@ -3212,29 +3228,40 @@ if ( !class_exists('CoursePress') ) {
                         $dashboard->ID = 'cp-dashboard';
                         $dashboard->db_id = -9998;
                         $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                        $sorted_menu_items[] = $dashboard;
                         $dashboard->classes[] = 'dropdown';
+                        /*if ( curPageURL() == $dashboard->url ) {
+                            $dashboard->classes[] = 'current_page_item';
+                        }*/
+                        $sorted_menu_items[] = $dashboard;
+
 
                         /* Student Dashboard > Courses page */
-
+                        
                         $dashboard_courses = new stdClass;
+                        
                         $dashboard_courses->title = __('My Courses', 'cp');
                         $dashboard_courses->menu_item_parent = -9998;
                         $dashboard_courses->ID = 'cp-dashboard-courses';
                         $dashboard_courses->db_id = '';
                         $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                        if ( curPageURL() == $dashboard_courses->url ) {
+                            $dashboard_courses->classes[] = 'current_page_item';
+                        }
                         $sorted_menu_items[] = $dashboard_courses;
 
                         /* Student Dashboard > Settings page */
 
-                        $settings = new stdClass;
+                        $settings_profile = new stdClass;
 
-                        $settings->title = __('My Profile', 'cp');
-                        $settings->menu_item_parent = -9998;
-                        $settings->ID = 'cp-dashboard-settings';
-                        $settings->db_id = '';
-                        $settings->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
-                        $sorted_menu_items[] = $settings;
+                        $settings_profile->title = __('My Profile', 'cp');
+                        $settings_profile->menu_item_parent = -9998;
+                        $settings_profile->ID = 'cp-dashboard-settings';
+                        $settings_profile->db_id = '';
+                        $settings_profile->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
+                        if ( curPageURL() == $settings_profile->url ) {
+                            $settings_profile->classes[] = 'current_page_item';
+                        }
+                        $sorted_menu_items[] = $settings_profile;
                     }
 
                     /* Sign up page */
@@ -3283,6 +3310,9 @@ if ( !class_exists('CoursePress') ) {
                 $courses->ID = 'cp-courses';
                 $courses->db_id = '';
                 $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
+                if ( curPageURL() == $courses->url ) {
+                    $courses->classes[] = 'current_page_item';
+                }
                 $main_sorted_menu_items[] = $courses;
 
                 /* Student Dashboard page */
@@ -3295,6 +3325,9 @@ if ( !class_exists('CoursePress') ) {
                     $dashboard->ID = 'cp-dashboard';
                     $dashboard->db_id = -9998;
                     $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                    /*if ( curPageURL() == $dashboard->url ) {
+                        $dashboard->classes[] = 'current_page_item';
+                    }*/
                     $main_sorted_menu_items[] = $dashboard;
 
                     /* Student Dashboard > Courses page */
@@ -3305,18 +3338,25 @@ if ( !class_exists('CoursePress') ) {
                     $dashboard_courses->ID = 'cp-dashboard-courses';
                     $dashboard_courses->db_id = '';
                     $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                    if ( curPageURL() == $dashboard_courses->url ) {
+                        $dashboard_courses->classes[] = 'current_page_item';
+                    }
                     $sub_sorted_menu_items[] = $dashboard_courses;
+
 
                     /* Student Dashboard > Settings page */
 
-                    $settings = new stdClass;
+                    $settings_profile = new stdClass;
 
-                    $settings->title = __('My Profile', 'cp');
-                    $settings->menu_item_parent = -9998;
-                    $settings->ID = 'cp-dashboard-settings';
-                    $settings->db_id = '';
-                    $settings->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
-                    $sub_sorted_menu_items[] = $settings;
+                    $settings_profile->title = __('My Profile', 'cp');
+                    $settings_profile->menu_item_parent = -9998;
+                    $settings_profile->ID = 'cp-dashboard-settings';
+                    $settings_profile->db_id = '';
+                    $settings_profile->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
+                    if ( curPageURL() == $settings_profile->url ) {
+                        $settings_profile->classes[] = 'current_page_item';
+                    }
+                    $sub_sorted_menu_items[] = $settings_profile;
                 }
 
                 /* Sign up page */
