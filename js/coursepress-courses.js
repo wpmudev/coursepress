@@ -331,7 +331,7 @@ function cp_editor_key_down(ed, page, tab) {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
             $('#' + ed.id).parents('.course-section').addClass('dirty');
-            if ($($('#' + ed.id).parents('.course-section.step').children('.status.saved')[0]).hasClass('saved')) {
+            if ($($('#' + ed.id).parents('.course-section.step').find('.status.saved')[0]).hasClass('saved')) {
                 $('#' + ed.id).parents('.course-section.step').find('input.button.update').css('display', 'inline-block');
             }
 
