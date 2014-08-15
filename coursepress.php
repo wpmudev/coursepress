@@ -162,7 +162,7 @@ if ( !class_exists('CoursePress') ) {
                 add_action('wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
-				
+
                 add_action('wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
 
                 add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
@@ -372,29 +372,27 @@ if ( !class_exists('CoursePress') ) {
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
-		
-		function activate_marketpress_lite() {
-			$ajax_response = array();			
-			
-			$result = activate_plugin( 'coursepress/marketpress.php' );
 
-			if ( is_wp_error( $result ) ) {
-				$ajax_response['mp_lite_activated'] = false;
-			} else {
-				$ajax_response['mp_lite_activated'] = true;				
-			}
-									
-			$response = array(
-			    'what' => 'cp_activate_mp_lite',
-			    'action' => 'cp_activate_mp_lite',
-			    'id' => 1, // success status
-			    'data' => json_encode($ajax_response),
-			);
-			$xmlResponse = new WP_Ajax_Response($response);
-			$xmlResponse->send();
-			
-		}
-		
+        function activate_marketpress_lite() {
+            $ajax_response = array();
+
+            $result = activate_plugin('coursepress/marketpress.php');
+
+            if ( is_wp_error($result) ) {
+                $ajax_response['mp_lite_activated'] = false;
+            } else {
+                $ajax_response['mp_lite_activated'] = true;
+            }
+
+            $response = array(
+                'what' => 'cp_activate_mp_lite',
+                'action' => 'cp_activate_mp_lite',
+                'id' => 1, // success status
+                'data' => json_encode($ajax_response),
+            );
+            $xmlResponse = new WP_Ajax_Response($response);
+            $xmlResponse->send();
+        }
 
         function cp_format_TinyMCE( $in ) {
             $in['menubar'] = false;
@@ -2806,9 +2804,11 @@ if ( !class_exists('CoursePress') ) {
                 'message_login_error' => __('Username and/or password is not valid.', 'cp'),
             ));
             //admin_url('admin-ajax.php')
+
             wp_enqueue_script('coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ));
+
             wp_enqueue_script('coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ));
-            if ( $post && !$this->is_preview($post->ID) ) {
+            if ( $post && !$this->is_preview($post->ID) && !isset($_GET['try']) ) {
                 wp_enqueue_script('coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ));
             }
             $course_id = do_shortcode('[get_parent_course_id]');
@@ -3254,16 +3254,16 @@ if ( !class_exists('CoursePress') ) {
                         $dashboard->db_id = -9998;
                         $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
                         $dashboard->classes[] = 'dropdown';
-                        /*if ( curPageURL() == $dashboard->url ) {
-                            $dashboard->classes[] = 'current_page_item';
-                        }*/
+                        /* if ( curPageURL() == $dashboard->url ) {
+                          $dashboard->classes[] = 'current_page_item';
+                          } */
                         $sorted_menu_items[] = $dashboard;
 
 
                         /* Student Dashboard > Courses page */
-                        
+
                         $dashboard_courses = new stdClass;
-                        
+
                         $dashboard_courses->title = __('My Courses', 'cp');
                         $dashboard_courses->menu_item_parent = -9998;
                         $dashboard_courses->ID = 'cp-dashboard-courses';
@@ -3350,9 +3350,9 @@ if ( !class_exists('CoursePress') ) {
                     $dashboard->ID = 'cp-dashboard';
                     $dashboard->db_id = -9998;
                     $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
-                    /*if ( curPageURL() == $dashboard->url ) {
-                        $dashboard->classes[] = 'current_page_item';
-                    }*/
+                    /* if ( curPageURL() == $dashboard->url ) {
+                      $dashboard->classes[] = 'current_page_item';
+                      } */
                     $main_sorted_menu_items[] = $dashboard;
 
                     /* Student Dashboard > Courses page */

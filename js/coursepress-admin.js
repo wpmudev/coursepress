@@ -1197,3 +1197,19 @@ function cp_is_valid_url(str) {
 function cp_is_value_in_array(value, array) {
     return array.indexOf(value) > -1;
 }
+
+jQuery(function($) {
+    $('input.module_preview').on('change', function() {
+        if ($(this).attr('checked')) {
+            $("input[name*='meta_preview_page[" + $(this).data('id') + "_']").each(function(i, obj) {
+                $(obj).attr('checked', true);
+                $(obj).attr('disabled', true);
+            });
+        } else {
+            $("input[name*='meta_preview_page[" + $(this).data('id') + "_']").each(function(i, obj) {
+                $(obj).attr('checked', false);
+                $(obj).attr('disabled', false);
+            });
+        }
+    });
+});
