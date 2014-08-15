@@ -437,7 +437,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             </label>
                                             <div class="course-structure">
                                                 <input type='checkbox' id='meta_course_structure_options' name='meta_course_structure_options' <?php echo ( $course_structure_options == 'on' ) ? 'checked' : ''; ?> />
-                                                <label for="meta_course_structure_options"><?php _e('Show the Course Overview stucture and Preview Options', 'cp'); ?></label><br />
+                                                <label for="meta_course_structure_options"><?php _e('Show the Course Overview structure and Preview Options', 'cp'); ?></label><br />
                                                 <input type='checkbox' id='meta_course_structure_time_display' name='meta_course_structure_time_display' <?php echo ( $course_structure_time_display == 'on' ) ? 'checked' : ''; ?> />
                                                 <label for="meta_course_structure_time_display"><?php _e('Display Time Estimates for Units and Lessons', 'cp'); ?></label>
                                                 <table>
