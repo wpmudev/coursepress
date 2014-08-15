@@ -298,6 +298,10 @@ if ( !class_exists('CoursePress') ) {
 //add_filter('generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ));
 //add_action('init', array( &$this, 'do_rewrite' ));
             add_action('pre_get_posts', array( &$this, 'remove_canonical' ));
+
+            add_filter('pre_get_posts', array( &$this, 'filter_search' ));
+            add_filter('posts_where', array( &$this, 'posts_where' ));
+
             add_action('wp_ajax_update_units_positions', array( $this, 'update_units_positions' ));
             add_filter('query_vars', array( $this, 'filter_query_vars' ));
             add_filter('get_edit_post_link', array( $this, 'courses_edit_post_link' ), 10, 3);
@@ -371,6 +375,41 @@ if ( !class_exists('CoursePress') ) {
             // Override order success page for courses
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
+        }
+
+        function filter_search( $query ) {
+            // Get post types
+            if ( $query->is_search ) {
+                $post_types = get_post_types(array( 'public' => true, 'exclude_from_search' => false ), 'objects');
+                $searchable_types = array();
+                // Add available post types
+                $remove_mp_products_from_search = apply_filters('remove_mp_products_from_search', true);
+                if ( $post_types ) {
+                    foreach ( $post_types as $type ) {
+                        if ( $remove_mp_products_from_search ) {
+                            if ( $type->name != 'product' ) {//remove MP products from search so we won't have duplicated posts in search
+                                $searchable_types[] = $type->name;
+                            }
+                        }else{
+                            $searchable_types[] = $type->name;
+                        }
+                    }
+                }
+
+                $searchable_types[] = 'course';
+                $query->set('post_type', $searchable_types);
+            }
+
+            return $query;
+        }
+
+        function posts_where( $where ) {
+
+            if ( is_search() ) {
+                $where = preg_replace(
+                        "/post_title\s+LIKE\s*(\'[^\']+\')/", "post_title LIKE $1) OR (post_excerpt LIKE $1", $where);
+            }
+            return $where;
         }
 
         function activate_marketpress_lite() {
