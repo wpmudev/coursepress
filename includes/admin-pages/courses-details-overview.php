@@ -236,7 +236,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                 <?php
                                 if ( $course_id != 0 && CoursePress_Capabilities::can_update_course($course_id) ) {//do not show anything
                                     ?>
-                                    <a class="button button-preview" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
+                                    <a class="button button-preview-overview" href="<?php echo get_permalink($course_id); ?>" target="_new"><?php _e('Preview', 'cp'); ?></a>
 
                                     <?php
                                     /* if (current_user_can('coursepress_change_course_status_cap') || ( current_user_can('coursepress_change_my_course_status_cap') && $course_details->post_author == get_current_user_id() )) { ?>
