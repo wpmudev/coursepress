@@ -161,9 +161,11 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
 
-
-
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
+				
+                add_action('wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
+
+                add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
             }
 
             //Setup Gatewat Array
@@ -370,6 +372,29 @@ if ( !class_exists('CoursePress') ) {
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
+		
+		function activate_marketpress_lite() {
+			$ajax_response = array();			
+			
+			$result = activate_plugin( 'coursepress/marketpress.php' );
+
+			if ( is_wp_error( $result ) ) {
+				$ajax_response['mp_lite_activated'] = false;
+			} else {
+				$ajax_response['mp_lite_activated'] = true;				
+			}
+									
+			$response = array(
+			    'what' => 'cp_activate_mp_lite',
+			    'action' => 'cp_activate_mp_lite',
+			    'id' => 1, // success status
+			    'data' => json_encode($ajax_response),
+			);
+			$xmlResponse = new WP_Ajax_Response($response);
+			$xmlResponse->send();
+			
+		}
+		
 
         function cp_format_TinyMCE( $in ) {
             $in['menubar'] = false;

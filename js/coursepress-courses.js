@@ -1385,6 +1385,30 @@ jQuery(document).ready(function($) {
     $('#marketpressprompt').click(function(event) {
         $('#marketpressprompt-box').toggle();
     });
+	
+	$('div.button.cp-activate-mp-lite').click( function( event ) {
+		event.stopPropagation();
+		
+        $.post(
+                'admin-ajax.php', {
+                    action: 'cp_activate_mp_lite',
+                }
+        ).done(function(data, status) {
+            if (status == 'success') {
+
+                var response = $.parseJSON($(data).find('response_data').text());
+                if (response && response.mp_lite_activated) {
+					$('.cp-markertpress-not-active').addClass('hidden');
+					$('.cp-markertpress-is-active').removeClass('hidden');					
+                } else {
+					$('.cp-markertpress-is-active').addClass('hidden');
+					$('.cp-markertpress-not-active').removeClass('hidden');					
+                }
+            }
+        });
+		
+		
+	});
 
     $('[name="meta_course_structure_options"]').change(function(event) {
 
