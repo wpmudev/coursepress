@@ -33,7 +33,7 @@
                             </ul>
 							
                             <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_instructors], [course_instructors course_id="5"], [course_instructors style="list"]</code>
+							<code>[course_instructors]<br />[course_instructors course_id="5"]<br />[course_instructors style="list"]</code>
                             <span class="description"></span>
                         </td>
                     </tr>
@@ -126,13 +126,13 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>title_tag</span> – <?php _e( 'The HTML tag (without brackets) to use for the title. Default: h3', 'cp' ); ?></li>
-								<li><span>link</span> – <?php _e( 'Should the title link to the course?  Accepts “yes” or “no”. Default: no', 'cp' ); ?></li>
+								<li><span>link</span> – <?php _e( 'Should the title link to the course?  Accepts "yes" or "no". Default: no', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
 							</ul>
 
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_title course_id="4"], [course_title]</code>
+							<code>[course_title course_id="4"]<br />[course_title]</code>
 						</td>
 					</tr>					
 					
@@ -158,7 +158,7 @@
 
 	
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_summary course_id="4"], [course_summary]</code>
+							<code>[course_summary course_id="4"]<br />[course_summary]</code>
 						</td>
 					</tr>					
 
@@ -183,7 +183,7 @@
 
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_description course_id="4"], [course_description]</code>
+							<code>[course_description course_id="4"]<br />[course_description]</code>
 						</td>
 					</tr>
 
@@ -212,7 +212,7 @@
 
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_start], [course_start label="Awesomeness begins on" label_tag="h3"]</code>
+							<code>[course_start]<br />[course_start label="Awesomeness begins on" label_tag="h3"]</code>
 						</td>
 					</tr>				
 					
@@ -241,7 +241,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_end], [course_end label="The End." label_tag="h3" course_id="5"]</code>
+							<code>[course_end]<br />[course_end label="The End." label_tag="h3" course_id="5"]</code>
 						</td>
 					</tr>						
 					
@@ -266,12 +266,12 @@
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'cp' ); ?></li>
 								<li><span>alt_display_text</span> – <?php _e( 'Alternate display when there is no end date. Default: Open-ended', 'cp' ); ?></li>
-								<li><span>show_alt_display</span> – <?php _e( 'If set to “yes” use the alt_display_text. If set to “no” use the “no_date_text”. Default: no', 'cp' ); ?></li>
+								<li><span>show_alt_display</span> – <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_dates], [course_dates show_alt_display="yes" alt_display_text="Learn Anytime!"]</code>
+							<code>[course_dates]<br />[course_dates show_alt_display="yes" alt_display_text="Learn Anytime!"]</code>
 						</td>
 					</tr>			
 
@@ -301,7 +301,7 @@
 
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_enrollment_start], [course_enrollment_start label="Signup from" label_tag="em"]</code>
+							<code>[course_enrollment_start]<br />[course_enrollment_start label="Signup from" label_tag="em"]</code>
 						</td>
 					</tr>				
 					
@@ -326,12 +326,12 @@
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if there is no enrollment end date. Default: Enroll Anytime', 'cp' ); ?></li>
-								<li><span>show_all_dates</span> – <?php _e( 'If “yes” it will display the no_date_text even if there is no date. If “no” then nothing will be displayed. Default: no', 'cp' ); ?></li>	
+								<li><span>show_all_dates</span> – <?php _e( 'If "yes" it will display the no_date_text even if there is no date. If "no" then nothing will be displayed. Default: no', 'cp' ); ?></li>	
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_end], [course_end label="End" label_delimeter="-"]</code>
+							<code>[course_end]<br />[course_end label="End" label_delimeter="-"]</code>
 						</td>
 					</tr>						
 					
@@ -356,12 +356,12 @@
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
 								<li><span>no_date_text</span> – <?php _e( 'Text to display if there is no enrollment start or end dates. Default: Enroll Anytime', 'cp' ); ?></li>
 								<li><span>alt_display_text</span> – <?php _e( 'Alternate display when there is no enrollment start or end dates. Default: Open-ended', 'cp' ); ?></li>
-								<li><span>show_alt_display</span> – <?php _e( 'If set to “yes” use the alt_display_text. If set to “no” use the “no_date_text”. Default: no', 'cp' ); ?></li>
+								<li><span>show_alt_display</span> – <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_enrollment_dates], [course_enrollment_dates no_date_text="No better time than now!"]</code>
+							<code>[course_enrollment_dates]<br />[course_enrollment_dates no_date_text="No better time than now!"]</code>
 						</td>
 					</tr>			
 
@@ -391,7 +391,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_entollment_type], [course_entollment_type course_id=“42”], [course_entollment_type passcode_text=“Whats the magic word?"]</code>
+							<code>[course_enrollment_type]<br />[course_enrollment_type course_id="42"]<br />[course_enrollment_type passcode_text="Whats the magic word?"]</code>
 						</td>
 					</tr>
 
@@ -413,15 +413,15 @@
 								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
-								<li><span>show_no_limit</span> – <?php _e( 'If “yes” it will show the no_limit_text. If “no” then nothing will display for unlimited courses. Default: no', 'cp' ); ?></li>
-								<li><span>show_remaining</span> – <?php _e( 'If “yes” show remaining_text. If “no” don’t show remaining places. Default: “Yes"', 'cp' ); ?></li>
+								<li><span>show_no_limit</span> – <?php _e( 'If "yes" it will show the no_limit_text. If "no" then nothing will display for unlimited courses. Default: no', 'cp' ); ?></li>
+								<li><span>show_remaining</span> – <?php _e( 'If "yes" show remaining_text. If "no" don’t show remaining places. Default: "Yes"', 'cp' ); ?></li>
 								<li><span>no_limit_text</span> – <?php _e( 'Text to display for unlimited class sizes. Default: Unlimited', 'cp' ); ?></li>
 								<li><span>remaining_text</span> – <?php _e( 'Text to display for remaining places. Use %d for the remaining number. Default: (%d places left)', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>								
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_class_size], [course_class_size course_id=“42” no_limit_text=“The more the merrier”], [course_class_size remaining_text=“Only %d places remaining!”]</code>
+							<code>[course_class_size]<br />[course_class_size course_id="42" no_limit_text="The more the merrier"]<br />[course_class_size remaining_text="Only %d places remaining!"]</code>
 						</td>
 					</tr>
 
@@ -448,7 +448,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_cost], [course_cost no_cost_text=“Free as in beer.”]</code>
+							<code>[course_cost]<br />[course_cost no_cost_text="Free as in beer."]</code>
 						</td>
 					</tr>
 
@@ -474,7 +474,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code> [course_language], [course_language label="Delivered in"]</code>
+							<code> [course_language]<br />[course_language label="Delivered in"]</code>
 						</td>
 					</tr>					
 
@@ -499,7 +499,7 @@
 							</ul>
 
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_list_image], [course_list_image width=“100” height=“100”]</code>
+							<code>[course_list_image]<br />[course_list_image width="100" height="100"]</code>
 						</td>
 					</tr>
 
@@ -524,7 +524,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_featured_video], [course_featured_video width=“320” height=“240”]</code>
+							<code>[course_featured_video]<br />[course_featured_video width="320" height="240"]</code>
 						</td>
 					</tr>
 
@@ -548,7 +548,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_thumbnail], [course_thumbnail course_id=“22” wrapper=“div"]</code>
+							<code>[course_thumbnail]<br />[course_thumbnail course_id="22" wrapper="div"]</code>
 						</td>
 					</tr>
 					
@@ -568,15 +568,15 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>type</span> – <?php _e( 'Use “image” to only display list image if available. Use “video” to only show the video if available. Use “thumbnail” to show the course thumbnail. Use “default” to enable priority mode (see priority attribute). Default: CoursePress Settings', 'cp' ); ?></li>
-								<li><span>priority</span> – <?php _e( 'Use “image” to try to show the list image first. If not available, then try to use the featured video.  Use “video” to try to show the featured video first. If not available, try to use the list image. Default: CoursePress Settings', 'cp' ); ?></li>
-								<li><span>list_page</span> – <?php _e( 'Use “yes” to use the CoursePress Settings for “Course Listings”. Use “no” to use the CoursePress Settings for “Course Details Page”. Default: no', 'cp' ); ?></li>
+								<li><span>type</span> – <?php _e( 'Use "image" to only display list image if available. Use "video" to only show the video if available. Use "thumbnail" to show the course thumbnail. Use "default" to enable priority mode (see priority attribute). Default: CoursePress Settings', 'cp' ); ?></li>
+								<li><span>priority</span> – <?php _e( 'Use "image" to try to show the list image first. If not available, then try to use the featured video.  Use "video" to try to show the featured video first. If not available, try to use the list image. Default: CoursePress Settings', 'cp' ); ?></li>
+								<li><span>list_page</span> – <?php _e( 'Use "yes" to use the CoursePress Settings for "Course Listings". Use "no" to use the CoursePress Settings for "Course Details Page". Default: no', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
 							</ul>
 
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_media], [course_media list_page=“yes”], [course_media type=“video”], [course_media priority=“image”], [course_media type=“thumbnail”]</code>
+							<code>[course_media]<br />[course_media list_page="yes"]<br />[course_media type="video"]<br />[course_media priority="image"]<br />[course_media type="thumbnail"]</code>
 						</td>
 					</tr>
 					
@@ -610,7 +610,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_join_button], [course_join_button course_id=“11” course_expired_text=“You missed out big time!”]</code>
+							<code>[course_join_button]<br />[course_join_button course_id="11" course_expired_text="You missed out big time!"]</code>
 						</td>
 					</tr>
 
@@ -618,7 +618,7 @@
 						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Action Links', 'cp' ); ?></th>
 						<td>
 							<span class="cp-shortcode-code">[course_action_links]</span><br />
-							<span class=""><?php _e( 'Shows  “Course Details” and “Withdraw” links to students.', 'cp' ); ?></span>
+							<span class=""><?php _e( 'Shows  "Course Details" and "Withdraw" links to students.', 'cp' ); ?></span>
 
 							<p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'cp' ); ?></p>
 
@@ -659,7 +659,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_calendar], [course_calendar pre=“< Previous” next=“Next >”]</code>
+							<code>[course_calendar]<br />[course_calendar pre="< Previous" next="Next >"]</code>
 						</td>
 					</tr>
 					
@@ -673,29 +673,29 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>status</span> – <?php _e( 'The status of courses to show (uses WordPress status). Default: published', 'cp' ); ?></li>
-								<li><span>instructor</span> – <?php _e( 'The instructor id to list courses for a specific instructor. Can also specify multiple instructors using commas. (e.g. instructor=“1,2,3”). Default: empty', 'cp' ); ?></li>
-								<li><span>student</span> – <?php _e( 'The student id to list courses for a specific student. Can also specify multiple students using commas. (e.g. student=“1,2,3”). Default: empty', 'cp' ); ?><br />
+								<li><span>instructor</span> – <?php _e( 'The instructor id to list courses for a specific instructor. Can also specify multiple instructors using commas. (e.g. instructor="1,2,3"). Default: empty', 'cp' ); ?></li>
+								<li><span>student</span> – <?php _e( 'The student id to list courses for a specific student. Can also specify multiple students using commas. (e.g. student="1,2,3"). Default: empty', 'cp' ); ?><br />
 									<strong>Note:</strong> If both student and instructor are specified, only the student will be used.</li>
-								<li><span>two_column</span> – <?php _e( 'Use “yes” to display primary fields in left column and actions in right column. Use “no” for a single column. Default: yes', 'cp' ); ?></li>
+								<li><span>two_column</span> – <?php _e( 'Use "yes" to display primary fields in left column and actions in right column. Use "no" for a single column. Default: yes', 'cp' ); ?></li>
 								<li><span>left_class</span> – <?php _e( 'Additional CSS classes for styling the left column (if selected). Default: empty', 'cp' ); ?></li>								
 								<li><span>right_class</span> – <?php _e( 'Additional CSS classes for styling the right column (if selected). Default: empty', 'cp' ); ?></li>									
-								<li><span>title_link</span> – <?php _e( 'Use “yes” to turn titles into links to the course. Use “no” to display titles without links. Default: yes', 'cp' ); ?></li>
+								<li><span>title_link</span> – <?php _e( 'Use "yes" to turn titles into links to the course. Use "no" to display titles without links. Default: yes', 'cp' ); ?></li>
 								<li><span>title_tag</span> – <?php _e( 'The HTML element (without brackets) to use for course titles. Default: h3', 'cp' ); ?></li>
 								<li><span>title_class</span> – <?php _e( 'Additional CSS classes for styling the course titles. Default: empty', 'cp' ); ?></li>									
 								<li><span>show</span> – <?php _e( 'The fields to show for the course body. See [course] shortcode. Default: dates,enrollment_dates,class_size,cost', 'cp' ); ?></li>
-								<li><span>show_button</span> – <?php _e( 'Show [course_join_button]. Accepts “yes” and “no”. Default: yes', 'cp' ); ?></li>
-								<li><span>show_divider</span> – <?php _e( 'Add divider between courses. Accepts “yes” or “no”. Default: yes', 'cp' ); ?></li>
-								<li><span>show_media</span> – <?php _e( 'Show [course_media] if “yes”. Default: no', 'cp' ); ?></li>
+								<li><span>show_button</span> – <?php _e( 'Show [course_join_button]. Accepts "yes" and "no". Default: yes', 'cp' ); ?></li>
+								<li><span>show_divider</span> – <?php _e( 'Add divider between courses. Accepts "yes" or "no". Default: yes', 'cp' ); ?></li>
+								<li><span>show_media</span> – <?php _e( 'Show [course_media] if "yes". Default: no', 'cp' ); ?></li>
 								<li><span>media_type</span> – <?php _e( 'Type to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'cp' ); ?></li>
 								<li><span>media_priority</span> – <?php _e( 'Priority to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'cp' ); ?></li>									
 								<li><span>course_class</span> – <?php _e( 'Additional CSS classes for styling each course. Default: empty', 'cp' ); ?></li>									
 								<li><span>limit</span> – <?php _e( 'Limit the number of courses. Use -1 to show all. Default: -1', 'cp' ); ?></li>
-								<li><span>order</span> – <?php _e( 'Order the courses by title. “ASC” for ascending order. “DESC” for descending order. Empty for WordPress default. Default: “ASC"', 'cp' ); ?></li>
+								<li><span>order</span> – <?php _e( 'Order the courses by title. "ASC" for ascending order. "DESC" for descending order. Empty for WordPress default. Default: "ASC"', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling the whole list. Default: empty', 'cp' ); ?></li>
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_list], [course_list instructor=“2”], [course_list student=“3”], [course_list instructor=“2,4,5”], [course_list show=“dates,cost” limit=“5”]</code>
+							<code>[course_list]<br />[course_list instructor="2"]<br />[course_list student="3"]<br />[course_list instructor="2,4,5"]<br />[course_list show="dates,cost" limit="5"]</code>
 						</td>
 					</tr>
 					
@@ -722,7 +722,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_featured course_id=“42”], [course_featured course_id=“11” featured_title=“The best we got!”]</code>
+							<code>[course_featured course_id="42"]<br />[course_featured course_id="11" featured_title="The best we got!"]</code>
 						</td>
 					</tr>
 					
@@ -742,9 +742,9 @@
 
 							<ul class="cp-shortcode-options">
 								<li><span>free_text</span> – <?php _e( 'Text to show for FREE preview items. Default: Free', 'cp' ); ?></li>
-						        <li><span>show_title</span> – <?php _e( 'Show course title in structure, “yes” or “no”. Default: “no"', 'cp' ); ?></li>
-								<li><span>show_label</span> – <?php _e( 'Show label text as tree heading, “yes” or “no”. Default: no', 'cp' ); ?></li>
-								<li><span>show_divider</span> – <?php _e( 'Show divider between major items in the tree, “yes” or “no”. Default: yes', 'cp' ); ?></li>
+						        <li><span>show_title</span> – <?php _e( 'Show course title in structure, "yes" or "no". Default: "no"', 'cp' ); ?></li>
+								<li><span>show_label</span> – <?php _e( 'Show label text as tree heading, "yes" or "no". Default: no', 'cp' ); ?></li>
+								<li><span>show_divider</span> – <?php _e( 'Show divider between major items in the tree, "yes" or "no". Default: yes', 'cp' ); ?></li>
 								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_tag</span> – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
@@ -752,7 +752,7 @@
 							</ul>
 
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_structure], [course_structure course_id=“42” free_text=“Gratis!” show_title=“no”], [course_structure show_title=“no” label=“Curriculum”]</code>
+							<code>[course_structure]<br />[course_structure course_id="42" free_text="Gratis!" show_title="no"]<br />[course_structure show_title="no" label="Curriculum"]</code>
 						</td>
 					</tr>
 					
@@ -770,12 +770,12 @@
 								<li><span>logout_url</span> – <?php _e( 'URL to redirect to when user logs out. Default: Plugin defaults.', 'cp' ); ?></li>
 								<li><span>signup_title</span> – <?php _e( 'Title to use for Signup section. Default: &lt;h3>Signup&lt;/h3>', 'cp' ); ?></li>
 								<li><span>login_title</span> – <?php _e( 'Title to use for Login section. Default: &lt;h3>Login&lt;/h3>', 'cp' ); ?></li>
-								<li><span>signup_url</span> – <?php _e( 'URL to redirect to when clicking on "Don\'t have an account? Go to Signup!”  Default: Plugin defaults.', 'cp' ); ?></li>
-								<li><span>login_url</span> – <?php _e( 'URL to redirect to when clicking on "Already have an Account?”. Default: Plugin defaults.', 'cp' ); ?></li>																
+								<li><span>signup_url</span> – <?php _e( 'URL to redirect to when clicking on "Don\'t have an account? Go to Signup!"  Default: Plugin defaults.', 'cp' ); ?></li>
+								<li><span>login_url</span> – <?php _e( 'URL to redirect to when clicking on "Already have an Account?". Default: Plugin defaults.', 'cp' ); ?></li>																
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_signup], [course_signup signup_title=“&lt;h1>Signup Now&lt;/h1>”]</code>
+							<code>[course_signup]<br />[course_signup signup_title="&lt;h1>Signup Now&lt;/h1>"]</code>
 						</td>
 					</tr>
 
