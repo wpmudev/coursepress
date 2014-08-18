@@ -2548,7 +2548,11 @@ if ( !class_exists('CoursePress') ) {
                 $content = '';
                 $title = '';
 
-                if ( is_user_logged_in() ) {
+				$invites = get_post_meta($_GET['course_id'], 'instructor_invites', true);
+				$invite_keys = array_keys( $invites );
+				$valid_code = in_array( $_GET['c'], $invite_keys ) ? true : false;
+
+                if ( is_user_logged_in() && $valid_code ) {
 
                     $current_user = wp_get_current_user();
                     $hash = sha1($current_user->user_email . $_GET['c']);
@@ -2558,7 +2562,7 @@ if ( !class_exists('CoursePress') ) {
                         $course_id = ( int ) $_GET['course_id'];
                         $user_id = get_current_user_id();
                         $instructors = get_post_meta($_GET['course_id'], 'instructors', true);
-                        $invites = get_post_meta($_GET['course_id'], 'instructor_invites', true);
+                        
 
                         foreach ( $invites as $key => $invite ) {
                             if ( $_GET['c'] == $invite['code'] ) {
@@ -2599,15 +2603,24 @@ if ( !class_exists('CoursePress') ) {
 						', 'cp'));
                     }
                 } else {
-                    $title = __('<h3>Login Required</h3>', 'cp');
-                    $content = do_shortcode(__('
-						<p>To accept your invitation request you will need to be logged in.</p>
-						<p>Please login with the account associated with this email.</p>
-					', 'cp'));
+					if( ! $valid_code ) {
+	                    $title = __('<h3>Invitation not found.</h3>', 'cp');
+	                    $content = do_shortcode(__('
+							<p>This invitation could not be found or is no longer available.</p>
+							<p>Please contact us if you believe this to be an error.</p>
+						', 'cp'));
+						
+					} else {
+	                    $title = __('<h3>Login Required</h3>', 'cp');
+	                    $content = do_shortcode(__('
+							<p>To accept your invitation request you will need to be logged in.</p>
+							<p>Please login with the account associated with this email.</p>
+						', 'cp'));
 
-                    ob_start();
-                    do_shortcode('[course_signup page="login" login_title="" redirect_url="' . urlencode(site_url($_SERVER['REQUEST_URI'])) . '" signup_url="' . CoursePress::instance()->get_signup_slug(true) . '" logout_url="' . CoursePress::instance()->get_signup_slug(true) . '"]');
-                    $content .= ob_get_clean();
+	                    ob_start();
+	                    do_shortcode('[course_signup page="login" login_title="" redirect_url="' . urlencode(site_url($_SERVER['REQUEST_URI'])) . '" signup_url="' . CoursePress::instance()->get_signup_slug(true) . '" logout_url="' . CoursePress::instance()->get_signup_slug(true) . '"]');
+	                    $content .= ob_get_clean();						
+					}
                 }
                 // get_sidebar();
                 //                 get_footer();
