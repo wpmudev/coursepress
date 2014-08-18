@@ -615,9 +615,9 @@ function coursepress_get_enrollment_content_email() {
 
 Congratulations! You have enrolled in course "%2$s" successfully! 
 
-You may check all courses you enrolled in here: %3$s.
+You may check all courses you are enrolled in here: %3$s.
 
-Or you can expore other courses in your %4$s
+Or you can explore other courses in your %4$s
 
 Yours sincerely,
 %5$s Team'), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __('Dashboard', 'cp') . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME');
