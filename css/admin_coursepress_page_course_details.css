@@ -2208,6 +2208,7 @@ label.bold-label{
     padding-left:5px;
 }
 
+#step-done-message .fa-check,
 #invite-message .fa-check {
     color: #6FC26E;
 }

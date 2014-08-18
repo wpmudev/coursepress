@@ -1208,7 +1208,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                     $modules = $module->get_modules($unit->ID);
 
                                     if ( isset($show_unit[$unit->ID]) && $show_unit[$unit->ID] == 'on' && $unit->post_status == 'publish' ) {
-										cp_write_log( $unit->post_title );
                                         ?>
                                         <li>
                                             <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">

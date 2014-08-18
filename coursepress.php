@@ -444,7 +444,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function course_checkout_success_msg( $setting, $default ) {
-            cp_write_log('MP Success Setting: ' . $setting);
+            // cp_write_log('MP Success Setting: ' . $setting);
             $cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
             $cookie = '';
 

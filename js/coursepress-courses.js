@@ -458,6 +458,16 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
             // Steps 1 - 5	
         } else {
             $(statusElement).addClass('saved');
+			
+			var buttons = $(statusElement).parents('.course-section').find('.course-form .course-step-buttons')[0];
+			
+			$('#step-done-message').remove();
+            $( buttons ).append('<span id="step-done-message">&nbsp;<i class="fa fa-check"></i></span>');
+            // Popup Message
+            $('#step-done-message').show(function() {
+                $(this).fadeOut(1000);
+            });
+			
         }
 
         $('.course-section.step input.button.update').css('display', 'none');
