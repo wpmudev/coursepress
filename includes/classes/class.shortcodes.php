@@ -1208,6 +1208,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                     $modules = $module->get_modules($unit->ID);
 
                                     if ( isset($show_unit[$unit->ID]) && $show_unit[$unit->ID] == 'on' && $unit->post_status == 'publish' ) {
+										cp_write_log( $unit->post_title );
                                         ?>
                                         <li>
                                             <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
@@ -1219,7 +1220,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                     <?php } ?>
 
                                                     <?php
-                                                    if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' ) {
+                                                    if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' && $unit_class->get_permalink() ) {
                                                         ?>
                                                         <a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php echo $free_text; ?></a>
                                                     <?php } ?>
@@ -1248,7 +1249,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                                     <?php } ?>
 
                                                                     <?php
-                                                                    if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' ) {
+                                                                    if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' && $unit_class->get_permalink() ) {
                                                                         ?>
                                                                         <a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php echo $free_text; ?></a>
                                                                     <?php } ?>
