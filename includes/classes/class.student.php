@@ -27,7 +27,6 @@ if ( !class_exists('Student') ) {
         }
 
         function Student( $ID, $name = '' ) {
-
             $this->__construct($ID, $name);
         }
 

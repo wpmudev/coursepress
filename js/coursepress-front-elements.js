@@ -1,66 +1,83 @@
+
+jQuery(document).ready(function($) {
+    $('#save_student_progress').click(function(e) {
+        e.preventDefault();
+        $('#modules_form').append('<input type="hidden" id="save_student_progress_indication" name="save_student_progress_indication" />');
+        $('#modules_form').submit();
+    });
+});
+
+
+
 function check_for_mandatory_answers() {
 
-    var mandatory_errors = 0;
+    if (jQuery("#save_student_progress_indication").length == 0) {
 
-    /* Input Text Element validation */
-    jQuery('input[type=text]').each(function() {
-        if (jQuery(this).attr("data-mandatory") == 'yes') {
+        var mandatory_errors = 0;
 
-            var element_val = jQuery(this).val();
+        /* Input Text Element validation */
+        jQuery('input[type=text]').each(function() {
+            if (jQuery(this).attr("data-mandatory") == 'yes') {
 
-            if (element_val.trim() == '') {
-                mandatory_errors++;
+                var element_val = jQuery(this).val();
+
+                if (element_val.trim() == '') {
+                    mandatory_errors++;
+                }
             }
-        }
-    });
+        });
 
-    /* Input Textarea Element validation */
-    jQuery('textarea').each(function() {
-        if (jQuery(this).attr("data-mandatory") == 'yes') {
+        /* Input Textarea Element validation */
+        jQuery('textarea').each(function() {
+            if (jQuery(this).attr("data-mandatory") == 'yes') {
 
-            var element_val = jQuery(this).val();
+                var element_val = jQuery(this).val();
 
-            if (element_val.trim() == '') {
-                mandatory_errors++;
+                if (element_val.trim() == '') {
+                    mandatory_errors++;
+                }
             }
-        }
-    });
+        });
 
-    /* Input File Element validation */
-    jQuery('input[type=file]').each(function() {
-        if (jQuery(this).attr("data-mandatory") == 'yes') {
+        /* Input File Element validation */
+        jQuery('input[type=file]').each(function() {
+            if (jQuery(this).attr("data-mandatory") == 'yes') {
 
-            var element_val = jQuery(this).val();
+                var element_val = jQuery(this).val();
 
-            if (element_val.trim() == '') {
-                mandatory_errors++;
+                if (element_val.trim() == '') {
+                    mandatory_errors++;
+                }
             }
-        }
-    });
+        });
 
-    /* Checkbox Input Element validation*/
-    jQuery('.checkbox_answer_group').each(function() {
-        if (jQuery(this).attr("data-mandatory") == 'yes') {
-            if (jQuery('input[type=checkbox]:checked').length == 0) {
-                mandatory_errors++;
+        /* Checkbox Input Element validation*/
+        jQuery('.checkbox_answer_group').each(function() {
+            if (jQuery(this).attr("data-mandatory") == 'yes') {
+                if (jQuery('input[type=checkbox]:checked').length == 0) {
+                    mandatory_errors++;
+                }
             }
-        }
-    });
+        });
 
-    /* Radio Button Input Element validation*/
-    jQuery('.radio_answer_group').each(function() {
-        if (jQuery(this).attr("data-mandatory") == 'yes') {
-            if (jQuery('input[type=radio]:checked').length == 0) {
-                mandatory_errors++;
+        /* Radio Button Input Element validation*/
+        jQuery('.radio_answer_group').each(function() {
+            if (jQuery(this).attr("data-mandatory") == 'yes') {
+                if (jQuery('input[type=radio]:checked').length == 0) {
+                    mandatory_errors++;
+                }
             }
-        }
-    });
+        });
 
-    if (mandatory_errors == 0) {
+        if (mandatory_errors == 0) {
+            return true;
+        } else {
+            jQuery('.mandatory_message').show("slow");
+            return false;
+        }
+       
+    }else{
         return true;
-    } else {
-        jQuery('.mandatory_message').show("slow");
-        return false;
     }
 }
 
@@ -89,12 +106,12 @@ jQuery(document).ready(function() {
         var next_page = 0;
         var action = jQuery("#modules_form").attr("action");
         var direct_url = '';
-        
+
         if (e.originalEvent) {//clicked button directly, not pagination
 
             var active_page = jQuery('#navigation-pagination .active a').html();
             var last_page = jQuery('#navigation-pagination li:last-child a').html();
-            
+
 
             if (active_page != last_page) {
                 next_page = parseInt(active_page) + 1;
@@ -116,13 +133,13 @@ jQuery(document).ready(function() {
 
         //return false;
     });
-	
-	// Use data-link attribute to follow links
-	jQuery('button').click( function( event ) {
-		if( jQuery( this ).data( 'link' ) ) {
-			window.location.href = jQuery( this ).data( 'link' );			
-		}
-	});
-	
+
+    // Use data-link attribute to follow links
+    jQuery('button').click(function(event) {
+        if (jQuery(this).data('link')) {
+            window.location.href = jQuery(this).data('link');
+        }
+    });
+
 
 });

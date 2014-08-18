@@ -1040,5 +1040,17 @@ table.popup-payment-info th {
 }
 
 .enrolled-courses-title {
-	padding-top: 50px;
+    padding-top: 50px;
+}
+
+.fullbox{
+    display: block;
+    width: 100%;
+    clear: both;
+}
+
+.save_progress{
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 10px;
 }

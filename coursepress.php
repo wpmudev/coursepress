@@ -390,7 +390,7 @@ if ( !class_exists('CoursePress') ) {
                             if ( $type->name != 'product' ) {//remove MP products from search so we won't have duplicated posts in search
                                 $searchable_types[] = $type->name;
                             }
-                        }else{
+                        } else {
                             $searchable_types[] = $type->name;
                         }
                     }
@@ -2015,7 +2015,6 @@ if ( !class_exists('CoursePress') ) {
 
         function register_custom_posts() {
 
-
 // Register custom taxonomy
             register_taxonomy('course_category', 'course', apply_filters('cp_register_course_category', array(
                 "hierarchical" => true,
@@ -2174,7 +2173,7 @@ if ( !class_exists('CoursePress') ) {
                 'public' => false,
                 //'has_archive' => true,
                 'show_ui' => false,
-                'publicly_queryable' => false,
+                'publicly_queryable' => true,
                 'capability_type' => 'discussion',
                 'map_meta_cap' => true,
                 'query_var' => true,
@@ -2888,6 +2887,13 @@ if ( !class_exists('CoursePress') ) {
                 ?>
                 <div class="save_elements_message_ok">
                     <?php _e('The data has been saved successfully.', 'cp'); ?>
+                </div>
+                <?php
+            }
+            if ( ( isset($_GET['saved']) && $_GET['saved'] == 'progress_ok' ) ) {
+                ?>
+                <div class="save_elements_message_ok">
+                    <?php _e('Your progress has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }

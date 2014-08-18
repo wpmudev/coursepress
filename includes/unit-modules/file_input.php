@@ -246,7 +246,7 @@ class file_input_module extends Unit_Module {
             }
         }
 
-        if ( isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done']) ) {
+        if ( isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done']) || isset($_POST['save_student_progress_indication']) ) {
 
             if ( $_FILES ) {
                 foreach ( $_FILES as $file => $array ) {

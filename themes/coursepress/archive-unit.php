@@ -52,7 +52,7 @@ get_header();
                         <div class='<?php echo $additional_class; ?>'></div>
                         <div class="unit-archive-single">
                             <?php echo do_shortcode('[course_unit_details field="percent" format="true" style="extended"]'); ?>
-                            <a class="unit-archive-single-title" href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
+                            <a class="unit-archive-single-title" href="<?php echo do_shortcode('[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]'); ?>" rel="bookmark"><?php the_title(); ?></a>
                             <?php do_shortcode('[module_status format="true"]'); ?>
                         </div>
                     </li>

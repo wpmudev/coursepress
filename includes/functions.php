@@ -13,6 +13,29 @@
   return $url;
   } */
 
+
+function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
+    if ( !$unit_id ) {
+        return false;
+    }
+    if(!$student_id){
+        $student_id = get_current_user_ID();
+    }
+    update_user_meta($student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num);
+}
+
+function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
+    if(!$student_id){
+        $student_id = get_current_user_ID();
+    }
+    $last_visited_unit_page = get_user_meta($student_id, 'last_visited_unit_' . $unit_id . '_page', true);
+    if ( $last_visited_unit_page ) {
+        return $last_visited_unit_page;
+    } else {
+        return 1;
+    }
+}
+
 function cp_get_order_course_id( $order_id ) {
     global $mp;
     $cart_info = $mp->get_order($order_id)->mp_cart_info;

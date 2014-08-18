@@ -1255,7 +1255,7 @@ a.apply-button-enrolled,
 #contact_form input[type="submit"].apply-button-enrolled, 
 .apply-box input[type="submit"].apply-button, 
 .apply-box a.apply-button{
-    min-width: 240px;
+    min-width: 120px;
     display: block;
     background-color: #ccc;
     background: #ccc;
