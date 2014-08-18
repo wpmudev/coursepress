@@ -2479,6 +2479,13 @@ li.current_page_item a{
     color: #74d1d4 !important;
 }
 
+.post-type-archive-course .quick-course-info .course-time{
+    width: 25%;
+}
+
+.post-type-archive-course .quick-course-info .course-cost{
+    width: 17%;
+}
 
 /*
 RESPONSIVE
