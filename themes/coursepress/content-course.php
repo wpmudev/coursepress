@@ -15,6 +15,8 @@ $course_language = $course->details->course_language;
     $course_thumbnail = Course::get_course_thumbnail(get_the_ID());
     if ( !$course_thumbnail ) {
         $extended_class = 'quick-course-info-extended';
+    }else{
+        $extended_class = '';
     }
     ?>
 
