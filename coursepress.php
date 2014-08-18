@@ -485,7 +485,10 @@ if ( !class_exists('CoursePress') ) {
 
                 if ( !empty($course_id) ) {
                     $student = new Student(get_current_user_id());
-                    $student->enroll_in_course($course_id);
+					$existing_student = $student->has_access_to_course($course_id);
+					if ( ! $existing_student ) {
+	                    $student->enroll_in_course($course_id);						
+					}
                 }
             } else {
                 cp_write_log('Error in cart. This should not happen.');
