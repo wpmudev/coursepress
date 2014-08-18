@@ -10,7 +10,7 @@ if ( isset( $_POST['submit'] ) ) {
 
     foreach ( $wp_user_search->get_results() as $user ) {
 		
-		CoursePress_Capabilities::grant_private_caps( $user_id );
+		CoursePress_Capabilities::grant_private_caps( $user->ID );
 		
 		// Don't remove capabilities from administrators
 		if( user_can( $user->ID, 'manage_options' ) ){
@@ -21,6 +21,7 @@ if ( isset( $_POST['submit'] ) ) {
         $user_capabilities = $role->wp_capabilities;
 
         if ( isset( $_POST['instructor_capability'] ) ) {
+			update_option( 'coursepress_instructor_capabilities', $_POST['instructor_capability'] );
             foreach ( $user_capabilities as $key => $old_cap ) {
 				// Make sure to only remove CoursePress instructor capabilities
                 if ( !in_array( $key, $_POST['instructor_capability'] ) && 
@@ -40,6 +41,7 @@ if ( isset( $_POST['submit'] ) ) {
             }
         }
     }
+	
 }
 
 // The default capabilities for an instructor
