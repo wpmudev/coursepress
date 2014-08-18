@@ -232,16 +232,34 @@ if ( !class_exists('Course') ) {
                     }
                 }
 
-                function mp_product_id() {
+                /*function mp_product_id() {
                     $mp_product_id = get_post_meta($this->id, 'mp_product_id', true);
                     return get_post($mp_product_id) ? $mp_product_id : 0;
+                }*/
+
+                function mp_product_id($course_id = false) {
+                    $course_id = $course_id ? $course_id : $this->id;
+                    $args = array(
+                        'posts_per_page' => 1,
+                        'post_type' => 'product',
+                        'post_parent' => $course_id,
+                        'post_status' => 'publish'
+                    );
+                    
+                    $products = get_posts($args);
+                    if(isset($products[0])){
+                        return $products[0]->ID;
+                    }else{
+                        return false;
+                    }
+                    
                 }
 
                 function update_mp_product( $course_id = false ) {
                     $course_id = $course_id ? $course_id : $this->id;
                     $automatic_sku_number = 'CP-' . $course_id;
 
-                    $mp_product_id = $this->mp_product_id();
+                    $mp_product_id = $this->mp_product_id($course_id);
 
                     $post = array(
                         'post_status' => 'publish',
@@ -253,12 +271,11 @@ if ( !class_exists('Course') ) {
                     // Add or Update a product if its a paid course
                     if ( isset($_POST['meta_paid_course']) && 'on' == $_POST['meta_paid_course'] ) {
 
-                        if ( $mp_product_id && 0 != $mp_product_id ) {
+                        if ( $mp_product_id) {
                             $post['ID'] = $mp_product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-                            $post_id = wp_update_post($post);
-                        } else {
-                            $post_id = wp_insert_post($post);
                         }
+
+                        $post_id = wp_insert_post($post);
 
                         // Only works if the course actually has a thumbnail.
                         set_post_thumbnail($mp_product_id, get_post_thumbnail_id($course_id));
@@ -280,8 +297,8 @@ if ( !class_exists('Course') ) {
                         update_post_meta($post_id, 'mp_price', $price);
                         update_post_meta($post_id, 'mp_sale_price', $sale_price);
                         update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
-						update_post_meta($post_id, 'mp_file', get_permalink( $this->id ) );
-						update_post_meta($post_id, 'cp_course_id', $this->id );
+                        update_post_meta($post_id, 'mp_file', get_permalink($this->id));
+                        update_post_meta($post_id, 'cp_course_id', $this->id);
 
                         // Remove product if its not a paid course (clean up MarketPress products)
                     } elseif ( isset($_POST['meta_paid_course']) && 'off' == $_POST['meta_paid_course'] ) {
