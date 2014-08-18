@@ -1248,7 +1248,8 @@ a.rsswidget{
 .apply-button-pending, 
 .apply-button, 
 .apply-button-enrolled, 
-a.apply-button-enrolled, 
+a.apply-button-enrolled,
+.manage-course,
 #student-settings input[type="submit"].apply-button-enrolled, 
 #modules_form input[type="submit"].apply-button-enrolled, 
 #contact_form input[type="submit"].apply-button-enrolled, 
@@ -1293,7 +1294,8 @@ a.apply-button-enrolled,
 .course-archive #modules_form input[type="submit"].apply-button-enrolled, 
 .course-archive #contact_form input[type="submit"].apply-button-enrolled, 
 .course-archive .apply-box input[type="submit"].apply-button, 
-.course-archive .apply-box a.apply-button{
+.course-archive .apply-box a.apply-button,
+{
     margin-top: 0px;
     min-width: 0px;
     padding: 6px 24px 6px 24px;
@@ -1307,7 +1309,8 @@ a.apply-button-enrolled,
 .apply-button-not-started,
 .apply-button-pending, 
 .apply-button-enrolled, 
-a.apply-button-enrolled{
+a.apply-button-enrolled,
+.manage-course{
     background-color: #ff6600;
     background: #ff6600;
 }
@@ -1476,6 +1479,11 @@ input[type="submit"].apply-button-finished,
     text-shadow: none;
     font-weight: 300;
 }
+
+.manage-course{
+    float: right;
+}
+
 .h1-title{
     border-bottom: 2px solid #74d1d4;
     margin-top: 40px;
