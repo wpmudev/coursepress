@@ -2917,3 +2917,16 @@ wrap mp-wrap nocoursesub mp-wrap{
 	border-style: solid none;
 	padding: 5px 0;
 }
+
+.button.cp-activate-mp-lite:hover,
+.button.cp-activate-mp-lite {
+	background: none repeat scroll 0 0 #6dc36c;
+	border: 1px solid #68b268;
+	color: #fff;
+	margin-top: 15px;
+	outline: medium none;
+	box-shadow: 0 1px 0 #6be285 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+.button.cp-activate-mp-lite:hover {
+	background: #68b268;
+}

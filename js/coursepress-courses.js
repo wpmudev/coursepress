@@ -1410,6 +1410,34 @@ jQuery(document).ready(function($) {
                 if (response && response.mp_lite_activated) {
 					$('.cp-markertpress-not-active').addClass('hidden');
 					$('.cp-markertpress-is-active').removeClass('hidden');					
+					
+					//
+			        var content = '<div class="update green top-right">aaaa' + coursepress_units.mp_activated_prompt + '<i class="fa fa-times-circle" /></div>';
+					var the_top = $('.course-section.step-6 .course-form').position().top + 200;
+			        $('#wpbody-content').append(content);
+			        $('.update.green.top-right').css({
+			            position: 'absolute',
+			            top: the_top,
+			            right: '60px',
+			            'background-color': '#fff',
+			            'border-left': '4px solid #6DC36C',
+			            'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
+			            padding: '15px 25px 15px 15px',
+			        });
+			        $('.update.green.top-right .fa-times-circle').css({
+			            'font-size': '20px',
+			            position: 'absolute',
+			            top: '10px',
+			            right: '10px',
+			            cursor: 'pointer',
+			        }).click(function(event) {
+			            $(this).parent().remove();
+			        });
+					setTimeout(function(){
+						$('.update.green.top-right').fadeOut('2000');						
+					}, 3000);
+					
+					
                 } else {
 					$('.cp-markertpress-is-active').addClass('hidden');
 					$('.cp-markertpress-not-active').removeClass('hidden');					
