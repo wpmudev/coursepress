@@ -1639,3 +1639,24 @@ jQuery(document).ready(function($) {
     course_state_toggle.init();//single course in admin
     unit_state_toggle.init();
 });
+
+/* iFrame fix for MP Gateway popup. */
+jQuery(document).ready(function($) {
+	$('.button-edit-gateways').click( function() {
+		fix_tinymce_in_iframe();
+	});
+	$('.button-incomplete-gateways').click( function() {
+		fix_tinymce_in_iframe();
+	});
+});
+
+function fix_tinymce_in_iframe() {
+	var the_box = '.coursepress_page_course_details #TB_iframeContent';
+	var delay=1000;//1 seconds
+    setTimeout(function(){
+		$( the_box ).on('load', function () {
+			tinyMCE.execCommand('mceRepaint');
+			jQuery( the_box ).contents().find('[id*="tmce"]').parents('.wp-editor-wrap').find('.mce-panel').show()
+		});
+    },delay);			
+}
