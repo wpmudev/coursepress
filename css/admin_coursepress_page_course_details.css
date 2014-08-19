@@ -328,7 +328,8 @@ a.action-to-negative {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -343,7 +344,8 @@ a.action-to-negative {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -768,7 +770,8 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     border-radius: 4px 0 0 4px;
     border-width: 1px 0 1px 1px;
     font-weight: 700;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
 }
 
 .add-new-unit-box{
@@ -1105,7 +1108,8 @@ input.wide, textarea.wide {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -1289,7 +1293,8 @@ div.buttons a.cancellink {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;

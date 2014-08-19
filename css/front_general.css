@@ -482,7 +482,8 @@ span.percentage{
     background-color: #f9a673;
     color: #fff;
     text-align: center;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
     margin-top: 8px;
@@ -507,7 +508,8 @@ span.percentage{
 .notification-time{
     color: #f9a673;
     font-size: 14px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
 }
 
@@ -592,7 +594,8 @@ h1.notification-title{
     padding-left: 20px;
     margin-top: 13px;
     display: block;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -610,7 +613,8 @@ h1.notification-title{
     margin-top: 13px;
     display: block;
     margin-left: 2%;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -632,7 +636,8 @@ h1.notification-title{
     color: #828282;
     margin-top: 13px;
     display: block;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -648,7 +653,8 @@ h1.notification-title{
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -752,7 +758,8 @@ label > .tree{
     display: inline-block;
     font-size: 13px;
     font-weight: 400;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-left: 3px;
     float: right;
     margin-top: 2px;
@@ -773,7 +780,8 @@ label > .tree{
     display: inline-block;
     font-size: 13px;
     font-weight: 400;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     float: right;
     margin-top: 2px;
     margin-right: 3px;}

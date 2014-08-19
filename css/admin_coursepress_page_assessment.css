@@ -80,7 +80,8 @@
 }
 
 .uppercase{
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;		
 }
 
 .block{

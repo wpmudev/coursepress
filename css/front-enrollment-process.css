@@ -113,7 +113,8 @@ label.cp_popup_col_2.second-child{
 }
 
 .cp_popup_title{
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     font-family: 'Lato', sans-serif;
     font-size: 34px;
     font-weight: 300;
@@ -204,7 +205,8 @@ button.apply-button-green{
     text-align: center;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -178,7 +178,8 @@ a.action-to-negative {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -197,7 +198,8 @@ a.action-to-negative {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
     padding-bottom: 15px;

@@ -540,6 +540,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course' => false,
                 'date_format' => get_option('date_format'),
                 'label' => __('Enrollment Dates', 'cp'),
+				'label_enrolled' => __('Enrolled Date', 'cp'),
+				'show_enrolled' => 'no',
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('Enroll Anytime', 'cp'),
@@ -555,11 +557,34 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
             $show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
+			
+			$is_enrolled = false;
+			
+			if( 'yes' == strtolower( $show_enrolled ) ) {
+	            $student = new Student( get_current_user_id() );
+				$is_enrolled = $student->has_access_to_course( $course_id );
+				$enrollment_date = '';
+				if ( $is_enrolled ) {
+					$enrollment_date = get_user_meta( get_current_user_id() , 'enrolled_course_date_' . $course_id, true);
+					$enrollment_date = date( $date_format, strtotime($enrollment_date ) );
+					$label = $label_enrolled;
+				}				
+			}			
+			
             ob_start();
             ?>
             <div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
                 <?php if ( !empty($label) ) : ?><<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>><?php endif; ?>
-                <?php if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) : ?><?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . sp2nbsp(date($date_format, strtotime($end_date))); ?><?php endif; ?>
+                <?php
+					if( ! $is_enrolled ) { 
+						if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) : ?>
+							<?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . sp2nbsp(date($date_format, strtotime($end_date))); ?>
+						<?php endif;?>
+				<?php
+					} else {
+						echo $enrollment_date;
+					}
+				?>
             </div>
             <?php
             $content = ob_get_clean();

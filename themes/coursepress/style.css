@@ -942,7 +942,8 @@ a.rsswidget{
     margin-left: 10%;
     padding: 4px 0px 4px 0px;
     width: 80%;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     font-weight: 400;
     float: left;
 }
@@ -1023,7 +1024,8 @@ a.rsswidget{
     padding-left: 20px;
     margin-top: 13px;
     display: block;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1041,7 +1043,8 @@ a.rsswidget{
     margin-top: 13px;
     display: block;
     margin-left: 2%;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1057,7 +1060,8 @@ a.rsswidget{
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1214,7 +1218,8 @@ a.rsswidget{
     background-repeat: no-repeat;
     padding-left: 20px;
     display: block;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1231,7 +1236,8 @@ a.rsswidget{
     padding-left: 20px;
     display: block;
     margin-left: 2%;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1264,7 +1270,8 @@ a.apply-button-enrolled,
     padding: 6px 30px 6px 30px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1357,7 +1364,8 @@ a.apply-button-enrolled:hover, #student-settings input[type="submit"].apply-butt
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1395,7 +1403,8 @@ input[type="submit"].apply-button-finished,
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1441,7 +1450,8 @@ input[type="submit"].apply-button-finished,
     text-align: center;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1466,7 +1476,8 @@ input[type="submit"].apply-button-finished,
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1542,7 +1553,8 @@ input[type="submit"].apply-button-finished,
     font-weight: 300;
     color: #828282;
     display: block;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-top: 20px;
 }
 
@@ -1926,7 +1938,8 @@ a[rel="prev"] {
     background-color: #f9a673;
     color: #fff;
     text-align: center;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
     margin-top: 8px;
@@ -1951,7 +1964,8 @@ a[rel="prev"] {
 .notification-time{
     color: #f9a673;
     font-size: 14px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
 }
 
@@ -2090,7 +2104,8 @@ select.units_dropdown::-ms-expand {
     font-size: 20px;
     color: #fff;
     text-align: center;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     position: absolute;
     top: 21px;
     left: 18px;
@@ -2159,7 +2174,8 @@ select.units_dropdown::-ms-expand {
     background-color: #74d1d4;
     color: #fff;
     text-align: center;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
     margin-top: 8px;
@@ -2186,7 +2202,8 @@ select.units_dropdown::-ms-expand {
     background-color: #c9d4d9;
     color: #fff;
     text-align: center;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
     margin-top: 8px;
@@ -2440,7 +2457,8 @@ html[xmlns] .clearf {
     color: #fff;
     font-size: 18px;
     padding: 10px 25px 10px 25px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
 }
 
@@ -2462,7 +2480,8 @@ html[xmlns] .clearf {
     background-color: #0facd9;
     font-size: 18px;
     padding: 7px 25px 7px 25px;
-    text-transform: uppercase;
+/*    text-transform: uppercase;*/
+    text-transform: capitalize;
     text-align: center;
     display: block;
     margin-top: 15px;
