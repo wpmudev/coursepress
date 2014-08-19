@@ -1612,6 +1612,11 @@ input[type="submit"].apply-button-finished,
     text-align: center;
     color:#fff;
     cursor: pointer;
+	margin-top: 1px;
+}
+
+#instructor-profiles h3:first-child {
+	margin-top: 0;
 }
 
 #instructor-profiles a.full-instructor-profile{
