@@ -942,7 +942,7 @@ a.rsswidget{
     margin-left: 10%;
     padding: 4px 0px 4px 0px;
     width: 80%;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     font-weight: 400;
     float: left;
@@ -1024,7 +1024,7 @@ a.rsswidget{
     padding-left: 20px;
     margin-top: 13px;
     display: block;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1043,7 +1043,7 @@ a.rsswidget{
     margin-top: 13px;
     display: block;
     margin-left: 2%;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1060,7 +1060,7 @@ a.rsswidget{
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1218,7 +1218,7 @@ a.rsswidget{
     background-repeat: no-repeat;
     padding-left: 20px;
     display: block;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1236,7 +1236,7 @@ a.rsswidget{
     padding-left: 20px;
     display: block;
     margin-left: 2%;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1252,8 +1252,7 @@ a.rsswidget{
 .apply-button-prerequisite,
 .apply-button-not-started,
 .apply-button-pending, 
-.apply-button, 
-.apply-button-enrolled, 
+.apply-button,
 a.apply-button-enrolled,
 .manage-course,
 #student-settings input[type="submit"].apply-button-enrolled, 
@@ -1261,6 +1260,34 @@ a.apply-button-enrolled,
 #contact_form input[type="submit"].apply-button-enrolled, 
 .apply-box input[type="submit"].apply-button, 
 .apply-box a.apply-button{
+    min-width: 240px;
+    display: block;
+    background-color: #ccc;
+    background: #ccc;
+    color: #fff;
+    text-align: center;
+    padding: 6px 30px 6px 30px;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    /*    text-transform: uppercase;*/
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    border: none;
+    text-shadow: none;
+    font-weight: 300;
+
+    box-shadow: none;
+}
+
+.apply-button-enrolled
+{
     min-width: 120px;
     display: block;
     background-color: #ccc;
@@ -1270,7 +1297,7 @@ a.apply-button-enrolled,
     padding: 6px 30px 6px 30px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1364,7 +1391,7 @@ a.apply-button-enrolled:hover, #student-settings input[type="submit"].apply-butt
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1403,7 +1430,7 @@ input[type="submit"].apply-button-finished,
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1450,7 +1477,7 @@ input[type="submit"].apply-button-finished,
     text-align: center;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1476,7 +1503,7 @@ input[type="submit"].apply-button-finished,
     padding: 6px 0 6px 0px;
     font-family: 'Dosis', sans-serif;
     font-size: 22px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
@@ -1553,7 +1580,7 @@ input[type="submit"].apply-button-finished,
     font-weight: 300;
     color: #828282;
     display: block;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     margin-top: 20px;
 }
@@ -1624,11 +1651,11 @@ input[type="submit"].apply-button-finished,
     text-align: center;
     color:#fff;
     cursor: pointer;
-	margin-top: 1px;
+    margin-top: 1px;
 }
 
 #instructor-profiles h3:first-child {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 #instructor-profiles a.full-instructor-profile{
@@ -1938,7 +1965,7 @@ a[rel="prev"] {
     background-color: #f9a673;
     color: #fff;
     text-align: center;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
@@ -1964,7 +1991,7 @@ a[rel="prev"] {
 .notification-time{
     color: #f9a673;
     font-size: 14px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
 }
@@ -2104,7 +2131,7 @@ select.units_dropdown::-ms-expand {
     font-size: 20px;
     color: #fff;
     text-align: center;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     position: absolute;
     top: 21px;
@@ -2174,7 +2201,7 @@ select.units_dropdown::-ms-expand {
     background-color: #74d1d4;
     color: #fff;
     text-align: center;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
@@ -2202,7 +2229,7 @@ select.units_dropdown::-ms-expand {
     background-color: #c9d4d9;
     color: #fff;
     text-align: center;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     margin-left: auto;
     margin-right: auto;
@@ -2457,7 +2484,7 @@ html[xmlns] .clearf {
     color: #fff;
     font-size: 18px;
     padding: 10px 25px 10px 25px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
 }
@@ -2480,7 +2507,7 @@ html[xmlns] .clearf {
     background-color: #0facd9;
     font-size: 18px;
     padding: 7px 25px 7px 25px;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     display: block;
@@ -2524,13 +2551,13 @@ li.current_page_item a{
 }
 
 .dashboard-random-courses .course-item {
-	float: left;
-	width: 30%;
-	margin-right: 30px;
+    float: left;
+    width: 30%;
+    margin-right: 30px;
 }
 
 .dashboard-random-courses .course-item:last-child {
-	margin-right: 0;
+    margin-right: 0;
 }
 
 /*
