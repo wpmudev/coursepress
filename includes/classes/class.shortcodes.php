@@ -66,6 +66,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course_thumbnail', array( &$this, 'course_thumbnail' ));
             add_shortcode('course_media', array( &$this, 'course_media' ));
             add_shortcode('course_action_links', array( &$this, 'course_action_links' ));
+			add_shortcode('course_random', array( &$this, 'course_random' ));
+				
 //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 // Page Shortcodes
             add_shortcode('course_signup', array( &$this, 'course_signup' ));
@@ -1312,7 +1314,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 ob_start();
                 ?>
                 <div class="featured-course featured-course-<?php echo $course_id; ?>">
+					<?php if (!empty($featured_title)) : ?>
                     <h2><?php echo $featured_title; ?></h2>
+					<?php endif;?>
                     <h3 class="featured-course-title"><?php echo $course->details->post_title; ?></h3>
                     <?php
                     echo do_shortcode('[course_media type="' . $media_type . '" priority="' . $media_priority . '" course_id="' . $course_id . '"]');
@@ -1453,6 +1457,60 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             return $content;
         }
+
+
+		function course_random( $atts ) {
+			
+            extract(shortcode_atts(array(
+				'number' => 3,
+				'featured_title' => 'default',
+				'button_title' => 'default',
+				'media_type' => 'default',
+				'media_priority' => 'default',
+				'course_class' => 'default',				
+                'class' => '',
+                            ), $atts, 'course_random'));
+			
+			$args = array(
+				'post_type' => 'course',
+				'posts_per_page' => $number,
+				'orderby' => 'rand',
+				'fields' => 'ids',
+			);
+			
+			$courses = new WP_Query( $args );
+			$courses = $courses->posts;
+			
+			$content = 0 < count( $courses ) ? '<div class="course-random ' . $class . '">' : '';
+			
+			$featured_atts = '';
+			
+			if( 'default' != $featured_title ) {
+				$featured_atts .= 'featured_title="' . $featured_title . '" ';
+			}
+			if( 'default' != $button_title ) {
+				$featured_atts .= 'button_title="' . $button_title . '" ';
+			}
+			if( 'default' != $media_type ) {
+				$featured_atts .= 'media_type="' . $media_type . '" ';
+			}
+			if( 'default' != $media_priority ) {
+				$featured_atts .= 'media_priority="' . $media_priority . '" ';
+			}
+			if( 'default' != $course_class ) {
+				$featured_atts .= 'class="' . $course_class . '" ';
+			}			
+			
+			foreach( $courses as $course ) {
+				$content .= '<div class="course-item course-item-' . $course . '">';
+				$content .= do_shortcode('[course_featured course_id="' . $course . '" ' . $featured_atts . ']');
+				$content .= '</div>';
+			}
+			
+			$content .= 0 < count( $courses ) ? '</div>' : '';
+			
+			return $content;
+		}
 
         /**
          * Shows the course calendar.

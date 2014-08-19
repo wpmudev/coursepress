@@ -2495,6 +2495,20 @@ li.current_page_item a{
     width: 17%;
 }
 
+.dashboard-random-courses .featured-course-title {
+    font-weight: 400;
+}
+
+.dashboard-random-courses .course-item {
+	float: left;
+	width: 30%;
+	margin-right: 30px;
+}
+
+.dashboard-random-courses .course-item:last-child {
+	margin-right: 0;
+}
+
 /*
 RESPONSIVE
 */

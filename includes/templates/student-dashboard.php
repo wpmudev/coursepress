@@ -11,16 +11,29 @@
 		$show = 'dates,class_size';
 		$course_list = do_shortcode('[course_list instructor="' . get_current_user_id() . '" instructor_msg="" status="all" title_column="left" title_tag="h4" show_divider="yes" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no" show="' . $show . '" show_title="no" admin_links="true" show_button="no" show_media="no"]');
 
+		$show_random_courses = true;
+
 		if ( ! empty( $course_list ) ) {
 			echo __('<h1 class="title">You manage the following courses:</h1>', 'cp');
 			echo '<hr />' . $course_list;
 			echo '<div class="clearfix" />';
 		}
+				
+		// Add some random courses.
+		if( empty( do_shortcode('[course_list student="' . $student->ID . '" student_msg=""]' ) )  && $show_random_courses  ) {
+
+			//Random Courses
+			echo __( '<h3 class="title suggested-courses">You are not enrolled in any courses.</h3>', 'cp' );
+			echo __( 'Here are a few to help you get started:<hr />');
+			echo '<div class="dashboard-random-courses">' . do_shortcode('[course_random number="3" featured_title="" media_priority="image"]') . '</div>';
+
+		} else {
 		
-		// Course List
-		echo __('<h2 class="title enrolled-courses-title">You are enrolled in the following courses:</h2>', 'cp');
-		echo do_shortcode('[course_list student="' . $student->ID . '" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
-		
+			// Course List
+			echo __('<h2 class="title enrolled-courses-title">You are enrolled in the following courses:</h2>', 'cp');
+			echo do_shortcode('[course_list student="' . $student->ID . '" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
+			
+		}
 		
 	?>
 	

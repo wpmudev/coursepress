@@ -1054,3 +1054,14 @@ table.popup-payment-info th {
     font-size: 14px;
     margin-top: 10px;
 }
+
+
+.dashboard-random-courses .featured-course-title {
+	font-size: 1em;
+}
+
+.dashboard-random-courses .course-item {
+	float: left;
+	width: 30%;
+	margin-right: 10px;
+}
