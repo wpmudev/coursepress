@@ -3288,7 +3288,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'table_class' => 'widefat shadow-table assessment-archive-table',
                 'table_labels_th_class' => 'manage-column'
                             )
-                            , $atts));
+                            , $args));
 
             $columns = array(
                 "module" => $module_column_title,
@@ -3447,18 +3447,20 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                     </td>
 
                                     <td class="<?php echo $style . ' ' . $visibility_class; ?> td-center">
-                                        <?php
-                                        if ( count($response) >= 1 ) {
-                                            $comment = $unit_module_main->get_response_comment($response->ID);
-                                        }
-                                        if ( isset($comment) && $comment !== '' ) {
-                                            ?>
-                                            <a alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>" class="<?php echo $comment_link_class; ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><i class="fa fa-comment"></i></a>
-                                                <?php
-                                            } else {
-                                                echo '<i class="fa fa-comment-o"></i>';
-                                            }
-                                            ?>
+                                        <?php								
+										if( ! empty( $response ) ) {
+											
+											$comment = $unit_module_main->get_response_comment($response->ID);
+	                                        if ( ! empty( $comment ) ) {
+	                                            ?>
+	                                            <a alt="<?php echo strip_tags( $comment ); ?>" title="<?php echo strip_tags( $comment ); ?>" class="<?php echo $comment_link_class; ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><i class="fa fa-comment"></i></a>
+	                                                <?php
+	                                            } 
+											
+										} else {
+	                                                echo '<i class="fa fa-comment-o"></i>';
+	                                    }									
+                                        ?>
                                     </td>
                                 <?php }//general col visibility          ?>
                             </tr>
