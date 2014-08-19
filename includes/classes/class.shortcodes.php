@@ -540,7 +540,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course' => false,
                 'date_format' => get_option('date_format'),
                 'label' => __('Enrollment Dates', 'cp'),
-				'label_enrolled' => __('Enrolled Date', 'cp'),
+				'label_enrolled' => __('You Enrolled on', 'cp'),
 				'show_enrolled_display' => 'yes',
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
