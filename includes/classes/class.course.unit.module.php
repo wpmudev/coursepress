@@ -255,6 +255,7 @@ if ( !class_exists('Unit_Module') ) {
             $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
             
             cp_set_last_visited_unit_page($unit_id, $paged, get_current_user_ID());
+            cp_set_visited_unit_page($unit_id, $paged, get_current_user_ID());
             
             $modules = $this->get_modules($unit_id);
 
