@@ -541,7 +541,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'date_format' => get_option('date_format'),
                 'label' => __('Enrollment Dates', 'cp'),
 				'label_enrolled' => __('Enrolled Date', 'cp'),
-				'show_enrolled' => 'no',
+				'show_enrolled_display' => 'yes',
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('Enroll Anytime', 'cp'),
@@ -560,7 +560,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 			
 			$is_enrolled = false;
 			
-			if( 'yes' == strtolower( $show_enrolled ) ) {
+			if( 'yes' == strtolower( $show_enrolled_display ) ) {
 	            $student = new Student( get_current_user_id() );
 				$is_enrolled = $student->has_access_to_course( $course_id );
 				$enrollment_date = '';
