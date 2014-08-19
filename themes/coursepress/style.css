@@ -1288,7 +1288,8 @@ a.apply-button-enrolled,
 
 .apply-button-enrolled
 {
-    min-width: 120px;
+    min-width: 240px;
+    max-width: 240px;
     display: block;
     background-color: #ccc;
     background: #ccc;
@@ -1313,6 +1314,11 @@ a.apply-button-enrolled,
 
     box-shadow: none;
 }
+
+.quick-course-info .apply-button-enrolled{
+    min-width: 120px;
+    max-width: 120px;
+} 
 
 .course-archive .apply-button-finished, 
 .course-archive .apply-button-full,
