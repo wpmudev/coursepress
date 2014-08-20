@@ -5,6 +5,7 @@ do_shortcode('[course_units_loop]'); //required for getting unit results
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
+echo __('<h2>Course Grades</h2>', 'cp');
 ?>
 
 <div class="units-archive">

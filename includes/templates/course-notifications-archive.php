@@ -13,6 +13,7 @@ $coursepress->check_access($course_id);
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
+echo __('<h2>Notifications</h2>', 'cp');
 ?>
 <div class="clearfix"></div>
 

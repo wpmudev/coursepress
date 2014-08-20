@@ -4,6 +4,7 @@ do_shortcode('[course_units_loop]'); //required for getting unit results
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
+echo __('<h2>Course Units</h2>', 'cp');
 ?>
 <div class="units-archive">
     <ul class="units-archive-list">
