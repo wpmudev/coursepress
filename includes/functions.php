@@ -18,14 +18,50 @@ function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $st
     if ( !$unit_id ) {
         return false;
     }
-    if(!$student_id){
+    if ( !$student_id ) {
         $student_id = get_current_user_ID();
     }
     update_user_meta($student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num);
 }
 
+function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
+    if ( !$unit_id ) {
+        return false;
+    }
+    if ( !$student_id ) {
+        $student_id = get_current_user_ID();
+    }
+//delete_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page');
+    $visited_pages = get_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', true);
+
+    if ( $visited_pages === false ) {
+        $visited_pages = $page_num;
+    } else {
+        $visited_pages = explode(',', $visited_pages);
+        if ( !in_array($page_num, $visited_pages) ) {
+            $visited_pages[] = $page_num;
+        }
+        $visited_pages = implode(',', $visited_pages);
+    }
+
+    update_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages);
+    var_dump($visited_pages);
+}
+
+function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = false ) {
+    if ( !$student_id ) {
+        $student_id = get_current_user_ID();
+    }
+    $visited_pages = get_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', true);
+    if ( $visited_pages ) {
+        return count(explode(',',$visited_pages))-1;
+    } else {
+        return 0;
+    }
+}
+
 function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
-    if(!$student_id){
+    if ( !$student_id ) {
         $student_id = get_current_user_ID();
     }
     $last_visited_unit_page = get_user_meta($student_id, 'last_visited_unit_' . $unit_id . '_page', true);

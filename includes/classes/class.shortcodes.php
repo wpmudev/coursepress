@@ -66,8 +66,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course_thumbnail', array( &$this, 'course_thumbnail' ));
             add_shortcode('course_media', array( &$this, 'course_media' ));
             add_shortcode('course_action_links', array( &$this, 'course_action_links' ));
-			add_shortcode('course_random', array( &$this, 'course_random' ));
-				
+            add_shortcode('course_random', array( &$this, 'course_random' ));
+
 //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 // Page Shortcodes
             add_shortcode('course_signup', array( &$this, 'course_signup' ));
@@ -540,8 +540,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course' => false,
                 'date_format' => get_option('date_format'),
                 'label' => __('Enrollment Dates', 'cp'),
-				'label_enrolled' => __('You Enrolled on', 'cp'),
-				'show_enrolled_display' => 'yes',
+                'label_enrolled' => __('You Enrolled on', 'cp'),
+                'show_enrolled_display' => 'yes',
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('Enroll Anytime', 'cp'),
@@ -557,34 +557,35 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
             $show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
-			
-			$is_enrolled = false;
-			
-			if( 'yes' == strtolower( $show_enrolled_display ) ) {
-	            $student = new Student( get_current_user_id() );
-				$is_enrolled = $student->has_access_to_course( $course_id );
-				$enrollment_date = '';
-				if ( $is_enrolled ) {
-					$enrollment_date = get_user_meta( get_current_user_id() , 'enrolled_course_date_' . $course_id, true);
-					$enrollment_date = date( $date_format, strtotime($enrollment_date ) );
-					$label = $label_enrolled;
-				}				
-			}			
-			
+
+            $is_enrolled = false;
+
+            if ( 'yes' == strtolower($show_enrolled_display) ) {
+                $student = new Student(get_current_user_id());
+                $is_enrolled = $student->has_access_to_course($course_id);
+                $enrollment_date = '';
+                if ( $is_enrolled ) {
+                    $enrollment_date = get_user_meta(get_current_user_id(), 'enrolled_course_date_' . $course_id, true);
+                    $enrollment_date = date($date_format, strtotime($enrollment_date));
+                    $label = $label_enrolled;
+                }
+            }
+
             ob_start();
             ?>
             <div class="enrollment-dates enrollment-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
                 <?php if ( !empty($label) ) : ?><<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>><?php endif; ?>
                 <?php
-					if( ! $is_enrolled ) { 
-						if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) : ?>
-							<?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . sp2nbsp(date($date_format, strtotime($end_date))); ?>
-						<?php endif;?>
-				<?php
-					} else {
-						echo $enrollment_date;
-					}
-				?>
+                if ( !$is_enrolled ) {
+                    if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) :
+                        ?>
+                        <?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . sp2nbsp(date($date_format, strtotime($end_date))); ?>
+                    <?php endif; ?>
+                    <?php
+                } else {
+                    echo $enrollment_date;
+                }
+                ?>
             </div>
             <?php
             $content = ob_get_clean();
@@ -864,21 +865,23 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $image_src = get_post_meta($course_id, 'featured_url', true);
 
-            list( $img_w, $img_h ) = getimagesize($image_src);
+            if ( !empty($image_src) ) {
+                list( $img_w, $img_h ) = getimagesize($image_src);
 
 // Note: by using both it usually reverts to the width
-            $width = 'default' == $width ? $img_w : $width;
-            $height = 'default' == $height ? $img_h : $height;
+                $width = 'default' == $width ? $img_w : $width;
+                $height = 'default' == $height ? $img_h : $height;
 
-            ob_start();
-            ?>
-            <div class="course-list-image course-list-image-<?php echo $course_id; ?> <?php echo $class; ?>">
-                <img width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="<?php echo $image_src; ?>" alt="<?php echo $course->details->post_title; ?>" title="<?php echo $course->details->post_title; ?>" />
-            </div>
-            <?php
-            $content = ob_get_clean();
+                ob_start();
+                ?>
+                <div class="course-list-image course-list-image-<?php echo $course_id; ?> <?php echo $class; ?>">
+                    <img width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="<?php echo $image_src; ?>" alt="<?php echo $course->details->post_title; ?>" title="<?php echo $course->details->post_title; ?>" />
+                </div>
+                <?php
+                $content = ob_get_clean();
 // Return the html in the buffer.
-            return $content;
+                return $content;
+            }
         }
 
         /**
@@ -1283,8 +1286,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                                 </div>
                                                             </label>
 
-                                                            <?php
-                                                            ?>
+                                                            <?php ?>
                                                         </li>
                                                         <?php
                                                     }
@@ -1339,9 +1341,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 ob_start();
                 ?>
                 <div class="featured-course featured-course-<?php echo $course_id; ?>">
-					<?php if (!empty($featured_title)) : ?>
-                    <h2><?php echo $featured_title; ?></h2>
-					<?php endif;?>
+                    <?php if ( !empty($featured_title) ) : ?>
+                        <h2><?php echo $featured_title; ?></h2>
+                    <?php endif; ?>
                     <h3 class="featured-course-title"><?php echo $course->details->post_title; ?></h3>
                     <?php
                     echo do_shortcode('[course_media type="' . $media_type . '" priority="' . $media_priority . '" course_id="' . $course_id . '"]');
@@ -1483,59 +1485,58 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             return $content;
         }
 
+        function course_random( $atts ) {
 
-		function course_random( $atts ) {
-			
             extract(shortcode_atts(array(
-				'number' => 3,
-				'featured_title' => 'default',
-				'button_title' => 'default',
-				'media_type' => 'default',
-				'media_priority' => 'default',
-				'course_class' => 'default',				
+                'number' => 3,
+                'featured_title' => 'default',
+                'button_title' => 'default',
+                'media_type' => 'default',
+                'media_priority' => 'default',
+                'course_class' => 'default',
                 'class' => '',
                             ), $atts, 'course_random'));
-			
-			$args = array(
-				'post_type' => 'course',
-				'posts_per_page' => $number,
-				'orderby' => 'rand',
-				'fields' => 'ids',
-			);
-			
-			$courses = new WP_Query( $args );
-			$courses = $courses->posts;
-			
-			$content = 0 < count( $courses ) ? '<div class="course-random ' . $class . '">' : '';
-			
-			$featured_atts = '';
-			
-			if( 'default' != $featured_title ) {
-				$featured_atts .= 'featured_title="' . $featured_title . '" ';
-			}
-			if( 'default' != $button_title ) {
-				$featured_atts .= 'button_title="' . $button_title . '" ';
-			}
-			if( 'default' != $media_type ) {
-				$featured_atts .= 'media_type="' . $media_type . '" ';
-			}
-			if( 'default' != $media_priority ) {
-				$featured_atts .= 'media_priority="' . $media_priority . '" ';
-			}
-			if( 'default' != $course_class ) {
-				$featured_atts .= 'class="' . $course_class . '" ';
-			}			
-			
-			foreach( $courses as $course ) {
-				$content .= '<div class="course-item course-item-' . $course . '">';
-				$content .= do_shortcode('[course_featured course_id="' . $course . '" ' . $featured_atts . ']');
-				$content .= '</div>';
-			}
-			
-			$content .= 0 < count( $courses ) ? '</div>' : '';
-			
-			return $content;
-		}
+
+            $args = array(
+                'post_type' => 'course',
+                'posts_per_page' => $number,
+                'orderby' => 'rand',
+                'fields' => 'ids',
+            );
+
+            $courses = new WP_Query($args);
+            $courses = $courses->posts;
+
+            $content = 0 < count($courses) ? '<div class="course-random ' . $class . '">' : '';
+
+            $featured_atts = '';
+
+            if ( 'default' != $featured_title ) {
+                $featured_atts .= 'featured_title="' . $featured_title . '" ';
+            }
+            if ( 'default' != $button_title ) {
+                $featured_atts .= 'button_title="' . $button_title . '" ';
+            }
+            if ( 'default' != $media_type ) {
+                $featured_atts .= 'media_type="' . $media_type . '" ';
+            }
+            if ( 'default' != $media_priority ) {
+                $featured_atts .= 'media_priority="' . $media_priority . '" ';
+            }
+            if ( 'default' != $course_class ) {
+                $featured_atts .= 'class="' . $course_class . '" ';
+            }
+
+            foreach ( $courses as $course ) {
+                $content .= '<div class="course-item course-item-' . $course . '">';
+                $content .= do_shortcode('[course_featured course_id="' . $course . '" ' . $featured_atts . ']');
+                $content .= '</div>';
+            }
+
+            $content .= 0 < count($courses) ? '</div>' : '';
+
+            return $content;
+        }
 
         /**
          * Shows the course calendar.
@@ -2610,7 +2611,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         $unit->details->$field = '<a class="tooltip" alt="' . $tooltip_alt . '"><input class="knob" data-fgColor="' . $knob_fg_color . '" data-bgColor="' . $knob_bg_color . '" data-thickness="' . $knob_data_thickness . '" data-width="' . $knob_data_width . '" data-height="' . $knob_data_height . '" data-readOnly=true value="' . $percent_value . '"></a>';
                     }
                 } else {
-                    $unit->details->$field = '';
+                    $unit_pages = $unit->get_number_of_unit_pages();
+                    $unit_pages_visited = cp_get_number_of_unit_pages_visited($unit_id);
+
+                    $percent_value = ( round(( 100 / $unit_pages ) * $unit_pages_visited, 0) );
+
+                    if ( $style == 'flat' ) {
+                        $unit->details->$field = '<span class="percentage">' . ($format == true ? $percent_value . '%' : $percent_value) . '</span>';
+                    } else {
+                        $unit->details->$field = '<a class="tooltip" alt="' . $tooltip_alt . '"><input class="knob" data-fgColor="' . $knob_fg_color . '" data-bgColor="' . $knob_bg_color . '" data-thickness="' . $knob_data_thickness . '" data-width="' . $knob_data_width . '" data-height="' . $knob_data_height . '" data-readOnly=true value="' . $percent_value . '"></a>';
+                    }
+                    //$unit->details->$field = '';
                 }
             }
 
@@ -3298,7 +3309,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">
@@ -3530,22 +3541,21 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                     </td>
 
                                     <td class="<?php echo $style . ' ' . $visibility_class; ?> td-center">
-                                        <?php								
-										if( ! empty( $response ) ) {
-											
-											$comment = $unit_module_main->get_response_comment($response->ID);
-	                                        if ( ! empty( $comment ) ) {
-	                                            ?>
-	                                            <a alt="<?php echo strip_tags( $comment ); ?>" title="<?php echo strip_tags( $comment ); ?>" class="<?php echo $comment_link_class; ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><i class="fa fa-comment"></i></a>
-	                                                <?php
-	                                            } 
-											
-										} else {
-	                                                echo '<i class="fa fa-comment-o"></i>';
-	                                    }									
-                                        ?>
+                                        <?php
+                                        if ( !empty($response) ) {
+
+                                            $comment = $unit_module_main->get_response_comment($response->ID);
+                                            if ( !empty($comment) ) {
+                                                ?>
+                                                <a alt="<?php echo strip_tags($comment); ?>" title="<?php echo strip_tags($comment); ?>" class="<?php echo $comment_link_class; ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><i class="fa fa-comment"></i></a>
+                                                    <?php
+                                                }
+                                            } else {
+                                                echo '<i class="fa fa-comment-o"></i>';
+                                            }
+                                            ?>
                                     </td>
-                                <?php }//general col visibility          ?>
+                                <?php }//general col visibility            ?>
                             </tr>
                             <?php
                             $current_row++;
