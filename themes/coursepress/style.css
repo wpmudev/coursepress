@@ -1320,6 +1320,13 @@ a.apply-button-enrolled,
     max-width: 120px;
 } 
 
+.single-course .quick-course-info .apply-button-enrolled{
+    padding-left: 20px;
+    padding-right: 20px;
+    min-width: 240px;
+    max-width: 240px;
+}
+
 .course-archive .apply-button-finished, 
 .course-archive .apply-button-full,
 .course-archive .apply-button-enrollment-closed,
