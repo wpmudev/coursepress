@@ -967,6 +967,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'passcode_text' => __('Passcode Required', 'cp'),
                 'not_started_text' => __('Not Available', 'cp'),
                 'access_text' => __('Start Learning', 'cp'),
+                'continue_learning_text' => __('Countinue Learning', 'cp'),
                 'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
@@ -1124,6 +1125,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     } else {
                         // "GO TO CLASS"
                         $button_url = get_permalink($course_id) . 'units/';
+
+                        if(cp_is_course_visited($course_id)){
+                            $access_text = $continue_learning_text;
+                        }
+                        
                         $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $access_text . '</button>';
                         // cp_write_log( 'EIGHTEEN');					
                     }

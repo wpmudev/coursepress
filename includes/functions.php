@@ -24,13 +24,64 @@ function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $st
     update_user_meta($student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num);
 }
 
+function cp_set_visited_course( $unit_id, $student_id = false ) {
+
+    if ( !$student_id ) {
+        $student_id = get_current_user_ID();
+    }
+
+    $course_id = wp_get_post_parent_id($unit_id);
+    $visited_courses = get_user_meta($student_id, 'visited_course_units_' . $course_id, true);
+
+    if ( $visited_courses === false ) {
+        $visited_courses = $course_id;
+    } else {
+        $visited_courses = explode(',', $visited_courses);
+        if ( !in_array($course_id, $visited_courses) ) {
+            $visited_courses[] = $course_id;
+        }
+        $visited_courses = implode(',', $visited_courses);
+    }
+    update_user_meta($student_id, 'visited_course_units_' . $course_id, $visited_courses);
+}
+
+function cp_is_course_visited( $course_id, $student_id = false ) {
+    if ( !$student_id ) {
+        $student_id = get_current_user_ID();
+    }
+
+    $visited_courses = get_user_meta($student_id, 'visited_course_units_' . $course_id, true);
+
+    if ( $visited_courses ) {
+        $visited_courses = (explode(',', $visited_courses));
+        if ( is_array($visited_courses) ) {
+            if ( in_array($course_id, $visited_courses) ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if ( $visited_courses == $course_id ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+}
+
 function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
+
     if ( !$unit_id ) {
         return false;
     }
     if ( !$student_id ) {
         $student_id = get_current_user_ID();
     }
+
+
 //delete_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page');
     $visited_pages = get_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', true);
 
@@ -45,7 +96,7 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
     }
 
     update_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages);
-    var_dump($visited_pages);
+    cp_set_visited_course($unit_id, $student_id);
 }
 
 function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = false ) {
@@ -54,7 +105,7 @@ function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = fa
     }
     $visited_pages = get_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page', true);
     if ( $visited_pages ) {
-        return count(explode(',',$visited_pages))-1;
+        return count(explode(',', $visited_pages)) - 1;
     } else {
         return 0;
     }
