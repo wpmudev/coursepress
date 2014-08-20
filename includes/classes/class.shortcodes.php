@@ -1126,10 +1126,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // "GO TO CLASS"
                         $button_url = get_permalink($course_id) . 'units/';
 
-                        if(cp_is_course_visited($course_id)){
+                        if ( cp_is_course_visited($course_id) ) {
                             $access_text = $continue_learning_text;
                         }
-                        
+
                         $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $access_text . '</button>';
                         // cp_write_log( 'EIGHTEEN');					
                     }
@@ -2481,11 +2481,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             if ( $field == 'unit_page_title' ) {
                 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
-				if( ! empty($unit->get_unit_page_name($paged)) ) {
-	                $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
-				} else {
-					$unit->details->$field = '';
-				}
+                $page_name = $unit->get_unit_page_name($paged);
+                if ( !empty($page_name) ) {
+                    $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
+                } else {
+                    $unit->details->$field = '';
+                }
             }
 
             if ( $field == 'parent_course' ) {
@@ -3311,18 +3312,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         <?php do_action('cp_form_fields'); ?>
 
                         <label class="full">
-                        <?php printf(__('Don\'t have an account? %s%s%s now!', 'cp'), '<a href="' . $signup_url . '">', __('Create an Account', 'cp'), '</a>'); ?>
+                            <?php printf(__('Don\'t have an account? %s%s%s now!', 'cp'), '<a href="' . $signup_url . '">', __('Create an Account', 'cp'), '</a>'); ?>
                         </label>
 
                         <label class="half-left">
-                            <a href="<?php echo wp_lostpassword_url();?>"><?php _e('Forgot Password?', 'tc');?></a>
+                            <a href="<?php echo wp_lostpassword_url(); ?>"><?php _e('Forgot Password?', 'tc'); ?></a>
                         </label>
                         <label class="half-right">
                             <input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="<?php _e('Log In', 'cp'); ?>"><br>
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">
