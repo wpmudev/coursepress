@@ -1216,9 +1216,9 @@ if ( !class_exists('CoursePress') ) {
                 header('Content-Type: ' . $requested_file_obj["type"]);
                 header('Content-Disposition: attachment; filename="' . basename($requested_file) . '"');
                 header('Content-Transfer-Encoding: binary');
+                ob_end_clean();
+                echo wp_remote_retrieve_body(wp_remote_get($requested_file), array( 'timeout' => 45, 'user-agent' => $this->name . ' / ' . $this->version . ';' ));
                 header('Connection: close');
-
-                echo wp_remote_retrieve_body(wp_remote_get($requested_file), array( 'user-agent' => $this->name . ' / ' . $this->version . ';' ));
                 exit();
             }
         }

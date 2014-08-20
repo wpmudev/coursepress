@@ -3307,10 +3307,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         <?php do_action('cp_form_fields'); ?>
 
                         <label class="full">
-                            <?php printf(__('Don\'t have an account? %s%s%s now!', 'cp'), '<a href="' . $signup_url . '">', __('Create an Account', 'cp'), '</a>'); ?>
+                        <?php printf(__('Don\'t have an account? %s%s%s now!', 'cp'), '<a href="' . $signup_url . '">', __('Create an Account', 'cp'), '</a>'); ?>
                         </label>
 
-                        <label class="full-right"><br>
+                        <label class="half-left">
+                            <a href="<?php echo wp_lostpassword_url();?>"><?php _e('Forgot Password?', 'tc');?></a>
+                        </label>
+                        <label class="half-right">
                             <input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="<?php _e('Log In', 'cp'); ?>"><br>
                         </label>
                         <br clear="all" />
