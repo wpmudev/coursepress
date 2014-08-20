@@ -15,6 +15,7 @@ add_thickbox();
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
+echo __('<h2>Workbook</h2>', 'cp');
 ?>
 
 <div class="clearfix"></div>

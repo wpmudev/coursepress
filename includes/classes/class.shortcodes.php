@@ -2481,7 +2481,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             if ( $field == 'unit_page_title' ) {
                 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
-                $unit->details->$field = '<' . $unit_page_title_tag . ' ' . ($unit_page_title_tag_class !== '' ? $unit_page_title_tag_class : '') . '>' . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
+				if( ! empty($unit->get_unit_page_name($paged)) ) {
+	                $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
+				} else {
+					$unit->details->$field = '';
+				}
             }
 
             if ( $field == 'parent_course' ) {

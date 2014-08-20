@@ -1322,9 +1322,13 @@ if ( !class_exists('CoursePress') ) {
                         require_once( $theme_file );
                         exit;
                     } else {
+						$course_id = do_shortcode('[get_parent_course_id]');
+
+						// DISCUSSIONS
+						
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => __('Discussion', 'cp'),
+                            'title' => get_the_title( $course_id ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-discussion-archive.php', $vars),
                             'type' => 'discussions',
                             'is_page' => TRUE,
@@ -1407,9 +1411,13 @@ if ( !class_exists('CoursePress') ) {
                         require_once( $theme_file );
                         exit;
                     } else {
+						$course_id = do_shortcode('[get_parent_course_id]');
+
+						// NOTIFICATIONS
+						
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => __('Notifications', 'cp'),
+                            'title' => get_the_title( $course_id ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-notifications-archive.php', $vars),
                             'type' => 'notifications',
                             'is_page' => TRUE,
@@ -1423,7 +1431,6 @@ if ( !class_exists('CoursePress') ) {
                 }
 
                 if ( $units_archive_page ) {
-
                     $this->units_archive_subpage = 'units';
 
                     $theme_file = locate_template(array( 'archive-unit.php' ));
@@ -1433,9 +1440,14 @@ if ( !class_exists('CoursePress') ) {
                         require_once( $theme_file );
                         exit;
                     } else {
+						$course_id = do_shortcode('[get_parent_course_id]');
+						
+						// COURSE UNITS
+						
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => __('Course Units', 'cp'),
+                            // 'title' => __('Course Units', 'cp'),
+							'title' => get_the_title( $course_id ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive.php', $vars),
                             'type' => 'unit',
                             'is_page' => TRUE,
@@ -1447,7 +1459,7 @@ if ( !class_exists('CoursePress') ) {
                     }
                     $this->set_latest_activity(get_current_user_id());
                 }
-
+				
                 if ( $units_archive_grades_page ) {
 
                     $this->units_archive_subpage = 'grades';
@@ -1459,9 +1471,13 @@ if ( !class_exists('CoursePress') ) {
                         require_once( $theme_file );
                         exit;
                     } else {
+						$course_id = do_shortcode('[get_parent_course_id]');
+						
+						// COURSE GRADES
+						
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => __('Course Grades', 'cp'),
+                            'title' => get_the_title( $course_id ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars),
                             'type' => 'unit',
                             'is_page' => TRUE,
@@ -1485,10 +1501,14 @@ if ( !class_exists('CoursePress') ) {
                         require_once( $theme_file );
                         exit;
                     } else {
+						$course_id = do_shortcode('[get_parent_course_id]');
+						
+						// WORKBOOK
+						
                         do_shortcode('[course_units_loop]');
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => __('Workbook', 'cp'),
+                            'title' => get_the_title( $course_id ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/archive-unit-workbook.php', $vars),
                             'type' => 'unit',
                             'is_page' => TRUE,
@@ -1548,7 +1568,8 @@ if ( !class_exists('CoursePress') ) {
                     } else {
                         $args = array(
                             'slug' => $wp->request,
-                            'title' => $unit->details->post_title,
+                            // 'title' => $unit->details->post_title,
+							'title' => get_the_title( $unit->details->post_parent ),
                             'content' => $this->get_template_details($this->plugin_dir . 'includes/templates/course-units-single.php', $vars),
                             'type' => 'unit',
                             'is_page' => TRUE,
