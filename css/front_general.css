@@ -1073,3 +1073,7 @@ table.popup-payment-info th {
 	width: 30%;
 	margin-right: 10px;
 }
+
+.module_grade {
+	font-size:0.9em;
+}

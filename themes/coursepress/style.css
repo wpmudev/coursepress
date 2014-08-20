@@ -2533,6 +2533,11 @@ li.current_page_item a{
 	margin-right: 0;
 }
 
+.module_grade {
+	font-size:0.9em;
+	text-align: right;
+}
+
 /*
 RESPONSIVE
 */

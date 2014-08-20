@@ -81,6 +81,7 @@ class text_input_module extends Unit_Module {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
 
+		$grade = false;
         if ( count($response) == 0 ) {
             global $coursepress;
             if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
@@ -90,6 +91,8 @@ class text_input_module extends Unit_Module {
             }
         } else {
             $enabled = 'disabled';
+			$unit_module = new Unit_Module();
+			$grade = $unit_module->get_response_grade( $response->ID );						
         }
         ?>
         <?php if ( ( isset($data->answer_length) && $data->answer_length == 'single' ) || (!isset($data->answer_length) ) ) { ?>
@@ -107,9 +110,15 @@ class text_input_module extends Unit_Module {
                 <?php } else { ?>
                     <div class="module_textarea_input"><input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> /></div>
                 <?php } ?>
-                <?php if ( $data->mandatory_answer == 'yes' ) { ?>
-                    <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
-                <?php } ?>
+			<?php if ( $grade && $data->gradable_answer ) { ?>
+				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
+				<?php } else {
+					if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
+						<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+				<?php
+					}
+				} ?>				
+
             </div>
             <?php } else {
             ?>
@@ -129,9 +138,14 @@ class text_input_module extends Unit_Module {
                         <textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" <?php echo $enabled; ?>></textarea>
                     <?php } ?>
                 </div>
-                <?php if ( $data->mandatory_answer == 'yes' ) { ?>
-                    <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
-                <?php } ?>
+			<?php if ( $grade && $data->gradable_answer ) { ?>
+				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
+				<?php } else {
+					if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
+						<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+				<?php
+					}
+				} ?>				
             </div>
             <?php
         }

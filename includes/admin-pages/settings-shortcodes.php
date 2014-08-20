@@ -271,7 +271,7 @@
 							</ul>
 		
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_dates]<br />[course_dates show_alt_display="yes" alt_display_text="Learn Anytime!"]</code>
+							<code>[course_dates course_id="42"]<br />[course_dates course_id="42" show_alt_display="yes" alt_display_text="Learn Anytime!"]</code>
 						</td>
 					</tr>			
 

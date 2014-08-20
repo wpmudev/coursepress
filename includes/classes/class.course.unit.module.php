@@ -414,7 +414,7 @@ if ( !class_exists('Unit_Module') ) {
                 
             }
         }
-
+		
         function get_ungraded_response_count( $course_id = '' ) {
 
             if ( $course_id == '' ) {

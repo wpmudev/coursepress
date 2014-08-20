@@ -75,6 +75,7 @@ class file_input_module extends Unit_Module {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
 
+		$grade = false;
         if ( count($response) == 0 ) {
             global $coursepress;
             if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
@@ -84,6 +85,8 @@ class file_input_module extends Unit_Module {
             }
         } else {
             $enabled = 'disabled';
+			$unit_module = new Unit_Module();
+			$grade = $unit_module->get_response_grade( $response->ID );			
         }
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
@@ -100,14 +103,19 @@ class file_input_module extends Unit_Module {
                     <input type="file" <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
                     <?php
                 } else {
-                    _e('File uploaded.', 'cp');
+                    _e('File uploaded. ', 'cp');
+				    // printf( __('<a target="_blank" href="%s" style="padding-left: 20px">View/Download File</a>'), $response->guid );
                 }
                 ?>
             </div>
-
-            <?php if ( $data->mandatory_answer == 'yes' ) { ?>
-                <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
-            <?php } ?>
+			<?php if ( $grade && $data->gradable_answer ) { ?>
+				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
+			<?php } else {
+				if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
+					<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+			<?php
+				}
+			} ?>				
 
         </div>
 

@@ -86,6 +86,7 @@ class checkbox_input_module extends Unit_Module {
             $student_checked_answers = get_post_meta($response->ID, 'student_checked_answers', true);
         }
 
+		$grade = false;
         if ( count($response) == 0 ) {
             global $coursepress;
             if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
@@ -95,17 +96,21 @@ class checkbox_input_module extends Unit_Module {
             }
         } else {
             $enabled = 'disabled';
+			$unit_module = new Unit_Module();
+			$grade = $unit_module->get_response_grade( $response->ID );
         }
+		// $data->gradable_answer
+		
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
             <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
-
+									
             <?php if ( $data->post_content != '' ) { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
             <?php } ?>
-
+															
             <ul class='radio_answer_check_li checkbox_answer_group' <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?>>
                 <?php
                 if ( isset($data->answers) && !empty($data->answers) ) {
@@ -119,10 +124,14 @@ class checkbox_input_module extends Unit_Module {
                 }
                 ?>
             </ul>
-
-            <?php if ( $data->mandatory_answer == 'yes' ) { ?>
-                <span class="mandatory_answer"><?php _e('* Mandatory', 'cp'); ?></span>
-            <?php } ?>
+			<?php if ( $grade && $data->gradable_answer ) { ?>
+				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
+			<?php } else {
+				if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
+					<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+			<?php
+				}
+			} ?>				
         </div>
         <?php
     }
