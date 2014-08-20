@@ -2177,10 +2177,10 @@ if ( !class_exists('CoursePress') ) {
                 //'has_archive' => true,
                 'show_ui' => false,
                 'publicly_queryable' => true,
-                'capability_type' => 'discussion',
+                'capability_type' => 'post',
                 'map_meta_cap' => true,
                 'query_var' => true,
-                'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug() )
+                //'rewrite' => array( 'slug' => trailingslashit($this->get_course_slug()) . '%course%/' . $this->get_discussion_slug() )
             );
 
             register_post_type('discussions', $args);
