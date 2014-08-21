@@ -560,6 +560,13 @@ h1.notification-title{
     padding-top: 9px;
 }
 
+.module_title h2 span{
+    font-size: 14px;
+    text-align: right;
+    float: right;
+    padding-top: 9px;
+}
+
 .save_elements_message_ok{
     position: fixed;
     top: 0px;
@@ -1076,4 +1083,26 @@ table.popup-payment-info th {
 
 .module_grade {
 	font-size:0.9em;
+}
+
+span.passed_element{
+    color:green;
+    text-transform: uppercase;
+}
+
+span.failed_element{
+    color:red;
+     text-transform: uppercase;
+}
+
+.module_grade_left{
+    width: 50%;
+    text-align: left;
+    display: inline-block;
+}
+
+.module_grade_right{
+    width: 49%;
+    display: inline-block;
+    text-align: right;
 }

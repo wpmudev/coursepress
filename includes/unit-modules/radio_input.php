@@ -57,11 +57,10 @@ class radio_input_module extends Unit_Module {
         <?php
     }
 
-    function get_response( $user_ID, $response_request_ID ) {
+    function get_response( $user_ID, $response_request_ID, $status = 'publish', $limit = 1 ) {
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
-            'meta_key' => 'user_ID',
-            'meta_value' => $user_ID,
+            'post_author' => $user_ID,
             'post_type' => 'module_response',
             'post_parent' => $response_request_ID,
             'post_status' => 'publish'
@@ -81,7 +80,10 @@ class radio_input_module extends Unit_Module {
     function front_main( $data ) {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
-		$grade = false;
+        $all_responses = $this->get_response(get_current_user_id(), $data->ID, 'private', -1);
+        
+        $grade = false;
+        
         if ( count($response) == 0 ) {
             global $coursepress;
             if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
@@ -91,8 +93,8 @@ class radio_input_module extends Unit_Module {
             }
         } else {
             $enabled = 'disabled';
-			$unit_module = new Unit_Module();
-			$grade = $unit_module->get_response_grade( $response->ID );			
+            $unit_module = new Unit_Module();
+            $grade = $unit_module->get_response_grade($response->ID);
         }
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
@@ -116,27 +118,7 @@ class radio_input_module extends Unit_Module {
                 ?>
             </ul>
 
-            <?php
-            /* $unit_module_main = new Unit_Module();
-
-              if ( is_object( $response ) && !empty( $response ) ) {
-
-              $comment = $unit_module_main->get_response_comment( $response->ID );
-              if ( !empty( $comment ) ) {
-              ?>
-              <div class="response_comment_front"><?php echo $comment; ?></div>
-              <?php
-              }
-              } */
-            ?>
-			<?php if ( $grade && $data->gradable_answer ) { ?>
-				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
-			<?php } else {
-				if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
-					<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
-			<?php
-				}
-			} ?>				
+            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response); ?>
         </div>
         <?php
     }
@@ -169,13 +151,18 @@ class radio_input_module extends Unit_Module {
                     _e('Element Title', 'cp');
                     $this->time_estimation($data);
                     ?></label>
-                <?php echo $this->element_title_description(); ?>
+        <?php echo $this->element_title_description(); ?>
                 <input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
 
                 <div class="group-check">
                     <?php echo $this->show_title_on_front_element($data); ?>
-                    <?php echo $this->mandatory_answer_element($data); ?>
-                    <?php echo $this->assessable_answer_element($data); ?>
+        <?php echo $this->mandatory_answer_element($data); ?>
+        <?php echo $this->assessable_answer_element($data); ?>
+                </div>
+
+                <div class="group-check second-group-check" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'no') || (!isset($data->gradable_answer)) ? 'style="display:none;"' : ''; ?>">
+        <?php echo $this->minimum_grade_element($data); ?>
+        <?php echo $this->limit_attempts_element($data); ?>
                 </div>
 
                 <label class="bold-label"><?php _e('Question', 'cp'); ?></label>
@@ -200,7 +187,7 @@ class radio_input_module extends Unit_Module {
                             <tr>
                                 <th width="96%">
                         <div class="radio_answer_check"><?php _e('Answer'); ?></div>
-                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                              ?></div>
+                        <div class="radio_answer"><?php //_e( 'Answers', 'cp' );                               ?></div>
                         </th>
                         <th width="3%">
                             <!--<a class="radio_new_link"><?php _e('Add New', 'cp'); ?></a>-->
@@ -231,13 +218,13 @@ class radio_input_module extends Unit_Module {
                                         <input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr(( isset($answer) ? $answer : '')); ?>' />
 
                                     </td>
-                                    <?php if ( $answer_cnt >= 2 ) { ?>
+                <?php if ( $answer_cnt >= 2 ) { ?>
                                         <td width="3%">    
                                             <a class="radio_remove" onclick="jQuery(this).parent().parent().remove();"><i class="fa fa-trash-o"></i></a>
                                         </td>
                                     <?php } else { ?>
                                         <td width="3%">&nbsp;</td>
-                                    <?php } ?>
+                                <?php } ?>
                                 </tr>
                                 <?php
                                 $answer_cnt++;
@@ -324,6 +311,9 @@ class radio_input_module extends Unit_Module {
                             $data->metas['answers'] = $answers[$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
+                            $data->metas['limit_attempts_value'] = $_POST[$this->name . '_limit_attempts_value'][$key];
+                            $data->metas['minimum_grade_required'] = $_POST[$this->name . '_minimum_grade_required'][$key];
+
                             if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {
@@ -340,6 +330,12 @@ class radio_input_module extends Unit_Module {
                                 $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
                             } else {
                                 $data->metas['gradable_answer'] = 'no';
+                            }
+
+                            if ( isset($_POST[$this->name . '_limit_attempts'][$key]) ) {
+                                $data->metas['limit_attempts'] = $_POST[$this->name . '_limit_attempts'][$key];
+                            } else {
+                                $data->metas['limit_attempts'] = 'no';
                             }
 
                             parent::update_module($data);

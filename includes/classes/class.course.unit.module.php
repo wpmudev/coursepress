@@ -245,18 +245,33 @@ if ( !class_exists('Unit_Module') ) {
         }
 
         function get_modules_front( $unit_id = 0 ) {
-
             global $coursepress, $coursepress_modules, $wp, $paged, $_POST;
+
+            if ( isset($_GET['resubmit_nonce']) || wp_verify_nonce($_GET['resubmit_nonce'], 'resubmit_answer') ) {
+                if ( isset($_GET['resubmit_answer']) ) {
+                    $response = get_post(( int ) $_GET['resubmit_answer']);
+                    if ( isset($response) && isset($response->post_author) && $response->post_author == get_current_user_ID() ) {
+                        $resubmitted_response = array(
+                            'ID' => $response->ID,
+                            'post_status' => 'private'
+                        );
+                        wp_update_post($resubmitted_response);
+                    }
+                    wp_redirect($_GET['resubmit_redirect_to']);
+                    exit;
+                }
+            }
+
 
             $front_save = false;
             $responses = 0;
             $input_modules = 0;
 
             $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
-            
+
             cp_set_last_visited_unit_page($unit_id, $paged, get_current_user_ID());
             cp_set_visited_unit_page($unit_id, $paged, get_current_user_ID());
-            
+
             $modules = $this->get_modules($unit_id);
 
             $course_id = do_shortcode('[get_parent_course_id]');
@@ -292,7 +307,7 @@ if ( !class_exists('Unit_Module') ) {
                 exit;
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );     ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                       ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
 
                 <?php
@@ -415,7 +430,7 @@ if ( !class_exists('Unit_Module') ) {
                 
             }
         }
-		
+
         function get_ungraded_response_count( $course_id = '' ) {
 
             if ( $course_id == '' ) {
@@ -524,7 +539,7 @@ if ( !class_exists('Unit_Module') ) {
         function assessable_answer_element( $data ) {
             ?>
             <label class="mandatory_answer">
-                <input type="checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer) ) ? 'checked' : '' ) ?> />
+                <input type="checkbox" class="assessable_checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer) ) ? 'checked' : '' ) ?> />
                 <?php _e('Assessable', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('The answer will be graded', 'cp'); ?></span>
             </label>
@@ -546,11 +561,96 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="show_title_on_front">
                 <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
-				<input type="hidden" name="<?php echo $this->name; ?>_show_title_field[]" value="<?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'yes' : 'no' ) ?>" />
+                <input type="hidden" name="<?php echo $this->name; ?>_show_title_field[]" value="<?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'yes' : 'no' ) ?>" />
                 <?php _e('Show Title', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('The title is displayed as a heading', 'cp'); ?></span>
             </label>
             <?php
+        }
+
+        function minimum_grade_element( $data ) {
+            ?>
+            <label class="minimum_grade_required_label">
+                <?php _e('Minimum grade required', 'cp'); ?><input type="text" class="grade_spinner" name="<?php echo $this->name; ?>_minimum_grade_required[]" value="<?php echo ( isset($data->minimum_grade_required) ? $data->minimum_grade_required : 100 ); ?>" /><br />
+                <span class="element_title_description"><?php _e('Set the minimum grade (%) required to pass the task', 'cp'); ?></span>
+            </label>
+            <?php
+        }
+
+        function limit_attempts_element( $data ) {
+            ?>
+            <label class="limit_attampts_label">
+                <input type="checkbox" class="limit_attempts_checkbox" name="<?php echo $this->name; ?>_limit_attempts[]" value="yes" <?php echo ( isset($data->limit_attempts) && $data->limit_attempts == 'yes' ? 'checked' : (!isset($data->limit_attempts) ) ? 'checked' : '' ) ?> />
+                <?php _e('Limit Attempts', 'cp'); ?><input type="text" class="attempts_spinner" name="<?php echo $this->name; ?>_limit_attempts_value[]" value="<?php echo ( isset($data->limit_attempts_value) ? $data->limit_attempts_value : 1 ); ?>" /><br>
+                <span class="element_title_description"><?php _e('Limit attempts of this task', 'cp'); ?></span>
+            </label>
+            <?php
+        }
+
+        function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false ) {
+            $number_of_answers = (int)count($responses) + (int)count($last_public_response);
+       
+            $limit_attempts = $data->limit_attempts; //yes or no
+            $limit_attempts_value = $data->limit_attempts_value;
+            $attempts_remaining = $limit_attempts_value - $number_of_answers;
+
+            if ( isset($limit_attempts) && $limit_attempts == 'yes' ) {
+                $limit_attempts_value = $limit_attempts_value;
+            } else {
+                $limit_attempts_value = -1; //unlimited
+            }
+
+            if ( $grade && $data->gradable_answer ) {
+                ?>
+                <div class="module_grade">
+                    <div class="module_grade_left">
+                        <?php
+                        if ( $grade['grade'] < 100 ) {
+                            if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
+                                $response = $this->get_response(get_current_user_id(), $data->ID);
+                                $unit_id = wp_get_post_parent_id($data->ID);
+                                $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
+                                $permalink = trailingslashit(trailingslashit(get_permalink($unit_id)) . 'page/' . trailingslashit($paged));
+                                $resubmit_url = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
+                                ?>
+                                <a href="<?php echo wp_nonce_url($resubmit_url, 'resubmit_answer', 'resubmit_nonce'); ?>" class="resubmit_response"><?php _e('Resubmit', 'cp'); ?></a>
+                                <?php
+                                if ( $attempts_remaining > 0 ) {
+                                    if ( $attempts_remaining == 1 ) {
+                                        _e('(1 attempt remaining)', 'cp');
+                                    } else {
+                                        printf(__('(%d attempts remaining)', 'cp'), $attempts_remaining);
+                                    }
+                                }
+                            }
+                        }
+                        ?>
+                    </div>
+                    <div class="module_grade_right">
+                        <?php echo __('Graded: ') . $grade['grade'] . '%'; ?> 
+                        <?php
+                        if ( isset($data->minimum_grade_required) && is_numeric($data->minimum_grade_required) ) {
+                            if ( $grade['grade'] >= $data->minimum_grade_required ) {
+                                ?>
+                                <span class="passed_element">(<?php _e('Passed', 'cp'); ?>)</span>
+                                <?php
+                            } else {
+                                ?>
+                                <span class="failed_element">(<?php _e('Failed', 'cp'); ?>)</span>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php
+            } else {
+                if ( $data->gradable_answer && 'enabled' != $enabled ) {
+                    ?>
+                    <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+                    <?php
+                }
+            }
         }
 
         function time_estimation( $data ) {
@@ -585,10 +685,10 @@ if ( !class_exists('Unit_Module') ) {
         function get_module_delete_link() {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(jQuery(this).parent().find('.element_id').val())) {
-                                    jQuery(this).parent().parent().remove();
-                                    update_sortable_module_indexes();
-                                }
-                                ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
+                        jQuery(this).parent().parent().remove();
+                        update_sortable_module_indexes();
+                    }
+                    ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
             <?php
         }
 

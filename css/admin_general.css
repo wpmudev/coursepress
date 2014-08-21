@@ -386,13 +386,13 @@
 }
 
 span.error {
-	color: #ff0000;
+    color: #ff0000;
 }
 
 span.required:after,
 label.required:after{
-	content: '*';
-	color: #ff0000;
+    content: '*';
+    color: #ff0000;
 }
 
 .unit-control-buttons a.button.button-unpublish,
@@ -426,10 +426,10 @@ td.label {
 }
 
 .group-check label{
-    display: inline;
+    display: inline-block;
     margin-left: 30px;
-	margin-top:0;
-	vertical-align: top;
+    margin-top:0;
+    vertical-align: top;
 }
 
 .group-check label:first-child{

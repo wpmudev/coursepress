@@ -57,14 +57,13 @@ class checkbox_input_module extends Unit_Module {
         <?php
     }
 
-    function get_response( $user_ID, $response_request_ID ) {
+    function get_response( $user_ID, $response_request_ID, $status = 'publish', $limit = 1 ) {
         $already_respond_posts_args = array(
-            'posts_per_page' => 1,
-            'meta_key' => 'user_ID',
-            'meta_value' => $user_ID,
+            'posts_per_page' => $limit,
+            'post_author' => $user_ID,
             'post_type' => 'module_response',
             'post_parent' => $response_request_ID,
-            'post_status' => 'publish'
+            'post_status' => $status
         );
 
         $already_respond_posts = get_posts($already_respond_posts_args);
@@ -74,6 +73,10 @@ class checkbox_input_module extends Unit_Module {
         } else {
             $response = $already_respond_posts;
         }
+        
+        if($limit == -1){
+            $response = $already_respond_posts;
+        }
 
         return $response;
     }
@@ -81,12 +84,14 @@ class checkbox_input_module extends Unit_Module {
     function front_main( $data ) {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
+        $all_responses = $this->get_response(get_current_user_id(), $data->ID, 'private', -1);
 
         if ( is_object($response) ) {
             $student_checked_answers = get_post_meta($response->ID, 'student_checked_answers', true);
         }
 
-		$grade = false;
+        $grade = false;
+
         if ( count($response) == 0 ) {
             global $coursepress;
             if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
@@ -96,21 +101,20 @@ class checkbox_input_module extends Unit_Module {
             }
         } else {
             $enabled = 'disabled';
-			$unit_module = new Unit_Module();
-			$grade = $unit_module->get_response_grade( $response->ID );
+            $unit_module = new Unit_Module();
+            $grade = $unit_module->get_response_grade($response->ID);
         }
-		// $data->gradable_answer
-		
+// $data->gradable_answer
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
             <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
-									
+
             <?php if ( $data->post_content != '' ) { ?>  
                 <div class="module_description"><?php echo apply_filters('element_content_filter', apply_filters('the_content', $data->post_content)); ?></div>
             <?php } ?>
-															
+
             <ul class='radio_answer_check_li checkbox_answer_group' <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?>>
                 <?php
                 if ( isset($data->answers) && !empty($data->answers) ) {
@@ -124,14 +128,9 @@ class checkbox_input_module extends Unit_Module {
                 }
                 ?>
             </ul>
-			<?php if ( $grade && $data->gradable_answer ) { ?>
-				<div class="module_grade"><?php echo __('Graded: ') . $grade['grade'] . '%'; ?></div>
-			<?php } else {
-				if( $data->gradable_answer && 'enabled' != $enabled ) { ?>
-					<div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
-			<?php
-				}
-			} ?>				
+
+            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response); ?>
+		
         </div>
         <?php
     }
@@ -170,6 +169,11 @@ class checkbox_input_module extends Unit_Module {
                     <?php echo $this->show_title_on_front_element($data); ?>
                     <?php echo $this->mandatory_answer_element($data); ?>
                     <?php echo $this->assessable_answer_element($data); ?>
+                </div>
+
+                <div class="group-check second-group-check" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'no') || (!isset($data->gradable_answer)) ? 'style="display:none;"' : ''; ?>">
+                    <?php echo $this->minimum_grade_element($data); ?>
+                    <?php echo $this->limit_attempts_element($data); ?>
                 </div>
 
                 <label class="bold-label"><?php _e('Question', 'cp'); ?></label>
@@ -306,7 +310,7 @@ class checkbox_input_module extends Unit_Module {
                     $checked_answers[] = $post_checked_answers;
                 }
 
-                //cp_write_log( $checked_answers );
+//cp_write_log( $checked_answers );
 
                 foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
 
@@ -329,6 +333,9 @@ class checkbox_input_module extends Unit_Module {
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
 
+                            $data->metas['limit_attempts_value'] = $_POST[$this->name . '_limit_attempts_value'][$key];
+                            $data->metas['minimum_grade_required'] = $_POST[$this->name . '_minimum_grade_required'][$key];
+
                             if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
                                 $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
                             } else {
@@ -345,6 +352,12 @@ class checkbox_input_module extends Unit_Module {
                                 $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
                             } else {
                                 $data->metas['gradable_answer'] = 'no';
+                            }
+
+                            if ( isset($_POST[$this->name . '_limit_attempts'][$key]) ) {
+                                $data->metas['limit_attempts'] = $_POST[$this->name . '_limit_attempts'][$key];
+                            } else {
+                                $data->metas['limit_attempts'] = 'no';
                             }
 
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
@@ -399,7 +412,7 @@ class checkbox_input_module extends Unit_Module {
                                 if ( in_array($chosen_answer, $right_answers) ) {
                                     $response_grade = $response_grade + 100;
                                 } else {
-                                    //$response_grade = $response_grade + 0;//this line can be empty as well : )
+//$response_grade = $response_grade + 0;//this line can be empty as well : )
                                 }
                             }
 

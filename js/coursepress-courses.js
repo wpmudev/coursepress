@@ -1,4 +1,31 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function($) {
+    
+    $( ".grade_spinner" ).spinner({
+      min: 1,
+      max: 100,
+      step: 1,
+      start: 100,
+      //numberFormat: "C"
+    });
+    
+    /*$( ".attempts_spinner" ).spinner({
+      min: 1,
+      max: 100,
+      step: 1,
+      start: 1,
+      //numberFormat: "C"
+    });*/
+    
+    $(".assessable_checkbox").on('change', function(){
+        var checked = $(this).prop('checked');
+        var second_group = $(this).parent().parent().parent().find('.second-group-check');
+        if(checked){
+            second_group.show();
+        }else{
+            second_group.hide();
+        }
+    });
+    
 
     jQuery('.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button').live('click', function() {
         var current_unit_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();

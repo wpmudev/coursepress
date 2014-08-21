@@ -328,7 +328,7 @@ a.action-to-negative {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -344,7 +344,7 @@ a.action-to-negative {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -770,7 +770,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     border-radius: 4px 0 0 4px;
     border-width: 1px 0 1px 1px;
     font-weight: 700;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
 }
 
@@ -1108,7 +1108,7 @@ input.wide, textarea.wide {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -1293,7 +1293,7 @@ div.buttons a.cancellink {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -1692,12 +1692,14 @@ a .remove-btn:hover{
     margin-bottom: 15px;
     width: 20%;
     display: inline-block;
+    font-weight: bold;
 }
 
 
 .mandatory_answer, .group-check label.mandatory_answer{
     width: 20%;
     display: inline-block;
+    font-weight: bold;
 }
 
 .module-content .show_title_on_front .mp-help-icon{
@@ -2740,12 +2742,65 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     font-weight: normal;
 }
 
+.group-check .element_title_description{
+    margin-left: 25px;
+}
+
 
 /* Media Captions: Admin */
 .caption-source {
-	margin-top: 10px;
-	margin-left: 20px;
+    margin-top: 10px;
+    margin-left: 20px;
 }
 .caption-source .element_title_description {
-	margin-left: 25px;
+    margin-left: 25px;
+}
+
+.module-content input[type="text"].grade_spinner{
+    margin:0px;
+    border: 0px;
+    width: 57px;
+    font-weight: normal;
+}
+
+.module-content input[type="text"].attempts_spinner{
+    margin:0px;
+    //border: 0px;
+    width: 30px;
+    font-weight: normal;
+    display: inline-block;
+    margin-left: 61px;
+    margin-top: -4px;
+    text-align: center;
+}
+
+.minimum_grade_required_label .ui-spinner,
+.limit_attampts_label .ui-spinner{
+    margin-left: 61px;
+    margin-top: -4px;
+}
+
+label.minimum_grade_required_label{
+    width: 40%;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.group-check label.limit_attampts_label{
+    width: 20%;
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 50px;
+}
+
+.second-group-check{
+    margin-left: 25px;
+}
+
+.second-group-check .element_title_description{
+    margin-left: 0px;
+}
+
+.second-group-check label{
+    display: inline-block;
 }
