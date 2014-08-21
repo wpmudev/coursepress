@@ -260,8 +260,10 @@ jQuery(document).ready(function()
     {
 
         var target_url_field = jQuery(this).prevAll(".image_url:first");
+		var caption_field = jQuery(this).parents('.module-content').find('.caption-source .element_title_description');
         wp.media.editor.send.attachment = function(props, attachment)
         {
+			console.log( attachment );
             if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
                 $(target_url_field).removeClass('invalid_extension_field');
                 $(target_url_field).parent().find('.invalid_extension_message').hide();
@@ -270,6 +272,7 @@ jQuery(document).ready(function()
                 $(target_url_field).parent().find('.invalid_extension_message').show();
             }
             jQuery(target_url_field).val(attachment.url);
+			jQuery(caption_field).html( '"' + attachment.caption + '"' );
         };
         wp.media.editor.open(this);
         return false;
@@ -1688,3 +1691,36 @@ function fix_tinymce_in_iframe() {
 		});
     },delay);			
 }
+
+/* Show Media Caption Toggle */
+jQuery( document ).ready( function( $ ) {
+	
+	$('[name*="show_media_caption"]').change( function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).parents('.caption-settings').find('.caption-source').removeClass('hidden');
+			$(this).siblings('[name*="show_caption_field"]').val('yes');
+		} else {
+			$(this).parents('.caption-settings').find('.caption-source').addClass('hidden');
+			$(this).siblings('[name*="show_caption_field"]').val('no');
+		}
+	});
+
+	$('[name*="show_title_on_front"]').change( function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).siblings('[name*="show_title_field"]').val('yes');
+		} else {
+			$(this).siblings('[name*="show_title_field"]').val('no');
+		}
+	});
+
+	$('[name*="_caption_source"]').change( function( event ) {
+		if ( $(this).val() == 'media' ) {
+			$(this).siblings('[name*="caption_field"]').val('media');
+		} else {
+			$(this).siblings('[name*="caption_field"]').val('custom');
+		}
+	});
+
+	
+	
+});

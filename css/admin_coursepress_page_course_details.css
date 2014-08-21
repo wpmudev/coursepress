@@ -2739,3 +2739,13 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     color: #72788c;
     font-weight: normal;
 }
+
+
+/* Media Captions: Admin */
+.caption-source {
+	margin-top: 10px;
+	margin-left: 20px;
+}
+.caption-source .element_title_description {
+	margin-left: 25px;
+}
