@@ -93,6 +93,9 @@ class image_module extends Unit_Module {
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_image_extensions); ?></div>
                     </label>
                 </div>
+				
+				<?php if( !empty( $data ) ) { echo $this->show_media_caption($data); } ?>
+				
                 <?php
                 parent::get_module_delete_link();
                 ?>
@@ -109,7 +112,49 @@ class image_module extends Unit_Module {
         $this->save_module_data();
         parent::additional_module_actions();
     }
+	
+    function show_media_caption( $data ) {
+        ?>
+		<div class="caption-settings">
+	        <label class="show_media_caption">
+	            <input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'checked' : (!isset($data->show_media_caption) ) ? 'checked' : '' ) ?> />
+				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'yes' : 'no' ) ?>" />
+	            <?php _e('Show Caption', 'cp'); ?><br />
+	            <span class="element_title_description"><?php _e('Show a caption for this image.', 'cp'); ?></span>
+	        </label>
+			<div class="caption-source <?php echo isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? '' : 'hidden'; ?>">
+				<?php 
+					cp_write_log($data->caption_field);
+					$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' ); 
+					cp_write_log($caption_source);
 
+				?>
+                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
+				<span class="element_title_description">
+					<?php
+						$no_caption_text = __('Media has no caption.');
+						$attachment_id = cp_get_attachment_id_from_src( $data->image_url );
+						if ( !empty( $attachment_id ) ){
+							$attachment = get_post( $attachment_id );
+							$caption = $attachment->post_excerpt;
+							if ( !empty( $caption ) ) {
+								echo '"' . $caption . '"';
+							} else {
+								echo $no_caption_text;
+							}
+						} else {
+							echo $no_caption_text;
+						}
+					?>
+				</span>
+                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="custom" <?php checked($caption_source, 'custom', true); ?>/> <?php _e('Custom Caption','cp'); ?>
+				<input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>" />
+				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo isset($data->caption_custom_text) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo isset($data->caption_custom_text) ? '' : __( 'Please enter a custom caption here.', 'cp' ); ?>" /><br /><br />
+			</div>
+		</div>
+        <?php
+    }
+		
     function save_module_data() {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
@@ -126,22 +171,33 @@ class image_module extends Unit_Module {
                     $data->content = '';
                     $data->metas = array();
                     $data->metas['module_type'] = $this->name;
+					// $data->metas['show_media_caption'] = array();
                     $data->post_type = 'module';
 
                     if ( isset($_POST[$this->name . '_id']) ) {
+
                         foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
+
                             $data->ID = $_POST[$this->name . '_id'][$key];
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['image_url'] = $_POST[$this->name . '_image_url'][$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
+							
+                            $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
+							$data->metas['show_media_caption'] = $_POST[$this->name . '_show_caption_field'][$key];
+							$data->metas['caption_custom_text'] = $_POST[$this->name . '_caption_custom_text'][$key];
+							$data->metas['caption_field'] = $_POST[$this->name . '_caption_field'][$key];
+							
+                            // if ( isset($_POST[$this->name . '_show_media_caption'][$key]) ) {
+                            //     $data->metas['show_media_caption'] = 'yes';
+                            // } else {
+                            //     $data->metas['show_media_caption'] = 'no';
+                            // }
+							
+							// cp_write_log( $data->metas['show_media_caption'] );
 
-                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                            } else {
-                                $data->metas['show_title_on_front'] = 'no';
-                            }
                             parent::update_module($data);
                         }
                     }

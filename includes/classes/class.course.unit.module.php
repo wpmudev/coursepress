@@ -546,6 +546,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="show_title_on_front">
                 <input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset($data->show_title_on_front) ) ? 'checked' : '' ) ?> />
+				<input type="hidden" name="<?php echo $this->name; ?>_show_title_field[]" value="<?php echo ( isset($data->show_title_on_front) && $data->show_title_on_front == 'yes' ? 'yes' : 'no' ) ?>" />
                 <?php _e('Show Title', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('The title is displayed as a heading', 'cp'); ?></span>
             </label>
