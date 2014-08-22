@@ -7,7 +7,7 @@ $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 do_shortcode('[course_unit_archive_submenu]');
 
 echo sprintf( __('<h2>%s</h2>', 'cp'), get_the_title( $unit_id ) );
-cp_write_log(do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="unit_page_title"]'));
+//cp_write_log(do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="unit_page_title"]'));
 ?>
 
 <?php echo do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="unit_page_title"]'); ?>

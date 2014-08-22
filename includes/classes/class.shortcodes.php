@@ -2455,6 +2455,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'knob_data_thickness' => '.35',
                 'knob_data_width' => '70',
                 'knob_data_height' => '70',
+                'unit_title' => '',
                 'unit_page_title_tag' => 'h3',
                 'unit_page_title_tag_class' => '',
                 'last_visited' => false,
@@ -2482,8 +2483,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( $field == 'unit_page_title' ) {
                 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
                 $page_name = $unit->get_unit_page_name($paged);
+                if ( $unit_title !== '' ) {
+                    $page_title_prepend = $unit_title . ': ';
+                } else {
+                    $page_title_prepend = '';
+                }
+                
                 if ( !empty($page_name) ) {
-                    $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
+                    $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $page_title_prepend . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
                 } else {
                     $unit->details->$field = '';
                 }
@@ -3323,7 +3330,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">

@@ -26,9 +26,9 @@ $post = $unit->details;
         <?php while ( have_posts() ) : the_post(); ?>
             <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                 <header class="entry-header">
-                    <h3 class="entry-title"><?php the_title(); ?></h3>
+                    <h3 class="entry-title"><?php echo do_shortcode('[course_title course_id="' . $course_id . '"]'); ?></h3>
                     <?php
-                    echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="parent_course"]');
+                    //echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="parent_course"]');
                     ?>
                 </header><!-- .entry-header -->
                 <div class="instructors-content"></div>
@@ -38,7 +38,7 @@ $post = $unit->details;
 
                 <div class="clearfix"></div>
 
-                <?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title"]'); ?>
+                <?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title" unit_title="'.get_the_title().'"]'); ?>
 
                 <div class="entry-content">
                     <?php
