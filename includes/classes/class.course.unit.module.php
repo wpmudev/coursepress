@@ -284,8 +284,12 @@ if ( !class_exists('Unit_Module') ) {
                     //wp_redirect( full_url( $_SERVER ). '?saved=ok' );
                     wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                 } else {
-                    //wp_redirect( full_url( $_SERVER ) );
-                    wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                    if ( $paged != 1 ) {
+                        //wp_redirect( full_url( $_SERVER ) );
+                        wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                    } else {
+                        wp_redirect(full_url($_SERVER));
+                    }
                 }
 
                 exit;
@@ -307,7 +311,7 @@ if ( !class_exists('Unit_Module') ) {
                 exit;
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                       ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                         ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
 
                 <?php
@@ -588,8 +592,8 @@ if ( !class_exists('Unit_Module') ) {
         }
 
         function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false ) {
-            $number_of_answers = (int)count($responses) + (int)count($last_public_response);
-       
+            $number_of_answers = ( int ) count($responses) + ( int ) count($last_public_response);
+
             $limit_attempts = $data->limit_attempts; //yes or no
             $limit_attempts_value = $data->limit_attempts_value;
             $attempts_remaining = $limit_attempts_value - $number_of_answers;
@@ -646,9 +650,11 @@ if ( !class_exists('Unit_Module') ) {
                 <?php
             } else {
                 if ( $data->gradable_answer && 'enabled' != $enabled ) {
-                    ?>
-                    <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
-                    <?php
+                    if ( ( int ) count($responses) > 1 ) {
+                        ?>
+                        <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+                        <?php
+                    }
                 }
             }
         }
@@ -685,10 +691,10 @@ if ( !class_exists('Unit_Module') ) {
         function get_module_delete_link() {
             ?>
             <a class="delete_module_link" onclick="if (deleteModule(jQuery(this).parent().find('.element_id').val())) {
-                        jQuery(this).parent().parent().remove();
-                        update_sortable_module_indexes();
-                    }
-                    ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
+                                    jQuery(this).parent().parent().remove();
+                                    update_sortable_module_indexes();
+                                }
+                                ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
             <?php
         }
 
