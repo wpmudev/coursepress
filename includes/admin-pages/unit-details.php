@@ -134,7 +134,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ) . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? $unit_object->post_status : 'live')); ?>" />
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? isset($unit_object->post_status) ? $unit_object->post_status : 'live' : 'live')); ?>" />
 
             <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
             <input type="hidden" name="unit_id" id="unit_id" value="<?php echo esc_attr($unit_id); ?>" />

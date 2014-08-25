@@ -454,7 +454,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                             <td colspan="4">
                                                                 <ol class="tree">
                                                                     <li>
-                                                                        <label for="course_<?php echo!empty($course->details) ? $course->details->ID : '0'; ?>"><?php echo (!empty($course->details) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __('Course', 'cp')); ?></label> <input type="checkbox" checked disabled id="course_<?php echo $course->details->ID; ?>" class="hidden_checkbox" /> 
+                                                                        <label for="course_<?php echo (!isset($course) || !empty($course->details)) ? $course->details->ID : '0'; ?>"><?php echo (!isset($course) || !empty($course->details) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __('Course', 'cp')); ?></label> <input type="checkbox" checked disabled id="course_<?php echo isset($course->details) ? $course->details->ID : ''; ?>" class="hidden_checkbox" /> 
                                                                         <?php
                                                                         $units = $course->get_units();
 
@@ -537,7 +537,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                 }
                                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
                                                                                                                        <?php
-																													   $disabled = '';
+                                                                                                                       $disabled = '';
                                                                                                                        if ( isset($preview_unit[$unit->ID]) ) {
                                                                                                                            if ( $preview_unit[$unit->ID] == 'on' ) {
                                                                                                                                $disabled = 'disabled';
@@ -546,7 +546,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                            }
                                                                                                                        }
                                                                                                                        ?>
-                                                                                                                <input type='checkbox' <?php echo $disabled;?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+                                                                                                                <input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr($unit->ID . '_' . $i); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
                                                                                                                 if ( isset($preview_page[$unit->ID . '_' . $i]) || isset($preview_unit[$unit->ID]) ) {
                                                                                                                     echo ( $preview_page[$unit->ID . '_' . $i] == 'on' || $preview_unit[$unit->ID] == 'on' ) ? 'checked' : '';
                                                                                                                 }
@@ -996,7 +996,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             </label>
 
                                             <div class="course-paid" id="marketpressprompt">
-                                                <p><input type="checkbox" name="meta_paid_course" <?php echo ( $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course" />
+                                                <p><input type="checkbox" name="meta_paid_course" <?php echo ( isset($paid_course) && $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course" />
                                                     <?php _e('This is a Paid Course', 'cp'); ?></p>
                                             </div>
 
@@ -1020,10 +1020,13 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                                 $product_exists = 0 != $mp_product_id ? true : false;
 
+                                                $paid_course = !isset($paid_course) || $paid_course == 'off' ? 'off' : 'on';
                                                 $paid_course = !$product_exists ? 'off' : $paid_course;
 
                                                 //var_dump(get_post_custom($course_id));
-                                                $mp_product_details = get_post_custom($course_id);
+                                                if ( isset($course_id) && $course_id !== 0 ) {
+                                                    $mp_product_details = get_post_custom($course_id);
+                                                }
 
                                                 $input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
                                                 ?>
@@ -1032,10 +1035,10 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                                 <div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
                                                     <div class="course-sku">
-                                                        <p><input type="checkbox" name="meta_auto_sku" <?php echo ( $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
+                                                        <p><input type="checkbox" name="meta_auto_sku" <?php echo ( isset($auto_sku) && $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
                                                             <?php _e('Automatically generate Stock Keeping Unit (SKU)', 'cp'); ?></p>
                                                         <input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
-                                                        if ( $auto_sku == 'on' ) {
+                                                        if ( isset($auto_sku) && $auto_sku == 'on' ) {
                                                             echo esc_attr($mp_product_details["mp_sku"][0]);
                                                         }
                                                         ?>" <?php echo $input_state; ?> />
@@ -1043,19 +1046,19 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                                     <div class="course-price">
                                                         <span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e('Price', 'cp'); ?></span>
-                                                        <input type="text" name="mp_price" id="mp_price" value="<?php echo esc_attr($mp_product_details["mp_price"][0]); ?>" <?php echo $input_state; ?>  />
+                                                        <input type="text" name="mp_price" id="mp_price" value="<?php echo (isset($mp_product_details)) ? esc_attr($mp_product_details["mp_price"][0]) : ''; ?>" <?php echo $input_state; ?>  />
                                                     </div>
 
                                                     <div class="clearfix"></div>
 
                                                     <div class="course-sale-price">
                                                         <p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php
-                                                            if ( !empty($mp_product_details["mp_is_sale"]) ) {
+                                                            if ( isset($mp_product_details) && !empty($mp_product_details["mp_is_sale"]) ) {
                                                                 checked($mp_product_details["mp_is_sale"][0], '1');
                                                             }
                                                             ?>" <?php echo $input_state; ?>  />
                                                             <?php _e('Enabled Sale Price', 'cp'); ?></p>
-                                                        <span class="price-label <?php !empty($mp_product_details["mp_is_sale"]) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
+                                                        <span class="price-label <?php isset($mp_product_details) && !empty($mp_product_details["mp_is_sale"]) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
                                                         <input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo!empty($mp_product_details['mp_sale_price']) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0; ?>" <?php echo $input_state; ?>  />
                                                     </div>
 
@@ -1163,7 +1166,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                             <?php
                             if ( $course_id !== 0 ) {
                                 ?>
-                                                        <a href="<?php echo admin_url('admin.php?page=' . ( int ) $_GET['page'] . '&tab=units&course_id=' . ( int ) $_GET['course_id']); ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
+                                                            <a href="<?php echo admin_url('admin.php?page=' . ( int ) $_GET['page'] . '&tab=units&course_id=' . ( int ) $_GET['course_id']); ?>" class="button-secondary"><?php _e('Add Units &raquo;', 'cp'); ?></a> 
                             <?php } ?>
                             </div>
                             -->

@@ -429,8 +429,11 @@ if ( !class_exists('CoursePress') ) {
                 'id' => 1, // success status
                 'data' => json_encode($ajax_response),
             );
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         function cp_format_TinyMCE( $in ) {
@@ -747,8 +750,11 @@ if ( !class_exists('CoursePress') ) {
                     'id' => 1, // success status
                     'data' => json_encode($ajax_response),
                 );
+                ob_end_clean();
+                ob_start();
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
+                ob_end_flush();
 
                 exit;
             }
@@ -1679,8 +1685,8 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function add_custom_before_discussion_single_content( $content ) {
-            
-           
+
+
             if ( $theme_file = locate_template(array( 'single-discussions.php' )) ) {
 //template will take control of the look so don't do anything
             } else {
@@ -2257,8 +2263,11 @@ if ( !class_exists('CoursePress') ) {
                 'id' => $ajax_status,
                 'data' => json_encode($ajax_response),
             );
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         /**
@@ -2310,8 +2319,11 @@ if ( !class_exists('CoursePress') ) {
                     'id' => 1, // success status
                     'data' => json_encode($ajax_response),
                 );
+                ob_end_clean();
+                ob_start();
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
+                ob_end_flush();
             }
         }
 
@@ -2339,8 +2351,11 @@ if ( !class_exists('CoursePress') ) {
                     'id' => 1, // success status
                     'data' => json_encode($ajax_response),
                 );
+                ob_end_clean();
+                ob_start();
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
+                ob_end_flush();
             }
         }
 
@@ -2368,8 +2383,11 @@ if ( !class_exists('CoursePress') ) {
                     'id' => 1, // success status
                     'data' => json_encode($ajax_response),
                 );
+                ob_end_clean();
+                ob_start();
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
+                ob_end_flush();
             }
         }
 
@@ -2426,8 +2444,11 @@ if ( !class_exists('CoursePress') ) {
                 'id' => 1, // success status
                 'data' => json_encode($ajax_response),
             );
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         /**
@@ -2469,8 +2490,11 @@ if ( !class_exists('CoursePress') ) {
                 'id' => 1, // success status
                 'data' => json_encode($ajax_response),
             );
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         /**
@@ -2556,8 +2580,12 @@ if ( !class_exists('CoursePress') ) {
                     'id' => $ajax_status,
                     'data' => json_encode($ajax_response),
                 );
+
+                ob_end_clean();
+                ob_start();
                 $xmlResponse = new WP_Ajax_Response($response);
                 $xmlResponse->send();
+                ob_end_flush();
             }
         }
 
@@ -2583,8 +2611,12 @@ if ( !class_exists('CoursePress') ) {
                 'id' => $ajax_status,
                 'data' => json_encode($ajax_response),
             );
+
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         function instructor_invite_confirmation() {
@@ -2744,8 +2776,11 @@ if ( !class_exists('CoursePress') ) {
                 'id' => $ajax_status,
                 'data' => json_encode($ajax_response),
             );
+            ob_end_clean();
+            ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
             $xmlResponse->send();
+            ob_end_flush();
         }
 
         function assign_instructor_capabilities( $user_id ) {

@@ -38,6 +38,10 @@ if ( !class_exists('Unit') ) {
                 if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
                     $unit->post_status = __('unpublished', 'cp');
                 }
+                
+                if(!isset($unit->details->post_name)){
+                    //$unit->details->post_name = '';
+                }
 
                 return $unit;
             } else {
@@ -330,10 +334,11 @@ if ( !class_exists('Unit') ) {
             if ( empty ( $course_id ) ) {
                 $course_id = get_post_meta($this->id, 'course_id', true);
             }
+            
             $course = new Course($course_id);
             $course = $course->get_course();
 						 
-            $unit_permalink = trailingslashit(site_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit($course->post_name . '/') . trailingslashit($units_slug . '/') . trailingslashit($this->details->post_name . '/');
+            $unit_permalink = trailingslashit(site_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit(isset($course->post_name) ? $course->post_name : '' . '/') . trailingslashit($units_slug . '/') . trailingslashit(isset($this->details->post_name) ? $this->details->post_name : '' . '/');
 			
             return $unit_permalink;
         }

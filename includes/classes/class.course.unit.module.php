@@ -247,7 +247,7 @@ if ( !class_exists('Unit_Module') ) {
         function get_modules_front( $unit_id = 0 ) {
             global $coursepress, $coursepress_modules, $wp, $paged, $_POST;
 
-            if ( isset($_GET['resubmit_nonce']) || wp_verify_nonce($_GET['resubmit_nonce'], 'resubmit_answer') ) {
+            if ( isset($_GET['resubmit_nonce']) || (isset($_GET['resubmit_nonce']) && wp_verify_nonce($_GET['resubmit_nonce'], 'resubmit_answer')) ) {
                 if ( isset($_GET['resubmit_answer']) ) {
                     $response = get_post(( int ) $_GET['resubmit_answer']);
                     if ( isset($response) && isset($response->post_author) && $response->post_author == get_current_user_ID() ) {
