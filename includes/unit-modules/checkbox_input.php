@@ -310,8 +310,6 @@ class checkbox_input_module extends Unit_Module {
                     $checked_answers[] = $post_checked_answers;
                 }
 
-//cp_write_log( $checked_answers );
-
                 foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
 
                     if ( $module_value == $this->name ) {
@@ -366,8 +364,11 @@ class checkbox_input_module extends Unit_Module {
 
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
-                            $data->metas['answers'] = $answers[$key];
-                            $data->metas['checked_answers'] = $checked_answers[$key];
+                            // $data->metas['answers'] = $answers[$key];
+							$data->metas['answers'] = $_POST[$this->name . '_checkbox_answers'][ $_POST[$this->name . '_module_order'][$key] ];
+							
+                            // $data->metas['checked_answers'] = $checked_answers[$key];
+							$data->metas['checked_answers'] = $_POST[$this->name . '_checkbox_check'][ $_POST[$this->name . '_module_order'][$key] ];
 
                             parent::update_module($data);
                         }
@@ -377,7 +378,7 @@ class checkbox_input_module extends Unit_Module {
         }
 
         if ( isset($_POST['submit_modules_data_save']) || isset($_POST['submit_modules_data_done']) || isset($_POST['save_student_progress_indication']) ) {
-
+			
             foreach ( $_POST as $response_name => $response_value ) {
 
 
