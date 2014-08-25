@@ -1,27 +1,5 @@
 Plugin Name: CoursePress
 Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
-1.0.3b - 25/JUL/2014
-- Major redesign of plugin.
-- Major redesign of course setup UI.
-- Major overhaul of unit creation.
-- UI improvements throughout the plugin.
-- New capabilities.
-- Widgets!!
-- CoursePress Menu Metabox.
-- A boat load of new shortcodes (see settings for index)
-- Overall better UX.
-- MarketPress Lite fully integrated. Start selling courses straight away.
-> "Enjoy!" - Marko & Rheinard
-
-1.0.2b - 30/MAY/2014
-- Security fortification
-- Resolved admin url issues
-
-1.0.1b - 29/MAY/2014
-- Resolved issue with adding student manually to a course
-- Adding search on each drop down
-
-1.0b - 28/MAY/2014
 ----------------------------------------------------------------------
-- First Beta Release.
+1.0 First Release.
