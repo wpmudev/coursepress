@@ -1495,7 +1495,12 @@ function cp_do_attachment_caption( $data ) {
 	$media_data = array();
 	$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' );
 	
-	$media_data['id'] = cp_get_attachment_id_from_src( $data->image_url );
+	if ( ! empty( $data->image_url ) ) {
+		$media_data['id'] = cp_get_attachment_id_from_src( $data->image_url );	
+	}
+	if ( ! empty( $data->video_url ) ) {
+		$media_data['id'] = cp_get_attachment_id_from_src( $data->video_url );	
+	}
 
 	if ( $media_data['id'] ) {
 		
@@ -1568,14 +1573,47 @@ function cp_do_attachment_caption( $data ) {
 	// Called from Video module
 	if ( ! empty( $data->video_url ) ) {
 
-		if ( $data->show_media_caption ) {
+        $video_extension = pathinfo($data->video_url, PATHINFO_EXTENSION);
+		
+		$video = '';
+        if ( !empty($video_extension) ) {//it's file, most likely on the server
+            $attr = array(
+                'src' => $data->video_url,
+                    //'width' => $data->player_width,
+                    //'height' => 550//$data->player_height,
+            );
+            $video = wp_video_shortcode($attr);
+        } else {
+            $embed_args = array(
+                    //'width' => $data->player_width,
+                    //'height' => 550
+            );
+            $video = wp_oembed_get($data->video_url);
+        }
 
+		if ( 'yes' == $data->show_media_caption ) {
+			
+			$attachment_id = '';
+			if ( $media_data['id'] ) {
+				$attachment_id = ' id="attachment_' . $media_data['id'] . '"';
+			}
+			
+			$html .= '<div class="video_holder">';
+			$html .= '<figure ' . $attachment_id . ' class="wp-caption" style="width: ' . $media_data['width'] . 'px;">';
+            $html .= '<div class="video_player">';
+			$html .= $video;
+			$html .= '</div>';			
+			$html .= '<figcaption class="wp-caption-text">' . $media_data['caption'] . '</figcaption>';
+			$html .= '</figure>';
+			$html .= '</div>';						
+			
 		} else {
-		
+            $html .= '<div class="video_player">';
+            $html .= $video;
+            $html .= '</div>';
 		}
-		
-	}	
 	
+	}	
 	
 	return $html;
 }

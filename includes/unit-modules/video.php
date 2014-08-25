@@ -23,28 +23,9 @@ class video_module extends Unit_Module {
             <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
-            <?php if ( $data->video_url != '' ) { ?>  
-                <div class="video_player">
-                    <?php
-                    $video_extension = pathinfo($data->video_url, PATHINFO_EXTENSION);
-
-                    if ( !empty($video_extension) ) {//it's file, most likely on the server
-                        $attr = array(
-                            'src' => $data->video_url,
-                                //'width' => $data->player_width,
-                                //'height' => 550//$data->player_height,
-                        );
-                        echo wp_video_shortcode($attr);
-                    } else {
-                        $embed_args = array(
-                                //'width' => $data->player_width,
-                                //'height' => 550
-                        );
-                        echo wp_oembed_get($data->video_url);
-                    }
-                    ?>
-                </div>
-            <?php } ?>
+            <?php
+				echo cp_do_attachment_caption( $data );
+            ?>
         </div>
         <?php
     }
@@ -116,10 +97,13 @@ class video_module extends Unit_Module {
 
                 <!--<div class="video_additional_controls">
 
-                    <label><?php _e('Player Width ( pixels )', 'cp'); ?></label>
-                    <input type="text" name="<?php echo $this->name; ?>_player_width[]" value="<?php echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) ); ?>" />
+                    <label><?php // _e('Player Width ( pixels )', 'cp'); ?></label>
+                    <input type="text" name="<?php // echo $this->name; ?>_player_width[]" value="<?php //echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) ); ?>" />
 
                 </div>-->
+				
+				<?php if( !empty( $data ) ) { echo $this->show_media_caption($data); } ?>
+					
                 <?php
                 parent::get_module_delete_link();
                 ?>
@@ -136,6 +120,45 @@ class video_module extends Unit_Module {
         $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
+    }
+
+    function show_media_caption( $data ) {
+        ?>
+		<div class="caption-settings">
+	        <label class="show_media_caption">
+	            <input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'checked' : (!isset($data->show_media_caption) ) ? 'checked' : '' ) ?> />
+				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'yes' : 'no' ) ?>" />
+	            <?php _e('Show Caption', 'cp'); ?><br />
+	            <span class="element_title_description"><?php _e('Show a caption for this video.', 'cp'); ?></span>
+	        </label>
+			<div class="caption-source <?php echo isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? '' : 'hidden'; ?>">
+				<?php 
+					$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' ); 
+				?>
+                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
+				<span class="element_title_description">
+					<?php
+						$no_caption_text = __('Media has no caption.');
+						$attachment_id = cp_get_attachment_id_from_src( $data->video_url );
+						if ( !empty( $attachment_id ) ){
+							$attachment = get_post( $attachment_id );
+							$caption = $attachment->post_excerpt;
+							if ( !empty( $caption ) ) {
+								echo '"' . $caption . '"';
+							} else {
+								echo $no_caption_text;
+							}
+						} else {
+							echo $no_caption_text;
+						}
+					?>
+				</span>
+                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="custom" <?php checked($caption_source, 'custom', true); ?>/> <?php _e('Custom Caption','cp'); ?>
+				<input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>" />
+				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo isset($data->caption_custom_text) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo isset($data->caption_custom_text) ? '' : __( 'Please enter a custom caption here.', 'cp' ); ?>" /><br /><br />
+			</div>
+		</div>
+        <?php
     }
 
     function cp_video_shortcode( $html ) {
@@ -178,13 +201,19 @@ class video_module extends Unit_Module {
                                 $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
                             }
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
-
-                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                            } else {
-                                $data->metas['show_title_on_front'] = 'no';
-                            }
+                            //
+                            // if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
+                            //     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            // } else {
+                            //     $data->metas['show_title_on_front'] = 'no';
+                            // }
                             //$data->metas['player_height'] = $_POST[$this->name . '_player_height'][$key];
+							
+                            $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
+							$data->metas['show_media_caption'] = $_POST[$this->name . '_show_caption_field'][$key];
+							$data->metas['caption_custom_text'] = $_POST[$this->name . '_caption_custom_text'][$key];
+							$data->metas['caption_field'] = $_POST[$this->name . '_caption_field'][$key];
+							
 
                             parent::update_module($data);
                         }
