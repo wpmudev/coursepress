@@ -160,7 +160,7 @@ class radio_input_module extends Unit_Module {
         <?php echo $this->assessable_answer_element($data); ?>
                 </div>
 
-                <div class="group-check second-group-check" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'no') || (!isset($data->gradable_answer)) ? 'style="display:none;"' : ''; ?>">
+                <div class="group-check second-group-check" <?php echo (isset($data->gradable_answer) && $data->gradable_answer == 'no') ? 'style="display:none;"' : ''; ?> />
         <?php echo $this->minimum_grade_element($data); ?>
         <?php echo $this->limit_attempts_element($data); ?>
                 </div>

@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
       //numberFormat: "C"
     });*/
     
-    $(".assessable_checkbox").on('change', function(){
+    $(".assessable_checkbox").live('change', function(){
         var checked = $(this).prop('checked');
         var second_group = $(this).parent().parent().parent().find('.second-group-check');
         if(checked){
@@ -1731,7 +1731,7 @@ jQuery( document ).ready( function( $ ) {
 	
 	
 	/* Show Media Caption Toggle */	
-	$('[name*="show_media_caption"]').change( function( event ) {
+	$('[name*="show_media_caption"]').live("change", function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).parents('.caption-settings').find('.caption-source').removeClass('hidden');
 			$(this).siblings('[name*="show_caption_field"]').val('yes');
@@ -1740,7 +1740,7 @@ jQuery( document ).ready( function( $ ) {
 			$(this).siblings('[name*="show_caption_field"]').val('no');
 		}
 	});
-	$('[name*="_caption_source"]').change( function( event ) {
+	$('[name*="_caption_source"]').live("change", function( event ) {
 		if ( $(this).val() == 'media' ) {
 			$(this).siblings('[name*="caption_field"]').val('media');
 		} else {
@@ -1750,7 +1750,7 @@ jQuery( document ).ready( function( $ ) {
 		
 
 	/* Set hidden title field. Resolves issue with $_POST arrays. */
-	$('[name*="show_title_on_front"]').change( function( event ) {
+	$('[name*="show_title_on_front"]').live("change", function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).siblings('[name*="show_title_field"]').val('yes');
 		} else {
@@ -1759,7 +1759,7 @@ jQuery( document ).ready( function( $ ) {
 	});
 
 	/* Set hidden mandatory field. Resolves issue with $_POST arrays. */
-	$('[name*="module_mandatory_answer"]').change( function( event ) {
+	$('[name*="module_mandatory_answer"]').live("change", function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).siblings('[name*="module_mandatory_answer"]').val('yes');
 		} else {
@@ -1768,7 +1768,7 @@ jQuery( document ).ready( function( $ ) {
 	});
 
 	/* Set hidden Assessable field. Resolves issue with $_POST arrays. */
-	$('[name*="module_gradable_answer"]').change( function( event ) {
+	$('[name*="module_gradable_answer"]').live("change", function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).siblings('[name*="module_gradable_answer"]').val('yes');
 		} else {
@@ -1777,7 +1777,7 @@ jQuery( document ).ready( function( $ ) {
 	});
 
 	/* Set hidden Limit Attempts field. Resolves issue with $_POST arrays. */
-	$('[name*="module_limit_attempts"]').change( function( event ) {
+	$('[name*="module_limit_attempts"]').live("change", function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).siblings('[name*="module_limit_attempts_field"]').val('yes');
 		} else {
