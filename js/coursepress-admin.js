@@ -1011,7 +1011,6 @@ jQuery(document).ready(function()
 
     jQuery('.featured_url_button').on('click', function()
     {
-
         var target_url_field = jQuery(this).prevAll(".featured_url:first");
 
         wp.media.string.props = function(props, attachment)
@@ -1155,6 +1154,9 @@ function cp_is_extension_allowed(filename, type) {
             if (cp_is_valid_url(filename) && extension.length > 5) {
                 return true;
             } else {
+				if( filename.length == 0 ) {
+					return true;
+				}
                 return false;
             }
         }
@@ -1167,6 +1169,9 @@ function cp_is_extension_allowed(filename, type) {
             if (cp_is_valid_url(filename) && extension.length > 5) {
                 return true;
             } else {
+				if( filename.length == 0 ) {
+					return true;
+				}
                 return false;
             }
         }
@@ -1179,6 +1184,9 @@ function cp_is_extension_allowed(filename, type) {
             if (cp_is_valid_url(filename) && extension.length > 5) {
                 return true;
             } else {
+				if( filename.length == 0 ) {
+					return true;
+				}
                 return false;
             }
         }
@@ -1211,5 +1219,5 @@ jQuery(function($) {
                 $(obj).attr('disabled', false);
             });
         }
-    });
+     });
 });

@@ -537,6 +537,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                 }
                                                                                                                 ?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
                                                                                                                        <?php
+																													   $disabled = '';
                                                                                                                        if ( isset($preview_unit[$unit->ID]) ) {
                                                                                                                            if ( $preview_unit[$unit->ID] == 'on' ) {
                                                                                                                                $disabled = 'disabled';

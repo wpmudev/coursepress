@@ -1309,6 +1309,13 @@ jQuery(document).ready(function($) {
         mark_dirty(this);
 		section_touched(this);
     });
+    $('.course-section .course_video_url').keydown(function() {
+        // Mark as dirty
+        mark_dirty(this);
+		section_touched(this);
+    });
+	
+	
     $('.course-form textarea').change(function() {
         // Mark as dirty		
         mark_dirty(this);
