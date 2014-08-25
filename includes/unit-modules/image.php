@@ -25,12 +25,8 @@ class image_module extends Unit_Module {
             <?php } ?>
 
             <?php
-            if ( $data->image_url != '' ) {
-                ?>  
-                <div class="image_holder">
-                    <img src="<?php echo $data->image_url; ?>" />
-                </div>
-            <?php } ?>
+				echo cp_do_attachment_caption( $data );
+			?>
         </div>
         <?php
     }
@@ -124,10 +120,7 @@ class image_module extends Unit_Module {
 	        </label>
 			<div class="caption-source <?php echo isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? '' : 'hidden'; ?>">
 				<?php 
-					cp_write_log($data->caption_field);
 					$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' ); 
-					cp_write_log($caption_source);
-
 				?>
                 <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
 				<span class="element_title_description">
@@ -190,14 +183,6 @@ class image_module extends Unit_Module {
 							$data->metas['caption_custom_text'] = $_POST[$this->name . '_caption_custom_text'][$key];
 							$data->metas['caption_field'] = $_POST[$this->name . '_caption_field'][$key];
 							
-                            // if ( isset($_POST[$this->name . '_show_media_caption'][$key]) ) {
-                            //     $data->metas['show_media_caption'] = 'yes';
-                            // } else {
-                            //     $data->metas['show_media_caption'] = 'no';
-                            // }
-							
-							// cp_write_log( $data->metas['show_media_caption'] );
-
                             parent::update_module($data);
                         }
                     }
