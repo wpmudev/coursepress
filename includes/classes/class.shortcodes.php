@@ -1212,6 +1212,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( $course->details->course_structure_options == 'on' ) {
                 $content = '';
 
+                $student = new Student(get_current_user_id());
+                $existing_student = $student->has_access_to_course($course_id);
+
                 $show_unit = $course->details->show_unit_boxes;
                 $preview_unit = $course->details->preview_unit_boxes;
 
@@ -1246,8 +1249,16 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                     if ( isset($show_unit[$unit->ID]) && $show_unit[$unit->ID] == 'on' && $unit->post_status == 'publish' ) {
                                         ?>
                                         <li>
-                                            <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
-                                                <div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+                                            <label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label <?php echo $existing_student ? 'single_column' : '';?>">
+												<?php
+													$title = '';
+													if ( $existing_student ) {
+														$title = '<a href="' . $unit_class->get_permalink() . '">' . $unit->post_title . '</a>';
+													} else {
+														$title = $unit->post_title;
+													}
+												?>
+                                                <div class="tree-unit-left"><?php echo $title; ?></div>
                                                 <div class="tree-unit-right">
 
                                                     <?php if ( $course->details->course_structure_time_display == 'on' ) { ?>
@@ -1255,7 +1266,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                     <?php } ?>
 
                                                     <?php
-                                                    if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' && $unit_class->get_permalink() ) {
+                                                    if ( isset($preview_unit[$unit->ID]) && $preview_unit[$unit->ID] == 'on' && $unit_class->get_permalink() && ! $existing_student ) {
                                                         ?>
                                                         <a href="<?php echo $unit_class->get_permalink(); ?>?try" class="preview_option"><?php echo $free_text; ?></a>
                                                     <?php } ?>
@@ -1267,15 +1278,25 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                 for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                                     if ( isset($show_page[$unit->ID . '_' . $i]) && $show_page[$unit->ID . '_' . $i] == 'on' ) {
                                                         ?>
-                                                        <li class="course_structure_page_li">
+                                                        <li class="course_structure_page_li <?php echo $existing_student ? 'single_column' : '';?>">
                                                             <?php
                                                             $pages_num = 1;
                                                             $page_title = $unit_class->get_unit_page_name($i);
                                                             ?>
 
                                                             <label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+																<?php
+																	$title = '';
+																	if ( $existing_student ) {
+																		$p_title = isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp');
+																		$title = '<a href="' . $unit_class->get_permalink() . '/' . 'page/' . $i . '">' . $p_title . '</a>';
+																	} else {
+																		$title = isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp');
+																	}
+																?>
+																
                                                                 <div class="tree-page-left">
-                                                                    <?php echo (isset($page_title) && $page_title !== '' ? $page_title : __('Untitled Page', 'cp')); ?>
+                                                                    <?php echo $title; ?>
                                                                 </div>
                                                                 <div class="tree-page-right">
 
@@ -1284,7 +1305,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                                     <?php } ?>
 
                                                                     <?php
-                                                                    if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' && $unit_class->get_permalink() ) {
+                                                                    if ( isset($preview_page[$unit->ID . '_' . $i]) && $preview_page[$unit->ID . '_' . $i] == 'on' && $unit_class->get_permalink() && ! $existing_student ) {
                                                                         ?>
                                                                         <a href="<?php echo $unit_class->get_permalink(); ?>page/<?php echo $i; ?>?try" class="preview_option"><?php echo $free_text; ?></a>
                                                                     <?php } ?>

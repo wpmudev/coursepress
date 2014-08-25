@@ -20,10 +20,12 @@ class video_module extends Unit_Module {
     function front_main( $data ) {
         ?>
         <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
+
             <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                 <h2 class="module_title"><?php echo $data->post_title; ?></h2>
             <?php } ?>
             <?php
+				remove_filter('the_content', 'wpautop');
 				echo cp_do_attachment_caption( $data );
             ?>
         </div>

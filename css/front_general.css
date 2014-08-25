@@ -746,7 +746,7 @@ label > .tree{
 }
 
 .tree .tree-unit-left{
-    //display: inline-block;
+    /*display: inline-block;*/
     width: 70%;
     text-overflow:ellipsis;
     white-space: nowrap;
@@ -755,7 +755,7 @@ label > .tree{
 }
 
 .tree .tree-unit-right{
-    //display: inline-block;
+    /*display: inline-block;*/
     width: 29%;
     float: right;
 }
@@ -765,12 +765,16 @@ label > .tree{
     display: inline-block;
     font-size: 13px;
     font-weight: 400;
-/*    text-transform: uppercase;*/
-    text-transform: capitalize;
+    text-transform: uppercase;
+/*    text-transform: capitalize;*/
     margin-left: 3px;
     float: right;
     margin-top: 2px;
     margin-right: 3px;
+	text-decoration: none;
+}
+.tree .tree-unit-right a:hover;{
+	text-decoration: underline;	
 }
 
 .tree .tree-page-right span{
@@ -787,14 +791,19 @@ label > .tree{
     display: inline-block;
     font-size: 13px;
     font-weight: 400;
-/*    text-transform: uppercase;*/
-    text-transform: capitalize;
+    text-transform: uppercase;
+/*    text-transform: capitalize;*/
     float: right;
     margin-top: 2px;
-    margin-right: 3px;}
+    margin-right: 3px;
+	text-decoration: none;
+}
+.tree .tree-page-right a:hover {
+	text-decoration: underline;
+}
 
 .tree .tree-unit-right span{
-    //display: inline-block;
+    /*display: inline-block;*/
     text-align: right;
     float: right;
     margin-right: 7px;
@@ -846,6 +855,16 @@ label > .tree{
 
 .tree ul{
     margin-left: 30px;
+}
+
+.course_structure_page_li.single_column .tree-page-left,
+.course_structure_unit_label.single_column .tree-unit-left {
+	width: 100%;
+}
+
+.course_structure_page_li.single_column .tree-page-right,
+.course_structure_unit_label.single_column .tree-unit-right {
+	display:none;
 }
 
 /*.wp-video,
@@ -1105,4 +1124,57 @@ span.failed_element{
     width: 49%;
     display: inline-block;
     text-align: right;
+}
+
+
+.course_structure_page_li.single_column a,
+.course_structure_unit_label.single_column a {
+	text-decoration: none;
+	display: block;
+	padding: 2px;
+}
+.course_structure_page_li.single_column a {
+	padding: 2px 2px 2px 20px;
+}
+
+.course_structure_page_li.single_column a:hover,
+.course_structure_unit_label.single_column a:hover {
+	text-decoration: underline;
+	background: #efefef;
+}
+
+.course-structure-block ul.tree,
+.course-structure-block ul.tree ul
+{
+	margin: 0 0 24px 15px;
+	padding:0;
+}
+
+
+.cp_course_strucutre_widget .widget-title {
+	margin-bottom: 0;
+}
+
+.cp_course_strucutre_widget .course_structure_unit_label {
+	border-top: none;
+}
+
+.cp_course_strucutre_widget .course_structure_unit_label.single_column a {
+	padding:0;
+}
+
+.cp_course_strucutre_widget .course_structure_page_li {
+	padding: 0 0 0 15px;
+}
+
+.cp_course_strucutre_widget .course_structure_page_li.single_column {
+	padding: 0;
+}
+
+.cp_course_strucutre_widget .course_structure_page_li.single_column a {
+	padding: 0 0 0 15px;
+}
+	
+.cp_course_strucutre_widget .course-structure-block ul.tree, .cp_course_strucutre_widget .course-structure-block ul.tree ul {
+	margin: 0 0 0 10px;
 }

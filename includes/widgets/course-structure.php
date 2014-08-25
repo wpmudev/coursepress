@@ -75,7 +75,8 @@ class CP_Course_Structure extends WP_Widget {
 	        }
 			
 			echo '<div class="course_structure_widget">';
-	        $course->course_structure_front( __('Free', 'cp') );
+	        // $course->course_structure_front( __('Free', 'cp') );
+			echo do_shortcode('[course_structure course_id="' . $course_id . '" label="" show_title="no" show_divider="no"]');
 			// Strange bug.
 			echo '</div>&nbsp;';
 			
