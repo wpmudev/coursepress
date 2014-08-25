@@ -1719,9 +1719,11 @@ function fix_tinymce_in_iframe() {
     },delay);			
 }
 
-/* Show Media Caption Toggle */
+
 jQuery( document ).ready( function( $ ) {
 	
+	
+	/* Show Media Caption Toggle */	
 	$('[name*="show_media_caption"]').change( function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).parents('.caption-settings').find('.caption-source').removeClass('hidden');
@@ -1731,7 +1733,16 @@ jQuery( document ).ready( function( $ ) {
 			$(this).siblings('[name*="show_caption_field"]').val('no');
 		}
 	});
+	$('[name*="_caption_source"]').change( function( event ) {
+		if ( $(this).val() == 'media' ) {
+			$(this).siblings('[name*="caption_field"]').val('media');
+		} else {
+			$(this).siblings('[name*="caption_field"]').val('custom');
+		}
+	});
+		
 
+	/* Set hidden title field. Resolves issue with $_POST arrays. */
 	$('[name*="show_title_on_front"]').change( function( event ) {
 		if ( $(this).attr('checked') ) {
 			$(this).siblings('[name*="show_title_field"]').val('yes');
@@ -1740,11 +1751,30 @@ jQuery( document ).ready( function( $ ) {
 		}
 	});
 
-	$('[name*="_caption_source"]').change( function( event ) {
-		if ( $(this).val() == 'media' ) {
-			$(this).siblings('[name*="caption_field"]').val('media');
+	/* Set hidden mandatory field. Resolves issue with $_POST arrays. */
+	$('[name*="module_mandatory_answer"]').change( function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).siblings('[name*="module_mandatory_answer"]').val('yes');
 		} else {
-			$(this).siblings('[name*="caption_field"]').val('custom');
+			$(this).siblings('[name*="module_mandatory_answer"]').val('no');
+		}
+	});
+
+	/* Set hidden Assessable field. Resolves issue with $_POST arrays. */
+	$('[name*="module_gradable_answer"]').change( function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).siblings('[name*="module_gradable_answer"]').val('yes');
+		} else {
+			$(this).siblings('[name*="module_gradable_answer"]').val('no');
+		}
+	});
+
+	/* Set hidden Limit Attempts field. Resolves issue with $_POST arrays. */
+	$('[name*="module_limit_attempts"]').change( function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).siblings('[name*="module_limit_attempts_field"]').val('yes');
+		} else {
+			$(this).siblings('[name*="module_limit_attempts_field"]').val('no');
 		}
 	});
 

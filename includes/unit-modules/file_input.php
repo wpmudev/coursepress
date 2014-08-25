@@ -235,24 +235,26 @@ class file_input_module extends Unit_Module {
                             // }
 							$data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
 
-                            if ( isset($_POST[$this->name . '_mandatory_answer'][$key]) ) {
-                                $data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer'][$key];
-                            } else {
-                                $data->metas['mandatory_answer'] = 'no';
-                            }
+                            // if ( isset($_POST[$this->name . '_mandatory_answer'][$key]) ) {
+                            //     $data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer'][$key];
+                            // } else {
+                            //     $data->metas['mandatory_answer'] = 'no';
+                            // }
+							$data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer_field'][$key];
 
-                            if ( isset($_POST[$this->name . '_gradable_answer'][$key]) ) {
-                                $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
-                            } else {
-                                $data->metas['gradable_answer'] = 'no';
-                            }
+                            // if ( isset($_POST[$this->name . '_gradable_answer'][$key]) ) {
+                            //     $data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer'][$key];
+                            // } else {
+                            //     $data->metas['gradable_answer'] = 'no';
+                            // }
+							$data->metas['gradable_answer'] = $_POST[$this->name . '_gradable_answer_field'][$key];
 
-                            if ( isset($_POST[$this->name . '_limit_attempts'][$key]) ) {
-                                $data->metas['limit_attempts'] = $_POST[$this->name . '_limit_attempts'][$key];
-                            } else {
-                                $data->metas['limit_attempts'] = 'no';
-                            }
-
+                            // if ( isset($_POST[$this->name . '_limit_attempts'][$key]) ) {
+                            //     $data->metas['limit_attempts'] = $_POST[$this->name . '_limit_attempts'][$key];
+                            // } else {
+                            //     $data->metas['limit_attempts'] = 'no';
+                            // }
+                            $data->metas['limit_attempts'] = $_POST[$this->name . '_limit_attempts_field'][$key];							
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
                             parent::update_module($data);

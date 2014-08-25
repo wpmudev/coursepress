@@ -534,6 +534,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="mandatory_answer">
                 <input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo ( isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset($data->mandatory_answer) ) ? 'checked' : '' ) ?> />
+                <input type="hidden" name="<?php echo $this->name; ?>_mandatory_answer_field[]" value="<?php echo ( isset($data->mandatory_answer) && $data->mandatory_answer == 'yes' ? 'yes' : 'no' ) ?>" />
                 <?php _e('Mandatory Answer', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('A response is required to continue', 'cp'); ?></span>
             </label>
@@ -544,6 +545,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="mandatory_answer">
                 <input type="checkbox" class="assessable_checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'checked' : (!isset($data->gradable_answer) ) ? 'checked' : '' ) ?> />
+                <input type="hidden" name="<?php echo $this->name; ?>_gradable_answer_field[]" value="<?php echo ( isset($data->gradable_answer) && $data->gradable_answer == 'yes' ? 'yes' : 'no' ) ?>" />				
                 <?php _e('Assessable', 'cp'); ?><br />
                 <span class="element_title_description"><?php _e('The answer will be graded', 'cp'); ?></span>
             </label>
@@ -585,6 +587,7 @@ if ( !class_exists('Unit_Module') ) {
             ?>
             <label class="limit_attampts_label">
                 <input type="checkbox" class="limit_attempts_checkbox" name="<?php echo $this->name; ?>_limit_attempts[]" value="yes" <?php echo ( isset($data->limit_attempts) && $data->limit_attempts == 'yes' ? 'checked' : (!isset($data->limit_attempts) ) ? 'checked' : '' ) ?> />
+                <input type="hidden" name="<?php echo $this->name; ?>_limit_attempts_field[]" value="<?php echo ( isset($data->limit_attempts) && $data->limit_attempts == 'yes' ? 'yes' : 'no' ) ?>" />								
                 <?php _e('Limit Attempts', 'cp'); ?><input type="text" class="attempts_spinner" name="<?php echo $this->name; ?>_limit_attempts_value[]" value="<?php echo ( isset($data->limit_attempts_value) ? $data->limit_attempts_value : 1 ); ?>" /><br>
                 <span class="element_title_description"><?php _e('Limit attempts of this task', 'cp'); ?></span>
             </label>
