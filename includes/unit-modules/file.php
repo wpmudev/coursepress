@@ -144,11 +144,13 @@ class file_module extends Unit_Module {
                             $data->metas['link_text'] = $_POST[$this->name . '_link_text'][$key];
                             $data->metas['file_url'] = $_POST[$this->name . '_file_url'][$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
-                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                            } else {
-                                $data->metas['show_title_on_front'] = 'no';
-                            }
+                            // if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
+                            //     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            // } else {
+                            //     $data->metas['show_title_on_front'] = 'no';
+                            // }
+							$data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
+							
                             parent::update_module($data);
                         }
                     }

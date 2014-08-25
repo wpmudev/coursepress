@@ -126,11 +126,12 @@ class text_module extends Unit_Module {
                             $data->content = $_POST[$this->name . '_content'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
-                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                            } else {
-                                $data->metas['show_title_on_front'] = 'no';
-                            }
+                            // if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
+                            //     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            // } else {
+                            //     $data->metas['show_title_on_front'] = 'no';
+                            // }
+							$data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
                             parent::update_module($data);
                         }
                     }

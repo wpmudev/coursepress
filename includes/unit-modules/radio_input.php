@@ -314,11 +314,12 @@ class radio_input_module extends Unit_Module {
                             $data->metas['limit_attempts_value'] = $_POST[$this->name . '_limit_attempts_value'][$key];
                             $data->metas['minimum_grade_required'] = $_POST[$this->name . '_minimum_grade_required'][$key];
 
-                            if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                            } else {
-                                $data->metas['show_title_on_front'] = 'no';
-                            }
+                            // if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
+                            //     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                            // } else {
+                            //     $data->metas['show_title_on_front'] = 'no';
+                            // }
+							$data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
 
                             if ( isset($_POST[$this->name . '_mandatory_answer'][$key]) ) {
                                 $data->metas['mandatory_answer'] = $_POST[$this->name . '_mandatory_answer'][$key];

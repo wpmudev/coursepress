@@ -120,11 +120,13 @@ if ( is_chat_plugin_active() ) {
                                 $data->title = $_POST[$this->name . '_title'][$key];
                                 $data->content = $_POST[$this->name . '_content'][$key];
                                 $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                                if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
-                                    $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
-                                } else {
-                                    $data->metas['show_title_on_front'] = 'no';
-                                }
+                                // if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
+                                //     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
+                                // } else {
+                                //     $data->metas['show_title_on_front'] = 'no';
+                                // }
+								
+								$data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
                                 parent::update_module($data);
                             }
                         }
