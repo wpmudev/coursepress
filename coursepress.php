@@ -813,7 +813,7 @@ if ( !class_exists('CoursePress') ) {
 
         function signup_enroll_student( $args = array() ) {
             // cp_write_log('enrolling user (or passing them on to payment)....');
-            // Handle enrolment stuff
+            // Handle enrollment stuff
             $student_id = get_current_user_id();
             $student_id = $student_id > 0 ? $student_id : $args['student_id'];
             $course_id = false;
