@@ -1161,7 +1161,10 @@ jQuery(document).ready(function($) {
 
         // Get current "active" step
         var activeElement = $('.course-section.step.active')[0];
-        var activeStep = $(activeElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
+		var activeStep = 1;
+		if (typeof activeElement != 'undefined') {
+        	activeStep = $(activeElement).attr('class').match(/step-\d+/)[0].replace(/^\D+/g, '');
+		}
 		
         var thisElement = $(this).parents('.course-section.step')[0];
         var thisElementFormVisible = $(thisElement).children('.course-form').is(':visible');

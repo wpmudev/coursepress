@@ -813,7 +813,7 @@ if ( !class_exists('CoursePress') ) {
 
         function signup_enroll_student( $args = array() ) {
             // cp_write_log('enrolling user (or passing them on to payment)....');
-            // Handle enrolment stuff
+            // Handle enrollment stuff
             $student_id = get_current_user_id();
             $student_id = $student_id > 0 ? $student_id : $args['student_id'];
             $course_id = false;
@@ -2308,6 +2308,12 @@ if ( !class_exists('CoursePress') ) {
                     $ajax_response['mp_product_id'] = $mp_product_id;
                     $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
                     $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
+					
+					if( !empty( $_POST['meta_course_setup_marker'] ) && 'step-6' == $_POST['meta_course_setup_marker'] ) {
+						update_post_meta( $course_id, 'course_setup_complete', 'yes');
+					}
+					
+					
                 } else {
                     $ajax_response['success'] = false;
                     $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');

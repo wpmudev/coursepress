@@ -597,7 +597,7 @@
 							<ul class="cp-shortcode-options">
 								<li><span>course_full_text</span> – <?php _e( 'Text to display if the course is full. Default: Course Full', 'cp' ); ?></li>
 								<li><span>course_expired_text</span> – <?php _e( 'Text to display when the course has expired. Default: Not available', 'cp' ); ?></li>
-								<li><span>enrollment_finished_text</span> – <?php _e( 'Text to display when enrolments are finished (expired). Default: Enrollments Finished', 'cp' ); ?></li>
+								<li><span>enrollment_finished_text</span> – <?php _e( 'Text to display when enrollments are finished (expired). Default: Enrollments Finished', 'cp' ); ?></li>
 								<li><span>enrollment_closed_text</span> – <?php _e( 'Text to display when enrollments haven’t started yet. Default: Enrollments Closed', 'cp' ); ?></li>
 								<li><span>enroll_text</span> – <?php _e( 'Text to display when course is ready for enrollments. Default: Enroll now', 'cp' ); ?></li>
 								<li><span>signup_text</span> – <?php _e( 'Text to display when course is ready for enrollments, but the user is not logged in (visitor). Default: Signup!', 'cp' ); ?></li>
