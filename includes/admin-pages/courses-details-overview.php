@@ -917,8 +917,10 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                 <div class="course-section step step-6 <?php echo 'step-6' == $course_setup_marker ? 'save-marker active' : ''; ?>">
                                     <div class='course-section-title'>
                                         <?php
+										
                                         $step_6_status = empty($course_setup_progress['step-6']) ? '' : $course_setup_progress['step-6'];
-                                        $step_6_status = !$gateways ? 'attention' : $step_6_status;
+                                        $step_6_status = !$gateways && ( isset($paid_course) && $paid_course == 'on' ) ? 'attention' : $step_6_status;
+										
                                         ?>
                                         <div class="status <?php echo $step_6_status; ?> "></div>									
                                         <h3><?php _e('Step 6 - Enrollment & Course Cost', 'cp') ?></h3>						
