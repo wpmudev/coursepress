@@ -2277,6 +2277,11 @@ label.bold-label{
     margin-bottom: 20px;
 }
 
+.unit_page_title input[type=checkbox]{
+    width: 16px;
+    margin-bottom: 0px;
+}
+
 .unit_page_title label{
     display: block;
     padding-top: 4px;
@@ -2813,5 +2818,5 @@ label.minimum_grade_required_label{
 .unit_page_title label.show_page_title {
 	font-size: 12px;
 	font-weight: normal;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
