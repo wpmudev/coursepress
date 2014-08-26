@@ -284,12 +284,17 @@ if ( !class_exists('Unit_Module') ) {
                     //wp_redirect( full_url( $_SERVER ). '?saved=ok' );
                     wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                 } else {
-                    if ( $paged != 1 ) {
-                        //wp_redirect( full_url( $_SERVER ) );
+                    if ( $_POST['event_origin'] == 'button' ) {
                         wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
                     } else {
                         wp_redirect(full_url($_SERVER));
                     }
+                    /* if ( $paged != 1 ) {
+                      //wp_redirect( full_url( $_SERVER ) );
+                      wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
+                      } else {
+                      wp_redirect(full_url($_SERVER));
+                      } */
                 }
 
                 exit;
@@ -311,7 +316,7 @@ if ( !class_exists('Unit_Module') ) {
                 exit;
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                         ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                           ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
 
                 <?php

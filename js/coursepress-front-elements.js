@@ -75,8 +75,8 @@ function check_for_mandatory_answers() {
             jQuery('.mandatory_message').show("slow");
             return false;
         }
-       
-    }else{
+
+    } else {
         return true;
     }
 }
@@ -107,11 +107,13 @@ jQuery(document).ready(function() {
         var action = jQuery("#modules_form").attr("action");
         var direct_url = '';
 
+        jQuery("#modules_form").remove('.event_origin');
+
         if (e.originalEvent) {//clicked button directly, not pagination
 
+            jQuery("#modules_form").append('<input type="hidden" name="event_origin" value="button" />');
             var active_page = jQuery('#navigation-pagination .active a').html();
             var last_page = jQuery('#navigation-pagination li:last-child a').html();
-
 
             if (active_page != last_page) {
                 next_page = parseInt(active_page) + 1;
@@ -120,6 +122,7 @@ jQuery(document).ready(function() {
                 next_page = parseInt(last_page);// done button + 1;
             }
         } else {
+            jQuery("#modules_form").append('<input type="hidden" name="event_origin" value="pagination" />');
             next_page = jQuery('#go_to_page').val();
         }
 
