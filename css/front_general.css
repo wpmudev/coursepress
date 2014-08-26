@@ -859,12 +859,12 @@ label > .tree{
 
 .course_structure_page_li.single_column .tree-page-left,
 .course_structure_unit_label.single_column .tree-unit-left {
-	width: 100%;
+	width: 75%;
 }
 
 .course_structure_page_li.single_column .tree-page-right,
 .course_structure_unit_label.single_column .tree-unit-right {
-	display:none;
+	width: 25%;
 }
 
 /*.wp-video,
