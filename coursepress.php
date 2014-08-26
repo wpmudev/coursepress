@@ -50,6 +50,13 @@ if ( !class_exists('CoursePress') ) {
 
         function __construct() {
 
+
+            global $wpmudev_notices;
+			// Todo: Add screens
+            // $wpmudev_notices[] = array( 'id' => XXX, 'name' => 'CoursePress', 'screens' => array( 'xxx', 'xxx' ) );
+            include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
+			
+
 //setup our variables
             $this->init_vars();
 
