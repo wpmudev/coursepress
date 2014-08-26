@@ -285,8 +285,8 @@ if ( !class_exists('Unit_Module') ) {
                     if ( $_POST['event_origin'] == 'button' ) {
                         wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                         exit;
-                    }else{
-                        wp_redirect(full_url($_SERVER)).'?saved=ok';
+                    } else {
+                        wp_redirect(full_url($_SERVER)) . '?saved=ok';
                     }
                 } else {
                     if ( $_POST['event_origin'] == 'button' ) {
@@ -321,7 +321,7 @@ if ( !class_exists('Unit_Module') ) {
                 exit;
             }
             ?>
-            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                            ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+            <form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit(get_permalink($unit_id)); //strtok( $_SERVER["REQUEST_URI"], '?' );                               ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
                 <input type="hidden" id="go_to_page" value="" />
 
                 <?php
@@ -652,9 +652,15 @@ if ( !class_exists('Unit_Module') ) {
                                 <span class="passed_element">(<?php _e('Passed', 'cp'); ?>)</span>
                                 <?php
                             } else {
-                                ?>
-                                <span class="failed_element">(<?php _e('Failed', 'cp'); ?>)</span>
-                                <?php
+                                if ( $attempts_remaining > 0 ) {
+                                    ?>
+                                    <span class="failed_element">(<?php _e('Not yet passed', 'cp'); ?>)</span>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <span class="failed_element">(<?php _e('Not Passed', 'cp'); ?>)</span>
+                                    <?php
+                                }
                             }
                         }
                         ?>
