@@ -277,19 +277,26 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
                                 $module = new Unit_Module();
                                 $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id );
+								
+								$show_title = get_post_meta( $unit_id, 'show_page_title', true );
 
                                 for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                     ?>
                                     <div id="unit-page-<?php echo $i; ?>">
                                         <div class='course-details elements-holder'>
                                             <div class="unit_page_title">
-                                                <label><?php _e('Page Title', 'cp'); ?>
+                                                <label><?php _e('Page Label', 'cp'); ?>
                                                     <span class="delete_unit_page">							
                                                         <a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e('Delete Page', 'cp'); ?></a>
                                                     </span>
                                                 </label>
-                                                <div class="description"><?php _e('The title will be displayed on the Course Overview and Unit page'); ?></div>
+                                                <div class="description"><?php _e('The label will be displayed on the Course Overview and Unit page'); ?></div>
                                                 <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i)); ?>" name="page_title[]" class="page_title" />
+									            <label class="show_page_title">
+									                <input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset($show_title[$i-1]) && $show_title[$i-1] == 'yes' ? 'checked' : (!isset($show_title[$i-1]) ) ? 'checked' : '' ) ?> />
+									                <input type="hidden" name="show_page_title_field[]" value="<?php echo ( (isset($show_title[$i-1]) && $show_title[$i-1] == 'yes') || !isset($show_title[$i-1]) ? 'yes' : 'no' ) ?>" />
+									                <?php _e('Show page label on unit.', 'cp'); ?><br />
+									            </label>
 
                                                 <label><?php _e('Build Page', 'cp'); ?></label>
                                                 <div class="description"><?php _e('Click to add elements to the page'); ?></div>

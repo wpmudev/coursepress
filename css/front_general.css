@@ -1105,14 +1105,20 @@ table.popup-payment-info th {
 }
 
 span.passed_element{
-    color:green;
-    text-transform: uppercase;
+	/*green*/
+    color: #008000;
 }
 
 span.failed_element{
-    color:red;
-     text-transform: uppercase;
+	/*darkred*/
+    color: #880000;
 }
+
+span.non_assessed_element{
+	/*darkgray*/
+    color:#a9a9a9;
+}
+
 
 .module_grade_left{
     width: 50%;

@@ -2256,6 +2256,10 @@ label.bold-label{
     margin-top: 10px;
 }
 
+.unit_page_title .page_title {
+	margin-bottom: 5px;
+}
+
 .coursepress_page_course_details .course-details hr{
     margin-left: -17px;
 }
@@ -2803,4 +2807,11 @@ label.minimum_grade_required_label{
 
 .second-group-check label{
     display: inline-block;
+}
+
+
+.unit_page_title label.show_page_title {
+	font-size: 12px;
+	font-weight: normal;
+	margin-bottom: 10px;
 }

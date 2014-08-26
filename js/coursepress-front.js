@@ -22,6 +22,7 @@ jQuery(document).ready(function($) {
     // Use data-link attribute to follow links
     $('button').click(function(event) {
         if ($(this).data('link')) {
+			event.preventDefault();
             window.location.href = $(this).data('link');
         }
     });
