@@ -72,8 +72,8 @@ if ( isset( $_POST['course_id'] ) ) {
 
                         <?php
                         $columns = array(
-                            "course" => __( '', 'cp' ),
-                            "additional_info" => __( '', 'cp' ),
+                            "course" => __( ' ', 'cp' ),
+                            "additional_info" => __( ' ', 'cp' ),
                         );
                         ?>
 

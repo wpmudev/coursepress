@@ -30,6 +30,14 @@
 
 if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
+
+function myplugin_init() {
+ $plugin_dir = basename(dirname(__FILE__));
+ error_log(load_plugin_textdomain( 'cp', false, $plugin_dir ));
+}
+add_action('plugins_loaded', 'myplugin_init');
+// load_plugin_textdomain('cp', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
 // Load the common functions
 require_once( 'includes/functions.php' );
 

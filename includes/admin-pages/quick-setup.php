@@ -80,8 +80,7 @@
 
         <div class="about-text">
             <?php
-            _e('There are many other features in Coursepress, but those are the basics to get you up and running. 
-Now it’s time to publish the course and watch your students learn', 'cp');
+            _e('There are many other features in Coursepress, but those are the basics to get you up and running. Now it’s time to publish the course and watch your students learn', 'cp');
             ?>
             <br /><br />
 

@@ -15,8 +15,8 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
 
                     <?php
                     $columns = array(
-                        "course" => __( '', 'cp' ),
-                        "additional_info" => __( '', 'cp' ),
+                        "course" => __( ' ', 'cp' ),
+                        "additional_info" => __( ' ', 'cp' ),
                     );
                     ?>
 
@@ -31,8 +31,8 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
 
                     <?php
                     $columns = array(
-                        "course" => __( '', 'cp' ),
-                        "additional_info" => __( '', 'cp' ),
+                        "course" => __( ' ', 'cp' ),
+                        "additional_info" => __( ' ', 'cp' ),
                     );
                     ?>
                     <!--COURSES START-->

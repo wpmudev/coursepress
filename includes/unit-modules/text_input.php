@@ -108,8 +108,10 @@ class text_input_module extends Unit_Module {
                     <div class="front_response_content">
                         <?php echo $response->post_content; ?>
                     </div>
-                <?php } else { ?>
-                    <div class="module_textarea_input"><input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> /></div>
+                <?php } else {
+					
+					 ?>
+                    <div class="module_textarea_input"><input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php echo(isset($data->placeholder_text) && $data->placeholder_text !== '' ? esc_attr($data->placeholder_text) : ' ' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : ' ' ); ?>" <?php echo $enabled; ?> /></div>
                 <?php } ?>
 
                 <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response); ?>				
@@ -130,7 +132,7 @@ class text_input_module extends Unit_Module {
                             <?php echo $response->post_content; ?>
                         </div>
                     <?php } else { ?>
-                        <textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php esc_attr_e(isset($data->placeholder_text) && $data->placeholder_text !== '' ? $data->placeholder_text : '' ); ?>" <?php echo $enabled; ?>></textarea>
+                        <textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $this->name . '_front'; ?>" name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" placeholder="<?php echo(isset($data->placeholder_text) && esc_attr($data->placeholder_text) !== '' ? $data->placeholder_text : ' ' ); ?>" <?php echo $enabled; ?>></textarea>
                     <?php } ?>
                 </div>
 

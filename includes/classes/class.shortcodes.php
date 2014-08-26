@@ -3239,7 +3239,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                             <?php do_action('cp_before_all_signup_fields'); ?>
 
-                            <input type="hidden" name="course_id" value="<?php esc_attr_e(isset($_GET['course_id']) ? $_GET['course_id'] : '' ); ?>" />
+                            <input type="hidden" name="course_id" value="<?php esc_attr_e(isset($_GET['course_id']) ? $_GET['course_id'] : ' ' ); ?>" />
                             <input type="hidden" name="redirect_url" value="<?php echo $redirect_url; ?>" />
 
                             <label>

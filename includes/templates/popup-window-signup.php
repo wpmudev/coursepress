@@ -31,14 +31,14 @@
         <input type="password" class="required" id="cp_popup_password_confirmation" placeholder="<?php _e('Password Confirmation', 'cp'); ?>" />
     </label>
 
-    <input type="hidden" value="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>" name="course_id" />
+    <input type="hidden" value="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : ' ' ); ?>" name="course_id" />
 
     <div class="cp_popup_buttons">
         <?php wp_nonce_field('popup_signup_nonce', 'submit_signup_data'); ?>
         <div class="validation_errors"></div>
 
         <label class="cp_popup_col_2">
-            <a href="" class="cp_login_step" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
+            <a href="" class="cp_login_step" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : ' ' ); ?>"><?php _e('Already have an Account?', 'cp'); ?></a>
         </label>
 
         <label class="cp_popup_col_2 second-child">
@@ -46,7 +46,7 @@
             $prereq = get_post_meta($_POST['course_id'], 'prerequisite', true);
             if ( $prereq == 'false' ) {
                 ?>
-                <button class="apply-button signup-data" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : '' ); ?>"><?php _e('Create Account', 'cp'); ?></button>
+                <button class="apply-button signup-data" data-course-id="<?php esc_attr_e(isset($_POST['course_id']) ? $_POST['course_id'] : ' ' ); ?>"><?php _e('Create Account', 'cp'); ?></button>
             <?php } ?>
         </label>
     </div>
