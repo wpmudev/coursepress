@@ -276,6 +276,8 @@ if ( !class_exists('Unit') ) {
             update_post_meta($post_id, 'force_current_unit_completion', $_POST['force_current_unit_completion']);
 
             update_post_meta($post_id, 'page_title', $_POST['page_title']);
+			
+			update_post_meta($post_id, 'show_page_title', $_POST['show_page_title_field']);
 
             if ( !get_post_meta($post_id, 'unit_order', true) ) {
                 update_post_meta($post_id, 'unit_order', $post_id);

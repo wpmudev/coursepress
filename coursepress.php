@@ -2797,6 +2797,7 @@ if ( !class_exists('CoursePress') ) {
 
             $role->add_cap('can_edit_posts');
             $role->add_cap('read');
+			$role->add_cap('upload_files');
 
             foreach ( $instructor_capabilities as $cap ) {
                 $role->add_cap($cap);
@@ -2815,6 +2816,7 @@ if ( !class_exists('CoursePress') ) {
 
             $role->remove_cap('can_edit_posts');
             $role->remove_cap('read');
+			$role->remove_cap('upload_files');			
 
             $capabilities = array_keys(CoursePress_Capabilities::$capabilities['instructor']);
             foreach ( $capabilities as $cap ) {

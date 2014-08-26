@@ -3383,10 +3383,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             echo $mandatory_responses;
                             ?> <?php _e('of', 'coursepress'); ?> <?php echo $mandatory_input_elements; ?> <?php
                             _e('mandatory elements completed', 'coursepress');
-                        } else {
-                            echo $all_responses;
-                            ?> <?php _e('of', 'coursepress'); ?> <?php echo $input_modules_count; ?> <?php
-                            _e('optional elements completed', 'coursepress');
+                        // } else {
+                        //     echo $all_responses;
+                        //     ?> <?php //_e('of', 'coursepress'); ?> <?php //echo $input_modules_count; ?> <?php
+                        //     _e('optional elements completed', 'coursepress');
                         }
                     } else {
                         echo __('Available', 'coursepress') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
@@ -3395,7 +3395,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             <?php } else { ?>
                 <span class="unit-archive-single-module-status"><?php
                     if ( $is_unit_available ) {
-                        _e('Read-only');
+                        // _e('Read-only');
                     } else {
                         echo __('Available', 'coursepress') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
                     }
@@ -3421,6 +3421,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'pending_grade_label' => __('Pending', 'cp'),
                 'unit_unread_label' => __('Unit Unread', 'cp'),
                 'unit_read_label' => __('Unit Read', 'cp'),
+				'non_assessable_label' => __('**'),
                 'table_class' => 'widefat shadow-table assessment-archive-table',
                 'table_labels_th_class' => 'manage-column'
                             )
@@ -3570,9 +3571,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                         }
                                         if ( count($response) >= 1 ) {
                                             if ( isset($grade_data) ) {
-                                                ?>
-                                                <?php echo $grade; ?>%
-                                                <?php
+												
+							                    if ( get_post_meta( $mod->ID, 'gradable_answer', true ) == 'no' ) {
+													echo $non_assessable_label;
+							                    } else {
+                                                    echo $grade . '%' ;
+							                    }
+
                                             } else {
                                                 echo $pending_grade_label;
                                             }
@@ -3626,6 +3631,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     <?php
                 }
                 ?>
+				<?php if ( 0 < $current_row ) : ?>
+					<tfoot><tr><td colspan="6">** <?php _e('Non-assessable elements.', 'cp' ); ?></td></tr></tfoot>
+				<?php endif; ?>
             </table>
             <?php
         }

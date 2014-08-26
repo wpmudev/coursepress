@@ -1785,6 +1785,15 @@ jQuery( document ).ready( function( $ ) {
 		}
 	});
 
+	/* Set Unit Page Titles. */
+	$('.show_page_title [name*="show_page_title"]').live("change", function( event ) {
+		if ( $(this).attr('checked') ) {
+			$(this).siblings('.show_page_title [name*="show_page_title_field"]').val('yes');
+		} else {
+			$(this).siblings('.show_page_title [name*="show_page_title_field"]').val('no');
+		}
+	});
+
 	
 	
 });

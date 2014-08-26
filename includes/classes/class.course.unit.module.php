@@ -284,12 +284,12 @@ if ( !class_exists('Unit_Module') ) {
                     //wp_redirect( full_url( $_SERVER ). '?saved=ok' );
                     wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()) . '?saved=ok');
                 } else {
-                    if ( $paged != 1 ) {
+                    // if ( $paged != 1 ) {
                         //wp_redirect( full_url( $_SERVER ) );
                         wp_redirect(get_permalink($course_id) . trailingslashit($coursepress->get_units_slug()));
-                    } else {
-                        wp_redirect(full_url($_SERVER));
-                    }
+                    // } else {
+                    //     wp_redirect(full_url($_SERVER));
+                    // }
                 }
 
                 exit;
@@ -612,15 +612,18 @@ if ( !class_exists('Unit_Module') ) {
                 <div class="module_grade">
                     <div class="module_grade_left">
                         <?php
-                        if ( $grade['grade'] < 100 ) {
-                            if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
+						$gradable = ! empty( $data->gradable_answer ) && 'yes' == $data->gradable_answer ? true : false;
+						
+                        if ( $grade['grade'] < 100 || ! $gradable ) {
+                            if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 || ! $gradable ) {
                                 $response = $this->get_response(get_current_user_id(), $data->ID);
                                 $unit_id = wp_get_post_parent_id($data->ID);
                                 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
                                 $permalink = trailingslashit(trailingslashit(get_permalink($unit_id)) . 'page/' . trailingslashit($paged));
                                 $resubmit_url = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
+								$resubmit_label = $gradable ? __( 'Resubmit', 'cp' ) : __( 'Resubmit Self-Assessment', 'cp' );
                                 ?>
-                                <a href="<?php echo wp_nonce_url($resubmit_url, 'resubmit_answer', 'resubmit_nonce'); ?>" class="resubmit_response"><?php _e('Resubmit', 'cp'); ?></a>
+                                <a href="<?php echo wp_nonce_url($resubmit_url, 'resubmit_answer', 'resubmit_nonce'); ?>" class="resubmit_response"><?php echo $resubmit_label; ?></a>
                                 <?php
                                 if ( $attempts_remaining > 0 ) {
                                     if ( $attempts_remaining == 1 ) {
@@ -637,15 +640,21 @@ if ( !class_exists('Unit_Module') ) {
                         <?php echo __('Graded: ') . $grade['grade'] . '%'; ?> 
                         <?php
                         if ( isset($data->minimum_grade_required) && is_numeric($data->minimum_grade_required) ) {
-                            if ( $grade['grade'] >= $data->minimum_grade_required ) {
+							if ( ! empty( $data->gradable_answer ) && 'yes' == $data->gradable_answer ) {
+	                            if ( $grade['grade'] >= $data->minimum_grade_required ) {
+	                                ?>
+	                                <span class="passed_element">(<?php _e('Passed', 'cp'); ?>)</span>
+	                                <?php
+	                            } else {
+	                                ?>
+	                                <span class="failed_element">(<?php _e('Not yet passed', 'cp'); ?>)</span>
+	                                <?php
+	                            }								
+							} else {
                                 ?>
-                                <span class="passed_element">(<?php _e('Passed', 'cp'); ?>)</span>
-                                <?php
-                            } else {
-                                ?>
-                                <span class="failed_element">(<?php _e('Failed', 'cp'); ?>)</span>
-                                <?php
-                            }
+                                <span class="non_assessed_element">(<?php _e('Not assessable', 'cp'); ?>)</span>
+                                <?php								
+							}
                         }
                         ?>
                     </div>
