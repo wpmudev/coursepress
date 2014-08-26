@@ -12,7 +12,7 @@
         ?>
         <br />
         <?php
-        printf(__('If these are not visible on your site and theme, you may need to check your %s.', 'cp'), '<a href="' . admin_url('admin.php?page=settings') . '">' . __('Menu Settings', 'cp') . '</a>');
+        printf(__('If these are not visible on your site and theme, you may need to check your %s.', 'cp'), '<a href="' . admin_url('nav-menus.php') . '">' . __('Menu Settings', 'cp') . '</a>');
         ?>
         <br />
         <?php
