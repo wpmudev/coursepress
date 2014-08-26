@@ -135,6 +135,12 @@ if ( isset($_GET['course_id']) ) {
     $course_setup_marker = empty($course->details->course_setup_marker) ? 'step-1' : $course->details->course_setup_marker;
     $course_structure_options = $course->details->course_structure_options;
     $course_structure_time_display = $course->details->course_structure_time_display;
+	
+	$course_setup_complete = get_post_meta( (int) $_GET['course_id'], 'course_setup_complete', true );
+
+	if( !empty( $course_setup_complete ) && 'yes' == $course_setup_complete ) {
+		$course_setup_marker = '';
+	}
 
     //$show_module = $course->details->show_module;
     //$preview_module = $course->details->preview_module;
