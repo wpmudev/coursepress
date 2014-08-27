@@ -743,6 +743,11 @@ label > .tree{
     float: left;
 }
 
+.course_structure_page_li .tree .tree-page-left {
+    width: 65%;
+	padding-left: 20px;	
+}
+
 .tree .tree-page-right{
     display: inline-block;
     width: 29%;
@@ -1187,4 +1192,9 @@ span.non_assessed_element{
 	
 .cp_course_strucutre_widget .course-structure-block ul.tree, .cp_course_strucutre_widget .course-structure-block ul.tree ul {
 	margin: 0 0 0 10px;
+}
+
+.cp_course_strucutre_widget .course-structure-block .course_structure_page_li .tree .tree-page-left {
+    width: 65%;
+	padding-left: 10px;	
 }
