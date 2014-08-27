@@ -470,23 +470,25 @@ span.percentage{
 
 .notification-archive-single-meta{
     float: left;
-    width: 100%;
+    width: 20%;
+	clear: both;
+	
 }
 
 .notification-date{
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     width: 55px;
     height: 55px;
-    background-color: #f9a673;
+    background-color: #a9a9a9;
     color: #fff;
     text-align: center;
 /*    text-transform: uppercase;*/
     text-transform: capitalize;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 8px;
+/*    margin-left: auto;
+    margin-right: auto; */
+/*    margin-top: 8px;*/
 }
 
 .notification-date .date-part-one{
@@ -506,24 +508,26 @@ span.percentage{
 }
 
 .notification-time{
-    color: #f9a673;
+	width: 55px;
+    color: #888888;
     font-size: 14px;
-/*    text-transform: uppercase;*/
-    text-transform: capitalize;
+    text-transform: lowercase;
+/*    text-transform: capitalize;*/
     text-align: center;
 }
 
 .notification-meta-divider{
-    background-color: #dbdbdb;
+/*    background-color: #dbdbdb;
     height: 2px;
     width: 24px;
-    margin: 13px auto 10px auto;
-    display: block;
+    margin: 13px auto 10px auto; */
+    display: none;
+
 }
 
 .notification-archive-single{
     float: left;
-    width: 100%;
+    width: 80%;
 }
 
 .entry-content ul.notification-archive-list,
@@ -535,8 +539,8 @@ span.percentage{
 h1.notification-title{
     font-size: 24px;
     border-bottom: 2px solid #f5f5f5;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+    margin: 0 0 10px 0;
+    padding: 0 0 5px 0;
 }
 
 .notification_author{

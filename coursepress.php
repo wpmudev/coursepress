@@ -52,8 +52,8 @@ if ( !class_exists('CoursePress') ) {
 
 
             global $wpmudev_notices;
-			// Todo: Add screens
-            // $wpmudev_notices[] = array( 'id' => XXX, 'name' => 'CoursePress', 'screens' => array( 'xxx', 'xxx' ) );
+			// Todo: Get CoursePress ID
+            // $wpmudev_notices[] = array( 'id' => XXX, 'name' => 'CoursePress', 'screens' => array( 'toplevel_page_courses', 'coursepress_page_course_details', 'coursepress_page_instructors', 'coursepress_page_students', 'coursepress_page_assessment', 'coursepress_page_reports', 'coursepress_page_notifications', 'coursepress_page_settings' ) );
             include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 			
 
@@ -116,7 +116,7 @@ if ( !class_exists('CoursePress') ) {
 //Assing instructor ajax call
 //add_action('wp_ajax_assign_instructor_capabilities', array(&$this, 'assign_instructor_capabilities'));
 // Changed to perform an update instead of just assigning capabilities
-// ::RK::
+
                 add_action('wp_ajax_add_course_instructor', array( &$this, 'add_course_instructor' ));
 
 // Using ajax to remove course instructor
@@ -252,7 +252,7 @@ if ( !class_exists('CoursePress') ) {
 
 //Add custom image sizes
             add_action('init', array( &$this, 'add_custom_image_sizes' ));
-
+			
 //Add custom image sizes to media library
 //add_filter( 'image_size_names_choose', array( &$this, 'add_custom_media_library_sizes' ) );
 //Add plugin admin menu - Network
@@ -1174,7 +1174,7 @@ if ( !class_exists('CoursePress') ) {
                 add_image_size('course_thumb', $course_image_width, $course_image_height, true);
             }
         }
-
+		
         function add_custom_media_library_sizes( $sizes ) {
             $sizes['course_thumb'] = __('Course Image');
             return $sizes;
@@ -2250,11 +2250,6 @@ if ( !class_exists('CoursePress') ) {
             do_action('after_custom_post_types');
         }
 
-        /**
-         *
-         *
-         * ::RK::
-         */
         function course_has_gateway() {
 
             $gateways = get_option('mp_settings', false);
@@ -2280,8 +2275,6 @@ if ( !class_exists('CoursePress') ) {
 
         /**
          * Handles AJAX call for Course Settings auto-update.
-         *
-         * ::RK::
          */
         function autoupdate_course_settings() {
 
@@ -2405,11 +2398,6 @@ if ( !class_exists('CoursePress') ) {
             }
         }
 
-        /**
-         *
-         *
-         * ::RK::
-         */
         function add_course_instructor() {
 
             $ajax_response = array();
@@ -2465,11 +2453,6 @@ if ( !class_exists('CoursePress') ) {
             ob_end_flush();
         }
 
-        /**
-         *
-         *
-         * ::RK::
-         */
         function remove_course_instructor() {
 
             $ajax_response = array();
@@ -2511,11 +2494,6 @@ if ( !class_exists('CoursePress') ) {
             ob_end_flush();
         }
 
-        /**
-         *
-         *
-         * ::RK::
-         */
         function send_instructor_invite() {
 
             $email_args['email_type'] = 'instructor_invitation';

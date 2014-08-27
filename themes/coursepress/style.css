@@ -2002,10 +2002,11 @@ a[rel="prev"] {
 }
 
 .notification-time{
+	width: auto;
     color: #f9a673;
     font-size: 14px;
     /*    text-transform: uppercase;*/
-    text-transform: capitalize;
+    text-transform: lowercase;
     text-align: center;
 }
 

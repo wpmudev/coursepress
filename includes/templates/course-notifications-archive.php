@@ -26,6 +26,7 @@ echo __('<h2>Notifications</h2>', 'cp');
         <?php
         while ( have_posts() ) {
             the_post();
+			remove_filter( 'the_content', 'wpautop' );
             ?>
             <li>
                 <div class="notification-archive-single-meta">
