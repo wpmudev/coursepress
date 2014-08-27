@@ -28,7 +28,7 @@
         //Random Courses
         echo __('<h3 class="title suggested-courses">You are not enrolled in any courses.</h3>', 'cp');
         echo __('Here are a few to help you get started:<hr />');
-        echo '<div class="dashboard-random-courses">' . do_shortcode('[course_random number="3" featured_title="" media_priority="image"]') . '</div>';
+        echo '<div class="dashboard-random-courses">' . do_shortcode('[course_random number="3" featured_title="" media_type="image"]') . '</div>';
     } else {
 
         // Course List
