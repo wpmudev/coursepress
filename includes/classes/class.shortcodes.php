@@ -991,6 +991,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $is_paid = get_post_meta($course_id, 'paid_course', true);
             $is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
+			// cp_write_log( date( 'Y-m-d', time() ) );
             $course_started = strtotime($course->course_start_date) <= time() ? true : false;
             $enrollment_started = strtotime($course->enrollment_start_date) <= time() ? true : false;
             $course_expired = strtotime($course->course_end_date) < time() ? true : false;
@@ -1017,12 +1018,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             $button .= '<span class="apply-button apply-button-finished ' . $class . '">' . $course_expired_text . '</span>';
                             // cp_write_log( 'TWO');
                             // Course hasn't expired, but its not yet available for enrollments (closed)
-                        } elseif ( !$enrollment_started && !$course->open_ended_enrollment ) {
+                        } elseif ( !$enrollment_started && !$course->open_ended_enrollment && $enrollment_expired ) {
                             // "ENROLLMENT NOT YET AVAILABLE/CLOSED"
                             $button .= '<span class="apply-button apply-button-enrollment-closed ' . $class . '">' . $enrollment_closed_text . '</span>';
                             // cp_write_log( 'THREE');
                             // Course is available, but enrollments have expired
-                        } elseif ( !$enrollment_expired && !$course->open_ended_enrollment ) {
+                        } elseif ( $enrollment_expired && !$course->open_ended_enrollment ) {
                             // "ENROLLMENTS ARE FINISHED"
                             $button .= '<span class="apply-button apply-button-enrollment-finished ' . $class . '">' . $enrollment_finished_text . '</span>';
                             // cp_write_log( 'FOUR');	
@@ -1067,7 +1068,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         $button .= '<span class="apply-button apply-button-enrollment-closed ' . $class . '">' . $enrollment_closed_text . '</span>';
                         // cp_write_log( 'NINE');					
                         // Course is available, but enrollments have expired
-                    } elseif ( !$enrollment_expired && !$course->open_ended_enrollment ) {
+                    } elseif ( $enrollment_expired && !$course->open_ended_enrollment ) {
                         // "ENROLLMENTS ARE FINISHED"
                         $button .= '<span class="apply-button apply-button-enrollment-finished ' . $class . '">' . $enrollment_finished_text . '</span>';
                         // cp_write_log( 'TEN');
