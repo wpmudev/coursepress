@@ -106,7 +106,34 @@
         
         <br /><br />
         
-        <a href="<?php echo admin_url('admin.php?page=course_details');?>" class="button button-units save-unit-button start-course-button"><?php _e('Start building your own course now', 'cp');?></a>
+		<?php
+        if ( current_user_can('manage_options') && !get_option('permalink_structure') ) {
+			// toplevel_page_courses
+			$screen = get_current_screen();
+
+			$show_warning = false;
+			
+			if ( 'toplevel_page_courses' == $screen->id && isset( $_GET['quick_setup'] ) ) {
+				$show_warning = true;
+			}
+			
+			if ( $show_warning ) {
+                // echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
+				?>
+					<div class="permalinks-error">
+						<h4><?php _e('Pretty permalinks are required to use CoursePress.', 'cp'); ?></h4>
+						<p><?php _e( 'Click the button below to setup your permalinks.', 'cp' ); ?></p>
+						<a href="<?php echo admin_url('options-permalink.php');?>" class="button button-units save-unit-button setup-permalinks-button"><?php _e('Setup Permalinks', 'cp');?></a>								
+					</div>					
+				<?php
+			} else {
+				?>
+			        <a href="<?php echo admin_url('admin.php?page=course_details');?>" class="button button-units save-unit-button start-course-button"><?php _e('Start building your own course now', 'cp');?></a>				
+				<?php
+			}
+        }
+		?>
+
 
     </div>
 

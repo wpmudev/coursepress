@@ -90,7 +90,7 @@ class image_module extends Unit_Module {
                     </label>
                 </div>
 				
-				<?php if( !empty( $data ) ) { echo $this->show_media_caption($data); } ?>
+				<?php echo $this->show_media_caption($data); ?>
 				
                 <?php
                 parent::get_module_delete_link();
@@ -110,23 +110,35 @@ class image_module extends Unit_Module {
     }
 	
     function show_media_caption( $data ) {
+		
+		if ( empty( $data ) ) {
+			$data = false;
+		}
+		
         ?>
 		<div class="caption-settings">
 	        <label class="show_media_caption">
-	            <input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'checked' : (!isset($data->show_media_caption) ) ? 'checked' : '' ) ?> />
-				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo ( isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'yes' : 'no' ) ?>" />
+	            <input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo ( ! empty( $data ) && isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'checked' : ( empty( $data ) || !isset($data->show_media_caption) ) ? 'checked' : '' ) ?> />
+				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo ( ! empty( $data ) && isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? 'yes' : empty( $data ) ? 'yes' : 'no' ) ?>" />
 	            <?php _e('Show Caption', 'cp'); ?><br />
 	            <span class="element_title_description"><?php _e('Show a caption for this image.', 'cp'); ?></span>
 	        </label>
-			<div class="caption-source <?php echo isset($data->show_media_caption) && $data->show_media_caption == 'yes' ? '' : 'hidden'; ?>">
+			<div class="caption-source <?php echo (! empty( $data) && isset($data->show_media_caption) && $data->show_media_caption == 'yes') || empty( $data ) ? '' : 'hidden'; ?>">
 				<?php 
-					$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' ); 
+					$caption_source = ( ! empty( $data ) && isset($data->caption_field) ? $data->caption_field : 'media' ); 
+					
+					// Usually the module ID, but if we cant use the ID, we'll take a timestamp
+					$unique = ! empty( $data ) ? $data->ID : time();					
 				?>
-                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
+                <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
 				<span class="element_title_description">
 					<?php
 						$no_caption_text = __('Media has no caption.');
-						$attachment_id = cp_get_attachment_id_from_src( $data->image_url );
+						$attachment_id = false;
+						if ( ! empty( $data ) ){
+							$attachment_id = cp_get_attachment_id_from_src( $data->image_url );
+						}
+						
 						if ( !empty( $attachment_id ) ){
 							$attachment = get_post( $attachment_id );
 							$caption = $attachment->post_excerpt;
@@ -140,9 +152,9 @@ class image_module extends Unit_Module {
 						}
 					?>
 				</span>
-                <input type="radio" name="<?php echo $this->name . '_' . $data->ID . '_caption_source[]'; ?>" value="custom" <?php checked($caption_source, 'custom', true); ?>/> <?php _e('Custom Caption','cp'); ?>
+                <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked($caption_source, 'custom', true); ?>/> <?php _e('Custom Caption','cp'); ?>
 				<input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>" />
-				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo isset($data->caption_custom_text) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo isset($data->caption_custom_text) ? '' : __( 'Please enter a custom caption here.', 'cp' ); ?>" /><br /><br />
+				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo ! empty( $data ) && isset($data->caption_custom_text) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo ! empty( $data ) && isset($data->caption_custom_text) ? '' : __( 'Please enter a custom caption here.', 'cp' ); ?>" /><br /><br />
 			</div>
 		</div>
         <?php

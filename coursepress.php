@@ -1108,6 +1108,7 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function is_preview( $unit_id, $page_num = false ) {
+			global $wp, $wpquery;
             if ( isset($_GET['try']) ) {
 
                 $unit = new Unit($unit_id);
@@ -1116,14 +1117,15 @@ if ( !class_exists('CoursePress') ) {
                 if ( $page_num ) {
                     $paged = $page_num;
                 } else {
-                    $paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+					$paged = ! empty( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
                 }
 
                 $preview_unit = $course->details->preview_unit_boxes;
                 $preview_page = $course->details->preview_page_boxes;
-
+				
                 if ( isset($preview_unit[$unit_id]) && $preview_unit[$unit_id] == 'on' ) {
-
+					return true;
+                } else {
                     if ( isset($preview_page[$unit_id . '_' . $paged]) && $preview_page[$unit_id . '_' . $paged] == 'on' ) {
                         return true;
                     } else {
@@ -3326,7 +3328,17 @@ if ( !class_exists('CoursePress') ) {
 //shows a warning notice to admins if pretty permalinks are disabled
         function admin_nopermalink_warning() {
             if ( current_user_can('manage_options') && !get_option('permalink_structure') ) {
-                echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
+				// toplevel_page_courses
+				$screen = get_current_screen();
+				$show_warning = true;
+				
+				if ( 'toplevel_page_courses' == $screen->id && isset( $_GET['quick_setup'] ) ) {
+					$show_warning = false;
+				}
+				
+				if ( $show_warning ) {
+	                echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';					
+				}
             }
         }
 

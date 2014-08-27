@@ -213,6 +213,19 @@ jQuery(document).ready(function()
 
 jQuery(document).ready(function($)
 {
+	// Prevent 'Enter' key from submitting page on unit builder
+	jQuery( document ).keypress( function( event ){
+		
+		if( event.keyCode == 13 ){
+			var unitBuilder = jQuery('.unit-detail-settings');
+			
+			if( typeof(unitBuilder) != 'undefined'){
+				event.preventDefault();
+			}
+		}
+		
+	});
+	
     jQuery('.video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".video_url:first");
@@ -227,6 +240,7 @@ jQuery(document).ready(function($)
                 $(target_url_field).parent().find('.invalid_extension_message').show();
             }
             jQuery(target_url_field).val(attachment.url);
+			jQuery(target_url_field).parents('.module-holder-title').find('.media-caption-description').html( '"' + attachment.caption + '"' );
         };
 
         wp.media.editor.open(this);

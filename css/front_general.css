@@ -415,7 +415,7 @@ span.percentage{
 #navigation-pagination.navigation{
     text-align: right;
     float: right;
-    margin-top: -18px;
+    margin-top: 25px;
 }
 
 #navigation-pagination.navigation li a,
@@ -1198,3 +1198,4 @@ span.non_assessed_element{
     width: 65%;
 	padding-left: 10px;	
 }
+

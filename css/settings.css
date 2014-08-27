@@ -2930,3 +2930,15 @@ wrap mp-wrap nocoursesub mp-wrap{
 .button.cp-activate-mp-lite:hover {
 	background: #68b268;
 }
+
+.permalinks-error {
+	border-left: 2px solid #ff0000;
+	padding-left: 10px;
+}
+
+.permalinks-error .setup-permalinks-button {
+	width: 300px !important;
+	background-color: orange !important;
+	font-weight: bold;
+	font-size: 18px;
+}

@@ -380,7 +380,9 @@ if ( !class_exists('Unit_Module') ) {
                 coursepress_unit_module_pagination($unit_id, $pages_num);
                 ?>
                 <div class="fullbox"></div>
-                <a href="" id="save_student_progress" class="save_progress"><?php _e('Save Progress & Exit', 'tc'); ?></a>
+				<?php if ( ! isset($_GET['try']) ) : ?>
+	                <a href="" id="save_student_progress" class="save_progress"><?php _e('Save Progress & Exit', 'tc'); ?></a>
+				<?php endif; ?>
             </form>
 
             <?php
