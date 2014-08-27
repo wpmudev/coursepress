@@ -736,9 +736,11 @@ if ( !class_exists('CoursePress') ) {
                     $method = $signup_steps[$step]['callback'][1];
 
                     if ( isset($signup_steps[$step]['callback'][2]) ) {//args
-                        call_user_func($classname . '::' . $method, $signup_steps[$step]['callback'][2]);
+                        // call_user_func($classname . '::' . $method, $signup_steps[$step]['callback'][2]);
+                        call_user_func(array( &$this, $method ), $signup_steps[$step]['callback'][2]);						
                     } else {
-                        call_user_func($classname . '::' . $method);
+                        // call_user_func($classname . '::' . $method);
+                        call_user_func( array( &$this, $method ) );						
                     }
                 } elseif ( 'render' == $signup_steps[$step]['action'] ) {
                     $data = $signup_steps[$step]['data'];
