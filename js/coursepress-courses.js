@@ -1724,7 +1724,8 @@ function fix_tinymce_in_iframe() {
     setTimeout(function(){
 		$( the_box ).on('load', function () {
 			tinyMCE.execCommand('mceRepaint');
-			jQuery( the_box ).contents().find('[id*="tmce"]').parents('.wp-editor-wrap').find('.mce-panel').show()
+			jQuery( the_box ).contents().find('[id*="tmce"]').parents('.wp-editor-wrap').find('.mce-panel').show();
+			jQuery( the_box ).contents().find('#mp-need-help').hide();
 		});
     },delay);			
 }
