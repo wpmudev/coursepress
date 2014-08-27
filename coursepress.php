@@ -9,7 +9,7 @@
   Version: 1.0.3b
   TextDomain: cp
   Domain Path: /languages/
-  WDP ID: N/A
+  WDP ID: 896496
   License: GNU General Public License ( Version 2 - GPLv2 )
 
   Copyright 2014 Incsub ( http://incsub.com )
@@ -52,8 +52,8 @@ if ( !class_exists('CoursePress') ) {
 
 
             global $wpmudev_notices;
-			// Todo: Get CoursePress ID
-            // $wpmudev_notices[] = array( 'id' => XXX, 'name' => 'CoursePress', 'screens' => array( 'toplevel_page_courses', 'coursepress_page_course_details', 'coursepress_page_instructors', 'coursepress_page_students', 'coursepress_page_assessment', 'coursepress_page_reports', 'coursepress_page_notifications', 'coursepress_page_settings' ) );
+
+            $wpmudev_notices[] = array( 'id' => 896496, 'name' => 'CoursePress', 'screens' => array( 'toplevel_page_courses', 'coursepress_page_course_details', 'coursepress_page_instructors', 'coursepress_page_students', 'coursepress_page_assessment', 'coursepress_page_reports', 'coursepress_page_notifications', 'coursepress_page_settings' ) );
             include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 			
 
