@@ -2963,14 +2963,16 @@ if ( !class_exists('CoursePress') ) {
                     if ( count($order) == 1 ) {//CP supports only one item in the cart per order so there is no reason to do the check otherwise
                         if ( cp_get_order_course_id($order_id) ) {
                             wp_enqueue_style('front_mp_fix', $this->plugin_url . 'css/front_mp_fix.css', array(), $this->version);
-                            add_filter('mp_order_status_section_title_shipping_info', function() {
-                                return '';
-                            });
+                            add_filter('mp_order_status_section_title_shipping_info', array( &$this, 'return_empty') );
                         }
                     }
                 }
             }
         }
+		
+		function return_empty() {
+			return;
+		}
 
         /* Custom footer actions */
 
