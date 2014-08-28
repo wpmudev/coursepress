@@ -210,6 +210,10 @@ if ( !class_exists('CoursePress') ) {
 // Course class
             require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
+// Course_Completion class
+            require_once( $this->plugin_dir . 'includes/classes/class.course.completion.php' );
+
+
 // Notification class
             require_once( $this->plugin_dir . 'includes/classes/class.notification.php' );
 

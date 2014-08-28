@@ -57,8 +57,9 @@ $course_language = $course->details->course_language;
                 <div class="quick-course-info <?php echo ( isset($extended_class) ? $extended_class : '' ); ?>">
                     <?php echo do_shortcode('[course_start label="" class="course-time"]'); ?>
                     <?php echo do_shortcode('[course_language label="" class="course-lang"]'); ?>
-                    <?php echo do_shortcode('[course_cost label="" no_cost_text=""]'); ?>
-                    <?php echo do_shortcode('[course_join_button details_text="'.__('Details', 'cp').'" course_expired_text="'.__('Not Available', 'cp').'"]'); ?>
+                    <?php //echo do_shortcode('[course_cost label="" no_cost_text=""]'); ?>
+					<?php echo do_shortcode( '[course_cost label="" class="course-cost" show_icon="true"]' ); ?>
+                    <?php echo do_shortcode('[course_join_button details_text="'.__('Details', 'cp').'" course_expired_text="'.__('Not Available', 'cp').'" list_page="yes"]'); ?>
                     <!--go-to-course-button-->
                 </div>
             </div><!-- .entry-content -->

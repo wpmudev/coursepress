@@ -88,7 +88,8 @@ $course_language = $course->details->course_language;
                 _e('Course Structure', 'coursepress');
                 ?></h1>
             <?php
-            $course->course_structure_front();
+            // $course->course_structure_front();
+			echo do_shortcode('[course_structure label="" show_title="no" show_divider="yes"]');
         }
         ?>
         <?php

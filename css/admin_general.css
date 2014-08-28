@@ -469,11 +469,21 @@ a.button.button-units.button-delete-unit:hover{
 }
 
 .wrap.about-wrap .changelog a.start-course-button{
-    width: 300px;
+/*    width: 300px;
     margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     float: none;
     display: block;
     font-size: 16px;
+*/}
+.wrap.about-wrap .changelog a.start-course-button {
+	background: none repeat scroll 0 0 #6dc36c;
+	border: 1px solid #68b268;
+	color: #fff;
+	outline: medium none;
+	font-size: 16px;
+	font-weight: bold;
+	box-shadow: 0 1px 0 #6be285 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+	width: 320px;
 }

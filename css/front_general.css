@@ -408,6 +408,15 @@ span.percentage{
     margin-top: 20px;
 }
 
+.front-single-module {
+    margin-bottom: 30px;
+}
+
+.front-single-module-save {
+    margin-bottom: 50px;
+}
+
+
 #submit_bottom{
     /*display: none;*/
 }
@@ -561,7 +570,7 @@ h1.notification-title{
     font-size: 14px;
     text-align: right;
     float: right;
-    padding-top: 9px;
+    padding-top: 7px;
 }
 
 .module_title h2 span{
@@ -637,7 +646,7 @@ h1.notification-title{
     background-repeat: no-repeat;
     line-height: 0px;
     margin-right: 0px;
-    padding: 0 0 0 20px;
+    padding: 2px 0 0 20px;
 }
 .post-type-archive-course .quick-course-info .course-cost {	
     width: 25%;

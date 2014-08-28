@@ -670,7 +670,8 @@ if ( !class_exists('Unit_Module') ) {
                 </div>
                 <?php
             } else {
-                if ( $data->gradable_answer && 'enabled' != $enabled ) {
+                // if ( $data->gradable_answer && 'enabled' != $enabled ) {
+                if ( $data->gradable_answer ) {					
                     if ( ( int ) count($responses) > 1 ) {
                         ?>
                         <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>

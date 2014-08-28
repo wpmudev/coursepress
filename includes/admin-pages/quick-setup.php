@@ -99,12 +99,8 @@
                 <li><?php _e('Generate Unit/Course/Site-wide Reporting', 'cp'); ?></li>
             </ul>
 
-            <br /><br />
 
         </div>
-        <img alt="" src="<?php echo trailingslashit($this->plugin_url) . 'images/quick-setup-step-3.jpg'; ?>" class="image-66">
-        
-        <br /><br />
         
 		<?php
         if ( current_user_can('manage_options') && !get_option('permalink_structure') ) {
@@ -126,12 +122,12 @@
 						<a href="<?php echo admin_url('options-permalink.php');?>" class="button button-units save-unit-button setup-permalinks-button"><?php _e('Setup Permalinks', 'cp');?></a>								
 					</div>					
 				<?php
-			} else {
-				?>
-			        <a href="<?php echo admin_url('admin.php?page=course_details');?>" class="button button-units save-unit-button start-course-button"><?php _e('Start building your own course now', 'cp');?></a>				
-				<?php
-			}
-        }
+			} 
+        } else {
+			?>
+		        <a href="<?php echo admin_url('admin.php?page=course_details');?>" class="button button-units save-unit-button start-course-button"><?php _e('Start building your own course now &rarr;', 'cp');?></a>
+			<?php
+		}
 		?>
 
 

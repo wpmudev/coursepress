@@ -971,7 +971,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
-
             // Saves some overhead by not loading the post again if we don't need to.
             $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
@@ -1004,7 +1003,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             // User is not logged in, so we need to see if course is ready for signup or not.
             if ( !is_user_logged_in() ) {
-
                 if ( 'manually' != $course->enroll_type ) {
                     if ( $course_full && !"yes" == $list_page ) {
                         // "COURSE FULL"
@@ -1013,21 +1011,21 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     } else {
 
                         // Course expired
-                        if ( $course_expired && !$course->open_ended_course ) {
+                        if ( $course_expired && !$course->open_ended_course && !"yes" == $list_page ) {
                             // "COURSE FINISHED"
                             $button .= '<span class="apply-button apply-button-finished ' . $class . '">' . $course_expired_text . '</span>';
                             // cp_write_log( 'TWO');
                             // Course hasn't expired, but its not yet available for enrollments (closed)
-                        } elseif ( !$enrollment_started && !$course->open_ended_enrollment && $enrollment_expired ) {
+                        } elseif ( !$enrollment_started && !$course->open_ended_enrollment && $enrollment_expired && !"yes" == $list_page ) {
                             // "ENROLLMENT NOT YET AVAILABLE/CLOSED"
                             $button .= '<span class="apply-button apply-button-enrollment-closed ' . $class . '">' . $enrollment_closed_text . '</span>';
                             // cp_write_log( 'THREE');
                             // Course is available, but enrollments have expired
-                        } elseif ( $enrollment_expired && !$course->open_ended_enrollment ) {
+                        } elseif ( $enrollment_expired && !$course->open_ended_enrollment && !"yes" == $list_page ) {
                             // "ENROLLMENTS ARE FINISHED"
                             $button .= '<span class="apply-button apply-button-enrollment-finished ' . $class . '">' . $enrollment_finished_text . '</span>';
                             // cp_write_log( 'FOUR');	
-                        } elseif ( !is_single() ) {
+                        } elseif ( !is_single() || "yes" == $list_page ) {
                             // GO TO COURSE
                             $button_url = get_permalink($course_id);
                             $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
@@ -2510,8 +2508,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 } else {
                     $page_title_prepend = '';
                 }
+				
+				$show_title_array = get_post_meta( $unit_id, 'show_page_title', true );
+				$show_title = false;
+				if ( isset( $show_title_array[ $paged - 1 ] ) && 'yes' == $show_title_array[ $paged - 1 ] ) {
+					$show_title = true;
+				}
                 
-                if ( !empty($page_name) ) {
+                if ( !empty($page_name) && $show_title ) {
                     $unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $page_title_prepend . $unit->get_unit_page_name($paged) . '</' . $unit_page_title_tag . '>';
                 } else {
                     $unit->details->$field = '';
@@ -3429,7 +3433,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             , $args));
 
             $columns = array(
-                "module" => $module_column_title,
+                // "module" => $module_column_title,
                 "title" => $title_column_title,
                 "submission_date" => $submission_date_column_title,
                 "response" => $response_column_title,
@@ -3439,7 +3443,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
 
             $col_sizes = array(
-                '15', '30', '15', '10', '13', '5'
+                // '15',
+// 				'30', 
+				'45',
+				'15', 
+				'10', 
+				'13', 
+				'5'
             );
 
             $unit_module_main = new Unit_Module();
@@ -3513,10 +3523,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                 <?php
                                 if ( $general_col_visibility ) {
                                     ?>
-                                    <td class = "<?php echo $style . ' ' . $visibility_class; ?>">
-                                        <?php echo $module->label;
-                                        ?>
-                                    </td>
 
                                     <td class="<?php echo $style . ' ' . $visibility_class; ?>">
                                         <?php echo $mod->post_title; ?>

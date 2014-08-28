@@ -20,7 +20,7 @@ echo do_shortcode('[course_summary]');
     </div>
     <div class="enroll-box-right">
         <div class="apply-box">
-            <?php echo do_shortcode('[course_join_button]'); ?>
+            <?php echo do_shortcode('[course_join_button list_page="yes"]'); ?>
             <?php // echo do_shortcode( '[course_details field="button"]' ); ?>
         </div>
     </div>

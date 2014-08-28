@@ -24,6 +24,8 @@ echo __('<h2>Workbook</h2>', 'cp');
 if ( have_posts() ) {
     while ( have_posts() ) {
         the_post();
+		$input_module_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
+		$has_assessable = $input_module_count  > 0 ? true : false;
         ?>
         <div class="workbook_units">
             <div class="unit_title">
@@ -31,12 +33,24 @@ if ( have_posts() ) {
                     <span><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]'); ?>% <?php _e('completed', 'cp');?></span>
                 </h3>
             </div>
+			<?php if ( $has_assessable ) { ?>
             <div class="accordion-inner">
-                <?php echo do_shortcode('[student_workbook_table]');?>
+                <?php 
+						$completion = new Course_Completion( $course_id );
+						$completion->check_pages_visited();
+						$completion->init_student_status();
+						cp_write_log( $completion->test() );
+						echo do_shortcode('[student_workbook_table]');
+				?>
             </div>
+			<?php } else { ?>
+            <div class="accordion-inner">
+				<div class="zero-inputs"><?php _e('There are no activities to complete in this unit.', 'cp'); ?></div>
+            </div>
+			<?php } ?>
         </div>
         <?php
-    }
+    } // While
 } else {
     ?>
     <div class="zero-courses"><?php _e('0 Units in the course', 'cp'); ?></div>
