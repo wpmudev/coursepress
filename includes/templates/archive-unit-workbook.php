@@ -30,16 +30,12 @@ if ( have_posts() ) {
         <div class="workbook_units">
             <div class="unit_title">
                 <h3><?php the_title(); ?>
-                    <span><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]'); ?>% <?php _e('completed', 'cp');?></span>
+                    <span><?php echo do_shortcode('[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]'); ?>% <?php _e('completed', 'cp');?></span>
                 </h3>
             </div>
 			<?php if ( $has_assessable ) { ?>
             <div class="accordion-inner">
                 <?php 
-						$completion = new Course_Completion( $course_id );
-						$completion->check_pages_visited();
-						$completion->init_student_status();
-						cp_write_log( $completion->test() );
 						echo do_shortcode('[student_workbook_table]');
 				?>
             </div>

@@ -41,8 +41,8 @@ add_thickbox();
                         <h3><?php the_title(); ?>
                             <span><?php
                                 if ( do_shortcode('[course_unit_details field="assessable_input_modules_count"]') > 0 ) {
-                                    _e('Grade:', 'cp');
-                                    ?> <?php echo apply_filters('cp_grade', do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]')); ?>%<?php } ?></span>
+                                    _e('Completion:', 'cp');
+                                    ?> <?php echo apply_filters('cp_grade', do_shortcode('[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]')); ?>%<?php } ?></span>
                         </h3>
                     </div>
                     <div class="accordion-inner">

@@ -1,4 +1,5 @@
 <?php
+$course_id = do_shortcode('[get_parent_course_id]');
 do_shortcode('[course_units_loop]'); //required for getting unit results
 ?>
 
@@ -22,7 +23,7 @@ echo __('<h2>Course Units</h2>', 'cp');
                 <li class="<?php echo $additional_li_class; ?>">
                     <div class='<?php echo $additional_class; ?>'></div>
                     <a href="<?php echo do_shortcode('[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]'); ?>" rel="bookmark"><?php the_title(); ?></a><?php echo do_shortcode('[course_unit_details field="percent" format="true" style="flat"]'); ?>
-                    <?php do_shortcode('[module_status format="true"]'); ?>
+                    <?php do_shortcode('[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]'); ?>
                 </li>
                 <?php
             endwhile;

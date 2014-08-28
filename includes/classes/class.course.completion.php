@@ -54,11 +54,7 @@ if ( !class_exists('Course_Completion') ) {
 				$unit->gradable_module_ids = $this->get_gradable_modules( $unit->modules, $unit->input_module_ids );
 			}
         }
-		
-		function test() {
-			// return ! empty( $this->units[1]->all_pages_viewed ) && $this->units[1]->all_pages_viewed ? 'yes!' : 'no :(';
-		}
-		
+				
         function Course_Completion( $id = '', $output = 'OBJECT' ) {
             $this->__construct($id, $output);
         }
@@ -287,8 +283,6 @@ if ( !class_exists('Course_Completion') ) {
 			$this->get_total_steps();
 			$this->get_completed_steps();
 			$this->get_completion();
-			
-			cp_write_log( $this->is_course_complete() );
 		}
 		
 		function unit_progress( $unit_id ) {
@@ -301,6 +295,32 @@ if ( !class_exists('Course_Completion') ) {
 				$unit = $this->units[ $this->unit_index[ $unit_id ] ];
 			
 				return( $unit->completion );
+			}
+		}
+
+		function unit_mandatory_steps( $unit_id ) {
+			
+			if( ! in_array( $unit_id, array_keys( $this->unit_index ) ) ) {
+				return false;
+			} else {
+			
+				// Get the correct unit
+				$unit = $this->units[ $this->unit_index[ $unit_id ] ];
+			
+				return count( $unit->mandatory_module_ids );
+			}
+		}
+
+		function unit_completed_mandatory_steps( $unit_id ) {
+			
+			if( ! in_array( $unit_id, array_keys( $this->unit_index ) ) ) {
+				return false;
+			} else {
+			
+				// Get the correct unit
+				$unit = $this->units[ $this->unit_index[ $unit_id ] ];
+			
+				return count( $unit->mandatory_module_ids ) - $unit->remaining_mandatory_items;
 			}
 		}
 		

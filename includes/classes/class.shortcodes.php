@@ -67,6 +67,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             add_shortcode('course_media', array( &$this, 'course_media' ));
             add_shortcode('course_action_links', array( &$this, 'course_action_links' ));
             add_shortcode('course_random', array( &$this, 'course_random' ));
+// Course-progress
+            add_shortcode('course_progress', array( &$this, 'course_progress' ));
+            add_shortcode('course_unit_progress', array( &$this, 'course_unit_progress' ));
+            add_shortcode('course_mandatory_message', array( &$this, 'course_mandatory_message' ));
 
 //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 // Page Shortcodes
@@ -1783,7 +1787,70 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             return $content;
         }
+		
+		/**
+		 * COURSE PROGRESS SHORTCODES
+		 * 
+		 */
+		
+        /**
+         * Course Progress
+         *
+         * @since 1.0.0
+         */
+        function course_progress( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+            ), $atts, 'course_progress'));
 
+			$completion = new Course_Completion( $course_id );
+			$completion->init_student_status();
+
+            return $completion->course_progress();
+        }
+		
+		
+        /**
+         * Course Unit Progress
+         *
+         * @since 1.0.0
+         */
+        function course_unit_progress( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+				'unit_id' => false,
+            ), $atts, 'course_unit_progress'));
+			
+			$completion = new Course_Completion( $course_id );
+			$completion->init_student_status();
+            return $completion->unit_progress( $unit_id );
+        }		
+		
+        /**
+         * Course Mandatory Message
+		 *
+		 * x of y mandatory elements completed 
+         *
+         * @since 1.0.0
+         */
+        function course_mandatory_message( $atts ) {
+            extract(shortcode_atts(array(
+                'course_id' => in_the_loop() ? get_the_ID() : '',
+				'unit_id' => false,
+				'message' => __( '%d of %d mandatory elements completed.', 'cp' ),
+            ), $atts, 'course_mandatory_message'));
+			
+			$completion = new Course_Completion( $course_id );
+			$completion->init_student_status();
+
+			if( 0 == $completion->unit_mandatory_steps( $unit_id ) ) {
+				return false;
+			}
+
+            return sprintf( $message, $completion->unit_completed_mandatory_steps( $unit_id ), $completion->unit_mandatory_steps( $unit_id ) );
+        }		
+		
+		
         /**
          *
          * INSTRUCTOR DETAILS SHORTCODES
@@ -3370,7 +3437,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         }
 
         function module_status( $atts ) {
-            extract(shortcode_atts(array( 'format' => true ), $atts));
+            extract(shortcode_atts(array( 'course_id' => false, 'unit_id' => false, 'format' => true ), $atts));
             $format = ( bool ) $format;
 
             $is_unit_available = do_shortcode('[course_unit_details field="is_unit_available"]');
@@ -3385,9 +3452,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <span class="unit-archive-single-module-status"><?php
                     if ( $is_unit_available ) {
                         if ( $mandatory_input_elements > 0 ) {
-                            echo $mandatory_responses;
-                            ?> <?php _e('of', 'coursepress'); ?> <?php echo $mandatory_input_elements; ?> <?php
-                            _e('mandatory elements completed', 'coursepress');
+							echo do_shortcode('[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]');
+                            // echo $mandatory_responses;
+                            ?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
+                            //_e('mandatory elements completed', 'coursepress');
                         // } else {
                         //     echo $all_responses;
                         //     ?> <?php //_e('of', 'coursepress'); ?> <?php //echo $input_modules_count; ?> <?php
