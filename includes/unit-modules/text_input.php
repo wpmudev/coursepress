@@ -226,7 +226,7 @@ class text_input_module extends Unit_Module {
         global $wpdb, $last_inserted_unit_id, $save_elements;
 
         if ( isset($_POST['module_type']) && ( $save_elements == true ) ) {
-			cp_write_log( $_POST );
+
             foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
 
                 if ( $module_value == $this->name ) {

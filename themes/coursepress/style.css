@@ -1620,6 +1620,19 @@ h1.title.completed-courses-title {
      margin-top: 0px;
 }
 
+.course-list-completed .h1-title {
+	position:relative;
+}
+.course-list-completed .h1-title:after {
+	content: url( 'images/complete_tick_green.svg' );	
+	display:block;
+	float:right;
+	width:19px;
+	height:19px;
+}
+
+/*//complete_tick_green.svg*/
+
 .course-list-current .course-list-item,
 .course-list-managed .course-list-item,
 .course-list-completed .course-list-item {

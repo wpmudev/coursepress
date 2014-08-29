@@ -1746,8 +1746,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 								
 				}
 				
-				cp_write_log( $course->post_title . ' : ' . $course->post_status );
-				
                 $content .= '<div class="course-list-item ' . $course_class . '">';
                 if ( 'yes' == $show_media ) {
                     $content .= do_shortcode('[course_media course_id="' . $course->ID . '" type="' . $media_type . '" priority="' . $media_priority . '"]');
