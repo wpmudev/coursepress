@@ -13,7 +13,7 @@ class file_input_module extends Unit_Module {
         $this->on_create();
     }
 
-    function text_input_module() {
+    function file_input_module() {
         $this->__construct();
     }
 

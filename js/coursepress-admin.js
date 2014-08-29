@@ -461,6 +461,10 @@ function coursepress_modules_ready() {
             jQuery(this).attr("name", "checkbox_input_module_checkbox_check[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
         });
 
+        jQuery("input[name*='answer_length']").each(function(i, obj) {
+            jQuery(this).attr("name", "text_input_module_answer_length[" + jQuery(this).closest(".module-content").find('.module_order').val() + '][]');
+        });
+
         /* Dynamic WP Editor */
         moving = jQuery('input#beingdragged').val();
 
