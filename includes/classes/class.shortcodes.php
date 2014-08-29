@@ -1628,6 +1628,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'title_link' => 'yes',
                 'title_class' => 'course-title',
                 'title_tag' => 'h3',
+				'course_status' => 'all',
+				'list_wrapper_before' => '<div class="course-list %s">',
+				'list_wrapper_after' => '</div>',
                 'show' => 'dates,enrollment_dates,class_size,cost',
                 'show_button' => 'yes',
                 'show_divider' => 'yes',
@@ -1637,6 +1640,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'media_priority' => get_option('listings_media_priority', 'image'), // image, video
                 'admin_links' => false,
                 'manage_link_title' => __('Manage Course', 'cp'),
+				'finished_link_title' => __('View Course', 'cp' ),
                 'limit' => -1,
                 'order' => 'ASC',
                 'class' => '',
@@ -1721,9 +1725,27 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $courses = get_posts($post_args);
             }
 
-            $content .= 0 < count($courses) ? '<div class="course-list ' . $class . '">' : '';
+			//<div class="course-list-item %s">
+            $content .= 0 < count($courses) && ! empty( $list_wrapper_before ) ? sprintf( $list_wrapper_before, $class )  : '';
 
             foreach ( $courses as $course ) {
+				
+				if( !empty($student) && 'all' != strtolower( $course_status ) ) {					
+					$completion = new Course_Completion( $course->ID );
+					$completion->init_student_status();
+					$course->completed = $completion->is_course_complete();
+					
+					// Skip if we wanted a completed course but got an incomplete
+					if ( 'completed' == strtolower( $course_status ) && ! $course->completed ) {
+						continue;
+					}
+					// Skip if we wanted an incompleted course but got a completed
+					if ( 'incomplete' == strtolower( $course_status ) && $course->completed ) {
+						continue;						
+					}
+								
+				}
+				
                 $content .= '<div class="course-list-item ' . $course_class . '">';
                 if ( 'yes' == $show_media ) {
                     $content .= do_shortcode('[course_media course_id="' . $course->ID . '" type="' . $media_type . '" priority="' . $media_priority . '"]');
@@ -1754,7 +1776,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 }
 
                 if ( 'yes' == $show_button ) {
-                    $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');
+					if ( ! empty( $course->completed ) ) {
+	                    $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '" continue_learning_text="' . $finished_link_title . '"]');												
+					} else {
+	                    $content .= do_shortcode('[course_join_button course_id="' . $course->ID . '"]');						
+					}
                 }
 
                 if ( $admin_links ) {
@@ -1783,7 +1809,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $content .= sprintf($student_msg, '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
             }
 
-            $content .= 0 < count($courses) ? '</div>' : ''; //course-list
+            // </div> course-list
+            $content .= 0 < count($courses) && ! empty( $list_wrapper_before ) ? $list_wrapper_after : '';
 
             return $content;
         }

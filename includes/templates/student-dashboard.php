@@ -15,13 +15,14 @@
     $show_random_courses = true;
 
     if ( !empty($course_list) ) {
-        echo __('<h1 class="title">You manage the following courses:</h1>', 'cp');
+        echo __('<h1 class="title managed-courses-title">Courses you manage:</h1>', 'cp');
         echo '<hr />' . $course_list;
         echo '<div class="clearfix" />';
     }
 
     // Add some random courses.
-    $course_list = do_shortcode('[course_list student="' . $student->ID . '" student_msg=""]');
+    // $course_list = do_shortcode('[course_list student="' . $student->ID . '" student_msg="" course_status="incomplete"]');
+	$course_list = do_shortcode('[course_list student="' . $student->ID . '" student_msg="" course_status="incomplete" list_wrapper_before="" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
             
     if ( empty($course_list) && $show_random_courses ) {
 
@@ -32,13 +33,28 @@
     } else {
 
         // Course List
-        echo __('<h2 class="title enrolled-courses-title">You are enrolled in the following courses:</h2>', 'cp');
-        echo do_shortcode('[course_list student="' . $student->ID . '" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
+        echo __('<h1 class="title enrolled-courses-title current-courses-title">Your current courses:</h1>', 'cp');
+        // echo do_shortcode('[course_list student="' . $student->ID . '" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
+		echo '<div class="course-list course-list-current course course-student-dashboard">';
+		echo $course_list;
+		echo '</div>';
     }
-    ?>
-
-    <?php
-
+	
+	// Completed courses
+    // $show = 'dates,class_size';
+    // $course_list = do_shortcode('[course_list student="' . $student->ID . '" student_msg="" course_status="completed" title_column="left" title_tag="h4" show_divider="yes" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no" show="' . $show . '" show_title="no" admin_links="true" show_button="no" show_media="no"]');
+	
+	$course_list = do_shortcode('[course_list student="' . $student->ID . '" student_msg="" course_status="completed" list_wrapper_before="" title_link="no"]');
+	
+	if( !empty( $course_list ) ){
+        // Course List
+        echo __('<h1 class="title completed-courses-title">Completed courses:</h1>', 'cp');
+        // echo do_shortcode('[course_list student="' . $student->ID . '" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="yes"]');
+		echo '<div class="course-list course-list-completed course course-student-dashboard">';
+		echo $course_list;
+		echo '</div>';
+	}
+	
 } else {
     //ob_start();
     // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
