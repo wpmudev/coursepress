@@ -1725,14 +1725,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 $courses = get_posts($post_args);
             }
 
-			//<div class="course-list-item %s">
+			//<div class="course-list %s">
             $content .= 0 < count($courses) && ! empty( $list_wrapper_before ) ? sprintf( $list_wrapper_before, $class )  : '';
 
             foreach ( $courses as $course ) {
 				
-				if( !empty($student) && 'all' != strtolower( $course_status ) ) {					
+				if( !empty($student) && 'all' != strtolower( $course_status ) && !is_array( $student ) ) {					
 					$completion = new Course_Completion( $course->ID );
-					$completion->init_student_status();
+					$completion->init_student_status( $student );
 					$course->completed = $completion->is_course_complete();
 					
 					// Skip if we wanted a completed course but got an incomplete
@@ -1745,6 +1745,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 					}
 								
 				}
+				
+				cp_write_log( $course->post_title . ' : ' . $course->post_status );
 				
                 $content .= '<div class="course-list-item ' . $course_class . '">';
                 if ( 'yes' == $show_media ) {
@@ -1799,6 +1801,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( 'yes' == $show_divider ) {
                     $content .= '<div class="divider" ></div>';
                 }
+				
+				$content .= '</div>';  //course-list-item
             } // foreach
 
             if ( (!$courses || 0 == count($courses) ) && !empty($instructor) ) {

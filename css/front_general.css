@@ -1208,3 +1208,24 @@ span.non_assessed_element{
 	padding-left: 10px;	
 }
 
+.course-media-img {
+	width: 100%;
+}
+
+.course-list-current,
+.course-list-completed,
+.course-list-managed {
+
+}
+
+h1.title.managed-courses-title,
+h1.title.current-courses-title,
+h1.title.completed-courses-title {
+    border-bottom: 3px solid #ccc;
+    font-size: 1.4em;
+    padding: 4px 0;
+    text-transform: uppercase;
+	margin-bottom: 30px;
+	line-height: 1.2em;
+	margin-top:0;
+}

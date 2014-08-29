@@ -32,6 +32,10 @@ get_header();
             <?php while ( have_posts() ) : the_post(); ?>
 
                 <?php
+				// $status = the_post();
+				if( 'publish' != $post->post_status ) {
+					continue;
+				}
                 get_template_part( 'content-course' );
                 ?>
 

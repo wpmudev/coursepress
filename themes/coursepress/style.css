@@ -1583,6 +1583,54 @@ input[type="submit"].apply-button-finished,
     display: none;
 }
 
+.course-list-current,
+.course-list-completed,
+.course-list-managed {
+
+}
+
+h1.title.managed-courses-title,
+h1.title.current-courses-title,
+h1.title.completed-courses-title {
+    border-bottom: none;
+	font-weight:normal;
+    font-size: 1.4em;
+    padding: 4px 0;
+    text-transform: uppercase;
+	margin-bottom: 30px;
+	line-height: 1.2em;
+	margin-top:0;
+}
+
+h1.title.managed-courses-title {
+	color: #FF6600;
+}
+h1.title.current-courses-title {
+	color: #0FACD9;
+}
+h1.title.completed-courses-title {
+	color: #41BB8A;
+}
+
+.course-list .h1-title  {
+    border-bottom: 2px solid #74d1d4;
+     clear: both;
+     font-size: 30px;
+     margin-bottom: 20px;
+     margin-top: 0px;
+}
+
+.course-list-current .course-list-item,
+.course-list-managed .course-list-item,
+.course-list-completed .course-list-item {
+	margin:0 0 40px 0;
+}
+
+.course-list-completed button.apply-button-enrolled {
+	background: #41BB8A;
+}
+
+
 #additional-summary{
     width: 100%;
     float: left;
