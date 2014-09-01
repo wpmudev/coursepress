@@ -2644,6 +2644,28 @@ li.current_page_item a{
 	text-align: right;
 }
 
+.virtual-page-courses-dashboard h1.entry-title{
+	font-size: 14px;
+	line-height: 16px;
+	margin-bottom:30px;
+}
+
+.unit-archive-course-complete {
+    background-image: none;
+    color: #ffffff;
+    display: block;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    margin: 20px 0 0;
+    padding: 2px 0;
+    text-align: center;
+    width: 100%;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+}
+
 /*
 RESPONSIVE
 */

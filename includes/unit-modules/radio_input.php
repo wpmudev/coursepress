@@ -19,6 +19,7 @@ class radio_input_module extends Unit_Module {
 
     function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
         $response = $this->get_response($user_ID, $response_request_ID);
+
         if ( count(( array ) $response >= 1) ) {
             ?>
             <div class="module_text_response_answer">
@@ -58,9 +59,11 @@ class radio_input_module extends Unit_Module {
     }
 
     function get_response( $user_ID, $response_request_ID, $status = 'publish', $limit = 1 ) {
+
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'post_author' => $user_ID,
+			'author' => $user_ID,
             'post_type' => 'module_response',
             'post_parent' => $response_request_ID,
             'post_status' => 'publish'
@@ -80,6 +83,7 @@ class radio_input_module extends Unit_Module {
     function front_main( $data ) {
 
         $response = $this->get_response(get_current_user_id(), $data->ID);
+
         $all_responses = $this->get_response(get_current_user_id(), $data->ID, 'private', -1);
         
         $grade = false;

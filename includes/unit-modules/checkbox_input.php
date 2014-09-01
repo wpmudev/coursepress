@@ -61,6 +61,7 @@ class checkbox_input_module extends Unit_Module {
         $already_respond_posts_args = array(
             'posts_per_page' => $limit,
             'post_author' => $user_ID,
+			'author' => $user_ID,
             'post_type' => 'module_response',
             'post_parent' => $response_request_ID,
             'post_status' => $status

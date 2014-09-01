@@ -54,6 +54,7 @@ class file_input_module extends Unit_Module {
         $already_respond_posts_args = array(
             'posts_per_page' => 1,
             'post_author' => $user_ID,
+			'author' => $user_ID,
             'post_type' => 'attachment',
             'post_parent' => $response_request_ID,
             'post_status' => $status//inherit

@@ -1229,3 +1229,16 @@ h1.title.completed-courses-title {
 	line-height: 1.2em;
 	margin-top:0;
 }
+
+.unit-archive-course-complete {
+    background-color: #41bb8a;
+    color: #ffffff;
+    display: block;
+    float: right;
+    font-size: 0.5em;
+    padding: 5px 5px 6px 30px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+	width:100px;
+}

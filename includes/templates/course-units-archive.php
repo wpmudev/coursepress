@@ -1,11 +1,15 @@
 <?php
 $course_id = do_shortcode('[get_parent_course_id]');
+$progress = do_shortcode('[course_progress course_id="' . $course_id . '"]');
 do_shortcode('[course_units_loop]'); //required for getting unit results
 ?>
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
-echo __('<h2>Course Units</h2>', 'cp');
+if( 100 == (int) $progress) {
+	$complete_message = sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
+}
+echo __('<h2>Course Units ' . $complete_message . '</h2>', 'cp');
 ?>
 <div class="units-archive">
     <ul class="units-archive-list">

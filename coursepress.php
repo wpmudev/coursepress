@@ -371,6 +371,8 @@ if ( !class_exists('CoursePress') ) {
             add_action('edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ));
             add_action('personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ));
             add_action('edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ));
+			
+			add_filter( 'body_class', array( &$this, 'add_body_classes' ) );
 
             // Handle MP payment confirmation
             $gateways = get_option('mp_settings', false);
@@ -388,6 +390,15 @@ if ( !class_exists('CoursePress') ) {
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
         }
+
+		function add_body_classes( $classes ) {
+			global $post;
+				if ( isset( $post ) ) {
+					$classes[] = str_replace( '_', '-', $post->post_type . '-' . $post->post_name );
+				}
+			return $classes;
+		}
+
 
         function filter_search( $query ) {
             // Get post types
@@ -3316,6 +3327,7 @@ if ( !class_exists('CoursePress') ) {
                     );
 
                     $pg = new CoursePress_Virtual_Page($args);
+					
                 }
                 $this->set_latest_activity(get_current_user_id());
             }
