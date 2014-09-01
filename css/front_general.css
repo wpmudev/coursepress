@@ -603,6 +603,12 @@ h1.notification-title{
     display: none;
 }
 
+.module_mandatory {
+    font-size: 0.8em;
+    font-style: oblique;
+    text-align: right;
+}
+
 .post-type-archive-course .quick-course-info .course-time{
     width: 25%;
     float: left;
@@ -1242,4 +1248,29 @@ h1.title.completed-courses-title {
     -moz-border-radius: 3px;
 	width:150px;
 	text-align:center;
+}
+
+.checkbox_input_module .correct,
+.checkbox_input_module .incorrect,
+.checkbox_input_module .unanswered,
+.radio_input_module .correct,
+.radio_input_module .incorrect,
+.radio_input_module .unanswered {
+	border-bottom: 1px solid #f8f8f8;
+}
+
+.checkbox_input_module .correct,
+.radio_input_module .correct {
+	background-image: url('../images/tick_green.svg');
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+
+.checkbox_input_module .incorrect,
+.radio_input_module .incorrect {
+	background-image: url('../images/cross_red.svg');
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
 }

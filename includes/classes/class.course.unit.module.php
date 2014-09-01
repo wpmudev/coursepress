@@ -605,21 +605,43 @@ if ( !class_exists('Unit_Module') ) {
             </label>
             <?php
         }
+		
+		function mandatory_message( $data ) {
+			if ( 'yes' == $data->mandatory_answer ) {
+				
+				$message = __( '* Mandatory', 'cp' );
+				if ( 'yes' == $data->gradable_answer ) {
+					$message = __( '* Mandatory', 'cp' );
+				}
+				
+				?>
+					<div class="module_mandatory">
+						<?php echo $message; ?>
+					</div>
+				<?php
+				
+			}
+		}
 
-        function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false ) {
+        function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false, $show_grade = true ) {
             $number_of_answers = ( int ) count($responses) + ( int ) count($last_public_response);
 
             $limit_attempts = $data->limit_attempts; //yes or no
             $limit_attempts_value = $data->limit_attempts_value;
             $attempts_remaining = $limit_attempts_value - $number_of_answers;
 
-            if ( isset($limit_attempts) && $limit_attempts == 'yes' ) {
+            if ( isset($limit_attempts) && $limit_attempts == 'yes' && 'yes' == $data->gradable_answer ) {
                 $limit_attempts_value = $limit_attempts_value;
             } else {
                 $limit_attempts_value = -1; //unlimited
             }
 
             if ( $grade && $data->gradable_answer ) {
+				
+				if ( $grade['grade'] < $data->minimum_grade_required && $data->mandatory_answer ) {
+					$this->mandatory_message( $data );
+				}
+				
                 ?>
                 <div class="module_grade">
                     <div class="module_grade_left">
@@ -646,8 +668,8 @@ if ( !class_exists('Unit_Module') ) {
                         ?>
                     </div>
                     <div class="module_grade_right">
-                        <?php echo __('Graded: ') . $grade['grade'] . '%'; ?> 
-                        <?php
+						<?php if( $show_grade ) : ?>
+                        <?php echo __('Graded: ') . $grade['grade'] . '%'; 
                         if ( isset($data->minimum_grade_required) && is_numeric($data->minimum_grade_required) ) {
                             if ( $grade['grade'] >= $data->minimum_grade_required ) {
                                 ?>
@@ -666,12 +688,16 @@ if ( !class_exists('Unit_Module') ) {
                             }
                         }
                         ?>
+						<?php endif;?>
                     </div>
                 </div>
                 <?php
             } else {
                 // if ( $data->gradable_answer && 'enabled' != $enabled ) {
-                if ( $data->gradable_answer ) {					
+                if ( $data->gradable_answer ) {
+					if( $data->mandatory_answer ) {
+						$this->mandatory_message( $data );
+					}	
                     if ( ( int ) count($responses) > 1 ) {
                         ?>
                         <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
@@ -679,7 +705,10 @@ if ( !class_exists('Unit_Module') ) {
                     }
                 }
             }
+			
         }
+		
+		
 
         function time_estimation( $data ) {
             // var_dump($data->time_estimation);

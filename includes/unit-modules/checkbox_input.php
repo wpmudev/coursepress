@@ -120,9 +120,21 @@ class checkbox_input_module extends Unit_Module {
                 <?php
                 if ( isset($data->answers) && !empty($data->answers) ) {
                     foreach ( $data->answers as $answer ) {
+						$student_answer = in_array( $answer, $student_checked_answers );
+						$correct_answer = in_array( $answer, $data->checked_answers );
+						
+						$correct = 'unanswered';
+						if( $student_answer && $correct_answer ) {
+							$correct = 'correct';
+						} else if( $student_answer ) {
+							$correct = 'incorrect';
+						}
+						
                         ?>
                         <li>
-                            <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_front_' . $data->ID; ?>[]" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo ( isset($student_checked_answers) && in_array($answer, ( is_array($student_checked_answers) ? $student_checked_answers : array())) ? 'checked' : '' ); ?> /><?php echo $answer; ?>
+	                        <div class="<?php echo $correct; ?>">							
+	                            <input class="checkbox_answer_check" type="checkbox" name="<?php echo $this->name . '_front_' . $data->ID; ?>[]" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo ( isset($student_checked_answers) && in_array($answer, ( is_array($student_checked_answers) ? $student_checked_answers : array())) ? 'checked' : '' ); ?> /><?php echo $answer; ?>
+							</div>
                         </li>
                         <?php
                     }
@@ -130,7 +142,7 @@ class checkbox_input_module extends Unit_Module {
                 ?>
             </ul>
 
-            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response); ?>
+            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response, false); ?>
 		
         </div>
         <?php

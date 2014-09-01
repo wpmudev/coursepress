@@ -2666,6 +2666,32 @@ li.current_page_item a{
     -moz-border-radius: 0px;
 }
 
+.checkbox_input_module .correct,
+.checkbox_input_module .incorrect,
+.checkbox_input_module .unanswered,
+.radio_input_module .correct,
+.radio_input_module .incorrect,
+.radio_input_module .unanswered {
+	border-bottom: none;
+}
+
+.checkbox_input_module .correct,
+.radio_input_module .correct {
+	background-image: url('images/complete_tick_green.svg');
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+
+.checkbox_input_module .incorrect,
+.radio_input_module .incorrect {
+	background-image: url('images/cross_red.svg');
+	background-size: 16px 16px;
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+
+
 /*
 RESPONSIVE
 */
