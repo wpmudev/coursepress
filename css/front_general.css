@@ -1235,10 +1235,11 @@ h1.title.completed-courses-title {
     color: #ffffff;
     display: block;
     float: right;
-    font-size: 0.5em;
-    padding: 5px 5px 6px 30px;
+    font-size: 0.6em;
+    padding: 5px;
     border-radius: 3px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-	width:100px;
+	width:150px;
+	text-align:center;
 }
