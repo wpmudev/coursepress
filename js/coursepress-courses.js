@@ -1444,10 +1444,46 @@ jQuery(document).ready(function($) {
     }
 });
 
-jQuery(document).ready(function($) {
+function toggle_payment_box( event, bool ) {
+	$ = jQuery;
+	event.stopPropagation();
+    $('#marketpressprompt-box').toggle();
+	if( $('#paid_course').is(':checked') ) {
+		$('#paid_course').prop('checked', ! bool);
+	} else {
+		$('#paid_course').prop('checked', bool);
+	}
+}
 
+function toggle_checkbox_option( target, event ) {
+	$ = jQuery;
+	event.stopPropagation();
+	if( $( target ).is(':checked') ) {
+		$( target ).prop('checked', false);
+	} else {
+		$( target ).prop('checked', true);
+	}	
+	$( target ).change();
+}
+
+function add_check_label_handler( target ) {
+	$ = jQuery;	
+	$( target ).siblings('span').click( function(event) {
+		toggle_checkbox_option( target , event );
+	});		
+}
+
+jQuery(document).ready(function($) {
+	// allow <span> to trigger checkbox
+	add_check_label_handler( '#limit_class_size' );
+	add_check_label_handler( '#allow_course_discussion' );
+	add_check_label_handler( '#allow_workbook_page' );	
+
+	$('#paid_course').click( function(event) {
+		toggle_payment_box( event, false );
+	});
     $('#marketpressprompt').click(function(event) {
-        $('#marketpressprompt-box').toggle();
+		toggle_payment_box( event, true );		
     });
 	
 	$('div.button.cp-activate-mp-lite').click( function( event ) {

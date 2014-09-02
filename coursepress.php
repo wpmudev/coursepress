@@ -2023,7 +2023,6 @@ if ( !class_exists('CoursePress') ) {
 
 //Add plugin admin menu items
         function add_admin_menu() {
-
 // Add the menu page
             if ( current_user_can('manage_options') || current_user_can('coursepress_dashboard_cap') ) {
                 add_menu_page($this->name, $this->name, 'coursepress_dashboard_cap', 'courses', array( &$this, 'coursepress_courses_admin' ), $this->plugin_url . 'images/coursepress-icon.png');

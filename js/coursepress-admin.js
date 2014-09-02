@@ -970,34 +970,12 @@ jQuery(document).ready(function() {
     });
 
     jQuery('#paid_course').change(function() {
-        if (this.checked) {
-            jQuery(this).parents('.product').find('.course-sku input').removeClass('disabled');
-            jQuery(this).parents('.product').find('.course-price input').removeClass('disabled');
-            jQuery(this).parents('.product').find('.course-sale-price input').removeClass('disabled');
-            jQuery(this).parents('.product').find('.course-sku input').removeAttr('disabled');
-            jQuery(this).parents('.product').find('.course-price input').removeAttr('disabled');
-            jQuery(this).parents('.product').find('.course-sale-price input').removeAttr('disabled');
-            jQuery(this).parents('.product').find('.course-price .price-label').addClass('required');
-            jQuery(this).parents('.product').find('.payment-gateway-required').addClass('required');
-            jQuery(this).parents('.product').find('.course-paid-course-details').removeClass('hidden');
-
-            // jQuery('input.class_size').removeClass('disabled');
-            // jQuery('input.class_size').removeAttr('disabled');
-        } else {
-            jQuery(this).parents('.product').find('.course-sku input').addClass('disabled');
-            jQuery(this).parents('.product').find('.course-price input').addClass('disabled');
-            jQuery(this).parents('.product').find('.course-sale-price input').addClass('disabled');
-            jQuery(this).parents('.product').find('.course-sku input').attr('disabled', 'disabled');
-            jQuery(this).parents('.product').find('.course-price input').attr('disabled', 'disabled');
-            jQuery(this).parents('.product').find('.course-sale-price input').attr('disabled', 'disabled');
-            jQuery(this).parents('.product').find('.course-price .price-label').removeClass('required');
-            jQuery(this).parents('.product').find('.payment-gateway-required').removeClass('required');
-            jQuery(this).parents('.product').find('.course-paid-course-details').addClass('hidden');
-            // jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
-            //             jQuery('input.class_size').addClass('disabled');
-            //             jQuery('input.class_size').attr('disabled', 'disabled');
-        }
+		toggle_payment_fields( jQuery( this ), jQuery( this ).is(':checked') );
     });
+	
+	jQuery('#paid_course').siblings('span').click(function() {
+		toggle_payment_fields( jQuery( '#paid_course' ), ! jQuery( '#paid_course' ).is(':checked') );
+	});
 
     jQuery('.course-section #mp_is_sale').change(function() {
         if (this.checked) {
@@ -1009,6 +987,38 @@ jQuery(document).ready(function() {
 
 
 });
+
+function toggle_payment_fields( element, bool ) {
+
+    if ( bool ) {
+        jQuery(element).parents('.product').find('.course-sku input').removeClass('disabled');
+        jQuery(element).parents('.product').find('.course-price input').removeClass('disabled');
+        jQuery(element).parents('.product').find('.course-sale-price input').removeClass('disabled');
+        jQuery(element).parents('.product').find('.course-sku input').removeAttr('disabled');
+        jQuery(element).parents('.product').find('.course-price input').removeAttr('disabled');
+        jQuery(element).parents('.product').find('.course-sale-price input').removeAttr('disabled');
+        jQuery(element).parents('.product').find('.course-price .price-label').addClass('required');
+        jQuery(element).parents('.product').find('.payment-gateway-required').addClass('required');
+        jQuery(element).parents('.product').find('.course-paid-course-details').removeClass('hidden');
+
+        // jQuery('input.class_size').removeClass('disabled');
+        // jQuery('input.class_size').removeAttr('disabled');
+    } else {
+        jQuery(element).parents('.product').find('.course-sku input').addClass('disabled');
+        jQuery(element).parents('.product').find('.course-price input').addClass('disabled');
+        jQuery(element).parents('.product').find('.course-sale-price input').addClass('disabled');
+        jQuery(element).parents('.product').find('.course-sku input').attr('disabled', 'disabled');
+        jQuery(element).parents('.product').find('.course-price input').attr('disabled', 'disabled');
+        jQuery(element).parents('.product').find('.course-sale-price input').attr('disabled', 'disabled');
+        jQuery(element).parents('.product').find('.course-price .price-label').removeClass('required');
+        jQuery(element).parents('.product').find('.payment-gateway-required').removeClass('required');
+        jQuery(element).parents('.product').find('.course-paid-course-details').addClass('hidden');
+        // jQuery( this ).parents('.wide').find('.limit-class-size-required').removeClass('required');
+        //             jQuery('input.class_size').addClass('disabled');
+        //             jQuery('input.class_size').attr('disabled', 'disabled');
+    }
+	
+}
 
 jQuery(document).ready(function()
 {

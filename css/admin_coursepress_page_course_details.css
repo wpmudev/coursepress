@@ -1941,7 +1941,7 @@ label.bold-label{
 .course-section .course-form label span {
     font-size: 0.9em;
     font-weight: normal;
-    display: block;
+    display: inline-block;
     margin: 15px 0;
 }
 

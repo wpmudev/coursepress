@@ -876,7 +876,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <div>
                                                 <label for='meta_class-size'>
                                                     <input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
-                                                    <?php _e('Limit class size', 'cp'); ?>
+                                                    <span><?php _e('Limit class size', 'cp'); ?></span>
                                                     <?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );             ?>
                                                     <br />
                                                     <span><?php _e('Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp'); ?></span>
@@ -888,7 +888,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                             <label for='meta_allow_course_discussion'>
                                                 <input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
-                                                <?php _e('Allow Course Discussion', 'cp'); ?>
+                                                <span><?php _e('Allow Course Discussion', 'cp'); ?></span>
                                                 <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );             ?>
                                                 <br />
                                                 <span><?php _e('If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp'); ?></span>
@@ -896,7 +896,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                             <label for='meta_allow_workbook_page'>
                                                 <input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
-                                                <?php _e('Show student Workbook', 'cp'); ?>
+                                                <span><?php _e('Show student Workbook', 'cp'); ?></span>
                                                 <?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );             ?>
                                                 <br />
                                                 <span><?php _e('If checked, students can see their progress and grades.', 'cp'); ?></span>
@@ -1004,8 +1004,8 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             </label>
 
                                             <div class="course-paid" id="marketpressprompt">
-                                                <p><input type="checkbox" name="meta_paid_course" <?php echo ( isset($paid_course) && $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course" />
-                                                    <?php _e('This is a Paid Course', 'cp'); ?></p>
+                                                <input type="checkbox" name="meta_paid_course" <?php echo ( isset($paid_course) && $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course"></input>
+                                                    <span><?php _e('This is a Paid Course', 'cp'); ?></span>
                                             </div>
 
                                             <div class="cp-markertpress-not-active <?php echo $coursepress->marketpress_active ? 'hidden' : ''; ?>">

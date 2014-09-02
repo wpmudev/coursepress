@@ -2691,6 +2691,9 @@ li.current_page_item a{
 	background-repeat: no-repeat;
 }
 
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price {
+	background-position: -872px -232px;
+}
 
 /*
 RESPONSIVE
