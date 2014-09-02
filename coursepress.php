@@ -2851,7 +2851,7 @@ if ( !class_exists('CoursePress') ) {
                 $role->add_cap($cap);
             }
 
-            CoursePress_Capabilities::drop_private_caps($user_id);
+            CoursePress_Capabilities::drop_private_caps($user->id);
         }
 
 //Functions for handling admin menu pages
