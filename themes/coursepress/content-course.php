@@ -22,7 +22,7 @@ $course_language = $course->details->course_language;
 
     <?php
     // Course thumbnail
-    echo do_shortcode('[course_media type="thumbnail"]');
+    echo do_shortcode('[course_media type="image"]');
     ?>
 
     <section class='article-content-right <?php echo $extended_class; ?> course-archive'>
