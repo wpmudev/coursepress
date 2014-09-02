@@ -6,6 +6,7 @@ do_shortcode('[course_units_loop]'); //required for getting unit results
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
+$complete_message = '';
 if( 100 == (int) $progress) {
 	$complete_message = sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
 }

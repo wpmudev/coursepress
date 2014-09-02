@@ -118,16 +118,24 @@ class checkbox_input_module extends Unit_Module {
 
             <ul class='radio_answer_check_li checkbox_answer_group' <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?>>
                 <?php
+				$total_correct = 0;
+				$total_answers = 0;
                 if ( isset($data->answers) && !empty($data->answers) ) {
                     foreach ( $data->answers as $answer ) {
-						$student_answer = in_array( $answer, $student_checked_answers );
-						$correct_answer = in_array( $answer, $data->checked_answers );
 						
 						$correct = 'unanswered';
-						if( $student_answer && $correct_answer ) {
-							$correct = 'correct';
-						} else if( $student_answer ) {
-							$correct = 'incorrect';
+						$student_answer = false;
+						if( ! empty( $student_checked_answers ) ) {						
+							$student_answer = in_array( $answer, $student_checked_answers );
+							$correct_answer = in_array( $answer, $data->checked_answers );
+							$total_answers = count( $data->checked_answers );
+						
+							if( $student_answer && $correct_answer ) {
+								$correct = 'correct';
+								$total_correct += 1;
+							} else if( $student_answer ) {
+								$correct = 'incorrect';
+							}
 						}
 						
                         ?>
@@ -141,8 +149,7 @@ class checkbox_input_module extends Unit_Module {
                 }
                 ?>
             </ul>
-
-            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response, false); ?>
+            <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response, false, $total_correct, $total_answers); ?>
 		
         </div>
         <?php

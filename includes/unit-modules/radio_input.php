@@ -113,29 +113,31 @@ class radio_input_module extends Unit_Module {
                 <?php
 				
 				$student_answer = -1;
-				if ( !empty( $response ) ) {
-					$student_answer = array_search( $response->post_content, $data->answers );
-				}
-				$correct_answer = array_search( $data->checked_answer, $data->answers );
-
-                foreach ( $data->answers as $key => $answer ) {
-
-					$correct = 'unanswered';
-					if( -1 != $student_answer && $key == $student_answer && $key == $correct_answer ) {
-						// $correct = $answer == $response->post_content ? 'correct' : 'unanswered';
-						$correct = 'correct';
-					} else if ( -1 != $student_answer && $key == $student_answer ) {
-						$correct = 'incorrect';
+				if ( ! empty( $data ) && ! empty( $data->checked_answer ) && ! empty( $data->answers ) ){
+					if ( !empty( $response ) ) {
+						$student_answer = array_search( $response->post_content, $data->answers );
 					}
+					$correct_answer = array_search( $data->checked_answer, $data->answers );
+
+	                foreach ( $data->answers as $key => $answer ) {
+
+						$correct = 'unanswered';
+						if( -1 != $student_answer && $key == $student_answer && $key == $correct_answer ) {
+							// $correct = $answer == $response->post_content ? 'correct' : 'unanswered';
+							$correct = 'correct';
+						} else if ( -1 != $student_answer && $key == $student_answer ) {
+							$correct = 'incorrect';
+						}
 					
-                    ?>
-                    <li>
-                        <div class="<?php echo $correct; ?>">
-							<input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo ( isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : '' ); ?> /><?php echo $answer; ?>
-						</div>
-                    </li>
-                    <?php
-                }
+	                    ?>
+	                    <li>
+	                        <div class="<?php echo $correct; ?>">
+								<input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr($answer); ?>' <?php echo $enabled; ?> <?php echo ( isset($response->post_content) && trim($response->post_content) == $answer ? 'checked' : '' ); ?> /><?php echo $answer; ?>
+							</div>
+	                    </li>
+	                    <?php
+	                }
+				}
                 ?>
             </ul>
             <?php echo $this->grade_status_and_resubmit($data, $grade, $all_responses, $response, false); ?>

@@ -10,7 +10,7 @@ $course_id = do_shortcode('[get_parent_course_id]');
 
 add_thickbox();
 
-$paged = $wp->query_vars['paged'] ? absint($wp->query_vars['paged']) : 1;
+$paged = ! empty( $wp->query_vars['paged'] ) ? absint($wp->query_vars['paged']) : 1;
 //redirect to the parent course page if not enrolled or not preview unit/page
 while ( have_posts() ) : the_post();
     $coursepress->check_access($course_id, get_the_ID());

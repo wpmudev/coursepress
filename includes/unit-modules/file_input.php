@@ -103,8 +103,8 @@ class file_input_module extends Unit_Module {
                     <input type="file" <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> name="<?php echo $this->name . '_front_' . $data->ID; ?>" id="<?php echo $this->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
                     <?php
                 } else {
-                    _e('File uploaded. ', 'cp');
-                    // printf( __('<a target="_blank" href="%s" style="padding-left: 20px">View/Download File</a>'), $response->guid );
+                    _e('File successfully uploaded. ', 'cp');
+                    // printf( '<a target="_blank" href="%s" style="padding-left: 20px">%s</a>', $response->guid, __( 'View/Download File', 'cp' ) );
                 }
                 ?>
             </div>

@@ -280,6 +280,7 @@ if ( !class_exists('Student') ) {
 
         function add_student( $student_data ) {
             //$student_data['role'] = 'student';
+			$student_data['first_name'] = str_replace( '\\', '', $student_data['first_name'] );
             return wp_insert_user($student_data);
         }
 

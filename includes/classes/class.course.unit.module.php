@@ -623,7 +623,7 @@ if ( !class_exists('Unit_Module') ) {
 			}
 		}
 
-        function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false, $show_grade = true ) {
+        function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false, $show_grade = true, $total_correct = false, $total_answers = false ) {
             $number_of_answers = ( int ) count($responses) + ( int ) count($last_public_response);
 
             $limit_attempts = $data->limit_attempts; //yes or no
@@ -689,6 +689,11 @@ if ( !class_exists('Unit_Module') ) {
                         }
                         ?>
 						<?php endif;?>
+						<?php
+							if ( ( !empty( $total_correct ) || 0 == $total_correct ) && !empty( $total_answers) ) {
+								printf( __( '%d of %d correct', 'cp' ), $total_correct, $total_answers );
+							}
+						?>
                     </div>
                 </div>
                 <?php
