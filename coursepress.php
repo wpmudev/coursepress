@@ -1,8 +1,8 @@
 <?php
 /*
-  Plugin Name: CoursePress
+  Plugin Name: CoursePress Pro
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
-  Description: CoursePress turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+  Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
@@ -40,7 +40,7 @@ if ( !class_exists('CoursePress') ) {
 
         private static $instance = null;
         var $version = '1.0.3b';
-        var $name = 'CoursePress';
+        var $name = 'CoursePress Pro';
         var $dir_name = 'coursepress';
         var $location = '';
         var $plugin_dir = '';
@@ -53,7 +53,7 @@ if ( !class_exists('CoursePress') ) {
 
             global $wpmudev_notices;
 
-            $wpmudev_notices[] = array( 'id' => 896496, 'name' => 'CoursePress', 'screens' => array( 'toplevel_page_courses', 'coursepress_page_course_details', 'coursepress_page_instructors', 'coursepress_page_students', 'coursepress_page_assessment', 'coursepress_page_reports', 'coursepress_page_notifications', 'coursepress_page_settings' ) );
+            $wpmudev_notices[] = array( 'id' => 896496, 'name' => $this->name, 'screens' => array( 'toplevel_page_courses', 'coursepress_page_course_details', 'coursepress_page_instructors', 'coursepress_page_students', 'coursepress_page_assessment', 'coursepress_page_reports', 'coursepress_page_notifications', 'coursepress_page_settings' ) );
             include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 			
 

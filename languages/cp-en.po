@@ -2055,7 +2055,7 @@ msgstr ""
 
 #: includes/admin-pages/quick-setup.php:83
 msgid ""
-"There are many other features in Coursepress, but those are the basics to "
+"There are many other features in CoursePress, but those are the basics to "
 "get you up and running. Now it’s time to publish the course and watch your "
 "students learn"
 msgstr ""

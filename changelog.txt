@@ -1,4 +1,4 @@
-Plugin Name: CoursePress
+Plugin Name: CoursePress Pro
 Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
 ----------------------------------------------------------------------
