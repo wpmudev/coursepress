@@ -1015,9 +1015,16 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     </label>
 
                                                     <?php
-                                                    echo sprintf(__('MarketPress Lite has been bundled with %s.<br />' .
-                                                                    'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
-                                                                    'If you require other payment gateways, you will need to upgrade to %s.', 'cp'), $coursepress->name, '<div class="button cp-activate-mp-lite">' . __('Activate MarketPress Lite', 'cp') . '</div>', '<a href="https://premium.wpmudev.org/project/e-commerce/">' . __('MarketPress', 'cp') . '</a>');
+													if ( ! CoursePress_Capabilities::is_pro() ) {
+	                                                    echo sprintf(__('MarketPress Lite has been bundled with %s.<br />' .
+	                                                                    'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
+	                                                                    'If you require other payment gateways, you will need to upgrade to %s.', 'cp'), $coursepress->name, '<div class="button cp-activate-mp-lite">' . __('Activate MarketPress Lite', 'cp') . '</div>', '<a href="https://premium.wpmudev.org/project/e-commerce/">' . __('MarketPress', 'cp') . '</a>');
+														
+													} else {
+	                                                    echo sprintf(__('The full version of MarketPress has been bundled with %s.<br />' .
+	                                                                    'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />',
+																		'cp'), 'CoursePress Pro', '<div class="button cp-activate-mp-lite">' . __('Activate MarketPress', 'cp') . '</div>' );														
+													}
                                                     ?>
                                                 </div>
                                             </div>  <!-- cp-marketpress-not-active -->
