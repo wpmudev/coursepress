@@ -2,15 +2,15 @@
 
 CoursePress has two primary development branches: coursepress/pro and coursepress/standard  
 
-** CoursePress Pro (coursepress/pro) **  
+#### CoursePress Pro (coursepress/pro)  
 
-CoursePress Pro is the official premium plugin that lives on WPMU Dev.
+CoursePress Pro is the official premium plugin that lives on WPMU Dev and will ultimately always be merged back into **master**.
 
-** CoursePress (coursepress/standard) **  
+#### CoursePress (coursepress/standard)  
 
 CoursePress is the free limited version that gets published to the WordPress plugin directory.
 
-### Working with the branches ###
+### Working with the branches
 
 #### Cloning ####
 
@@ -20,7 +20,7 @@ When cloning CoursePress to your local repo please use the --recursive flag as p
 
 This will ensure you grab all the required submodules.
 
-#### Checking out branches ####  
+#### Checking out branches  
 
 When checking out the *coursepress/pro* or *coursepress/standard* branches please make sure that you run 'git clean -dff' and then 'git submodule update'.  
 
