@@ -40,7 +40,7 @@ if ( !class_exists('CoursePress') ) {
 
         private static $instance = null;
         var $version = '1.0.3b';
-        var $name = 'CoursePress Pro';
+        var $name = 'CoursePress';
         var $dir_name = 'coursepress';
         var $location = '';
         var $plugin_dir = '';
