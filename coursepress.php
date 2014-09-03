@@ -389,8 +389,9 @@ if ( !class_exists('CoursePress') ) {
             // Override order success page for courses
             add_filter('mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2);
             // apply_filters("mp_setting_" . implode('', $keys), $setting, $default);
+			
         }
-
+		
 		function add_body_classes( $classes ) {
 			global $post;
 				if ( isset( $post ) ) {
@@ -438,6 +439,7 @@ if ( !class_exists('CoursePress') ) {
         function activate_marketpress_lite() {
             $ajax_response = array();
 
+			// Same file regardless of Lite or full version of MP
             $result = activate_plugin('coursepress/marketpress.php');
 
             if ( is_wp_error($result) ) {
@@ -3134,7 +3136,7 @@ if ( !class_exists('CoursePress') ) {
                 'delete_class' => __('Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp'),
                 'setup_gateway' => __("You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp'),
                 'unit_setup_prompt' => __('<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp'),
-                'mp_activated_prompt' => __('<div>Marketpress Lite has been activated successfully.</div>', 'cp'),
+                'mp_activated_prompt' => __('<div>Marketpress has been activated successfully.</div>', 'cp'),
                 'required_course_name' => __('<strong>Course Name</strong> is a required field.', 'cp'),
                 'required_course_excerpt' => __('<strong>Course Excerpt</strong> is a required field.', 'cp'),
                 'required_course_description' => __('<strong>Course Description</strong> is a required field.', 'cp'),
