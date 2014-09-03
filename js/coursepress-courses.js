@@ -1502,7 +1502,7 @@ jQuery(document).ready(function($) {
 					$('.cp-markertpress-is-active').removeClass('hidden');					
 					
 					//
-			        var content = '<div class="update green top-right">aaaa' + coursepress_units.mp_activated_prompt + '<i class="fa fa-times-circle" /></div>';
+			        var content = '<div class="update green top-right">' + coursepress_units.mp_activated_prompt + '<i class="fa fa-times-circle" /></div>';
 					var the_top = $('.course-section.step-6 .course-form').position().top + 200;
 			        $('#wpbody-content').append(content);
 			        $('.update.green.top-right').css({
@@ -1537,7 +1537,7 @@ jQuery(document).ready(function($) {
 		
 		
 	});
-
+	
     $('[name="meta_course_structure_options"]').change(function(event) {
 
         if ($(this).prop('checked')) {
