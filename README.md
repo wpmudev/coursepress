@@ -18,7 +18,12 @@ When cloning CoursePress to your local repo please use the --recursive flag as p
 
     git clone git@bitbucket.org:incsub/coursepress.git --recursive  
 
-This will ensure you grab all the required submodules.
+This will ensure you grab all the required submodules.  
+
+**Note: ** If you already have a cloned repo, you will need to *init* the submodule.  
+
+    git submodule init --   
+    git submodule update  
 
 #### Checking out branches  
 
