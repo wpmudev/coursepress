@@ -275,7 +275,7 @@
 
 /* List table anomalies */
 @media ( max-width: 439px ) {
-    .nav-tab-wrapper .nav-tab{
+    .unit-details .nav-tab{
         padding: 10px;
     }
 }
@@ -308,7 +308,7 @@
         width: 100%;
     }	
 
-    .nav-tab-wrapper .nav-tab{
+    .unit-details .nav-tab{
         font-size: 0.8em;
         padding: 13px;
     }

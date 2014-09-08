@@ -508,7 +508,7 @@ div.buttons a.cancellink {
     cursor: auto !Important;
 }
 
-.unit-control-buttons .button.button-preview {
+.unit-details .unit-control-buttons .button.button-preview {
     position:relative;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -516,7 +516,7 @@ div.buttons a.cancellink {
     -ms-filter: none;
     filter: none;
 }
-.unit-control-buttons .button.button-preview:after {
+.unit-details .unit-control-buttons .button.button-preview:after {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -536,15 +536,15 @@ div.buttons a.cancellink {
     height: 27px;
 }
 
-.section.static .unit-control-buttons .button.button-preview:after {
+.unit-details .section.static .unit-control-buttons .button.button-preview:after {
     background: #0074A2;	
 }
 
-.section.static .unit-control-buttons .button.save-unit-button {
+.unit-details .section.static .unit-control-buttons .button.save-unit-button {
     background: #00B0D6;	
 }
 
-.section.static .unit-control-buttons .button.button-delete-unit {
+.unit-details .section.static .unit-control-buttons .button.button-delete-unit {
     background: #0074A2;	
     //border: 1px solid #0093CD;
     position: relative;
@@ -553,7 +553,7 @@ div.buttons a.cancellink {
     line-height: 26px;
     height: 26px;
 }
-.section.static .unit-control-buttons .button.button-delete-unit:hover {
+.unit-details .section.static .unit-control-buttons .button.button-delete-unit:hover {
     background: #be4251;
     color: #fff;
 }
@@ -1744,16 +1744,16 @@ label.bold-label{
 
 
 /* SETTINGS PAGE OVERRIDES */
-.mp-wrap .mp-settings {
+.unit-details.mp-wrap .mp-settings {
     padding:0;
 }
 
-.mp-wrap .mp-settings .section.static,
-.mp-wrap .mp-settings .section{
+.unit-details.mp-wrap .mp-settings .section.static,
+.unit-details.mp-wrap .mp-settings .section{
     padding: 27px;
 }
 
-.mp-wrap .mp-settings .section.elements-section{
+.unit-details.mp-wrap .mp-settings .section.elements-section{
     padding: 0px;
 }
 
@@ -1761,19 +1761,19 @@ label.bold-label{
     border-width: 0px;
 }
 
-.mp-wrap .mp-settings .section.static {
+.unit-details.mp-wrap .mp-settings .section.static {
     padding-top: 1px;
     background: #0074A2;
 }
 
-.course-control-buttons {
+.unit-details .course-control-buttons {
     display: inline-block;
     margin: 20px 0 0px 20px;
 }
 
 /* COURSE SETUP PAGE */
 
-.course-details {
+.unit-details .course-details {
     padding-bottom: 15px;
 }
 
@@ -2260,7 +2260,7 @@ label.bold-label{
 	margin-bottom: 5px;
 }
 
-.course-details hr{
+.unit-details .course-details hr{
     margin-left: -17px;
 }
 

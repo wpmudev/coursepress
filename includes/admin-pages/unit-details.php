@@ -85,7 +85,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
 $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_redirect'] : 'no';
 ?>
-<div class='wrap mp-wrap nocoursesub'>
+<div class='wrap mp-wrap nocoursesub unit-details'>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
         <div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>
