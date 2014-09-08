@@ -508,7 +508,7 @@ div.buttons a.cancellink {
     cursor: auto !Important;
 }
 
-.coursepress_page_course_details .unit-control-buttons .button.button-preview {
+.unit-details .unit-control-buttons .button.button-preview {
     position:relative;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -516,7 +516,7 @@ div.buttons a.cancellink {
     -ms-filter: none;
     filter: none;
 }
-.coursepress_page_course_details .unit-control-buttons .button.button-preview:after {
+.unit-details .unit-control-buttons .button.button-preview:after {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -536,15 +536,15 @@ div.buttons a.cancellink {
     height: 27px;
 }
 
-.coursepress_page_course_details .section.static .unit-control-buttons .button.button-preview:after {
+.unit-details .section.static .unit-control-buttons .button.button-preview:after {
     background: #0074A2;	
 }
 
-.coursepress_page_course_details .section.static .unit-control-buttons .button.save-unit-button {
+.unit-details .section.static .unit-control-buttons .button.save-unit-button {
     background: #00B0D6;	
 }
 
-.coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit {
+.unit-details .section.static .unit-control-buttons .button.button-delete-unit {
     background: #0074A2;	
     //border: 1px solid #0093CD;
     position: relative;
@@ -553,7 +553,7 @@ div.buttons a.cancellink {
     line-height: 26px;
     height: 26px;
 }
-.coursepress_page_course_details .section.static .unit-control-buttons .button.button-delete-unit:hover {
+.unit-details .section.static .unit-control-buttons .button.button-delete-unit:hover {
     background: #be4251;
     color: #fff;
 }
@@ -1744,16 +1744,16 @@ label.bold-label{
 
 
 /* SETTINGS PAGE OVERRIDES */
-.coursepress_page_course_details .mp-wrap .mp-settings {
+.unit-details.mp-wrap .mp-settings {
     padding:0;
 }
 
-.coursepress_page_course_details .mp-wrap .mp-settings .section.static,
-.coursepress_page_course_details .mp-wrap .mp-settings .section{
+.unit-details.mp-wrap .mp-settings .section.static,
+.unit-details.mp-wrap .mp-settings .section{
     padding: 27px;
 }
 
-.coursepress_page_course_details .mp-wrap .mp-settings .section.elements-section{
+.unit-details.mp-wrap .mp-settings .section.elements-section{
     padding: 0px;
 }
 
@@ -1761,19 +1761,19 @@ label.bold-label{
     border-width: 0px;
 }
 
-.coursepress_page_course_details .mp-wrap .mp-settings .section.static {
+.unit-details.mp-wrap .mp-settings .section.static {
     padding-top: 1px;
     background: #0074A2;
 }
 
-.coursepress_page_course_details .course-control-buttons {
+.unit-details .course-control-buttons {
     display: inline-block;
     margin: 20px 0 0px 20px;
 }
 
 /* COURSE SETUP PAGE */
 
-.coursepress_page_course_details .course-details {
+.unit-details .course-details {
     padding-bottom: 15px;
 }
 
@@ -2257,10 +2257,10 @@ label.bold-label{
 }
 
 .unit_page_title .page_title {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
-.coursepress_page_course_details .course-details hr{
+.unit-details .course-details hr{
     margin-left: -17px;
 }
 
@@ -2762,7 +2762,8 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     margin-left: 20px;
 }
 .caption-source .element_title_description {
-    margin-left: 25px;
+    margin-left: 1.8%;
+    width: 98%;
 }
 
 .module-content input[type="text"].grade_spinner{
@@ -2816,7 +2817,7 @@ label.minimum_grade_required_label{
 
 
 .unit_page_title label.show_page_title {
-	font-size: 12px;
-	font-weight: normal;
-	margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 15px;
 }
