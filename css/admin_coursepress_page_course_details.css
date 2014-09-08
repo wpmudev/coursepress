@@ -2257,7 +2257,7 @@ label.bold-label{
 }
 
 .unit_page_title .page_title {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .unit-details .course-details hr{
@@ -2762,7 +2762,8 @@ h2.nav-tab-wrapper, h3.nav-tab-wrapper{
     margin-left: 20px;
 }
 .caption-source .element_title_description {
-    margin-left: 25px;
+    margin-left: 1.8%;
+    width: 98%;
 }
 
 .module-content input[type="text"].grade_spinner{
@@ -2816,7 +2817,7 @@ label.minimum_grade_required_label{
 
 
 .unit_page_title label.show_page_title {
-	font-size: 12px;
-	font-weight: normal;
-	margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 15px;
 }
