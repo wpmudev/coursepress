@@ -1,6 +1,6 @@
 <?php
 /*
-  Plugin Name: CoursePress Standard
+  Plugin Name: CoursePress Pro
   Plugin URI: http://premium.wpmudev.org/project/coursepress/
   Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
   Author: WPMU DEV
@@ -9,6 +9,7 @@
   Version: 1.0.0
   TextDomain: cp
   Domain Path: /languages/
+  WDP ID: 896496
   License: GNU General Public License ( Version 2 - GPLv2 )
 
   Copyright 2014 Incsub ( http://incsub.com )
