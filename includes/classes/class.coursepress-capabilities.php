@@ -420,4 +420,16 @@ class CoursePress_Capabilities {
 		}
 	}
 	
+	/**
+	 * Is this CoursePress Pro?
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_pro() {
+		return true;
+	}
+	
+	
 }

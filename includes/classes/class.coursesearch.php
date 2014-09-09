@@ -9,7 +9,7 @@ if ( !class_exists('Course_Search') ) {
 
         var $courses_per_page = 10;
         var $args = array();
-        var $is_light = false;
+        var $is_light = ! CoursePress_Capabilities::is_pro();
         var $post_type = 'course';
 
         function __construct( $search_term = '', $page_num = '' ) {
