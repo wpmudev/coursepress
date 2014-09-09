@@ -83,6 +83,9 @@ if ( !class_exists('CoursePress') ) {
 
             add_theme_support('post-thumbnails');
 
+//CoursePress Capabilities Class
+            require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
+
 //Administration area
             if ( is_admin() ) {
 
@@ -189,10 +192,6 @@ if ( !class_exists('CoursePress') ) {
 
 
             add_action('init', array( &$this, 'debugging' ));
-
-//CoursePress Capabilities Class
-            require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
-
 
 // Course Calendar
             require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
