@@ -256,20 +256,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                             <!-- COURSE DETAILS -->
                             <div class='course-details'>
-                                <?php
-                                $wp_course_search = new Course_Search('', 1);
-                                if ( CoursePress_Capabilities::can_create_course() ) {
-                                    if ( $wp_course_search->is_light ) {
-                                        if ( $wp_course_search->get_count_of_all_courses() < $wp_course_search->courses_per_page ) {
-                                            $not_limited = true;
-                                        } else {
-                                            $not_limited = false;
-                                        }
-                                    }
-                                }
-
-                                if ( (isset($_GET['course_id'])) || !isset($_GET['course_id']) && $not_limited ) {
-                                    ?>
+                  
                                     <!-- Course Overview -->
                                     <div class="course-section step step-1 <?php echo 'step-1' == $course_setup_marker ? 'save-marker active' : ''; ?>">
                                         <div class='course-section-title'>
@@ -1203,12 +1190,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                     </div>
                 </div>
-            <?php } else {//can update or create course
-                ?>
-                <p><?php _e("You don't have required permissions for this action."); ?></p>
-            <?php }
-            ?>
-        </div>
+         
 </div> <!-- course-liquid-left -->
 
 </form>

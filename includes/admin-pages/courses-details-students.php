@@ -143,6 +143,7 @@ if ( isset($_GET['withdraw']) && is_numeric($_GET['withdraw']) ) {
 
 $columns = array(
     "ID" => __('Student ID', 'cp'),
+    "username" => __('Username', 'cp'),
     "user_firstname" => __('First Name', 'cp'),
     "user_lastname" => __('Surname', 'cp'),
     //"group" => __( 'Group', 'cp' ),
@@ -226,8 +227,8 @@ $wp_user_search = new WP_User_Query($args);
                         $style = ( 'alternate' == $style ) ? '' : 'alternate';
                         ?>
                         <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
-
                             <td class="<?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
+                            <td class="<?php echo $style; ?>"><?php echo $user_object->user_login; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
                             <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
                             <!--<td class="<?php echo $style; ?>"><?php echo ( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>-->
@@ -282,7 +283,7 @@ $wp_user_search = new WP_User_Query($args);
             <table cellspacing="0" class="widefat">
                 <tr>
                     <td>
-                        <div class="zero-students"><?php _e('0 Students in this class', 'cp'); ?></div>
+                        <div class="zero-students"><?php _e('0 Students in this course', 'cp'); ?></div>
                     </td>
                 </tr>
             </table>
@@ -294,9 +295,9 @@ $wp_user_search = new WP_User_Query($args);
                     <form id="add_new_student_to_class" name="add_new_student_to_class_<?php echo ( isset($class) ? $class : '' ); ?>" action="<?php echo admin_url('admin.php?page=course_details&tab=students&course_id=' . $course_id . '&ms=as') ?>" method="post">
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
-                        <?php if ( $students->total_users > 0 ) { ?>
+                        <?php //if ( $students->total_users > 0 ) { ?>
                             <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
-                        <?php } ?>
+                        <?php //} ?>
                         <?php wp_nonce_field('student_details'); ?>
                     </form>
                 <?php } ?>

@@ -81,30 +81,30 @@
 }
 
 /* Column Widths */
-.coursepress_page_reports .column-ID {
+.reports .column-ID {
 	width: 8%;
 }
-.coursepress_page_reports .column-user-fullname{
+.reports .column-user-fullname{
 	width: 20%;
 }
-.coursepress_page_reports .column-user-firstname
+.reports .column-user-firstname
 {
 	width: 10%;
 }
-.coursepress_page_reports .column-user-lastname
+.reports .column-user-lastname
 {
 	width: 10%;
 }
-.coursepress_page_reports .column-responses{
+.reports .column-responses{
 	width: 10%;
 }
-.coursepress_page_reports .column-average-grade{
+.reports .column-average-grade{
 	width: 10%;
 }
-.coursepress_page_reports .column-report{
+.reports .column-report{
 	width: 5%;
 }
 
-.coursepress_page_reports .column-user-fullname {
+.reports .column-user-fullname {
 	display: none;
 }

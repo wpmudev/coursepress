@@ -1616,63 +1616,63 @@ a .remove-btn:hover{
 
 /* -------------------------------------------------------------------------- */
 
-.coursepress_page_students .column-user-fullname {
+.students .column-user-fullname {
 	display: none;
 }
 
-.coursepress_page_students th {
+.students th {
 	text-overflow:ellipsis;
 }
 
 /* Column Widths */
-.coursepress_page_students .column-ID { 
+.students .column-ID { 
 	width: 6%; 
 }
 
-.coursepress_page_students .column-username { 
+.students .column-username { 
 	width: 10%; 
 }
 
-.coursepress_page_students .column-user-firstname { 
+.students .column-user-firstname { 
 	width: 10%; 
 }
 
-.coursepress_page_students .column-user-lastname { 
+.students .column-user-lastname { 
 	width: 10%; 
 }
 
-.coursepress_page_students .column-registration-date { 
+.students .column-registration-date { 
 	width: 14%;
 	text-align:left;	
 	padding: 8px 5px 10px;	
 }
-.coursepress_page_students td.column-registration-date{
+.students td.column-registration-date{
 	padding: 14px 5px 10px;	
 }
 
-.coursepress_page_students .column-latest-activity { 
+.students .column-latest-activity { 
 	width: 14%;
 	text-align:left;
 	padding: 8px 5px 10px;		
 }
-.coursepress_page_students td.column-latest-activity { 
+.students td.column-latest-activity { 
 	padding: 14px 5px 10px;		
 }
 
-.coursepress_page_students .column-courses { 
+.students .column-courses { 
 	width: 9%; 
 }
 
-.coursepress_page_students .column-workbook {
+.students .column-workbook {
 	width: 9%; 	
 }
 
 /* profile */
-.coursepress_page_students .column-edit {
+.students .column-edit {
 	width: 9% 	
 }
 
-.coursepress_page_students .column-delete {
+.students .column-delete {
 	width: 9%; 	
 }
 

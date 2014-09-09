@@ -292,9 +292,9 @@ input.wide, textarea.wide, #wp-notification_description-wrap {
     margin-bottom: 5px;
 }
 
-a .remove-btn{
+.notifications a .remove-btn{
     margin-left: 17px;
     margin-right: auto;
-    margin-top: 36px;
+    margin-top: 24px;
     font-size: 22px;
 }

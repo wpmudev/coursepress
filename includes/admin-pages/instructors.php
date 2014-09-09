@@ -60,7 +60,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
     $wp_user_search = new Instructor_Search( $usersearch, $page_num );
     ?>
 
-    <div class="wrap nosubsub">
+    <div class="wrap nosubsub instructors">
 
         <div class="icon32 " id="icon-users"><br></div>
         <h2><?php _e( 'Instructors', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?><a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
@@ -92,7 +92,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                     <?php if ( current_user_can( 'manage_options' ) ) { ?>
                         <select name="action">
                             <option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
-                            <option value="delete"><?php _e( 'Delete', 'cp' ); ?></option>
+                            <option value="delete"><?php _e( 'Remove', 'cp' ); ?></option>
                             <option value="unassign"><?php _e( 'Unassign from all courses', 'cp' ); ?></option>
                         </select>
                         <input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'cp' ); ?>" />
@@ -125,7 +125,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                 );
 
 
-                $columns["delete"] = __( 'Delete', 'cp' );
+                $columns["delete"] = __( 'Remove', 'cp' );
                 $col_sizes[] = '5';
 
                 ?>

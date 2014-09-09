@@ -98,7 +98,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
         $message = __('Status for the selected notification has been changed successfully.', 'cp');
     }
     ?>
-    <div class="wrap nosubsub">
+    <div class="wrap nosubsub notifications">
         <div class="icon32" id="icon-themes"><br></div>
         <h2><?php _e('Notifications', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') || current_user_can('coursepress_create_my_assigned_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
         <?php
