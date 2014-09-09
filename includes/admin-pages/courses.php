@@ -115,7 +115,7 @@ if ( isset($_GET['quick_setup']) ) {
             <?php
             if ( CoursePress_Capabilities::can_create_course() ) {
                 if ( $wp_course_search->is_light ) {
-                    if ( $wp_course_search->get_count_of_all_courses() <= 9 ) {
+                    if ( $wp_course_search->get_count_of_all_courses() < $wp_course_search->courses_per_page ) {
                         ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=course_details'); ?>"><?php _e('Add New', 'cp'); ?></a>
                         <?php
                     }

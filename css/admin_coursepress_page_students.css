@@ -1629,12 +1629,16 @@ a .remove-btn:hover{
 	width: 6%; 
 }
 
+.coursepress_page_students .column-username { 
+	width: 10%; 
+}
+
 .coursepress_page_students .column-user-firstname { 
-	width: 15%; 
+	width: 10%; 
 }
 
 .coursepress_page_students .column-user-lastname { 
-	width: 15%; 
+	width: 10%; 
 }
 
 .coursepress_page_students .column-registration-date { 

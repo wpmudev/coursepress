@@ -110,6 +110,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 
                 $columns = array(
                     "ID" => __( 'ID', 'cp' ),
+                    "username" => __( 'Username', 'cp' ),
                     "user_fullname" => __( 'Full Name', 'cp' ),
                     "user_firstname" => __( 'First Name', 'cp' ),
                     "user_lastname" => __( 'Surname', 'cp' ),
@@ -120,7 +121,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 
 
                 $col_sizes = array(
-                    '4', '10', '10', '15', '15', '15', '5'
+                    '4', '8', '7', '7', '15', '15', '15', '5'
                 );
 
 
@@ -164,6 +165,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
                                     <input type='checkbox' name='users[]' id='user_<?php echo $user_object->ID; ?>' value='<?php echo $user_object->ID; ?>' />
                                 </th>
                                 <td class="column-ID <?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
+                                <td class="column-user-username <?php echo $style; ?>"><?php echo $user_object->user_login; ?></td>
                                 <td class="column-user-fullname visible-small visible-extra-small <?php echo $style; ?>">
                                     <?php echo $user_object->first_name; ?>
                                     <?php echo $user_object->last_name; ?>

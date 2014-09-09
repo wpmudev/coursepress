@@ -381,7 +381,7 @@ if ( !class_exists('Unit_Module') ) {
                 ?>
                 <div class="fullbox"></div>
 				<?php if ( ! isset($_GET['try']) ) : ?>
-	                <a href="" id="save_student_progress" class="save_progress"><?php _e('Save Progress & Exit', 'tc'); ?></a>
+	                <a href="" id="save_student_progress" class="save_progress"><?php _e('Save Progress & Exit', 'cp'); ?></a>
 				<?php endif; ?>
             </form>
 

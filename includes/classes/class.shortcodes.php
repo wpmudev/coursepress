@@ -3445,7 +3445,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
 
                         <label class="half-left">
-                            <a href="<?php echo wp_lostpassword_url(); ?>"><?php _e('Forgot Password?', 'tc'); ?></a>
+                            <a href="<?php echo wp_lostpassword_url(); ?>"><?php _e('Forgot Password?', 'cp'); ?></a>
                         </label>
                         <label class="half-right">
                             <input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="<?php _e('Log In', 'cp'); ?>"><br>

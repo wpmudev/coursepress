@@ -1,5 +1,6 @@
 Plugin Name: CoursePress Pro
 Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
+CHANGE LOG
 ----------------------------------------------------------------------
 1.0 First Release.

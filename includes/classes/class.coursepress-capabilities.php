@@ -37,7 +37,8 @@ class CoursePress_Capabilities {
 		    'coursepress_students_cap' => 1, 					
 		    'coursepress_assessment_cap' => 1, 					
 		    'coursepress_reports_cap' => 1, 					
-		    'coursepress_notifications_cap' => 1, 					
+		    'coursepress_notifications_cap' => 1,
+                    'coursepress_discussions_cap' => 1,
 		    'coursepress_settings_cap' => 1, 									
 			/* Courses */
 		    'coursepress_create_course_cap' => 1, 					
@@ -418,17 +419,5 @@ class CoursePress_Capabilities {
 			$user->remove_cap("read_private_{$capability_type}s");			
 		}
 	}
-	
-	/**
-	 * Is this CoursePress Pro?
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
-	public static function is_pro() {
-		return true;
-	}
-	
 	
 }

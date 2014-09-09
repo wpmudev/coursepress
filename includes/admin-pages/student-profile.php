@@ -47,6 +47,10 @@ if ( isset( $_POST['course_id'] ) ) {
                                     <span class="info"><?php echo $student->ID; ?></span>
                                 </div>
                                 <div>
+                                    <span class="info_caption"><?php _e( 'Username', 'cp' ); ?></span>
+                                    <span class="info"><?php echo $student->user_login; ?></span>
+                                </div>
+                                <div>
                                     <span class="info_caption"><?php _e( 'First Name', 'cp' ); ?></span>
                                     <span class="info"><?php echo $student->user_firstname; ?></span>
                                 </div>
