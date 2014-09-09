@@ -79,6 +79,7 @@ section {
 ol, ul {
     list-style: none;
 }
+
 table { /* tables still need 'cellspacing="0"' in the markup */
     border-collapse: separate;
     border-spacing: 0;
@@ -1388,7 +1389,7 @@ a.apply-button-enrolled:hover, #student-settings input[type="submit"].apply-butt
 }
 
 .course_structure_page_li.single_column a:hover, .course_structure_unit_label.single_column a:hover {
-	background:none;
+    background:none;
 }
 
 /* ==================================== */
@@ -1593,42 +1594,42 @@ h1.title.managed-courses-title,
 h1.title.current-courses-title,
 h1.title.completed-courses-title {
     border-bottom: none;
-	font-weight:normal;
+    font-weight:normal;
     font-size: 1.4em;
     padding: 4px 0;
     text-transform: uppercase;
-	margin-bottom: 30px;
-	line-height: 1.2em;
-	margin-top:0;
+    margin-bottom: 30px;
+    line-height: 1.2em;
+    margin-top:0;
 }
 
 h1.title.managed-courses-title {
-	color: #FF6600;
+    color: #FF6600;
 }
 h1.title.current-courses-title {
-	color: #0FACD9;
+    color: #0FACD9;
 }
 h1.title.completed-courses-title {
-	color: #41BB8A;
+    color: #41BB8A;
 }
 
 .course-list .h1-title  {
     border-bottom: 2px solid #74d1d4;
-     clear: both;
-     font-size: 30px;
-     margin-bottom: 20px;
-     margin-top: 0px;
+    clear: both;
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-top: 0px;
 }
 
 .course-list-completed .h1-title {
-	position:relative;
+    position:relative;
 }
 .course-list-completed .h1-title:after {
-	content: url( 'images/complete_tick_green.svg' );	
-	display:block;
-	float:right;
-	width:19px;
-	height:19px;
+    content: url( 'images/complete_tick_green.svg' );	
+    display:block;
+    float:right;
+    width:19px;
+    height:19px;
 }
 
 /*//complete_tick_green.svg*/
@@ -1636,11 +1637,11 @@ h1.title.completed-courses-title {
 .course-list-current .course-list-item,
 .course-list-managed .course-list-item,
 .course-list-completed .course-list-item {
-	margin:0 0 40px 0;
+    margin:0 0 40px 0;
 }
 
 .course-list-completed button.apply-button-enrolled {
-	background: #41BB8A;
+    background: #41BB8A;
 }
 
 
@@ -2067,7 +2068,7 @@ a[rel="prev"] {
 }
 
 .notification-time{
-	width: auto;
+    width: auto;
     color: #f9a673;
     font-size: 14px;
     text-transform: uppercase;
@@ -2444,7 +2445,7 @@ h1.discussion-title{
 }
 
 .module_description p{
-    margin-bottom: -3px;
+    margin-bottom: 10px;//-3px
 }
 
 /* Workbook */
@@ -2640,14 +2641,14 @@ li.current_page_item a{
 }
 
 .module_grade {
-	font-size:0.9em;
-	text-align: right;
+    font-size:0.9em;
+    text-align: right;
 }
 
 .virtual-page-courses-dashboard h1.entry-title{
-	font-size: 14px;
-	line-height: 16px;
-	margin-bottom:30px;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom:30px;
 }
 
 .unit-archive-course-complete {
@@ -2672,27 +2673,53 @@ li.current_page_item a{
 .radio_input_module .correct,
 .radio_input_module .incorrect,
 .radio_input_module .unanswered {
-	border-bottom: none;
+    border-bottom: none;
 }
 
 .checkbox_input_module .correct,
 .radio_input_module .correct {
-	background-image: url('images/complete_tick_green.svg');
-	background-size: 16px 16px;
-	background-position: right center;
-	background-repeat: no-repeat;
+    background-image: url('images/complete_tick_green.svg');
+    background-size: 16px 16px;
+    background-position: right center;
+    background-repeat: no-repeat;
 }
 
 .checkbox_input_module .incorrect,
 .radio_input_module .incorrect {
-	background-image: url('images/cross_red.svg');
-	background-size: 16px 16px;
-	background-position: right center;
-	background-repeat: no-repeat;
+    background-image: url('images/cross_red.svg');
+    background-size: 16px 16px;
+    background-position: right center;
+    background-repeat: no-repeat;
 }
 
 .post-type-archive-course .quick-course-info .course-cost .mp_product_price {
-	background-position: -872px -232px;
+    background-position: -872px -232px;
+}
+.module_description ol{
+    list-style: decimal;
+    padding:0;
+    margin:0;
+    margin: 30px 0px 30px 0px;
+    padding-left: 2.5em;
+}
+
+.module_description ul{
+    list-style: none;
+    padding:0;
+    margin:0;
+    margin: 30px 0px 30px 0px;
+}
+
+.module_description ul li { 
+    padding-left: 1em; 
+    text-indent: 0em;
+}
+
+.module_description ul li:before {
+    content: "■ ";
+    color: #cdcf30;
+    padding-right: 10px;
+
 }
 
 /*

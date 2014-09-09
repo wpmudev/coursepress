@@ -2094,7 +2094,7 @@ if ( !class_exists('CoursePress') ) {
             do_action('coursepress_add_menu_items_after_course_discussions');
 
             if ( current_user_can('manage_options') || current_user_can('coursepress_settings_cap') ) {
-                add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', 'settings', array( &$this, 'coursepress_settings_admin' ));
+                add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', $this->screen_base.'_settings', array( &$this, 'coursepress_settings_admin' ));
             }
             do_action('coursepress_add_menu_items_after_settings');
 
