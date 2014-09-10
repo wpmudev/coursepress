@@ -1418,7 +1418,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             $priority = 'default' != $type ? false : $priority;
-            
+
 // Saves some overhead by not loading the post again if we don't need to.
             $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
@@ -1954,47 +1954,49 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             if ( 'count' != $style ) {
-                foreach ( $instructors as $instructor ) {
+                if ( !empty($instructors) ) {
+                    foreach ( $instructors as $instructor ) {
 
-                    $profile_href = trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+                        $profile_href = trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
 
-                    switch ( $style ) {
+                        switch ( $style ) {
 
-                        case 'block':
-                            ob_start();
-                            ?>
-                            <div class="instructor-profile <?php echo $class; ?>">
-                                <?php if ( 'yes' == $link_all ) { ?>
-                                    <a href="<?php echo $profile_href ?>">
-                                    <?php } ?>
-                                    <div class="profile-name"><?php echo $instructor->display_name; ?></div>
-                                    <div class="profile-avatar">
-                                        <?php echo get_avatar($instructor->ID, $avatar_size, $default_avatar, $instructor->display_name); ?>
-                                    </div>
-                                    <div class="profile-description"><?php echo $this->author_description_excerpt($instructor->ID, $summary_length); ?></div>
-                                    <div class="profile-link">
-                                        <?php if ( 'no' == $link_all ) { ?>
-                                            <a href="<?php echo $profile_href ?>">
-                                            <?php } ?>
-                                            <?php echo $link_text; ?>
-                                            <?php if ( 'no' == $link_all ) { ?>
-                                            </a>
-                                        <?php } ?>								
-                                    </div>
+                            case 'block':
+                                ob_start();
+                                ?>
+                                <div class="instructor-profile <?php echo $class; ?>">
                                     <?php if ( 'yes' == $link_all ) { ?>
-                                    </a>
-                                <?php } ?>
-                            </div>	
-                            <?php
-                            $content .= ob_get_clean();
-                            break;
+                                        <a href="<?php echo $profile_href ?>">
+                                        <?php } ?>
+                                        <div class="profile-name"><?php echo $instructor->display_name; ?></div>
+                                        <div class="profile-avatar">
+                                            <?php echo get_avatar($instructor->ID, $avatar_size, $default_avatar, $instructor->display_name); ?>
+                                        </div>
+                                        <div class="profile-description"><?php echo $this->author_description_excerpt($instructor->ID, $summary_length); ?></div>
+                                        <div class="profile-link">
+                                            <?php if ( 'no' == $link_all ) { ?>
+                                                <a href="<?php echo $profile_href ?>">
+                                                <?php } ?>
+                                                <?php echo $link_text; ?>
+                                                <?php if ( 'no' == $link_all ) { ?>
+                                                </a>
+                                            <?php } ?>								
+                                        </div>
+                                        <?php if ( 'yes' == $link_all ) { ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>	
+                                <?php
+                                $content .= ob_get_clean();
+                                break;
 
-                        case 'link':
-                        case 'list':
-                        case 'list-flat':
-                            $list[] = ( $link ? '<a href="' . $profile_href . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
+                            case 'link':
+                            case 'list':
+                            case 'list-flat':
+                                $list[] = ( $link ? '<a href="' . $profile_href . '">' . $instructor->display_name . '</a>' : $instructor->display_name );
 
-                            break;
+                                break;
+                        }
                     }
                 }
             }
@@ -3456,7 +3458,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">

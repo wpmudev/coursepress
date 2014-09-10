@@ -32,9 +32,6 @@ if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
 
 
-
-
-
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -351,7 +348,9 @@ if ( !class_exists('CoursePress') ) {
                 if ( !has_nav_menu($theme_location) ) {
                     if ( get_option('display_menu_items', 1) ) {
                         add_filter('wp_page_menu', array( &$this, 'main_navigation_links_fallback' ), 20, 2);
-                        add_filter('wp_page_menu', array( &$this, 'mobile_navigation_links_fallback' ), 21, 3);
+                        if ( wp_get_theme() == 'CoursePress' ) {
+                            add_filter('wp_page_menu', array( &$this, 'mobile_navigation_links_fallback' ), 21, 3);
+                        }
                     }
                 }
             }
