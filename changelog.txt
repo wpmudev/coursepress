@@ -8,6 +8,7 @@ CHANGE LOG
 1.0.2
 ----------------------------------------------------------------------
 - Resolved issue with mobile menu
+- Resolved issue with listing images, videos and overlapping content in the CoursePress theme
 
 1.0.1
 ----------------------------------------------------------------------
