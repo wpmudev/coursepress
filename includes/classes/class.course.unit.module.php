@@ -88,7 +88,7 @@ if ( !class_exists('Unit_Module') ) {
             $args = array(
                 'posts_per_page' => -1,
                 'post_parent' => $id,
-                'post_type' => array( 'module_response', 'attachment' ),
+                'post_type' => array( 'module_response' ),
                 'post_status' => 'any',
             );
 
@@ -119,7 +119,7 @@ if ( !class_exists('Unit_Module') ) {
                 'posts_per_page' => 1,
                 'meta_key' => 'user_ID',
                 'meta_value' => $student_id,
-                'post_type' => array( 'module_response', 'attachment' ),
+                'post_type' => array( 'module_response' ),
                 'post_parent' => $unit_module_id,
                 'post_status' => array( 'publish', 'inherit' )
             );
