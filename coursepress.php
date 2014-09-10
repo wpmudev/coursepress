@@ -33,6 +33,8 @@ if ( !defined('ABSPATH') )
 
 
 
+
+
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -280,15 +282,15 @@ if ( !class_exists('CoursePress') ) {
             add_action('admin_enqueue_scripts', array( &$this, 'admin_header_actions' ));
 
 
-            add_action('load-'.$this->screen_base.'_page_course_details', array( &$this, 'admin_coursepress_page_course_details' ));
-            add_action('load-'.$this->screen_base.'_page_settings', array( &$this, 'admin_coursepress_page_settings' ));
+            add_action('load-' . $this->screen_base . '_page_course_details', array( &$this, 'admin_coursepress_page_course_details' ));
+            add_action('load-' . $this->screen_base . '_page_settings', array( &$this, 'admin_coursepress_page_settings' ));
             add_action('load-toplevel_page_courses', array( &$this, 'admin_coursepress_page_courses' ));
-            add_action('load-'.$this->screen_base.'_page_notifications', array( &$this, 'admin_coursepress_page_notifications' ));
-            add_action('load-'.$this->screen_base.'_page_discussions', array( &$this, 'admin_coursepress_page_discussions' ));
-            add_action('load-'.$this->screen_base.'_page_reports', array( &$this, 'admin_coursepress_page_reports' ));
-            add_action('load-'.$this->screen_base.'_page_assessment', array( &$this, 'admin_coursepress_page_assessment' ));
-            add_action('load-'.$this->screen_base.'_page_students', array( &$this, 'admin_coursepress_page_students' ));
-            add_action('load-'.$this->screen_base.'_page_instructors', array( &$this, 'admin_coursepress_page_instructors' ));
+            add_action('load-' . $this->screen_base . '_page_notifications', array( &$this, 'admin_coursepress_page_notifications' ));
+            add_action('load-' . $this->screen_base . '_page_discussions', array( &$this, 'admin_coursepress_page_discussions' ));
+            add_action('load-' . $this->screen_base . '_page_reports', array( &$this, 'admin_coursepress_page_reports' ));
+            add_action('load-' . $this->screen_base . '_page_assessment', array( &$this, 'admin_coursepress_page_assessment' ));
+            add_action('load-' . $this->screen_base . '_page_students', array( &$this, 'admin_coursepress_page_students' ));
+            add_action('load-' . $this->screen_base . '_page_instructors', array( &$this, 'admin_coursepress_page_instructors' ));
 
             add_filter('login_redirect', array( &$this, 'login_redirect' ), 10, 3);
             add_filter('post_type_link', array( &$this, 'check_for_valid_post_type_permalinks' ), 10, 3);
@@ -347,7 +349,10 @@ if ( !class_exists('CoursePress') ) {
                 }
 
                 if ( !has_nav_menu($theme_location) ) {
-                    add_filter('wp_page_menu', array( &$this, 'main_navigation_links_fallback' ), 20, 2);
+                    if ( get_option('display_menu_items', 1) ) {
+                        add_filter('wp_page_menu', array( &$this, 'main_navigation_links_fallback' ), 20, 2);
+                        add_filter('wp_page_menu', array( &$this, 'mobile_navigation_links_fallback' ), 21, 3);
+                    }
                 }
             }
 
@@ -2093,7 +2098,7 @@ if ( !class_exists('CoursePress') ) {
             do_action('coursepress_add_menu_items_after_course_discussions');
 
             if ( current_user_can('manage_options') || current_user_can('coursepress_settings_cap') ) {
-                add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', $this->screen_base.'_settings', array( &$this, 'coursepress_settings_admin' ));
+                add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', $this->screen_base . '_settings', array( &$this, 'coursepress_settings_admin' ));
             }
             do_action('coursepress_add_menu_items_after_settings');
 
@@ -3605,6 +3610,103 @@ if ( !class_exists('CoursePress') ) {
                     </ul>
                 </div>
 
+                <?php
+            }
+        }
+
+        function mobile_navigation_links_fallback( $current_menu ) {
+
+            if ( !is_admin() ) {
+                $is_in = is_user_logged_in();
+
+                $courses = new stdClass;
+
+                $courses->title = __('Courses', 'cp');
+                $courses->menu_item_parent = 0;
+                $courses->ID = 'cp-courses-mobile';
+                $courses->db_id = '';
+                $courses->url = trailingslashit(site_url() . '/' . $this->get_course_slug());
+                if ( curPageURL() == $courses->url ) {
+                    $courses->classes[] = 'current_page_item';
+                }
+                $main_sorted_menu_items[] = $courses;
+
+                /* Student Dashboard page */
+
+                if ( $is_in ) {
+                    $dashboard = new stdClass;
+
+                    $dashboard->title = __('Dashboard', 'cp');
+                    $dashboard->menu_item_parent = 0;
+                    $dashboard->ID = 'cp-dashboard-mobile';
+                    $dashboard->db_id = -9998;
+                    $dashboard->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+
+                    $main_sorted_menu_items[] = $dashboard;
+
+                    /* Student Dashboard > Courses page */
+
+                    $dashboard_courses = new stdClass;
+                    $dashboard_courses->title = __('My Courses', 'cp');
+                    $dashboard_courses->menu_item_parent = -9998;
+                    $dashboard_courses->ID = 'cp-dashboard-courses-mobile';
+                    $dashboard_courses->db_id = '';
+                    $dashboard_courses->url = trailingslashit(site_url() . '/' . $this->get_student_dashboard_slug());
+                    if ( curPageURL() == $dashboard_courses->url ) {
+                        $dashboard_courses->classes[] = 'current_page_item';
+                    }
+                    $sub_sorted_menu_items[] = $dashboard_courses;
+
+                    /* Student Dashboard > Settings page */
+
+                    $settings_profile = new stdClass;
+
+                    $settings_profile->title = __('My Profile', 'cp');
+                    $settings_profile->menu_item_parent = -9998;
+                    $settings_profile->ID = 'cp-dashboard-settings-mobile';
+                    $settings_profile->db_id = '';
+                    $settings_profile->url = trailingslashit(site_url() . '/' . $this->get_student_settings_slug());
+                    if ( curPageURL() == $settings_profile->url ) {
+                        $settings_profile->classes[] = 'current_page_item';
+                    }
+                    $sub_sorted_menu_items[] = $settings_profile;
+                }
+
+                /* Log in / Log out links */
+
+                $login = new stdClass;
+                if ( $is_in ) {
+                    $login->title = __('Log Out', 'cp');
+                } else {
+                    $login->title = __('Log In', 'cp');
+                }
+
+                $login->menu_item_parent = 0;
+                $login->ID = 'cp-logout-mobile';
+                $login->db_id = '';
+                $login->url = $is_in ? wp_logout_url() : ( get_option('use_custom_login_form', 1) ? trailingslashit(site_url() . '/' . $this->get_login_slug()) : wp_login_url() );
+
+                $main_sorted_menu_items[] = $login;
+                ?>
+                <div class="menu">
+                    <ul id="mobile_menu" class='mobile_menu'>
+                        <?php
+                        foreach ( $main_sorted_menu_items as $menu_item ) {
+                            ?>
+                            <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
+                                <?php if ( $menu_item->db_id !== '' ) { ?>
+                                    <?php
+                                    foreach ( $sub_sorted_menu_items as $menu_item ) {
+                                        ?>
+                                    <li><a href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
+                                <?php } ?>
+                            <?php } ?>
+
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
                 <?php
             }
         }

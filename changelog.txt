@@ -5,10 +5,14 @@ CHANGE LOG
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-1.0.0
+1.0.2
 ----------------------------------------------------------------------
-- 1.0 First Release.
+- Resolved issue with mobile menu
 
 1.0.1
 ----------------------------------------------------------------------
-- Resolved issue with deleting media file (selecting in elements) upon deleting a unit or a module.
+- Resolved issue with deleting media files (selected in elements) upon deleting a unit or a module.
+
+1.0.0
+----------------------------------------------------------------------
+- 1.0 First Release.
