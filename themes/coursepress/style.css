@@ -2722,6 +2722,20 @@ li.current_page_item a{
 
 }
 
+.post-type-archive-course .video_player{
+    margin-top: 0px;
+    border-bottom: 0px;
+}
+
+.post-type-archive-course .video_player iframe{
+    width: inherit;
+    height: inherit;
+}
+
+.course-featured-media{
+    line-height: 0px;
+}
+
 /*
 RESPONSIVE
 */
@@ -2748,6 +2762,10 @@ RESPONSIVE
         width: 96%;
         margin-left: 2%;
         margin-right: 2%;
+    }
+
+    .course-video{
+        min-height: 0px;
     }
 
     .post-type-archive-course section.article-content-right{

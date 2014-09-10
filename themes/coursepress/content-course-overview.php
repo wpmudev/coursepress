@@ -21,34 +21,17 @@ $course_language = $course->details->course_language;
 
     <section id="course-summary">
 
-        <?php if ( $course->details->course_video_url != '' ) { ?>  
-            <div class="course-video">
-                <?php
-                $video_extension = pathinfo($course->details->course_video_url, PATHINFO_EXTENSION);
+      
 
-                if ( !empty($video_extension) ) {//it's file, most likely on the server
-                    $attr = array(
-                        'src' => $course->details->course_video_url,
-                            /* 'width' => 500,
-                              'height' => 300 */
-                    );
-
-                    echo wp_video_shortcode($attr);
-                } else {
-
-                    $embed_args = array(
-                            /* 'width' => $course->details->course_video_url,
-                              'height' => 900 */
-                    );
-
-                    echo wp_oembed_get($course->details->course_video_url, $embed_args);
-                }
-                ?>
-            </div>
-        <?php } ?>
+        <div class="course-video">
+            <?php
+            // Show course media
+            echo do_shortcode('[course_media]');
+            ?>
+        </div>
 
         <div class="entry-content-excerpt <?php echo (!isset($course->details->course_video_url) || $course->details->course_video_url == '' ? 'entry-content-excerpt-right' : '' ); ?>">
-            <?php //the_excerpt(); ?>
+            <?php //the_excerpt();  ?>
             <div class="course-box">
                 <?php echo do_shortcode('[course_dates show_alt_display="yes"]'); //change to yes for 'Open-ended' ?>
                 <?php echo do_shortcode('[course_enrollment_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
@@ -89,7 +72,7 @@ $course_language = $course->details->course_language;
                 ?></h1>
             <?php
             // $course->course_structure_front();
-			echo do_shortcode('[course_structure label="" show_title="no" show_divider="yes"]');
+            echo do_shortcode('[course_structure label="" show_title="no" show_divider="yes"]');
         }
         ?>
         <?php

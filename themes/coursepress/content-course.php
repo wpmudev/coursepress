@@ -22,7 +22,8 @@ $course_language = $course->details->course_language;
 
     <?php
     // Course thumbnail
-    echo do_shortcode('[course_media type="image"]');
+    echo do_shortcode('[course_media wrapper="figure" list_page="yes"]');
+    //echo do_shortcode('[course_media type="image" img_wrapper="figure"]');
     ?>
 
     <section class='article-content-right <?php echo $extended_class; ?> course-archive'>
