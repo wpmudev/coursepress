@@ -10,6 +10,7 @@ CHANGE LOG
 - Resolved issue with mobile menu
 - Resolved issue with listing images, videos and overlapping content in the CoursePress theme
 - Minifying HTML output on all coursepress admin pages and speeding up loading of admin pages
+- Responsive fixes for admin pages
 
 1.0.1
 ----------------------------------------------------------------------
