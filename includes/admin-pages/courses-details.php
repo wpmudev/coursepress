@@ -33,7 +33,7 @@ $units = $course->get_units();
 $students_count = $course->get_number_of_students();
 ?>
 
-<div class="wrap nosubsub">
+<div class="wrap nosubsub course-details">
     <div class="icon32" id="icon-themes"><br></div>
     <?php
     $tab = ( isset($_GET['tab']) ) ? $_GET['tab'] : '';

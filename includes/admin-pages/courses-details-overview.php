@@ -187,7 +187,6 @@ if ( isset($_GET['course_id']) ) {
 $mp_settings = get_option('mp_settings');
 $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 ?>
-
 <div class='wrap nocoursesub'>
     <form action='<?php esc_attr_e(admin_url('admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ( $course_id !== 0 ) ? '&ms=cu' : '&ms=ca' ))); ?>' name='course-add' id='course-add' method='post'>
 

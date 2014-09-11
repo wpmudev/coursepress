@@ -82,7 +82,7 @@
 
 /* Column Widths */
 .reports .column-ID {
-	width: 8%;
+	width: 4%;
 }
 .reports .column-user-fullname{
 	width: 20%;
@@ -107,4 +107,10 @@
 
 .reports .column-user-fullname {
 	display: none;
+}
+
+.reports th{
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

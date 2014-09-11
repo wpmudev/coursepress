@@ -374,7 +374,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
 
     <?php
     $columns = array(
-        "ID" => __('Student ID', 'cp'),
+        "ID" => __('ID', 'cp'),
         "user_fullname" => __('Full Name', 'cp'),
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
@@ -384,7 +384,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     );
 
     $col_sizes = array(
-        '8', '10', '10', '10', '10', '5'
+        '4', '10', '10', '10', '10', '5'
     );
     ?>
     <form method="post" id="generate-report">
@@ -392,7 +392,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         <table cellspacing="0" class="widefat fixed shadow-table">
             <thead>
                 <tr>
-                    <th class="manage-column column-cb check-column" style="width:5%;" id="cb" scope="col"><input type="checkbox"></th>
+                    <th class="manage-column column-cb check-column" style="width:3%;" id="cb" scope="col"><input type="checkbox"></th>
                     <?php
                     $n = 0;
                     foreach ( $columns as $key => $col ) {

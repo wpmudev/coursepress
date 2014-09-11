@@ -4,50 +4,65 @@
 
 /* Menu bar goes responsive */
 @media only screen and ( max-width: 782px ) {
-	.coursepress_page_reports .column-registration-date,
-	.coursepress_page_reports .column-user-firstname,
-	.coursepress_page_reports .column-user-lastname,
-	.coursepress_page_reports .coursepress_page_instructors #posts-filter { 
-		display: none; 
-	}	
-	
-	.coursepress_page_reports .column-user-fullname {
-		display: table-cell;
-	}
-		
-	.coursepress_page_reports th {
-		text-overflow:ellipsis;
-	}	
+    .coursepress_page_reports .column-registration-date,
+    .coursepress_page_reports .column-user-firstname,
+    .coursepress_page_reports .column-user-lastname,
+    .coursepress_page_reports .coursepress_page_instructors #posts-filter { 
+        display: none; 
+    }	
+
+    .coursepress_page_reports .column-user-fullname {
+        display: table-cell;
+    }
+
+    .coursepress_page_reports th {
+        text-overflow:ellipsis;
+    }	
+}
+
+@media only screen and ( max-width: 750px ) {
+    .reports .column-average-grade{
+        display: none;
+    }
+}
+
+@media only screen and ( max-width: 600px ) {
+    .reports .column-responses{
+        display: none;
+    }
 }
 
 /* List table anomalies */
 @media ( max-width: 555px ) {
-	.coursepress_page_reports .column-ID {
-		width: 4%;
-	}
-	.coursepress_page_reports .column-user-fullname{
-		width: 15%;
-	}	
-	.coursepress_page_reports td.column-user-fullname{
-		padding: 8px 6px 2px;
-	}	
-	
-	.coursepress_page_reports .column-responses{
-		display: none;
-	}
-	.coursepress_page_reports .column-average-grade{
-		width: 10%;
-	}
-	.coursepress_page_reports .column-report{
-		width: 6%;
-	}	
-	
-	.coursepress_page_reports .user-fullname {
-		font-weight: bold;
-		font-size:1.1em;
-	}
+    .coursepress_page_reports .column-ID {
+        width: 4%;
+    }
+    .coursepress_page_reports .column-user-fullname{
+        width: 15%;
+    }	
+    .coursepress_page_reports td.column-user-fullname{
+        padding: 8px 6px 2px;
+    }	
+
+    .coursepress_page_reports .column-responses{
+        display: none;
+    }
+    .coursepress_page_reports .column-average-grade{
+        width: 10%;
+    }
+    .coursepress_page_reports .column-report{
+        width: 6%;
+    }	
+
+    .coursepress_page_reports .user-fullname {
+        font-weight: bold;
+        font-size:1.1em;
+    }
 }
 
 /* For extra small devices */
-@media ( max-width: 480px ) {
+@media ( max-width: 460px ) {
+    .reports .column-ID{
+        display: none;
+    }
 }

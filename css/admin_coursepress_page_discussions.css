@@ -298,3 +298,7 @@ a .remove-btn{
     margin-top: 24px;
     font-size: 22px;
 }
+
+.discussions-details .course-holder div select{
+    max-width: 99%;
+}

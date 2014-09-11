@@ -5,87 +5,114 @@
 
 /* Menu bar goes responsive */
 @media only screen and ( max-width: 782px ) {
-	/*.coursepress_page_assessment .assesment-response-details*/
-	/*.assessment-holder .buttons
-		.assessment-holder .buttons .additional_grade_info
-		.assessment-holder .buttons .submit
-		.assessment-holder .buttons .response_grade*/
-		.coursepress_page_assessment .assesment-response-details .front_response_content {
-			width:96%;
-		}
-		.assessment-holder .buttons .additional_grade_info {
-			width: 30%;
-			min-width: 0;
-			margin: 0 0 0 25px;
-		}		
+    /*.coursepress_page_assessment .assesment-response-details*/
+    /*.assessment-holder .buttons
+            .assessment-holder .buttons .additional_grade_info
+            .assessment-holder .buttons .submit
+            .assessment-holder .buttons .response_grade*/
+    .coursepress_page_assessment .assesment-response-details .front_response_content {
+        width:96%;
+    }
+    .assessment-holder .buttons .additional_grade_info {
+        width: 30%;
+        min-width: 0;
+        margin: 0 0 0 25px;
+    }		
 }
+
+@media only screen and ( max-width: 700px ) {
+    .assessment-archive-table .column-module{
+        display: none;
+    }
+}
+
+@media only screen and ( max-width: 700px ) {
+    .assessment-archive-table .column-comment{
+        display: none;
+    }
+}
+
 
 /* List table anomalies */
 @media ( max-width: 555px ) {
-	.coursepress_page_assessment .assesment-response-details .front_response_content {
-		width:94%;
-	}	
-	
-	.coursepress_page_assessment .column-submission-date,
-	.coursepress_page_assessment .column-module{
-		display: none;
-	}
+    .coursepress_page_assessment .assesment-response-details .front_response_content {
+        width:94%;
+    }	
 
-	.coursepress_page_assessment .assessment .column-name {
-		width: 25%;
-	}	
-	.coursepress_page_assessment .assessment .column-title {
-		width: 40%;
-	}
-	.coursepress_page_assessment .assessment td.column-title {	
-		font-size: 1em;
-	}
-	.coursepress_page_assessment .assessment .column-title .extra-information {
-		font-size: 0.8em;
-	}
-	
-	.coursepress_page_assessment .assessment .column-response {
-		width: 5%;
-		max-width:40px;
-	}
-	.coursepress_page_assessment .assessment .column-grade {
-		width: 5%;
-		max-width:40px;
-	}
-	.coursepress_page_assessment .assessment .column-comment {
-		width: 5%;
-		max-width:40px;		
-	}
-	
-	.assessment th.manage-column {
-		font-size: 0.9em;
-		text-overflow: ellipsis;
-	}
-	
-	.assessment {
-		clear: both;
-	}
-	
-	.assessment .ui-tabs .ui-tabs-nav li.ui-tabs-active,
-	.assessment .ui-tabs .ui-tabs-nav li {
-		padding: 8px;
-	}
+    .coursepress_page_assessment .column-submission-date,
+    .coursepress_page_assessment .column-module{
+        display: none;
+    }
+
+    .coursepress_page_assessment .assessment .column-name {
+        width: 25%;
+    }	
+    .coursepress_page_assessment .assessment .column-title {
+        width: 40%;
+    }
+    .coursepress_page_assessment .assessment td.column-title {	
+        font-size: 1em;
+    }
+    .coursepress_page_assessment .assessment .column-title .extra-information {
+        font-size: 0.8em;
+    }
+
+    .coursepress_page_assessment .assessment .column-response {
+        width: 5%;
+        max-width:40px;
+    }
+    .coursepress_page_assessment .assessment .column-grade {
+        width: 5%;
+        max-width:40px;
+    }
+    .coursepress_page_assessment .assessment .column-comment {
+        width: 5%;
+        max-width:40px;		
+    }
+
+    .assessment th.manage-column {
+        font-size: 0.9em;
+        text-overflow: ellipsis;
+    }
+
+    .assessment {
+        clear: both;
+    }
+
+    .assessment .ui-tabs .ui-tabs-nav li.ui-tabs-active,
+    .assessment .ui-tabs .ui-tabs-nav li {
+        padding: 8px;
+    }
 }
+
+@media only screen and ( max-width: 500px ) {
+    .assessment-archive-table .column-grade{
+        display: none;
+    }
+}
+
 
 /* For extra small devices */
 @media ( max-width: 480px ) {
 
-	.assessment-holder .buttons .additional_grade_info {
-		width: 30%;
-		min-width: 0;
-		margin: 0 0 0 15px;
-	}
-	.assessment-holder .buttons .submit {
-		width: 10%;
-		
-	}
-	.assessment-holder .buttons .response_grade {
-		width: 10%;
-	}
-	
+    .assessment-holder .buttons .additional_grade_info {
+        width: 30%;
+        min-width: 0;
+        margin: 0 0 0 15px;
+    }
+    .assessment-holder .buttons .submit {
+        width: 10%;
+
+    }
+    .assessment-holder .buttons .response_grade {
+        width: 10%;
+    }
+
 }
+
+@media only screen and ( max-width: 400px ) {
+    .assessment-archive-table .column-submission-date{
+        display: none;
+    }
+}
+

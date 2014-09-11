@@ -16,7 +16,7 @@ if ( isset( $_POST['course_id'] ) ) {
     }
 }
 ?>
-<div class="wrap nocoursesub">
+<div class="wrap nocoursesub student-workbook">
     <a href="<?php echo admin_url( 'admin.php?page=students' );?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
     <h2><?php _e( 'Student Workbook', 'cp' ); ?></h2>
 

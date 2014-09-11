@@ -119,7 +119,7 @@ if ( isset($_GET['action']) && ( $_GET['action'] == 'edit' || $_GET['action'] ==
 
                 <?php
                 $columns = array(
-                    "ID" => __('Student ID', 'cp'),
+                    "ID" => __('ID', 'cp'),
                     "username" => __('Username', 'cp'),
                     "user_fullname" => __('Full Name', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),

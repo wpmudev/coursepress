@@ -292,7 +292,7 @@ a.action-to-negative {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -308,7 +308,7 @@ a.action-to-negative {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -660,7 +660,7 @@ html>body #sortable-units li.postbox { line-height: 1.2em; cursor: move; }
     border-radius: 4px 0 0 4px;
     border-width: 1px 0 1px 1px;
     font-weight: 700;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
 }
 
@@ -992,7 +992,7 @@ input.wide, textarea.wide {
     border: 3px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -1177,7 +1177,7 @@ div.buttons a.cancellink {
     border: 2px dashed #ddd;
     color: #a9a9a9;
     font-weight: bold;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
     text-align: center;
     padding-top: 15px;
@@ -1580,7 +1580,7 @@ a .remove-btn:hover{
 }
 
 .student-course-bottom .course-summary{
-/*    padding-right: 160px;*/
+    /*    padding-right: 160px;*/
 }
 
 .student-course-top .workbook-button{
@@ -1617,63 +1617,63 @@ a .remove-btn:hover{
 /* -------------------------------------------------------------------------- */
 
 .students .column-user-fullname {
-	display: none;
+    display: none;
 }
 
 .students th {
-	text-overflow:ellipsis;
+    text-overflow:ellipsis;
 }
 
 /* Column Widths */
 .students .column-ID { 
-	width: 6%; 
+    width: 3%; 
 }
 
 .students .column-username { 
-	width: 10%; 
+    width: 10%; 
 }
 
 .students .column-user-firstname { 
-	width: 10%; 
+    width: 10%; 
 }
 
 .students .column-user-lastname { 
-	width: 10%; 
+    width: 10%; 
 }
 
 .students .column-registration-date { 
-	width: 14%;
-	text-align:left;	
-	padding: 8px 5px 10px;	
+    width: 14%;
+    text-align:left;	
+    padding: 8px 5px 10px;	
 }
 .students td.column-registration-date{
-	padding: 14px 5px 10px;	
+    padding: 14px 5px 10px;	
 }
 
 .students .column-latest-activity { 
-	width: 14%;
-	text-align:left;
-	padding: 8px 5px 10px;		
+    width: 14%;
+    text-align:left;
+    padding: 8px 5px 10px;		
 }
 .students td.column-latest-activity { 
-	padding: 14px 5px 10px;		
+    padding: 14px 5px 10px;		
 }
 
 .students .column-courses { 
-	width: 9%; 
+    width: 9%; 
 }
 
 .students .column-workbook {
-	width: 9%; 	
+    width: 9%; 	
 }
 
 /* profile */
 .students .column-edit {
-	width: 9% 	
+    width: 9% 	
 }
 
 .students .column-delete {
-	width: 9%; 	
+    width: 9%; 	
 }
 
 
@@ -1707,4 +1707,27 @@ a .remove-btn:hover{
 
 #student-profile-courses .sidebar-name h3{
     padding: 0px 0px 10px 10px;
+}
+
+.students th{
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.student-workbook .tablenav .actions .chosen-container{
+    min-width: 100%;
+}
+
+.student-workbook .tablenav {
+    min-height: 40px;
+}
+
+.student-workbook .course-holder label.ungraded {
+    margin-bottom: 0px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 7px;
+    margin-bottom: 0px;
+    padding-bottom: 10px;
 }

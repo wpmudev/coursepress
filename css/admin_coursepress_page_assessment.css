@@ -80,7 +80,7 @@
 }
 
 .uppercase{
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;		
 }
 
@@ -279,23 +279,29 @@ td.less_visible_row{
 
 /* Column widths */
 .column-name {
-	width: 12%;
+    width: 12%;
 }
 .column-module {
-	width: 12%;
+    width: 12%;
 }
 .column-title {
-	width: 36%;
+    width: 36%;
 }
 .column-submission-date {
-	width: 15%;
+    width: 15%;
 }
 .column-response {
-	width: 10%;
+    width: 10%;
 }
 .column-grade {
-	width: 10%;
+    width: 10%;
 }
 .column-comment {
-	width: 5%;
+    width: 5%;
+}
+
+.assessment-archive-table th{
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

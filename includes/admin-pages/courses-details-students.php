@@ -227,10 +227,10 @@ $wp_user_search = new WP_User_Query($args);
                         $style = ( 'alternate' == $style ) ? '' : 'alternate';
                         ?>
                         <tr id='user-<?php echo $user_object->ID; ?>' <?php echo $style; ?>>
-                            <td class="<?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
-                            <td class="<?php echo $style; ?>"><?php echo $user_object->user_login; ?></td>
-                            <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
-                            <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
+                            <td class="<?php echo $style; ?> <?php echo 'manage-column column-id'; ?>"><?php echo $user_object->ID; ?></td>
+                            <td class="<?php echo $style; ?> <?php echo 'manage-column column-user_login'; ?>"><?php echo $user_object->user_login; ?></td>
+                            <td class="<?php echo $style; ?> <?php echo 'manage-column column-first_name'; ?>"><?php echo $user_object->first_name; ?></td>
+                            <td class="<?php echo $style; ?> <?php echo 'manage-column column-last_name'; ?>"><?php echo $user_object->last_name; ?></td>
                             <!--<td class="<?php echo $style; ?>"><?php echo ( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __('Default', 'cp') : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>-->
                             <td class="<?php echo $style . ' edit-button-student-td'; ?>">
                                 <a href="<?php echo admin_url('admin.php?page=students&action=view&student_id=' . $user_object->ID); ?>">
