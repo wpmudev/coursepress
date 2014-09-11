@@ -32,6 +32,7 @@ if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
 
 
+
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -3784,7 +3785,15 @@ if ( !class_exists('CoursePress') ) {
 
         function output_buffer() {
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-            ob_start();
+            $page = $_GET['page'];
+            
+            $cp_pages = array('courses', 'course_details', 'instructors', 'students', 'assessment', 'reports', 'notifications', 'discussions', 'coursepress-pro_settings');
+            
+            if ( is_admin() && (isset($page) && !empty($page)) && (in_array($page, $cp_pages)) ) {
+                ob_start("minify_output");
+            } else {
+                ob_start();
+            }
         }
 
         /* Check if user is currently active on the website */

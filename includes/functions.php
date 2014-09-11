@@ -1479,103 +1479,100 @@ require_once( 'first-install.php' );
 
 function cp_get_attachment_id_from_src( $image_src ) {
 
-	global $wpdb;
-	$query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
-	$id = $wpdb->get_var($query);
-	return $id;
+    global $wpdb;
+    $query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
+    $id = $wpdb->get_var($query);
+    return $id;
 
 }
 
 function cp_do_attachment_caption( $data ) {
-	
-	if ( empty( $data->image_url ) && empty( $data->video_url ) ) {
-		return '';
-	}
 
-	$media_data = array();
-	$caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' );
-	
-	if ( ! empty( $data->image_url ) ) {
-		$media_data['id'] = cp_get_attachment_id_from_src( $data->image_url );	
-	}
-	if ( ! empty( $data->video_url ) ) {
-		$media_data['id'] = cp_get_attachment_id_from_src( $data->video_url );	
-	}
+    if ( empty($data->image_url) && empty($data->video_url) ) {
+        return '';
+    }
 
-	if ( $media_data['id'] ) {
-		
-		// Alt - always add alt!
-		$meta = get_post_meta( $media_data['id'] ); // Get post meta by ID
-		if ( ! empty( $meta['_wp_attachment_image_alt'] ) ) {
-			$media_data['alt'] = $meta['_wp_attachment_image_alt'][0];
-		} else {
-			$media_data['alt'] = '';
-		}
-		
-		// Width - used for caption shortcode
-		$attachment = get_post( $media_data['id'] );
-		$meta = wp_get_attachment_metadata( $media_data['id'] );		
-		$media_data['width'] = $meta['width'];
-		
-		if( 'media' == $caption_source ) {
-			$media_data['caption'] = $attachment->post_excerpt;
-		} else {
-			$media_data['caption'] = !empty( $data->caption_custom_text ) ? $data->caption_custom_text : '';
-		}
-		
-	} else {
-				
-		// If the user did happen to put something in the custom caption box,
-		// use this for alt. Worst case scenario is an empty alt tag.
-		if ( !empty( $data->caption_custom_text ) ) {
-			$media_data['alt'] = $data->caption_custom_text;
-		} else {
-			$media_data['alt'] = '';
-		}
-		
-		global $content_width;
-		if ( ! empty( $content_width ) ) {
-			$media_data['width'] = $content_width;
-		} else {
-			// Default to media setting for large images if its not an attachment
-			$media_data['width'] = get_option( 'large_size_w' );			
-		}
-		
-		// Get the custom caption text
-		$media_data['caption'] = !empty( $data->caption_custom_text ) ? $data->caption_custom_text : '';
-		
-	}
+    $media_data = array();
+    $caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' );
 
-	$html = '';
+    if ( !empty($data->image_url) ) {
+        $media_data['id'] = cp_get_attachment_id_from_src($data->image_url);
+    }
+    if ( !empty($data->video_url) ) {
+        $media_data['id'] = cp_get_attachment_id_from_src($data->video_url);
+    }
 
-	// Called from Image module
-	if ( ! empty( $data->image_url ) ) {
+    if ( $media_data['id'] ) {
 
-		if ( 'yes' == $data->show_media_caption ) {
-			
-			$attachment_id = '';
-			if ( $media_data['id'] ) {
-				$attachment_id = ' id="attachment_' . $media_data['id'] . '"';
-			}
-			
+        // Alt - always add alt!
+        $meta = get_post_meta($media_data['id']); // Get post meta by ID
+        if ( !empty($meta['_wp_attachment_image_alt']) ) {
+            $media_data['alt'] = $meta['_wp_attachment_image_alt'][0];
+        } else {
+            $media_data['alt'] = '';
+        }
+
+        // Width - used for caption shortcode
+        $attachment = get_post($media_data['id']);
+        $meta = wp_get_attachment_metadata($media_data['id']);
+        $media_data['width'] = $meta['width'];
+
+        if ( 'media' == $caption_source ) {
+            $media_data['caption'] = $attachment->post_excerpt;
+        } else {
+            $media_data['caption'] = !empty($data->caption_custom_text) ? $data->caption_custom_text : '';
+        }
+    } else {
+
+        // If the user did happen to put something in the custom caption box,
+        // use this for alt. Worst case scenario is an empty alt tag.
+        if ( !empty($data->caption_custom_text) ) {
+            $media_data['alt'] = $data->caption_custom_text;
+        } else {
+            $media_data['alt'] = '';
+        }
+
+        global $content_width;
+        if ( !empty($content_width) ) {
+            $media_data['width'] = $content_width;
+        } else {
+            // Default to media setting for large images if its not an attachment
+            $media_data['width'] = get_option('large_size_w');
+        }
+
+        // Get the custom caption text
+        $media_data['caption'] = !empty($data->caption_custom_text) ? $data->caption_custom_text : '';
+    }
+
+    $html = '';
+
+    // Called from Image module
+    if ( !empty($data->image_url) ) {
+
+        if ( 'yes' == $data->show_media_caption ) {
+
+            $attachment_id = '';
+            if ( $media_data['id'] ) {
+                $attachment_id = ' id="attachment_' . $media_data['id'] . '"';
+            }
+
             $html .= '<div class="image_holder">';
             $img = '<img src="' . $data->image_url . '" alt="' . $media_data['alt'] . '" />';
-			$html .= do_shortcode('[caption width="' . $media_data['width'] . '"' . $attachment_id . ']' . $img . ' ' . $media_data['caption'] . '[/caption]');
-			$html .= '</div>';
-		} else {
+            $html .= do_shortcode('[caption width="' . $media_data['width'] . '"' . $attachment_id . ']' . $img . ' ' . $media_data['caption'] . '[/caption]');
+            $html .= '</div>';
+        } else {
             $html .= '<div class="image_holder">';
             $html .= '<img src="' . $data->image_url . '" alt="' . $media_data['alt'] . '" />';
             $html .= '</div>';
-		}
-		
-	}
+        }
+    }
 
-	// Called from Video module
-	if ( ! empty( $data->video_url ) ) {
+    // Called from Video module
+    if ( !empty($data->video_url) ) {
 
         $video_extension = pathinfo($data->video_url, PATHINFO_EXTENSION);
-		
-		$video = '';
+
+        $video = '';
         if ( !empty($video_extension) ) {//it's file, most likely on the server
             $attr = array(
                 'src' => $data->video_url,
@@ -1591,30 +1588,42 @@ function cp_do_attachment_caption( $data ) {
             $video = wp_oembed_get($data->video_url);
         }
 
-		if ( 'yes' == $data->show_media_caption ) {
-			
-			$attachment_id = '';
-			if ( $media_data['id'] ) {
-				$attachment_id = ' id="attachment_' . $media_data['id'] . '"';
-			}
-			
-			$html .= '<div class="video_holder">';
-			$html .= '<figure ' . $attachment_id . ' class="wp-caption" style="width: ' . $media_data['width'] . 'px;">';
-            $html .= '<div class="video_player">';
-			$html .= $video;
-			$html .= '</div>';			
-			$html .= '<figcaption class="wp-caption-text">' . $media_data['caption'] . '</figcaption>';
-			$html .= '</figure>';
-			$html .= '</div>';						
-			
-		} else {
+        if ( 'yes' == $data->show_media_caption ) {
+
+            $attachment_id = '';
+            if ( $media_data['id'] ) {
+                $attachment_id = ' id="attachment_' . $media_data['id'] . '"';
+            }
+
+            $html .= '<div class="video_holder">';
+            $html .= '<figure ' . $attachment_id . ' class="wp-caption" style="width: ' . $media_data['width'] . 'px;">';
             $html .= '<div class="video_player">';
             $html .= $video;
             $html .= '</div>';
-		}
-	
-	}	
-	
-	return $html;
+            $html .= '<figcaption class="wp-caption-text">' . $media_data['caption'] . '</figcaption>';
+            $html .= '</figure>';
+            $html .= '</div>';
+        } else {
+            $html .= '<div class="video_player">';
+            $html .= $video;
+            $html .= '</div>';
+        }
+    }
+
+    return $html;
 }
 
+function minify_output( $buffer ) {
+    $search = array(
+        '/\>[^\S ]+/s', //strip whitespaces after tags, except space
+        '/[^\S ]+\</s', //strip whitespaces before tags, except space
+        '/(\s)+/s'  // shorten multiple whitespace sequences
+    );
+    $replace = array(
+        '>',
+        '<',
+        '\\1'
+    );
+    $buffer = preg_replace($search, $replace, $buffer);
+    return $buffer;
+}
