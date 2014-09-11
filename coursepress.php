@@ -3790,7 +3790,8 @@ if ( !class_exists('CoursePress') ) {
             $cp_pages = array('courses', 'course_details', 'instructors', 'students', 'assessment', 'reports', 'notifications', 'discussions', 'coursepress-pro_settings');
             
             if ( is_admin() && (isset($page) && !empty($page)) && (in_array($page, $cp_pages)) ) {
-                ob_start("minify_output");
+                //ob_start("minify_output");
+                ob_start();
             } else {
                 ob_start();
             }
