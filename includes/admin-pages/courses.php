@@ -289,9 +289,8 @@ if ( isset($_GET['quick_setup']) ) {
                                     <div class="courses-state">
                                         <?php
                                         $data_nonce = wp_create_nonce('toggle-' . $course->ID);
-                                        $data_cap = $can_publish ? sha1('can_change_course_state' . $data_nonce) : '';
                                         ?>
-                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+                                        <div class="course_state_id" data-id="<?php echo $course->ID; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
                                         <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                                         <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">
                                             <div class="toggle"></div>

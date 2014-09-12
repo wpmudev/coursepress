@@ -24,7 +24,6 @@ jQuery(document).ready(function($) {
                     var the_toggle = this;
                     var course_id = $(this).parent().find('.course_state_id').attr('data-id');
                     var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
-                    var required_cap = $(this).parent().find('.course_state_id').attr('data-cap');
 			        var uid = $('#course-ajax-check').data('uid');
 										
                     if ($(this).hasClass('disabled')) {
@@ -48,7 +47,6 @@ jQuery(document).ready(function($) {
                                 course_state: course_state,
                                 course_id: course_id,
                                 course_nonce: course_nonce,
-                                required_cap: required_cap,
 								user_id: uid,
                             }
                     ).done(function(data, status) {
@@ -58,7 +56,6 @@ jQuery(document).ready(function($) {
                             // Apply a new nonce when returning
                             if (response && response.toggle) {
                                 $(the_toggle).parent().find('.course_state_id').attr('data-nonce', response.nonce);
-                                $(the_toggle).parent().find('.course_state_id').attr('data-cap', response.cap);
                                 // Else, toggle back.	
                             } else {
                                 if ($(the_toggle).hasClass('on')) {

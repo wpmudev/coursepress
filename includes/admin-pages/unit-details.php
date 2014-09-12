@@ -149,7 +149,6 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
             $can_publish = CoursePress_Capabilities::can_change_course_unit_status($course_id, $unit_id);
             $data_nonce = wp_create_nonce('toggle-' . $unit_id);
-            $data_cap = $can_publish ? sha1('can_change_course_unit_state' . $data_nonce) : '';
             ?>
 
             <div class='section static'>
@@ -162,7 +161,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 								   $control_position = 'on';
 							   }
 							?>
-                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
                             <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
                             <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
                                 <div class="toggle"></div>
@@ -434,7 +433,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 											   $control_position = 'on';
 										   }
 										?>
-			                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+			                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
 			                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
 			                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
 			                                <div class="toggle"></div>

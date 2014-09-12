@@ -193,10 +193,9 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
         <?php
         $can_update = 0 == $course_id || CoursePress_Capabilities::can_update_course($course_id);
         $data_nonce = wp_create_nonce('auto-update-' . $course_id);
-        $data_cap = $can_update ? sha1('can_update_course' . $data_nonce) : '';
         ?>
 
-        <input type='hidden' name='course-ajax-check' id="course-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo $can_update ? get_current_user_id() : ''; ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>" value="" />
+        <input type='hidden' name='course-ajax-check' id="course-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo $can_update ? get_current_user_id() : ''; ?>" data-nonce="<?php echo $data_nonce; ?>" value="" />
         <div class='course-liquid-left'>
 
             <div id='course'>

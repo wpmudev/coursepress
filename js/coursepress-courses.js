@@ -422,7 +422,6 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
 		console.log( response );
         if (response && response.success) {
             $('#course-ajax-check').data('nonce', response.nonce);
-            $('#course-ajax-check').data('cap', response.cap);
             $('#course-ajax-check').data('id', response.course_id);
             $('[name=course_id]').val(response.course_id);
             if (response.mp_product_id) {
@@ -550,7 +549,6 @@ function step_1_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         course_excerpt: content,
@@ -617,7 +615,6 @@ function step_2_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         meta_course_video_url: $('[name=meta_course_video_url]').val(),
@@ -653,7 +650,6 @@ function step_3_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         instructor: instructors,
@@ -673,7 +669,6 @@ function step_4_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         meta_open_ended_course: $('[name=meta_open_ended_course]').is(':checked') ? 'on' : 'off',
@@ -698,7 +693,6 @@ function step_5_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         meta_limit_class_size: $('[name=meta_limit_class_size]').is(':checked') ? 'on' : 'off',
@@ -733,7 +727,6 @@ function step_6_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
         user_id: initialVars['user_id'],
         // Alter as required
         meta_enroll_type: $('[name=meta_enroll_type]').val(),
@@ -933,7 +926,6 @@ function courseAutoUpdate(step, nextAction) {
         var meta_course_setup_progress = get_meta_course_setup_progress();
 
         var course_nonce = $('#course-ajax-check').data('nonce');
-        var required_cap = $('#course-ajax-check').data('cap');
         var uid = $('#course-ajax-check').data('uid');
 
         var initial_vars = {
@@ -941,7 +933,6 @@ function courseAutoUpdate(step, nextAction) {
             course_id: course_id,
             course_name: $('[name=course_name]').val(),
             course_nonce: course_nonce,
-            required_cap: required_cap,
             user_id: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
@@ -1659,7 +1650,6 @@ jQuery(document).ready(function($) {
 
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
                     var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
-                    var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');
 			        var uid = $('#course-ajax-check').data('uid');
 
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
@@ -1669,7 +1659,6 @@ jQuery(document).ready(function($) {
                                     unit_state: unit_state,
                                     unit_id: unit_id,
                                     unit_nonce: unit_nonce,
-                                    required_cap: required_cap,
 									course_id: course_id,
 									user_id: uid,
                                 }
@@ -1681,7 +1670,6 @@ jQuery(document).ready(function($) {
                                 // Apply a new nonce when returning
                                 if (response && response.toggle) {
                                     $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-nonce', response.nonce);
-                                    $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-cap', response.cap);
                                     // Else, toggle back.	
                                 } else {
                                     if ($(selector).hasClass('on')) {
@@ -1740,7 +1728,6 @@ jQuery(document).ready(function($) {
 
                     var course_id = $('#course_state_id').attr('data-id');
                     var course_nonce = $('#course_state_id').attr('data-nonce');
-                    var required_cap = $('#course_state_id').attr('data-cap');
 			        var uid = $('#course-ajax-check').data('uid');
 					
                     $.post(
@@ -1749,7 +1736,6 @@ jQuery(document).ready(function($) {
                                 course_state: course_state,
                                 course_id: course_id,
                                 course_nonce: course_nonce,
-                                required_cap: required_cap,
 								user_id: uid,
                             }
                     ).done(function(data, status) {
@@ -1760,7 +1746,6 @@ jQuery(document).ready(function($) {
                             // Apply a new nonce when returning
                             if (response && response.toggle) {
                                 $('#course_state_id').attr('data-nonce', response.nonce);
-                                $('#course_state_id').attr('data-cap', response.cap);
                                 // Else, toggle back.	
                             } else {
                                 if ($(selector).hasClass('on')) {

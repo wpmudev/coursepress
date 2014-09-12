@@ -162,9 +162,8 @@ $students_count = $course->get_number_of_students();
 				<?php 
 					$can_publish = CoursePress_Capabilities::can_change_course_status( $course_id );
 					$data_nonce = wp_create_nonce('toggle-' . $course_id ); 
-					$data_cap = CoursePress_Capabilities::can_change_course_status( $course_id ) ? sha1( 'can_change_course_state' . $data_nonce ) : '';
 				?>
-                <div id="course_state_id" data-id="<?php echo $course_id ?>" data-nonce="<?php echo $data_nonce; ?>" data-cap="<?php echo $data_cap; ?>"></div>
+                <div id="course_state_id" data-id="<?php echo $course_id ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
                 <span class="publish-course-message"><?php _e('Publish Course', 'cp'); ?></span>
                 <span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
                 <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">

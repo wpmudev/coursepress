@@ -2333,7 +2333,6 @@ if ( !class_exists('CoursePress') ) {
                 $ajax_response['course_id'] = $course_id;
                 $ajax_response['mp_product_id'] = $mp_product_id;
                 $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
-                $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);  // leave this here until the next few are sorted
 
                 if ( !empty($_POST['meta_course_setup_marker']) && 'step-6' == $_POST['meta_course_setup_marker'] ) {
                     update_post_meta($course_id, 'course_setup_complete', 'yes');
@@ -2372,7 +2371,6 @@ if ( !class_exists('CoursePress') ) {
                 $course->change_status($_POST['course_state']);
                 $ajax_response['toggle'] = true;
                 $ajax_response['nonce'] = wp_create_nonce('toggle-' . $course_id);
-                $ajax_response['cap'] = sha1('can_change_course_state' . $ajax_response['nonce']);
             } else {
                 $ajax_response['toggle'] = false;
                 $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
@@ -2408,7 +2406,6 @@ if ( !class_exists('CoursePress') ) {
 
                 $ajax_response['toggle'] = true;
                 $ajax_response['nonce'] = wp_create_nonce('toggle-' . $unit_id);
-                $ajax_response['cap'] = sha1('can_change_course_unit_state' . $ajax_response['nonce']);
             } else {
                 $ajax_response['toggle'] = false;
                 $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
