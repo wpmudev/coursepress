@@ -1,6 +1,6 @@
 <?php
 global $action, $page;
-global $page, $user_id, $coursepress_admin_notice;
+global $page, $user_id, $cp_admin_notice;
 global $coursepress;
 
 $notification_id = '';
@@ -46,7 +46,7 @@ if ( isset($_GET['notification_id']) ) {
 }
 ?>
 
-<div class="wrap nosubsub">
+<div class="wrap nosubsub cp-wrap">
     <div class="icon32" id="icon-themes"><br></div>
 
     <h2><?php _e('Notification', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') || current_user_can('coursepress_create_my_assigned_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>

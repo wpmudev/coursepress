@@ -176,7 +176,7 @@ $args = array(
 $wp_user_search = new WP_User_Query($args);
 ?>
 
-<div id="students_accordion">
+<div id="students_accordion" class="cp-wrap">
     <?php
     $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
     $search_args['meta_value'] = ( isset($class) ? $class : '' );
@@ -269,7 +269,7 @@ $wp_user_search = new WP_User_Query($args);
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php if ( $students->total_users > 0 ) { ?>
-                            <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                            <?php cp_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
                         <?php } ?>
                         <?php wp_nonce_field('student_details'); ?>
                     </form>
@@ -296,7 +296,7 @@ $wp_user_search = new WP_User_Query($args);
                         <input type="hidden" name="class_name" value="" />
                         <input type="hidden" name="active_student_tab" value="0" /> 
                         <?php //if ( $students->total_users > 0 ) { ?>
-                            <?php coursepress_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
+                            <?php cp_students_drop_down(); ?> <?php submit_button(__('Add Student', 'cp'), 'secondary', 'add_new_student', ''); ?>
                         <?php //} ?>
                         <?php wp_nonce_field('student_details'); ?>
                     </form>
@@ -404,7 +404,7 @@ $wp_user_search = new WP_User_Query($args);
       <input type="hidden" name="class_name" value="<?php echo ( isset( $class ) ? $class : '' ); ?>" />
       <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
       <?php if ( $students->total_users > 0 ) { ?>
-      <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+      <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
       <?php } ?>
       <?php wp_nonce_field( 'student_details' ); ?>
       <?php } ?>
@@ -437,7 +437,7 @@ $wp_user_search = new WP_User_Query($args);
       <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
       <input type="hidden" name="class_name" value="<?php echo $class; ?>" />
       <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
-      <?php coursepress_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
+      <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'cp' ), 'secondary', 'add_new_student', '' ); ?>
       <?php wp_nonce_field( 'student_details' ); ?>
       </form>
       <?php } ?>

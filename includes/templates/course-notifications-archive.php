@@ -51,4 +51,4 @@ echo __('<h2>Notifications</h2>', 'cp');
     ?>
 </ul>
 <br clear="all" />
-<?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+<?php cp_numeric_posts_nav('navigation-pagination'); ?>

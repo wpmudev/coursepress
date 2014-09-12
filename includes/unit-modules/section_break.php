@@ -116,5 +116,5 @@ class section_break_module extends Unit_Module {
 
 }
 
-coursepress_register_module('section_break_module', 'section_break_module', 'output');
+cp_register_module('section_break_module', 'section_break_module', 'output');
 ?>

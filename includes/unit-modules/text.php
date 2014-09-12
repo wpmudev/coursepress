@@ -142,5 +142,5 @@ class text_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_module', 'text_module', 'output');
+cp_register_module('text_module', 'text_module', 'output');
 ?>

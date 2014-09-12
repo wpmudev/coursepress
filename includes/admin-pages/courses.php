@@ -109,7 +109,7 @@ if ( isset($_GET['quick_setup']) ) {
         $message = __('Status for the selected course has been changed successfully.', 'cp');
     }
     ?>
-    <div class="wrap nosubsub">
+    <div class="wrap nosubsub cp-wrap">
         <div class="icon32" id="icon-themes"><br></div>
         <h2><?php _e('Courses', 'cp'); ?>
             <?php
@@ -253,7 +253,7 @@ if ( isset($_GET['quick_setup']) ) {
                                 </th>
                                 <td class="column-course <?php echo $style; ?>"><?php if ( $can_update ) { ?><a href="<?php echo admin_url('admin.php?page=course_details&course_id=' . $course_object->ID); ?>"><?php } ?><strong><?php echo $course_object->post_title; ?></strong><?php if ( $can_update ) { ?></a><?php } ?><br />
                                     <!-- <div class="course-thumbnail"><img src="<?php echo Course::get_course_thumbnail($course->ID); ?>" alt="<?php echo esc_attr($course_object->post_title); ?>" /></div> -->
-                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($course_object->ID, 55); ?></div>
+                                    <div class="course_excerpt"><?php echo cp_get_the_course_excerpt($course_object->ID, 55); ?></div>
                                     <div class="column-course-units visible-small visible-extra-small">
                                         <strong><?php _e('Units', 'cp'); ?>:</strong>
                                         <?php echo $course_obj->get_units('', 'any', true); ?> <?php _e('Units', 'cp'); ?>,

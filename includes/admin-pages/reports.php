@@ -269,7 +269,7 @@ if ( isset($_GET['s']) ) {
 // Query the users
 $wp_user_search = new Student_Search($usersearch, $page_num);
 ?>
-<div class="wrap nosubsub reports">
+<div class="wrap nosubsub reports cp-wrap">
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e('Reports', 'cp'); ?></h2>
 

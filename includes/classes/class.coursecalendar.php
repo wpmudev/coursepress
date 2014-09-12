@@ -28,7 +28,7 @@ if ( !class_exists('Course_Calendar') ) {
 				
         function __construct( $args ) {
 			
-			extract( default_args( array(
+			extract( cp_default_args( array(
 				'month' => false,
 				'year' => false,
 				'course_id' => false,

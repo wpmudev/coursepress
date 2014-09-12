@@ -1,6 +1,6 @@
 <?php $page = $_GET['page']; ?>
 
-<div id="poststuff" class="metabox-holder m-settings email-settings">
+<div id="poststuff" class="metabox-holder m-settings email-settings cp-wrap">
     <form action='' method='post'>
 
         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
@@ -258,7 +258,7 @@
                         <tr>
                             <th><?php _e('E-mail Subject', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_instructor_invitation_email_subject" value="<?php echo esc_attr(coursepress_get_instructor_invitation_email_subject()); ?>" />
+                                <input type="text" name="option_instructor_invitation_email_subject" value="<?php echo esc_attr(cp_get_instructor_invitation_email_subject()); ?>" />
                             </td>
                         </tr>
 
@@ -268,7 +268,7 @@
                                 <p class="description"><?php _e('These codes will be replaced with actual data: INSTRUCTOR_FIRST_NAME, INSTRUCTOR_LAST_NAME, INSTRUCTOR_EMAIL, CONFIRMATION_LINK, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', 'cp'); ?></p>
                                 <?php
                                 $args = array( "textarea_name" => "option_instructor_invitation_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_instructor_invitation_email()), "option_instructor_invitation_email", $args);
+                                wp_editor(stripslashes(cp_get_instructor_invitation_email()), "option_instructor_invitation_email", $args);
                                 ?>
                             </td>
                         </tr>

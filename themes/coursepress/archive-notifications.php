@@ -87,7 +87,7 @@ get_header();
             ?>
         </ul>
         <br clear="all" />
-        <?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+        <?php cp_numeric_posts_nav('navigation-pagination'); ?>
     </main><!-- #main -->
 </div><!-- #primary -->
 <?php get_sidebar('footer'); ?>

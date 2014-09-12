@@ -3,7 +3,7 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
     $instructor = new Instructor( $_GET['instructor_id'] );
 }
 ?>
-<div class='wrap nocoursesub'>
+<div class='wrap nocoursesub cp-wrap'>
    
         <div class='course-liquid-left'>
 
@@ -64,14 +64,14 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                                     <tr id='user-<?php echo $course_object->ID; ?>' <?php echo $style; ?>>
                                         <td <?php echo $style; ?>><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id='.$course_object->ID );?>" width="75%">
                                                 <div class="course_title"><?php echo $course_object->post_title; ?></a></div>
-                                            <div class="course_excerpt"><?php echo get_the_course_excerpt( $course_object->ID ); ?></div>
+                                            <div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID ); ?></div>
                                         </td>
 
                                         <td <?php echo $style; ?> width="25%">
                                             <div class="course_additional_info">
                                                 <div><span class="info_caption"><?php _e( 'Start', 'cp' ); ?>:</span><span class="info"><?php if( $course_object->open_ended_course == 'on' ) { _e( 'Open-ended', 'cp' ); }else{ echo $course_object->course_start_date;} ?></span></div>
                                                 <div><span class="info_caption"><?php _e( 'End', 'cp' ); ?>:</span><?php if( $course_object->open_ended_course == 'on' ) { _e( 'Open-ended', 'cp' ); }else{ echo $course_object->course_end_date;} ?></span></div>
-                                                <div><span class="info_caption"><?php _e( 'Duration', 'cp' ); ?>:</span><span class="info"><?php if( $course_object->open_ended_course == 'on' ) { echo '&infin;';} else{ echo get_number_of_days_between_dates( $course_object->course_start_date, $course_object->course_end_date ); } ?> <?php _e( 'Days', 'cp' ); ?></span></div>
+                                                <div><span class="info_caption"><?php _e( 'Duration', 'cp' ); ?>:</span><span class="info"><?php if( $course_object->open_ended_course == 'on' ) { echo '&infin;';} else{ echo cp_get_number_of_days_between_dates( $course_object->course_start_date, $course_object->course_end_date ); } ?> <?php _e( 'Days', 'cp' ); ?></span></div>
                                             </div>
                                         </td>
                                     </tr>

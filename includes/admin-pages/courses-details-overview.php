@@ -1,5 +1,5 @@
 <?php
-global $page, $user_id, $coursepress_admin_notice, $coursepress, $mp;
+global $page, $user_id, $cp_admin_notice, $coursepress, $mp;
 
 add_editor_style(CoursePress::instance()->plugin_url . 'css/editor_style_fix.css');
 
@@ -187,7 +187,7 @@ if ( isset($_GET['course_id']) ) {
 $mp_settings = get_option('mp_settings');
 $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 ?>
-<div class='wrap nocoursesub'>
+<div class='wrap nocoursesub cp-wrap'>
     <form action='<?php esc_attr_e(admin_url('admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ( $course_id !== 0 ) ? '&ms=cu' : '&ms=ca' ))); ?>' name='course-add' id='course-add' method='post'>
 
         <?php
@@ -292,7 +292,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                                 $desc = '';
                                                 wp_editor(htmlspecialchars_decode(( isset($_GET['course_id']) ? $course_details->post_excerpt : '')), "course_excerpt", $args);
-                                                $supported_image_extensions = implode(", ", wp_get_image_extensions());
+                                                $supported_image_extensions = implode(", ", cp_wp_get_image_extensions());
                                                 ?>
                                             </div>
 
@@ -722,10 +722,10 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                 </label>
 
                                                 <?php if ( CoursePress_Capabilities::can_assign_course_instructor($course_id) ) { ?>
-                                                    <?php coursepress_instructors_avatars_array(); ?>
+                                                    <?php cp_instructors_avatars_array(); ?>
 
                                                     <div class="clearfix"></div>
-                                                    <?php coursepress_instructors_drop_down('postform chosen-select-course course-instructors'); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
+                                                    <?php cp_instructors_drop_down('postform chosen-select-course course-instructors'); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
                                                     <!-- <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p> -->
 
 											        <?php
@@ -735,7 +735,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 											        <input type='hidden' name='instructor-ajax-check' id="instructor-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo get_current_user_id(); ?>" data-nonce="<?php echo $data_nonce; ?>" value="" />
                                                     <?php
                                                 } else {
-                                                    if ( coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
+                                                    if ( cp_get_number_of_instructors() == 0 || cp_instructors_avatars($course_id, false, true) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
                                                         _e('You do not have required permissions to assign instructors to a course.', 'cp');
                                                     }
                                                 }
@@ -743,7 +743,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
 
                                                 <p><?php _e('Assigned Instructors:', 'cp'); ?></p>
                                                 <div class="instructors-info" id="instructors-info">
-                                                    <?php if ( 0 >= coursepress_instructors_avatars($course_id, true, true) ) : ?> 
+                                                    <?php if ( 0 >= cp_instructors_avatars($course_id, true, true) ) : ?> 
                                                         <div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e('Please Assign Instructor', 'cp'); ?></span></div>											
                                                     <?php endif ?>
 
@@ -751,8 +751,8 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     $can_manage_instructors = CoursePress_Capabilities::can_assign_course_instructor($course_id);
                                                     ?>
 
-                                                    <?php coursepress_instructors_avatars($course_id, $can_manage_instructors); ?>
-                                                    <?php coursepress_instructors_pending($course_id, $can_manage_instructors); ?>
+                                                    <?php cp_instructors_avatars($course_id, $can_manage_instructors); ?>
+                                                    <?php cp_instructors_pending($course_id, $can_manage_instructors); ?>
                                                 </div>
 
                                                 <div class="clearfix"></div>

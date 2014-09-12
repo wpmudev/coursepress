@@ -3,7 +3,7 @@ $user_id = isset( $_GET['user_id'] ) ? ( int )$_GET['user_id'] : '';
 $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
 ?>
 
-<div class="wrap nosubsub">
+<div class="wrap nosubsub cp-wrap">
     <?php if ( $user_id !== '' && $course_id !== '' ) { ?>
         <?php _e('Go to:', 'cp'); ?> <a href="<?php echo admin_url( 'admin.php?action=workbook&student_id='.$user_id.'&page=students&course_id='.$course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'cp' ); ?></a> | 
 		<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id='.$course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'cp' ); ?></a>

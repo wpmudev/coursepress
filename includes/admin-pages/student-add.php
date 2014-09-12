@@ -71,7 +71,7 @@ if ( isset( $_POST['submit'] ) ) {
 }
 ?>
 
-<form id="student-settings" name="student-settings" method="post" class="student-settings">
+<form id="student-settings" name="student-settings" method="post" class="student-settings cp-wrap">
     <div class="wrap nosubsub">
         <div class="icon32" id="icon-users"><br></div>
         <h2><?php _e( 'Add New Student', 'cp' ); ?></h2>

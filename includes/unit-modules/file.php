@@ -161,5 +161,5 @@ class file_module extends Unit_Module {
 
 }
 
-coursepress_register_module('file_module', 'file_module', 'output');
+cp_register_module('file_module', 'file_module', 'output');
 ?>

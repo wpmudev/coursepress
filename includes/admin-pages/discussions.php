@@ -69,7 +69,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
         }
     }
     ?>
-    <div class="wrap nosubsub">
+    <div class="wrap nosubsub cp-wrap">
         <div class="icon32" id="icon-themes"><br></div>
         <h2><?php _e('Discussions', 'cp'); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_create_discussion_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
@@ -170,7 +170,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                                     <input type='checkbox' name='discussions[]' id='user_<?php echo $discussion_object->ID; ?>' class='' value='<?php echo $discussion_object->ID; ?>' />
                                 </th>
                                 <td <?php echo $style; ?>><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID); ?>"><strong><?php echo $discussion_object->post_title; ?></strong></a><br />
-                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($discussion_object->ID); ?></div>
+                                    <div class="course_excerpt"><?php echo cp_get_the_course_excerpt($discussion_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_discussion"><a href="<?php echo admin_url('admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID); ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
 

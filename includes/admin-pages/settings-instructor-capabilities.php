@@ -142,7 +142,7 @@ $instructor_capabilities_notifications = array(
     'coursepress_change_my_notification_status_cap' => __( 'Change statuses of notifications made by the instructor only', 'cp' )
 );
 ?>
-<div id="poststuff" class="metabox-holder m-settings">
+<div id="poststuff" class="metabox-holder m-settings cp-wrap">
     <form action='' method='post'>
 
         <?php

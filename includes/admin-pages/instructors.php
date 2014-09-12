@@ -60,7 +60,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
     $wp_user_search = new Instructor_Search( $usersearch, $page_num );
     ?>
 
-    <div class="wrap nosubsub instructors">
+    <div class="wrap nosubsub instructors cp-wrap">
 
         <div class="icon32 " id="icon-users"><br></div>
         <h2><?php _e( 'Instructors', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?><a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>

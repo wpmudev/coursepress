@@ -182,5 +182,5 @@ class audio_module extends Unit_Module {
 
 }
 
-coursepress_register_module('audio_module', 'audio_module', 'output');
+cp_register_module('audio_module', 'audio_module', 'output');
 ?>

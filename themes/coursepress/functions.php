@@ -335,10 +335,10 @@ function dropdown_menu_scripts() {
 add_filter('element_content_filter', 'cp_theme_element_content_filter_add_thickbox', 12, 1);
 
 function cp_theme_element_content_filter_add_thickbox( $content ) {
-    return preg_replace_callback('#( <a\s[^>]*href )="( [^"]+ )".*<img#', "cp_theme_callback_link", $content);
+    return preg_replace_callback('#( <a\s[^>]*href )="( [^"]+ )".*<img#', "cp_theme_cp_callback_link", $content);
 }
 
-function cp_theme_callback_link( $match ) {
+function cp_theme_cp_callback_link( $match ) {
     $new_url = str_replace('../wp-content', WP_CONTENT_URL, $match[0]);
     $output = preg_replace('#( http://([^\s]* )\.( jpg|gif|png ) )#', '$1" class="thickbox', $new_url);
     return $output;
@@ -359,9 +359,9 @@ function unit_content( $content ) {
 /**
  * Numeric pagination
  */
-if ( !function_exists('coursepress_numeric_posts_nav') ) {
+if ( !function_exists('cp_numeric_posts_nav') ) {
 
-    function coursepress_numeric_posts_nav( $navigation_id = '' ) {
+    function cp_numeric_posts_nav( $navigation_id = '' ) {
 
         if ( is_singular() )
             return;

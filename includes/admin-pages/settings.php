@@ -46,7 +46,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
 }
 ?>
 
-<div class='wrap mp-wrap nocoursesub' id="settings-wrap">
+<div class='wrap mp-wrap nocoursesub cp-wrap' id="settings-wrap">
     <div class="icon32 icon32-posts-page" id="icon-options-general"><br></div>
     <h2><?php _e( 'Settings', 'cp' ); ?></h2>
 

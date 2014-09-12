@@ -107,7 +107,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $course = new Course($course_id);
 
 // needs some more work...
-// $encoded = object_encode( $course );
+// $encoded = cp_object_encode( $course );
             $encoded = false;
 
             $sections = explode(',', $show);
@@ -287,7 +287,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'length' => ''
                             ), $atts, 'course_summary'));
 
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             ob_start();
             ?>
@@ -320,7 +320,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_description'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             ob_start();
             ?>
@@ -351,7 +351,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_start'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'course_start_date', true);
             ob_start();
@@ -360,7 +360,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <?php if ( !empty($label) ) : ?>
                     <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                 <?php endif; ?>
-                <?php echo sp2nbsp(date($date_format, strtotime($start_date))); ?>
+                <?php echo cp_sp2nbsp(date($date_format, strtotime($start_date))); ?>
             </div>
             <?php
             $content = ob_get_clean();
@@ -388,7 +388,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_end'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $end_date = get_post_meta($course_id, 'course_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_course', true) ? false : true;
@@ -398,7 +398,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <?php if ( !empty($label) ) : ?>
                     <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                 <?php endif; ?>
-                <?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($end_date))); ?>
+                <?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($end_date))); ?>
             </div>
             <?php
             $content = ob_get_clean();
@@ -428,18 +428,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_dates'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'course_start_date', true);
             $end_date = get_post_meta($course_id, 'course_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_course', true) ? false : true;
-            $end_output = $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($end_date)));
+            $end_output = $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($end_date)));
             $show_alt_display = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
             ob_start();
             ?>
             <div class="course-dates course-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
                 <?php if ( !empty($label) ) : ?><<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>><?php endif; ?>
-                <?php if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) : ?><?php echo $alt_display_text; ?><?php else: ?><?php echo sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . $end_output; ?><?php endif; ?>
+                <?php if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) : ?><?php echo $alt_display_text; ?><?php else: ?><?php echo cp_sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . $end_output; ?><?php endif; ?>
             </div>
             <?php
             $content = ob_get_clean();
@@ -467,7 +467,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_enrollment_start'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'enrollment_start_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
@@ -477,7 +477,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <?php if ( !empty($label) ) : ?>
                     <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                 <?php endif; ?>
-                <?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))); ?>
+                <?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($start_date))); ?>
             </div>
             <?php
             $content = ob_get_clean();
@@ -508,7 +508,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_enrollment_end'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
@@ -518,7 +518,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <?php if ( !empty($label) ) : ?>
                     <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                 <?php endif; ?>
-                <?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($end_date))); ?>				
+                <?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($end_date))); ?>				
             </div>
             <?php
             $content = '';
@@ -555,7 +555,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_enrollment_dates'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'enrollment_start_date', true);
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
@@ -583,7 +583,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( !$is_enrolled ) {
                     if ( ( 'yes' == strtolower($show_alt_display) || $show_alt_display ) && $open_ended ) :
                         ?>
-                        <?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . sp2nbsp(date($date_format, strtotime($end_date))); ?>
+                        <?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($start_date))) . ' - ' . cp_sp2nbsp(date($date_format, strtotime($end_date))); ?>
                     <?php endif; ?>
                     <?php
                 } else {
@@ -623,7 +623,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_class_size'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $content = '';
 
@@ -679,7 +679,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_cost'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $is_paid = get_post_meta($course_id, 'paid_course', true) == 'on' ? true : false;
 
@@ -727,7 +727,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_language'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $language = get_post_meta($course_id, 'course_language', true);
             ob_start();
@@ -763,7 +763,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_category'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $content = '';
 
@@ -813,7 +813,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_enrollment_type'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $enrollment_type = get_post_meta($course_id, 'enroll_type', true);
 
@@ -865,7 +865,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_list_image'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $image_src = get_post_meta($course_id, 'featured_url', true);
 
@@ -903,7 +903,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_featured_video'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $video_src = get_post_meta($course_id, 'course_video_url', true);
 
@@ -976,7 +976,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_join_button'));
             // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             global $enrollment_process_url, $signup_url;
 
@@ -1164,7 +1164,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_thumbnail'));
 
             // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $thumbnail = Course::get_course_thumbnail($course_id);
 
@@ -1210,7 +1210,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_structure'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             if ( $course->details->course_structure_options == 'on' ) {
                 $content = '';
@@ -1420,7 +1420,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $priority = 'default' != $type ? false : $priority;
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $course_video = get_post_meta($course_id, 'course_video_url', true);
             $course_image = get_post_meta($course_id, 'featured_url', true);
@@ -1493,7 +1493,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_action_links'));
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $course->course_start_date = get_post_meta($course_id, 'course_start_date', true);
             $course->course_end_date = get_post_meta($course_id, 'course_end_date', true);
@@ -1935,7 +1935,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $show_label = 'list-flat' == $style && !$show_label ? 'yes' : $show_label;
 
-            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
 
             $instructors = Course::get_course_instructors($course_id);
             $list = array();
@@ -2246,7 +2246,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     if ( $course->$field == '' ) {
                         $course->$field = __('N/A', 'cp');
                     } else {
-                        $course->$field = sp2nbsp(date($date_format, strtotime($course->$field)));
+                        $course->$field = cp_sp2nbsp(date($date_format, strtotime($course->$field)));
                     }
                 }
             }

@@ -65,7 +65,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'add_new_unit' || ( isset($_GE
             <li class="postbox ui-state-default clearfix">
                 <div class="unit-order-number"><div class="numberCircle"><?php echo $list_order; ?></div></div>
                 <div class="unit-title"><a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=edit') ?>"><?php echo $unit_object->post_title; ?></a></div>
-                <div class="unit-description"><?php echo get_the_course_excerpt($unit_object->ID, 28); ?></div>
+                <div class="unit-description"><?php echo cp_get_the_course_excerpt($unit_object->ID, 28); ?></div>
 
                 <?php if ( CoursePress_Capabilities::can_delete_course_unit($course_id, $unit_object->ID) ) { ?>
                     <div class="unit-remove"><a href="<?php echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=delete_unit'); ?>" onClick="return removeUnit();">

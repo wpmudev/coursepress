@@ -1,4 +1,4 @@
-<div class="wrap about-wrap">
+<div class="wrap about-wrap cp-wrap">
 
     <h1><?php _e('Welcome to', 'cp'); ?> <?php echo $this->name; ?></h1>
 

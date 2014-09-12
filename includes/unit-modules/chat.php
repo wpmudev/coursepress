@@ -1,5 +1,5 @@
 <?php
-if ( is_chat_plugin_active() ) {
+if ( cp_is_chat_plugin_active() ) {
 
     class chat_module extends Unit_Module {
 
@@ -137,6 +137,6 @@ if ( is_chat_plugin_active() ) {
 
     }
 
-    coursepress_register_module('chat_module', 'chat_module', 'output');
+    cp_register_module('chat_module', 'chat_module', 'output');
 }
 ?>

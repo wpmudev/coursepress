@@ -1,6 +1,6 @@
 <?php
 global $action, $page;
-global $page, $user_id, $coursepress_admin_notice;
+global $page, $user_id, $cp_admin_notice;
 global $coursepress;
 
 $discussion_id = '';
@@ -46,7 +46,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 }
 ?>
 
-<div class="wrap nosubsub discussions-details">
+<div class="wrap nosubsub discussions-details cp-wrap">
     <div class="icon32" id="icon-themes"><br></div>
 
     <h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) ) { ?><a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' );?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>

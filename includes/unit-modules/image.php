@@ -36,7 +36,7 @@ class image_module extends Unit_Module {
         wp_enqueue_script('thickbox');
         wp_enqueue_media();
         wp_enqueue_script('media-upload');
-        $supported_image_extensions = implode(", ", wp_get_image_extensions());
+        $supported_image_extensions = implode(", ", cp_wp_get_image_extensions());
         ?>
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
@@ -205,5 +205,5 @@ class image_module extends Unit_Module {
 
 }
 
-coursepress_register_module('image_module', 'image_module', 'output');
+cp_register_module('image_module', 'image_module', 'output');
 ?>

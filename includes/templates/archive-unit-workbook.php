@@ -18,6 +18,8 @@ add_thickbox();
 do_shortcode('[course_unit_archive_submenu]');
 if( 100 == (int) $progress) {
 	$complete_message = sprintf( '<span class="unit-archive-course-complete">%s %s</span>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
+}else{
+    $complete_message = '';
 }			
 echo sprintf( '<h2>%s %s</h2>', __('Workbook', 'cp'), $complete_message);
 ?>
@@ -31,7 +33,7 @@ if ( have_posts() ) {
 		$input_module_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
 		$has_assessable = $input_module_count  > 0 ? true : false;
         ?>
-        <div class="workbook_units">
+        <div class="workbook_units cp-wrap">
             <div class="unit_title">
                 <h3><?php the_title(); ?>
                     <span><?php echo do_shortcode('[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]'); ?>% <?php _e('completed', 'cp');?></span>

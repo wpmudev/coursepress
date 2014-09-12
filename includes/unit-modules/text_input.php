@@ -321,5 +321,5 @@ class text_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_input_module', 'text_input_module', 'input');
+cp_register_module('text_input_module', 'text_input_module', 'input');
 ?>

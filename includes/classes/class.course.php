@@ -431,7 +431,7 @@ if ( !class_exists('Course') ) {
 
                                 if ( serialize(array( $_POST['instructor'] )) !== serialize($old_post_meta) || 0 == $_POST['instructor'] ) {//If instructors IDs don't match
                                     delete_post_meta($post_id, 'instructors');
-                                    delete_user_meta_by_key('course_' . $post_id);
+                                    cp_delete_user_meta_by_key('course_' . $post_id);
                                 }
 
                                 if ( 0 != $_POST['instructor'] ) {
@@ -461,10 +461,10 @@ if ( !class_exists('Course') ) {
                     wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
 
                     /* Delete all usermeta associated to the course */
-                    delete_user_meta_by_key('course_' . $this->id);
-                    delete_user_meta_by_key('enrolled_course_date_' . $this->id);
-                    delete_user_meta_by_key('enrolled_course_class_' . $this->id);
-                    delete_user_meta_by_key('enrolled_course_group_' . $this->id);
+                    cp_delete_user_meta_by_key('course_' . $this->id);
+                    cp_delete_user_meta_by_key('enrolled_course_date_' . $this->id);
+                    cp_delete_user_meta_by_key('enrolled_course_class_' . $this->id);
+                    cp_delete_user_meta_by_key('enrolled_course_group_' . $this->id);
 
                     //delete all course units
 

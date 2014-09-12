@@ -19,7 +19,7 @@
         <?php include( get_template_directory() . '/inc/custom-colors.php' ); ?>
     </head>
 
-    <body <?php body_class(); ?>>
+    <body <?php body_class('cp-wrap'); ?>>
         <div id="page" class="hfeed site">
             <?php do_action('before'); ?>
             <header id="masthead" class="site-header" role="banner">

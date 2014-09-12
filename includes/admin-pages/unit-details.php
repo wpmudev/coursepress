@@ -1,5 +1,5 @@
 <?php
-global $page, $user_id, $coursepress_admin_notice;
+global $page, $user_id, $cp_admin_notice;
 global $coursepress_modules, $coursepress_modules_labels, $coursepress_modules_descriptions, $coursepress_modules_ordered, $save_elements;
 
 $course_id = '';
@@ -85,7 +85,7 @@ if ( isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['new_sta
 
 $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_redirect'] : 'no';
 ?>
-<div class='wrap mp-wrap nocoursesub unit-details'>
+<div class='wrap mp-wrap nocoursesub unit-details cp-wrap'>
 
     <div id="undefined-sticky-wrapper" class="sticky-wrapper">
         <div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>

@@ -240,5 +240,5 @@ class video_module extends Unit_Module {
 
 }
 
-coursepress_register_module('video_module', 'video_module', 'output');
+cp_register_module('video_module', 'video_module', 'output');
 ?>

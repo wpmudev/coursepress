@@ -98,7 +98,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
         $message = __('Status for the selected notification has been changed successfully.', 'cp');
     }
     ?>
-    <div class="wrap nosubsub notifications">
+    <div class="wrap nosubsub notifications cp-wrap">
         <div class="icon32" id="icon-themes"><br></div>
         <h2><?php _e('Notifications', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') || current_user_can('coursepress_create_my_assigned_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
         <?php
@@ -214,7 +214,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
                                 <td class="column-notification-title <?php echo $style; ?>"><a href="<?php echo admin_url('admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID); ?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
                                     <div class="visible-small visible-extra-small"><strong><?php _e('Course:', 'cp'); ?></strong> <?php echo $course_name; ?></div>
                                     <div class="visible-small visible-extra-small"><strong><?php _e('Status:', 'cp'); ?></strong> <?php echo ( $notification_object->post_status == 'publish' ) ? ucfirst($notification_object->post_status) . 'ed' : ucfirst($notification_object->post_status); ?></div>
-                                    <div class="course_excerpt"><?php echo get_the_course_excerpt($notification_object->ID); ?></div>
+                                    <div class="course_excerpt"><?php echo cp_get_the_course_excerpt($notification_object->ID); ?></div>
                                     <div class="row-actions">
                                         <span class="edit_notification"><a href="<?php echo admin_url('admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID); ?>"><?php _e('Edit', 'cp'); ?></a> | </span>
                                         <?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_change_notification_status_cap') || ( current_user_can('coursepress_change_my_notification_status_cap') && $notification_object->post_author == get_current_user_id() ) ) { ?>

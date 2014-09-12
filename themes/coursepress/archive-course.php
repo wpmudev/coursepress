@@ -41,7 +41,7 @@ get_header();
 
             <?php endwhile; ?>
 
-            <?php coursepress_numeric_posts_nav( 'navigation-pagination' ); ?>
+            <?php cp_numeric_posts_nav( 'navigation-pagination' ); ?>
 
         <?php else : ?>
 

@@ -120,5 +120,5 @@ class page_break_module extends Unit_Module {
 
 }
 
-coursepress_register_module('page_break_module', 'page_break_module', 'invisible');
+cp_register_module('page_break_module', 'page_break_module', 'invisible');
 ?>

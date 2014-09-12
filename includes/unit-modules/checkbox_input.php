@@ -460,5 +460,5 @@ class checkbox_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('checkbox_input_module', 'checkbox_input_module', 'input');
+cp_register_module('checkbox_input_module', 'checkbox_input_module', 'input');
 ?>
