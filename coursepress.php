@@ -951,6 +951,8 @@ if ( !class_exists('CoursePress') ) {
         function instructor_save_extra_profile_fields( $user_id ) {
             if ( !current_user_can('edit_user', $user_id) )
                 return false;
+            
+            check_admin_referer('update-user_' . $user_id);
 
             if ( $_POST['cp_instructor_capabilities'] == 'grant' ) {
                 update_user_meta($user_id, 'role_ins', 'instructor');
