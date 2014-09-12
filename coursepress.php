@@ -170,15 +170,13 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_get_next_unit_url', array( &$this, 'get_next_unit_url' ));
 
-                add_action('wp_ajax_nopriv_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
-
                 add_action('wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));
+                // add_action('wp_ajax_nopriv_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ));				
 
                 add_action('mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ));
 
                 add_action('wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
-
-                add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
+                // add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
             }
 
             //Setup Gatewat Array
