@@ -36,6 +36,7 @@ if ( !defined('ABSPATH') )
 
 
 
+
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -83,9 +84,7 @@ if ( !class_exists('CoursePress') ) {
 
             global $last_inserted_unit_id; //$last_inserted_module_id
             global $last_inserted_front_page_module_id; //$last_inserted_module_id
-
             //add_theme_support('post-thumbnails');
-
 //CoursePress Capabilities Class
             require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
 
@@ -2035,15 +2034,15 @@ if ( !class_exists('CoursePress') ) {
 //Add plugin admin menu items
         function add_admin_menu() {
 // Add the menu page
-            if ( current_user_can('manage_options') || current_user_can('coursepress_dashboard_cap') ) {
-                add_menu_page($this->name, $this->name, 'coursepress_dashboard_cap', 'courses', array( &$this, 'coursepress_courses_admin' ), $this->plugin_url . 'images/coursepress-icon.png');
-            }
+
+            add_menu_page($this->name, $this->name, 'coursepress_dashboard_cap', 'courses', array( &$this, 'coursepress_courses_admin' ), $this->plugin_url . 'images/coursepress-icon.png');
+
             do_action('coursepress_add_menu_items_up');
 
 // Add the sub menu items
-            if ( current_user_can('manage_options') || current_user_can('coursepress_courses_cap') ) {
-                add_submenu_page('courses', __('Courses', 'cp'), __('Courses', 'cp'), 'coursepress_courses_cap', 'courses', array( &$this, 'coursepress_courses_admin' ));
-            }
+
+            add_submenu_page('courses', __('Courses', 'cp'), __('Courses', 'cp'), 'coursepress_courses_cap', 'courses', array( &$this, 'coursepress_courses_admin' ));
+
             do_action('coursepress_add_menu_items_after_courses');
 
             if ( isset($_GET['page']) && $_GET['page'] == 'course_details' && isset($_GET['course_id']) ) {
@@ -2052,22 +2051,18 @@ if ( !class_exists('CoursePress') ) {
                 $new_or_current_course_menu_item_title = __('New Course', 'cp');
             }
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_courses_cap') ) {
-                add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array( &$this, 'coursepress_course_details_admin' ));
-            }
+            add_submenu_page('courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array( &$this, 'coursepress_course_details_admin' ));
+
             do_action('coursepress_add_menu_items_after_new_courses');
 
 //add_submenu_page( 'courses', __( 'Categories', 'cp' ), __( 'Categories', 'cp' ), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
 //do_action( 'coursepress_add_menu_items_after_course_categories' );
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_instructors_cap') ) {
-                add_submenu_page('courses', __('Instructors', 'cp'), __('Instructors', 'cp'), 'coursepress_instructors_cap', 'instructors', array( &$this, 'coursepress_instructors_admin' ));
-            }
+            add_submenu_page('courses', __('Instructors', 'cp'), __('Instructors', 'cp'), 'coursepress_instructors_cap', 'instructors', array( &$this, 'coursepress_instructors_admin' ));
             do_action('coursepress_add_menu_items_after_instructors');
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_students_cap') ) {
-                add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array( &$this, 'coursepress_students_admin' ));
-            }
+            add_submenu_page('courses', __('Students', 'cp'), __('Students', 'cp'), 'coursepress_students_cap', 'students', array( &$this, 'coursepress_students_admin' ));
+
             do_action('coursepress_add_menu_items_after_instructors');
 
             $main_module = new Unit_Module();
@@ -2079,29 +2074,20 @@ if ( !class_exists('CoursePress') ) {
                 $count_output = '&nbsp;<span class="update-plugins"><span class="updates-count count-' . $count . '">' . $count . '</span></span>';
             }
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_assessment_cap') ) {
-                add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp') . $count_output, 'coursepress_assessment_cap', 'assessment', array( &$this, 'coursepress_assessment_admin' ));
-            }
+            add_submenu_page('courses', __('Assessment', 'cp'), __('Assessment', 'cp') . $count_output, 'coursepress_assessment_cap', 'assessment', array( &$this, 'coursepress_assessment_admin' ));
             do_action('coursepress_add_menu_items_after_assessment');
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_reports_cap') ) {
-                add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array( &$this, 'coursepress_reports_admin' ));
-            }
+
+            add_submenu_page('courses', __('Reports', 'cp'), __('Reports', 'cp'), 'coursepress_reports_cap', 'reports', array( &$this, 'coursepress_reports_admin' ));
             do_action('coursepress_add_menu_items_after_reports');
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_notifications_cap') ) {
-                add_submenu_page('courses', __('Notifications', 'cp'), __('Notifications', 'cp'), 'coursepress_notifications_cap', 'notifications', array( &$this, 'coursepress_notifications_admin' ));
-            }
+            add_submenu_page('courses', __('Notifications', 'cp'), __('Notifications', 'cp'), 'coursepress_notifications_cap', 'notifications', array( &$this, 'coursepress_notifications_admin' ));
             do_action('coursepress_add_menu_items_after_course_notifications');
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_discussions_cap') ) {
-                add_submenu_page('courses', __('Discussions', 'cp'), __('Discussions', 'cp'), 'coursepress_discussions_cap', 'discussions', array( &$this, 'coursepress_discussions_admin' ));
-            }
+            add_submenu_page('courses', __('Discussions', 'cp'), __('Discussions', 'cp'), 'coursepress_discussions_cap', 'discussions', array( &$this, 'coursepress_discussions_admin' ));
             do_action('coursepress_add_menu_items_after_course_discussions');
 
-            if ( current_user_can('manage_options') || current_user_can('coursepress_settings_cap') ) {
-                add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', $this->screen_base . '_settings', array( &$this, 'coursepress_settings_admin' ));
-            }
+            add_submenu_page('courses', __('Settings', 'cp'), __('Settings', 'cp'), 'coursepress_settings_cap', $this->screen_base . '_settings', array( &$this, 'coursepress_settings_admin' ));
             do_action('coursepress_add_menu_items_after_settings');
 
             do_action('coursepress_add_menu_items_down');
@@ -3049,14 +3035,14 @@ if ( !class_exists('CoursePress') ) {
             if ( ( isset($_GET['saved']) && $_GET['saved'] == 'ok' ) ) {
                 ?>
                 <div class="save_elements_message_ok">
-                <?php _e('The data has been saved successfully.', 'cp'); ?>
+                    <?php _e('The data has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }
             if ( ( isset($_GET['saved']) && $_GET['saved'] == 'progress_ok' ) ) {
                 ?>
                 <div class="save_elements_message_ok">
-                <?php _e('Your progress has been saved successfully.', 'cp'); ?>
+                    <?php _e('Your progress has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }
@@ -3649,15 +3635,15 @@ if ( !class_exists('CoursePress') ) {
                         foreach ( $main_sorted_menu_items as $menu_item ) {
                             ?>
                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                                    <?php if ( $menu_item->db_id !== '' ) { ?>
+                                <?php if ( $menu_item->db_id !== '' ) { ?>
                                     <ul class="sub-menu dropdown-menu">
                                         <?php
                                         foreach ( $sub_sorted_menu_items as $menu_item ) {
                                             ?>
                                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                    <?php } ?>
+                                        <?php } ?>
                                     </ul>
-                            <?php } ?>
+                                <?php } ?>
                             </li>
                             <?php
                         }
