@@ -1,7 +1,7 @@
 <?php
 global $wp_roles;
 
-if ( isset( $_POST['submit'] ) ) {
+if ( isset( $_POST['submit'] ) && current_user_can( 'manage_options' ) ) {
     
     /* Set capabilities for each instructor user */
     

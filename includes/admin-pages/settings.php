@@ -69,7 +69,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
         //$menus['groups'] = __( 'Class Groups', 'cp' ); //to do in the next release
     }*/
 
-    if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_options' ) ) {
         /* $menus['payment'] = __( 'Payment Settings', 'cp' ); */
         $menus['email'] = __( 'E-mail Settings', 'cp' );
     }

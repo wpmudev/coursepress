@@ -12,7 +12,7 @@ CHANGE LOG
 - Fixed CSS issue with uploaded videos in CoursePress theme (plus better responsive)
 - Resolved issue with output buffer in shortcodes
 - Added missing text domain on a number of places
-- Small code improvements
+- Other code improvements
 
 1.0.2
 -------------------------------------------------
