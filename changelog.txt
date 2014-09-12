@@ -10,6 +10,7 @@ CHANGE LOG
 - Resolved CSS issues with MarketPress popup called from CoursePress
 - Fixed issue with theme location in the CoursePress theme
 - Fixed CSS issue with uploaded videos in CoursePress theme (plus better responsive)
+- Resolved issue with output buffer in shortcodes
 
 1.0.2
 -------------------------------------------------

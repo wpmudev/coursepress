@@ -3148,7 +3148,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         /* =========== PAGES SHORTCODES =============== */
 
         function course_signup( $atts ) {
-
+            ob_start();
             $allowed = array( 'signup', 'login' );
 
             extract(shortcode_atts(array(
@@ -3458,7 +3458,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">
@@ -3469,6 +3469,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     <?php
                     break;
             }
+            $output = ob_get_clean();
+            return $output;
         }
 
         function module_status( $atts ) {
