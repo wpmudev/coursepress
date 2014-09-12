@@ -1474,12 +1474,14 @@ if ( !function_exists('cp_length') ) {
 require_once( 'first-install.php' );
 
 function cp_get_attachment_id_from_src( $image_src ) {
-
     global $wpdb;
-    $query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
-    $id = $wpdb->get_var($query);
-    return $id;
 
+    $id = $wpdb->get_var($wpdb->prepare(
+                    "SELECT ID FROM {$wpdb->posts} WHERE guid = %s
+	", $image_src
+    ));
+                    
+    return $id;
 }
 
 function cp_do_attachment_caption( $data ) {
