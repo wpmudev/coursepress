@@ -34,7 +34,7 @@ class file_input_module extends Unit_Module {
                     <label><?php _e('Uploaded File', 'cp'); ?></label>
                 <?php } ?>
                 <div class="front_response_content">
-                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $response->guid; ?>"><?php
+                    <a href="<?php echo trailingslashit(home_url()) . '?fdcpf=' . $response->guid; ?>"><?php
                         _e('Download file ', 'cp');
                         echo ' ( ' . $file_extension . ' )';
                         ?></a>

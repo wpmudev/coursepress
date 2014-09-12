@@ -34,7 +34,7 @@ class file_module extends Unit_Module {
                 $data->file_url = $encryption->encode($data->file_url);
                 ?>  
                 <div class="file_holder">
-                    <a href="<?php echo trailingslashit(site_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo ( isset($data->link_text) ? $data->link_text : $data->post_title ); ?></a> 
+                    <a href="<?php echo trailingslashit(home_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo ( isset($data->link_text) ? $data->link_text : $data->post_title ); ?></a> 
                 </div>
             <?php } ?>
         </div>

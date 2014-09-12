@@ -340,7 +340,7 @@ if ( !class_exists('Unit') ) {
             $course = new Course($course_id);
             $course = $course->get_course();
 						 
-            $unit_permalink = trailingslashit(site_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit(isset($course->post_name) ? $course->post_name : '' . '/') . trailingslashit($units_slug . '/') . trailingslashit(isset($this->details->post_name) ? $this->details->post_name : '' . '/');
+            $unit_permalink = trailingslashit(home_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit(isset($course->post_name) ? $course->post_name : '' . '/') . trailingslashit($units_slug . '/') . trailingslashit(isset($this->details->post_name) ? $this->details->post_name : '' . '/');
 			
             return $unit_permalink;
         }

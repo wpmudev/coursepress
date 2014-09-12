@@ -1814,7 +1814,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
-                $content .= sprintf($student_msg, '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
+                $content .= sprintf($student_msg, '<a href="' . trailingslashit(home_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
             }
 
             // </div> course-list
@@ -1957,7 +1957,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( !empty($instructors) ) {
                     foreach ( $instructors as $instructor ) {
 
-                        $profile_href = trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+                        $profile_href = trailingslashit(home_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
 
                         switch ( $style ) {
 
@@ -2073,7 +2073,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $instructor = get_userdata($instructor_id);
 
             if ( $instructor_id ) {
-                return trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+                return trailingslashit(home_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
             }
         }
 

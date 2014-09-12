@@ -60,7 +60,7 @@ class CP_Latest_Courses extends WP_Widget {
         ?>
 
         <div class="cp_featured_widget_course_link">
-            <a href="<?php echo trailingslashit(site_url() . '/' . $coursepress->get_course_slug()); ?>"><?php echo $instance['button_title']; ?></a>
+            <a href="<?php echo trailingslashit(home_url() . '/' . $coursepress->get_course_slug()); ?>"><?php echo $instance['button_title']; ?></a>
         </div>
 
         <?php

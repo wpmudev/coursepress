@@ -155,7 +155,7 @@ function cp_mp_order_notification_body( $content, $order ) {
         $tracking_url = apply_filters('wpml_marketpress_tracking_url', mp_orderstatus_link(false, true) . $order->post_title . '/');
 
         $tags = array( 'CUSTOMER_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'ORDER_ID', 'ORDER_STATUS_URL' );
-        $tags_replaces = array( $order->mp_shipping_info['name'], get_bloginfo(), wp_login_url(), site_url(), $course->get_permalink(), $course->details->post_title, $order->ID, $tracking_url );
+        $tags_replaces = array( $order->mp_shipping_info['name'], get_bloginfo(), wp_login_url(), home_url(), $course->get_permalink(), $course->details->post_title, $order->ID, $tracking_url );
 
         $message = coursepress_get_mp_order_content_email();
 
@@ -388,10 +388,10 @@ function coursepress_send_email( $email_args = array() ) {
         global $course_slug;
         $email_address = $email_args['student_email'];
         $subject = coursepress_get_registration_email_subject();
-        $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
+        $courses_address = trailingslashit(home_url()) . trailingslashit($course_slug);
 
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
-        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url() );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, home_url() );
 
         $message = coursepress_get_registration_content_email();
 
@@ -423,11 +423,11 @@ function coursepress_send_email( $email_args = array() ) {
         $email_address = $email_args['student_email'];
         $dashboard_address = $email_args['dashboard_address'];
         $subject = coursepress_get_enrollment_email_subject();
-        $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
+        $courses_address = trailingslashit(home_url()) . trailingslashit($course_slug);
         $course = new Course($email_args['course_id']);
 
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'STUDENT_DASHBOARD' );
-        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, site_url(), $course->get_permalink(), $course->details->post_title, $email_args['dashboard_address'] );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], get_bloginfo(), wp_login_url(), $courses_address, home_url(), $course->get_permalink(), $course->details->post_title, $email_args['dashboard_address'] );
 
         $message = coursepress_get_enrollment_content_email();
 
@@ -464,7 +464,7 @@ function coursepress_send_email( $email_args = array() ) {
         }
 
         $tags = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'PASSCODE' );
-        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], $course->details->post_title, $course->details->post_excerpt, $course->get_permalink(), site_url(), $course->details->passcode );
+        $tags_replaces = array( $email_args['student_first_name'], $email_args['student_last_name'], $course->details->post_title, $course->details->post_excerpt, $course->get_permalink(), home_url(), $course->details->passcode );
 
         if ( $email_args['enroll_type'] == 'passcode' ) {
             $message = coursepress_get_invitation_content_passcode_email();
@@ -503,7 +503,7 @@ function coursepress_send_email( $email_args = array() ) {
         $course = '';
         $course_summary = '';
         $course_name = '';
-        $courses_address = trailingslashit(site_url()) . trailingslashit($course_slug);
+        $courses_address = trailingslashit(home_url()) . trailingslashit($course_slug);
         $bugfix = false;
 
         if ( isset($email_args['course_id']) ) {
@@ -530,7 +530,7 @@ function coursepress_send_email( $email_args = array() ) {
 
         $tags = array( 'INSTRUCTOR_FIRST_NAME', 'INSTRUCTOR_LAST_NAME', 'INSTRUCTOR_EMAIL', 'CONFIRMATION_LINK', 'COURSE_NAME', 'COURSE_EXCERPT', 'COURSE_ADDRESS', 'WEBSITE_ADDRESS', 'WEBSITE_NAME' );
 
-        $tags_replaces = array( $email_args['first_name'], $email_args['last_name'], $email_address, $confirm_link, $course_name, $course_summary, $course_address, site_url(), get_bloginfo() );
+        $tags_replaces = array( $email_args['first_name'], $email_args['last_name'], $email_address, $confirm_link, $course_name, $course_summary, $course_address, home_url(), get_bloginfo() );
 
         $message = cp_get_instructor_invitation_email();
 
