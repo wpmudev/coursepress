@@ -1164,18 +1164,42 @@ a.rsswidget{
     position: relative;
 }
 
-.course-video iframe,  
-.course-video object,  
-.course-video embed,
-.course-video .mejs-container,
-.course-video .mejs-layer,
-.course-video .wp-video-shortcode
+.course-featured-media iframe,  
+.course-featured-media object,  
+.course-featured-media embed,
+.course-featured-media .wp-video-shortcode,
+.course-featured-media .mejs-layer,
+.course-featured-media .mejs-container
 {
     position: absolute;
     top: 0;
     left: 0;
-    max-width: 100% !important;
-    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
+}
+
+.course-featured-media .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
+}
+
+.course-video iframe,  
+.course-video object,  
+.course-video embed,
+.course-video .wp-video-shortcode,
+.course-video .mejs-layer,
+.course-video .mejs-container
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.course-video .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
 }
 
 .entry-content-excerpt{
@@ -2765,7 +2789,7 @@ RESPONSIVE
     }
 
     .course-video{
-        min-height: 0px;
+        height: auto;
     }
 
     .post-type-archive-course section.article-content-right{

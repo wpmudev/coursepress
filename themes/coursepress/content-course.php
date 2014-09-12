@@ -13,7 +13,7 @@ $course_language = $course->details->course_language;
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php
     $course_thumbnail = Course::get_course_thumbnail(get_the_ID());
-    if ( !$course_thumbnail ) {
+    if ( !$course_thumbnail && !Course::has_course_video(get_the_ID())) {
         $extended_class = 'quick-course-info-extended';
     }else{
         $extended_class = '';

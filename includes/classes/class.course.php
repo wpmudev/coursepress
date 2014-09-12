@@ -194,6 +194,20 @@ if ( !class_exists('Course') ) {
                         self::get_course_featured_url($course_id);
                     }
                 }
+                
+                static function has_course_video( $course_id = false ) {
+                    if ( !$course_id ) {
+                        return false;
+                    }
+
+                    $course_video = get_post_meta($course_id, 'course_video_url', true);
+
+                    if ( $course_video ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
 
                 static function get_course_by_marketpress_product_id( $marketpress_product_id ) {
 
