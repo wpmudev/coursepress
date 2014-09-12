@@ -419,6 +419,7 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
         var response = $.parseJSON($(data).find('response_data').text());
         // console.log(response);
         // Apply a new nonce when returning
+		console.log( response );
         if (response && response.success) {
             $('#course-ajax-check').data('nonce', response.nonce);
             $('#course-ajax-check').data('cap', response.cap);
@@ -428,14 +429,19 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                 $('[name=meta_mp_product_id]').val(response.mp_product_id);
             }
 
+	        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+	        var uid = $('#instructor-ajax-check').data('uid');
+
             // Add user as instructor
             if (step == 'step-1' && response.instructor) {
-                $.post(
-                        'admin-ajax.php', {
-                            action: 'add_course_instructor',
-                            user_id: response.instructor,
-                            course_id: response.course_id,
-                        }
+		        $.post(
+		                'admin-ajax.php', {
+		                    action: 'add_course_instructor',
+		                    instructor_id: response.instructor,
+				            instructor_nonce: instructor_nonce,					
+		                    course_id: response.course_id,
+				            user_id: uid,					
+		                }
                 ).done(function(data, status) {
 
                     var instructor_id = response.instructor;
@@ -446,7 +452,6 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                         $('.instructor-avatar-holder.empty').hide();
                         $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
                     }
-
 
                     //window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
 
@@ -1234,6 +1239,8 @@ jQuery(document).ready(function($) {
             $('[name=course_id]').val(course_id);
         }
 
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
 
         $.post(
                 'admin-ajax.php', {
@@ -1242,12 +1249,15 @@ jQuery(document).ready(function($) {
                     last_name: $('[name=invite_instructor_last_name]').val(),
                     email: $('[name=invite_instructor_email]').val(),
                     course_id: course_id,
+					user_id: uid,
+					instructor_nonce: instructor_nonce,
                 }
         ).done(function(data, status) {
             // Handle return
             if (status == 'success') {
-
+				console.log( data );
                 var response = $.parseJSON($(data).find('response_data').text());
+				console.log( response )
                 var response_type = $($.parseHTML(response.content));
 
                 if ($(response_type).hasClass('status-success')) {
@@ -1358,12 +1368,17 @@ jQuery(document).ready(function($) {
 
         // Mark as dirty
         mark_dirty(this);
+		
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
 
         $.post(
                 'admin-ajax.php', {
                     action: 'add_course_instructor',
-                    user_id: instructor_id,
+                    instructor_id: instructor_id,
+		            instructor_nonce: instructor_nonce,					
                     course_id: course_id,
+		            user_id: uid,					
                 }
         ).done(function(data, status) {
             // Handle return

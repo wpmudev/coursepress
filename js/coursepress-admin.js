@@ -683,17 +683,23 @@ function removeInstructor(instructor_id) {
             }
         }
 
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
+
         $.post(
                 'admin-ajax.php', {
                     action: 'remove_course_instructor',
-                    user_id: instructor_id,
+                    instructor_id: instructor_id,
                     course_id: course_id,
+		            instructor_nonce: instructor_nonce,
+		            user_id: uid,					
                 }
         ).done(function(data, status) {
             // Handle return
             if (status == 'success') {
 
                 var response = $.parseJSON($(data).find('response_data').text());
+				
                 var response_type = $($.parseHTML(response.content));
 
                 if (response.instructor_removed) {
@@ -715,15 +721,25 @@ function removeInstructor(instructor_id) {
 function removePendingInstructor(invite_code, course_id) {
     $ = jQuery;
     if (confirm(coursepress.delete_pending_instructor_alert)) {
+		
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
+		
         $.post(
                 'admin-ajax.php', {
                     action: 'remove_instructor_invite',
                     invite_code: invite_code,
                     course_id: course_id,
+		            instructor_nonce: instructor_nonce,
+		            user_id: uid,										
                 }
         ).done(function(data, status) {
             if (status == 'success') {
-                $('#' + invite_code).remove();
+                var response = $.parseJSON($(data).find('response_data').text());
+				
+                if (response.invite_removed) {				
+	                $('#' + invite_code).remove();
+				}
             }
         }).fail(function(data) {
         });

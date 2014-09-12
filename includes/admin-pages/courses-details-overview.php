@@ -729,7 +729,11 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     <?php coursepress_instructors_drop_down('postform chosen-select-course course-instructors'); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e('Assign', 'cp'); ?>">
                                                     <!-- <p><?php _e('NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp'); ?></p> -->
 
+											        <?php
+												        $data_nonce = wp_create_nonce('manage-instructors-' . get_current_user_id() );
+											        ?>
 
+											        <input type='hidden' name='instructor-ajax-check' id="instructor-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo get_current_user_id(); ?>" data-nonce="<?php echo $data_nonce; ?>" value="" />
                                                     <?php
                                                 } else {
                                                     if ( coursepress_get_number_of_instructors() == 0 || coursepress_instructors_avatars($course_id, false, true) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course

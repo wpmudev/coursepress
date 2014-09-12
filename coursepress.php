@@ -2425,46 +2425,58 @@ if ( !class_exists('CoursePress') ) {
 
         function add_course_instructor() {
 
+            $instructor_id = (int) $_POST['instructor_id'];
+			$user_id = (int) $_POST['user_id'];
+            $course_id = (int) $_POST['course_id'];
+			$nonce_check = wp_verify_nonce( $_POST['instructor_nonce'], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
             $ajax_response = array();
+			
+			if( $nonce_check && $cap && $doing_ajax ) {
+				
+	            $instructors = get_post_meta($_POST['course_id'], 'instructors', true);
 
-            $instructors = get_post_meta($_POST['course_id'], 'instructors', true);
-            $user_id = $_POST['user_id'];
-            $course_id = $_POST['course_id'];
+	            $exists = false;
+	            if ( is_array($instructors) ) {
+	                foreach ( $instructors as $instructor ) {
+	                    if ( $instructor == $instructor_id ) {
+	                        $instructor_course_id = get_user_meta($instructor_id, 'course_' . $course_id);
+	                        if ( !empty($instructor_course_id) ) {
+	                            $exists = true;
+	                        };
+	                    }
+	                }
+	            }
 
-            $exists = false;
-            if ( is_array($instructors) ) {
-                foreach ( $instructors as $instructor ) {
-                    if ( $instructor == $user_id ) {
-                        $instructor_course_id = get_user_meta($user_id, 'course_' . $course_id);
-                        if ( !empty($instructor_course_id) ) {
-                            $exists = true;
-                        };
-                    }
-                }
-            }
+	            // User is not yet an instructor
+	            if ( !$exists ) {
+	                // Assign Instructor capabilities
 
-            // User is not yet an instructor
-            if ( !$exists ) {
-                // Assign Instructor capabilities
+	                $this->assign_instructor_capabilities($instructor_id);
 
-                $this->assign_instructor_capabilities($user_id);
+	                $instructors[] = $instructor_id;
+	                update_post_meta($course_id, 'instructors', $instructors);
+	                update_user_meta($instructor_id, 'course_' . $course_id, $course_id);
 
-                $instructors[] = $user_id;
-                update_post_meta($course_id, 'instructors', $instructors);
-                update_user_meta($user_id, 'course_' . $course_id, $course_id);
+	                $ajax_response['instructors'] = json_encode($instructors);
+	                $ajax_response['instructor_added'] = true;
 
-                $ajax_response['instructors'] = json_encode($instructors);
-                $ajax_response['instructor_added'] = true;
+	                $user_info = get_userdata($instructor_id);
 
-                $user_info = get_userdata($user_id);
-
-                $ajax_response['instructor_gravatar'] = get_avatar($user_id, 80, "", $user_info->display_name);
-                $ajax_response['instructor_name'] = $user_info->display_name;
-            } else {
+	                $ajax_response['instructor_gravatar'] = get_avatar($instructor_id, 80, "", $user_info->display_name);
+	                $ajax_response['instructor_name'] = $user_info->display_name;
+	            } else {
+	                $ajax_response['instructor_added'] = false;
+	                $ajax_response['reason'] = __('Instructor already added.', 'cp');
+	            }
+				
+			// Nonce failed, User doesn't have the capability
+			} else {
                 $ajax_response['instructor_added'] = false;
-                $ajax_response['reason'] = __('Instructor already added.', 'cp');
-            }
-
+                $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
+			}
+			
             $response = array(
                 'what' => 'instructor_invite',
                 'action' => 'instructor_invite',
@@ -2480,31 +2492,42 @@ if ( !class_exists('CoursePress') ) {
 
         function remove_course_instructor() {
 
+            $instructor_id = (int) $_POST['instructor_id'];
+			$user_id = (int) $_POST['user_id'];
+            $course_id = (int) $_POST['course_id'];
+			$nonce_check = wp_verify_nonce( $_POST['instructor_nonce'], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
             $ajax_response = array();
 
-            $user_id = $_POST['user_id'];
-            $course_id = $_POST['course_id'];
+			if( $nonce_check && $cap && $doing_ajax ) {
 
-            $instructors = get_post_meta($course_id, 'instructors', true);
+	            $instructors = get_post_meta($course_id, 'instructors', true);
 
-            $updated_instructors = array();
-            foreach ( $instructors as $instructor ) {
-                if ( $instructor != $user_id ) {
-                    $updated_instructors[] = $instructor;
-                }
-            }
-            update_post_meta($course_id, 'instructors', $updated_instructors);
-            delete_user_meta($user_id, 'course_' . $course_id, $course_id);
+	            $updated_instructors = array();
+	            foreach ( $instructors as $instructor ) {
+	                if ( $instructor != $instructor_id ) {
+	                    $updated_instructors[] = $instructor;
+	                }
+	            }
+	            update_post_meta($course_id, 'instructors', $updated_instructors);
+	            delete_user_meta($instructor_id, 'course_' . $course_id, $course_id);
 
-            $instructor = new Instructor($user_id);
+	            $instructor = new Instructor($instructor_id);
 
-// If user is no longer an instructor of any courses, remove his capabilities.
-            $assigned_courses_ids = $instructor->get_assigned_courses_ids();
-            if ( empty($assigned_courses_ids) ) {
-                $this->drop_instructor_capabilities($user_id);
-            }
+				// If user is no longer an instructor of any courses, remove his capabilities.
+				$assigned_courses_ids = $instructor->get_assigned_courses_ids();
+				if ( empty($assigned_courses_ids) ) {
+					$this->drop_instructor_capabilities($instructor_id);
+				}
 
-            $ajax_response['instructor_removed'] = true;
+	            $ajax_response['instructor_removed'] = true;
+				
+			// Nonce failed, User doesn't have the capability
+			} else {
+                $ajax_response['instructor_removed'] = false;
+                $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
+			}
 
             $response = array(
                 'what' => 'instructor_invite',
@@ -2512,6 +2535,7 @@ if ( !class_exists('CoursePress') ) {
                 'id' => 1, // success status
                 'data' => json_encode($ajax_response),
             );
+
             ob_end_clean();
             ob_start();
             $xmlResponse = new WP_Ajax_Response($response);
@@ -2521,21 +2545,29 @@ if ( !class_exists('CoursePress') ) {
 
         function send_instructor_invite() {
 
-            $email_args['email_type'] = 'instructor_invitation';
-            $email_args['first_name'] = sanitize_text_field($_POST['first_name']);
-            $email_args['last_name'] = sanitize_text_field($_POST['last_name']);
-            $email_args['instructor_email'] = sanitize_email($_POST['email']);
+			$user_id = (int) $_POST['user_id'];
+            $course_id = (int) $_POST['course_id'];
+			$nonce_check = wp_verify_nonce( $_POST['instructor_nonce'], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
+            $ajax_response = array();
+			
+			if( $nonce_check && $cap && $doing_ajax ) {
+				
+	            $email_args['email_type'] = 'instructor_invitation';
+	            $email_args['first_name'] = sanitize_text_field($_POST['first_name']);
+	            $email_args['last_name'] = sanitize_text_field($_POST['last_name']);
+	            $email_args['instructor_email'] = sanitize_email($_POST['email']);
 
-            $user = get_user_by('email', $email_args['instructor_email']);
-            if ( $user ) {
-                $email_args['user'] = $user;
-            }
-            if ( !empty($_POST['course_id']) ) {
-                $email_args['course_id'] = ( int ) $_POST['course_id'];
+	            $user = get_user_by('email', $email_args['instructor_email']);
+	            if ( $user ) {
+	                $email_args['user'] = $user;
+	            }
 
-                $ajax_response = array();
+                $email_args['course_id'] = $course_id;
+
                 $ajax_status = 1; //success
-// Get the invite meta for this course and add the new invite
+				// Get the invite meta for this course and add the new invite
                 $invite_exists = false;
                 if ( $instructor_invites = get_post_meta($email_args['course_id'], 'instructor_invites', true) ) {
                     foreach ( $instructor_invites as $i ) {
@@ -2547,13 +2579,14 @@ if ( !class_exists('CoursePress') ) {
 
                 if ( !$invite_exists ) {
 
-// Generate invite code.
+					// Generate invite code.
                     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                     $invite_code = '';
                     for ( $i = 0; $i < 20; $i++ ) {
                         $invite_code .= $characters[rand(0, strlen($characters) - 1)];
                     }
-// Save the invite in the course meta. Hash will be used for user authentication.
+					
+					// Save the invite in the course meta. Hash will be used for user authentication.
                     $email_args['invite_code'] = $invite_code;
                     $invite_hash = sha1($email_args['instructor_email'] . $email_args['invite_code']);
 
@@ -2589,38 +2622,52 @@ if ( !class_exists('CoursePress') ) {
                     $ajax_response['content'] = '<i class="fa fa-info-circle status status-exist"></i> ' . __('Invitation already exists.', 'cp');
                     ;
                 }
+				
+			} else {
+                $ajax_status = new WP_Error('nonce_fail', __('Invalid request. Security check failed.', 'cp'));
+                $ajax_response['content'] = '<i class="fa fa-exclamation status status-fail"></i> ' . __('Invalid request. Security check failed.', 'cp');
+			}
 
+            $response = array(
+                'what' => 'instructor_invite',
+                'action' => 'instructor_invite',
+                'id' => $ajax_status,
+                'data' => json_encode($ajax_response),
+            );
 
-                $response = array(
-                    'what' => 'instructor_invite',
-                    'action' => 'instructor_invite',
-                    'id' => $ajax_status,
-                    'data' => json_encode($ajax_response),
-                );
+            ob_end_clean();
+            ob_start();
+            $xmlResponse = new WP_Ajax_Response($response);
+            $xmlResponse->send();
+            ob_end_flush();
 
-                ob_end_clean();
-                ob_start();
-                $xmlResponse = new WP_Ajax_Response($response);
-                $xmlResponse->send();
-                ob_end_flush();
-            }
         }
 
         function remove_instructor_invite() {
-            $ajax_response = array();
+			$user_id = (int) $_POST['user_id'];
+            $course_id = (int) $_POST['course_id'];
+			$nonce_check = wp_verify_nonce( $_POST['instructor_nonce'], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
+            $ajax_response = array();			
             $ajax_status = 1; //success
 
-            if ( !empty($_POST['course_id']) ) {
-                $course_id = ( int ) $_POST['course_id'];
-                $invite_code = sanitize_text_field($_POST['invite_code']);
-                $instructor_invites = get_post_meta($course_id, 'instructor_invites', true);
+			if( $nonce_check && $cap && $doing_ajax ) {				
 
-                unset($instructor_invites[$invite_code]);
+	            $invite_code = sanitize_text_field($_POST['invite_code']);
+	            $instructor_invites = get_post_meta($course_id, 'instructor_invites', true);
 
-                update_post_meta($course_id, 'instructor_invites', $instructor_invites);
+	            unset($instructor_invites[$invite_code]);
 
-                $ajax_response['content'] = __('Instructor invitation cancelled.', 'cp');
-            }
+	            update_post_meta($course_id, 'instructor_invites', $instructor_invites);
+
+				$ajax_response['invite_removed'] = true;
+	            $ajax_response['content'] = __('Instructor invitation cancelled.', 'cp');
+				
+			} else {
+                $ajax_response['invite_removed'] = false;
+                $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
+			}
 
             $response = array(
                 'what' => 'remove_instructor_invite',
@@ -2824,7 +2871,7 @@ if ( !class_exists('CoursePress') ) {
         function drop_instructor_capabilities( $user_id ) {
 
             if ( user_can($user_id, 'manage_options') ) {
-                exit;
+                return;
             }
 
             $role = new Instructor($user_id);
@@ -3785,8 +3832,8 @@ if ( !class_exists('CoursePress') ) {
 
         function output_buffer() {
             // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
-            $page = $_GET['page'];
-            
+            $page = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
+
             $cp_pages = array('courses', 'course_details', 'instructors', 'students', 'assessment', 'reports', 'notifications', 'discussions', 'coursepress-pro_settings');
             
             if ( is_admin() && (isset($page) && !empty($page)) && (in_array($page, $cp_pages)) ) {
