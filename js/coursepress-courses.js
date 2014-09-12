@@ -1731,7 +1731,8 @@ jQuery(document).ready(function($) {
                     var course_id = $('#course_state_id').attr('data-id');
                     var course_nonce = $('#course_state_id').attr('data-nonce');
                     var required_cap = $('#course_state_id').attr('data-cap');
-
+			        var uid = $('#course-ajax-check').data('uid');
+					
                     $.post(
                             'admin-ajax.php', {
                                 action: 'change_course_state',
@@ -1739,6 +1740,7 @@ jQuery(document).ready(function($) {
                                 course_id: course_id,
                                 course_nonce: course_nonce,
                                 required_cap: required_cap,
+								user_id: uid,
                             }
                     ).done(function(data, status) {
                         if (status == 'success') {

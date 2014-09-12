@@ -25,6 +25,8 @@ jQuery(document).ready(function($) {
                     var course_id = $(this).parent().find('.course_state_id').attr('data-id');
                     var course_nonce = $(this).parent().find('.course_state_id').attr('data-nonce');
                     var required_cap = $(this).parent().find('.course_state_id').attr('data-cap');
+			        var uid = $('#course-ajax-check').data('uid');
+										
                     if ($(this).hasClass('disabled')) {
                         return;
                     }
@@ -47,6 +49,7 @@ jQuery(document).ready(function($) {
                                 course_id: course_id,
                                 course_nonce: course_nonce,
                                 required_cap: required_cap,
+								user_id: uid,
                             }
                     ).done(function(data, status) {
                         if (status == 'success') {
