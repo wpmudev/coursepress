@@ -39,6 +39,7 @@
                     <nav id="site-navigation" class="main-navigation" role="navigation">
 
                         <?php
+                        $theme_location = 'primary';
                         if ( !has_nav_menu($theme_location) ) {
                             $theme_locations = get_nav_menu_locations();
                             foreach ( ( array ) $theme_locations as $key => $location ) {
