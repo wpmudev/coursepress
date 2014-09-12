@@ -1117,7 +1117,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                     if ( $coursepress->is_marketpress_active() ) {
                                         ?>
                                                                                                                                                                                                                     
-                                        <?php _e('MarketPress product'); ?>
+                                        <?php _e('MarketPress product', 'cp'); ?>
                                                                                                                                                                                                                     
                                                                                                                                                                                                                     <a class="help-icon" href="javascript:;"></a>
                                                                                                                                                                                                                     <div class="tooltip">

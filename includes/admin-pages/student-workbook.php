@@ -310,11 +310,11 @@ if ( isset( $_POST['course_id'] ) ) {
                                                                                         <a class="response_grade" alt="<?php
                                                                                         _e( 'Grade by ', 'cp' );
                                                                                         echo $instructor_name->display_name;
-                                                                                        _e( ' on ' . $grade_time );
+                                                                                        echo sprintf(__(' on %s', 'cp'), $grade_time);
                                                                                         ?>" title="<?php
                                                                                            _e( 'Grade by ', 'cp' );
                                                                                            echo $instructor_name->display_name;
-                                                                                           _e( ' on ' . $grade_time, 'cp' );
+                                                                                           echo sprintf(__(' on %s', 'cp'), $grade_time);
                                                                                            ?>"><?php echo $grade; ?>%</a>
                                                                                            <?php
                                                                                        } else {

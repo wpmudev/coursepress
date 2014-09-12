@@ -292,7 +292,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                                         <a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e('Delete Page', 'cp'); ?></a>
                                                     </span>
                                                 </label>
-                                                <div class="description"><?php _e('The label will be displayed on the Course Overview and Unit page'); ?></div>
+                                                <div class="description"><?php _e('The label will be displayed on the Course Overview and Unit page', 'cp'); ?></div>
                                                 <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i)); ?>" name="page_title[]" class="page_title" />
                                                 <label class="show_page_title">
                                                     <input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset($show_title[$i - 1]) && $show_title[$i - 1] == 'yes' ? 'checked' : (!isset($show_title[$i - 1]) ) ? 'checked' : '' ) ?> />

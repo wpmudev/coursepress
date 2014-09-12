@@ -160,7 +160,7 @@ if ( isset($_GET['notification_id']) ) {
                                         <input type="submit" value = "<?php ( $notification_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp') ); ?>" class = "button-primary" />
                                         <?php
                                     } else {
-                                        _e('You do not have required permissions for this action');
+                                        _e('You do not have required permissions for this action', 'cp');
                                     }
                                     ?>
                                 </div>

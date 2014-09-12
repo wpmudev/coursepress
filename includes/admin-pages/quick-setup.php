@@ -8,7 +8,7 @@
         ?>
         <br />
         <?php
-        _e('It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.');
+        _e('It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.', 'cp');
         ?>
         <br />
         <?php
@@ -19,7 +19,7 @@
         printf(__('%s has also installed - but not activated - MarketPress Lite.', 'cp'), $this->name);
         ?>
         <br />
-        <?php _e('For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.'); ?>
+        <?php _e('For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.', 'cp'); ?>
     </div>
 
     <h1><?php _e('Let’s Get Started', 'cp'); ?></h1>

@@ -14,10 +14,10 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                 <div id='edit-sub' class='course-holder-wrap'>
 
                     <?php
-                    $columns = array(
+                    /*$columns = array(
                         "course" => __( ' ', 'cp' ),
                         "additional_info" => __( ' ', 'cp' ),
-                    );
+                    );*/
                     ?>
 
                 </div>
@@ -30,10 +30,10 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
                     </div>
 
                     <?php
-                    $columns = array(
+                    /*$columns = array(
                         "course" => __( ' ', 'cp' ),
                         "additional_info" => __( ' ', 'cp' ),
-                    );
+                    );*/
                     ?>
                     <!--COURSES START-->
                     <table cellspacing="0" class="widefat shadow-table">

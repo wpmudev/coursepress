@@ -118,7 +118,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
                                         <input type="submit" value = "<?php ( $discussion_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class = "button-primary" />
                                         <?php
                                     } else {
-                                        _e( 'You do not have required permissions for this action' );
+                                        _e( 'You do not have required permissions for this action', 'cp' );
                                     }
                                     ?>
                                 </div>
