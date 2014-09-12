@@ -143,7 +143,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
             <input type="hidden" name="unit_id" id="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
             <input type="hidden" name="unit_page_num" id="unit_page_num" value="1" />
             <input type="hidden" name="action" value="update_unit" />
-            <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? $_GET['active_element'] : 1); ?>" />
+            <input type="hidden" name="active_element" id="active_element" value="<?php echo (isset($_GET['active_element']) ? (int)$_GET['active_element'] : 1); ?>" />
 
             <?php
             $unit = new Unit($unit_id);
