@@ -3397,7 +3397,7 @@ if ( !class_exists('CoursePress') ) {
                 }
 
                 if ( $show_warning ) {
-                    echo '<div class="error"><p>' . __('<strong>' . $this->name . ' is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp') . '</p></div>';
+                    echo '<div class="error"><p>' . sprintf(__('<strong>%s is almost ready</strong>. You must <a href="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'cp'), $this->name) . '</p></div>';
                 }
             }
         }
