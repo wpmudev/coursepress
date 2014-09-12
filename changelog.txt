@@ -2,19 +2,24 @@ Plugin Name: CoursePress Pro
 Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
 CHANGE LOG
-----------------------------------------------------------------------
-----------------------------------------------------------------------
+=================================================
+
+1.0.3
+-------------------------------------------------
+- Added extra security to add/remove instructors.  
+- Improved security for auto-save of course setup.  
+- Improved security for course, unit toggles.
 
 1.0.2
-----------------------------------------------------------------------
+-------------------------------------------------
 - Resolved issue with mobile menu
 - Resolved issue with listing images, videos and overlapping content in the CoursePress theme
 - Responsive fixes for admin pages
 
 1.0.1
-----------------------------------------------------------------------
+-------------------------------------------------
 - Resolved issue with deleting media files (selected in elements) upon deleting a unit or a module.
 
 1.0.0
-----------------------------------------------------------------------
+-------------------------------------------------
 - 1.0 First Release.
