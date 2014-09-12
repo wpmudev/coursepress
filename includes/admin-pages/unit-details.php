@@ -38,12 +38,15 @@ if ( isset($_POST['action']) && $_POST['action'] == 'update_unit' ) {
 
     if ( wp_verify_nonce($_REQUEST['_wpnonce'], 'unit_details_overview_' . $user_id) ) {
 
-        $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0 );
+        if ( current_user_can('manage_options') || current_user_can('coursepress_create_course_unit_cap') || current_user_can('coursepress_update_course_unit_cap') || current_user_can('coursepress_update_my_course_unit_cap') || current_user_can('coursepress_update_all_courses_unit_cap') ) {
+            $new_post_id = $unit->update_unit(isset($_POST['unit_id']) ? $_POST['unit_id'] : 0 );
+        }
 
         if ( isset($_POST['unit_state']) ) {
-            /* Save & Publish */
-            $unit = new Unit($new_post_id);
-            $unit->change_status($_POST['unit_state']);
+            if ( current_user_can('manage_options') || current_user_can('coursepress_change_course_unit_status_cap') || current_user_can('coursepress_change_my_course_unit_status_cap') || current_user_can('coursepress_change_all_courses_unit_status_cap') ) {
+                $unit = new Unit($new_post_id);
+                $unit->change_status($_POST['unit_state']);
+            }
         }
 
         if ( $new_post_id !== 0 ) {
@@ -134,7 +137,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
         <form action="<?php echo esc_attr(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ) . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ))); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
             <?php wp_nonce_field('unit_details_overview_' . $user_id); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? isset($unit_object->post_status) ? $unit_object->post_status : 'live' : 'live')); ?>" />
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr((isset($unit_id) && ($unit_id > 0) ? isset($unit_object->post_status) ? $unit_object->post_status : 'live'  : 'live')); ?>" />
 
             <input type="hidden" name="course_id" value="<?php echo esc_attr($course_id); ?>" />
             <input type="hidden" name="unit_id" id="unit_id" value="<?php echo esc_attr($unit_id); ?>" />
@@ -155,12 +158,12 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                 <div class='unit-detail-settings'>
                     <h3><i class="fa fa-cog"></i> <?php _e('Unit Settings', 'cp'); ?>
                         <div class="unit-state">
-							<?php
-							   $control_position = 'off';
-							   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
-								   $control_position = 'on';
-							   }
-							?>
+                            <?php
+                            $control_position = 'off';
+                            if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
+                                $control_position = 'on';
+                            }
+                            ?>
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
                             <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
                             <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
@@ -276,8 +279,8 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
                                 $module = new Unit_Module();
                                 $modules = $module->get_modules($unit_id == 0 ? -1 : $unit_id );
-								
-								$show_title = get_post_meta( $unit_id, 'show_page_title', true );
+
+                                $show_title = get_post_meta($unit_id, 'show_page_title', true);
 
                                 for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                     ?>
@@ -291,11 +294,11 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                                 </label>
                                                 <div class="description"><?php _e('The label will be displayed on the Course Overview and Unit page'); ?></div>
                                                 <input type="text" value="<?php echo esc_attr($unit->get_unit_page_name($i)); ?>" name="page_title[]" class="page_title" />
-									            <label class="show_page_title">
-									                <input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset($show_title[$i-1]) && $show_title[$i-1] == 'yes' ? 'checked' : (!isset($show_title[$i-1]) ) ? 'checked' : '' ) ?> />
-									                <input type="hidden" name="show_page_title_field[]" value="<?php echo ( (isset($show_title[$i-1]) && $show_title[$i-1] == 'yes') || !isset($show_title[$i-1]) ? 'yes' : 'no' ) ?>" />
-									                <?php _e('Show page label on unit.', 'cp'); ?><br />
-									            </label>
+                                                <label class="show_page_title">
+                                                    <input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset($show_title[$i - 1]) && $show_title[$i - 1] == 'yes' ? 'checked' : (!isset($show_title[$i - 1]) ) ? 'checked' : '' ) ?> />
+                                                    <input type="hidden" name="show_page_title_field[]" value="<?php echo ( (isset($show_title[$i - 1]) && $show_title[$i - 1] == 'yes') || !isset($show_title[$i - 1]) ? 'yes' : 'no' ) ?>" />
+                                                    <?php _e('Show page label on unit.', 'cp'); ?><br />
+                                                </label>
 
                                                 <label><?php _e('Build Page', 'cp'); ?></label>
                                                 <div class="description"><?php _e('Click to add elements to the page', 'cp'); ?></div>
@@ -426,20 +429,20 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                     }
                                     ?>
 
-			                        <div class="unit-state">
-										<?php
-										   $control_position = 'off';
-										   if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
-											   $control_position = 'on';
-										   }
-										?>
-			                            <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
-			                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
-			                            <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
-			                                <div class="toggle"></div>
-			                            </div>
-			                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
-			                        </div>
+                                    <div class="unit-state">
+                                        <?php
+                                        $control_position = 'off';
+                                        if ( $unit_id > 0 && $unit_object && 'publish' == $unit_object->post_status ) {
+                                            $control_position = 'on';
+                                        }
+                                        ?>
+                                        <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
+                                        <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e('Draft', 'cp'); ?></span>
+                                        <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
+                                            <div class="toggle"></div>
+                                        </div>
+                                        <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e('Live', 'cp'); ?></span>
+                                    </div>
 
                                 </div>
                             </div>
