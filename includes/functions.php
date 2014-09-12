@@ -1480,7 +1480,7 @@ function cp_get_attachment_id_from_src( $image_src ) {
                     "SELECT ID FROM {$wpdb->posts} WHERE guid = %s
 	", $image_src
     ));
-                    
+
     return $id;
 }
 
@@ -1598,7 +1598,9 @@ function cp_do_attachment_caption( $data ) {
             $html .= '<div class="video_player">';
             $html .= $video;
             $html .= '</div>';
-            $html .= '<figcaption class="wp-caption-text">' . $media_data['caption'] . '</figcaption>';
+            if ( isset($media_data['caption']) && $media_data['caption'] !== '' ) {
+                $html .= '<figcaption class="wp-caption-text">' . $media_data['caption'] . '</figcaption>';
+            }
             $html .= '</figure>';
             $html .= '</div>';
         } else {

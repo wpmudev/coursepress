@@ -1274,3 +1274,31 @@ h1.title.completed-courses-title {
 	background-position: right center;
 	background-repeat: no-repeat;
 }
+
+/* Front video */
+
+.front-single-module .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
+}
+
+.front-single-module .video_player{
+    margin-top: 0px;
+}
+
+.front-single-module .mejs-layer,
+.front-single-module .mejs-container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.front-single-module .video_player .wp-video{
+    max-width: 100%;
+    min-height: 350px;
+}
+
+/* End front video */
