@@ -5,6 +5,9 @@
  *
  * @package CoursePress
  */
+
+add_theme_support('post-thumbnails');
+
 function author_description_excerpt( $user_id = false, $length = 100 ) {
 
     $excerpt = get_the_author_meta('description', $user_id);

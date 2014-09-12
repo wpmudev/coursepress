@@ -84,13 +84,14 @@ if ( !class_exists('CoursePress') ) {
             global $last_inserted_unit_id; //$last_inserted_module_id
             global $last_inserted_front_page_module_id; //$last_inserted_module_id
 
-            add_theme_support('post-thumbnails');
+            //add_theme_support('post-thumbnails');
 
 //CoursePress Capabilities Class
             require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
 
 //Administration area
             if ( is_admin() ) {
+
 
 // Course search
                 require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
