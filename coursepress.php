@@ -591,7 +591,7 @@ if ( !class_exists('CoursePress') ) {
         function get_next_unit_url() {
             global $wpdb;
 
-            $course_id = $_POST['course_id'];
+            $course_id = (int)$_POST['course_id'];
             $next_unit_id = $this->get_last_inserted_id();
             echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $next_unit_id . '&action=edit');
             exit;
