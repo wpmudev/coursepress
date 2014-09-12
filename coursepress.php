@@ -2304,59 +2304,59 @@ if ( !class_exists('CoursePress') ) {
          * Handles AJAX call for Course Settings auto-update.
          */
         function autoupdate_course_settings() {
+			
+			// $instructor_id = (int) $_POST['instructor_id'];
+			$user_id = (int) $_POST['user_id'];
+			$course_id = (int) $_POST['course_id'];
+			$nonce_check = wp_verify_nonce( $_POST['course_nonce'], 'auto-update-' . $course_id );
+			$cap = 0 == $course_id ? CoursePress_Capabilities::can_create_course( $user_id ) : CoursePress_Capabilities::can_update_course( $course_id, $user_id );
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
+			$ajax_response = array();
 
-            if ( isset($_POST['course_id']) && isset($_POST['course_nonce']) && isset($_POST['required_cap']) && defined('DOING_AJAX') && DOING_AJAX ) {
-                /*
-                  http://codex.wordpress.org/Plugin_API/Filter_Reference/tiny_mce_before_init
-                  http://www.tinymce.com/wiki.php/API3:event.tinymce.Editor.onChange
-                 */
+			if( $nonce_check && $cap && $doing_ajax ) {
 
-                $ajax_response = array();
-
-                if ( ( $_POST['course_id'] || 0 == $_POST['course_id'] ) && wp_verify_nonce($_POST['course_nonce'], 'auto-update-' . $_POST['course_id']) &&
-                        sha1('can_update_course' . $_POST['course_nonce']) == $_POST['required_cap'] ) {
-
-                    $course = new Course(( int ) $_POST['course_id']);
-                    if ( $course->details ) {
-                        $course->data['status'] = $course->details->post_status;
-                    } else {
-                        $course->data['status'] = 'draft';
-                    }
-
-                    if ( !empty($_POST['uid']) && 0 == ( int ) $_POST['course_id'] ) {
-                        $course->data['uid'] = ( int ) $_POST['uid'];
-                        $ajax_response['instructor'] = ( int ) $_POST['uid'];
-                    }
-
-                    $course_id = $course->update_course();
-                    $mp_product_id = $course->mp_product_id();
-
-                    $ajax_response['success'] = true;
-                    $ajax_response['course_id'] = $course_id;
-                    $ajax_response['mp_product_id'] = $mp_product_id;
-                    $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
-                    $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);
-
-                    if ( !empty($_POST['meta_course_setup_marker']) && 'step-6' == $_POST['meta_course_setup_marker'] ) {
-                        update_post_meta($course_id, 'course_setup_complete', 'yes');
-                    }
+                $course = new Course( $course_id );
+                if ( $course->details ) {
+                    $course->data['status'] = $course->details->post_status;
                 } else {
-                    $ajax_response['success'] = false;
-                    $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
+                    $course->data['status'] = 'draft';
                 }
 
-                $response = array(
-                    'what' => 'instructor_invite',
-                    'action' => 'instructor_invite',
-                    'id' => 1, // success status
-                    'data' => json_encode($ajax_response),
-                );
-                ob_end_clean();
-                ob_start();
-                $xmlResponse = new WP_Ajax_Response($response);
-                $xmlResponse->send();
-                ob_end_flush();
+                if ( ! empty( $user_id ) && 0 == $course_id ) {
+                    $course->data['uid'] = $user_id;
+                    $ajax_response['instructor'] = $user_id;
+                }
+
+                $course_id = $course->update_course();
+                $mp_product_id = $course->mp_product_id();
+
+                $ajax_response['success'] = true;
+                $ajax_response['course_id'] = $course_id;
+                $ajax_response['mp_product_id'] = $mp_product_id;
+                $ajax_response['nonce'] = wp_create_nonce('auto-update-' . $course_id);
+                $ajax_response['cap'] = sha1('can_update_course' . $ajax_response['nonce']);  // leave this here until the next few are sorted
+
+                if ( !empty($_POST['meta_course_setup_marker']) && 'step-6' == $_POST['meta_course_setup_marker'] ) {
+                    update_post_meta($course_id, 'course_setup_complete', 'yes');
+                }
+				
+            } else {
+                $ajax_response['success'] = false;
+                $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
             }
+
+            $response = array(
+                'what' => 'instructor_invite',
+                'action' => 'instructor_invite',
+                'id' => 1, // success status
+                'data' => json_encode($ajax_response),
+            );
+            ob_end_clean();
+            ob_start();
+            $xmlResponse = new WP_Ajax_Response($response);
+            $xmlResponse->send();
+            ob_end_flush();
+
         }
 
         function change_course_state() {

@@ -551,7 +551,7 @@ function step_1_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
-        uid: initialVars['uid'],
+        user_id: initialVars['user_id'],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
@@ -618,6 +618,7 @@ function step_2_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_course_video_url: $('[name=meta_course_video_url]').val(),
         course_description: content,
@@ -653,6 +654,7 @@ function step_3_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         instructor: instructors,
         // Don't remove
@@ -672,6 +674,7 @@ function step_4_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_open_ended_course: $('[name=meta_open_ended_course]').is(':checked') ? 'on' : 'off',
         meta_course_start_date: $('[name=meta_course_start_date]').val(),
@@ -696,6 +699,7 @@ function step_5_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_limit_class_size: $('[name=meta_limit_class_size]').is(':checked') ? 'on' : 'off',
         meta_class_size: $('[name=meta_class_size]').val(),
@@ -730,6 +734,7 @@ function step_6_update(attr) {
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
         required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_enroll_type: $('[name=meta_enroll_type]').val(),
         meta_prerequisite: prerequisite_val,
@@ -937,7 +942,7 @@ function courseAutoUpdate(step, nextAction) {
             course_name: $('[name=course_name]').val(),
             course_nonce: course_nonce,
             required_cap: required_cap,
-            uid: uid,
+            user_id: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
         }
