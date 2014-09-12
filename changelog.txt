@@ -6,9 +6,8 @@ CHANGE LOG
 
 1.0.3
 -------------------------------------------------
-- Added extra security to add/remove instructors.  
-- Improved security for auto-save of course setup.  
-- Improved security for course, unit toggles.
+- Improved security
+- Resolved CSS issues with MarketPress popup called from CoursePress
 
 1.0.2
 -------------------------------------------------

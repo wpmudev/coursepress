@@ -11,3 +11,12 @@ html.wp-toolbar{
 #wpbody-content{
     padding-bottom: 0px;
 }
+
+#screen-meta-links{
+    display: none;
+}
+
+#adminmenuwrap,
+#adminmenuback{
+    display: none;
+}
