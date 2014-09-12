@@ -592,7 +592,7 @@ function coursepress_get_invitation_passcode_from_email() {
 }
 
 function coursepress_get_invitation_passcode_email_subject() {
-    return get_option('invitation_passcode_email_subject', 'Invitation to a Course ( Psss...for selected ones only )');
+    return get_option('invitation_passcode_email_subject', __('Invitation to a Course ( Psss...for selected ones only )', 'cp'));
 }
 
 function coursepress_get_invitation_content_passcode_email() {
@@ -626,7 +626,7 @@ function coursepress_get_invitation_from_email() {
 }
 
 function coursepress_get_invitation_email_subject() {
-    return get_option('invitation_email_subject', 'Invitation to a Course');
+    return get_option('invitation_email_subject', __('Invitation to a Course', 'cp'));
 }
 
 function coursepress_get_invitation_content_email() {
@@ -657,7 +657,7 @@ function coursepress_get_registration_from_email() {
 }
 
 function coursepress_get_registration_email_subject() {
-    return get_option('registration_email_subject', 'Registration Status');
+    return get_option('registration_email_subject', __('Registration Status', 'cp'));
 }
 
 function coursepress_get_registration_content_email() {
@@ -684,7 +684,7 @@ function coursepress_get_mp_order_from_email() {
 }
 
 function coursepress_get_mp_order_email_subject() {
-    return get_option('mp_order_email_subject', 'Order Confirmation');
+    return get_option('mp_order_email_subject', __('Order Confirmation', 'cp'));
 }
 
 function coursepress_get_mp_order_content_email() {
@@ -713,7 +713,7 @@ function coursepress_get_enrollment_from_email() {
 }
 
 function coursepress_get_enrollment_email_subject() {
-    return get_option('enrollment_email_subject', 'Enrollment Confirmation');
+    return get_option('enrollment_email_subject', __('Enrollment Confirmation', 'cp'));
 }
 
 function coursepress_get_enrollment_content_email() {
@@ -768,7 +768,7 @@ If you haven\'t yet got a username you will need to create one.
 
 function cp_admin_notice( $notice, $type = 'updated' ) {
     if ( $notice <> '' ) {
-        echo '<div class="' . $type . '"><p>' . $notice . '</p></div>';
+        echo '<div class="' . esc_attr($type) . '"><p>' . esc_html($notice) . '</p></div>';
     }
 }
 

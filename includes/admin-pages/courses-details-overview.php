@@ -92,10 +92,10 @@ if ( isset($_POST['action']) && ( $_POST['action'] == 'add' || $_POST['action'] 
         // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
         ob_start();
         if ( isset($_GET['ms']) ) {
-            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . $new_post_id . '&ms=' . $_GET['ms']));
+            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . (int)$new_post_id . '&ms=' . $_GET['ms']));
             exit;
         } else {
-            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . $new_post_id));
+            wp_redirect(admin_url('admin.php?page=' . $page . '&course_id=' . (int)$new_post_id));
             exit;
         }
     } else {
