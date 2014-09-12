@@ -750,7 +750,7 @@ if ( !class_exists('Unit_Module') ) {
                                     jQuery(this).parent().parent().remove();
                                     update_sortable_module_indexes();
                                 }
-                                ;"><i class="fa fa-trash-o"></i> <?php _e('Delete'); ?></a>
+                                ;"><i class="fa fa-trash-o"></i> <?php _e('Delete', 'cp'); ?></a>
             <?php
         }
 

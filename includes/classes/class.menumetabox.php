@@ -161,10 +161,10 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 								),
 								remove_query_arg( $removed_args )
 							));
-						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e('Select All'); ?></a>						
+						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e('Select All', 'cp'); ?></a>						
 					</span>
 					<span class="add-to-menu">
-						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>" />
+						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'cp' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>" />
 						<span class="spinner"></span>
 					</span>
 				</p>

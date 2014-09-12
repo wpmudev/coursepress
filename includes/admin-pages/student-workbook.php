@@ -308,13 +308,13 @@ if ( isset( $_POST['course_id'] ) ) {
                                                                                     if ( isset( $grade_data ) ) {
                                                                                         ?>
                                                                                         <a class="response_grade" alt="<?php
-                                                                                        _e( 'Grade by ' );
+                                                                                        _e( 'Grade by ', 'cp' );
                                                                                         echo $instructor_name->display_name;
                                                                                         _e( ' on ' . $grade_time );
                                                                                         ?>" title="<?php
-                                                                                           _e( 'Grade by ' );
+                                                                                           _e( 'Grade by ', 'cp' );
                                                                                            echo $instructor_name->display_name;
-                                                                                           _e( ' on ' . $grade_time );
+                                                                                           _e( ' on ' . $grade_time, 'cp' );
                                                                                            ?>"><?php echo $grade; ?>%</a>
                                                                                            <?php
                                                                                        } else {

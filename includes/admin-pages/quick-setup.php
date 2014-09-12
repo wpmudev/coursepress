@@ -29,10 +29,10 @@
 
         <div class="about-text">
             <ul>
-                <li><?php _e('Add course title and description'); ?></li>
-                <li><?php _e('Assign course instructor'); ?></li>
-                <li><?php _e('Configure attendance and access settings'); ?></li>
-                <li><?php _e('Set up payment gateways for paid courses'); ?></li>
+                <li><?php _e('Add course title and description', 'cp'); ?></li>
+                <li><?php _e('Assign course instructor', 'cp'); ?></li>
+                <li><?php _e('Configure attendance and access settings', 'cp'); ?></li>
+                <li><?php _e('Set up payment gateways for paid courses', 'cp'); ?></li>
             </ul>
 
         </div>

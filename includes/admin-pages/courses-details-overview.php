@@ -299,7 +299,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <div class="wide narrow">
                                                 <label for='featured_url'>
                                                     <?php _e('Listing Image', 'cp'); ?><br />
-                                                    <span><?php _e('The image is used on the "Courses" listing ( archive ) page along with the course excerpt.') ?></span>
+                                                    <span><?php _e('The image is used on the "Courses" listing ( archive ) page along with the course excerpt.', 'cp') ?></span>
                                                 </label>
                                                 <div class="featured_url_holder">
                                                     <input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
@@ -1124,12 +1124,12 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                                                                                                                                                                                     <div class="tooltip-before"></div>
                                                                                                                                                                                                                     <div class="tooltip-button">&times;</div>
                                                                                                                                                                                                                     <div class="tooltip-content">
-                                        <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.'); ?>
+                                        <?php _e('For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.', 'cp'); ?>
                                                                                                                                                                                                                     </div>
                                                                                                                                                                                                                     </div>
                                                                                                                                                                                                                     
                                                                                                                                                                                                                     <select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
-                                                                                                                                                                                                                    <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free'); ?></option>
+                                                                                                                                                                                                                    <option value="" <?php selected($marketpress_product, '', true); ?>><?php _e('None, this course is free', 'cp'); ?></option>
                                         <?php
                                         global $post;
                                         $args = array(

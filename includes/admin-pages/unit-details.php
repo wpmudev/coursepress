@@ -298,7 +298,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 									            </label>
 
                                                 <label><?php _e('Build Page', 'cp'); ?></label>
-                                                <div class="description"><?php _e('Click to add elements to the page'); ?></div>
+                                                <div class="description"><?php _e('Click to add elements to the page', 'cp'); ?></div>
                                             </div>
                                             <?php
                                             foreach ( $coursepress_modules_ordered['output'] as $element ) {
@@ -348,7 +348,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
                                             <hr />
 
-                                            <span class="no-elements"><?php _e('No elements have been added to this page yet'); ?></span>
+                                            <span class="no-elements"><?php _e('No elements have been added to this page yet', 'cp'); ?></span>
 
                                         </div>
 

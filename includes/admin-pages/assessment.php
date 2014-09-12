@@ -77,11 +77,11 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                 $grade_time = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $grade_data['time'] );
 
                                 if ( !empty( $grade ) ) {
-                                    _e( 'Grade by ' );
+                                    _e( 'Grade by ', 'cp' );
                                     ?>
                                     <a href="<?php echo admin_url( 'admin.php?page=instructors&action=view&instructor_id='.$instructor_id );?>"><?php echo esc_html( $instructor_name->display_name ); ?></a>
                                     <?php
-                                    _e( ' on ' . $grade_time );
+                                    _e( ' on ' . $grade_time, 'cp' );
                                 }
                                 ?>
 
@@ -420,13 +420,13 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                                                                         if ( isset( $grade_data ) ) {
                                                                             ?>
                                                                             <a class="response_grade" alt="<?php
-                                                                            _e( 'Grade by ' );
+                                                                            _e( 'Grade by ', 'cp' );
                                                                             echo $instructor_name->display_name;
-                                                                            _e( ' on ' . $grade_time );
+                                                                            _e( ' on ' . $grade_time, 'cp' );
                                                                             ?>" title="<?php
-                                                                               _e( 'Grade by ' );
+                                                                               _e( 'Grade by ', 'cp' );
                                                                                echo $instructor_name->display_name;
-                                                                               _e( ' on ' . $grade_time );
+                                                                               _e( ' on ' . $grade_time, 'cp' );
                                                                                ?>"><?php echo $grade; ?>%</a>
                                                                                <?php
                                                                            } else {
@@ -487,7 +487,7 @@ $course_id = isset( $_GET['course_id'] ) ? ( int )$_GET['course_id'] : '';
                 <?php
             } else {
                 ?>
-                <p><?php _e( '0 Units within the selected course.' ); ?></p>
+                <p><?php _e( '0 Units within the selected course.', 'cp' ); ?></p>
                 <?php
             }
         }//Course exists

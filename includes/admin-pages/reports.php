@@ -483,7 +483,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         <div class="tablenav">
             <div class="alignleft actions">
                 <select name="units" class="chosen-select">
-                    <option value=""><?php _e('All Units') ?></option>
+                    <option value=""><?php _e('All Units', 'cp') ?></option>
                     <?php
                     $course = new Course($current_course_id);
                     $course_units = $course->get_units();

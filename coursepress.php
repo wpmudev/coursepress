@@ -964,7 +964,7 @@ if ( !class_exists('CoursePress') ) {
 
         function instructor_extra_profile_fields( $user ) {
             ?>
-            <h3><?php _e('Instructor Capabilities'); ?></h3>
+            <h3><?php _e('Instructor Capabilities', 'cp'); ?></h3>
 
             <?php
             $has_instructor_role = get_user_meta($user->ID, 'role_ins', true);
@@ -974,8 +974,8 @@ if ( !class_exists('CoursePress') ) {
                     <th><label for="instructor_capabilities"><?php _e('Capabilities', 'cp'); ?></label></th>
 
                     <td>
-                        <input type="radio" name="cp_instructor_capabilities" value="grant" <?php echo ($has_instructor_role ? 'checked' : ''); ?>><?php _e('Granted Instructor Capabilities') ?><br /><br />
-                        <input type="radio" name="cp_instructor_capabilities" value="revoke" <?php echo (!$has_instructor_role ? 'checked' : ''); ?>><?php _e('Revoked Instructor Capabilities') ?><br />
+                        <input type="radio" name="cp_instructor_capabilities" value="grant" <?php echo ($has_instructor_role ? 'checked' : ''); ?>><?php _e('Granted Instructor Capabilities', 'cp') ?><br /><br />
+                        <input type="radio" name="cp_instructor_capabilities" value="revoke" <?php echo (!$has_instructor_role ? 'checked' : ''); ?>><?php _e('Revoked Instructor Capabilities', 'cp') ?><br />
                     </td>
                 </tr>
 
