@@ -8,6 +8,7 @@ CHANGE LOG
 -------------------------------------------------
 - Improved security
 - Resolved CSS issues with MarketPress popup called from CoursePress
+- Fixed issue with theme location in the CoursePress theme
 
 1.0.2
 -------------------------------------------------
