@@ -2368,10 +2368,10 @@ if ( !class_exists('CoursePress') ) {
 			$ajax_response = array();
 
             if( $nonce_check && $cap && $doing_ajax ) {
-                $course = new Course(( int ) $_POST['course_id']);
+                $course = new Course($course_id);
                 $course->change_status($_POST['course_state']);
                 $ajax_response['toggle'] = true;
-                $ajax_response['nonce'] = wp_create_nonce('toggle-' . ( int ) $_POST['course_id']);
+                $ajax_response['nonce'] = wp_create_nonce('toggle-' . $course_id);
                 $ajax_response['cap'] = sha1('can_change_course_state' . $ajax_response['nonce']);
             } else {
                 $ajax_response['toggle'] = false;
@@ -2393,35 +2393,38 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function change_unit_state() {
-            if ( isset($_POST['unit_state']) && isset($_POST['unit_id']) && isset($_POST['unit_nonce']) && isset($_POST['required_cap']) && defined('DOING_AJAX') && DOING_AJAX ) {
+			
+			$user_id = empty($_POST['user_id']) ? get_current_user_id() : (int) $_POST['user_id'];
+			$course_id = (int) $_POST['course_id'];
+			$unit_id = (int) $_POST['unit_id'];
+			$nonce_check = wp_verify_nonce( $_POST['unit_nonce'], 'toggle-' . $unit_id );
+			$cap = CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id );
+			$doing_ajax = defined('DOING_AJAX') && DOING_AJAX  ? true : false;
+			$ajax_response = array();
 
-                $ajax_response = array();
+            if( $nonce_check && $cap && $doing_ajax ) {
+                $unit = new Unit($unit_id);
+                $unit->change_status($_POST['unit_state']);
 
-                if ( $_POST['unit_id'] && wp_verify_nonce($_POST['unit_nonce'], 'toggle-' . $_POST['unit_id']) &&
-                        sha1('can_change_course_unit_state' . $_POST['unit_nonce']) == $_POST['required_cap'] ) {
-                    $unit = new Unit(( int ) $_POST['unit_id']);
-                    $unit->change_status($_POST['unit_state']);
-
-                    $ajax_response['toggle'] = true;
-                    $ajax_response['nonce'] = wp_create_nonce('toggle-' . ( int ) $_POST['unit_id']);
-                    $ajax_response['cap'] = sha1('can_change_course_unit_state' . $ajax_response['nonce']);
-                } else {
-                    $ajax_response['toggle'] = false;
-                    $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
-                }
-
-                $response = array(
-                    'what' => 'instructor_invite',
-                    'action' => 'instructor_invite',
-                    'id' => 1, // success status
-                    'data' => json_encode($ajax_response),
-                );
-                ob_end_clean();
-                ob_start();
-                $xmlResponse = new WP_Ajax_Response($response);
-                $xmlResponse->send();
-                ob_end_flush();
+                $ajax_response['toggle'] = true;
+                $ajax_response['nonce'] = wp_create_nonce('toggle-' . $unit_id);
+                $ajax_response['cap'] = sha1('can_change_course_unit_state' . $ajax_response['nonce']);
+            } else {
+                $ajax_response['toggle'] = false;
+                $ajax_response['reason'] = __('Invalid request. Security check failed.', 'cp');
             }
+
+            $response = array(
+                'what' => 'instructor_invite',
+                'action' => 'instructor_invite',
+                'id' => 1, // success status
+                'data' => json_encode($ajax_response),
+            );
+            ob_end_clean();
+            ob_start();
+            $xmlResponse = new WP_Ajax_Response($response);
+            $xmlResponse->send();
+            ob_end_flush();
         }
 
         function add_course_instructor() {

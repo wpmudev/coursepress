@@ -1650,9 +1650,17 @@ jQuery(document).ready(function($) {
                         var unit_state = 'publish';
                     }
 
+			        // Course ID
+			        var course_id = $('[name=course_id]').val();
+			        if (!course_id) {
+			            course_id = $.urlParam('course_id');
+			            $('[name=course_id]').val(course_id);
+			        }
+
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
                     var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
                     var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');
+			        var uid = $('#course-ajax-check').data('uid');
 
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
@@ -1662,6 +1670,8 @@ jQuery(document).ready(function($) {
                                     unit_id: unit_id,
                                     unit_nonce: unit_nonce,
                                     required_cap: required_cap,
+									course_id: course_id,
+									user_id: uid,
                                 }
                         ).done(function(data, status) {
                             if (status == 'success') {
