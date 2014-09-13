@@ -277,7 +277,7 @@ if ( !class_exists('Course') ) {
 
                     $post = array(
                         'post_status' => 'publish',
-                        'post_title' => $this->details->post_title,
+                        'post_title' => cp_filter_content($this->details->post_title, true),
                         'post_type' => 'product',
                         'post_parent' => $course_id
                     );
@@ -299,18 +299,18 @@ if ( !class_exists('Course') ) {
                         if ( $automatic_sku == 'on' ) {
                             $sku = $automatic_sku_number;
                         } else {
-                            $sku = !empty($_POST['mp_sku']) ? $_POST['mp_sku'] : '';
+                            $sku = cp_filter_content((!empty($_POST['mp_sku']) ? $_POST['mp_sku'] : ''), true);
                         }
 
                         update_post_meta($this->id, 'mp_product_id', $post_id);
                         update_post_meta($this->id, 'marketpress_product', $post_id);
 
-                        $price = !empty($_POST['mp_price']) ? $_POST['mp_price'] : 0;
-                        $sale_price = !empty($_POST['mp_sale_price']) ? $_POST['mp_sale_price'] : 0;
+                        $price = cp_filter_content((!empty($_POST['mp_price']) ? $_POST['mp_price'] : 0), true);
+                        $sale_price = cp_filter_content((!empty($_POST['mp_sale_price']) ? $_POST['mp_sale_price'] : 0), true);
                         update_post_meta($post_id, 'mp_sku', $sku);
                         update_post_meta($post_id, 'mp_price', $price);
                         update_post_meta($post_id, 'mp_sale_price', $sale_price);
-                        update_post_meta($post_id, 'mp_is_sale', $_POST['mp_is_sale']);
+                        update_post_meta($post_id, 'mp_is_sale', cp_filter_content($_POST['mp_is_sale']), true);
                         update_post_meta($post_id, 'mp_file', get_permalink($this->id));
                         update_post_meta($post_id, 'cp_course_id', $this->id);
 
@@ -350,15 +350,15 @@ if ( !class_exists('Course') ) {
 
                     // If the course already exsists, avoid accidentally wiping out important fields.
                     if ( $course ) {
-                        $post['post_excerpt'] = empty($_POST['course_excerpt']) ? $course->post_excerpt : $_POST['course_excerpt'];
-                        $post['post_content'] = empty($_POST['course_description']) ? $course->post_content : $_POST['course_description'];
-                        $post['post_title'] = empty($_POST['course_name']) ? $course->post_title : $_POST['course_name'];
+                        $post['post_excerpt'] = cp_filter_content(empty($_POST['course_excerpt']) ? $course->post_excerpt : $_POST['course_excerpt']);
+                        $post['post_content'] = cp_filter_content(empty($_POST['course_description']) ? $course->post_content : $_POST['course_description']);
+                        $post['post_title'] = cp_filter_content((empty($_POST['course_name']) ? $course->post_title : $_POST['course_name']), true);
                     } else {
-                        $post['post_excerpt'] = $_POST['course_excerpt'];
+                        $post['post_excerpt'] = cp_filter_content($_POST['course_excerpt']);
                         if ( isset($_POST['course_description']) ) {
-                            $post['post_content'] = $_POST['course_description'];
+                            $post['post_content'] = cp_filter_content($_POST['course_description']);
                         }
-                        $post['post_title'] = $_POST['course_name'];
+                        $post['post_title'] = cp_filter_content($_POST['course_name'], true);
                     }
 
                     if ( isset($_POST['course_id']) ) {
@@ -371,10 +371,10 @@ if ( !class_exists('Course') ) {
                     if ( $post_id != 0 ) {
                         foreach ( $_POST as $key => $value ) {
                             if ( preg_match("/meta_/i", $key) ) {//every field name with prefix "meta_" will be saved as post meta automatically
-                                update_post_meta($post_id, str_replace('meta_', '', $key), $value);
+                                update_post_meta($post_id, str_replace('meta_', '', $key), cp_filter_content($value));
                             }
                             if ( preg_match("/mp_/i", $key) ) {
-                                update_post_meta($post_id, $key, $value);
+                                update_post_meta($post_id, $key, cp_filter_content($value));
                             }
 
                             if ( isset($_POST['meta_course_category']) ) {
@@ -407,15 +407,15 @@ if ( !class_exists('Course') ) {
                                     $image_size = $image->get_size();
 
                                     if ( ( $image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height ) || ( $image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height ) ) {
-                                        update_post_meta($post_id, '_thumbnail_id', $_POST['meta_featured_url']);
+                                        update_post_meta($post_id, '_thumbnail_id', cp_filter_content($_POST['meta_featured_url']), true);
                                     } else {
                                         $ext = pathinfo($fl, PATHINFO_EXTENSION);
                                         $new_file_name = str_replace('.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename($_POST['meta_featured_url']));
                                         $new_file_path = str_replace(basename($_POST['meta_featured_url']), $new_file_name, $_POST['meta_featured_url']);
-                                        update_post_meta($post_id, '_thumbnail_id', $new_file_path);
+                                        update_post_meta($post_id, '_thumbnail_id', cp_filter_content($new_file_path), true);
                                     }
                                 } else {
-                                    update_post_meta($post_id, '_thumbnail_id', $_POST['meta_featured_url']);
+                                    update_post_meta($post_id, '_thumbnail_id', cp_filter_content($_POST['meta_featured_url'], true), true);
                                 }
                             } else {
                                 if ( isset($_POST['meta_featured_url']) && $_POST['meta_featured_url'] == '' ) {
@@ -436,7 +436,7 @@ if ( !class_exists('Course') ) {
 
                                 if ( 0 != $_POST['instructor'] ) {
 
-                                    update_post_meta($post_id, 'instructors', $_POST['instructor']); //Save instructors for the Course
+                                    update_post_meta($post_id, 'instructors', cp_filter_content($_POST['instructor'])); //Save instructors for the Course
 
 
                                     foreach ( $_POST['instructor'] as $instructor_id ) {

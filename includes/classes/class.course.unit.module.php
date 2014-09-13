@@ -48,10 +48,10 @@ if ( !class_exists('Unit_Module') ) {
             $post = array(
                 'post_author' => $user_id,
                 'post_parent' => $data->unit_id,
-                'post_excerpt' => ( isset($data->excerpt) ? $data->excerpt : '' ),
-                'post_content' => ( isset($data->content) ? $data->content : '' ),
+                'post_excerpt' => cp_filter_content( isset($data->excerpt) ? $data->excerpt : '' ),
+                'post_content' => cp_filter_content( isset($data->content) ? $data->content : '' ),
                 'post_status' => 'publish',
-                'post_title' => ( isset($data->title) ? $data->title : '' ),
+                'post_title' => cp_filter_content( (isset($data->title) ? $data->title : ''), true ),
                 'post_type' => ( isset($data->post_type) ? $data->post_type : 'module' ),
             );
 
@@ -72,7 +72,7 @@ if ( !class_exists('Unit_Module') ) {
                   } */
                 if ( isset($data->metas) ) {
                     foreach ( $data->metas as $key => $value ) {
-                        update_post_meta($post_id, $key, $value);
+                        update_post_meta($post_id, $key, cp_filter_content($value));
                     }
                 }
             }
@@ -174,7 +174,7 @@ if ( !class_exists('Unit_Module') ) {
                 if ( $post_id != 0 ) {
                     if ( isset($data->metas) ) {
                         foreach ( $data->metas as $key => $value ) {
-                            update_post_meta($post_id, $key, $value);
+                            update_post_meta($post_id, $key, cp_filter_content($value));
                         }
                     }
                 }
@@ -412,7 +412,7 @@ if ( !class_exists('Unit_Module') ) {
 
         function save_response_comment() {
             if ( isset($_POST['response_id']) && isset($_POST['response_comment']) && is_admin() ) {
-                update_post_meta($_POST['response_id'], 'response_comment', $_POST['response_comment']);
+                update_post_meta($_POST['response_id'], 'response_comment', cp_filter_content($_POST['response_comment']));
             }
         }
 

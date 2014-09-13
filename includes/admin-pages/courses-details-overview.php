@@ -207,7 +207,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                         <?php
                         if ( CoursePress_Capabilities::can_update_course($course_id) || 0 == $course_id ) {
                             ?>
-                            <input type="hidden" name="admin_url" value="<?php echo admin_url('admin.php?page=course_details'); ?>" />
+                        <input type="hidden" name="admin_url" value="<?php echo esc_attr(admin_url('admin.php?page=course_details')); ?>" />
                         <?php } ?>
                         <input type="hidden" name="action" value="update" />
                     <?php } else { ?>
@@ -265,7 +265,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <?php
                                             $set_status = $course_setup_progress['step-1'];
                                             ?>
-                                            <input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+                                            <input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo esc_attr($set_status); ?>" />
                                             <div class="wide">
                                                 <label for='course_name' class="required">
                                                     <?php _e('Course Name', 'cp'); ?>
@@ -310,7 +310,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     <input class="featured_url_button button-secondary" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                                                     <input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
                                                     if ( $course_id !== 0 ) {
-                                                        echo get_post_meta($course_id, '_thumbnail_id', true);
+                                                        echo esc_attr(get_post_meta($course_id, '_thumbnail_id', true));
                                                     }
                                                     ?>" />
                                                            <?php
@@ -768,11 +768,11 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                     </label>										
                                                     <div class="instructor-invite">
                                                         <label for="invite_instructor_first_name"><?php _e('First Name', 'cp'); ?></label>
-                                                        <input type="text" name="invite_instructor_first_name" placeholder="First Name" />
+                                                        <input type="text" name="invite_instructor_first_name" placeholder="<?php _e('First Name', 'cp'); ?>" />
                                                         <label for="invite_instructor_last_name"><?php _e('Last Name', 'cp'); ?></label>
-                                                        <input type="text" name="invite_instructor_last_name" placeholder="Last Name" />
+                                                        <input type="text" name="invite_instructor_last_name" placeholder="<?php _e('Last Name', 'cp'); ?>" />
                                                         <label for="invite_instructor_email"><?php _e('E-Mail', 'cp'); ?></label>
-                                                        <input type="text" name="invite_instructor_email" placeholder="instructor@email.com" />											
+                                                        <input type="text" name="invite_instructor_email" placeholder="<?php _e('instructor@email.com', 'cp'); ?>" />											
                                                         <div class="submit-message">
                                                             <input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e('Send Invite', 'cp'); ?>">
                                                         </div>
@@ -802,7 +802,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                             <?php
                                             $set_status = $course_setup_progress['step-4'];
                                             ?>
-                                            <input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+                                            <input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo esc_attr($set_status); ?>" />
                                             <div class="wide course-dates"> 
                                                 <label>
                                                     <?php _e('Course Dates', 'cp'); ?>

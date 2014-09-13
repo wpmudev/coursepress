@@ -256,7 +256,7 @@ if ( !class_exists('Unit') ) {
                 'post_author' => $user_id,
                 'post_content' => '', //$_POST['unit_description']
                 'post_status' => $post_status, //$post_status
-                'post_title' => $_POST['unit_name'],
+                'post_title' => cp_filter_content($_POST['unit_name'], true),
                 'post_type' => 'unit',
                 'post_parent' => $_POST['course_id']
             );
@@ -269,15 +269,15 @@ if ( !class_exists('Unit') ) {
 
             $last_inserted_unit_id = $post_id;
 
-            update_post_meta($post_id, 'course_id', $_POST['course_id']);
+            update_post_meta($post_id, 'course_id', (int)$_POST['course_id']);
 
-            update_post_meta($post_id, 'unit_availability', $_POST['unit_availability']);
+            update_post_meta($post_id, 'unit_availability', cp_filter_content($_POST['unit_availability']));
 
-            update_post_meta($post_id, 'force_current_unit_completion', $_POST['force_current_unit_completion']);
+            update_post_meta($post_id, 'force_current_unit_completion', cp_filter_content($_POST['force_current_unit_completion']));
 
-            update_post_meta($post_id, 'page_title', $_POST['page_title']);
+            update_post_meta($post_id, 'page_title', cp_filter_content($_POST['page_title'], true));
 			
-			update_post_meta($post_id, 'show_page_title', $_POST['show_page_title_field']);
+			update_post_meta($post_id, 'show_page_title', cp_filter_content($_POST['show_page_title_field']));
 
             if ( !get_post_meta($post_id, 'unit_order', true) ) {
                 update_post_meta($post_id, 'unit_order', $post_id);

@@ -13,6 +13,35 @@
   return $url;
   } */
 
+function cp_filter_content( $content, $none_allowed = false ) {
+    if ( $none_allowed ) {
+        if ( is_array($content) ) {
+            foreach ( $content as $content_key => $content_value ) {
+                $content[$content_key] = wp_filter_nohtml_kses($content_value);
+            }
+        } else {
+            $content = wp_filter_nohtml_kses($content);
+        }  
+    } else {
+        if ( current_user_can('unfiltered_html') ) {
+            $content = $content;
+        } else {
+            if ( is_array($content) ) {
+                foreach ( $content as $content_key => $content_value ) {
+                    $content[$content_key] = wp_kses($content_value, cp_allowed_post_tags());
+                }
+            } else {
+                $content = wp_kses($content, cp_allowed_post_tags());
+            }
+        }
+    }
+    return $content;
+}
+
+function cp_allowed_post_tags() {
+    $allowed_tags = wp_kses_allowed_html('post');
+    return apply_filters('cp_allowes_post_tags', $allowed_tags);
+}
 
 function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
     if ( !$unit_id ) {
