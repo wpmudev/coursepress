@@ -11,7 +11,7 @@
 	    <p><?php echo sprintf(__('You have successfully enrolled in %s', 'cp'), $course_link); ?>
 		<br />
 	    <?php
-	    _e('You will receive an e-mail confirmation shortly.');
+	    _e('You will receive an e-mail confirmation shortly.', 'cp');
 	    ?>
 		</p>
 	    <p><?php echo sprintf(__('You course will be available at any time in your %s', 'cp'), $dashboard_link); ?></p>
@@ -22,7 +22,7 @@
 	    if ( ( strtotime($course->details->course_start_date) <= time() && strtotime($course->details->course_end_date) >= time() ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
 	        ?>
 			<div class="cp_popup_button_container">
-		        <button class="apply-button enroll-success" data-link="<?php echo get_permalink($course_id) . 'units'; ?>"><?php _e('Start Learning Now'); ?></button>
+                            <button class="apply-button enroll-success" data-link="<?php echo trailingslashit(get_permalink($course_id)) . 'units'; ?>"><?php _e('Start Learning Now', 'cp'); ?></button>
 			</div>
 	        <?php
 	    }

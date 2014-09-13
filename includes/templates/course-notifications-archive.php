@@ -13,8 +13,8 @@ $coursepress->check_access($course_id);
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
-echo __('<h2>Notifications</h2>', 'cp');
 ?>
+<h2><?php _e('Notifications', 'cp'); ?></h2>
 <div class="clearfix"></div>
 
 <ul class="notification-archive-list">
@@ -26,7 +26,7 @@ echo __('<h2>Notifications</h2>', 'cp');
         <?php
         while ( have_posts() ) {
             the_post();
-			remove_filter( 'the_content', 'wpautop' );
+            remove_filter('the_content', 'wpautop');
             ?>
             <li>
                 <div class="notification-archive-single-meta">

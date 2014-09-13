@@ -5,8 +5,8 @@ do_shortcode('[course_units_loop]'); //required for getting unit results
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
-echo __('<h2>Course Grades</h2>', 'cp');
 ?>
+<h2><?php _e('Course Grades', 'cp');?></h2>
 
 <div class="units-archive">
     <ul class="units-archive-list">
@@ -22,7 +22,7 @@ echo __('<h2>Course Grades</h2>', 'cp');
                     <?php if ( do_shortcode('[course_unit_details field="input_modules_count"]') > 0 ) { ?>
                         <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements completed', 'cp'); ?></span>
                     <?php } else { ?>
-                        <span class="unit-archive-single-module-status read-only-module"><?php _e('Read-only'); ?></span>
+                        <span class="unit-archive-single-module-status read-only-module"><?php _e('Read-only', 'cp'); ?></span>
                     <?php } ?>
                 </li>
                 <?php
@@ -30,12 +30,12 @@ echo __('<h2>Course Grades</h2>', 'cp');
             endwhile;
         } else {
             ?>
-            <h1 class="zero-course-units"><?php _e("0 units in the course currently. Please check back later."); ?></h1>
+            <h1 class="zero-course-units"><?php _e("0 units in the course currently. Please check back later.", "cp"); ?></h1>
             <?php
         }
         ?>
     </ul>
 
-    <div class="total_grade"><?php echo apply_filters('grade_caption', ( __('TOTAL:', 'cp'))); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
+    <div class="total_grade"><?php echo apply_filters('grade_caption', __('TOTAL:', 'cp')); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
 
 </div>
