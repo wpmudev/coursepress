@@ -8,6 +8,7 @@ CHANGE LOG
 -------------------------------------------------
 - Shortcode changes and Improved security
 - Fixed textdomain issues
+- Resolved potential issue if Mcrypt library is not installed on server
 
 1.0.3
 -------------------------------------------------
