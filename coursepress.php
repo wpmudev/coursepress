@@ -30,13 +30,6 @@
 
 if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
-
-
-
-
-
-
-
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -179,7 +172,7 @@ if ( !class_exists('CoursePress') ) {
                 // add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
             }
 
-            //Setup Gatewat Array
+            //Setup Gateway Array
             add_action('init', array( $this, 'setup_gateway_array' ));
 
 //Output buffer hack
@@ -188,8 +181,6 @@ if ( !class_exists('CoursePress') ) {
 //MarketPress Check
             add_action('init', array( &$this, 'marketpress_check' ), 0);
 
-
-            add_action('init', array( &$this, 'debugging' ));
 
 // Course Calendar
             require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
@@ -982,84 +973,6 @@ if ( !class_exists('CoursePress') ) {
 
             </table>
             <?php
-        }
-
-        function restore_capabilities( $user ) {
-            $user->add_cap('manage_network');
-            $user->add_cap('manage_sites');
-            $user->add_cap('manage_network_users');
-            $user->add_cap('manage_network_plugins');
-            $user->add_cap('manage_network_themes');
-            $user->add_cap('manage_network_options');
-            $user->add_cap('unfiltered_html');
-            $user->add_cap('activate_plugins');
-            $user->add_cap('create_users');
-            $user->add_cap('delete_plugins');
-            $user->add_cap('delete_themes');
-            $user->add_cap('delete_users');
-            $user->add_cap('edit_files');
-            $user->add_cap('edit_plugins');
-            $user->add_cap('edit_theme_options');
-            $user->add_cap('edit_themes');
-            $user->add_cap('edit_users');
-            $user->add_cap('export');
-            $user->add_cap('import');
-            $user->add_cap('install_plugins');
-            $user->add_cap('install_themes');
-            $user->add_cap('list_users');
-            $user->add_cap('manage_options');
-            $user->add_cap('promote_users');
-            $user->add_cap('remove_users');
-            $user->add_cap('switch_themes');
-            $user->add_cap('update_core');
-            $user->add_cap('update_plugins');
-            $user->add_cap('update_themes');
-            $user->add_cap('edit_dashboard');
-            $user->add_cap('moderate_comments');
-            $user->add_cap('manage_categories');
-            $user->add_cap('manage_links');
-            $user->add_cap('edit_others_posts');
-            $user->add_cap('edit_pages');
-            $user->add_cap('edit_others_pages');
-            $user->add_cap('edit_published_pages');
-            $user->add_cap('publish_pages');
-            $user->add_cap('delete_pages');
-            $user->add_cap('delete_others_pages');
-            $user->add_cap('delete_published_pages');
-            $user->add_cap('delete_others_posts');
-            $user->add_cap('delete_private_posts');
-            $user->add_cap('edit_private_posts');
-            $user->add_cap('read_private_posts');
-            $user->add_cap('delete_private_pages');
-            $user->add_cap('edit_private_pages');
-            $user->add_cap('read_private_pages');
-            $user->add_cap('edit_published_posts');
-            $user->add_cap('upload_files');
-            $user->add_cap('publish_posts');
-            $user->add_cap('delete_published_posts');
-            $user->add_cap('edit_posts');
-            $user->add_cap('delete_posts');
-            $user->add_cap('read');
-
-
-            // Fix admin role
-            $role = get_role('administrator');
-            $role->add_cap('read');
-
-            // Add ALL instructor capabilities
-            $admin_capabilities = array_keys(CoursePress_Capabilities::$capabilities['instructor']);
-            foreach ( $admin_capabilities as $cap ) {
-                $role->add_cap($cap);
-                $user->add_cap($cap);
-            }
-        }
-
-        function debugging() {
-            // $user = wp_get_current_user();
-            // $this->restore_capabilities( $user );
-            // $this->assign_instructor_capabilities( $user->ID );
-            // cp_write_log( $user->allcaps );
-            // cp_write_log( get_role('administrator')->capabilities['coursepress_settings_cap'] );
         }
 
         function cp_marketpress_popup() {
