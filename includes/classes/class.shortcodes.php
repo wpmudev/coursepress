@@ -1102,7 +1102,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'passcode_text' => __('Passcode Required', 'cp'),
                 'not_started_text' => __('Not Available', 'cp'),
                 'access_text' => __('Start Learning', 'cp'),
-                'continue_learning_text' => __('Countinue Learning', 'cp'),
+                'continue_learning_text' => __('Continue Learning', 'cp'),
                 'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
@@ -3652,7 +3652,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                 }
                                                 exit;
                                             } else {
-                                                $form_message = __('An error occured while creating the account. Please check the form and try again.', 'cp');
+                                                $form_message = __('An error occurred while creating the account. Please check the form and try again.', 'cp');
                                                 $form_message_class = 'red';
                                             }
                                         }
