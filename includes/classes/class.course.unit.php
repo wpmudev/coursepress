@@ -201,7 +201,7 @@ if ( !class_exists('Unit') ) {
                 'post_author' => $user_id,
                 'post_content' => '',
                 'post_status' => 'auto-draft', //$post_status
-                'post_title' => __('Untitled', ''),
+                'post_title' => __('Untitled', 'cp'),
                 'post_type' => 'unit',
                 'post_parent' => $course_id
             );

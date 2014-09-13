@@ -16,7 +16,7 @@ get_header();
 
             <header class="page-header">
                 <!--<h1 class="page-title">
-                <?php _e( 'Courses', 'coursepress' ); ?>
+                <?php _e( 'Courses', 'cp' ); ?>
                 </h1>-->
                 <?php
                 // Show an optional term description.

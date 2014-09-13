@@ -48,12 +48,12 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 				<ul id="posttype-<?php echo $post_type_name; ?>-tabs" class="posttype-tabs add-menu-item-tabs">
 					<li <?php echo ( 'cp-published' == $current_tab ? ' class="tabs"' : '' ); ?>>
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-published" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg($post_type_name . '-tab', 'cp-published', remove_query_arg($removed_args))); ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-published">
-							<?php _e( 'Courses' ); ?>
+							<?php _e( 'Courses', 'cp' ); ?>
 						</a>
 					</li>					
 					<li <?php echo ( 'cp-special-pages' == $current_tab ? ' class="tabs"' : '' ); ?>>
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-special-pages" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg($post_type_name . '-tab', 'cp-special-pages', remove_query_arg($removed_args))); ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-special-pages">
-							<?php _e( 'Pages' ); ?>
+							<?php _e( 'Pages', 'cp' ); ?>
 						</a>
 					</li>										
 				</ul><!-- .posttype-tabs -->

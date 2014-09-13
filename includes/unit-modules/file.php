@@ -50,7 +50,7 @@ class file_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -91,12 +91,12 @@ class file_module extends Unit_Module {
 
                 <div class="file_url_holder">
                     <label><?php _e('Link Text', 'cp'); ?>
-                        <input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr(isset($data->link_text) ? $data->link_text : 'Download' ); ?>" />
+                        <input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr(isset($data->link_text) ? $data->link_text : __('Download', 'cp') ); ?>" />
                     </label>
 
                     <label><?php _e('Enter a URL or Browse for a file.', 'cp'); ?>
                         <input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr(( isset($data->file_url) ? $data->file_url : '')); ?>" />
-                        <input class="file_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <input class="file_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                     </label>
                 </div>
 
@@ -113,6 +113,7 @@ class file_module extends Unit_Module {
     function on_create() {
         $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp');
+        $this->label = __('File Download', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

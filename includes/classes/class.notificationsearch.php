@@ -68,8 +68,10 @@ if ( !class_exists('Notification_Search') ) {
             $pagination->Items($this->get_count_of_all_notifications());
             $pagination->limit($this->notifications_per_page);
             $pagination->parameterName = 'page_num';
+            $pagination->nextT = __('Next', 'cp');
+            $pagination->prevT = __('Previous', 'cp');
             if ( $this->search_term != '' ) {
-                $pagination->target("admin.php?page=notifications&s=" . $this->search_term);
+                $pagination->target(esc_url("admin.php?page=notifications&s=" . $this->search_term));
             } else {
                 $pagination->target("admin.php?page=notifications");
             }

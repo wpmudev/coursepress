@@ -1074,7 +1074,7 @@ $gateways = !empty($mp_settings['gateways']['allowed']) ? true : false;
                                                             ?>" <?php echo $input_state; ?>  />
                                                             <?php _e('Enabled Sale Price', 'cp'); ?></p>
                                                         <span class="price-label <?php isset($mp_product_details) && !empty($mp_product_details["mp_is_sale"]) && checked($mp_product_details["mp_is_sale"][0], '1') ? 'required' : ''; ?>"><?php _e('Sale Price', 'cp'); ?></span>
-                                                        <input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo!empty($mp_product_details['mp_sale_price']) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0; ?>" <?php echo $input_state; ?>  />
+                                                        <input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo (!empty($mp_product_details['mp_sale_price']) ? esc_attr($mp_product_details["mp_sale_price"][0]) : 0); ?>" <?php echo $input_state; ?>  />
                                                     </div>
 
                                                     <div class="clearfix"></div>

@@ -15,7 +15,7 @@ echo __('<h2>Discussions</h2>', 'cp');
 ?>
 
 <div class="discussion-controls">
-    <button data-link="<?php echo get_permalink($course_id); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e('Ask a Question', 'coursepress'); ?></button>
+    <button data-link="<?php echo get_permalink($course_id); ?><?php echo $coursepress->get_discussion_slug() . '/' . $coursepress->get_discussion_slug_new(); ?>/"><?php _e('Ask a Question', 'cp'); ?></button>
 </div>
 
 <ul class="discussion-archive-list">
@@ -52,7 +52,7 @@ echo __('<h2>Discussions</h2>', 'cp');
                             $discussion_unit = '<a href="' . $unit->get_permalink() . '">' . $discussion->get_unit_name() . '</a>';
                         }
                         ?>
-                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'coursepress'); ?></span>
+                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'cp'); ?></span>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -61,7 +61,7 @@ echo __('<h2>Discussions</h2>', 'cp');
         <?php endwhile;
         } else {
         ?>
-        <h1 class="zero-course-units"><?php _e("0 discussions. Start one, ask a question."); ?></h1>
+        <h1 class="zero-course-units"><?php _e("0 discussions. Start one, ask a question.", "cp"); ?></h1>
         <?php
     }
     ?>

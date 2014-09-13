@@ -82,6 +82,8 @@ if ( !class_exists( 'Instructor_Search' ) ) {
             $pagination->Items( $this->get_total() );
             $pagination->limit( $this->users_per_page );
             $pagination->parameterName = 'page_num';
+            $pagination->nextT = __('Next', 'cp');
+            $pagination->prevT = __('Previous', 'cp');
             $pagination->target( "admin.php?page=instructors" );
             $pagination->currentPage( $this->page_num );
             $pagination->nextIcon( '&#9658;' );

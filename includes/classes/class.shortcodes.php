@@ -104,10 +104,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'show_title' => 'no',
                             ), $atts, 'course'));
 
+            $course_id = ( int ) $course_id;
+            $show = sanitize_text_field($show);
+            $date_format = sanitize_text_field($date_format);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $show_title = sanitize_html_class($show_title);
+
             $course = new Course($course_id);
 
 // needs some more work...
-// $encoded = cp_object_encode( $course );
+// $encoded = object_encode( $course );
             $encoded = false;
 
             $sections = explode(',', $show);
@@ -156,7 +163,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     $content .= do_shortcode('[course_enrollment_end course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');
                 }
 
-// [course_enrollment_dates]				
+// [course_enrollment_dates]
                 if ( 'enrollment_dates' == trim($section) ) {
                     $content .= do_shortcode('[course_enrollment_dates course="' . $encoded . '" date_format="' . $date_format . '" label_tag="' . $label_tag . '" label_delimeter="' . $label_delimeter . '" course_id="' . $course_id . '"]');
                 }
@@ -243,6 +250,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_title'));
 
+            $course_id = ( int ) $course_id;
+            $title_tag = sanitize_html_class($title_tag);
+            $link = sanitize_html_class($link);
+            $class = sanitize_html_class($class);
+
             $title = get_the_title($course_id);
 
             $content = '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">';
@@ -267,6 +279,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_link'));
 
+            $course_id = ( int ) $course_id;
+            $element = sanitize_html_class($element);
+            $class = sanitize_html_class($class);
+
             $title = get_the_title($course_id);
 
             $content = do_shortcode('[course_title course_id="' . $course_id . '" title_tag="' . $element . '" link="yes" class="' . $class . '"]');
@@ -287,7 +303,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'length' => ''
                             ), $atts, 'course_summary'));
 
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course_id = ( int ) $course_id;
+            $class = sanitize_html_class($class);
+            $length = ( int ) $length;
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             ob_start();
             ?>
@@ -319,8 +338,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_description'));
 
+            $course_id = ( int ) $course_id;
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             ob_start();
             ?>
@@ -344,14 +366,21 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Course Start Date', 'cp'),
+                'label' => __('Course Start Date: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'class' => '',
                             ), $atts, 'course_start'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'course_start_date', true);
             ob_start();
@@ -380,15 +409,23 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Course End Date', 'cp'),
+                'label' => __('Course End Date: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('No End Date', 'cp'),
                 'class' => '',
                             ), $atts, 'course_end'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_date_text = sanitize_text_field($no_date_text);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $end_date = get_post_meta($course_id, 'course_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_course', true) ? false : true;
@@ -409,7 +446,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         /**
          * Shows the course start and end date.
          *
-         * If the course has no end date, the no_date_text will be displayed instead of the date.		
+         * If the course has no end date, the no_date_text will be displayed instead of the date.
          *
          * @since 1.0.0
          */
@@ -418,7 +455,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Course Dates', 'cp'),
+                'label' => __('Course Dates: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('No End Date', 'cp'),
@@ -427,8 +464,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_dates'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_date_text = sanitize_text_field($no_date_text);
+            $alt_display_text = sanitize_text_field($alt_display_text);
+            $show_alt_display = sanitize_html_class($show_alt_display);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'course_start_date', true);
             $end_date = get_post_meta($course_id, 'course_end_date', true);
@@ -459,15 +506,23 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Enrollment Start Date', 'cp'),
+                'label' => __('Enrollment Start Date: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_date_text' => __('Enroll Anytime', 'cp'),
                 'class' => '',
                             ), $atts, 'course_enrollment_start'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_date_text = sanitize_text_field($no_date_text);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $start_date = get_post_meta($course_id, 'enrollment_start_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
@@ -490,7 +545,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
          *
          * By default this will not show for open ended enrollments.
          * Set show_all_dates="yes" to make it display.
-         * If it is an open ended enrollment the no_date_text will be displayed.		
+         * If it is an open ended enrollment the no_date_text will be displayed.
          *
          * @since 1.0.0
          */
@@ -499,16 +554,25 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Enrollment End Date', 'cp'),
+                'label' => __('Enrollment End Date: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
-                'no_date_text' => __('Enroll Anytime', 'cp'),
+                'no_date_text' => __('Enroll Anytime: ', 'cp'),
                 'show_all_dates' => 'no',
                 'class' => '',
                             ), $atts, 'course_enrollment_end'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_date_text = sanitize_text_field($no_date_text);
+            $show_all_dates = sanitize_html_class($show_all_dates);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
             $open_ended = 'off' == get_post_meta($course_id, 'open_ended_enrollment', true) ? false : true;
@@ -518,7 +582,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 <?php if ( !empty($label) ) : ?>
                     <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                 <?php endif; ?>
-                <?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($end_date))); ?>				
+                <?php echo $open_ended ? $no_date_text : cp_sp2nbsp(date($date_format, strtotime($end_date))); ?>
             </div>
             <?php
             $content = '';
@@ -543,8 +607,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
                 'date_format' => get_option('date_format'),
-                'label' => __('Enrollment Dates', 'cp'),
-                'label_enrolled' => __('You Enrolled on', 'cp'),
+                'label' => __('Enrollment Dates: ', 'cp'),
+                'label_enrolled' => __('You Enrolled on: ', 'cp'),
                 'show_enrolled_display' => 'yes',
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
@@ -554,8 +618,21 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_enrollment_dates'));
 
+            $course_id = ( int ) $course_id;
+            $date_format = sanitize_text_field($date_format);
+            $label = sanitize_text_field($label);
+            $label_enrolled = sanitize_text_field($label_enrolled);
+            $show_enrolled_display = sanitize_html_class($show_enrolled_display);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_date_text = sanitize_text_field($no_date_text);
+            $alt_display_text = sanitize_text_field($alt_display_text);
+            $show_alt_display = ( bool ) $show_alt_display;
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $class = sanitize_html_class($class);
 
             $start_date = get_post_meta($course_id, 'enrollment_start_date', true);
             $end_date = get_post_meta($course_id, 'enrollment_end_date', true);
@@ -614,7 +691,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course' => false,
                 'show_no_limit' => 'no',
                 'show_remaining' => 'yes',
-                'label' => __('Class Size', 'cp'),
+                'label' => __('Class Size: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_limit_text' => __('Unlimited', 'cp'),
@@ -622,8 +699,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_class_size'));
 
+            $course_id = ( int ) $course_id;
+            $show_no_limit = sanitize_html_class($show_no_limit);
+            $show_remaining = sanitize_html_class($show_remaining);
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_limit_text = sanitize_text_field($no_limit_text);
+            $remaining_text = sanitize_text_field($remaining_text);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $content = '';
 
@@ -670,7 +757,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
-                'label' => __('Price', 'cp'),
+                'label' => __('Price: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ': ',
                 'no_cost_text' => __('FREE', 'cp'),
@@ -678,8 +765,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_cost'));
 
+            $course_id = ( int ) $course_id;
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_cost_text = sanitize_text_field($no_cost_text);
+            $show_icon = ( bool ) $show_icon;
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+
 
             $is_paid = get_post_meta($course_id, 'paid_course', true) == 'on' ? true : false;
 
@@ -720,26 +816,33 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
-                'label' => __('Course Language', 'cp'),
+                'label' => __('Course Language: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'class' => '',
                             ), $atts, 'course_language'));
 
+            $course_id = ( int ) $course_id;
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+
 
             $language = get_post_meta($course_id, 'course_language', true);
             ob_start();
             ?>
-            <?php if ( isset($language) && $language !== '' ) : ?>	
+            <?php if ( isset($language) && $language !== '' ) : ?>
                 <div class="course-language course-language-<?php echo $course_id; ?> <?php echo $class; ?>">
                     <?php if ( !empty($label) ) : ?>
                         <<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
                     <?php endif; ?>
                     <?php echo $language; ?>
                 </div>
-            <?php endif; ?>								
+            <?php endif; ?>
             <?php
             $content = ob_get_clean();
 // Return the html in the buffer.
@@ -755,15 +858,22 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
-                'label' => __('Course Category', 'cp'),
+                'label' => __('Course Category: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'no_category_test' => __('None', 'cp'),
                 'class' => '',
                             ), $atts, 'course_category'));
 
+            $course_id = ( int ) $course_id;
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $no_category_test = sanitize_text_field($no_category_test);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $content = '';
 
@@ -802,7 +912,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                 'course' => false,
-                'label' => __('Who can Enroll?', 'cp'),
+                'label' => __('Who can Enroll: ', 'cp'),
                 'label_tag' => 'strong',
                 'label_delimeter' => ':',
                 'manual_text' => __('Students are added by instructors.', 'cp'),
@@ -812,8 +922,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_enrollment_type'));
 
+            $course_id = ( int ) $course_id;
+            $label = sanitize_text_field($label);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $manual_text = sanitize_text_field($manual_text);
+            $prerequisite_text = sanitize_text_field($prerequisite_text);
+            $passcode_text = sanitize_text_field($passcode_text);
+            $anyone_text = sanitize_text_field($anyone_text);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $enrollment_type = get_post_meta($course_id, 'enroll_type', true);
 
@@ -864,8 +984,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_list_image'));
 
+            $course_id = ( int ) $course_id;
+            $label = sanitize_text_field($label);
+            $width = sanitize_html_class($width);
+            $height = sanitize_html_class($height);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $image_src = get_post_meta($course_id, 'featured_url', true);
 
@@ -902,8 +1028,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_featured_video'));
 
+            $course_id = ( int ) $course_id;
+            $width = sanitize_text_field($width);
+            $height = sanitize_html_class($height);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $video_src = get_post_meta($course_id, 'course_video_url', true);
 
@@ -975,8 +1106,25 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'list_page' => false,
                 'class' => '',
                             ), $atts, 'course_join_button'));
+
+            $course_id = ( int ) $course_id;
+            $course_full_text = sanitize_text_field($course_full_text);
+            $course_expired_text = sanitize_text_field($course_expired_text);
+            $enrollment_finished_text = sanitize_text_field($enrollment_finished_text);
+            $enrollment_closed_text = sanitize_text_field($enrollment_closed_text);
+            $enroll_text = sanitize_text_field($enroll_text);
+            $signup_text = sanitize_text_field($signup_text);
+            $details_text = sanitize_text_field($details_text);
+            $prerequisite_text = sanitize_text_field($prerequisite_text);
+            $passcode_text = sanitize_text_field($passcode_text);
+            $not_started_text = sanitize_text_field($not_started_text);
+            $access_text = sanitize_text_field($access_text);
+            $continue_learning_text = sanitize_text_field($continue_learning_text);
+            $list_page = ( bool ) $list_page;
+            $class = sanitize_html_class($class);
+
             // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             global $enrollment_process_url, $signup_url;
 
@@ -1028,7 +1176,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         } elseif ( $enrollment_expired && !$course->open_ended_enrollment && !"yes" == $list_page ) {
                             // "ENROLLMENTS ARE FINISHED"
                             $button .= '<span class="apply-button apply-button-enrollment-finished ' . $class . '">' . $enrollment_finished_text . '</span>';
-                            // cp_write_log( 'FOUR');	
+                            // cp_write_log( 'FOUR');
                         } elseif ( !is_single() || "yes" == $list_page ) {
                             // GO TO COURSE
                             $button_url = get_permalink($course_id);
@@ -1039,14 +1187,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             // "SIGN UP NOW"
                             $button_url = $signup_url;
                             $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="' . $course_id . '" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
-                            // cp_write_log( 'SIX');	
+                            // cp_write_log( 'SIX');
                         }
                     }
                 } else {
                     // nothing to do here when its a manual enrollment
                 }
 
-                // User is logged in, if its a student, lets see if they can access their course.	
+                // User is logged in, if its a student, lets see if they can access their course.
             } else {
 
                 // Assume user is a student
@@ -1058,17 +1206,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     if ( $course_full ) {
                         // "COURSE FULL"
                         $button .= '<span class="apply-button apply-button-full ' . $class . '">' . $course_full_text . '</span>';
-                        // cp_write_log( 'SEVEN');			
-                        // We've got room, but make sure its not expired	
+                        // cp_write_log( 'SEVEN');
+                        // We've got room, but make sure its not expired
                     } elseif ( $course_expired && !$course->open_ended_course ) {
                         // "COURSE FINISHED"
                         $button .= '<span class="apply-button apply-button-finished ' . $class . '">' . $course_expired_text . '</span>';
-                        // cp_write_log( 'EIGHT');				
+                        // cp_write_log( 'EIGHT');
                         // Course hasn't expired, but its not yet available for enrollments (closed)
                     } elseif ( !$enrollment_started && !$course->open_ended_enrollment ) {
                         // "ENROLLMENT NOT YET AVAILABLE"
                         $button .= '<span class="apply-button apply-button-enrollment-closed ' . $class . '">' . $enrollment_closed_text . '</span>';
-                        // cp_write_log( 'NINE');					
+                        // cp_write_log( 'NINE');
                         // Course is available, but enrollments have expired
                     } elseif ( $enrollment_expired && !$course->open_ended_enrollment ) {
                         // "ENROLLMENTS ARE FINISHED"
@@ -1103,27 +1251,27 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // }
 
                         $is_form = true;
-                        // cp_write_log( 'FOURTEEN');	
+                        // cp_write_log( 'FOURTEEN');
                     }
 
-                    // Student is enrolled, but lets see if they can still access it.	
+                    // Student is enrolled, but lets see if they can still access it.
                 } else {
 
                     // The course is finished.
                     if ( $course_expired && !$course->open_ended_course ) {
                         // "COURSE FINISHED"
                         $button .= '<span class="apply-button apply-button-finished ' . $class . '">' . $course_expired_text . '</span>';
-                        // cp_write_log( 'FIFTEEN');		
+                        // cp_write_log( 'FIFTEEN');
                         // Course hasn't expired, but is not yet available
                     } elseif ( !$course_started && !$course->open_ended_course ) {
                         // "NOT YET AVAILABLE"
                         $button .= '<span class="apply-button apply-button-not-started ' . $class . '">' . $not_started_text . '</span>';
-                        // cp_write_log( 'SIXTEEN');			
+                        // cp_write_log( 'SIXTEEN');
                     } elseif ( !is_single() && false === strpos($_SERVER['REQUEST_URI'], CoursePress::instance()->get_student_dashboard_slug()) ) {
                         // GO TO COURSE
                         $button_url = get_permalink($course_id);
                         $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
-                        // cp_write_log( 'SEVENTEEN');				
+                        // cp_write_log( 'SEVENTEEN');
                         // Course is available, so lets go to class
                     } else {
                         // "GO TO CLASS"
@@ -1134,7 +1282,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         }
 
                         $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $access_text . '</button>';
-                        // cp_write_log( 'EIGHTEEN');					
+                        // cp_write_log( 'EIGHTEEN');
                     }
                 }
             }
@@ -1163,8 +1311,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_thumbnail'));
 
+            $course_id = ( int ) $course_id;
+            $wrapper = sanitize_html_class($wrapper);
+            $class = sanitize_html_class($class);
+
             // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $class = sanitize_html_class($class);
 
             $thumbnail = Course::get_course_thumbnail($course_id);
 
@@ -1209,8 +1362,22 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_structure'));
 
+            $course_id = ( int ) $course_id;
+            $free_text = sanitize_text_field($free_text);
+            $free_show = ( bool ) $free_show;
+            $show_title = sanitize_html_class($show_title);
+            $show_label = sanitize_html_class($show_label);
+            $label_delimeter = sanitize_html_class($label_delimeter);
+            $label_tag = sanitize_html_class($label_tag);
+            $show_divider = sanitize_html_class($show_divider);
+            $label = sanitize_text_field($label);
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $class = sanitize_html_class($class);
+            $label_tag = sanitize_html_class($label_tag);
+            $label_delimeter = sanitize_html_class($label_delimeter);
 
             if ( $course->details->course_structure_options == 'on' ) {
                 $content = '';
@@ -1320,7 +1487,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                         </li>
                                                         <?php
                                                     }
-                                                }//page visible 
+                                                }//page visible
                                                 ?>
 
                                             </ul>
@@ -1363,10 +1530,21 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'media_priority' => 'video', // video, image
                 'class' => '',
                             ), $atts, 'course_featured'));
+
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $featured_title = sanitize_text_field($featured_title);
+            $button_title = sanitize_text_field($button_title);
+            $media_type = sanitize_text_field($media_type);
+            $media_priority = sanitize_text_field($media_priority);
+            $class = sanitize_html_class($class);
+
             $content = '';
 
             if ( !empty($course_id) ) {
                 $course = new Course($course_id);
+                $class = sanitize_html_class($class);
 
                 ob_start();
                 ?>
@@ -1409,6 +1587,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'wrapper' => ''
                             ), $atts, 'course_thumbnail'));
 
+            $course_id = ( int ) $course_id;
+            $type = sanitize_text_field($type);
+            $priority = sanitize_text_field($priority);
+            $list_page = sanitize_html_class($list_page);
+            $class = sanitize_html_class($class);
+            $wrapper = sanitize_html_class($wrapper);
+
             if ( 'yes' != $list_page ) {
                 $type = empty($type) ? get_option('details_media_type', 'default') : $type;
                 $priority = empty($priority) ? get_option('details_media_priority', 'video') : $priority;
@@ -1420,7 +1605,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $priority = 'default' != $type ? false : $priority;
 
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
+            $class = sanitize_html_class($class);
 
             $course_video = get_post_meta($course_id, 'course_video_url', true);
             $course_image = get_post_meta($course_id, 'featured_url', true);
@@ -1438,7 +1624,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 ?>
 
                 <div class="video_player <?php echo 'course-featured-media course-featured-media-' . $course_id . ' ' . $class; ?>">
-                    <?php echo ($wrapper !== '' ? '<' . $wrapper . '>' : ''); ?>                
+                    <?php echo ($wrapper !== '' ? '<' . $wrapper . '>' : ''); ?>
                     <?php
                     $video_extension = pathinfo($course_video, PATHINFO_EXTENSION);
 
@@ -1492,8 +1678,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_action_links'));
 
+            $course_id = ( int ) $course_id;
+            $class = sanitize_html_class($class);
+
 // Saves some overhead by not loading the post again if we don't need to.
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $course->course_start_date = get_post_meta($course_id, 'course_start_date', true);
             $course->course_end_date = get_post_meta($course_id, 'course_end_date', true);
@@ -1534,6 +1723,14 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_random'));
 
+            $number = ( int ) $number;
+            $featured_title = sanitize_text_field($featured_title);
+            $button_title = sanitize_text_field($button_title);
+            $media_type = sanitize_html_class($media_type);
+            $media_priority = sanitize_html_class($media_priority);
+            $course_class = sanitize_html_class($course_class);
+            $class = sanitize_html_class($class);
+
             $args = array(
                 'post_type' => 'course',
                 'posts_per_page' => $number,
@@ -1543,6 +1740,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $courses = new WP_Query($args);
             $courses = $courses->posts;
+            $class = sanitize_html_class($class);
 
             $content = 0 < count($courses) ? '<div class="course-random ' . $class . '">' : '';
 
@@ -1587,9 +1785,17 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => in_the_loop() ? get_the_ID() : false,
                 'month' => false,
                 'year' => false,
-                'pre' => __('« Previous', 'cp'),
-                'next' => __('Next »', 'cp'),
+                'pre' => __('Â« Previous', 'cp'),
+                'next' => __('Next Â»', 'cp'),
                             ), $atts, 'course_calendar'));
+
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $month = ( bool ) $month;
+            $year = ( bool ) $year;
+            $pre = sanitize_text_field($pre);
+            $next = sanitize_text_field($next);
 
             if ( empty($course_id) ) {
                 if ( $post && 'course' == $post->post_type ) {
@@ -1625,7 +1831,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'status' => 'publish',
                 'instructor' => '', // Note, one or the other
                 'instructor_msg' => __('The Instructor does not have any courses assigned yet.', 'cp'),
-                'student' => '', // If both student and instructor is specified only student will be used			
+                'student' => '', // If both student and instructor is specified only student will be used
                 'student_msg' => __('You have not yet enrolled in a course. Browse courses %s', 'cp'),
                 'two_column' => 'yes',
                 'title_column' => 'none',
@@ -1636,8 +1842,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'title_class' => 'course-title',
                 'title_tag' => 'h3',
                 'course_status' => 'all',
-                'list_wrapper_before' => '<div class="course-list %s">',
-                'list_wrapper_after' => '</div>',
+                'list_wrapper_before' => 'div',
+                'list_wrapper_before_class' => 'course-list %s',
+                'list_wrapper_after' => 'div',
                 'show' => 'dates,enrollment_dates,class_size,cost',
                 'show_button' => 'yes',
                 'show_divider' => 'yes',
@@ -1652,6 +1859,39 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'order' => 'ASC',
                 'class' => '',
                             ), $atts, 'course_list'));
+
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $status = sanitize_html_class($status);
+            $instructor = sanitize_text_field($instructor);
+            $instructor_msg = sanitize_text_field($instructor_msg);
+            $student = sanitize_text_field($student);
+            $student_msg = sanitize_text_field($student_msg);
+            $two_column = sanitize_html_class($two_column);
+            $title_column = sanitize_text_field($title_column);
+            $left_class = sanitize_html_class($left_class);
+            $right_class = sanitize_html_class($right_class);
+            $course_class = sanitize_html_class($course_class);
+            $title_link = sanitize_html_class($title_link);
+            $title_class = sanitize_html_class($title_class);
+            $title_tag = sanitize_html_class($title_tag);
+            $course_status = sanitize_text_field($course_status);
+            $list_wrapper_before = sanitize_html_class($list_wrapper_before);
+            $list_wrapper_after = sanitize_html_class($list_wrapper_after);
+            $show = sanitize_text_field($show);
+            $show_button = sanitize_html_class($show_button);
+            $show_divider = sanitize_html_class($show_divider);
+            $show_title = sanitize_html_class($show_title);
+            $show_media = sanitize_html_class($show_media);
+            $media_type = sanitize_text_field($media_type);
+            $media_priority = sanitize_text_field($media_priority);
+            $admin_links = ( bool ) $admin_links;
+            $manage_link_title = sanitize_text_field($manage_link_title);
+            $finished_link_title = sanitize_text_field($finished_link_title);
+            $limit = ( int ) $limit;
+            $order = sanitize_html_class($order);
+            $class = sanitize_html_class($class);
 
             $status = 'published' == $status ? 'publish' : $status;
 
@@ -1733,7 +1973,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             //<div class="course-list %s">
-            $content .= 0 < count($courses) && !empty($list_wrapper_before) ? sprintf($list_wrapper_before, $class) : '';
+            $content .= 0 < count($courses) && !empty($list_wrapper_before) ? '<' . $list_wrapper_before . ' class=' . $list_wrapper_before_class . '>' : '';
 
             foreach ( $courses as $course ) {
 
@@ -1814,18 +2054,18 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             if ( (!$courses || 0 == count($courses) ) && !empty($student) ) {
-                $content .= sprintf($student_msg, '<a href="' . trailingslashit(home_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
+                $content .= sprintf($student_msg, '<a href="' . trailingslashit(site_url() . '/' . CoursePress::instance()->get_course_slug()) . '">' . __('here', 'cp') . '</a>');
             }
 
             // </div> course-list
-            $content .= 0 < count($courses) && !empty($list_wrapper_before) ? $list_wrapper_after : '';
+            $content .= 0 < count($courses) && !empty($list_wrapper_before) ? '</' . $list_wrapper_after . '>' : '';
 
             return $content;
         }
 
         /**
          * COURSE PROGRESS SHORTCODES
-         * 
+         *
          */
 
         /**
@@ -1837,6 +2077,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'course_id' => in_the_loop() ? get_the_ID() : '',
                             ), $atts, 'course_progress'));
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
 
             $completion = new Course_Completion($course_id);
             $completion->init_student_status();
@@ -1855,6 +2098,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'unit_id' => false,
                             ), $atts, 'course_unit_progress'));
 
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $unit_id = ( int ) $unit_id;
+
             $completion = new Course_Completion($course_id);
             $completion->init_student_status();
             return $completion->unit_progress($unit_id);
@@ -1863,7 +2111,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         /**
          * Course Mandatory Message
          *
-         * x of y mandatory elements completed 
+         * x of y mandatory elements completed
          *
          * @since 1.0.0
          */
@@ -1873,6 +2121,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'unit_id' => false,
                 'message' => __('%d of %d mandatory elements completed.', 'cp'),
                             ), $atts, 'course_mandatory_message'));
+
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $unit_id = ( int ) $unit_id;
+            $message = sanitize_text_field($message);
 
             $completion = new Course_Completion($course_id);
             $completion->init_student_status();
@@ -1894,12 +2148,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         /**
          * Shows all the instructors of the given course.
          *
-         * Four styles are supported:  
+         * Four styles are supported:
          *
          * * style="block" - List profile blocks including name, avatar, description (optional) and profile link. You can choose to make the entire block clickable ( link_all="yes" ) or only the profile link ( link_all="no", Default).
-         * * style="list"  - Lists instructor display names (separated by list_separator).  
-         * * style="link"  - Same as 'list', but returns hyperlinks to instructor profiles.  
-         * * style="count" - Outputs a simple integer value with the total of instructors for the course.  
+         * * style="list"  - Lists instructor display names (separated by list_separator).
+         * * style="link"  - Same as 'list', but returns hyperlinks to instructor profiles.
+         * * style="count" - Outputs a simple integer value with the total of instructors for the course.
          *
          * @since 1.0.0
          */
@@ -1929,13 +2183,31 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'class' => '',
                             ), $atts, 'course_instructors'));
 
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+            $label = sanitize_text_field($label);
+            $label_plural = sanitize_text_field($label_plural);
+            $label_delimeter = sanitize_text_field($label_delimeter);
+            $label_tag = sanitize_html_class($label_tag);
+            $link = ( bool ) $link;
+            $link_text = sanitize_text_field($link_text);
+            $show_label = ( bool ) $show_label;
+            $summary_length = ( int ) $summary_length;
+            $style = sanitize_html_class($style);
+            $list_separator = sanitize_text_field($list_separator);
+            $avatar_size = ( int ) $avatar_size;
+            $show_divider = sanitize_html_class($show_divider);
+            $link_all = sanitize_html_class($link_all);
+            $class = sanitize_html_class($class);
+
 // Support previous arguments
             $style = $count ? 'count' : $style;
             $style = $list ? 'list-flat' : $style;
 
             $show_label = 'list-flat' == $style && !$show_label ? 'yes' : $show_label;
 
-            $course = empty($course) ? new Course($course_id) : cp_object_decode($course, 'Course');
+            $course = empty($course) ? new Course($course_id) : object_decode($course, 'Course');
 
             $instructors = Course::get_course_instructors($course_id);
             $list = array();
@@ -1957,7 +2229,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( !empty($instructors) ) {
                     foreach ( $instructors as $instructor ) {
 
-                        $profile_href = trailingslashit(home_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+                        $profile_href = trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
 
                         switch ( $style ) {
 
@@ -1980,12 +2252,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                 <?php echo $link_text; ?>
                                                 <?php if ( 'no' == $link_all ) { ?>
                                                 </a>
-                                            <?php } ?>								
+                                            <?php } ?>
                                         </div>
                                         <?php if ( 'yes' == $link_all ) { ?>
                                         </a>
                                     <?php } ?>
-                                </div>	
+                                </div>
                                 <?php
                                 $content .= ob_get_clean();
                                 break;
@@ -2046,6 +2318,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             extract(shortcode_atts(array( 'instructor_id' => 0, 'thumb_size' => 80, 'class' => 'small-circle-profile-image' ), $atts));
 
+            $instructor_id = ( int ) $instructor_id;
+            $thumb_size = ( int ) $thumb_size;
+            $class = sanitize_html_class($class);
+
             $doc = new DOMDocument();
             $doc->loadHTML(get_avatar($instructor_id, $thumb_size));
             $imageTags = $doc->getElementsByTagName('img');
@@ -2070,10 +2346,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             extract(shortcode_atts(array(
                 'instructor_id' => 0 ), $atts));
 
+            $instructor_id = ( int ) $instructor_id;
+
             $instructor = get_userdata($instructor_id);
 
             if ( $instructor_id ) {
-                return trailingslashit(home_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
+                return trailingslashit(site_url()) . trailingslashit($instructor_profile_slug) . trailingslashit($instructor->user_login);
             }
         }
 
@@ -2090,6 +2368,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => ''
                             ), $atts));
 
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
+
             if ( $course_id == '' ) {
                 $course_id = do_shortcode('[get_parent_course_id]');
             }
@@ -2102,26 +2384,26 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             ?>
             <div class="submenu-main-container">
                 <ul id="submenu-main" class="submenu nav-submenu">
-                    <li class="submenu-item submenu-units <?php echo( isset($subpage) && $subpage == 'units' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_units_slug(); ?>/"><?php _e('Units', 'coursepress'); ?></a></li>
-                    <li class="submenu-item submenu-notifications <?php echo( isset($subpage) && $subpage == 'notifications' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_notifications_slug(); ?>/"><?php _e('Notifications', 'coursepress'); ?></a></li>
+                    <li class="submenu-item submenu-units <?php echo( isset($subpage) && $subpage == 'units' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_units_slug(); ?>/"><?php _e('Units', 'cp'); ?></a></li>
+                    <li class="submenu-item submenu-notifications <?php echo( isset($subpage) && $subpage == 'notifications' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_notifications_slug(); ?>/"><?php _e('Notifications', 'cp'); ?></a></li>
                     <?php
                     $course_obj = new Course($course_id);
                     $course = $course_obj->get_course();
                     if ( $course->allow_course_discussion == 'on' ) {
                         ?>
-                        <li class="submenu-item submenu-discussions <?php echo( isset($subpage) && $subpage == 'discussions' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_discussion_slug(); ?>/"><?php _e('Discussions', 'coursepress'); ?></a></li>
+                        <li class="submenu-item submenu-discussions <?php echo( isset($subpage) && $subpage == 'discussions' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_discussion_slug(); ?>/"><?php _e('Discussions', 'cp'); ?></a></li>
                         <?php
                     }
                     /* if ( $course->allow_course_grades_page == 'on' ) {
                       ?>
-                      <li class="submenu-item submenu-grades <?php echo( isset( $subpage ) && $subpage == 'grades' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_grades_slug(); ?>/"><?php _e( 'Grades', 'coursepress' ); ?></a></li>
+                      <li class="submenu-item submenu-grades <?php echo( isset( $subpage ) && $subpage == 'grades' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_grades_slug(); ?>/"><?php _e( 'Grades', 'cp' ); ?></a></li>
                       <?php
                       } */
                     if ( $course->allow_workbook_page == 'on' ) {
                         ?>
-                        <li class="submenu-item submenu-workbook <?php echo( isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'coursepress'); ?></a></li>
+                        <li class="submenu-item submenu-workbook <?php echo( isset($subpage) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink($course_id) . $coursepress->get_workbook_slug(); ?>/"><?php _e('Workbook', 'cp'); ?></a></li>
                     <?php } ?>
-                    <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Details', 'coursepress'); ?></a></li>
+                    <li class="submenu-item submenu-info"><a href="<?php echo get_permalink($course_id); ?>"><?php _e('Course Details', 'cp'); ?></a></li>
                 </ul><!--submenu-main-->
             </div><!--submenu-main-container-->
             <?php
@@ -2134,6 +2416,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'url' => ''
                             ), $atts));
 
+            $url = esc_url_raw($url);
+
             if ( $url == 'enrollment-process' ) {
                 return $enrollment_process_url;
             }
@@ -2144,7 +2428,15 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
         }
 
         function units_dropdown( $atts ) {
-            extract(shortcode_atts(array( 'course_id' => ( isset($wp_query->post->ID) ? $wp_query->post->ID : 0 ), 'include_general' => false, 'general_title' => '' ), $atts));
+            extract(shortcode_atts(array(
+                'course_id' => ( isset($wp_query->post->ID) ? $wp_query->post->ID : 0 ),
+                'include_general' => false,
+                'general_title' => '' ), $atts));
+
+            $course_id = ( int ) $course_id;
+            $include_general = ( bool ) $include_general;
+            $general_title = sanitize_text_field($general_title);
+
             $course_obj = new Course($course_id);
             $units = $course_obj->get_units();
 
@@ -2153,6 +2445,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 if ( $general_title == '' ) {
                     $general_title = __('-- General --', 'cp');
                 }
+                $general_title = sanitize_html_class($general_title);
                 $dropdown .= '<option value="">' . $general_title . '</option>';
             }
             foreach ( $units as $unit ) {
@@ -2172,6 +2465,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'course_id' => ( isset($wp_query->post->ID) ? $wp_query->post->ID : 0 ),
                 'field' => 'course_start_date'
                             ), $atts));
+
+            $course_id = ( int ) $course_id;
+            $field = sanitize_html_class($field);
 
             $course_obj = new Course($course_id);
 
@@ -2381,6 +2677,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             extract(shortcode_atts(array( 'unit_id' => 0 ), $atts));
 
+            $unit_id = ( int ) $unit_id;
+
             if ( empty($unit_id) ) {
                 if ( array_key_exists('unitname', $wp->query_vars) ) {
                     $unit = new Unit();
@@ -2404,6 +2702,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             global $wp;
 
             extract(shortcode_atts(array( 'course_id' => 0 ), $atts));
+
+            $course_id = ( int ) $course_id;
 
             if ( empty($course_id) ) {
                 if ( array_key_exists('coursename', $wp->query_vars) ) {
@@ -2438,6 +2738,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             global $wp;
 
             extract(shortcode_atts(array( 'course_id' => 0 ), $atts));
+
+            $course_id = ( int ) $course_id;
 
             if ( empty($course_id) ) {
                 if ( array_key_exists('coursename', $wp->query_vars) ) {
@@ -2477,6 +2779,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             extract(shortcode_atts(array( 'course_id' => 0 ), $atts));
 
+            $course_id = ( int ) $course_id;
+
             if ( empty($course_id) ) {
                 if ( array_key_exists('coursename', $wp->query_vars) ) {
                     $course_id = Course::get_course_id_by_name($wp->query_vars['coursename']);
@@ -2505,6 +2809,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $content = '';
 
             extract(shortcode_atts(array( 'course_id' => $course_id ), $atts));
+
+            if ( !empty($course_id) ) {
+                $course_id = ( int ) $course_id;
+            }
 
             if ( empty($course_id) ) {
                 if ( array_key_exists('coursename', $wp->query_vars) ) {
@@ -2571,7 +2879,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'additional' => '2',
                 'style' => 'flat',
                 'class' => 'course-name-content',
-                'tooltip_alt' => __('Percent of the unit completion', 'coursepress'),
+                'tooltip_alt' => __('Percent of the unit completion', 'cp'),
                 'knob_fg_color' => '#24bde6',
                 'knob_bg_color' => '#e0e6eb',
                 'knob_data_thickness' => '.35',
@@ -2585,9 +2893,24 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'student_id' => get_current_user_ID(),
                             ), $atts));
 
+            $unit_id = ( int ) $unit_id;
+            $field = sanitize_html_class($field);
             $format = ( bool ) $format;
-
+            $additional = sanitize_text_field($additional);
+            $style = sanitize_html_class($style);
+            $tooltip_alt = sanitize_text_field($tooltip_alt);
+            $knob_fg_color = sanitize_text_field($knob_fg_color);
+            $knob_bg_color = sanitize_text_field($knob_bg_color);
+            $knob_data_thickness = sanitize_text_field($knob_data_thickness);
+            $knob_data_width = ( int ) $knob_data_width;
+            $knob_data_height = ( int ) $knob_data_height;
+            $unit_title = sanitize_text_field($unit_title);
+            $unit_page_title_tag = sanitize_html_class($unit_page_title_tag);
+            $unit_page_title_tag_class = sanitize_html_class($unit_page_title_tag_class);
+            $parent_course_preceding_content = sanitize_text_field($parent_course_preceding_content);
+            $student_id = ( int ) $student_id;
             $last_visited = ( bool ) $last_visited;
+            $class = sanitize_html_class($class);
 
             if ( $unit_id == 0 ) {
                 $unit_id = get_the_ID();
@@ -2596,7 +2919,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $unit = new Unit($unit_id);
 
             $student = new Student(get_current_user_id());
-
+            $class = sanitize_html_class($class);
 
             if ( $field == 'is_unit_available' ) {
                 $unit->details->$field = $unit->is_unit_available();
@@ -2999,6 +3322,10 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'position' => 'shortcode'
                             ), $atts));
 
+            $course_id = ( int ) $course_id;
+            $type = sanitize_html_class($type);
+            $position = sanitize_html_class($position);
+
             if ( empty($course_id) ) {
                 if ( array_key_exists('coursename', $wp->query_vars) ) {
                     $course_id = Course::get_course_id_by_name($wp->query_vars['coursename']);
@@ -3010,11 +3337,11 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $course = new Course($course_id);
 
             if ( $type == 'unit_archive' ) {
-                $units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit(get_option('home')) . $course_slug . '/">' . __('Courses', 'cp') . '</a> » <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a></div>';
+                $units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit(get_option('home')) . $course_slug . '/">' . __('Courses', 'cp') . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a></div>';
             }
 
             if ( $type == 'unit_single' ) {
-                $units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit(get_option('home')) . $course_slug . '/">' . __('Courses', 'cp') . '</a> » <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a> » <a href="' . $course->get_permalink() . $units_slug . '/">' . __('Units', 'cp') . '</a></div>';
+                $units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit(get_option('home')) . $course_slug . '/">' . __('Courses', 'cp') . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a> Â» <a href="' . $course->get_permalink() . $units_slug . '/">' . __('Units', 'cp') . '</a></div>';
             }
 
             if ( $position == 'shortcode' ) {
@@ -3036,7 +3363,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             if ( $course->details->allow_course_discussion == 'on' ) {
 
                 $comments_args = array(
-// change the title of send button 
+// change the title of send button
                     'label_submit' => __('Send', 'cp'),
                     // change the title of the reply section
                     'title_reply' => __('Write a Reply or Comment', 'cp'),
@@ -3104,7 +3431,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             }
 
             $comments_args = array(
-// change the title of send button 
+// change the title of send button
                 'label_submit' => 'Send',
                 // change the title of the reply secpertion
                 'title_reply' => 'Write a Reply or Comment',
@@ -3156,12 +3483,25 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'failed_login_text' => __('Invalid login.', 'cp'),
                 'failed_login_class' => 'red',
                 'logout_url' => '',
-                'signup_title' => __('<h3>Signup</h3>', 'cp'),
-                'login_title' => __('<h3>Login</h3>', 'cp'),
+                'signup_tag' => 'h3',
+                'signup_title' => __('Signup', 'cp'),
+                'login_tag' => 'h3',
+                'login_title' => __('Login', 'cp'),
                 'signup_url' => '',
                 'login_url' => '',
                 'redirect_url' => '', // redirect on successful login or signup
                             ), $atts, 'course_signup'));
+
+            $failed_login_text = sanitize_text_field($failed_login_text);
+            $failed_login_class = sanitize_html_class($failed_login_class);
+            $logout_url = esc_url_raw($logout_url);
+            $signup_tag = sanitize_html_class($signup_tag);
+            $signup_title = sanitize_text_field($signup_title);
+            $login_tag = sanitize_html_class($login_tag);
+            $login_title = sanitize_text_field($login_title);
+            $signup_url = esc_url_raw($signup_url);
+            $redirect_url = esc_url_raw($redirect_url);
+
 
             $page = in_array($page, $allowed) ? $page : 'signup';
 
@@ -3333,12 +3673,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         }
                         ?>
                         <?php
+                        //ob_start();
                         if ( !empty($signup_title) ) {
-                            echo $signup_title;
+                            echo '<' . $signup_tag . '>' . $signup_title . '</' . $signup_tag . '>';
                         }
                         ?>
 
-                        <p class="form-info-<?php echo apply_filters('signup_form_message_class', $form_message_class); ?>"><?php echo apply_filters('signup_form_message', $form_message); ?></p>
+                        <p class="form-info-<?php echo apply_filters('signup_form_message_class', sanitize_text_field($form_message_class)); ?>"><?php echo apply_filters('signup_form_message', sanitize_text_field($form_message)); ?></p>
 
                         <?php do_action('cp_before_signup_form'); ?>
 
@@ -3407,29 +3748,30 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
                         <?php do_action('cp_after_signup_form'); ?>
                         <?php
+                        //$content = ob_get_clean();
+
+// Return the html in the buffer.
+                    //return $content;
                     } else {
-//if ( isset( $this ) ) {
-//ob_start();
-// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
+
                         if ( !empty($redirect_url) ) {
                             wp_redirect(urldecode($redirect_url));
                         } else {
                             wp_redirect(CoursePress::instance()->get_student_dashboard_slug(true));
                         }
                         exit;
-//}
                     }
-
+                    
                     break;
 
                 case 'login':
                     ?>
                     <?php
                     if ( !empty($login_title) ) {
-                        echo $login_title;
+                        echo '<' . $login_tag . '>' . $login_title . '</' . $login_tag . '>';
                     }
                     ?>
-                    <p class="form-info-<?php echo apply_filters('signup_form_message_class', $form_message_class); ?>"><?php echo apply_filters('signup_form_message', $form_message); ?></p>
+                        <p class="form-info-<?php echo apply_filters('signup_form_message_class', sanitize_text_field($form_message_class)); ?>"><?php echo apply_filters('signup_form_message', sanitize_text_field($form_message)); ?></p>
                     <?php do_action('cp_before_login_form'); ?>
                     <form name="loginform" id="student-settings" class="student-settings" method="post">
                         <?php do_action('cp_after_start_form_fields'); ?>
@@ -3458,24 +3800,30 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         </label>
                         <br clear="all" />
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e('Remember Me?', 'cp'); ?> </span> -->
                         <input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug(true); ?>" type="hidden">
                         <input name="testcookie" value="1" type="hidden">
                         <input name="course_signup_login" value="1" type="hidden">
                         <?php do_action('cp_before_end_form_fields'); ?>
                     </form>
 
-                    <?php do_action('cp_after_login_form'); ?>			
+                    <?php do_action('cp_after_login_form'); ?>
                     <?php
                     break;
             }
-            $output = ob_get_clean();
-            return $output;
+            $content = ob_get_clean();
+
+// Return the html in the buffer.
+            return $content;
         }
 
         function module_status( $atts ) {
             extract(shortcode_atts(array( 'course_id' => false, 'unit_id' => false, 'format' => true ), $atts));
             $format = ( bool ) $format;
+            if ( $course_id ) {
+                $course_id = ( int ) $course_id;
+            }
+            $unit_id = ( int ) $unit_id;
 
             $is_unit_available = do_shortcode('[course_unit_details field="is_unit_available"]');
             $input_modules_count = do_shortcode('[course_unit_details field="input_modules_count"]');
@@ -3495,12 +3843,12 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             //_e('mandatory elements completed', 'coursepress');
                             // } else {
                             //     echo $all_responses;
-                            //     
+                            //
                             ?> <?php //_e('of', 'coursepress'); ?> <?php //echo $input_modules_count; ?> <?php
                             //     _e('optional elements completed', 'coursepress');
                         }
                     } else {
-                        echo __('Available', 'coursepress') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
+                        echo __('Available', 'cp') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
                     }
                     ?></span>
             <?php } else { ?>
@@ -3508,7 +3856,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     if ( $is_unit_available ) {
                         // _e('Read-only');
                     } else {
-                        echo __('Available', 'coursepress') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
+                        echo __('Available', 'cp') . ' ' . date(get_option('date_format'), strtotime(do_shortcode('[course_unit_details field="unit_availability"]')));
                     }
                     ?></span>
                 <?php
@@ -3538,6 +3886,24 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             )
                             , $args));
 
+            $module_column_title = sanitize_text_field($module_column_title);
+            $title_column_title = sanitize_text_field($title_column_title);
+            $submission_date_column_title = sanitize_text_field($submission_date_column_title);
+            $response_column_title = sanitize_text_field($response_column_title);
+            $grade_column_title = sanitize_text_field($grade_column_title);
+            $comment_column_title = sanitize_text_field($comment_column_title);
+            $module_response_description_label = sanitize_text_field($module_response_description_label);
+            $comment_label = sanitize_text_field($comment_label);
+            $view_link_label = sanitize_text_field($view_link_label);
+            $view_link_class = sanitize_html_class($view_link_class);
+            $comment_link_class = sanitize_html_class($comment_link_class);
+            $pending_grade_label = sanitize_text_field($pending_grade_label);
+            $unit_unread_label = sanitize_text_field($unit_unread_label);
+            $unit_read_label = sanitize_text_field($unit_read_label);
+            $non_assessable_label = sanitize_text_field($non_assessable_label);
+            $table_class = sanitize_html_class($table_class);
+            $table_labels_th_class = sanitize_html_class($table_labels_th_class);
+
             $columns = array(
                 // "module" => $module_column_title,
                 "title" => $title_column_title,
@@ -3550,7 +3916,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
 
             $col_sizes = array(
                 // '15',
-// 				'30', 
+// 				'30',
                 '45',
                 '15',
                 '10',
@@ -3665,7 +4031,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                 ?>
                                             </div>
 
-                                            <a class="<?php echo $view_link_class; ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><?php echo $view_link_label; ?></a>
+                                            <a class="<?php echo sanitize_html_class($view_link_class); ?> thickbox" href="#TB_inline?width=500&height=300&inlineId=response_<?php echo $response->ID; ?>"><?php echo sanitize_html_class($view_link_label); ?></a>
 
                                             <?php
                                         } else {
@@ -3714,7 +4080,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                             }
                                             ?>
                                     </td>
-                                <?php }//general col visibility            ?>
+                                <?php }//general col visibility                ?>
                             </tr>
                             <?php
                             $current_row++;

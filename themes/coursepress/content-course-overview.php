@@ -36,7 +36,7 @@ $course_language = $course->details->course_language;
                 <?php echo do_shortcode('[course_dates show_alt_display="yes"]'); //change to yes for 'Open-ended' ?>
                 <?php echo do_shortcode('[course_enrollment_dates show_alt_display="no"]'); //change to yes for 'Open-ended' ?>
                 <?php echo do_shortcode('[course_class_size]'); ?>
-                <?php echo do_shortcode('[course_enrollment_type label="Who can Enroll"]'); ?>
+                <?php echo do_shortcode('[course_enrollment_type label="Who can Enroll: "]'); ?>
                 <?php echo do_shortcode('[course_language]'); ?>				
                 <?php echo do_shortcode('[course_cost]'); ?>	
 
@@ -50,7 +50,7 @@ $course_language = $course->details->course_language;
 
     <section id="additional-summary">
         <div class="social-shares">
-            <span><?php _e('SHARE', 'coursepress'); ?></span>
+            <span><?php _e('SHARE', 'cp'); ?></span>
             <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]=<?php the_permalink(); ?>&p[images][0]=&p[title]=<?php the_title(); ?>&p[summary]=<?php echo urlencode(strip_tags(get_the_excerpt())); ?>" class="facebook-share" target="_blank"></a>
             <a href="http://twitter.com/home?status=<?php the_title(); ?> <?php the_permalink(); ?>" class="twitter-share" target="_blank"></a>
             <a href="https://plus.google.com/share?url=<?php the_permalink(); ?>" class="google-share" target="_blank"></a>
@@ -64,11 +64,11 @@ $course_language = $course->details->course_language;
     $instructors = Course::get_course_instructors($course->details->ID);
     ?>
     <div class="entry-content <?php echo( count($instructors) > 0 ? 'left-content' : '' ); ?>">
-        <h1 class="h1-about-course"><?php _e('About the Course', 'coursepress'); ?></h1>
+        <h1 class="h1-about-course"><?php _e('About the Course', 'cp'); ?></h1>
         <?php the_content(); ?>
         <?php if ( $course->details->course_structure_options == 'on' ) { ?>
             <h1 class = "h1-about-course"><?php
-                _e('Course Structure', 'coursepress');
+                _e('Course Structure', 'cp');
                 ?></h1>
             <?php
             // $course->course_structure_front();
@@ -77,7 +77,7 @@ $course_language = $course->details->course_language;
         ?>
         <?php
         wp_link_pages(array(
-            'before' => '<div class="page-links">' . __('Pages:', 'coursepress'),
+            'before' => '<div class="page-links">' . __('Pages:', 'cp'),
             'after' => '</div>',
         ));
         ?>
@@ -85,7 +85,7 @@ $course_language = $course->details->course_language;
 
     <?php if ( count($instructors) > 0 ) { ?>
         <div class="course-instructors right-content">
-            <h1 class="h1-instructors"><?php _e('Instructors', 'coursepress'); ?></h1>
+            <h1 class="h1-instructors"><?php _e('Instructors', 'cp'); ?></h1>
             <script>
                 jQuery(function() {
                     jQuery("#instructor-profiles").accordion({
@@ -127,25 +127,25 @@ $course_language = $course->details->course_language;
     <footer class="entry-meta">
         <?php
         /* translators: used between list items, there is a space after the comma */
-        $category_list = get_the_category_list(__(', ', 'coursepress'));
+        $category_list = get_the_category_list(__(', ', 'cp'));
 
         /* translators: used between list items, there is a space after the comma */
-        $tag_list = get_the_tag_list('', __(', ', 'coursepress'));
+        $tag_list = get_the_tag_list('', __(', ', 'cp'));
 
         if ( !coursepress_categorized_blog() ) {
             // This blog only has 1 category so we just need to worry about tags in the meta text
             if ( '' != $tag_list ) {
-                $meta_text = __('This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');
+                $meta_text = __('This entry was tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'cp');
             } else {
-                //$meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress' );
+                //$meta_text = __( 'Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'cp' );
                 $meta_text = '';
             }
         } else {
             // But this blog has loads of categories so we should probably display them here
             if ( '' != $tag_list ) {
-                $meta_text = __('This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');
+                $meta_text = __('This entry was posted in %1$s and tagged %2$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'cp');
             } else {
-                $meta_text = __('This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'coursepress');
+                $meta_text = __('This entry was posted in %1$s. Bookmark the <a href="%3$s" rel="bookmark">permalink</a>.', 'cp');
             }
         } // end check for categories on this blog
 
@@ -154,6 +154,6 @@ $course_language = $course->details->course_language;
         );
         ?>
 
-        <?php edit_post_link(__('Edit', 'coursepress'), '<span class="edit-link">', '</span>'); ?>
+        <?php edit_post_link(__('Edit', 'cp'), '<span class="edit-link">', '</span>'); ?>
     </footer><!-- .entry-meta -->
 </article><!-- #post-## -->

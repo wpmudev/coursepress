@@ -35,7 +35,7 @@ if ( !class_exists('Discussion') ) {
 
         function get_unit_name() {
             if ( !isset($this->details->unit_id) || $this->details->unit_id == '' ) {
-                return __('General', 'coursepress');
+                return __('General', 'cp');
             } else {
                 $unit_obj = new Unit($this->details->unit_id);
                 $unit = $unit_obj->get_unit();

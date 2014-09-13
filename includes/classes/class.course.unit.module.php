@@ -27,7 +27,7 @@ if ( !class_exists('Unit_Module') ) {
                 <div class='action action-draggable'>
                     <div class='action-top closed'>
                         <a href="#available-actions" class="action-button hide-if-no-js"></a>
-                        <?php _e($this->label, 'cp'); ?>
+                        <?php echo $this->label; ?>
                     </div>
                     <div class='action-body closed'>
                         <?php if ( !empty($this->description) ) { ?>
@@ -367,7 +367,7 @@ if ( !class_exists('Unit_Module') ) {
 
                             <?php
                         } else {
-                            ?><input type="submit" class = "apply-button-enrolled submit-elements-data-button" name = "submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value = "<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
+                            ?><input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_no_save_<?php echo ( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo ( $is_last_page ? __('Done', 'cp') : __('Next', 'cp') ); ?>">
                             <?php
                         }
                     } else {
@@ -567,7 +567,7 @@ if ( !class_exists('Unit_Module') ) {
         function placeholder_element( $data ) {
             ?>
             <div class="placeholder_holder">
-                <label><?php _e('Placeholder Text') ?><br />
+                <label><?php _e('Placeholder Text', 'cp') ?><br />
                     <span class="element_title_description"><?php _e('Additional instructions visible in the input field as a placeholder', 'cp'); ?></span>
                 </label>
                 <input type="text" class="placeholder_text" name="<?php echo $this->name; ?>_placeholder_text[]" value="<?php echo esc_attr(isset($data->placeholder_text) ? $data->placeholder_text : '' ); ?>" />
@@ -669,7 +669,7 @@ if ( !class_exists('Unit_Module') ) {
                     </div>
                     <div class="module_grade_right">
 						<?php if( $show_grade ) : ?>
-                        <?php echo __('Graded: ') . $grade['grade'] . '%'; 
+                        <?php echo __('Graded: ', 'cp') . $grade['grade'] . '%'; 
                         if ( isset($data->minimum_grade_required) && is_numeric($data->minimum_grade_required) ) {
                             if ( $grade['grade'] >= $data->minimum_grade_required ) {
                                 ?>
@@ -705,7 +705,7 @@ if ( !class_exists('Unit_Module') ) {
 					}	
                     if ( ( int ) count($responses) > 1 ) {
                         ?>
-                        <div class="module_grade"><?php echo __('Grade Pending.'); ?></div>
+                        <div class="module_grade"><?php echo __('Grade Pending.', 'cp'); ?></div>
                         <?php
                     }
                 }

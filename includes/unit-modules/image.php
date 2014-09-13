@@ -41,7 +41,7 @@ class image_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -85,7 +85,7 @@ class image_module extends Unit_Module {
                 <div class="file_url_holder">
                     <label><?php _e('Enter a URL or Browse for an image.', 'cp'); ?>
                         <input class="image_url" type="text" size="36" name="<?php echo $this->name; ?>_image_url[]" value="<?php echo esc_attr(( isset($data->image_url) ? $data->image_url : '')); ?>" />
-                        <input class="image_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <input class="image_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_image_extensions); ?></div>
                     </label>
                 </div>
@@ -105,6 +105,7 @@ class image_module extends Unit_Module {
     function on_create() {
         $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Image, 100% width', 'cp');
+        $this->label = __('Image', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -132,7 +133,7 @@ class image_module extends Unit_Module {
                 <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption', 'cp'); ?>
                 <span class="element_title_description">
                     <?php
-                    $no_caption_text = __('Media has no caption.');
+                    $no_caption_text = __('Media has no caption.', 'cp');
                     $attachment_id = false;
                     if ( !empty($data) ) {
                         $attachment_id = cp_get_attachment_id_from_src($data->image_url);
@@ -153,7 +154,7 @@ class image_module extends Unit_Module {
                 </span>
                 <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked($caption_source, 'custom', true); ?>/> <?php _e('Custom Caption', 'cp'); ?>
                 <input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>" />
-                <input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo!empty($data) && isset($data->caption_custom_text) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo!empty($data) && isset($data->caption_custom_text) ? '' : __('Please enter a custom caption here.', 'cp'); ?>" /><br /><br />
+                <input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo (!empty($data) && isset($data->caption_custom_text) ? $data->caption_custom_text : ''); ?>" placeholder="<?php echo (!empty($data) && isset($data->caption_custom_text) ? '' : __('Please enter a custom caption here.', 'cp')); ?>" /><br /><br />
             </div>
         </div>
         <?php

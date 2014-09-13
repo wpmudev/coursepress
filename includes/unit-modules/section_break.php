@@ -77,6 +77,7 @@ class section_break_module extends Unit_Module {
     function on_create() {
         $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Inserts section break ( <hr> element )', 'cp');
+        $this->label = __('Section Break', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

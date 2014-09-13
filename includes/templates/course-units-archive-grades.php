@@ -20,7 +20,7 @@ echo __('<h2>Course Grades</h2>', 'cp');
                 <li>
                     <span class="percentage"><?php echo do_shortcode('[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '" format="true"]'); ?></span><a href="<?php echo do_shortcode('[course_unit_details field="permalink" unit_id="' . get_the_ID() . '"]'); ?>" rel="bookmark"><?php the_title(); ?></a>
                     <?php if ( do_shortcode('[course_unit_details field="input_modules_count"]') > 0 ) { ?>
-                        <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'coursepress'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements completed', 'coursepress'); ?></span>
+                        <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements completed', 'cp'); ?></span>
                     <?php } else { ?>
                         <span class="unit-archive-single-module-status read-only-module"><?php _e('Read-only'); ?></span>
                     <?php } ?>
@@ -36,6 +36,6 @@ echo __('<h2>Course Grades</h2>', 'cp');
         ?>
     </ul>
 
-    <div class="total_grade"><?php echo apply_filters('grade_caption', ( __('TOTAL:', 'coursepress'))); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
+    <div class="total_grade"><?php echo apply_filters('grade_caption', ( __('TOTAL:', 'cp'))); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
 
 </div>

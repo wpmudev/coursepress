@@ -81,6 +81,7 @@ class page_break_module extends Unit_Module {
     function on_create() {
         $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Breaks the Unit into more pages', 'cp');
+        $this->label = __('Page Break', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

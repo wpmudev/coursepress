@@ -100,7 +100,9 @@ if ( !class_exists( 'Student_Search' ) ) {
             $pagination->Items( $this->get_total() );
             $pagination->limit( $this->users_per_page );
             $pagination->parameterName = 'page_num';
-            $pagination->target( "admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) );
+            $pagination->nextT = __('Next', 'cp');
+            $pagination->prevT = __('Previous', 'cp');
+            $pagination->target( esc_url("admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args )) );
             $pagination->currentPage( $this->page_num );
             $pagination->nextIcon( '&#9658;' );
             $pagination->prevIcon( '&#9668;' );
@@ -249,7 +251,7 @@ if ( !class_exists( 'Student_Search' ) ) {
             }
 
             if ( isset( $this->search_term ) && $this->search_term !== '' ) {
-                $this->query_where .= $wpdb->prepare( " OR $wpdb->users.display_name LIKE %s", '%' . like_escape( $this->search_term ) . '%' );
+                $this->query_where .= $wpdb->prepare( " OR $wpdb->users.display_name LIKE %s", '%' . $wpdb->esc_like( $this->search_term ) . '%' );
             }
 
             do_action_ref_array( 'pre_user_query', array( &$this ) );

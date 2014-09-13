@@ -159,7 +159,7 @@ class checkbox_input_module extends Unit_Module {
         ?>
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -219,7 +219,7 @@ class checkbox_input_module extends Unit_Module {
                             <tr>
 
                                 <th width="96%">
-                        <div class="checkbox_answer_check"><?php _e('Answers'); ?></div>
+                        <div class="checkbox_answer_check"><?php _e('Answers', 'cp'); ?></div>
                         <div class="checkbox_answer"></div>
                         </th>
 
@@ -289,7 +289,7 @@ class checkbox_input_module extends Unit_Module {
                         </tbody>
                     </table>
 
-                    <a class="checkbox_new_link button-secondary">Add New</a>
+                    <a class="checkbox_new_link button-secondary"><?php _e('Add New', 'cp'); ?></a>
 
                 </div>
 
@@ -308,6 +308,7 @@ class checkbox_input_module extends Unit_Module {
     function on_create() {
         $this->order = apply_filters($this->name . '_order', $this->order);
         $this->description = __('Multiple choice question where multiple options can be selected', 'cp');
+        $this->label = __('Multiple Choice', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }

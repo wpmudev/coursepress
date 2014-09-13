@@ -81,7 +81,7 @@ get_header();
                 }
             } else {
                 ?>
-                <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later."); ?></h1>
+                <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later.", "cp"); ?></h1>
                 <?php
             }
             ?>

@@ -51,7 +51,7 @@ $course_language = $course->details->course_language;
 
                 <?php
                 wp_link_pages(array(
-                    'before' => '<div class="page-links">' . __('Pages:', 'coursepress'),
+                    'before' => '<div class="page-links">' . __('Pages:', 'cp'),
                     'after' => '</div>',
                 ));
                 ?>
@@ -71,21 +71,21 @@ $course_language = $course->details->course_language;
             <?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search  ?>
                 <?php
                 /* translators: used between list items, there is a space after the comma */
-                $categories_list = get_the_category_list(__(', ', 'coursepress'));
+                $categories_list = get_the_category_list(__(', ', 'cp'));
                 if ( $categories_list && coursepress_categorized_blog() ) :
                     ?>
                     <span class="cat-links">
-                        <?php printf(__('Courses in %1$s', 'coursepress'), $categories_list); ?>
+                        <?php printf(__('Courses in %1$s', 'cp'), $categories_list); ?>
                     </span>
                 <?php endif; // End if categories   ?>
 
                 <?php
                 /* translators: used between list items, there is a space after the comma */
-                $tags_list = get_the_tag_list('', __(', ', 'coursepress'));
+                $tags_list = get_the_tag_list('', __(', ', 'cp'));
                 if ( $tags_list ) :
                     ?>
                     <span class="tags-links">
-                        <?php printf(__('Tagged %1$s', 'coursepress'), $tags_list); ?>
+                        <?php printf(__('Tagged %1$s', 'cp'), $tags_list); ?>
                     </span>
                 <?php endif; // End if $tags_list   ?>
             <?php endif; // End if 'post' == get_post_type()  ?>

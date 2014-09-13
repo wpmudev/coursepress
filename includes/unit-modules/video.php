@@ -45,7 +45,7 @@ class video_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -92,7 +92,7 @@ class video_module extends Unit_Module {
                     <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?><br />
                         <span class="element_title_description"><?php printf(__('You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), $supported_video_extensions); ?> </span>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr(( isset($data->video_url) ? $data->video_url : '')); ?>" />
-                        <input class="video_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <input class="video_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_video_extensions); ?></div>
                     </label>
                 </div>
@@ -120,6 +120,7 @@ class video_module extends Unit_Module {
         $this->order = apply_filters($this->name . '_order', $this->order);
         add_filter('wp_video_shortcode', array( &$this, 'cp_video_shortcode' ));
         $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
+        $this->label = __('Video', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -148,7 +149,7 @@ class video_module extends Unit_Module {
                 <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption','cp'); ?>
 				<span class="element_title_description media-caption-description">
 					<?php
-						$no_caption_text = __('Media has no caption.');
+						$no_caption_text = __('Media has no caption.', 'cp');
 						$attachment_id = false;
 						if ( ! empty( $data ) ){
 							$attachment_id = cp_get_attachment_id_from_src( $data->video_url );							
