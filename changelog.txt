@@ -4,6 +4,11 @@ Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 CHANGE LOG
 =================================================
 
+1.0.5
+-------------------------------------------------
+- Settings changes and Improved security  
+
+
 1.0.4
 -------------------------------------------------
 - Shortcode changes and Improved security

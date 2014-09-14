@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.0.4
+  Version: 1.0.5
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -39,7 +39,7 @@ if ( !class_exists('CoursePress') ) {
     class CoursePress {
 
         private static $instance = null;
-        var $version = '1.0.3';
+        var $version = '1.0.5';
         var $name = 'CoursePress Pro';
         var $dir_name = 'coursepress';
         var $location = '';

@@ -2,22 +2,18 @@
 global $action, $page;
 wp_reset_vars( array( 'action', 'page' ) );
 
-$page = $_GET['page'];
+$page = sanitize_text_field( $_GET['page'] );
 
-$tab = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : '';
+$tab = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 if ( empty( $tab ) ) {
     if ( current_user_can( 'manage_options' ) ) {
         $tab = 'general';
-    } /*else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
-        $tab = 'groups';
-    }*/ else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
-        $tab = 'shortcodes';
     } else {
         die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
     }
 }
 
-if ( isset( $_POST['_wpnonce'] ) ) {
+if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
     if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-coursepress-options' ) ) {
         foreach ( $_POST as $key => $value ) {
             if ( preg_match( "/option_/i", $key ) ) {//every field name with prefix "option_" will be saved as an option
