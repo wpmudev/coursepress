@@ -7,6 +7,7 @@ CHANGE LOG
 1.0.5
 -------------------------------------------------
 - Resolved issues with displaced content when PopUp Pro plugin is active
+- CoursePress Theme CSS fixes
 - Settings changes and Improved security  
 
 
