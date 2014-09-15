@@ -599,6 +599,7 @@ h1.site-title a:hover{
     border-bottom: 1px solid #c9ced2;
     border-left: 1px solid #c9ced2;
     border-right: 1px solid #c9ced2;
+    border-top: 1px solid #c9ced2;
     display: block;
     line-height: 22px;
     padding: 10px;
@@ -622,7 +623,7 @@ h1.site-title a:hover{
 .main-navigation ul.sub-menu li{
     margin-left:0px;
     padding-top: 0px;
-    margin-top: 0px;
+    margin-top: -1px;
 }
 
 .main-navigation ul ul a:hover {
