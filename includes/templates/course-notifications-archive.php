@@ -6,7 +6,7 @@
  */
 global $coursepress, $wp;
 $course_id = do_shortcode('[get_parent_course_id]');
-
+$course_id = (int) $course_id;
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
 ?>
@@ -19,7 +19,7 @@ do_shortcode('[course_unit_archive_submenu]');
 
 <ul class="notification-archive-list">
     <?php
-    $page = ( isset($wp->query_vars['paged']) ) ? $wp->query_vars['paged'] : 1;
+    $page = ( isset($wp->query_vars['paged']) ) ? (int) $wp->query_vars['paged'] : 1;
     do_shortcode('[course_notifications_loop]');
     ?>
     <?php if ( have_posts() ) { ?>

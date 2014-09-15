@@ -6,7 +6,8 @@
  */
 global $coursepress;
 $course_id = do_shortcode('[get_parent_course_id]');
-$progress = do_shortcode('[course_progress course_id="' . (int)$course_id . '"]');
+$course_id = (int) $course_id;
+$progress = do_shortcode('[course_progress course_id="' . $course_id . '"]');
 
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
@@ -17,7 +18,7 @@ add_thickbox();
 <?php
 do_shortcode('[course_unit_archive_submenu]');
 if ( 100 == ( int ) $progress ) {
-    $complete_message = '<span class="unit-archive-course-complete"><i class="fa fa-check-circle"></i>' . __('Course Complete', 'cp') . '</span>';
+    $complete_message = '<span class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __('Course Complete', 'cp') . '</span>';
 } else {
     $complete_message = '';
 }

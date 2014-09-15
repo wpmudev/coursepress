@@ -10,7 +10,7 @@ if ( is_user_logged_in() ) {
 
         check_admin_referer('enrollment_process');
 
-        $course_id = $_POST['course_id'];
+        $course_id = (int) $_POST['course_id'];
         $course = new Course($course_id);
         $pass_errors = 0;
 
@@ -52,7 +52,7 @@ if ( is_user_logged_in() ) {
                     }
                 }
             } else {
-                printf(__('Passcode is not valid. Please %s and try again.', 'cp'), '<a href="' . $course->get_permalink() . '">'.__('go back', 'cp').'</a>');
+                printf(__('Passcode is not valid. Please %s and try again.', 'cp'), '<a href="' . esc_url( $course->get_permalink() ) . '">'.__('go back', 'cp').'</a>');
                 
             }
         } else {

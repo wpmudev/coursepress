@@ -49,7 +49,7 @@
     }
     $student = new Student(get_current_user_id());
     ?>
-    <p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
+    <p class="<?php echo esc_attr('form-info-' . $form_message_class); ?>"><?php echo esc_html($form_message); ?></p>
     <?php do_action('before_settings_form'); ?>
     <form id="student-settings" name="student-settings" method="post" class="student-settings">
         <?php wp_nonce_field('student_settings_save', 'student_settings_nonce'); ?>

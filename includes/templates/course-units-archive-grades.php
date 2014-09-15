@@ -36,6 +36,6 @@ do_shortcode('[course_unit_archive_submenu]');
         ?>
     </ul>
 
-    <div class="total_grade"><?php echo apply_filters('grade_caption', __('TOTAL:', 'cp')); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
+    <div class="total_grade"><?php echo apply_filters('grade_caption', __('TOTAL:', 'cp')); ?> <?php echo esc_html( apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%') ); ?></div>
 
 </div>

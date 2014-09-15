@@ -23,7 +23,7 @@ if ( ! $course_thumbnail ) {
 	echo do_shortcode( '[course_summary]' );
 ?>
 
-<div class="quick-course-info <?php echo ( isset( $extended_class ) ? $extended_class : '' ); ?>">
+<div class="quick-course-info <?php echo ( isset( $extended_class ) ? esc_attr( $extended_class ) : '' ); ?>">
     <?php echo do_shortcode( '[course_start label="" class="course-time"]' ); ?> 
 	<?php echo do_shortcode( '[course_language label="" class="course-lang"]' ); ?>
 	<?php echo do_shortcode( '[course_cost label="" class="course-cost" show_icon="true"]' ); ?>

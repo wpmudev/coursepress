@@ -6,6 +6,7 @@
  */
 global $coursepress, $wp;
 $course_id = do_shortcode('[get_parent_course_id]');
+$course_id = (int) $course_id;
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
 ?>
@@ -16,12 +17,13 @@ do_shortcode('[course_unit_archive_submenu]');
 <h2><?php _e('Discussions', 'cp'); ?></h2>
 
 <div class="discussion-controls">
-    <button data-link="<?php echo get_permalink($course_id); ?><?php echo trailingslashit($coursepress->get_discussion_slug()) . trailingslashit($coursepress->get_discussion_slug_new()); ?>"><?php _e('Ask a Question', 'cp'); ?></button>
+	<?php $url = get_permalink($course_id) . trailingslashit($coursepress->get_discussion_slug()) . trailingslashit($coursepress->get_discussion_slug_new()); ?>
+    <button data-link="<?php echo esc_url( $url ); ?>"><?php _e('Ask a Question', 'cp'); ?></button>
 </div>
 
 <ul class="discussion-archive-list">
     <?php
-    $page = ( isset($wp->query_vars['paged']) ) ? $wp->query_vars['paged'] : 1;
+    $page = ( isset($wp->query_vars['paged']) ) ? (int) $wp->query_vars['paged'] : 1;
     do_shortcode('[course_discussion_loop]');
 
     if ( have_posts() ) {
@@ -49,10 +51,10 @@ do_shortcode('[course_unit_archive_submenu]');
                             $discussion_unit = $discussion->get_unit_name();
                         } else {
                             $unit = new Unit($discussion->details->unit_id);
-                            $discussion_unit = '<a href="' . $unit->get_permalink() . '">' . $discussion->get_unit_name() . '</a>';
+                            $discussion_unit = '<a href="' . esc_url( $unit->get_permalink() ) . '">' . esc_html( $discussion->get_unit_name() ) . '</a>';
                         }
                         ?>
-                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'cp'); ?></span>
+                        <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo esc_html( $discussion_unit ); ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'cp'); ?></span>
                     </div>
                     <div class="clearfix"></div>
                 </div>

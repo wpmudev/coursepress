@@ -1,6 +1,7 @@
 <?php
 $course_id = do_shortcode('[get_parent_course_id]');
-$progress = do_shortcode('[course_progress course_id="' . ( int ) $course_id . '"]');
+$course_id = (int) $course_id;
+$progress = do_shortcode('[course_progress course_id="' . $course_id . '"]');
 do_shortcode('[course_units_loop]'); //required for getting unit results
 ?>
 
@@ -25,9 +26,9 @@ if ( 100 == ( int ) $progress ) {
                     $additional_li_class = 'li-locked-unit';
                 }
                 ?>
-                <li class="<?php echo $additional_li_class; ?>">
-                    <div class='<?php echo $additional_class; ?>'></div>
-                    <a href="<?php echo do_shortcode('[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]'); ?>" rel="bookmark"><?php the_title(); ?></a><?php echo do_shortcode('[course_unit_details field="percent" format="true" style="flat"]'); ?>
+                <li class="<?php echo esc_attr( $additional_li_class ); ?>">
+                    <div class='<?php echo esc_attr( $additional_class ); ?>'></div>
+                    <a href="<?php echo esc_url( do_shortcode('[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]') ); ?>" rel="bookmark"><?php the_title(); ?></a><?php echo do_shortcode('[course_unit_details field="percent" format="true" style="flat"]'); ?>
                 <?php do_shortcode('[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]'); ?>
                 </li>
                 <?php

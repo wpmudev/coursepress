@@ -5,7 +5,7 @@ $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
 do_shortcode('[course_unit_archive_submenu]');
 ?>
-<h2><?php echo get_the_title($unit_id); ?></h2>
+<h2><?php echo get_the_title((int) $unit_id); ?></h2>
 
 <?php
 echo do_shortcode('[course_unit_details unit_id="' . $unit_id . '" field="unit_page_title"]');
@@ -18,5 +18,5 @@ if ( $paged == 1 ) {
 ?>
 <?php
 $module = new Unit_Module();
-$module->get_modules_front($unit_id);
+$module->get_modules_front( (int)$unit_id );
 ?>
