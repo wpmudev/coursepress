@@ -30,6 +30,10 @@
 
 if ( !defined('ABSPATH') )
     exit; // Exit if accessed directly
+
+
+
+
     
 // Load the common functions
 require_once( 'includes/functions.php' );
@@ -582,7 +586,7 @@ if ( !class_exists('CoursePress') ) {
         function get_next_unit_url() {
             global $wpdb;
 
-            $course_id = (int)$_POST['course_id'];
+            $course_id = ( int ) $_POST['course_id'];
             $next_unit_id = $this->get_last_inserted_id();
             echo admin_url('admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $next_unit_id . '&action=edit');
             exit;
@@ -942,7 +946,7 @@ if ( !class_exists('CoursePress') ) {
         function instructor_save_extra_profile_fields( $user_id ) {
             if ( !current_user_can('edit_user', $user_id) )
                 return false;
-            
+
             check_admin_referer('update-user_' . $user_id);
 
             if ( $_POST['cp_instructor_capabilities'] == 'grant' ) {
@@ -1611,20 +1615,23 @@ if ( !class_exists('CoursePress') ) {
         }
 
         function add_custom_before_course_single_content( $content ) {
+            global $wpdb;
 
             if ( get_post_type() == 'course' ) {
                 if ( is_single() ) {
                     if ( $theme_file = locate_template(array( 'single-course.php' )) ) {
 //template will take control of the look so don't do anything
                     } else {
-
                         wp_enqueue_style('front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version);
-
                         if ( locate_template(array( 'single-course.php' )) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
 //just output the content
                         } else {
-                            $prepend_content = $this->get_template_details($this->plugin_dir . 'includes/templates/single-course-before-details.php');
-                            $content = do_shortcode($prepend_content . $content);
+                            if ( get_post_type($wpdb->last_result[0]->post_id) == 'course' ) {
+                                $prepend_content = $this->get_template_details($this->plugin_dir . 'includes/templates/single-course-before-details.php');
+                                $content = do_shortcode($prepend_content . $content);
+                            }else{
+                                return $content;
+                            }
                         }
                     }
                 }
@@ -1652,14 +1659,18 @@ if ( !class_exists('CoursePress') ) {
 
         function courses_archive_custom_content( $content ) {
             global $post, $content_shown;
-            /* if ( locate_template( array( 'archive-course.php' ) ) ) {
-              return $post->post_excerpt;
-              } else {
 
-              } */
+            if ( locate_template(array( 'archive-course.php' )) ) {
+                return $post->post_excerpt;
+            }
 
             if ( !isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
-                include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
+                global $wpdb;
+                if ( get_post_type($wpdb->last_result[0]->post_id) == 'course' ) {
+                    include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
+                } else {
+                    return $content;
+                }
                 if ( !isset($content_shown[$GLOBALS['post']->ID]) ) {
                     $content_shown[$GLOBALS['post']->ID] = 1;
                 } else {
@@ -2949,14 +2960,14 @@ if ( !class_exists('CoursePress') ) {
             if ( ( isset($_GET['saved']) && $_GET['saved'] == 'ok' ) ) {
                 ?>
                 <div class="save_elements_message_ok">
-                    <?php _e('The data has been saved successfully.', 'cp'); ?>
+                <?php _e('The data has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }
             if ( ( isset($_GET['saved']) && $_GET['saved'] == 'progress_ok' ) ) {
                 ?>
                 <div class="save_elements_message_ok">
-                    <?php _e('Your progress has been saved successfully.', 'cp'); ?>
+                <?php _e('Your progress has been saved successfully.', 'cp'); ?>
                 </div>
                 <?php
             }
@@ -3547,15 +3558,15 @@ if ( !class_exists('CoursePress') ) {
                         foreach ( $main_sorted_menu_items as $menu_item ) {
                             ?>
                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-                                <?php if ( $menu_item->db_id !== '' ) { ?>
+                                    <?php if ( $menu_item->db_id !== '' ) { ?>
                                     <ul class="sub-menu dropdown-menu">
                                         <?php
                                         foreach ( $sub_sorted_menu_items as $menu_item ) {
                                             ?>
                                             <li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>" href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-                                        <?php } ?>
+                                    <?php } ?>
                                     </ul>
-                                <?php } ?>
+                            <?php } ?>
                             </li>
                             <?php
                         }

@@ -6,6 +6,7 @@ CHANGE LOG
 
 1.0.5
 -------------------------------------------------
+- Resolved issues with displaced content when PopUp Pro plugin is active
 - Settings changes and Improved security  
 
 
