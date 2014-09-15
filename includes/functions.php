@@ -13,6 +13,14 @@
   return $url;
   } */
 
+function cp_user_can_register() {
+    if ( is_multisite() ) {
+        return users_can_register_signup_filter();
+    } else {
+        return get_option('users_can_register');
+    }
+}
+
 function cp_filter_content( $content, $none_allowed = false ) {
     if ( $none_allowed ) {
         if ( is_array($content) ) {
@@ -21,7 +29,7 @@ function cp_filter_content( $content, $none_allowed = false ) {
             }
         } else {
             $content = wp_filter_nohtml_kses($content);
-        }  
+        }
     } else {
         if ( current_user_can('unfiltered_html') ) {
             $content = $content;
