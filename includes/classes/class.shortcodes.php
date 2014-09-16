@@ -3887,6 +3887,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                 'pending_grade_label' => __('Pending', 'cp'),
                 'unit_unread_label' => __('Unit Unread', 'cp'),
                 'unit_read_label' => __('Unit Read', 'cp'),
+				'single_correct_label' => __('Correct', 'cp'),
+				'single_incorrect_label' => __('Incorrect', 'cp'),
                 'non_assessable_label' => __('**'),
                 'table_class' => 'widefat shadow-table assessment-archive-table',
                 'table_labels_th_class' => 'manage-column'
@@ -3910,6 +3912,8 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $non_assessable_label = sanitize_text_field($non_assessable_label);
             $table_class = sanitize_html_class($table_class);
             $table_labels_th_class = sanitize_html_class($table_labels_th_class);
+			$single_correct_label = sanitize_text_field( $single_correct_label );
+			$single_incorrect_label = sanitize_text_field( $single_incorrect_label );
 
             $columns = array(
                 // "module" => $module_column_title,
@@ -4063,9 +4067,9 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                                 } else {
 													if ( 'radio_input_module' == $class_name ) {
 														if ( 100 == $grade ) {
-															_e( 'Correct', 'cp' );
+															echo $single_correct_label;
 														} else {
-															_e( 'Incorrect', 'cp' );
+															echo $single_incorrect_label;
 														}
 													} else {
 														echo $grade . '%';	
