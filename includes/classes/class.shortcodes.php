@@ -4056,15 +4056,27 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                                             $grade_time = date_i18n(get_option('date_format') . ' ' . get_option('time_format'), $grade_data['time']);
                                         }
                                         if ( count($response) >= 1 ) {
-                                            if ( isset($grade_data) ) {
 
+                                            if ( isset($grade_data) ) {
                                                 if ( get_post_meta($mod->ID, 'gradable_answer', true) == 'no' ) {
                                                     echo $non_assessable_label;
                                                 } else {
-                                                    echo $grade . '%';
+													if ( 'radio_input_module' == $class_name ) {
+														if ( 100 == $grade ) {
+															_e( 'Correct', 'cp' );
+														} else {
+															_e( 'Incorrect', 'cp' );
+														}
+													} else {
+														echo $grade . '%';	
+													}
                                                 }
                                             } else {
-                                                echo $pending_grade_label;
+                                                if ( get_post_meta($mod->ID, 'gradable_answer', true) == 'no' ) {
+                                                    echo $non_assessable_label;
+                                                } else {
+                                                    echo $pending_grade_label;
+                                                }												
                                             }
                                         } else {
                                             echo '-';
