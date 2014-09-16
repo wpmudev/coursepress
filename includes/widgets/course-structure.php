@@ -41,7 +41,12 @@ class CP_Course_Structure extends WP_Widget {
 
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
-        $instance['title'] = $new_instance['title'];
+		// Admin on single sites, Super admin on network
+		if ( current_user_can( 'unfiltered_html' ) ) {
+	        $instance['title'] = $new_instance['title'];
+		} else {
+	        $instance['title'] = strip_tags( $new_instance['title'] );
+		}
         $instance['course'] = $new_instance['course'];
         return $instance;
     }

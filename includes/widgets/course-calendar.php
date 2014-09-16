@@ -46,9 +46,17 @@ class CP_Course_Calendar extends WP_Widget {
 
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
-        $instance['title'] = $new_instance['title'];
-		$instance['pre_text'] = $new_instance['pre_text'];
-		$instance['next_text'] = $new_instance['next_text'];
+		// Admin on single sites, Super admin on network
+		if ( current_user_can( 'unfiltered_html' ) ) {
+	        $instance['title'] = $new_instance['title'];
+			$instance['pre_text'] = $new_instance['pre_text'];
+			$instance['next_text'] = $new_instance['next_text'];
+		} else {
+	        $instance['title'] = strip_tags( $new_instance['title'] );
+			$instance['pre_text'] = strip_tags( $new_instance['pre_text'] );
+			$instance['next_text'] = strip_tags( $new_instance['next_text'] );
+		}
+		
         $instance['course'] = $new_instance['course'];
         return $instance;
     }

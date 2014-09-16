@@ -1665,7 +1665,8 @@ if ( !class_exists('CoursePress') ) {
 
             if ( !isset($content_shown[$GLOBALS['post']->ID]) || $content_shown[$GLOBALS['post']->ID] !== 1 ) {//make sure that we don't apply the filter on more than one content / excerpt on the page per post
                 global $wpdb;
-                if ( get_post_type($wpdb->last_result[0]->post_id) == 'course' ) {
+                if ( ( ! empty( $wpdb->last_result ) && ! empty( $wpdb->last_result[0]->post_id ) &&  'course' == get_post_type($wpdb->last_result[0]->post_id) ) || 'course' == get_post_type() ) {
+					// cp_write_log( get_post_type() );
                     include( $this->plugin_dir . 'includes/templates/archive-courses-single.php' );
                 } else {
                     return $content;

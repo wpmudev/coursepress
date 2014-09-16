@@ -63,8 +63,15 @@ class CP_Featured_Course extends WP_Widget {
 
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
-        $instance['title'] = $new_instance['title'];
-        $instance['button_title'] = $new_instance['button_title'];
+		
+		// Admin on single sites, Super admin on network
+		if ( current_user_can( 'unfiltered_html' ) ) {
+	        $instance['title'] = $new_instance['title'];
+	        $instance['button_title'] = $new_instance['button_title'];
+		} else {
+	        $instance['title'] = strip_tags( $new_instance['title'] );
+	        $instance['button_title'] = strip_tags( $new_instance['button_title'] );
+		}
         $instance['course'] = $new_instance['course'];
 		$instance['type'] = $new_instance['type']; 
 		$instance['priority'] = $new_instance['priority'];
@@ -89,7 +96,7 @@ class CP_Featured_Course extends WP_Widget {
         }
         ?>
 		<div class=fcp_featured_widget cp_featured_widget-course-<?php echo $course_id; ?>">
-	        <h3 class="cp_featured_widget_title"><?php echo $course->details->post_title; ?></h3>
+	        <h3 class="cp_featured_widget_title"><?php echo esc_html( $course->details->post_title ); ?></h3>
 	        <?php
 	        echo do_shortcode('[course_media type="' . $selected_type . '" priority="' . $selected_priority . '" course_id="' . $course_id . '"]');
 	        ?>
@@ -98,7 +105,7 @@ class CP_Featured_Course extends WP_Widget {
 	        </div>
 
 	        <div class="cp_featured_widget_course_link">
-				<button data-link="<?php echo $course->get_permalink($course_id) ?>"><?php echo $instance['button_title']; ?></button>
+				<button data-link="<?php echo esc_url( $course->get_permalink($course_id) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></button>
 	        </div>
 		</div>
         <?php

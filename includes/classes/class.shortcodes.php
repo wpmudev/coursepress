@@ -1180,13 +1180,13 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         } elseif ( !is_single() || "yes" == $list_page ) {
                             // GO TO COURSE
                             $button_url = get_permalink($course_id);
-                            $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
+                            $button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
                             // cp_write_log( 'FIVE');
                             // Course hasn't expired and enrollments are open... Lets sign up!
                         } else {
                             // "SIGN UP NOW"
-                            $button_url = $signup_url;
-                            $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="' . $course_id . '" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
+                            $button_url = $signup_url . '?course_id=' . $course_id;
+                            $button .= '<button data-link-old="' . esc_url( $button_url ) . '" data-course-id="' . $course_id . '" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
                             // cp_write_log( 'SIX');
                         }
                     }
@@ -1226,7 +1226,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     } elseif ( !is_single() ) {
                         // GO TO COURSE
                         $button_url = get_permalink($course_id);
-                        $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
+                        $button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
                         // cp_write_log( 'ELEVEN');
                         // Enrollments are open, but requires a prerequisite
                     } elseif ( 'prerequisite' == $course->enroll_type ) {
@@ -1245,7 +1245,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                         // ENROLL
                         // if ( $is_paid ) {
                         //                             $button_url = $signup_url;
-                        $button .= '<button data-link-old="' . $button_url . '?course_id=' . $course_id . '" data-course-id="' . $course_id . '" class="apply-button enroll' . $class . '">' . $enroll_text . '</button>';
+                        $button .= '<button data-link-old="' . esc_url( $button_url . '?course_id=' . $course_id ) . '" data-course-id="' . $course_id . '" class="apply-button enroll' . $class . '">' . $enroll_text . '</button>';
                         // } else {
                         // 	                        $button .= '<input type="submit" class="apply-button ' . $class . '" value="' . $enroll_text . '" />';
                         // }
@@ -1270,7 +1270,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     } elseif ( !is_single() && false === strpos($_SERVER['REQUEST_URI'], CoursePress::instance()->get_student_dashboard_slug()) ) {
                         // GO TO COURSE
                         $button_url = get_permalink($course_id);
-                        $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
+                        $button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
                         // cp_write_log( 'SEVENTEEN');
                         // Course is available, so lets go to class
                     } else {
@@ -1281,7 +1281,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             $access_text = $continue_learning_text;
                         }
 
-                        $button .= '<button data-link="' . $button_url . '" class="apply-button-enrolled ' . $class . '">' . $access_text . '</button>';
+                        $button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $access_text . '</button>';
                         // cp_write_log( 'EIGHTEEN');
                     }
                 }
@@ -1561,7 +1561,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                     </div>
 
                     <div class="featured-course-link">
-                        <button data-link="<?php echo $course->get_permalink($course_id) ?>"><?php echo $button_title; ?></button>
+                        <button data-link="<?php echo esc_url( $course->get_permalink($course_id) ); ?>"><?php echo $button_title; ?></button>
                     </div>
                 </div>
                 <?php
