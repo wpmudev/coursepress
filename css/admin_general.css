@@ -487,3 +487,7 @@ a.button.button-units.button-delete-unit:hover{
 	box-shadow: 0 1px 0 #6be285 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
 	width: 320px;
 }
+
+.assessment-archive-table span.uppercase.block a{
+    color: #0074a2;
+}
