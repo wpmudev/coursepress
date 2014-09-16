@@ -485,7 +485,9 @@ function coursepress_modules_ready() {
             elements: rand_id,
             plugins: 'wplink, textcolor, hr',
             toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
-            menubar: false
+            menubar: false,
+			height: '300px',
+			content_css: coursepress_units.cp_editor_style,
         });
 
         var accordion_elements_count = (jQuery(this).parents('.elements-holder').siblings('.modules_accordion').find('div.module-holder-title').length);//find('.modules_accordion').length

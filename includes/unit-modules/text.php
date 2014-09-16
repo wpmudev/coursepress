@@ -74,7 +74,8 @@ class text_module extends Unit_Module {
                         "textarea_name" => $this->name . "_content[]",
                         "textarea_rows" => 5,
                         "quicktags" => false,
-                        "teeny" => false
+                        "teeny" => false,
+						"editor_class" => 'cp-editor cp-unit-element',						
                     );
 
                     $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );

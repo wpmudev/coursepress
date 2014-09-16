@@ -171,6 +171,9 @@ if ( !class_exists('CoursePress') ) {
 
                 add_action('wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
                 // add_action('wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ));
+				
+				add_filter('mce_css', array( &$this, 'mce_editor_style' ) );
+
             }
 
             //Setup Gateway Array
@@ -465,6 +468,7 @@ if ( !class_exists('CoursePress') ) {
             $in['toolbar4'] = '';
             return $in;
         }
+		
 
         function course_checkout_success_msg( $setting, $default ) {
             // cp_write_log('MP Success Setting: ' . $setting);
@@ -1192,6 +1196,7 @@ if ( !class_exists('CoursePress') ) {
                 "textarea_rows" => 4,
                 "quicktags" => false,
                 "teeny" => true,
+				"editor_class" => 'cp-editor cp-dynamic-editor',
             );
 
             wp_editor(htmlspecialchars_decode(( isset($_GET['editor_content']) ? $_GET['editor_content'] : '')), $editor_id, $args);
@@ -2699,6 +2704,7 @@ if ( !class_exists('CoursePress') ) {
                 $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
 
                 if ( in_array($page, $detect_pages) ) {
+					$initArray['height'] = '300px';
                     $initArray['setup'] = 'function( ed ) {
 							ed.on( \'init\', function( args ) {
 								jQuery( \'#\' + ed.id + \'_parent\' ).bind( \'mousemove\',function ( evt ) {
@@ -2714,6 +2720,31 @@ if ( !class_exists('CoursePress') ) {
 
             return $initArray;
         }
+		
+		// CoursePress CSS styles for TinyMCE
+		function mce_editor_style($url) {
+
+			// Only on these pages
+            $detect_pages = array(
+                'coursepress_page_course_details',
+				'coursepress-pro_page_course_details',
+            );
+
+            $page = get_current_screen()->id;
+            $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
+
+            if ( in_array($page, $detect_pages) ) {
+
+			    if ( !empty($url) )
+			        $url .= ',';
+
+			    $url .= $this->plugin_url . 'css/editor_style_fix.css';
+				
+			}
+
+		    return $url;
+		}
+		
 
         function refresh_course_calendar() {
             $ajax_response = array();
@@ -3114,6 +3145,7 @@ if ( !class_exists('CoursePress') ) {
                 'required_price' => __('<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp'),
                 'required_sale_price' => __('<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp'),
                 'section_error' => __('There is some information missing or incorrect. Please check your input and try again.', 'cp'),
+				'cp_editor_style' => $this->plugin_url . 'css/editor_style_fix.css',
             ));
 
             wp_enqueue_style('jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css');

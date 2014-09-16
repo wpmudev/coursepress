@@ -80,7 +80,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
                                 <br/><br/>
                                 <label for='course_name'><?php _e( 'Discussion Content', 'cp' ); ?></label>
                                 <?php
-                                $args = array( "textarea_name" => "discussion_description", "textarea_rows" => 10 );
+                                $args = array( "textarea_name" => "discussion_description", "editor_class" => 'cp-editor', "textarea_rows" => 10 );
                                 wp_editor( htmlspecialchars_decode( isset( $discussion->details->post_content ) ? $discussion->details->post_content : '' ), "discussion_description", $args );
                                 ?>
                                 <br/>
