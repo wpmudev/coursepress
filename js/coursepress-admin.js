@@ -486,7 +486,7 @@ function coursepress_modules_ready() {
             plugins: 'wplink, textcolor, hr',
             toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
             menubar: false,
-			height: '300px',
+			height: '360px',
 			content_css: coursepress_units.cp_editor_style,
         });
 

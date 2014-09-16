@@ -2704,7 +2704,7 @@ if ( !class_exists('CoursePress') ) {
                 $tab = empty($_GET['tab']) ? '' : $_GET['tab'];
 
                 if ( in_array($page, $detect_pages) ) {
-					$initArray['height'] = '300px';
+					$initArray['height'] = '360px';
                     $initArray['setup'] = 'function( ed ) {
 							ed.on( \'init\', function( args ) {
 								jQuery( \'#\' + ed.id + \'_parent\' ).bind( \'mousemove\',function ( evt ) {
