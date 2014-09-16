@@ -438,7 +438,7 @@ if ( !class_exists('CoursePress') ) {
             $ajax_response = array();
 
             // Same file regardless of Lite or full version of MP
-            $result = activate_plugin('coursepress/marketpress.php');
+            $result = activate_plugin($this->dir_name.'/marketpress.php');
 
             if ( is_wp_error($result) ) {
                 $ajax_response['mp_lite_activated'] = false;
