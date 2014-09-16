@@ -4,49 +4,52 @@ Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 CHANGE LOG
 =================================================
 
-1.0.6
--------------------------------------------------
-- Improved security
-- Fixed: Auto-update issue with text editor in course setup  
-- Slightly larger content editor for more convenient editing
-- Fixed: Course completion now calculates correctly
-- Resolved issue with incorrect saving of Single Line / Multiple Lines option in input text element
-- Added student username (and link to the student's profile) in the assessment column
+== Changelog ==
 
-1.0.5
+= 1.0.6 = 
 -------------------------------------------------
-- Resolved issues with displaced content when PopUp Pro plugin is active
-- Resolved issue with (not honoring) WP Settings for registrations
-- CoursePress Theme CSS fixes
-- Settings changes and Improved security  
+* Improved security
+* Fixed: Auto-update issue with text editor in course setup  
+* Slightly larger content editor for more convenient editing
+* Fixed: Course completion now calculates correctly
+* Resolved issue with incorrect saving of Single Line / Multiple Lines option in input text element
+* Added student username (and link to the student's profile) in the assessment column
+* Dynamic MarketPress path set
+
+= 1.0.5 =
+-------------------------------------------------
+* Resolved issues with displaced content when PopUp Pro plugin is active
+* Resolved issue with (not honoring) WP Settings for registrations
+* CoursePress Theme CSS fixes
+* Settings changes and Improved security  
 
 
-1.0.4
+= 1.0.4 =
 -------------------------------------------------
-- Shortcode changes and Improved security
-- Fixed textdomain issues
-- Resolved potential issue if Mcrypt library is not installed on server
+* Shortcode changes and Improved security
+* Fixed textdomain issues
+* Resolved potential issue if Mcrypt library is not installed on server
 
-1.0.3
+= 1.0.3 =
 -------------------------------------------------
-- Improved security
-- Resolved CSS issues with MarketPress popup called from CoursePress
-- Fixed issue with theme location in the CoursePress theme
-- Fixed CSS issue with uploaded videos in CoursePress theme (plus better responsive)
-- Resolved issue with output buffer in shortcodes
-- Added missing text domain on a number of places
-- Other code improvements
+* Improved security
+* Resolved CSS issues with MarketPress popup called from CoursePress
+* Fixed issue with theme location in the CoursePress theme
+* Fixed CSS issue with uploaded videos in CoursePress theme (plus better responsive)
+* Resolved issue with output buffer in shortcodes
+* Added missing text domain on a number of places
+* Other code improvements
 
-1.0.2
+= 1.0.2 =
 -------------------------------------------------
-- Resolved issue with mobile menu
-- Resolved issue with listing images, videos and overlapping content in the CoursePress theme
-- Responsive fixes for admin pages
+* Resolved issue with mobile menu
+* Resolved issue with listing images, videos and overlapping content in the CoursePress theme
+* Responsive fixes for admin pages
 
-1.0.1
+= 1.0.1 =
 -------------------------------------------------
-- Resolved issue with deleting media files (selected in elements) upon deleting a unit or a module.
+* Resolved issue with deleting media files (selected in elements) upon deleting a unit or a module.
 
-1.0.0
+= 1.0.0 =
 -------------------------------------------------
-- 1.0 First Release.
+* 1.0 First Release.
