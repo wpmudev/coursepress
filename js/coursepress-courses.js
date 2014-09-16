@@ -52,6 +52,10 @@ jQuery(document).ready(function($) {
             var vl = jQuery(this).parent().find('.radio_answer').val();
             jQuery(this).closest(".module-content").find('.checked_index').val(vl);
         });
+        
+        jQuery("input[name*='text_input_module_answer_length']:checked").each(function() {
+            jQuery(this).closest(".module-content").find('.checked_index').val(jQuery(this).val());
+        });
 
         jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
             jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');

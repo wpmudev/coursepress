@@ -10,6 +10,8 @@ CHANGE LOG
 - Fixed: Auto-update issue with text editor in course setup  
 - Slightly larger content editor for more convenient editing
 - Fixed: Course completion now calculates correctly
+- Resolved issue with incorrect saving of Single Line / Multiple Lines option in input text element
+- Added student username (and link to the student's profile) in the assessment column
 
 1.0.5
 -------------------------------------------------
