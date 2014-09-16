@@ -2692,6 +2692,7 @@ if ( !class_exists('CoursePress') ) {
             if ( is_admin() ) {
                 $detect_pages = array(
                     'coursepress_page_course_details',
+					'coursepress-pro_page_course_details',
                 );
 
                 $page = get_current_screen()->id;

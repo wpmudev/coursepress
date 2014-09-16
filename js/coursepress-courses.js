@@ -370,7 +370,12 @@ var active_editor;
 function cp_editor_key_down(ed, page, tab) {
     $ = jQuery;
 
-    if (page == 'coursepress_page_course_details') {
+	var courseDetailsPages = [
+		'coursepress_page_course_details',
+		'coursepress-pro_page_course_details'
+	];
+
+	if ( $.inArray( page, courseDetailsPages ) ) {
         if (tab == '' || tab == 'overview') {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
