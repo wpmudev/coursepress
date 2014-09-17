@@ -226,7 +226,7 @@ function cp_filter_search( $query ) {
 		if ( !is_admin() ) {
 			$query->set( 'post_type', array( 'post', 'course' ) );
 		}
-	};
+	}
 	return $query;
 }
 
