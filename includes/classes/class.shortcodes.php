@@ -985,7 +985,6 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
                             ), $atts, 'course_list_image'));
 
             $course_id = ( int ) $course_id;
-            $label = sanitize_text_field($label);
             $width = sanitize_html_class($width);
             $height = sanitize_html_class($height);
             $class = sanitize_html_class($class);

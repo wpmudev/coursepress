@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.0.8 = 
+-------------------------------------------------
+* Upgraded MartketPress Bundle to 2.9.5.3
+
 = 1.0.7 = 
 -------------------------------------------------
 * Resolved issues with wrong pre_get_posts filtering within the admin
