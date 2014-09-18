@@ -229,7 +229,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ) );
 
 				/**
-				 * Add instructor to a course via AJAX.
+				 * Add instructor to a course (AJAX).
 				 *
 				 * This also assigns the instructor capabilities.
 				 *
@@ -238,7 +238,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_add_course_instructor', array( &$this, 'add_course_instructor' ) );
 
 				/**
-				 * Remove instructor from a course via AJAX.
+				 * Remove instructor from a course (AJAX).
 				 *
 				 * If the instructor is no longer an instructor of any courses
 				 * then the instructor's capabilities will also be removed.
@@ -248,7 +248,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_remove_course_instructor', array( &$this, 'remove_course_instructor' ) );
 
 				/**
-				 * Update course during setup via AJAX.
+				 * Update course during setup (AJAX).
 				 *
 				 * This method is executed during setup in the 'Course Overview'.
 				 * Each time the user moved from one section to another or when triggered
@@ -259,7 +259,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
 
 				/**
-				 * Determined if a gateway is active via AJAX.
+				 * Determined if a gateway is active (AJAX).
 				 *
 				 * MarketPress integration:
 				 * An active gateway is required to be able to sell a course.
@@ -269,7 +269,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_course_has_gateway', array( &$this, 'course_has_gateway' ) );
 
 				/**
-				 * Invite an instructor to join a course via AJAX.
+				 * Invite an instructor to join a course (AJAX).
 				 *
 				 * Sends the instructor an email with a confirmation link.
 				 *
@@ -277,202 +277,571 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				 */
 				add_action( 'wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ) );
 
-				//Change course state ( draft / publish )
-				add_action( 'wp_ajax_change_course_state', array( &$this, 'change_course_state' ) );
-
-				//Change unit state ( draft / publish )
-				add_action( 'wp_ajax_change_unit_state', array( &$this, 'change_unit_state' ) );
-
-				//Remove instructor invite ajax call
+				/**
+				 * Remove instructor invite (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_remove_instructor_invite', array( &$this, 'remove_instructor_invite' ) );
 
-				// Using ajax to update course calendar
-				add_action( 'wp_ajax_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ) );
+				/**
+				 * Change course state (draft/publish) (AJAX).
+				 *
+				 * @since 1.0.0
+				 */
+				add_action( 'wp_ajax_change_course_state', array( &$this, 'change_course_state' ) );
 
+				/**
+				 * Change unit state (draft/publish) (AJAX).
+				 *
+				 * @since 1.0.0
+				 */
+				add_action( 'wp_ajax_change_unit_state', array( &$this, 'change_unit_state' ) );
+
+				/**
+				 * Update Course Calendar widget/shortcode (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
+				add_action( 'wp_ajax_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ) );
+				
+				/**
+				 * Update Course Calendar for all visitors (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_nopriv_refresh_course_calendar', array( &$this, 'refresh_course_calendar' ) );
 
+				/**
+				 * Handle popup registration/signup forms (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_cp_popup_signup', array( &$this, 'popup_signup' ) );
 
+				/**
+				 * Handle popup registration/signup forms for everyone (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_nopriv_cp_popup_signup', array( &$this, 'popup_signup' ) );
 
+				/**
+				 * Returns whether the user already exists (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ) );
 
+				/**
+				 * Returns whether the user already exists for everyone (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_nopriv_cp_popup_user_exists', array( &$this, 'cp_popup_user_exists' ) );
 
+				/**
+				 * Returns whether the email already exists (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ) );
 
+				/**
+				 * Returns whether the email already exists for everyone (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_nopriv_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ) );
 
+				/**
+				 * Login the user from the popup (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ) );
 
+				/**
+				 * Login the user from the popup for everyone (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_nopriv_cp_popup_login_user', array( &$this, 'cp_popup_login_user' ) );
 
-				add_action( 'wp_ajax_nopriv_get_next_unit_url', array( &$this, 'get_next_unit_url' ) );
-
+				/**
+				 * Get the URL for the next unit in a course (AJAX).
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_get_next_unit_url', array( &$this, 'get_next_unit_url' ) );
 
-				add_action( 'wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ) );
-				// add_action( 'wp_ajax_nopriv_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ) );
+				/**
+				 * Get the URL for the next unit in a course for everyone (AJAX).
+				 *
+				 * Available to everyone because of the course preview options.
+				 *
+				 * @since 1.0.0
+				 */				
+				add_action( 'wp_ajax_nopriv_get_next_unit_url', array( &$this, 'get_next_unit_url' ) );				
 
+				/**
+				 * Create a unit element draft post (AJAX).
+				 *
+				 * Allows the user to preview a unit.
+				 *
+				 * @since 1.0.0
+				 */				
+				add_action( 'wp_ajax_create_unit_element_draft', array( &$this, 'create_unit_element_draft' ) );
+
+				/**
+				 * MarketPress Gateway Settings (AJAX).
+				 *
+				 * Allows access to MarketPress gateways from Course Setup.
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'mp_gateway_settings', array( &$this, 'cp_marketpress_popup' ) );
 
+				/**
+				 * Activate MarketPress or MarketPress Lite (AJAX).
+				 *
+				 * Dependending on whether this is CoursePress or CoursePress Pro.
+				 * 
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ) );
-				// add_action( 'wp_ajax_nopriv_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ) );
 
+				/**
+				 * Apply some styles to the WordPress editor (AJAX).
+				 *
+				 * Keeps consistency across course setup and unit setup.
+				 *
+				 * @since 1.0.0
+				 */				
 				add_filter( 'mce_css', array( &$this, 'mce_editor_style' ) );
 			}
 
-			//Setup Gateway Array
+			/**
+			 * Setup payment gateway array.  
+			 *
+			 * MarketPress integration.
+			 *
+			 * @since 1.0.0
+			 */							
 			add_action( 'init', array( $this, 'setup_gateway_array' ) );
 
-			//Output buffer hack
+			/**
+			 * Output buffer workaround
+			 *
+			 * Prevents errors from CoursePress and other plugins or themes
+			 * from breaking AJAX calls.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_action( 'init', array( &$this, 'output_buffer' ), 0 );
 
-			//MarketPress Check
+			/**
+			 * Is there a version of MarketPress active.  
+			 *
+			 * MarketPress integration.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_action( 'init', array( &$this, 'marketpress_check' ), 0 );
 
-
-			// Course Calendar
+			/**
+			 * Class for rendering course calendar.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursecalendar.php' );
 
-			// Discusson class
+			/**
+			 * Class for creating/participating in course discussions.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.discussion.php' );
 
-			// Search Discusson class
+			/**
+			 * Class to search course discussions.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.discussionsearch.php' );
 
-			// Instructor class
+			/**
+			 * Class for managing instructors.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.instructor.php' );
 
-			// Unit class
+			/**
+			 * Class for managing Units.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.unit.php' );
 
-			// Course class
+			/**
+			 * The Course class.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
-			// Course_Completion class
+			/**
+			 * Class to determine course completion.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.completion.php' );
 
-
-			// Notification class
+			/**
+			 * Class for creating course or sitewide course notifications.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.notification.php' );
 
-			// Student class
+			/**
+			 * Class to manage students.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.student.php' );
 
-			// Unit module class
+			/**
+			 * Class to manage unit (page) elements.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.unit.module.php' );
 
-			//Load unit modules
+			/**
+			 * Load all unit element classes.  
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'init', array( &$this, 'load_modules' ), 11 );
 
-			//Load Widgets
+			/**
+			 * Load CoursePress widgets.  
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'init', array( &$this, 'load_widgets' ), 1 );
 
-			// Shortcodes class
+			/**
+			 * Class to handle shortcodes.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.shortcodes.php' );
 
-			// Virtual page class
+			/**
+			 * Class to create virtual pages.
+			 * Does not use existing pages.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.virtualpage.php' );
 
-
-			//Register custom post types
+			/**
+			 * Register all CoursePress custom post types.  
+			 *
+			 * @since 1.0.0
+			 */												
 			add_action( 'init', array( &$this, 'register_custom_posts' ), 1 );
 
-			//Listen to files download requests ( using in file module )
+			/**
+			 * Check for forced download in 'File' unit element.
+			 *
+			 * Checks to see if the file needs to be downloaded on click and then
+			 * serve up the file.  
+			 *
+			 * @since 1.0.0
+			 */					
 			add_action( 'init', array( &$this, 'check_for_force_download_file_request' ), 1 );
 
-			//Localize the plugin
+			/**
+			 * Initiate plugin localization.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'plugins_loaded', array( &$this, 'localization' ), 9 );
 
-			//Check for $_GET actions
+			/**
+			 * Handle $_GET actions.  
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'init', array( &$this, 'check_for_get_actions' ), 98 );
 
-			//Add virtual pages
+			/**
+			 * Add virtual pages.  
+			 *
+			 * @since 1.0.0
+			 */	
 			add_action( 'init', array( &$this, 'create_virtual_pages' ), 99 );
 
-			//Add custom image sizes
+			/**
+			 * Add custom image sizes.  
+			 *
+			 * @since 1.0.0
+			 */	
 			add_action( 'init', array( &$this, 'add_custom_image_sizes' ) );
 
-			//Add custom image sizes to media library
+			/**
+			 * Add custom image sizes to media library.
+			 *
+			 * @todo: decide to keep it or remove it
+			 * @since 1.0.0
+			 */	
 			//add_filter( 'image_size_names_choose', array( &$this, 'add_custom_media_library_sizes' ) );
-			//Add plugin admin menu - Network
+			
+			/**
+			 * Add plugin menu for network installs.  
+			 *
+			 * @since 1.0.0
+			 */	
 			add_action( 'network_admin_menu', array( &$this, 'add_admin_menu_network' ) );
 
-			//Add plugin admin menu
+			/**
+			 * Add admin menu.
+			 *
+			 * @since 1.0.0
+			 */	
 			add_action( 'admin_menu', array( &$this, 'add_admin_menu' ) );
 
-			//Check for admin notices
+			/**
+			 * Check for admin notices.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'admin_notices', array( &$this, 'admin_nopermalink_warning' ) );
 
-			//Custom header actions
+			/**
+			 * Custom header actions.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'wp_enqueue_scripts', array( &$this, 'header_actions' ) );
 
-			//Custom header actions
+			/**
+			 * Custom header actions.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'wp_head', array( &$this, 'head_actions' ) );
 
-			//Custom footer actions
-
+			/**
+			 * Custom footer actions.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'wp_footer', array( &$this, 'footer_actions' ) );
 
+			/**
+			 * Add jQueryUI.
+			 *
+			 * @todo: decide if we need to keep this hook
+			 * @since 1.0.0
+			 */				
 			//add_action( 'admin_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
+
+			/**
+			 * Admin header actions.
+			 *
+			 * @since 1.0.0
+			 */							
 			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_header_actions' ) );
 
-
+			/**
+			 * Load Course Details (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_course_details', array( &$this, 'admin_coursepress_page_course_details' ) );
+			
+			/**
+			 * Load CoursePress Settings (admin).
+			 *
+			 * @since 1.0.0
+			 */							
 			add_action( 'load-' . $this->screen_base . '_page_settings', array( &$this, 'admin_coursepress_page_settings' ) );
+			
+			/**
+			 * Load Course Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-toplevel_page_courses', array( &$this, 'admin_coursepress_page_courses' ) );
+			
+			/**
+			 * Load Course Notifications Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_notifications', array( &$this, 'admin_coursepress_page_notifications' ) );
+
+			/**
+			 * Load Course Discussions Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_discussions', array( &$this, 'admin_coursepress_page_discussions' ) );
+
+			/**
+			 * Load Course Reports Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_reports', array( &$this, 'admin_coursepress_page_reports' ) );
+
+			/**
+			 * Load Course Assessments Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_assessment', array( &$this, 'admin_coursepress_page_assessment' ) );
+
+			/**
+			 * Load Course Students Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_students', array( &$this, 'admin_coursepress_page_students' ) );
+
+			/**
+			 * Load Course Instructors Page (admin).
+			 *
+			 * @since 1.0.0
+			 */				
 			add_action( 'load-' . $this->screen_base . '_page_instructors', array( &$this, 'admin_coursepress_page_instructors' ) );
 
+			/**
+			 * Redirect users after login.
+			 *
+			 * @since 1.0.0
+			 */				
 			add_filter( 'login_redirect', array( &$this, 'login_redirect' ), 10, 3 );
+			
+			/**
+			 * Check for valid permalinks.
+			 *
+			 * @since 1.0.0
+			 */							
 			add_filter( 'post_type_link', array( &$this, 'check_for_valid_post_type_permalinks' ), 10, 3 );
+
+			/**
+			 * Enable comments for discussions pages.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_filter( 'comments_open', array( &$this, 'comments_open_filter' ), 10, 2 );
 
-			add_filter( "comments_template", array( &$this, "no_comments_template" ) );
+			/**
+			 * Remove comments from Virtual Pages.
+			 *
+			 * @since 1.0.0
+			 */							
+			add_filter( 'comments_template', array( &$this, 'no_comments_template' ) );
 
-			// Load payment gateways ( to do )
-			//$this->load_payment_gateways();
-			//Load add-ons ( for future us, to do )
-			//$this->load_addons();
-			//update install script if necessary
-
-			/* if ( get_option( 'coursepress_version' ) != $this->version ) {
-			  $this->install();
-			  } */
-
+			/**
+			 * Load CoursePress templates.
+			 *
+			 * @since 1.0.0
+			 */							
 			add_action( 'wp', array( &$this, 'load_plugin_templates' ) );
+			
+			/**
+			 * Add CoursePress rewrite rules.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ) );
-			//add_action( 'wp_loaded', array( &$this, 'flush_rules' ) );
-			//add_filter( 'generate_rewrite_rules', array( &$this, 'generate_rewrite_rules' ) );
-			//add_action( 'init', array( &$this, 'do_rewrite' ) );
+						
+			/**
+			 * Prevent Virtual Pages from redirecting.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_action( 'pre_get_posts', array( &$this, 'remove_canonical' ) );
 
+			/**
+			 * Filter searches.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_filter( 'pre_get_posts', array( &$this, 'filter_search' ) );
+			
+			/**
+			 * Add post type filtering.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_filter( 'posts_where', array( &$this, 'posts_where' ) );
 
+			/**
+			 * Update unit positions of reordering (AJAX).
+			 *
+			 * @since 1.0.0
+			 */										
 			add_action( 'wp_ajax_update_units_positions', array( $this, 'update_units_positions' ) );
+			
+			/**
+			 * Apply custom filter to WP query variables (AJAX).
+			 *
+			 * @since 1.0.0
+			 */													
 			add_filter( 'query_vars', array( $this, 'filter_query_vars' ) );
+			
+			/**
+			 * Filter 'edit' link for Course post type.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_filter( 'get_edit_post_link', array( $this, 'courses_edit_post_link' ), 10, 3 );
+			
+			/**
+			 * Continue parsing requests when WordPress is done.
+			 *
+			 * @since 1.0.0
+			 */										
 			add_action( 'parse_request', array( $this, 'action_parse_request' ) );
+			
+			/**
+			 * Redirect to Setup Guide on plugin activation.
+			 *
+			 * @since 1.0.0
+			 */													
 			add_action( 'admin_init', array( &$this, 'coursepress_plugin_do_activation_redirect' ), 0 );
+			
+			/**
+			 * Record last student login.
+			 *
+			 * @since 1.0.0
+			 */													
 			add_action( 'wp_login', array( &$this, 'set_latest_student_activity_upon_login' ), 10, 2 );
+			
+			/**
+			 * Did MarketPress process a successful order.
+			 *
+			 * If MarketPress payment was successful, then enrol the user.
+			 *
+			 * @since 1.0.0
+			 */													
 			add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ) );
+			
+			/**
+			 * Course taxonomies (not in this version).
+			 *
+			 * @todo: on the roadmap to implement
+			 * @since 1.0.0
+			 */													
 			add_action( 'parent_file', array( &$this, 'parent_file_correction' ) );
 
-			// Update CoursePress login/logout menu item.
+			/**
+			 * Update CoursePress login/logout menu item.
+			 *
+			 * @since 1.0.0
+			 */													
 			add_filter( 'wp_nav_menu_objects', array( &$this, 'menu_metabox_navigation_links' ), 10, 2 );
 
 			//add_filter( 'wp_nav_menu_args', array( &$this, 'modify_nav_menu_args' ), 10 );
 
 			if ( get_option( 'display_menu_items', 1 ) ) {
+				
+				/**
+				 * Create CoursePress basic menus automatically.
+				 *
+				 * @since 1.0.0
+				 */													
 				add_filter( 'wp_nav_menu_objects', array( &$this, 'main_navigation_links' ), 10, 2 );
 			}
 
+			/* 
+			 * If allowing CoursePress to create a basic menu then
+			 * make sure that there is somewhere to put it.
+			 */
 			if ( get_option( 'display_menu_items', 1 ) ) {
 
 				$theme_location = 'primary';
@@ -487,37 +856,122 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				if ( ! has_nav_menu( $theme_location ) ) {
 					if ( get_option( 'display_menu_items', 1 ) ) {
+
+						/**
+						 * Fallback if there is no menu location.
+						 *
+						 * @since 1.0.0
+						 */													
 						add_filter( 'wp_page_menu', array( &$this, 'main_navigation_links_fallback' ), 20, 2 );
 						if ( wp_get_theme() == 'CoursePress' ) {
+
+							/**
+							 * Special case for the CoursePress theme.
+							 *
+							 * @todo: replace this with a hook so that it can be extended for other themes.
+							 * @since 1.0.0
+							 */													
 							add_filter( 'wp_page_menu', array( &$this, 'mobile_navigation_links_fallback' ), 21, 3 );
 						}
 					}
 				}
 			}
 
+			/**
+			 * Add image filter for content.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_filter( 'element_content_filter', array( &$this, 'element_content_img_filter' ), 98, 1 );
 
+			/**
+			 * Add link filter for content.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_filter( 'element_content_filter', array( &$this, 'element_content_link_filter' ), 99, 1 );
 
+			/**
+			 * Redirect user after logout.
+			 *
+			 * Works with custom shortcode and CoursePress custom login.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'wp_logout', array( &$this, 'redirect_after_logout' ) );
 
+			/**
+			 * Load the correct Virtual Page template.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'template_redirect', array( &$this, 'virtual_page_template' ) );
 
+			/**
+			 * Display the Instructor invite confirmation page.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'template_redirect', array( &$this, 'instructor_invite_confirmation' ) );
 
-			// Setup TinyMCE callback
+			/**
+			 * Add keydown() event listener for WP Editor.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
 
+			/**
+			 * MarketPress: Making it a little bit more friendly for non-physical goods (aka Courses).
+			 *
+			 * @since 1.0.0
+			 */									
 			add_filter( 'gettext', array( &$this, 'change_mp_shipping_to_email' ), 20, 3 );
 
-			// Filter Product Image for courses
+			/**
+			 * Use the course list image as the MarketPress product image.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_filter( 'mp_product_image', array( &$this, 'course_product_image' ), 10, 4 );
 
+			/**
+			 * Show extra instructor profile fields.
+			 *
+			 * @since 1.0.0
+			 */									
 			add_action( 'show_user_profile', array( &$this, 'instructor_extra_profile_fields' ) );
+			
+			/**
+			 * Edit/show extra instructor profile fields.
+			 *
+			 * @since 1.0.0
+			 */												
 			add_action( 'edit_user_profile', array( &$this, 'instructor_extra_profile_fields' ) );
+
+			/**
+			 * Save instructor profile fields.
+			 *
+			 * Grant/Revoke instructor capabilities.
+			 *
+			 * @since 1.0.0
+			 */												
 			add_action( 'personal_options_update', array( &$this, 'instructor_save_extra_profile_fields' ) );
+			
+			/**
+			 * Save instructor profile fields.
+			 *
+			 * Grant/Revoke instructor capabilities.
+			 *
+			 * @since 1.0.0
+			 */																
 			add_action( 'edit_user_profile_update', array( &$this, 'instructor_save_extra_profile_fields' ) );
 
+			/**
+			 * Add extra classes to HTML body.
+			 *
+			 * @since 1.0.0
+			 */												
 			add_filter( 'body_class', array( &$this, 'add_body_classes' ) );
 
 			// Handle MP payment confirmation
@@ -527,14 +981,24 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				foreach ( $gateways as $gateway ) {
 					// Don't enroll students automatically with manual payments.
 					if ( 'manual-payments' != $gateway ) {
+						/**
+						 * Hook each payment gateway's payment confirmation to enrol students.
+						 *
+						 * @since 1.0.0
+						 */					
 						add_action( 'mp_payment_confirm_' . $gateway, array( &$this, 'enroll_on_payment_confirmation' ), 10, 2 );
 					}
 				}
 			}
 
-			// Override order success page for courses
+			/**
+			 * Change the MarketPress message to be more suitable for Courses.
+			 *
+			 * MarketPress integration. 
+			 *
+			 * @since 1.0.0
+			 */								
 			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
-			// apply_filters( "mp_setting_" . implode( '', $keys ), $setting, $default );
 		}
 
 		function add_body_classes( $classes ) {
@@ -1308,8 +1772,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		/* Force requested file downlaod */
 
 		function check_for_force_download_file_request() {
-
-			// if( defined( 'DOING_AJAX' ) && DOING_AJAX ) { cp_write_log( 'doing ajax' ); }
 
 			if ( isset( $_GET[ 'fdcpf' ] ) ) {
 				ob_start();
