@@ -53,7 +53,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @access private
 		 * @var object 
 		 */
-		private static $instance	 = null;
+		private static $instance = null;
 		
 		/** 
 		 * Current plugin version.
@@ -61,7 +61,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version				 = '1.0.8';
+		public $version = '1.0.8';
 		
 		/** 
 		 * Plugin friendly name.
@@ -69,7 +69,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */		
-		public $name				 = 'CoursePress Pro';
+		public $name = 'CoursePress Pro';
 		
 		/** 
 		 * Plugin directory name.
@@ -77,7 +77,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */		
-		public $dir_name			 = 'coursepress';
+		public $dir_name = 'coursepress';
 		
 		/** 
 		 * Plugin installation location.
@@ -87,7 +87,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $location			 = '';
+		public $location = '';
 		
 		/** 
 		 * Plugin installation directory.
@@ -95,7 +95,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $plugin_dir			 = '';
+		public $plugin_dir = '';
 		
 		/** 
 		 * Plugin installation url.
@@ -103,7 +103,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */		
-		public $plugin_url			 = '';
+		public $plugin_url = '';
 		
 		/** 
 		 * Is MarketPress active.
@@ -113,7 +113,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var bool
 		 */		
-		public $marketpress_active	 = false;
+		public $marketpress_active = false;
 		
 		/** 
 		 * Active MarketPress gateways.
@@ -123,7 +123,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var bool
 		 */				
-		public static $gateway		 = array();
+		public static $gateway = array();
 
 		/** 
 		 * CoursePress constructor.
@@ -135,16 +135,21 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			global $wpmudev_notices;
 
-			//setup our variables
+			// Setup CoursePress properties
 			$this->init_vars();
 
+			// Prepare WPMUDev Dashboard Notifications
 			$wpmudev_notices[] = array( 'id' => 913071, 'name' => $this->name, 'screens' => array( 'toplevel_page_courses', $this->screen_base . '_page_course_details', $this->screen_base . '_page_instructors', $this->screen_base . '_page_students', $this->screen_base . '_page_assessment', $this->screen_base . '_page_reports', $this->screen_base . '_page_notifications', $this->screen_base . '_page_settings' ) );
+			
+			/**
+			 * Include WPMUDev Dashboard.
+			 */
 			include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 
-			//register themes directory
+			// Define custom theme directory for CoursePress theme
 			$this->register_theme_directory();
 
-			//Register Globals
+			// Register Globals
 			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
 			$GLOBALS[ 'course_slug' ]				 = $this->get_course_slug();
 			$GLOBALS[ 'units_slug' ]				 = $this->get_units_slug();
@@ -154,61 +159,122 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$GLOBALS[ 'enrollment_process_url' ]	 = $this->get_enrollment_process_slug( true );
 			$GLOBALS[ 'signup_url' ]				 = $this->get_signup_slug( true );
 
-			//Install plugin
+			// Install Plugin
 			register_activation_hook( __FILE__, array( $this, 'install' ) );
 
+			/**
+			 * @todo: Document this
+			 */ 
 			global $last_inserted_unit_id; //$last_inserted_module_id
 			global $last_inserted_front_page_module_id; //$last_inserted_module_id
-			//add_theme_support( 'post-thumbnails' );
-			//CoursePress Capabilities Class
+			
+
+			/**
+			 * CoursePress Capabilities Class.
+			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
 
 			//Administration area
 			if ( is_admin() ) {
 
-
-				// Course search
+				/**
+				 * Course search.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.coursesearch.php' );
 
-				// Notificatioon search
+				/**
+				 * Notificatioon search.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.notificationsearch.php' );
 
-				// Contextual help
+				/**
+				 * Contextual help.
+				 *
+				 * @todo: Finish this class
+				 */
 				//require_once( $this->plugin_dir . 'includes/classes/class.help.php' );
-				// Search Students class
+				
+				/**
+				 * Search Students class.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.studentsearch.php' );
 
-				// Search Instructor class
+				/**
+				 * Search Instructor class.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.instructorsearch.php' );
 
-				//Pagination Class
+				/**
+				 * Pagination Class.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.pagination.php' );
 
-				//Tooltip Helper
+				/**
+				 * Tooltip Helper.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.cp-helper-tooltip.php' );
 
-				// Menu Meta Box
+				/**
+				 * CoursePress Menu meta box.
+				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );
 
-				//Listen to dynamic editor requests ( using on unit page in the admin )
+				/**
+				 * Listen to dynamic editor requests.
+				 *
+				 * Used on unit page in admin.
+				 *
+				 * @since 1.0.0
+				 */
 				add_action( 'wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ) );
 
-				//Assing instructor ajax call
-				//add_action( 'wp_ajax_assign_instructor_capabilities', array( &$this, 'assign_instructor_capabilities' ) );
-				// Changed to perform an update instead of just assigning capabilities
-
+				/**
+				 * Add instructor to a course via AJAX.
+				 *
+				 * This also assigns the instructor capabilities.
+				 *
+				 * @since 1.0.0
+				 */
 				add_action( 'wp_ajax_add_course_instructor', array( &$this, 'add_course_instructor' ) );
 
-				// Using ajax to remove course instructor
+				/**
+				 * Remove instructor from a course via AJAX.
+				 *
+				 * If the instructor is no longer an instructor of any courses
+				 * then the instructor's capabilities will also be removed.
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_remove_course_instructor', array( &$this, 'remove_course_instructor' ) );
 
-				//Assign Course Setup auto-update ajax call
+				/**
+				 * Update course during setup via AJAX.
+				 *
+				 * This method is executed during setup in the 'Course Overview'.
+				 * Each time the user moved from one section to another or when triggered
+				 * via the 'Update' button.
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_autoupdate_course_settings', array( &$this, 'autoupdate_course_settings' ) );
 
-				//Does Course have an active Gateway?
+				/**
+				 * Determined if a gateway is active via AJAX.
+				 *
+				 * MarketPress integration:
+				 * An active gateway is required to be able to sell a course.
+				 *
+				 * @since 1.0.0
+				 */				
 				add_action( 'wp_ajax_course_has_gateway', array( &$this, 'course_has_gateway' ) );
 
-				//Invite instructor ajax call
+				/**
+				 * Invite an instructor to join a course via AJAX.
+				 *
+				 * Sends the instructor an email with a confirmation link.
+				 *
+				 * @since 1.0.0
+				 */
 				add_action( 'wp_ajax_send_instructor_invite', array( &$this, 'send_instructor_invite' ) );
 
 				//Change course state ( draft / publish )
