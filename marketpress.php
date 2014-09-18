@@ -453,7 +453,7 @@ Thanks again!", 'mp')
 		// Load up the localization file if we're using WordPress in a different language
 		// Place it in this plugin's "languages" folder and name it "mp-[value in wp-config].mo"
 		$mu_plugins = wp_get_mu_plugins();
-		$lang_dir = dirname(plugin_basename($this->plugin_file)) . '/marketpress-includes/languages/';
+		$lang_dir = dirname(plugin_basename($this->plugin_file)) . 'includes/marketpress/marketpress-includes/languages/';
 		$custom_path = WP_LANG_DIR . '/marketpress/mp-' . get_locale() . '.mo';
 		
 		if ( file_exists($custom_path) ) {
