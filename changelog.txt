@@ -13,6 +13,8 @@ CHANGE LOG
 * Resolved issue with instructor capabilities settings and saving
 * Resolved possible issues with rewrite rules formating and avoid 404s
 * Fixed issue with non-protected discussions for students who didn't enroll to the course
+* Fixed up issues with course completion checking  
+* Added file size indicator next to downloadable files  
 
 = 1.0.7 = 
 -------------------------------------------------
