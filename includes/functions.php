@@ -13,6 +13,14 @@
   return $url;
   } */
 
+function cp_can_see_unit_draft(){
+	if(  current_user_can( 'manage_options') || current_user_can( 'coursepress_create_course_unit_cap' )){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 function cp_user_can_register() {
     if ( is_multisite() ) {
         return users_can_register_signup_filter();
