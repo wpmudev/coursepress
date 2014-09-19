@@ -11,6 +11,7 @@ CHANGE LOG
 * Upgraded MarketPress Bundle to 2.9.5.3
 * Added warning message (for admins) to the course overview page if "anyone can register" is not selected
 * Resolved issue with instructor capabilities settings and saving
+* Resolved possible issues with rewrite rules formating and avoid 404s
 
 = 1.0.7 = 
 -------------------------------------------------
