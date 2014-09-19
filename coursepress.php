@@ -4582,4 +4582,3 @@ if ( ! class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
-

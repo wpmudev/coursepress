@@ -31,10 +31,14 @@ class file_module extends Unit_Module {
                 require_once( $coursepress->plugin_dir . 'includes/classes/class.encryption.php' );
                 $encryption = new CP_Encryption();
 
+				$file_size = cp_get_file_size( $data->file_url );
+				
                 $data->file_url = $encryption->encode($data->file_url);
+				$url = trailingslashit(home_url()) . '?fdcpf=' . $data->file_url;
+				
                 ?>  
                 <div class="file_holder">
-                    <a href="<?php echo trailingslashit(home_url()) . '?fdcpf=' . $data->file_url; ?>" /><?php echo ( isset($data->link_text) ? $data->link_text : $data->post_title ); ?></a> 
+                    <a href="<?php echo esc_url( $url ) ?>" /><?php echo ( isset($data->link_text) ? $data->link_text : $data->post_title ); ?> <small>(<?php echo esc_html( $file_size ); ?>)</small></a> 
                 </div>
             <?php } ?>
         </div>
