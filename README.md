@@ -112,3 +112,21 @@ MarketPress is now updated for CoursePress Pro.
 ##### Someone else updated MarketPress Bundle  
 
 This is where `git submodule update` fits in. It makes sure that you have the latest submodule in your branch updated to the commit ID of the submodule in your branch.  
+
+
+### Releasing
+
+#### CoursePress (wp.org version)
+
+CoursePress is identical to CoursePress Pro, but the following changes need to be made:  
+
+* Copy/Merge ALL code from Pro to Standard (**dont remove readme.txt**)
+* Remove /includes/marketpress/  
+* Remove ./marketpress.php  
+* Add MarketPress Lite to /includes/wordpress-ecommerce
+* Copy MarketPress Lite's marketpress.php to ./a-marketpress.php  
+* Update paths in ./a-marketpress.php  
+* Change plugin name in ./a-marketpress.php  
+* Change plugin name in ./coursepress.php  
+* Remove WPMUDev Dashboard notifications and require statements  
+* Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php  
