@@ -11,6 +11,7 @@
   font-weight: normal;
   font-style: normal;
 }
+.update .fa,
 .cp-wrap .fa {
   display: inline-block;
   font-family: CP_Font_Awesome;
@@ -439,6 +440,7 @@
 .cp-wrap .fa-minus-circle:before {
   content: "\f056";
 }
+.update .fa-times-circle:before,
 .cp-wrap .fa-times-circle:before {
   content: "\f057";
 }
