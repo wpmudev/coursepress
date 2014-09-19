@@ -2718,7 +2718,7 @@ if ( !class_exists('CoursePress_Shortcodes') ) {
             $args = array(
                 'order' => 'ASC',
                 'post_type' => 'unit',
-                'post_status' => 'publish',
+                'post_status' => (cp_can_see_unit_draft() ? 'any' : 'publish'),
                 'meta_key' => 'unit_order',
                 'orderby' => 'meta_value_num',
                 'posts_per_page' => '-1',
