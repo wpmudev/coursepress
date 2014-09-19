@@ -42,15 +42,20 @@ if ( !class_exists('Course_Completion') ) {
             $units = $this->get_units();
             foreach ( $units as $key => $unit ) {
                 $this->unit_index[$unit->ID] = $key;
-                // Used to get input modules
+                
+				// Used to get input modules
                 $unit->modules = $this->get_unit_modules($unit->ID);
+								// cp_write_log( $unit->modules );
                 // Used to determine page views
                 $unit->page_count = $this->get_unit_pages($unit->modules);
+
                 // Used to determine mandatory modules
-                $unit->input_module_ids = $this->get_input_modules($unit->modules);
+                $unit->input_module_ids = $this->get_input_modules($unit->modules);	
                 $unit->mandatory_module_ids = $this->get_mandatory_modules($unit->modules, $unit->input_module_ids);
+
                 // Uses only mandatory modules
-                $unit->gradable_module_ids = $this->get_gradable_modules($unit->modules, $unit->input_module_ids);
+                $unit->gradable_module_ids = $this->get_gradable_modules($unit->modules, $unit->mandatory_module_ids);
+
 				$this->units[] = $unit;
             }
         }
@@ -83,19 +88,19 @@ if ( !class_exists('Course_Completion') ) {
             foreach ( $modules as $mod ) {
                 $class_name = $mod->module_type;
                 if ( in_array($class_name, $input_modules) ) {
-                    $inputs[$count] = $count;
+					$inputs[$mod->ID] = $count;
                 }
                 $count += 1;
             }
             return $inputs;
         }
-
+		
         function get_mandatory_modules( $modules, $input_ids ) {
             $mandatory_ids = array();
-            foreach ( $input_ids as $input_id ) {
+            foreach ( $input_ids as $key => $input_id ) {
                 $mandatory = get_post_meta($modules[$input_id]->ID, 'mandatory_answer', true);
                 if ( 'yes' == $mandatory ) {
-                    $mandatory_ids[$input_id] = $input_id;
+                    $mandatory_ids[$key] = $input_id;
                 }
             }
             return $mandatory_ids;
@@ -103,10 +108,10 @@ if ( !class_exists('Course_Completion') ) {
 
         function get_gradable_modules( $modules, $input_ids ) {
             $gradable_ids = array();
-            foreach ( $input_ids as $input_id ) {
+            foreach ( $input_ids as $key => $input_id ) {
                 $gradable = get_post_meta($modules[$input_id]->ID, 'gradable_answer', true);
                 if ( 'yes' == $gradable ) {
-                    $gradable_ids[$input_id] = $input_id;
+                    $gradable_ids[$key] = $input_id;
                 }
             }
             return $gradable_ids;
@@ -137,14 +142,16 @@ if ( !class_exists('Course_Completion') ) {
 
             foreach ( $this->units as $unit ) {
                 $unit->mandatory_answered = array();
-                foreach ( $unit->mandatory_module_ids as $mod_id ) {
+                foreach ( $unit->mandatory_module_ids as $key => $mod_id ) {
                     $module = $unit->modules[$mod_id];
                     $module = new $module->module_type($module->ID);
+
                     $response = $module->get_response($student_id, $unit->modules[$mod_id]->ID);
+
                     if ( !empty($response) ) {
-                        $unit->mandatory_answered[$mod_id] = true;
+                        $unit->mandatory_answered[$key] = true;
                     } else {
-                        $unit->mandatory_answered[$mod_id] = false;
+                        $unit->mandatory_answered[$key] = false;
                     }
                 }
             }
@@ -154,10 +161,11 @@ if ( !class_exists('Course_Completion') ) {
 
             foreach ( $this->units as $unit ) {
                 $unit_answered = true;
-                foreach ( $unit->mandatory_module_ids as $mod_id ) {
+                foreach ( $unit->mandatory_module_ids as $key => $mod_id ) {
                     $module = $unit->modules[$mod_id];
+
                     $answered = false;
-                    if ( !empty($unit->mandatory_answered[$mod_id]) && $unit->mandatory_answered[$mod_id] ) {
+                    if ( !empty($unit->mandatory_answered[$key]) && $unit->mandatory_answered[$key] ) {
                         $answered = true;
                     }
                     $unit_answered &= $answered;
@@ -169,7 +177,7 @@ if ( !class_exists('Course_Completion') ) {
         function init_gradable_modules_passed( $student_id = 0 ) {
             foreach ( $this->units as $unit ) {
                 $unit->gradable_passed = array();
-                foreach ( $unit->gradable_module_ids as $mod_id ) {
+                foreach ( $unit->gradable_module_ids as $key => $mod_id ) {
                     $module = $unit->modules[$mod_id];
                     $module = new $module->module_type($module->ID);
                     $response = $module->get_response($student_id, $unit->modules[$mod_id]->ID);
@@ -182,7 +190,7 @@ if ( !class_exists('Course_Completion') ) {
                         $success = $grade['grade'] >= $minimum_grade ? true : false;
                     }
 
-                    $unit->gradable_passed[$mod_id] = $success;
+                    $unit->gradable_passed[$key] = $success;
                 }
             }
         }
@@ -193,10 +201,10 @@ if ( !class_exists('Course_Completion') ) {
                 $unit_passed = true;
 				$unit->gradable_passed_count = 0;
 				$unit->total_gradable = count( $unit->gradable_module_ids );
-                foreach ( $unit->gradable_module_ids as $mod_id ) {
+                foreach ( $unit->gradable_module_ids as $key => $mod_id ) {
                     $module = $unit->modules[$mod_id];
                     $success = false;
-                    if ( !empty($unit->gradable_passed[$mod_id]) && $unit->gradable_passed[$mod_id] ) {
+                    if ( !empty($unit->gradable_passed[$key]) && $unit->gradable_passed[$key] ) {
                         $success = true;
 						$unit->gradable_passed_count += 1;
                     }
@@ -205,38 +213,21 @@ if ( !class_exists('Course_Completion') ) {
                 $unit->all_modules_passed = $unit_passed;
             }
         }
-
+		
         function get_remaining_mandatory_items() {
             foreach ( $this->units as $unit ) {
-
-                $mandatory = $unit->mandatory_module_ids;
-                $answered = array_filter($unit->mandatory_answered);
-
-                // We only want mandatory items, so grab those ids.
-                $gradable_array = array_intersect($unit->gradable_module_ids, $mandatory);
+				$remaining  = count($unit->mandatory_module_ids);
 				
-                // Now get the passes
-                $passed = array_filter($unit->gradable_passed);
-				
-                // Remove non-mandatory graded items, irrelevant for this calculartion
-                foreach ( array_keys($passed) as $pass_id ) {
-                    if ( !in_array($pass_id, array_keys($gradable_array)) ) {
-                        unset($passed[$pass_id]);
-                    }
-                }
-
-                $required_in_answers = count($gradable_array);
-
-                $in_answered = 0;
-                foreach ( array_keys($passed) as $pass_id ) {
-                    if ( in_array($pass_id, array_keys($answered)) ) {
-                        $in_answered += 1;
-                    }
-                }
-
-                $not_in_answers = !empty($gradable_array) ? $required_in_answers - $in_answered : 0;
-                $answers_adjusted = count($answered) - $required_in_answers;
-                $remaining = count($mandatory) - $answers_adjusted - $required_in_answers + $not_in_answers;
+				foreach( array_keys($unit->mandatory_module_ids) as $module_id ) {
+					
+					$answered = $unit->mandatory_answered[ $module_id ];
+					$gradable = in_array( $module_id, array_keys( $unit->gradable_module_ids ) );
+					$passed   = $gradable ? $unit->gradable_passed[ $module_id ] : false;
+					
+					if( $answered && ( ( $gradable && $passed ) || ! $gradable  ) ) {
+						$remaining -= 1;
+					}
+				}
 
                 $unit->remaining_mandatory_items = $remaining;
             }
@@ -265,7 +256,6 @@ if ( !class_exists('Course_Completion') ) {
                 $completion = $unit->completed_steps / $unit->total_steps * 100;
 
                 $unit->completion = ( int ) $completion;
-
             }
         }
 
@@ -280,12 +270,12 @@ if ( !class_exists('Course_Completion') ) {
 
             $this->init_gradable_modules_passed($student_id);
             $this->check_gradable_modules_passed($student_id);
-
+			
             $this->get_remaining_mandatory_items();
+
             $this->get_total_steps();
             $this->get_completed_steps();
             $this->get_completion();
-			
         }
 
         function unit_progress( $unit_id ) {
