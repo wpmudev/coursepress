@@ -8,8 +8,9 @@ CHANGE LOG
 
 = 1.0.8 = 
 -------------------------------------------------
-* Upgraded MartketPress Bundle to 2.9.5.3
+* Upgraded MarketPress Bundle to 2.9.5.3
 * Added warning message (for admins) to the course overview page if "anyone can register" is not selected
+* Resolved issue with instructor capabilities settings and saving
 
 = 1.0.7 = 
 -------------------------------------------------
