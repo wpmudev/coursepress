@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.0.9 =
+* Resolved issue with details button on courses archive and inconsistent shortcode used
+
 = 1.0.8 = 
 -------------------------------------------------
 * Upgraded MarketPress Bundle to 2.9.5.3
