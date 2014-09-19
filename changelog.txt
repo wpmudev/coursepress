@@ -12,6 +12,7 @@ CHANGE LOG
 * Added warning message (for admins) to the course overview page if "anyone can register" is not selected
 * Resolved issue with instructor capabilities settings and saving
 * Resolved possible issues with rewrite rules formating and avoid 404s
+* Fixed issue with non-protected discussions for students who didn't enroll to the course
 
 = 1.0.7 = 
 -------------------------------------------------
