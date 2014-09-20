@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.0.10 =
+* Fixed issue with course limits in PRO version
+
 = 1.0.9 =
 * Resolved issue with details button on courses archive and inconsistent shortcode used
 

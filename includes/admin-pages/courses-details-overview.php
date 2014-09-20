@@ -263,8 +263,12 @@ $gateways	 = !empty( $mp_settings[ 'gateways' ][ 'allowed' ] ) ? true : false;
 										} else {
 											$not_limited = false;
 										}
+									}else{
+										$not_limited = true;
 									}
 								}
+								
+								
 
 								if ( (isset( $_GET[ 'course_id' ] )) || !isset( $_GET[ 'course_id' ] ) && $not_limited ) {
 									?>
