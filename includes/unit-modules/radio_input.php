@@ -167,7 +167,7 @@ class radio_input_module extends Unit_Module {
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
-                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID)); ?>" />
+                <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
                     _e('Element Title', 'cp');

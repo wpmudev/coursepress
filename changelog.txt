@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.1.1 = 
 * Fixed issue with protection of the next unit when previous unit has set "User needs to complete current unit in order to access the next one"
+* Fixed bug with removing a Single Choice element from a Unit
 
 = 1.1.0 =
 * Fixed issue with course limits in PRO version
