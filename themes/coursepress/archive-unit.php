@@ -58,9 +58,9 @@ get_header();
 					$additional_class	 = '';
 					$additional_li_class = '';
 
-					$is_unit_available = do_shortcode( '[course_unit_details field="is_unit_available"]' );
+					$is_unit_available = do_shortcode( '[course_unit_details field="is_unit_available" unit_id="' . get_the_ID() . '"]' );
 
-					if ( $is_unit_available == false ) {
+					if ( !$is_unit_available ) {
 						$additional_class	 = 'locked-unit';
 						$additional_li_class = 'li-locked-unit';
 					}

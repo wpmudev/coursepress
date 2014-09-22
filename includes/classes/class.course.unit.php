@@ -1,391 +1,410 @@
 <?php
 
-if ( !defined('ABSPATH') )
-    exit; // Exit if accessed directly
+if ( !defined( 'ABSPATH' ) )
+	exit; // Exit if accessed directly
 
-if ( !class_exists('Unit') ) {
+if ( !class_exists( 'Unit' ) ) {
 
-    class Unit {
+	class Unit {
 
-        var $id = '';
-        var $output = 'OBJECT';
-        var $unit = array();
-        var $details;
-        var $course_id = '';
+		var $id			 = '';
+		var $output		 = 'OBJECT';
+		var $unit		 = array();
+		var $details;
+		var $course_id	 = '';
 
-        function __construct( $id = '', $output = 'OBJECT' ) {
-            $this->id = $id;
-            $this->output = $output;
-            $this->details = get_post($this->id, $this->output);
+		function __construct( $id = '', $output = 'OBJECT' ) {
+			$this->id		 = $id;
+			$this->output	 = $output;
+			$this->details	 = get_post( $this->id, $this->output );
 
-            $this->course_id = $this->get_parent_course_id();
-        }
+			$this->course_id = $this->get_parent_course_id();
+		}
 
-        function Unit( $id = '', $output = 'OBJECT' ) {
-            $this->__construct($id, $output);
-        }
+		function Unit( $id = '', $output = 'OBJECT' ) {
+			$this->__construct( $id, $output );
+		}
 
-        function get_unit() {
+		function get_unit() {
 
-            $unit = get_post($this->id, $this->output);
+			$unit = get_post( $this->id, $this->output );
 
-            if ( !empty($unit) ) {
+			if ( !empty( $unit ) ) {
 
-                if ( $unit->post_title == '' ) {
-                    $unit->post_title = __('Untitled', 'cp');
-                }
+				if ( $unit->post_title == '' ) {
+					$unit->post_title = __( 'Untitled', 'cp' );
+				}
 
-                if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
-                    $unit->post_status = __('unpublished', 'cp');
-                }
-                
-                if(!isset($unit->details->post_name)){
-                    //$unit->details->post_name = '';
-                }
+				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
+					$unit->post_status = __( 'unpublished', 'cp' );
+				}
 
-                return $unit;
-            } else {
-                return false;
-            }
-        }
+				if ( !isset( $unit->details->post_name ) ) {
+					//$unit->details->post_name = '';
+				}
 
-        function is_unit_available( $unit_id = '' ) {
+				return $unit;
+			} else {
+				return false;
+			}
+		}
 
-            if ( $unit_id == '' ) {
-                $unit_id = $this->id;
-            }
+		function is_unit_available( $unit_id = '' ) {
 
-            $unit_details = $this->get_unit($unit_id);
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
 
-            $current_date = ( date('Y-m-d', current_time('timestamp', 0)) );
+			$unit_details = $this->get_unit( $unit_id );
 
-            /* Check if previous unit must be 100% completed */
+			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
-            $forced_not_available = false;
+			/* Check if previous unit must be 100% completed */
 
-            //if ( $unit_details->force_current_unit_completion == 'on' ) {
-            $previous_unit = $this->get_previous_unit_from_the_same_course($unit_id);
+			$forced_not_available = false;
 
-            if ( $previous_unit ) {
-                if ( $previous_unit[0]->force_current_unit_completion == 'on' ) {
-                    if ( do_shortcode('[course_unit_details field="percent" unit_id="' . $previous_unit[0]->ID . '"]') < 100 ) {
-                        $forced_not_available = true;
-                    }
-                }
-            }
+			$previous_unit_id				 = $this->get_previous_unit_from_the_same_course( $unit_id );
+			$force_current_unit_completion	 = get_post_meta( $previous_unit_id, 'force_current_unit_completion', true );
 
-            if ( $forced_not_available ) {
-                return false;
-            }
+			$available = true;
 
-            if ( $current_date < $unit_details->unit_availability || $forced_not_available ) {
-                return false;
-            }
+			if ( $force_current_unit_completion ) {
+				if ( $force_current_unit_completion == 'on' ) {
 
-            return true;
-        }
+					$previous_unit_completion_percent = str_replace( '%', '', (do_shortcode( '[course_unit_details field="percent" format="false" style="none" unit_id="' . $previous_unit_id . '"]' ) ) );
 
-        function get_previous_unit_from_the_same_course( $unit_id = '', $post_status = 'publish' ) {
-
-            if ( $unit_id == '' ) {
-                $unit_id = $this->id;
-            }
-
-            $current_unit_order = get_post_meta($unit_id, 'unit_order', true);
-
-            $args = array(
-                'post_type' => 'unit',
-                'post_status' => $post_status,
-                'posts_per_page' => -1,
-                'meta_key' => 'course_id',
-                'meta_value' => $this->course_id,
-                'meta_query' => array(
-                    array(
-                        'key' => 'unit_order',
-                        'compare' => '=',
-                        'value' => $current_unit_order - 1
-                    ),
-                )
-            );
-
-            $previous_unit = get_posts($args);
-
-            return $previous_unit;
-        }
-
-        function get_unit_page_time_estimation( $unit_id, $page_num ) {
-
-            $unit_pages = $this->get_number_of_unit_pages();
-            $module = new Unit_Module();
-            $modules = $module->get_modules($unit_id);
+					if ( $previous_unit_completion_percent < 100 ) {
+						$available = false;
+					} else {
+						$available = true;
+					}
+				}
+			}
 
 
-            for ( $i = 1; $i <= $unit_pages; $i++ ) {
-                $pages_num = 1;
-                $total_minutes = 0;
-                $total_seconds = 0;
+			if ( $current_date < $unit_details->unit_availability || !$available ) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 
-                foreach ( $modules as $mod ) {
-                    $class_name = $mod->module_type;
-                    $time_estimation = $mod->time_estimation;
+		function get_previous_unit_from_the_same_course( $unit_id = '', $post_status = 'publish' ) {
 
-                    if ( class_exists($class_name) ) {
-                        $module = new $class_name();
+			global $wpdb;
 
-                        if ( $module->name == 'page_break_module' ) {
-                            $pages_num++;
-                        } else {
-                            if ( $pages_num == $page_num ) {
-                                if ( isset($time_estimation) && $time_estimation !== '' ) {
-                                    $estimatation = explode(':', $time_estimation);
-                                    if ( isset($estimatation[0]) ) {
-                                        $total_minutes = $total_minutes + intval($estimatation[0]);
-                                    }
-                                    if ( isset($estimatation[1]) ) {
-                                        $total_seconds = $total_seconds + intval($estimatation[1]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
 
-                $total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+			$current_unit_order = get_post_meta( $unit_id, 'unit_order', true );
 
-                $minutes = floor($total_seconds / 60);
-                $seconds = $total_seconds % 60;
+			/* $args = array(
+			  'post_type'		 => 'unit',
+			  'post_status'	 => $post_status,
+			  'posts_per_page' => 1,
+			  'meta_key'		 => 'course_id',
+			  'meta_value'	 => $this->course_id,
+			  'meta_query'	 => array(
+			  array(
+			  'key'		 => 'unit_order',
+			  'compare'	 => '<',
+			  'value'		 => $current_unit_order
+			  ),
+			  )
+			  ); */
 
-                if ( $minutes >= 1 || $seconds >= 1 ) {
-                    return apply_filters('cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min'));
-                } else {
-                    return apply_filters('cp_unit_time_estimation_na_format', __('N/A', 'cp'));
-                }
-            }
-        }
+			$previous_unit_id = $wpdb->get_var(
+			$wpdb->prepare(
+			"SELECT p.ID FROM $wpdb->posts p, $wpdb->postmeta pm  
+				WHERE p.ID = pm.post_id
+				AND p.post_parent = %d
+				AND pm.meta_key = 'unit_order' 
+				AND pm.meta_value < %d
+				ORDER BY pm.meta_value DESC
+				LIMIT 1", $this->course_id, $this->id )
+			);
 
-        function get_unit_time_estimation( $unit_id ) {
-            $module = new Unit_Module();
-            $modules = $module->get_modules($unit_id);
-            $total_minutes = 0;
-            $total_seconds = 0;
+			return $previous_unit_id;
 
-            foreach ( $modules as $mod ) {
-                $time_estimation = $mod->time_estimation;
-                if ( isset($time_estimation) && $time_estimation !== '' ) {
-                    $estimatation = explode(':', $time_estimation);
-                    if ( isset($estimatation[0]) ) {
-                        $total_minutes = $total_minutes + intval($estimatation[0]);
-                    }
-                    if ( isset($estimatation[1]) ) {
-                        $total_seconds = $total_seconds + intval($estimatation[1]);
-                    }
-                }
-            }
+			//$previous_unit = new Unit($previous_unit_id);//get_posts( $args );
+			//print_r($results);
+			//return $previous_unit;
+		}
 
-            $total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+		function get_unit_page_time_estimation( $unit_id, $page_num ) {
 
-            $minutes = floor($total_seconds / 60);
-            $seconds = $total_seconds % 60;
+			$unit_pages	 = $this->get_number_of_unit_pages();
+			$module		 = new Unit_Module();
+			$modules	 = $module->get_modules( $unit_id );
 
-            if ( $minutes >= 1 || $seconds >= 1 ) {
-                return apply_filters('cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min'));
-            } else {
-                return apply_filters('cp_unit_time_estimation_na_format', __('N/A', 'cp'));
-            }
-        }
 
-        function create_auto_draft($course_id){
-            global $user_id;
-            
-            $post = array(
-                'post_author' => $user_id,
-                'post_content' => '',
-                'post_status' => 'auto-draft', //$post_status
-                'post_title' => __('Untitled', 'cp'),
-                'post_type' => 'unit',
-                'post_parent' => $course_id
-            );
-            
-            $post_id = wp_insert_post($post);
-            
-            return $post_id;
-        }
-        
-        function delete_all_elements_auto_drafts( $unit_id = false ) {
-            global $wpdb;
+			for ( $i = 1; $i <= $unit_pages; $i++ ) {
+				$pages_num		 = 1;
+				$total_minutes	 = 0;
+				$total_seconds	 = 0;
 
-            if(!$unit_id){
-                $unit_id = $this->id;
-            }
-            
-            $unit_id = ( int ) $unit_id;
+				foreach ( $modules as $mod ) {
+					$class_name		 = $mod->module_type;
+					$time_estimation = $mod->time_estimation;
 
-            $wpdb->query(
-                    $wpdb->prepare("
+					if ( class_exists( $class_name ) ) {
+						$module = new $class_name();
+
+						if ( $module->name == 'page_break_module' ) {
+							$pages_num++;
+						} else {
+							if ( $pages_num == $page_num ) {
+								if ( isset( $time_estimation ) && $time_estimation !== '' ) {
+									$estimatation = explode( ':', $time_estimation );
+									if ( isset( $estimatation[ 0 ] ) ) {
+										$total_minutes = $total_minutes + intval( $estimatation[ 0 ] );
+									}
+									if ( isset( $estimatation[ 1 ] ) ) {
+										$total_seconds = $total_seconds + intval( $estimatation[ 1 ] );
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+
+				$minutes = floor( $total_seconds / 60 );
+				$seconds = $total_seconds % 60;
+
+				if ( $minutes >= 1 || $seconds >= 1 ) {
+					return apply_filters( 'cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
+				} else {
+					return apply_filters( 'cp_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
+				}
+			}
+		}
+
+		function get_unit_time_estimation( $unit_id ) {
+			$module			 = new Unit_Module();
+			$modules		 = $module->get_modules( $unit_id );
+			$total_minutes	 = 0;
+			$total_seconds	 = 0;
+
+			foreach ( $modules as $mod ) {
+				$time_estimation = $mod->time_estimation;
+				if ( isset( $time_estimation ) && $time_estimation !== '' ) {
+					$estimatation = explode( ':', $time_estimation );
+					if ( isset( $estimatation[ 0 ] ) ) {
+						$total_minutes = $total_minutes + intval( $estimatation[ 0 ] );
+					}
+					if ( isset( $estimatation[ 1 ] ) ) {
+						$total_seconds = $total_seconds + intval( $estimatation[ 1 ] );
+					}
+				}
+			}
+
+			$total_seconds = $total_seconds + ($total_minutes * 60); //converted everything into minutes for easy conversion back to minutes and seconds
+
+			$minutes = floor( $total_seconds / 60 );
+			$seconds = $total_seconds % 60;
+
+			if ( $minutes >= 1 || $seconds >= 1 ) {
+				return apply_filters( 'cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
+			} else {
+				return apply_filters( 'cp_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
+			}
+		}
+
+		function create_auto_draft( $course_id ) {
+			global $user_id;
+
+			$post = array(
+				'post_author'	 => $user_id,
+				'post_content'	 => '',
+				'post_status'	 => 'auto-draft', //$post_status
+				'post_title'	 => __( 'Untitled', 'cp' ),
+				'post_type'		 => 'unit',
+				'post_parent'	 => $course_id
+			);
+
+			$post_id = wp_insert_post( $post );
+
+			return $post_id;
+		}
+
+		function delete_all_elements_auto_drafts( $unit_id = false ) {
+			global $wpdb;
+
+			if ( !$unit_id ) {
+				$unit_id = $this->id;
+			}
+
+			$unit_id = (int) $unit_id;
+
+			$wpdb->query(
+			$wpdb->prepare( "
                 DELETE FROM $wpdb->posts
 		 WHERE post_parent = %d
                  AND post_status = 'auto-draft'
 		", $unit_id
-                    )
-            );
-        }
-        
-        function update_unit() {
-            global $user_id, $last_inserted_unit_id;
+			)
+			);
+		}
 
-            $post_status = 'private';
+		function update_unit() {
+			global $user_id, $last_inserted_unit_id;
 
-            if ( isset($_POST['unit_id']) && $_POST['unit_id'] != 0 ) {
+			$post_status = 'private';
 
-                $unit_id = ( isset($_POST['unit_id']) ? $_POST['unit_id'] : $this->id );
+			if ( isset( $_POST[ 'unit_id' ] ) && $_POST[ 'unit_id' ] != 0 ) {
 
-                $unit = get_post($unit_id, $this->output);
+				$unit_id = ( isset( $_POST[ 'unit_id' ] ) ? $_POST[ 'unit_id' ] : $this->id );
 
-                if ( $_POST['unit_name'] !== '' && $_POST['unit_name'] !== __('Untitled', 'cp') /* && $_POST['unit_description'] !== '' */ ) {
-                    if ( $unit->post_status !== 'publish' ) {
-                        $post_status = 'private';
-                    } else {
-                        $post_status = 'publish';
-                    }
-                } else {
-                    $post_status = 'draft';
-                }
-            }
+				$unit = get_post( $unit_id, $this->output );
 
-            $post = array(
-                'post_author' => $user_id,
-                'post_content' => '', //$_POST['unit_description']
-                'post_status' => $post_status, //$post_status
-                'post_title' => cp_filter_content($_POST['unit_name'], true),
-                'post_type' => 'unit',
-                'post_parent' => $_POST['course_id']
-            );
+				if ( $_POST[ 'unit_name' ] !== '' && $_POST[ 'unit_name' ] !== __( 'Untitled', 'cp' ) /* && $_POST['unit_description'] !== '' */ ) {
+					if ( $unit->post_status !== 'publish' ) {
+						$post_status = 'private';
+					} else {
+						$post_status = 'publish';
+					}
+				} else {
+					$post_status = 'draft';
+				}
+			}
 
-            if ( isset($_POST['unit_id']) ) {
-                $post['ID'] = $_POST['unit_id']; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-            }
+			$post = array(
+				'post_author'	 => $user_id,
+				'post_content'	 => '', //$_POST['unit_description']
+				'post_status'	 => $post_status, //$post_status
+				'post_title'	 => cp_filter_content( $_POST[ 'unit_name' ], true ),
+				'post_type'		 => 'unit',
+				'post_parent'	 => $_POST[ 'course_id' ]
+			);
 
-            $post_id = wp_insert_post($post);
+			if ( isset( $_POST[ 'unit_id' ] ) ) {
+				$post[ 'ID' ] = $_POST[ 'unit_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+			}
 
-            $last_inserted_unit_id = $post_id;
+			$post_id = wp_insert_post( $post );
 
-            update_post_meta($post_id, 'course_id', (int)$_POST['course_id']);
+			$last_inserted_unit_id = $post_id;
 
-            update_post_meta($post_id, 'unit_availability', cp_filter_content($_POST['unit_availability']));
+			update_post_meta( $post_id, 'course_id', (int) $_POST[ 'course_id' ] );
 
-            update_post_meta($post_id, 'force_current_unit_completion', cp_filter_content($_POST['force_current_unit_completion']));
+			update_post_meta( $post_id, 'unit_availability', cp_filter_content( $_POST[ 'unit_availability' ] ) );
 
-            update_post_meta($post_id, 'page_title', cp_filter_content($_POST['page_title'], true));
-			
-			update_post_meta($post_id, 'show_page_title', cp_filter_content($_POST['show_page_title_field']));
+			update_post_meta( $post_id, 'force_current_unit_completion', cp_filter_content( $_POST[ 'force_current_unit_completion' ] ) );
 
-            if ( !get_post_meta($post_id, 'unit_order', true) ) {
-                update_post_meta($post_id, 'unit_order', $post_id);
-            }
-           
-            return $post_id;
-        }
+			update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
 
-        function get_unit_page_name( $page_number ) {
-            return ! empty( $this->details->page_title ) ? $this->details->page_title[( int ) ($page_number - 1)] : '';
-        }
+			update_post_meta( $post_id, 'show_page_title', cp_filter_content( $_POST[ 'show_page_title_field' ] ) );
 
-        function delete_unit( $force_delete ) {
-            $wpdb;
-            wp_delete_post($this->id, $force_delete); //Whether to bypass trash and force deletion
-            //Delete unit modules
+			if ( !get_post_meta( $post_id, 'unit_order', true ) ) {
+				update_post_meta( $post_id, 'unit_order', $post_id );
+			}
 
-            $args = array(
-                'posts_per_page' => -1,
-                'post_parent' => $this->id,
-                'post_type' => 'module',
-                'post_status' => 'any',
-            );
+			return $post_id;
+		}
 
-            $units_modules = get_posts($args);
+		function get_unit_page_name( $page_number ) {
+			return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ($page_number - 1) ] : '';
+		}
 
-            foreach ( $units_modules as $units_module ) {
-                $module = new Unit_Module($units_module->ID);
-                $module->delete_module(true);
-            }
-        }
+		function delete_unit( $force_delete ) {
+			$wpdb;
+			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+			//Delete unit modules
 
-        function change_status( $post_status ) {
-            $post = array(
-                'ID' => $this->id,
-                'post_status' => $post_status,
-            );
+			$args = array(
+				'posts_per_page' => -1,
+				'post_parent'	 => $this->id,
+				'post_type'		 => 'module',
+				'post_status'	 => 'any',
+			);
 
-            // Update the post status
-            wp_update_post($post);
-        }
+			$units_modules = get_posts( $args );
 
-        function can_show_permalink() {
-            $unit = $this->get_unit();
-            if ( $unit->post_status !== 'draft' ) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+			foreach ( $units_modules as $units_module ) {
+				$module = new Unit_Module( $units_module->ID );
+				$module->delete_module( true );
+			}
+		}
 
-        function get_permalink( $course_id = '' ) {
-            global $course_slug;
-            global $units_slug;
+		function change_status( $post_status ) {
+			$post = array(
+				'ID'			 => $this->id,
+				'post_status'	 => $post_status,
+			);
 
-            if ( empty ( $course_id ) ) {
-                $course_id = get_post_meta($this->id, 'course_id', true);
-            }
-            
-            $course = new Course($course_id);
-            $course = $course->get_course();
-						 
-            $unit_permalink = trailingslashit(home_url() . '/') . trailingslashit($course_slug . '/') . trailingslashit(isset($course->post_name) ? $course->post_name : '' . '/') . trailingslashit($units_slug . '/') . trailingslashit(isset($this->details->post_name) ? $this->details->post_name : '' . '/');
-			
-            return $unit_permalink;
-        }
+			// Update the post status
+			wp_update_post( $post );
+		}
 
-        function get_unit_id_by_name( $slug ) {
-            global $wpdb;
-            $id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'unit'", $slug));
-            return $id;
-        }
+		function can_show_permalink() {
+			$unit = $this->get_unit();
+			if ( $unit->post_status !== 'draft' ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-        function get_parent_course_id( $unit_id = '' ) {
-            if ( $unit_id == '' ) {
-                $unit_id = $this->id;
-            }
+		function get_permalink( $course_id = '' ) {
+			global $course_slug;
+			global $units_slug;
 
-            $course_id = get_post_meta($unit_id, 'course_id', true);
-            return $course_id;
-        }
+			if ( empty( $course_id ) ) {
+				$course_id = get_post_meta( $this->id, 'course_id', true );
+			}
 
-        function get_number_of_unit_pages( $unit_id = '' ) {
-            if ( $unit_id == '' ) {
-                $unit_id = $this->id;
-            }
+			$course	 = new Course( $course_id );
+			$course	 = $course->get_course();
 
-            $module = new Unit_Module();
-            $modules = $module->get_modules($unit_id);
+			$unit_permalink = trailingslashit( home_url() . '/' ) . trailingslashit( $course_slug . '/' ) . trailingslashit( isset( $course->post_name ) ? $course->post_name : '' . '/'  ) . trailingslashit( $units_slug . '/' ) . trailingslashit( isset( $this->details->post_name ) ? $this->details->post_name : '' . '/'  );
 
-            $pages_num = 1;
+			return $unit_permalink;
+		}
 
-            foreach ( $modules as $mod ) {
-                $class_name = $mod->module_type;
+		function get_unit_id_by_name( $slug ) {
+			global $wpdb;
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'unit'", $slug ) );
+			return $id;
+		}
 
-                if ( class_exists($class_name) ) {
-                    $module = new $class_name();
+		function get_parent_course_id( $unit_id = '' ) {
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
 
-                    if ( $module->name == 'page_break_module' ) {
-                        $pages_num++;
-                    }
-                }
-            }
+			$course_id = get_post_meta( $unit_id, 'course_id', true );
+			return $course_id;
+		}
 
-            return $pages_num;
-        }
+		function get_number_of_unit_pages( $unit_id = '' ) {
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
 
-    }
+			$module	 = new Unit_Module();
+			$modules = $module->get_modules( $unit_id );
+
+			$pages_num = 1;
+
+			foreach ( $modules as $mod ) {
+				$class_name = $mod->module_type;
+
+				if ( class_exists( $class_name ) ) {
+					$module = new $class_name();
+
+					if ( $module->name == 'page_break_module' ) {
+						$pages_num++;
+					}
+				}
+			}
+
+			return $pages_num;
+		}
+
+	}
 
 }
 ?>
