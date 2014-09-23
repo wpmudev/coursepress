@@ -3830,20 +3830,21 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 			$unit_id = (int) $unit_id;
 
-			$is_unit_available				 = do_shortcode( '[course_unit_details field="is_unit_available"]' );
+			// $is_unit_available				 = do_shortcode( '[course_unit_details field="is_unit_available"]' );
 			$input_modules_count			 = do_shortcode( '[course_unit_details field="input_modules_count"]' );
 			$assessable_input_modules_count	 = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
 			$mandatory_input_elements		 = do_shortcode( '[course_unit_details field="mandatory_input_modules_count"]' );
 			$mandatory_responses			 = do_shortcode( '[course_unit_details field="student_module_responses" additional="mandatory"]' );
 			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
 
+			$unit = new Unit( $unit_id );
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
-				if ( $is_unit_available ) {
+				if ( $unit->is_unit_available() ) {
 					if ( $mandatory_input_elements > 0 ) {
 						echo do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' );
-						// echo $mandatory_responses;
+
 						?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
 							//_e('mandatory elements completed', 'coursepress');
 							// } else {
@@ -3853,15 +3854,29 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							//     _e('optional elements completed', 'coursepress');
 						}
 					} else {
-						echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+						if( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
+							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );							
+						} elseif( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
+							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
+						}
+						if( isset( $unit->status ) && ! $unit->status['date_restriction']['result']  ) {
+							echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );	
+						}
 					}
 					?></span>
 				<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
-				if ( $is_unit_available ) {
+				if ( $unit->is_unit_available() ) {
 					// _e('Read-only');
 				} else {
-					echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+					if( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
+						esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );							
+					} elseif( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
+						esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
+					}
+					if( isset( $unit->status ) && ! $unit->status['date_restriction']['result']  ) {
+						echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );	
+					}
 				}
 					?></span>
 					<?php

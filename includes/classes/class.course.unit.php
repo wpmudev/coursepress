@@ -12,6 +12,7 @@ if ( !class_exists( 'Unit' ) ) {
 		var $unit		 = array();
 		var $details;
 		var $course_id	 = '';
+		var $status		 = array();
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
@@ -72,10 +73,18 @@ if ( !class_exists( 'Unit' ) ) {
 			$mandatory_done = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
 			$unit_completed = 100 == $completion->unit_progress( $previous_unit_id );
 
-			$available = ! empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion ? $mandatory_done : $available;
-			$available = ! empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion ? $unit_completed : $available;
+			$this->status['mandatory_required']['enabled'] = ! empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
+			$this->status['mandatory_required']['result'] = $mandatory_done;
+			
+			$this->status['completion_required']['enabled'] = ! empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion;
+			$this->status['completion_required']['result'] = $unit_completed;
+				
+			$available = $this->status['mandatory_required']['enabled'] ? $this->status['mandatory_required']['result'] : $available;
+			$available = $this->status['completion_required']['enabled'] ? $this->status['completion_required']['result'] : $available;
 
-			if ( $current_date < $unit_details->unit_availability || !$available ) {
+			$this->status['date_restriction']['result'] = $current_date >= $unit_details->unit_availability;
+			
+			if ( ! $this->status['date_restriction']['result'] || !$available ) {
 				return false;
 			} else {
 				return true;
