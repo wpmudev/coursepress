@@ -9,7 +9,9 @@ CHANGE LOG
 = 1.2 =
 * Added Duplicate Course feature
 * Fixed issue with "units" slugs
-* Fixed jQuery conflicts with theme options in WPMU Dev themes
+* Fixed jQuery conflicts with theme options in WPMU Dev themes  
+* Added Unit restriction options to avoid confusion between 'completed answers' and 'successfull/passed answers'.  
+* Fixed unit restriction checking on front end 'Units' page. Will now show restrictions required from previous unit.
 
 = 1.1.1 = 
 * Fixed issue with protection of the next unit when previous unit has set "User needs to complete current unit in order to access the next one"
