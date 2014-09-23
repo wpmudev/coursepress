@@ -407,6 +407,78 @@ if ( !class_exists( 'Unit' ) ) {
 			return $pages_num;
 		}
 
+		function get_unit_modules( $unit_id = '' ) {
+
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
+
+			$args = array(
+				'post_type'		 => 'module',
+				'post_status'	 => 'any',
+				'posts_per_page' => -1,
+				'post_parent'	 => $unit_id,
+				'meta_key'		 => 'module_order',
+				'orderby'		 => 'meta_value_num',
+				'order'			 => 'ASC',
+			);
+
+			$modules = get_posts( $args );
+
+			return $modules;
+		}
+
+		function duplicate( $unit_id = '', $course_id = '' ) {
+			global $wpdb;
+
+			if ( $unit_id == '' ) {
+				$unit_id = $this->id;
+			}
+
+			/* Duplicate course and change some data */
+
+			$new_unit	 = $this->get_unit();
+			$old_unit_id = $new_unit->ID;
+
+			unset( $new_unit->ID );
+			unset( $new_unit->guid );
+
+			$new_unit->post_author	 = get_current_user_id();
+			$new_unit->post_status	 = 'private';
+			$new_unit->post_parent	 = $course_id;
+
+			$new_unit_id = wp_insert_post( $new_unit );
+
+
+			/*
+			 * Duplicate course post meta
+			 */
+
+			$post_metas = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $old_unit_id ) );
+
+			if ( count( $post_metas ) != 0 ) {
+				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
+
+				foreach ( $post_metas as $meta_info ) {
+					$meta_key		 = $meta_info->meta_key;
+					$meta_value		 = addslashes( $meta_info->meta_value );
+					$sql_query_sel[] = "SELECT $new_unit_id, '$meta_key', '$meta_value'";
+				}
+
+				$sql_query.= implode( " UNION ALL ", $sql_query_sel );
+				$wpdb->query( $sql_query );
+			}
+
+			update_post_meta( $new_unit_id, 'course_id', $course_id );
+
+			$unit_modules = $this->get_unit_modules( $old_unit_id );
+
+			foreach ( $unit_modules as $unit_module ) {
+				$module = new Unit_Module( $unit_module->ID );
+				$module->duplicate( $unit_module->ID, $new_unit_id );
+			}
+		}
+
 	}
 
 }

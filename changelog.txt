@@ -6,7 +6,8 @@ CHANGE LOG
 
 == Changelog ==
 
-= 1.1.2 =
+= 1.2 =
+* Added Duplicate Course feature
 * Fixed issue with "units" slugs
 * Fixed jQuery conflicts with theme options in WPMU Dev themes
 

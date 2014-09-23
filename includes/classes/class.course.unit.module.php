@@ -206,8 +206,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			$ordered_modules = array();
 
 			foreach ( $modules as $module ) {
-				$order					 = get_post_meta( $module->ID, 'module_order', true );
-				$ordered_modules[ $order ] = $module;
+				$order						 = get_post_meta( $module->ID, 'module_order', true );
+				$ordered_modules[ $order ]	 = $module;
 			}
 
 			return $ordered_modules;
@@ -321,7 +321,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				exit;
 			}
 			?>
-			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                   ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
 				<input type="hidden" id="go_to_page" value="" />
 
 				<?php
@@ -643,15 +643,15 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				?>
 				<div class="module_grade">
 					<div class="module_grade_left">
-				<?php
-				if ( $grade[ 'grade' ] < 100 ) {
-					if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
-						$response		 = $this->get_response( get_current_user_id(), $data->ID );
-						$unit_id		 = wp_get_post_parent_id( $data->ID );
-						$paged			 = isset( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
-						$permalink		 = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
-						$resubmit_url	 = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
-						?>
+						<?php
+						if ( $grade[ 'grade' ] < 100 ) {
+							if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
+								$response		 = $this->get_response( get_current_user_id(), $data->ID );
+								$unit_id		 = wp_get_post_parent_id( $data->ID );
+								$paged			 = isset( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
+								$permalink		 = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
+								$resubmit_url	 = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
+								?>
 								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Resubmit', 'cp' ); ?></a>
 								<?php
 								if ( $attempts_remaining > 0 ) {
@@ -666,7 +666,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 						?>
 					</div>
 					<div class="module_grade_right">
-				<?php if ( $show_grade ) : ?>
+						<?php if ( $show_grade ) : ?>
 							<?php
 							echo __( 'Graded: ', 'cp' ) . $grade[ 'grade' ] . '%';
 							if ( isset( $data->minimum_grade_required ) && is_numeric( $data->minimum_grade_required ) ) {
@@ -714,7 +714,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		function time_estimation( $data ) {
 			// var_dump($data->time_estimation);
 			?>
-			<div class="module_time_estimation"><?php _e( 'Time Estimation (mins)', 'cp' ); ?> <input type="text" name="<?php echo $this->name; ?>_time_estimation[]" value="<?php echo esc_attr( isset( $data->time_estimation ) ? $data->time_estimation : '1:00' ); ?>" /></div>
+			<div class="module_time_estimation"><?php _e( 'Time Estimation (mins)', 'cp' ); ?> <input type="text" name="<?php echo $this->name; ?>_time_estimation[]" value="<?php echo esc_attr( isset( $data->time_estimation ) ? $data->time_estimation : '1:00'  ); ?>" /></div>
 			<?php
 		}
 
@@ -740,6 +740,48 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			return $post_id;
 		}
 
+		function duplicate( $module_id = '', $unit_id = '' ) {
+			global $wpdb;
+
+			if ( $module_id == '' ) {
+				$module_id = $this->id;
+			}
+
+			/* Duplicate course and change some data */
+
+			$new_module		 = $this->get_module( $module_id );
+			$old_module_id	 = $new_module->ID;
+
+			unset( $new_module->ID );
+			unset( $new_module->guid );
+
+			$new_module->post_author = get_current_user_id();
+			$new_module->post_status = 'publish';
+			$new_module->post_parent = $unit_id;
+
+			$new_module_id = wp_insert_post( $new_module );
+
+
+			/*
+			 * Duplicate course post meta
+			 */
+
+			$post_metas = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $old_module_id ) );
+
+			if ( count( $post_metas ) != 0 ) {
+				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
+
+				foreach ( $post_metas as $meta_info ) {
+					$meta_key		 = $meta_info->meta_key;
+					$meta_value		 = addslashes( $meta_info->meta_value );
+					$sql_query_sel[] = "SELECT $new_module_id, '$meta_key', '$meta_value'";
+				}
+
+				$sql_query.= implode( " UNION ALL ", $sql_query_sel );
+				$wpdb->query( $sql_query );
+			}
+		}
+
 		function get_module_delete_link() {
 			?>
 			<a class="delete_module_link" onclick="if ( deleteModule( jQuery( this ).parent().find( '.element_id' ).val() ) ) {
@@ -748,38 +790,38 @@ if ( !class_exists( 'Unit_Module' ) ) {
 								}
 								;"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
 			<?php
-		   }
+		}
 
-		   function display_title_on_front( $data ) {
-			   $to_display = isset( $data->show_title_on_front ) && $data->show_title_on_front == 'yes' ? true : (!isset( $data->show_title_on_front ) ) ? true : false;
-			   return $to_display;
-		   }
+		function display_title_on_front( $data ) {
+			$to_display = isset( $data->show_title_on_front ) && $data->show_title_on_front == 'yes' ? true : (!isset( $data->show_title_on_front ) ) ? true : false;
+			return $to_display;
+		}
 
-		   function get_response_comment( $response_id, $count = false ) {
-			   return get_post_meta( $response_id, 'response_comment', true );
-		   }
+		function get_response_comment( $response_id, $count = false ) {
+			return get_post_meta( $response_id, 'response_comment', true );
+		}
 
-		   function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
-			   //module does not overwrite this method message?
-		   }
+		function get_response_form( $user_ID, $response_request_ID, $show_label = true ) {
+			//module does not overwrite this method message?
+		}
 
-		   function get_response( $user_ID, $response_request_ID ) {
-			   
-		   }
+		function get_response( $user_ID, $response_request_ID ) {
+			
+		}
 
-		   function on_create() {
-			   
-		   }
+		function on_create() {
+			
+		}
 
-		   function save_module_data() {
-			   
-		   }
+		function save_module_data() {
+			
+		}
 
-		   function admin_main( $data ) {
-			   
-		   }
+		function admin_main( $data ) {
+			
+		}
 
-	   }
+	}
 
-   }
-   ?>
+}
+?>
