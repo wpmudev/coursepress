@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.1.2 =
 * Fixed issue with "units" slugs
+* Fixed jQuery conflicts with theme options in WPMU Dev themes
 
 = 1.1.1 = 
 * Fixed issue with protection of the next unit when previous unit has set "User needs to complete current unit in order to access the next one"
