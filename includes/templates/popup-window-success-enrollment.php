@@ -22,7 +22,7 @@
 	    if ( ( strtotime($course->details->course_start_date) <= time() && strtotime($course->details->course_end_date) >= time() ) || $course->details->open_ended_course == 'on' ) {//Course is currently active
 	        ?>
 			<div class="cp_popup_button_container">
-                            <button class="apply-button enroll-success" data-link="<?php echo esc_url(trailingslashit(get_permalink($course_id))) . 'units'; ?>"><?php _e('Start Learning Now', 'cp'); ?></button>
+				<button class="apply-button enroll-success" data-link="<?php echo esc_url(trailingslashit(get_permalink($course_id))) . trailingslashit( $coursepress->get_units_slug()); ?>"><?php _e('Start Learning Now', 'cp'); ?></button>
 			</div>
 	        <?php
 	    }

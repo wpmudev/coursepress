@@ -1,4 +1,6 @@
 <?php
+global $coursepress;
+
 if ( isset($_GET['quick_setup']) ) {
     include( 'quick-setup.php' );
 } else {
@@ -276,7 +278,7 @@ if ( isset($_GET['quick_setup']) ) {
                                         <span class="view_course"><a href="<?php echo get_permalink($course->ID); ?>" rel="permalink"><?php _e('View Course', 'cp') ?></a>
                                             <?php if ( $can_view_unit || $my_course || $can_update ) { ?> | <?php } ?></span>
                                         <?php if ( $can_view_unit || $my_course || $can_update ) { ?>
-                                            <span class="units"><a href="<?php echo get_permalink($course->ID); ?>units/" rel="permalink"><?php _e('View Units', 'cp') ?></a></span>
+                                            <span class="units"><a href="<?php echo trailingslashit(get_permalink($course->ID)) . trailingslashit( $coursepress->get_units_slug() ); ?>" rel="permalink"><?php _e('View Units', 'cp') ?></a></span>
                                         <?php } ?>
                                     </div>
                                 </td>

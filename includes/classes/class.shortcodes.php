@@ -1087,6 +1087,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 * @since 1.0.0
 		 */
 		function course_join_button( $atts ) {
+			global $coursepress;
 			extract( shortcode_atts( array(
 				'course_id'					 => in_the_loop() ? get_the_ID() : '',
 				'course'					 => false,
@@ -1274,7 +1275,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
-						$button_url = get_permalink( $course_id ) . 'units/';
+						$button_url = trailingslashit( get_permalink( $course_id ) ) . trailingslashit( $coursepress->get_units_slug() );
 
 						if ( cp_is_course_visited( $course_id ) ) {
 							$access_text = $continue_learning_text;
@@ -2457,7 +2458,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		}
 
 		function course_details( $atts ) {
-			global $wp_query, $signup_url;
+			global $wp_query, $signup_url, $coursepress;
 
 			$student = new Student( get_current_user_id() );
 
@@ -2595,8 +2596,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					} else {
 						if ( ( $course->course_start_date !== '' && $course->course_end_date !== '' ) || $course->open_ended_course == 'on' ) {//Course is currently active
 							if ( ( strtotime( $course->course_start_date ) <= time() && strtotime( $course->course_end_date ) >= time() ) || $course->open_ended_course == 'on' ) {//Course is currently active
-								$course->button .= '<a href="' . get_permalink( $course->ID ) . 'units/" class="apply-button-enrolled">' . __( 'Go to Class', 'cp' ) . '</a>';
-//$course->button .= '<input type="button" data-url="' . get_permalink( $course->ID ) . 'units/" class="apply-button-enrolled">' . __( 'Go to Class', 'cp' ) . '</a>';
+								$course->button .= '<a href="' . trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ) . '" class="apply-button-enrolled">' . __( 'Go to Class', 'cp' ) . '</a>';
 							} else {
 
 								if ( strtotime( $course->course_start_date ) >= time() ) {//Waiting for a course to start
@@ -3072,7 +3072,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 
 			if ( $field == 'percent' ) {
-			
+
 				$completion		 = new Course_Completion( $unit->course_id );
 				$completion->init_student_status();
 				$percent_value	 = $completion->unit_progress( $unit_id );
@@ -3081,12 +3081,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 				if ( $style == 'flat' ) {
 					$unit->details->$field = '<span class="percentage">' . ($format == true ? $percent_value . '%' : $percent_value) . '</span>';
-				} elseif($style == 'none'){
+				} elseif ( $style == 'none' ) {
 					$unit->details->$field = $percent_value;
-				}else {
+				} else {
 					$unit->details->$field = '<a class="tooltip" alt="' . $tooltip_alt . '"><input class="knob" data-fgColor="' . $knob_fg_color . '" data-bgColor="' . $knob_bg_color . '" data-thickness="' . $knob_data_thickness . '" data-width="' . $knob_data_width . '" data-height="' . $knob_data_height . '" data-readOnly=true value="' . $percent_value . '"></a>';
 				}
-			
 			}
 
 			if ( $field == 'permalink' ) {
@@ -3841,11 +3840,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $is_unit_available ) {
-						if ( $mandatory_input_elements > 0 ) {
-							echo do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' );
-							// echo $mandatory_responses;
-							?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
+				if ( $is_unit_available ) {
+					if ( $mandatory_input_elements > 0 ) {
+						echo do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' );
+						// echo $mandatory_responses;
+						?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
 							//_e('mandatory elements completed', 'coursepress');
 							// } else {
 							//     echo $all_responses;
@@ -3857,15 +3856,15 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
 					}
 					?></span>
-			<?php } else { ?>
+				<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $is_unit_available ) {
-						// _e('Read-only');
-					} else {
-						echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-					}
+				if ( $is_unit_available ) {
+					// _e('Read-only');
+				} else {
+					echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+				}
 					?></span>
-				<?php
+					<?php
 			}
 		}
 
@@ -3998,8 +3997,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							$style = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 							?>
 							<tr id='user-<?php echo $user_object->ID; ?>' class="<?php
-							echo $style;
-							echo 'row-' . $current_row;
+						echo $style;
+						echo 'row-' . $current_row;
 							?>">
 
 								<?php
@@ -4102,7 +4101,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											}
 											?>
 									</td>
-								<?php }//general col visibility                 ?>
+								<?php }//general col visibility                  ?>
 							</tr>
 							<?php
 							$current_row++;

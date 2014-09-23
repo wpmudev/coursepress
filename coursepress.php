@@ -1308,7 +1308,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				),
 				'redirect_to_course' => array(
 					'action' => 'redirect',
-					'url'	 => get_permalink( $course_id ) . '/units' . '/',
+					'url'	 => trailingslashit( get_permalink( $course_id ) ) . trailingslashit( $this->get_units_slug() ),
 				),
 			) );
 
