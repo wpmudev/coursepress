@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.1.2
+  Version: 1.1.1
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -61,7 +61,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.1.2';
+		public $version = '1.1.1';
 
 		/**
 		 * Plugin friendly name.
@@ -3636,21 +3636,21 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Add required jQuery scripts */
 
 		function add_jquery_ui() {
-			wp_enqueue_script( 'jquery' );
+			/*wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-widget' );
 			wp_enqueue_script( 'jquery-ui-mouse' );
 			wp_enqueue_script( 'jquery-ui-accordion' );
 			wp_enqueue_script( 'jquery-ui-autocomplete' );
 			wp_enqueue_script( 'jquery-ui-slider' );
-			wp_enqueue_script( 'jquery-ui-tabs' );
+			wp_enqueue_script( 'jquery-ui-tabs');
 			wp_enqueue_script( 'jquery-ui-sortable' );
 			wp_enqueue_script( 'jquery-ui-draggable' );
 			wp_enqueue_script( 'jquery-ui-droppable' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-resize' );
 			wp_enqueue_script( 'jquery-ui-dialog' );
-			wp_enqueue_script( 'jquery-ui-button' );
+			wp_enqueue_script( 'jquery-ui-button' );*/
 		}
 
 		function admin_header_actions() {
