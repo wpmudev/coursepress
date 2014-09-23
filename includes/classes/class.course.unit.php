@@ -59,28 +59,21 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
-			/* Check if previous unit must be 100% completed */
-
-			$forced_not_available = false;
-
-			$previous_unit_id				 = $this->get_previous_unit_from_the_same_course( $unit_id );
-			$force_current_unit_completion	 = get_post_meta( $previous_unit_id, 'force_current_unit_completion', true );
+			/* Check if previous has conditions */
+			$previous_unit_id                         = $this->get_previous_unit_from_the_same_course( $unit_id );
+			$force_current_unit_completion            = get_post_meta( $previous_unit_id, 'force_current_unit_completion', true );
+			$force_current_unit_successful_completion = get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true );
 
 			$available = true;
 
-			if ( $force_current_unit_completion ) {
-				if ( $force_current_unit_completion == 'on' ) {
+			$completion	= new Course_Completion( $this->course_id );
+			$completion->init_student_status();
+			
+			$mandatory_done = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
+			$unit_completed = 100 == $completion->unit_progress( $previous_unit_id );
 
-					$previous_unit_completion_percent = str_replace( '%', '', (do_shortcode( '[course_unit_details field="percent" format="false" style="none" unit_id="' . $previous_unit_id . '"]' ) ) );
-
-					if ( $previous_unit_completion_percent < 100 ) {
-						$available = false;
-					} else {
-						$available = true;
-					}
-				}
-			}
-
+			$available = ! empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion ? $mandatory_done : $available;
+			$available = ! empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion ? $unit_completed : $available;
 
 			if ( $current_date < $unit_details->unit_availability || !$available ) {
 				return false;
@@ -293,7 +286,8 @@ if ( !class_exists( 'Unit' ) ) {
 			update_post_meta( $post_id, 'unit_availability', cp_filter_content( $_POST[ 'unit_availability' ] ) );
 
 			update_post_meta( $post_id, 'force_current_unit_completion', cp_filter_content( $_POST[ 'force_current_unit_completion' ] ) );
-
+			update_post_meta( $post_id, 'force_current_unit_successful_completion', cp_filter_content( $_POST[ 'force_current_unit_successful_completion' ] ) );
+			
 			update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
 
 			update_post_meta( $post_id, 'show_page_title', cp_filter_content( $_POST[ 'show_page_title_field' ] ) );

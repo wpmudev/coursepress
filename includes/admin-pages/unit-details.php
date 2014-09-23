@@ -17,16 +17,22 @@ if ( !empty($course_id) && !CoursePress_Capabilities::can_view_course_units($_GE
 if ( !isset($_POST['force_current_unit_completion']) ) {
     $_POST['force_current_unit_completion'] = 'off';
 }
+if ( !isset($_POST['force_current_unit_successful_completion']) ) {
+    $_POST['force_current_unit_successful_completion'] = 'off';
+}
+
 
 if ( isset($_GET['unit_id']) ) {
     $unit_id = ( int ) $_GET['unit_id'];
     $unit = new Unit($unit_id);
     $unit_details = $unit->get_unit();
     $force_current_unit_completion = $unit->details->force_current_unit_completion;
+    $force_current_unit_successful_completion = $unit->details->force_current_unit_successful_completion;	
 } else {
     $unit = new Unit();
     $unit_id = 0;
     $force_current_unit_completion = 'off';
+	$force_current_unit_successful_completion = 'off';
 }
 
 if ( $unit_id == 0 ) {
@@ -181,8 +187,11 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                     <div class='mp-settings-field'>
                         <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr(stripslashes(isset($unit_details->unit_availability) ? $unit_details->unit_availability : ( date('Y-m-d', current_time('timestamp', 0)) ) )); ?>" />
                         <div class="force_unit_completion">
-                            <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ( $force_current_unit_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e('User needs to complete current unit in order to access the next one', 'cp'); ?>
+                            <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ( $force_current_unit_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e('User needs to <strong><em>answer</em></strong> all mandatory assessments and view all pages in order to access the next unit', 'cp'); ?>
                         </div>						
+                        <div class="force_unit_successful_completion">
+							<input type="checkbox" name="force_current_unit_successful_completion" id="force_current_unit_successful_completion" value="on" <?php echo ( $force_current_unit_successful_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e('User also needs to <strong><em>pass</em></strong> all mandatory assessments', 'cp'); ?>							
+						</div>
                     </div>					
                 </div>
                 <div class="unit-control-buttons">
