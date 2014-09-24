@@ -172,7 +172,7 @@ function load_all_jquery() {
 		"jquery-ui-widget",
 		"jquery-ui-mouse",
 		"jquery-ui-accordion",
-		"jquery-ui-autocomplete",
+		//"jquery-ui-autocomplete",
 		"jquery-ui-slider",
 		"jquery-ui-tabs",
 		"jquery-ui-sortable",

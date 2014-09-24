@@ -3805,7 +3805,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						</label>
 						<br clear="all" />
 
-																																																							<!-- ><input name="rememberme" id="rememberme" value="forever" tabindex="90" type="checkbox"> <span><?php _e( 'Remember Me?', 'cp' ); ?> </span> -->
 						<input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( true ); ?>" type="hidden">
 						<input name="testcookie" value="1" type="hidden">
 						<input name="course_signup_login" value="1" type="hidden">
