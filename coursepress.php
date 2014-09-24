@@ -1020,7 +1020,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * @since 1.2.1
 			 *
 			 */
-			do_action( 'coursepress_admin_init' );
+			do_action( 'coursepress_init' );
 			
 		}
 
