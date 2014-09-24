@@ -419,6 +419,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * @since 1.0.0
 				 */
 				add_filter( 'mce_css', array( &$this, 'mce_editor_style' ) );
+				
+				/**
+				 * Hook CoursePress admin initialization.
+				 *
+				 * Allows plugins and themes to add aditional hooks during CoursePress constructor 
+				 * for admin specific actions.
+				 *
+				 * @since 1.2.1
+				 *
+				 */
+				do_action( 'coursepress_admin_init' );
+				
 			}
 
 			/**
@@ -999,6 +1011,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * @since 1.0.0
 			 */
 			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
+			
+			/**
+			 * Hook CoursePress initialization.
+			 *
+			 * Allows plugins and themes to add aditional hooks during CoursePress constructor.
+			 *
+			 * @since 1.2.1
+			 *
+			 */
+			do_action( 'coursepress_admin_init' );
+			
 		}
 
 		function add_body_classes( $classes ) {
@@ -1633,7 +1656,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function register_theme_directory() {
 			global $wp_theme_directories;
-			register_theme_directory( $this->plugin_dir . '/themes/' );
+			// Allow registration of other theme directories or moving the CoursePress theme.
+			$theme_directories = apply_filters( 'coursepress_theme_directory_array', 
+				array(
+					$this->plugin_dir . '/themes/',
+				)
+			);
+			foreach( $theme_directories as $theme_directory ) {
+				register_theme_directory( $theme_directory );
+			}
 		}
 
 		/* Fix for the broken images in the Unit elements content */
@@ -2846,6 +2877,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
+				/**
+				 * Course auto-update about to start.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Course ID about to be updated.
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_autoupdate_started', $course_id, $user_id );
+
 				$course = new Course( $course_id );
 				if ( $course->details ) {
 					$course->data[ 'status' ] = $course->details->post_status;
@@ -2869,6 +2910,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 				if ( !empty( $_POST[ 'meta_course_setup_marker' ] ) && 'step-6' == $_POST[ 'meta_course_setup_marker' ] ) {
 					update_post_meta( $course_id, 'course_setup_complete', 'yes' );
 				}
+				
+				/**
+				 * Course auto-update completed.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Course ID about to be updated.
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_autoupdate_complete', $course_id, $user_id );
+				
 			} else {
 				$ajax_response[ 'success' ]	 = false;
 				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
@@ -2901,9 +2953,29 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$course->change_status( $_POST[ 'course_state' ] );
 				$ajax_response[ 'toggle' ]	 = true;
 				$ajax_response[ 'nonce' ]	 = wp_create_nonce( 'toggle-' . $course_id );
+				
+				/**
+				 * Course status toggled.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Course ID about to be updated.
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_status_changed', $course_id, $user_id );
 			} else {
 				$ajax_response[ 'toggle' ]	 = false;
 				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
+
+				/**
+				 * Course status not changed.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Course ID about to be updated.
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_status_change_fail', $course_id, $user_id );				
 			}
 
 			$response	 = array(
@@ -2935,9 +3007,31 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$ajax_response[ 'toggle' ]	 = true;
 				$ajax_response[ 'nonce' ]	 = wp_create_nonce( 'toggle-' . $unit_id );
+				
+				/**
+				 * Unit status toggled.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Parent course ID.
+				 * @param int unit_id Unit ID about to be updated.				
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_status_changed', $course_id, $unit_id, $user_id );				
 			} else {
 				$ajax_response[ 'toggle' ]	 = false;
 				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
+
+				/**
+				 * Unit status toggled.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id Parent course ID.
+				 * @param int unit_id Unit ID about to be updated.				
+				 * @param int user_id User initiating the update.
+				 */
+				do_action( 'coursepress_course_status_change_fail', $course_id, $unit_id, $user_id );
 			}
 
 			$response	 = array(
@@ -2996,15 +3090,48 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$ajax_response[ 'instructor_gravatar' ]	 = get_avatar( $instructor_id, 80, "", $user_info->display_name );
 					$ajax_response[ 'instructor_name' ]		 = $user_info->display_name;
+					
+					/**
+					 * Instructor added successfully to course.
+					 *
+					 * @since 1.2.1
+					 *
+					 * @param int course_id The course instructor was added to.
+					 * @param int instructor_id The user ID of the new instructor.
+					 *
+					 */
+					do_action( 'coursepress_course_instructor_added', $course_id, $instructor_id );
 				} else {
 					$ajax_response[ 'instructor_added' ] = false;
 					$ajax_response[ 'reason' ]			 = __( 'Instructor already added.', 'cp' );
+					
+					/**
+					 * Instructor already exists in the course.
+					 *
+					 * @since 1.2.1
+					 *
+					 * @param int course_id The course instructor was added to.
+					 * @param int instructor_id The user ID of the new instructor.
+					 *
+					 */
+					do_action( 'coursepress_course_instructor_exists', $course_id, $instructor_id );
 				}
 
 				// Nonce failed, User doesn't have the capability
 			} else {
 				$ajax_response[ 'instructor_added' ] = false;
 				$ajax_response[ 'reason' ]			 = __( 'Invalid request. Security check failed.', 'cp' );
+				
+				/**
+				 * Failed to add an instructor to the course.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id The course instructor was added to.
+				 * @param int instructor_id The user ID of the new instructor.
+				 *
+				 */
+				do_action( 'coursepress_course_instructor_not_added', $course_id, $instructor_id );
 			}
 
 			$response	 = array(
@@ -3052,11 +3179,33 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 
 				$ajax_response[ 'instructor_removed' ] = true;
+				
+				/**
+				 * Instructor has been removed from course.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id The course instructor was added to.
+				 * @param int instructor_id The user ID of the new instructor.
+				 *
+				 */
+				do_action( 'coursepress_course_instructor_removed', $course_id, $instructor_id );
 
 				// Nonce failed, User doesn't have the capability
 			} else {
 				$ajax_response[ 'instructor_removed' ]	 = false;
 				$ajax_response[ 'reason' ]				 = __( 'Invalid request. Security check failed.', 'cp' );
+				
+				/**
+				 * Instructor has NOT been removed from course.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id The course instructor was added to.
+				 * @param int instructor_id The user ID of the new instructor.
+				 *
+				 */
+				do_action( 'coursepress_course_instructor_not_removed', $course_id, $instructor_id );				
 			}
 
 			$response = array(
@@ -3077,6 +3226,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$user_id		 = (int) $_POST[ 'user_id' ];
 			$course_id		 = (int) $_POST[ 'course_id' ];
+			$email			 = sanitize_email( $_POST[ 'email' ] );
 			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
 			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
 			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
@@ -3087,7 +3237,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$email_args[ 'email_type' ]			 = 'instructor_invitation';
 				$email_args[ 'first_name' ]			 = sanitize_text_field( $_POST[ 'first_name' ] );
 				$email_args[ 'last_name' ]			 = sanitize_text_field( $_POST[ 'last_name' ] );
-				$email_args[ 'instructor_email' ]	 = sanitize_email( $_POST[ 'email' ] );
+				$email_args[ 'instructor_email' ]	 = $email;
 
 				$user = get_user_by( 'email', $email_args[ 'instructor_email' ] );
 				if ( $user ) {
@@ -3144,13 +3294,44 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						$ajax_response[ 'data' ]	 = $invite;
 						$ajax_response[ 'content' ]	 = '<i class ="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', 'cp' );
+						
+						/**
+						 * Instructor has been invited.
+						 *
+						 * @since 1.2.1
+						 *
+						 * @param int course_id The course instructor was added to.
+						 * @param string email The email invite was sent to.		
+						 *
+						 */
+						do_action( 'coursepress_instructor_invite_sent', $course_id, $email );
 					} else {
 						$ajax_status				 = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
 						$ajax_response[ 'content' ]	 = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', 'cp' );
+						
+						/**
+						 * Instructor invite not sent.
+						 *
+						 * @since 1.2.1
+						 *
+						 * @param int course_id The course instructor was added to.
+						 * @param int instructor_id The user ID of the new instructor.
+						 *
+						 */
+						do_action( 'coursepress_instructor_invite_mail_fail', $course_id, $email );
 					}
 				} else {
 					$ajax_response[ 'content' ] = '<i class ="fa fa-info-circle status status-exist"></i> ' . __( 'Invitation already exists.', 'cp' );
-					;
+					/**
+					 * Instructor already invited.
+					 *
+					 * @since 1.2.1
+					 *
+					 * @param int course_id The course instructor was added to.
+					 * @param int instructor_id The user ID of the new instructor.
+					 *
+					 */
+					do_action( 'coursepress_instructor_invite_exists', $course_id, $email );
 				}
 			} else {
 				$ajax_status				 = new WP_Error( 'nonce_fail', __( 'Invalid request. Security check failed.', 'cp' ) );
@@ -3174,6 +3355,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function remove_instructor_invite() {
 			$user_id		 = (int) $_POST[ 'user_id' ];
 			$course_id		 = (int) $_POST[ 'course_id' ];
+			$invite_code	 = sanitize_text_field( $_POST[ 'invite_code' ] );			
 			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
 			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
 			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
@@ -3182,7 +3364,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
-				$invite_code		 = sanitize_text_field( $_POST[ 'invite_code' ] );
 				$instructor_invites	 = get_post_meta( $course_id, 'instructor_invites', true );
 
 				unset( $instructor_invites[ $invite_code ] );
@@ -3191,9 +3372,31 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$ajax_response[ 'invite_removed' ]	 = true;
 				$ajax_response[ 'content' ]			 = __( 'Instructor invitation cancelled.', 'cp' );
+
+				/**
+				 * Instructor invite has been cancelled.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id The course instructor was added to.
+				 * @param int invite_code The code of the invite that was cancelled.
+				 *
+				 */
+				do_action( 'coursepress_instructor_invite_cancelled', $course_id, $invite_code );				
 			} else {
 				$ajax_response[ 'invite_removed' ]	 = false;
 				$ajax_response[ 'reason' ]			 = __( 'Invalid request. Security check failed.', 'cp' );
+				/**
+				 * Instructor invite has NOT been cancelled.
+				 *
+				 * @since 1.2.1
+				 *
+				 * @param int course_id The course instructor was added to.
+				 * @param int invite_code The code of the invite that was cancelled.
+				 *
+				 */
+				do_action( 'coursepress_instructor_invite_not_cancelled', $course_id, $invite_code );				
+				
 			}
 
 			$response = array(
@@ -3218,7 +3421,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				// get_header();
 				$content = '';
 				$title	 = '';
-
+				$course_id	 = (int) $_GET[ 'course_id' ];
+				$user_id	 = get_current_user_id();
 				$invites	 = get_post_meta( $_GET[ 'course_id' ], 'instructor_invites', true );
 				$invite_keys = array_keys( $invites );
 				$valid_code	 = in_array( $_GET[ 'c' ], $invite_keys ) ? true : false;
@@ -3230,8 +3434,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					if ( $hash == $_GET[ 'h' ] ) {
 
-						$course_id	 = (int) $_GET[ 'course_id' ];
-						$user_id	 = get_current_user_id();
+
 						$instructors = get_post_meta( $_GET[ 'course_id' ], 'instructors', true );
 
 
@@ -3262,6 +3465,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 									$content = do_shortcode( sprintf( __( '<p>Congratulations. You are now an instructor in the following course:</p>
 										<p>%s</p>
 									', 'cp' ), $course_link ) );
+									
+									/**
+									 * Instructor invite confirmed.
+									 *
+									 * @since 1.2.1
+									 *
+									 * @param int course_id The course instructor was added to.
+									 * @param int user_id The user ID of instructor assigned.
+									 *
+									 */
+									do_action( 'coursepress_instructor_invite_confirmed', $course_id, $user_id );
+									
 								}
 								break;
 							}
@@ -3272,6 +3487,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 							<p>This invitation link is not associated with your email address.</p>
 							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
 						', 'cp' ) );
+						
+						/**
+						 * Instructor confirmation failed.
+						 *
+						 * Usually when the email sent to and the one trying to register don't match.
+						 *
+						 * @since 1.2.1
+						 *
+						 * @param int course_id The course instructor was added to.
+						 * @param int user_id The user ID of instructor assigned.
+						 *
+						 */
+						do_action( 'coursepress_instructor_invite_confirm_fail', $course_id, $user_id );
 					}
 				} else {
 					if ( !$valid_code ) {
@@ -3280,6 +3508,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 							<p>This invitation could not be found or is no longer available.</p>
 							<p>Please contact us if you believe this to be an error.</p>
 						', 'cp' ) );
+						
+						/**
+						 * Instructor confirmation failed.
+						 *
+						 * Usually when the email sent to and the one trying to register don't match.
+						 *
+						 * @since 1.2.1
+						 *
+						 * @param int course_id The course instructor was added to.
+						 * @param int user_id The user ID of instructor assigned.
+						 *
+						 */
+						do_action( 'coursepress_instructor_invite_not_found', $course_id, $user_id );
 					} else {
 						$title	 = __( '<h3>Login Required</h3>', 'cp' );
 						$content = do_shortcode( __( '
