@@ -233,18 +233,44 @@ jQuery(document).ready(function($)
     jQuery('.video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".video_url:first");
+		var target_id_field = jQuery(this).prevAll(".attachment_id:first");
+		var caption_field = jQuery(this).parents('.module-content').find('.caption-source .element_title_description');
+
+	    wp.media.string.props = function(props, attachment)
+	    {
+
+	        jQuery(target_url_field).val(props.url);
+
+			if (attachment !== undefined){
+				            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+				                $(target_url_field).removeClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').hide();
+				            } else {//extension is not allowed
+				                $(target_url_field).addClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').show();
+				            }
+			} else {
+				jQuery(target_id_field).val(0);
+			}
+
+			return props;
+	    };
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
-            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
-                $(target_url_field).removeClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').hide();
-            } else {//extension is not allowed
-                $(target_url_field).addClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').show();
-            }
-            jQuery(target_url_field).val(attachment.url);
-			jQuery(target_url_field).parents('.module-holder-title').find('.media-caption-description').html( '"' + attachment.caption + '"' );
+			if (attachment !== undefined){
+	            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+	                $(target_url_field).removeClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').hide();
+	            } else {//extension is not allowed
+	                $(target_url_field).addClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').show();
+	            }
+
+	            jQuery(target_url_field).val(attachment.url);
+				jQuery(target_id_field).val(attachment.id);
+				jQuery(target_url_field).parents('.module-holder-title').find('.media-caption-description').html( '"' + attachment.caption + '"' );
+			}
         };
 
         wp.media.editor.open(this);
