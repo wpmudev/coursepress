@@ -135,7 +135,7 @@ class image_module extends Unit_Module {
                 <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption', 'cp'); ?>
                 <span class="element_title_description">
                     <?php
-					cp_write_log( $data );
+
                     $no_caption_text = __('Media has no caption.', 'cp');
                     $attachment_id = false;
                     if ( !empty($data) ) {
