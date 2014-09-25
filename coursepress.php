@@ -1211,8 +1211,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function get_last_inserted_id() {
-			global $wpdb;
-			return $wpdb->get_var( 'SELECT MAX( ID ) FROM ' . $wpdb->prefix . 'posts' );
+			$post = get_posts( array( 'post_type'=>array('unit'), 'orderby'=>'ID', 'order'=>'DESC', 'numberposts'=>'1' ) );
+			$post = array_pop( $post );
+			return $post->ID;
 		}
 
 		function get_next_unit_url() {
@@ -4832,4 +4833,4 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 CoursePress::instance( new CoursePress() );
 global $coursepress;
-$coursepress = CoursePress::instance();
+$coursepress = CoursePress::instance();			
