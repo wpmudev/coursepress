@@ -1019,7 +1019,8 @@ if ( !function_exists('cp_delete_user_meta_by_key') ) {
     function cp_delete_user_meta_by_key( $meta_key ) {
         global $wpdb;
 
-        if ( $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", $meta_key)) ) {
+        // if ( $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", $meta_key)) ) {
+		if ( delete_metadata( 'user', 0, $meta_key, '', true ) ) {
             return true;
         } else {
             return false;
@@ -1149,21 +1150,23 @@ if ( !function_exists('cp_get_userdatabynicename') ) :
         if ( empty($user_nicename) )
             return false;
 
+		$user = false;
+		// @todo: find a better way
         if ( !$user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename)) )
             return false;
-
-        $wpdb->hide_errors();
-        $metavalues = $wpdb->get_results($wpdb->prepare("SELECT meta_key, meta_value FROM $wpdb->usermeta WHERE user_id = %d", $user->ID));
-        $wpdb->show_errors();
+		
+		$metavalues = get_user_meta($user->ID);
 
         if ( $metavalues ) {
-            foreach ( $metavalues as $meta ) {
-                $value = maybe_unserialize($meta->meta_value);
-                $user->{$meta->meta_key} = $value;
+            foreach ( $metavalues as $key => $meta ) {
 
-                // We need to set user_level from meta, not row 
-                if ( $wpdb->prefix . 'user_level' == $meta->meta_key )
-                    $user->user_level = $meta->meta_value;
+				$value = array_pop( $meta );
+				$value = maybe_unserialize( $value );
+				$user->{$key} = $value;
+
+                // We need to set user_level from meta, not row
+                if ( $wpdb->prefix . 'user_level' == $key )
+                    $user->user_level = $value;
             }
         }
 
@@ -1518,17 +1521,6 @@ if ( !function_exists('cp_length') ) {
 
 require_once( 'first-install.php' );
 
-function cp_get_attachment_id_from_src( $image_src ) {
-    global $wpdb;
-
-    $id = $wpdb->get_var($wpdb->prepare(
-                    "SELECT ID FROM {$wpdb->posts} WHERE guid = %s
-	", $image_src
-    ));
-
-    return $id;
-}
-
 function cp_do_attachment_caption( $data ) {
 
     if ( empty($data->image_url) && empty($data->video_url) ) {
@@ -1539,10 +1531,10 @@ function cp_do_attachment_caption( $data ) {
     $caption_source = ( isset($data->caption_field) ? $data->caption_field : 'media' );
 
     if ( !empty($data->image_url) ) {
-        $media_data['id'] = cp_get_attachment_id_from_src($data->image_url);
+        $media_data['id'] = $data->attachment_id;
     }
     if ( !empty($data->video_url) ) {
-        $media_data['id'] = cp_get_attachment_id_from_src($data->video_url);
+        $media_data['id'] = $data->attachment_id;
     }
 
     if ( $media_data['id'] ) {

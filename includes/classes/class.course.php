@@ -706,21 +706,14 @@ if ( !class_exists( 'Course' ) ) {
 					/*
 					 * Duplicate course post meta
 					 */
-
-					$post_metas = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $old_course_id ) );
-
-					if ( count( $post_metas ) != 0 ) {
-						$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-
-						foreach ( $post_metas as $meta_info ) {
-							$meta_key		 = $meta_info->meta_key;
-							$meta_value		 = addslashes( $meta_info->meta_value );
-							$sql_query_sel[] = "SELECT $new_course_id, '$meta_key', '$meta_value'";
+					
+					if( ! empty( $new_course_id ) ) {
+						$post_metas = get_post_meta( $old_course_id );
+						foreach ( $post_metas as $key => $meta_value ) {
+							$value = array_pop( $meta_value );
+							update_post_meta( $new_course_id, $key, $value );
 						}
-
-						$sql_query.= implode( " UNION ALL ", $sql_query_sel );
-						$wpdb->query( $sql_query );
-					}
+					}					
 
 					$units = $this->get_units( $old_course_id );
 

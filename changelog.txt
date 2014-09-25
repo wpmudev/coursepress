@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.1 =
+* Various database improvements.
+
 = 1.2.1 =
 * Fixed issue with incorrectly displayed footer on student login page
 * Fixed issue with BuddyPress autocomplete on Compose Message page

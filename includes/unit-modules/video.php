@@ -93,6 +93,7 @@ class video_module extends Unit_Module {
                     <label><?php _e('Put a URL or Browse for a video file.', 'cp'); ?><br />
                         <span class="element_title_description"><?php printf(__('You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'cp'), $supported_video_extensions); ?> </span>
                         <input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr(( isset($data->video_url) ? $data->video_url : '')); ?>" />
+                        <input class="attachment_id" type="hidden" size="36" name="<?php echo $this->name; ?>_attachment_id[]" value="<?php echo esc_attr(( isset($data->attachment_id) ? $data->attachment_id : '0')); ?>" />						
                         <input class="video_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_video_extensions); ?></div>
                     </label>
@@ -152,7 +153,8 @@ class video_module extends Unit_Module {
                     $no_caption_text = __('Media has no caption.', 'cp');
                     $attachment_id = false;
                     if ( !empty($data) ) {
-                        $attachment_id = cp_get_attachment_id_from_src($data->video_url);
+						$attachment_id = ! empty( $data->attachment_id ) ? $data->attachment_id : false;						
+                        // $attachment_id = cp_get_attachment_id_from_src($data->video_url);
                     }
 
                     if ( !empty($attachment_id) ) {
@@ -215,6 +217,7 @@ class video_module extends Unit_Module {
                             }
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['video_url'] = $_POST[$this->name . '_video_url'][$key];
+                            $data->metas['attachment_id'] = $_POST[$this->name . '_attachment_id'][$key];							
                             if ( !empty($_POST[$this->name . '_player_width']) ) {
                                 $data->metas['player_width'] = $_POST[$this->name . '_player_width'][$key];
                             }

@@ -86,6 +86,7 @@ class image_module extends Unit_Module {
                 <div class="file_url_holder">
                     <label><?php _e('Enter a URL or Browse for an image.', 'cp'); ?>
                         <input class="image_url" type="text" size="36" name="<?php echo $this->name; ?>_image_url[]" value="<?php echo esc_attr(( isset($data->image_url) ? $data->image_url : '')); ?>" />
+                        <input class="attachment_id" type="hidden" size="36" name="<?php echo $this->name; ?>_attachment_id[]" value="<?php echo esc_attr(( isset($data->attachment_id) ? $data->attachment_id : '0')); ?>" />
                         <input class="image_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_image_extensions); ?></div>
                     </label>
@@ -134,10 +135,12 @@ class image_module extends Unit_Module {
                 <input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked($caption_source, 'media', true); ?>/> <?php _e('Media Caption', 'cp'); ?>
                 <span class="element_title_description">
                     <?php
+					cp_write_log( $data );
                     $no_caption_text = __('Media has no caption.', 'cp');
                     $attachment_id = false;
                     if ( !empty($data) ) {
-                        $attachment_id = cp_get_attachment_id_from_src($data->image_url);
+						$attachment_id = ! empty( $data->attachment_id ) ? $data->attachment_id : false;
+                        // $attachment_id = cp_get_attachment_id_from_src($data->image_url);
                     }
 
                     if ( !empty($attachment_id) ) {
@@ -189,6 +192,7 @@ class image_module extends Unit_Module {
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['image_url'] = $_POST[$this->name . '_image_url'][$key];
+                            $data->metas['attachment_id'] = $_POST[$this->name . '_attachment_id'][$key];							
                             $data->metas['time_estimation'] = $_POST[$this->name . '_time_estimation'][$key];
 
                             $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_field'][$key];
