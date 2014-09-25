@@ -93,45 +93,50 @@ if ( !class_exists( 'Unit' ) ) {
 
 		function get_previous_unit_from_the_same_course( $unit_id = '', $post_status = 'publish' ) {
 
-			global $wpdb;
-
 			if ( $unit_id == '' ) {
 				$unit_id = $this->id;
 			}
 
 			$current_unit_order = get_post_meta( $unit_id, 'unit_order', true );
 
-			/* $args = array(
-			  'post_type'		 => 'unit',
-			  'post_status'	 => $post_status,
-			  'posts_per_page' => 1,
-			  'meta_key'		 => 'course_id',
-			  'meta_value'	 => $this->course_id,
-			  'meta_query'	 => array(
-			  array(
-			  'key'		 => 'unit_order',
-			  'compare'	 => '<',
-			  'value'		 => $current_unit_order
-			  ),
-			  )
-			  ); */
-
-			$previous_unit_id = $wpdb->get_var(
-			$wpdb->prepare(
-			"SELECT p.ID FROM $wpdb->posts p, $wpdb->postmeta pm  
-				WHERE p.ID = pm.post_id
-				AND p.post_parent = %d
-				AND pm.meta_key = 'unit_order' 
-				AND pm.meta_value < %d
-				ORDER BY pm.meta_value DESC
-				LIMIT 1", $this->course_id, $this->id )
+			$args = array(
+				'post_type'   => 'unit',
+				'post_status' => 'any',
+				'meta_key'    => 'unit_order',
+				'orderby'     => 'meta_value_num',
+				'order'       => 'ASC',
+				'meta_query'  => array(
+					  array(
+						  'key'      => 'course_id',
+						  'compare'  => 'IN',
+						  'value'    => array( $this->course_id ),
+					  ),
+				  ),
 			);
 
-			return $previous_unit_id;
+			$units = get_posts( $args );
+			$position = 0;
+			$previous_unit_id = 0;
 
-			//$previous_unit = new Unit($previous_unit_id);//get_posts( $args );
-			//print_r($results);
-			//return $previous_unit;
+			if( $unit_id == $current_unit_order ) {
+			  $haystack = array();
+			  foreach( $units as $unit_item ) {
+				  $haystack[] = $unit_item->ID;
+			  }
+			  $position = array_search( $unit_id, $haystack );
+			} else {
+			  // Adjust the index to fit in array bounds.
+			  $position = $current_unit_order - 1;
+			}
+
+			// There is no previous unit...
+			if( 0 == $position ) {
+			  $previous_unit_id = $unit_id;
+
+			} else {
+			  $previous_unit_id = $units[ $position - 1 ]->ID;
+			}
+  
 		}
 
 		function get_unit_page_time_estimation( $unit_id, $page_num ) {
@@ -240,15 +245,14 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 
 			$unit_id = (int) $unit_id;
+			
+			$drafts = get_posts( array( 'post_type'=>array('module','unit'), 'post_status'=>'auto-draft', 'post_parent'=>$unit_id, 'post_per_pag'=>-1 ) );
 
-			$wpdb->query(
-			$wpdb->prepare( "
-                DELETE FROM $wpdb->posts
-		 WHERE post_parent = %d
-                 AND post_status = 'auto-draft'
-		", $unit_id
-			)
-			);
+			if( ! empty( $drafts ) ) {
+				foreach( $drafts as $draft ) {
+					wp_delete_post( $draft->ID, true );
+				}				
+			}
 		}
 
 		function update_unit() {
@@ -368,9 +372,9 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_id_by_name( $slug ) {
-			global $wpdb;
-			$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'unit'", $slug ) );
-			return $id;
+			$post = get_posts( array( 'post_type'=>array('unit'), 'name'=>$slug, 'post_per_pag'=>1 ) );
+			$post = ! empty($post) && is_array( $post ) ? array_pop( $post ) : false;
+			return ! empty( $post ) ? $post->ID : false;
 		}
 
 		function get_parent_course_id( $unit_id = '' ) {
@@ -454,20 +458,13 @@ if ( !class_exists( 'Unit' ) ) {
 			 * Duplicate course post meta
 			 */
 
-			$post_metas = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=%d", $old_unit_id ) );
-
-			if ( count( $post_metas ) != 0 ) {
-				$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-
-				foreach ( $post_metas as $meta_info ) {
-					$meta_key		 = $meta_info->meta_key;
-					$meta_value		 = addslashes( $meta_info->meta_value );
-					$sql_query_sel[] = "SELECT $new_unit_id, '$meta_key', '$meta_value'";
+			if( ! empty( $new_unit_id ) ) {
+				$post_metas = get_post_meta( $old_unit_id );
+				foreach ( $post_metas as $key => $meta_value ) {
+					$value = array_pop( $meta_value );
+					update_post_meta( $new_unit_id, $key, $value );
 				}
-
-				$sql_query.= implode( " UNION ALL ", $sql_query_sel );
-				$wpdb->query( $sql_query );
-			}
+			}	
 
 			update_post_meta( $new_unit_id, 'course_id', $course_id );
 
