@@ -29,14 +29,27 @@ if ( !class_exists( 'Instructor' ) ) {
             $this->__construct( $ID, $name );
         }
 
+		static function get_course_meta_keys( $user_id ) {
+			$meta = get_user_meta( $user_id );
+			$meta = array_filter( array_keys( $meta ), array( 'Instructor', 'filter_course_meta_array' ) );
+			return $meta;
+		}
+		
+		static function filter_course_meta_array( $var ) {
+			if( preg_match( '/^course\_/', $var) ) {
+				return $var;
+			}			
+		}
+
         function get_assigned_courses_ids( $status = 'all' ) {
             global $wpdb;
 
             $assigned_courses = array();
-            $courses = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'course_%%' AND user_id = %d", $this->ID ), OBJECT );
+			
+			$courses = Instructor::get_course_meta_keys( $this->ID );
 
             foreach ( $courses as $course ) {
-                $course_id = str_replace( 'course_', '', $course->meta_key );
+                $course_id = str_replace( 'course_', '', $course );
                 if ( $status !== 'all' ) {
                     if ( get_post_status( $course_id ) == $status ) {
                         $assigned_courses[] = $course_id;
@@ -65,13 +78,12 @@ if ( !class_exists( 'Instructor' ) ) {
 
         //Get number of instructor's assigned courses
         static function get_courses_number( $user_id = false ) {
-            global $wpdb;
 			
 			if ( ! $user_id ) {
 				return 0;
 			}
 			
-            $courses_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( * ) as cnt FROM $wpdb->usermeta um, $wpdb->posts p WHERE ( um.user_id = %d AND um.meta_key LIKE 'course_%%' ) AND ( p.ID = um.meta_value )", $user_id ) );
+            $courses_count = count( Instructor::get_course_meta_keys( $user_id ) );
             return $courses_count;
         }
 
