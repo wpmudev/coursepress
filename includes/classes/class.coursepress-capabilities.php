@@ -98,8 +98,11 @@ class CoursePress_Capabilities {
 		    'coursepress_delete_my_notification_cap' => 1, 					
 		    'coursepress_change_notification_status_cap' => 0, 					
 		    'coursepress_change_my_notification_status_cap' => 1,
-                    
-                    
+			/* Certificates*/
+			'coursepress_certificates_cap' => 0,
+			'coursepress_create_certificates_cap' => 0,
+			'coursepress_update_certificates_cap' => 0, 
+			'coursepress_delete_certificates_cap' => 0, 
 		),
 	);
 
