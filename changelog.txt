@@ -10,6 +10,7 @@ CHANGE LOG
 * Various database improvements. 
 * Added course progress display to student workbook.  
 * Added unit progress to CoursePress theme on student workbook.  
+* Minor changes to enrollment popup window.  
 
 = 1.2.1 =
 * Fixed issue with incorrectly displayed footer on student login page

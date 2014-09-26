@@ -1,5 +1,5 @@
 <div class="cp_popup_inner">
-	<div class="cp_popup_title"><?php _e('Congratulations', 'cp'); ?></div>
+	<div class="cp_popup_title cp_popup_congratulations_title"><?php _e('Congratulations', 'cp'); ?></div>
 	<?php
 	global $coursepress;
 	$course_id = (int) $args['course_id'];
@@ -8,13 +8,14 @@
 	$course_link = '<a href="' . esc_url( get_permalink($course_id) ) . '">' . $course->details->post_title . '</a>';
 	?>
 	<div class="cp_popup_success_message">
-	    <p><?php echo sprintf(__('You have successfully enrolled in %s', 'cp'), $course_link); ?>
-		<br />
+		<div class="congratulations-image">
+			<img src="<?php echo esc_url( CoursePress::instance()->plugin_url . 'images/congrats-tick.png' ) ;?>" alt="<?php esc_attr_e( 'Congratulations image', 'cp' ); ?>">
+		</div
+	    <p><?php echo sprintf( __('You have successfully enrolled in %s', 'cp'), $course_link ); ?><br />
 	    <?php
 	    _e('You will receive an e-mail confirmation shortly.', 'cp');
-	    ?>
-		</p>
-	    <p><?php echo sprintf(__('You course will be available at any time in your %s', 'cp'), $dashboard_link); ?></p>
+	    ?></p>
+	    <p><?php echo sprintf( __('You course will be available at any time in your %s', 'cp'), $dashboard_link ); ?></p>
 	</div>
 	
 	<?php
