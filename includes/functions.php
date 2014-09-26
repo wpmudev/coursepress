@@ -1149,12 +1149,23 @@ if ( !function_exists( 'cp_get_userdatabynicename' ) ) :
 
 		if ( empty( $user_nicename ) )
 			return false;
-
-		$user	 = false;
-		// @todo: find a better way
-		if ( !$user	 = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_nicename = %s LIMIT 1", $user_nicename ) ) )
+		
+		$args = array (
+			'search'         => $user_nicename,
+			'search_columns' => array( 'user_nicename' ),
+			'number'         => '1',
+			'fields'         => array( 'id' ),
+		);
+		
+		$users = new WP_User_Query( $args );
+		$user_id = !empty( $users->results ) ? array_pop( $users->results ) : false;
+		
+		$user = ! empty( $user_id ) ? new WP_User( $user_id->id ) : false;
+		
+		if ( empty( $user ) ) {
 			return false;
-
+		}
+		
 		$metavalues = get_user_meta( $user->ID );
 
 		if ( $metavalues ) {
