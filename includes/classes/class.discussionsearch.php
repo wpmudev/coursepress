@@ -1,7 +1,8 @@
 <?php
 
 if ( !defined( 'ABSPATH' ) )
-    exit; // Exit if accessed directly
+    exit; // Exit if accessed directlyinclude 'class.discussionsearch.php';
+    
 
 if ( !class_exists( 'Discussion_Search' ) ) {
 
@@ -37,7 +38,6 @@ if ( !class_exists( 'Discussion_Search' ) ) {
         }
 
         function get_results( $count = false ) {
-            global $wpdb;
             $offset = ($this->page_num - 1 ) * $this->discussion_per_page;
             if ( $this->search_term !== '' ) {
 				$search_args = $this->args;

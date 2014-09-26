@@ -40,10 +40,12 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
 
         // filter to create virtual page content
         function virtualPage( $posts ) {
-            global $wp, $wp_query, $wpdb, $comment;
+            global $wp, $wp_query, $comment;
 
-            $old_post_slug_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = %s", $wp->request ) ); //check if slug already exists
-			// cp_write_log( $comment );
+            //check if slug already exists
+			$old_post_slug_id = get_posts( array( 'post_type'=>array('post','page','unit','course'), 'name'=>$wp->request, 'post_per_page'=>1, 'fields'=>'ids' ) );
+			$old_post_slug_id = is_array( $old_post_slug_id ) && ! empty( $old_post_slug_id ) ? array_pop( $old_post_slug_id ) : false;
+		 
 			// unset( $comment );
 			
             if ( $old_post_slug_id == '' ) {

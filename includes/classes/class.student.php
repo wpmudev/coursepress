@@ -23,7 +23,7 @@ if ( !class_exists('Student') ) {
 
             $this->first_name = get_user_meta($ID, 'first_name', true);
             $this->last_name = get_user_meta($ID, 'last_name', true);
-            $this->courses_number = $this->get_courses_number();
+            $this->courses_number = Student::get_courses_number( $this->ID );
         }
 
         function Student( $ID, $name = '' ) {
@@ -139,32 +139,47 @@ if ( !class_exists('Student') ) {
             }
         }
 
+		static function get_course_enrollment_meta( $user_id ) {
+			$meta = get_user_meta( $user_id );
+			$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );
+			return $meta;
+		}
+		
+		static function filter_course_meta_array( $var ) {
+			if( preg_match( '/^enrolled\_course\_date\_/', $var) ) {
+				$course_id = str_replace('enrolled_course_date_', '', $var );
+				if( ! empty( $course_id ) ) {
+					return $var;					
+				}
+			}			
+		}
+
         // alias to get_enrolled_course_ids()
         function get_assigned_courses_ids() {
             return $this->get_enrolled_courses_ids();
         }
 
         function get_enrolled_courses_ids() {
-            global $wpdb;
-            $enrolled_courses = array();
-            $courses = $wpdb->get_results($wpdb->prepare("SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'enrolled_course_date_%%' AND user_id = %d", $this->ID), OBJECT);
 
+            $enrolled_courses = array();
+			$courses = Student::get_course_enrollment_meta( $this->ID );
             foreach ( $courses as $course ) {
-                $course_id = str_replace('enrolled_course_date_', '', $course->meta_key);
-                $course = new Course($course_id);
-                //if ( !empty( $course->course ) ) {
-                $enrolled_courses[] = $course_id;
-                //}
+                $course_id = str_replace('enrolled_course_date_', '', $course );
+				if( !empty( $course_id ) ) {
+	                $enrolled_courses[] = $course_id;
+				}
             }
 
             return $enrolled_courses;
         }
 
         //Get number of courses student enrolled in
-        function get_courses_number() {
-            global $wpdb;
-            $courses_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT( * ) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key LIKE 'enrolled_course_date_%%'", $this->ID));
-            return $courses_count;
+        static function get_courses_number( $user_id = false) {
+			if( !$user_id ) {
+				return 0;
+			}
+			$courses_count = count( Student::get_course_enrollment_meta( $user_id ) );
+			return $courses_count;
         }
 
         function delete_student( $delete_user = false ) {
@@ -179,21 +194,17 @@ if ( !class_exists('Student') ) {
         function has_access_to_course( $course_id = '', $user_id = '' ) {
             global $wpdb;
 
-            if ( $user_id == '' ) {
+            if ( empty( $user_id ) ) {
                 $user_id = get_current_user_id();
             }
 
-            if ( $course_id == '' ) {
+            if ( empty( $course_id ) ) {
                 return false;
             }
+			
+			$courses = $this->get_enrolled_courses_ids();
 
-            $courses_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT( * ) as cnt FROM $wpdb->usermeta WHERE user_id = %d AND meta_key = %s", $user_id, 'enrolled_course_date_' . $course_id));
-
-            if ( $courses_count >= 1 ) {
-                return true;
-            } else {
-                return false;
-            }
+            return is_array( $courses ) ? in_array( $course_id, $courses ) : false;
         }
 
         function get_number_of_responses( $course_id ) {

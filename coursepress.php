@@ -4905,3 +4905,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 		global $coursepress;
 		$coursepress = CoursePress::instance();
 		
+		
+		function test() {
+			// $meta = Student::get_course_enrollment_ids( 2 );
+			// cp_write_log( $meta );
+			// $student = new Student( 2 );
+			// cp_write_log( $student->has_access_to_course( 128, 2 ) ? 'yes' : 'no' );
+					 	// cp_write_log( get_posts( array('name'=>'unit-2') ) );
+		
+			$unit_id = 149;
+			// $unit_id = 161;
+			// $drafts = get_post( array( 'post_parent'=>$unit_id, 'post_status'=>'auto_draft' ) );
+			$slug = 'unit-1';
+			$slug_id = get_posts( array( 'post_type'=>array('post','page','unit','course'), 'name'=>$slug, 'post_per_page'=>1, 'fields'=>'ids' ) );
+			$slug_id = is_array( $slug_id ) && ! empty( $slug_id ) ? array_pop( $slug_id ) : false;
+			// $post = ! empty($post) && is_array( $post ) ? array_pop( $post ) : false;
+// 			$post_id = ! empty( $post ) ? $post->ID : false;
+// 			cp_write_log( $post->ID );
+cp_write_log($post);
+						
+		}
+		add_filter( 'init', 'test' );

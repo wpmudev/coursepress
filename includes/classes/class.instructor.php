@@ -12,8 +12,6 @@ if ( !class_exists( 'Instructor' ) ) {
         var $courses_number = 0;
 
         function __construct( $ID, $name = '' ) {
-            global $wpdb;
-
             if ( $ID != 0 ) {
                 parent::__construct( $ID, $name );
             }
@@ -42,8 +40,6 @@ if ( !class_exists( 'Instructor' ) ) {
 		}
 
         function get_assigned_courses_ids( $status = 'all' ) {
-            global $wpdb;
-
             $assigned_courses = array();
 			
 			$courses = Instructor::get_course_meta_keys( $this->ID );

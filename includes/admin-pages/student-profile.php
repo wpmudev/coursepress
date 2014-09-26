@@ -64,7 +64,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
-                                    <span class="info"><?php echo $student->get_courses_number(); ?></span>
+                                    <span class="info"><?php echo Student::get_courses_number( $student->ID ); ?></span>
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>

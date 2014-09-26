@@ -249,7 +249,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$unit_id = (int) $unit_id;
 			
-			$drafts = get_posts( array( 'post_type'=>array('module','unit'), 'post_status'=>'auto-draft', 'post_parent'=>$unit_id, 'post_per_pag'=>-1 ) );
+			$drafts = get_posts( array( 'post_type'=>array('module','unit'), 'post_status'=>'auto-draft', 'post_parent'=>$unit_id, 'post_per_page'=>-1 ) );
 
 			if( ! empty( $drafts ) ) {
 				foreach( $drafts as $draft ) {
@@ -375,7 +375,7 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_id_by_name( $slug ) {
-			$post = get_posts( array( 'post_type'=>array('unit'), 'name'=>$slug, 'post_per_pag'=>1 ) );
+			$post = get_posts( array( 'post_type'=>array('unit'), 'name'=>$slug, 'post_per_page'=>1 ) );
 			$post = ! empty($post) && is_array( $post ) ? array_pop( $post ) : false;
 			return ! empty( $post ) ? $post->ID : false;
 		}

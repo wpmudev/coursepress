@@ -28,7 +28,7 @@ if ( !class_exists('Notification_Search') ) {
             $this->args = $args;
         }
 
-        function Course( $search_term = '', $page_num = '' ) {
+        function Notification_Search( $search_term = '', $page_num = '' ) {
             $this->__construct($search_term, $page_num);
         }
 
@@ -37,10 +37,11 @@ if ( !class_exists('Notification_Search') ) {
         }
 
         function get_results( $count = false ) {
-            global $wpdb;
             $offset = ($this->page_num - 1 ) * $this->notifications_per_page;
             if ( $this->search_term !== '' ) {
-                $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = %s AND (post_title LIKE %s OR post_content LIKE %s) ORDER BY post_date DESC LIMIT %d OFFSET %d", $this->post_type, '%' . $this->search_term . '%', '%' . $this->search_term . '%', $this->notifications_per_page, $offset), OBJECT);
+				$search_args = $this->args;
+				$search_args['s'] = $this->search_term;
+                $results = get_posts( $search_args );
                 if ( $count ) {
                     return count($results);
                 } else {
