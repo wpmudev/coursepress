@@ -571,6 +571,7 @@ h1.notification-title{
     text-align: right;
     float: right;
     padding-top: 7px;
+	font-weight:normal;
 }
 
 .module_title h2 span{
@@ -1302,3 +1303,13 @@ h1.title.completed-courses-title {
 }
 
 /* End front video */
+.workbook-title {
+	position: relative;
+}
+.workbook-course-progress {
+	font-size: 14px;
+	font-weight: normal;
+	position:absolute;
+	bottom: 2px;
+	right:0;
+}

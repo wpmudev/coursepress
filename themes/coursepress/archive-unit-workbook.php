@@ -16,7 +16,12 @@ add_thickbox();
 ?>
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-        <h1><?php echo do_shortcode('[course_title course_id="' . $course_id . '"]'); ?></h1>
+		<h1 class="workbook-title">
+			<?php echo do_shortcode('[course_title course_id="' . $course_id . '" title_tag=""]'); ?>
+			<?php if ( 100 > (int) $progress ) { ?>
+				<span class="workbook-course-progress"><?php echo esc_html( $progress ); ?>% <?php esc_html_e('completed', 'cp'); ?></span>			
+			<?php } ?>
+		</h1>
 
         <div class="instructors-content">
             <?php
@@ -44,10 +49,7 @@ add_thickbox();
                 <div class="workbook_units">
                     <div class="unit_title">
                         <h3><?php the_title(); ?>
-                            <span><?php
-                                if ( do_shortcode('[course_unit_details field="assessable_input_modules_count"]') > 0 ) {
-                                    _e('Completion:', 'cp');
-                                    ?> <?php echo apply_filters('cp_grade', do_shortcode('[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]')); ?>%<?php } ?></span>
+                            <span><?php echo do_shortcode('[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]'); ?>% <?php _e('completed', 'cp'); ?></span>
                         </h3>
                     </div>
                     <div class="accordion-inner">

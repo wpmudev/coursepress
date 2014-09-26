@@ -7,7 +7,9 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.1.1 =
-* Various database improvements.
+* Various database improvements. 
+* Added course progress display to student workbook.  
+* Added unit progress to CoursePress theme on student workbook.  
 
 = 1.2.1 =
 * Fixed issue with incorrectly displayed footer on student login page

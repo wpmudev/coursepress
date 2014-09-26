@@ -257,11 +257,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$title = get_the_title( $course_id );
 
-			$content = '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">';
+			$content = ! empty( $title_tag ) ? '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">' : '';
 			$content .= 'yes' == $link ? '<a href="' . get_permalink( $course_id ) . '" title="' . $title . '">' : '';
 			$content .= $title;
 			$content .= 'yes' == $link ? '</a>' : '';
-			$content .= '</' . $title_tag . '>';
+			$content .= ! empty( $title_tag ) ? '</' . $title_tag . '>' : '';
 
 // Return the html in the buffer.
 			return $content;

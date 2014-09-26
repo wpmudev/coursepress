@@ -2826,6 +2826,17 @@ li.current_page_item a{
     line-height: 0px;
 }
 
+.workbook-title {
+	position:relative;
+}
+.workbook-course-progress {
+	font-size: 16px;
+	float:right;
+	position:absolute;
+	bottom:5px;
+	right: 0;
+}
+
 /*
 RESPONSIVE
 */
