@@ -62,8 +62,8 @@ if ( !class_exists( 'Unit' ) ) {
 
 			/* Check if previous has conditions */
 			$previous_unit_id                         = $this->get_previous_unit_from_the_same_course( $unit_id );
-			$force_current_unit_completion            = get_post_meta( $previous_unit_id, 'force_current_unit_completion', true );
-			$force_current_unit_successful_completion = get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true );
+			$force_current_unit_completion            = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : '';
+			$force_current_unit_successful_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : '';
 
 			$available = true;
 
@@ -115,6 +115,7 @@ if ( !class_exists( 'Unit' ) ) {
 			);
 
 			$units = get_posts( $args );
+						
 			$position = 0;
 			$previous_unit_id = 0;
 
@@ -136,6 +137,8 @@ if ( !class_exists( 'Unit' ) ) {
 			} else {
 			  $previous_unit_id = $units[ $position - 1 ]->ID;
 			}
+			
+			return $unit_id != $previous_unit_id ? $previous_unit_id : false;
   
 		}
 
