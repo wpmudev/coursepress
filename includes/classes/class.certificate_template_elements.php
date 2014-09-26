@@ -45,7 +45,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_all_set_elements() {
 			$set_elements = array();
 
-			for ( $i = 1; $i <= apply_filters( 'cp_certificate_template_row_number', 10 ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'cp_certificate_template_row_number', 15 ); $i++ ) {
 				$rows_elements = get_post_meta( $this->id, 'rows_' . $i, true );
 				if ( isset( $rows_elements ) && $rows_elements !== '' ) {
 					$element_class_names = explode( ',', $rows_elements );
@@ -81,22 +81,22 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			<?php
 		}
 
-		function get_document_margins() {
+		function get_document_margins($top = 10, $right = 10, $left = 10) {
 			?>
 			<label><?php _e( 'Document Margins', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="ticket_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_top_margin' ] ) ? $this->template_metas[ 'document_template_top_margin' ] : ''  ); ?>" />
-			<?php _e( 'Right', 'cp' ); ?> <input class="ticket_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_right_margin' ] ) ? $this->template_metas[ 'document_template_right_margin' ] : ''  ); ?>" />
-			<?php _e( 'Left', 'cp' ); ?> <input class="ticket_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_left_margin' ] ) ? $this->template_metas[ 'document_template_left_margin' ] : ''  ); ?>" />
+			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_top_margin' ] ) ? $this->template_metas[ 'document_template_top_margin' ] : $top  ); ?>" />
+			<?php _e( 'Right', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_right_margin' ] ) ? $this->template_metas[ 'document_template_right_margin' ] : $right  ); ?>" />
+			<?php _e( 'Left', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_left_margin' ] ) ? $this->template_metas[ 'document_template_left_margin' ] : $left  ); ?>" />
 			</p>
 			<?php
 		}
 
 		function get_full_background_image() {
 			?>
-			<label><?php _e( 'Certificate Background Image', 'cp' ); ?>
-				<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( (isset( $this->template_metas[ 'document_template_background_image' ] ) && $this->template_metas[ 'document_template_background_image' ] !== '' ? $this->template_metas[ 'document_template_background_image' ] : '' ) ); ?>" />
-				<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>" />
-			</label>
+			<label><?php _e( 'Certificate Background Image', 'cp' ); ?></label>
+			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( (isset( $this->template_metas[ 'document_template_background_image' ] ) && $this->template_metas[ 'document_template_background_image' ] !== '' ? $this->template_metas[ 'document_template_background_image' ] : '' ) ); ?>" />
+			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>" />
+
 			<?php
 		}
 
@@ -114,8 +114,8 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_element_margins() {
 			?>
 			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="ticket_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_top_padding' ] ) ? $this->template_metas[ $this->element_name . '_top_padding' ] : '0'  ); ?>" />
-			<?php _e( 'Bottom', 'cp' ); ?> <input class="ticket_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_bottom_padding' ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ] : '0'  ); ?>" />
+			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_top_padding' ] ) ? $this->template_metas[ $this->element_name . '_top_padding' ] : '0'  ); ?>" />
+			<?php _e( 'Bottom', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_bottom_padding' ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ] : '0'  ); ?>" />
 			</p>
 			<?php
 		}
@@ -139,14 +139,14 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_colors( $label = 'Color', $field_name = 'color', $default_color = '#000000' ) {
 			?>
 			<label><?php echo $label; ?></label>
-			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color ); ?>" />
+			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color  ); ?>" />
 			<?php
 		}
 
 		function get_font_colors( $label = 'Font Color', $field_name = 'font_color', $default_color = '#000000' ) {
 			?>
 			<label><?php echo $label; ?></label>
-			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color ); ?>" />
+			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color  ); ?>" />
 			<?php
 		}
 
@@ -183,7 +183,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value='symbol' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
 				<option value='times' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
 				<option value='zapfdingbats' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
-				<?php do_action( 'cp_ticket_font' ); ?>
+				<?php do_action( 'cp_template_font' ); ?>
 			</select>
 			<?php
 		}

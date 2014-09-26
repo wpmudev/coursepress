@@ -9,7 +9,7 @@ class cp_website_element extends CP_Certificate_Template_Elements {
 		$this->element_title = apply_filters( 'cp_website_element_title', __( 'Website', 'cp' ) );
 	}
 
-	function ticket_content( $course_id = false, $user_id = false, $preview = false  ) {
+	function template_content( $course_id = false, $user_id = false, $preview = false  ) {
 
 	}
 

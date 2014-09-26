@@ -713,6 +713,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * @since 1.0.0
 			 */
 			add_action( 'load-' . $this->screen_base . '_page_assessment', array( &$this, 'admin_coursepress_page_assessment' ) );
+			
+			/**
+			 * Load Course Certificates Page (admin).
+			 *
+			 * @since 1.0.0
+			 */
+			add_action( 'load-' . $this->screen_base . '_page_certificates', array( &$this, 'admin_coursepress_page_certificates' ) );
 
 			/**
 			 * Load Course Students Page (admin).
@@ -2595,13 +2602,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// if ( ! $this->is_marketpress_active() && ! $this->is_marketpress_lite_active() && ! $this->is_marketpress_lite_active() ) {
 			//     $this->install_and_activate_plugin( '/' . $this->dir_name . '/marketpress.php' );
 			// }
-			$this->load_ticket_template_elements();
+			$this->load_certificate_template_elements();
 
 			do_action( 'coursepress_modules_loaded' );
 		}
 
-		function load_ticket_template_elements() {
-//get ticket elements dir
+		function load_certificate_template_elements() {
+
 			$dir = $this->plugin_dir . 'includes/certificate-elements/';
 
 //search the dir for files
@@ -4122,6 +4129,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
+		}
+		
+		function admin_coursepress_page_certificates() {
+			wp_enqueue_style( 'certificates', $this->plugin_url . 'css/admin_coursepress_page_certificates.css', array(), $this->version );
+			wp_enqueue_script( 'assessment-admin', $this->plugin_url . 'js/certificates-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-accordion', 'wp-color-picker' ), false, false );
+			//wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
+			//wp_enqueue_script( 'jquery-ui-core' );
+			//wp_enqueue_script( 'jquery-ui-tabs' );
 		}
 
 		function admin_coursepress_page_students() {

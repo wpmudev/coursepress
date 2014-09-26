@@ -1,0 +1,216 @@
+.cp-wrap #minor-publishing-actions{
+    text-align: left;
+}
+
+.cp-wrap #minor-publishing-actions label{
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+    width: 100%;
+}
+
+.cp-wrap #minor-publishing-actions select{
+    width: 100%;
+}
+
+.cp-wrap #minor-publishing-actions input{
+    text-align: left;
+    max-width: 100%;
+    font-weight: normal;
+}
+
+.cp-wrap #minor-publishing-actions .file_url_button.button-secondary{
+    font-weight: normal;
+    width: 28%;
+}
+
+.cp-wrap #minor-publishing-actions .file_url{
+    width: 69%;
+}
+
+.cp-wrap #minor-publishing-actions .template_margin{
+    width: 18%;
+    margin-left: 1%;
+}
+
+.cp-wrap #titlediv #titlewrap #title{
+    line-height: 120%;
+}
+
+/* Ticket Templates */
+
+.sortables{ list-style-type: none; margin: 0; padding: 0; float: left; width: 100%}
+.sortables li{ padding:5px; font-size: 12px; width: auto; cursor: move; }
+
+#certificate_elements{ 
+    width: 100%; 
+    float: left;
+    min-height: 20px;
+    margin-bottom: 20px;
+}
+
+#certificate_elements .element_content{
+    display: none;
+}
+
+.element_content select{
+    max-width: 100%;
+}
+
+#certificate_elements li{
+    margin-bottom: 5px;
+    background: none;
+    background-color: #fff;
+}
+
+.rows{
+    width: 100%;
+    float: left;
+}
+
+.rows li{
+    padding-left: 0%;
+    padding-right: 0%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.rows ul{
+    width: 98%;
+    margin-bottom: 30px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border: 1px dashed #ccc;
+    position: relative;
+}
+
+.rows .sortables .ui-state-default{
+    background: none;
+    background-color: #fff;
+}
+
+.rows .element_title{
+    font-size: 20px;
+}
+
+.row_num_info{
+    position: absolute;
+    top: -20px;
+    z-index: 99999;
+    right: 0px;
+    color: #8F8F8F;
+}
+
+.rows li.ui-state-default.cols{
+    display: inline-block;
+    float: left;
+}
+
+.rows li.ui-state-default.cols div{
+    //padding: 5px;
+}
+
+.rows .element_title, 
+.rows .element_content{
+    padding: 5px;
+}
+
+.ui-state-highlight { }
+
+.rows li.ui-state-default.cols_1{
+    width: 100%;
+}
+
+.rows li.ui-state-default.cols_1 .element_title{
+    font-size: 20px;
+}
+
+
+.rows li.ui-state-default.cols_2{
+    width: 49.5%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_2 .element_title{
+    font-size: 20px;
+}
+
+
+.rows li.ui-state-default.cols_3{
+    width: 32.6%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_3 .element_title{
+    font-size: 17px;
+}
+
+.rows li.ui-state-default.cols_4{
+    width: 24.2%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_4 .element_title{
+    font-size: 16px;
+}
+
+.rows li.ui-state-default.cols_5{
+    width: 19%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_5 .element_title{
+    font-size: 16px;
+}
+
+.rows li.ui-state-default.cols_6{
+    width: 15.66%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_6 .element_title{
+    font-size: 15px;
+}
+
+.rows li.ui-state-default.cols_7{
+    width: 13.25%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_7 .element_title{
+    font-size: 15px;
+}
+
+.rows li.ui-state-default.cols_8{
+    width: 11.43%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_8 .element_title{
+    font-size: 14px;
+}
+
+.rows li.ui-state-default.cols_9{
+    width: 10%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_9 .element_title{
+    font-size: 14px;
+}
+
+.rows li.ui-state-default.cols_10{
+    width: 8.94%;
+    margin-right: 1%;
+}
+
+.rows li.ui-state-default.cols_10 .element_title{
+    font-size: 14px;
+}
+
+.rows li.ui-state-default.cols.last_child{
+    margin-right: 0%;
+}

@@ -32,13 +32,13 @@ if ( !class_exists( 'CP_Certificate_Templates' ) ) {
 				$metas = get_post_meta( $post_id ); //cp_get_post_meta_all
 			}
 
-			$margin_left	 = $metas[ 'document_ticket_left_margin' ];
-			$margin_top		 = $metas[ 'document_ticket_top_margin' ];
-			$margin_right	 = $metas[ 'document_ticket_right_margin' ];
+			$margin_left	 = $metas[ 'document_template_left_margin' ];
+			$margin_top		 = $metas[ 'document_template_top_margin' ];
+			$margin_right	 = $metas[ 'document_template_right_margin' ];
 
 			// create new PDF document
 
-			$pdf = new TCPDF( $metas[ 'document_ticket_orientation' ], PDF_UNIT, apply_filters( 'cp_additional_template_document_size_output', $metas[ 'document_ticket_size' ] ), true, apply_filters( 'cp_template_document_encoding', bloginfo( 'charset' ) ), false );
+			$pdf = new TCPDF( $metas[ 'document_template_orientation' ], PDF_UNIT, apply_filters( 'cp_additional_template_document_size_output', $metas[ 'document_template_size' ] ), true, apply_filters( 'cp_template_document_encoding', bloginfo( 'charset' ) ), false );
 
 			$pdf->setPrintHeader( false );
 			$pdf->setPrintFooter( false );
@@ -56,8 +56,8 @@ if ( !class_exists( 'CP_Certificate_Templates' ) ) {
 			ob_clean(); //Clear any previous output 
 			ob_start(); //Start new output buffer 
 
-			if ( isset( $metas[ 'document_ticket_background_image' ] ) && $metas[ 'document_ticket_background_image' ] !== '' ) {
-				$pdf->Image( $metas[ 'document_ticket_background_image' ], 0, 0, '', '', '', '', '', false, 300, '', false, false, 0 );
+			if ( isset( $metas[ 'document_template_background_image' ] ) && $metas[ 'document_template_background_image' ] !== '' ) {
+				$pdf->Image( $metas[ 'document_template_background_image' ], 0, 0, '', '', '', '', '', false, 300, '', false, false, 0 );
 			}
 
 			$col_1		 = 'width: 100%;';
@@ -76,7 +76,7 @@ if ( !class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$rows = '<table>';
 
-			for ( $i = 1; $i <= apply_filters( 'cp_ticket_template_row_number', 10 ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'cp_template_template_row_number', 10 ); $i++ ) {
 
 				$rows .= '<tr>';
 				$rows_elements = get_post_meta( $post_id, 'rows_' . $i, true );

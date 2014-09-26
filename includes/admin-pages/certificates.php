@@ -8,7 +8,7 @@ $page					 = $_GET[ 'page' ];
 
 if ( isset( $_POST[ 'add_new_template' ] ) ) {
 	if ( check_admin_referer( 'save_template' ) ) {
-		if ( current_user_can( 'coursepress_create_certificates_cap' ) ) {
+		if ( current_user_can( 'coursepress_create_certificates_cap' ) || current_user_can('manage_options') ) {
 			$templates->add_new_template();
 			$message = __( 'Certificate Template data has been successfully saved.', 'cp' );
 		} else {
@@ -17,7 +17,7 @@ if ( isset( $_POST[ 'add_new_template' ] ) ) {
 	}
 }
 
-if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && current_user_can( 'coursepress_update_certificates_cap' ) ) {
+if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && (current_user_can( 'coursepress_update_certificates_cap' )  || current_user_can('manage_options')) ) {
 	$post_id				 = (int) $_GET[ 'ID' ];
 	$template				 = new CP_Certificate_Template( $post_id );
 	$template_elements		 = new CP_Certificate_Template_Elements( $post_id );
@@ -27,7 +27,7 @@ if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && current_user_c
 if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delete' ) {
 	if ( !isset( $_POST[ '_wpnonce' ] ) ) {
 		check_admin_referer( 'delete_' . $_GET[ 'ID' ] );
-		if ( current_user_can( 'coursepress_delete_certificates_cap' ) ) {
+		if ( current_user_can( 'coursepress_delete_certificates_cap' ) || current_user_can('manage_options') ) {
 			$template	 = new CP_Certificate_Template( (int) $_GET[ 'ID' ] );
 			$template->delete_template();
 			$message	 = __( 'Certificate Template has been successfully deleted.', 'cp' );
@@ -53,7 +53,7 @@ $wp_templates_search = new CP_Certificate_Templates_Search( $templatessearch, $p
 $fields				 = $templates->get_template_col_fields();
 $columns			 = $templates->get_columns();
 ?>
-<div class="wrap">
+<div class="wrap cp-wrap">
     <h2><?php _e( 'Certificate Templates', 'cp' ); ?><?php if ( isset( $_GET[ 'action' ] ) && ($_GET[ 'action' ] == 'edit' || $_GET[ 'action' ] == 'add_new') ) { ?><a href="admin.php?page=<?php echo $_GET[ 'page' ]; ?>" class="add-new-h2"><?php _e( 'Back', 'cp' ); ?></a><?php } else { ?><a href="<?php echo admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&action=add_new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
 	<?php
@@ -163,8 +163,6 @@ $columns			 = $templates->get_columns();
 			}
 			?>
 
-			<h4><?php _e( 'Certificate Template Title', 'cp' ); ?></h4>
-
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">
@@ -172,92 +170,186 @@ $columns			 = $templates->get_columns();
 						<div id="titlediv">
 							<div id="titlewrap">
 								<label class="" id="title-prompt-text" for="title"></label>
-								<input type="text" name="template_title" size="30" value="" id="title" autocomplete="off">
+								<input type="text" name="template_title" size="30" value="" id="title" placeholder="<?php _e( 'Certificate Template Title', 'cp' ); ?>" autocomplete="off">
 							</div>
 						</div>
 
-						<h4><?php _e( 'Certificate', 'cp' ); ?></h4>
-						<div class="rows">
-							<?php for ( $i = 1; $i <= apply_filters( 'cp_ticket_template_row_number', 10 ); $i++ ) { ?>
-								<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
-									<?php
-									if ( isset( $post_id ) ) {
-										$rows_elements = get_post_meta( $post_id, 'rows_' . $i, true );
-										if ( isset( $rows_elements ) && $rows_elements !== '' ) {
-											$element_class_names = explode( ',', $rows_elements );
-											foreach ( $element_class_names as $element_class_name ) {
-												if ( class_exists( $element_class_name ) ) {
-													if ( isset( $post_id ) ) {
-														$element = new $element_class_name( $post_id );
-													} else {
-														$element = new $element_class_name;
+						<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw">
+							<h4><?php _e( 'Certificate', 'cp' ); ?></h4>
+							<div class="rows">
+								<?php for ( $i = 1; $i <= apply_filters( 'cp_certificate_template_row_number', 15 ); $i++ ) { ?>
+									<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
+										<?php
+										if ( isset( $post_id ) ) {
+											$rows_elements = get_post_meta( $post_id, 'rows_' . $i, true );
+											if ( isset( $rows_elements ) && $rows_elements !== '' ) {
+												$element_class_names = explode( ',', $rows_elements );
+												foreach ( $element_class_names as $element_class_name ) {
+													if ( class_exists( $element_class_name ) ) {
+														if ( isset( $post_id ) ) {
+															$element = new $element_class_name( $post_id );
+														} else {
+															$element = new $element_class_name;
+														}
+														?>
+														<li class="ui-state-default cols" data-class="<?php echo $element_class_name; ?>">
+															<div class="element_title"><?php echo $element->element_title; ?></div>
+															<div class="element_content"><?php $element->admin_content(); ?></div>
+														</li>
+														<?php
 													}
-													?>
-													<li class="ui-state-default cols" data-class="<?php echo $element_class_name; ?>">
-														<div class="element_title"><?php echo $element->element_title; ?></div>
-														<div class="element_content"><?php $element->admin_content(); ?></div>
-													</li>
-													<?php
 												}
 											}
 										}
-									}
-									?>
-								</ul>
-							<?php } ?>
+										?>
+									</ul>
+								<?php } ?>
+
+							</div>
+							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'cp_certificate_template_row_number', 15 ); ?>" />
+						</div><!--wp-content-wrap-->
+					</div><!--post-body-content-->
+
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="side-sortables" class="meta-box-sortables ui-sortable" style="">
+							<div id="submitdiv" class="postbox ">
+								<h3 class="hndle"><span><?php _e( 'Certificate Elements', 'cp' ); ?></span></h3>
+								<div class="inside">
+									<div class="submitbox" id="submitpost">
+
+										<div id="minor-publishing">
+
+											<div id="minor-publishing-actions">
+												<div class="misc-pub-section">
+													<ul class="sortables droptrue" id="certificate_elements">
+														<?php
+														foreach ( $cp_template_elements as $element ) {
+															$element_class = new $element[ 0 ];
+
+															if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
+																?>
+																<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
+																	<div class="element_title"><?php echo $element[ 1 ]; ?></div>
+																	<div class="element_content">
+																		<?php echo $element_class->admin_content(); ?>
+																	</div>
+																</li>
+																<?php
+															}
+														}
+														?>
+													</ul>
+												</div>
+										
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!--document settings-->
+
+							<div id="submitdiv" class="postbox ">
+								<h3 class="hndle"><span><?php _e( 'Certificate PDF Settings', 'cp' ); ?></span></h3>
+								<div class="inside">
+									<div class="submitbox" id="submitpost">
+
+										<div id="minor-publishing">
+
+											<div id="minor-publishing-actions">
+												<div class="misc-pub-section">
+													<?php $template_elements->tcpdf_get_fonts(); ?>
+												</div>
+												<div class="misc-pub-section">
+													<?php $template_elements->get_document_sizes(); ?>
+												</div>
+												<div class="misc-pub-section">
+													<?php $template_elements->get_document_orientation(); ?>
+												</div>
+												<div class="misc-pub-section">
+													<?php $template_elements->get_document_margins( 10, 10, 10 ); ?>
+												</div>
+												<div class="misc-pub-section">
+													<?php $template_elements->get_full_background_image(); ?>
+												</div>
+												<?php
+												do_action( 'cp_template_document_settings' );
+												?>
+											</div>
+											<div class="clear"></div>
+										</div>
+
+										<div id="major-publishing-actions">
+											<div id="delete-action">
+												<a class="preview button" href="" target="wp-preview-695" id="post-preview"><?php _e( 'Preview', 'tc' ) ?></a>
+											</div>
+
+											<div id="publishing-action">
+												<?php submit_button( __( 'Save', 'cp' ), 'primary', 'add_new_template', false ); ?>
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+
+								</div>
+							</div>
 
 						</div>
-						<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'cp_ticket_template_row_number', 10 ); ?>" />
-
 					</div>
+
+
+
 				</div><!--post-body-->
 
-				<h4><?php _e( 'Certificate Elements', 'cp' ); ?></h4>
+				<?php if ( 1 == 0 ) { ?>
+					<h4><?php _e( 'Certificate Elements', 'cp' ); ?></h4>
 
 
-				<ul class="sortables droptrue" id="ticket_elements">
-					<?php
-					foreach ( $cp_template_elements as $element ) {
-						$element_class = new $element[ 0 ];
-
-						if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
-							?>
-							<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
-								<div class="element_title"><?php echo $element[ 1 ]; ?></div>
-								<div class="element_content">
-									<?php echo $element_class->admin_content(); ?>
-								</div>
-							</li>
-							<?php
-						}
-					}
-					?>
-				</ul>
-
-
-				<?php submit_button( __( 'Save', 'cp' ), 'primary', 'add_new_template', true ); ?>
-
-				<div class="right-holder">
-					<h4><?php _e( 'Certificate PDF Settings', 'cp' ); ?></h4>
-					<div id="template_document_settings">
+					<ul class="sortables droptrue" id="certificate_elements">
 						<?php
-						$template_elements->tcpdf_get_fonts();
-						$template_elements->get_document_sizes();
-						$template_elements->get_document_orientation();
-						$template_elements->get_document_margins();
-						$template_elements->get_full_background_image();
-						do_action( 'cp_template_document_settings' );
+						foreach ( $cp_template_elements as $element ) {
+							$element_class = new $element[ 0 ];
+
+							if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
+								?>
+								<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
+									<div class="element_title"><?php echo $element[ 1 ]; ?></div>
+									<div class="element_content">
+										<?php echo $element_class->admin_content(); ?>
+									</div>
+								</li>
+								<?php
+							}
+						}
 						?>
-						<br /><br />
-						<?php submit_button( __( 'Save', 'cp' ), 'primary', 'add_new_template', false ); ?>
+					</ul>
+
+
+					<?php submit_button( __( 'Save', 'cp' ), 'primary', 'add_new_template', true ); ?>
+
+					<div class="right-holder">
+						<h4><?php _e( 'Certificate PDF Settings', 'cp' ); ?></h4>
+						<div id="template_document_settings">
+							<?php
+							$template_elements->tcpdf_get_fonts();
+							$template_elements->get_document_sizes();
+							$template_elements->get_document_orientation();
+							$template_elements->get_document_margins();
+							$template_elements->get_full_background_image();
+							do_action( 'cp_template_document_settings' );
+							?>
+							<br /><br />
+
+						</div>
 					</div>
-				</div>
 
-				<div class="right-holder">
-					<?php submit_button( __( 'Preview', 'cp' ), 'primary', 'preview', false ); ?>
-				</div>
-
-			</div>
+					<div class="right-holder">
+						<?php submit_button( __( 'Preview', 'cp' ), 'primary', 'preview', false ); ?>
+					</div>
+				<?php } ?>
+			</div><!--post stuff-->
 		</form>
-	</div>
+	</div><!--wrap-->
 <?php } ?>

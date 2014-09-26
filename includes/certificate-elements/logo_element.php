@@ -14,7 +14,7 @@ class cp_logo_element extends CP_Certificate_Template_Elements {
 		echo parent::get_element_margins();
 	}
 
-	function ticket_content( $course_id = false, $user_id = false, $preview = false  ) {
+	function template_content( $course_id = false, $user_id = false, $preview = false  ) {
 		/*
 		  if ( $certificate_logo ) {
 		  return '<img src="' . $certificate_logo . '" />';
