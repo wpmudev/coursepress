@@ -2664,12 +2664,22 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 		function courses_student_dashboard( $atts ) {
 			global $plugin_dir;
-			load_template( $plugin_dir . 'includes/templates/student-dashboard.php', false );
+			// load_template( $plugin_dir . 'includes/templates/student-dashboard.php', false );
+			ob_start();
+			require( $plugin_dir . 'includes/templates/student-dashboard.php' );
+			$content = ob_get_clean();
+			return $content;
+			
 		}
 
 		function courses_student_settings( $atts ) {
 			global $plugin_dir;
-			load_template( $plugin_dir . 'includes/templates/student-settings.php', false );
+			// load_template( $plugin_dir . 'includes/templates/student-settings.php', false );
+			ob_start();
+			require( $plugin_dir . 'includes/templates/student-settings.php' );
+			$content = ob_get_clean();
+			return $content;
+			
 		}
 
 		function course_unit_single( $atts ) {
@@ -3444,7 +3454,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 		function student_registration_form() {
 			global $plugin_dir;
-			load_template( $plugin_dir . 'includes/templates/student-signup.php', true );
+			// load_template( $plugin_dir . 'includes/templates/student-signup.php', true );
+			ob_start();
+			require( $plugin_dir . 'includes/templates/student-signup.php' );
+			$content = ob_get_clean();
+			return $content;			
 		}
 
 		function author_description_excerpt( $user_id = false, $length = 100 ) {
