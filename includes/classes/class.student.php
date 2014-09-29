@@ -141,7 +141,9 @@ if ( !class_exists('Student') ) {
 
 		static function get_course_enrollment_meta( $user_id ) {
 			$meta = get_user_meta( $user_id );
-			$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );
+			if( $meta ) {
+				$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );				
+			}
 			return $meta;
 		}
 		
@@ -163,6 +165,9 @@ if ( !class_exists('Student') ) {
 
             $enrolled_courses = array();
 			$courses = Student::get_course_enrollment_meta( $this->ID );
+			if( ! $courses ) {
+				return array();
+			}
             foreach ( $courses as $course ) {
                 $course_id = str_replace('enrolled_course_date_', '', $course );
 				if( !empty( $course_id ) ) {

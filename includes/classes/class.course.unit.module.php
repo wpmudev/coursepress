@@ -1,7 +1,7 @@
 <?php
 if ( !class_exists( 'Unit_Module' ) ) {
 
-	class Unit_Module {
+	class Unit_Module extends CoursePress_Object {
 
 		var $data;
 		var $name			 = 'none';

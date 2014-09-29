@@ -36,6 +36,7 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
             
             add_filter( 'the_posts', array( &$this, 'virtualPage' ) );
             add_filter( 'the_title', array( &$this, 'hide_title' ), 10, 2 );
+			
         }
 
         // filter to create virtual page content

@@ -5,7 +5,7 @@ if ( !defined( 'ABSPATH' ) )
 
 if ( !class_exists( 'Unit' ) ) {
 
-	class Unit {
+	class Unit extends CoursePress_Object {
 
 		var $id			 = '';
 		var $output		 = 'OBJECT';
@@ -17,9 +17,22 @@ if ( !class_exists( 'Unit' ) ) {
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
-			$this->details	 = get_post( $this->id, $this->output );
+			
+			if( ! $this->load( self::TYPE_UNIT, $this->id, $this->details ) ) {
+				$this->details	 = get_post( $this->id, $this->output );
+				$course_id = $this->get_parent_course_id();
+				if( ! empty( $course_id ) ) {
+					$this->details->course_id = $course_id;
+				}
+				$this->cache( self::TYPE_UNIT, $this->id, $this->details );
+				cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
+			} else {
+				cp_write_log( 'Unit[' . $this->id . ']: Loaded from cache...');
+			};			
 
+			// Will return cached value if it exists
 			$this->course_id = $this->get_parent_course_id();
+			
 		}
 
 		function Unit( $id = '', $output = 'OBJECT' ) {
@@ -28,7 +41,8 @@ if ( !class_exists( 'Unit' ) ) {
 
 		function get_unit() {
 
-			$unit = get_post( $this->id, $this->output );
+			// $unit = get_post( $this->id, $this->output );
+			$unit = $this->details;
 
 			if ( !empty( $unit ) ) {
 
@@ -52,11 +66,14 @@ if ( !class_exists( 'Unit' ) ) {
 
 		function is_unit_available( $unit_id = '' ) {
 
+			$unit_details = false;
 			if ( $unit_id == '' ) {
+				$unit_details = $this->get_unit();
 				$unit_id = $this->id;
+			} else {
+				$unit = new Unit( (int) $unit_id );
+				$unit_details = $unit->get_unit();
 			}
-
-			$unit_details = $this->get_unit( $unit_id );
 
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
@@ -381,7 +398,14 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_parent_course_id( $unit_id = '' ) {
+
 			if ( $unit_id == '' ) {
+
+				// If its already loaded from cache, return that value.
+				if( isset( $this->details ) && isset( $this->details->course_id ) ) {
+					return $this->details->course_id;
+				}
+				
 				$unit_id = $this->id;
 			}
 

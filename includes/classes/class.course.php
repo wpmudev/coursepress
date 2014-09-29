@@ -4,7 +4,7 @@ if ( !defined( 'ABSPATH' ) )
 
 if ( !class_exists( 'Course' ) ) {
 
-	class Course {
+	class Course extends CoursePress_Object {
 
 		var $id		 = '';
 		var $output	 = 'OBJECT';
@@ -15,7 +15,15 @@ if ( !class_exists( 'Course' ) ) {
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
-			$this->details	 = get_post( $this->id, $this->output );
+
+			if( ! $this->load( self::TYPE_COURSE, $this->id, $this->details ) ) {
+				$this->details	 = get_post( $this->id, $this->output );
+				$this->cache( self::TYPE_COURSE, $this->id, $this->details );
+				// cp_write_log( 'Course[' . $this->id . ']: Saved to cache..');
+			} else {
+				// cp_write_log( 'Course[' . $this->id . ']: Loaded from cache...');
+			};
+
 		}
 
 		function Course( $id = '', $output = 'OBJECT' ) {
