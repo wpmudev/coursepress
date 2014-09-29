@@ -17,7 +17,7 @@ if ( !class_exists( 'Course' ) ) {
 			$this->output	 = $output;
 
 			// Attempt to load from cache or create new cache object
-			if( ! $this->load( self::TYPE_COURSE, $this->id, $this->details ) ) {
+			if( ! self::load( self::TYPE_COURSE, $this->id, $this->details ) ) {
 				
 				// Get the course
 				$this->details	 = get_post( $this->id, $this->output );
@@ -26,7 +26,7 @@ if ( !class_exists( 'Course' ) ) {
 				$this->init_course( $this->details );
 				
 				// Cache the course object
-				$this->cache( self::TYPE_COURSE, $this->id, $this->details );
+				self::cache( self::TYPE_COURSE, $this->id, $this->details );
 
 				// cp_write_log( 'Course[' . $this->id . ']: Saved to cache..');
 			} else {
@@ -50,12 +50,6 @@ if ( !class_exists( 'Course' ) ) {
 
 				$course->allow_course_discussion = get_post_meta( $this->id, 'allow_course_discussion', true );
 				$course->class_size				 = get_post_meta( $this->id, 'class_size', true );
-				
-				// Get published unit IDs
-				$course->unit_ids = $this->get_unit_ids( $course->ID );
-				
-				// Get any unit IDs
-				$course->unit_ids_all = $this->get_unit_ids( $course->ID, 'any' );
 				
 			}
 		}
@@ -390,7 +384,13 @@ if ( !class_exists( 'Course' ) ) {
 					$post_id = wp_insert_post( $post );
 					
 					// Clear cached object because we updated
-					$this->kill( $post_id, TYPE_COURSE );
+					self::kill( $post_id, TYPE_COURSE );
+
+					// Clear related caches
+					self::kill( 'list-publish-' . $post_id, TYPE_UNIT_STATIC );
+					self::kill( 'list-any-' . $post_id, TYPE_UNIT_STATIC );
+					self::kill( 'object-publish-' . $post_id, TYPE_UNIT_STATIC );
+					self::kill( 'object-any-' . $post_id, TYPE_UNIT_STATIC );
 
 					//Update post meta
 					if ( $post_id != 0 ) {
@@ -482,7 +482,14 @@ if ( !class_exists( 'Course' ) ) {
 				function delete_course( $force_delete = true ) {
 
 					// Clear cached object because we're deleting the object
-					$this->kill( $this->id, TYPE_COURSE );
+					self::kill( $this->id, TYPE_COURSE );
+					
+					// Clear related caches
+					self::kill( 'list-publish-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'list-any-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'object-publish-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'object-any-' . $this->id, TYPE_UNIT_STATIC );
+					
 					
 					wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 
@@ -586,33 +593,14 @@ if ( !class_exists( 'Course' ) ) {
 					wp_update_post( $post );
 					
 					// Clear cached object because we updated the object
-					$this->kill( $this->id, TYPE_COURSE );
-				}
-
-
-				// Meant to only be called from init()
-				private function get_unit_ids( $course_id, $unit_status = 'publish' ) {
-										
-					$args = array(
-						'post_type'   => 'unit',
-						'post_status' => $unit_status,
-						'meta_key'    => 'unit_order',
-						'orderby'     => 'meta_value_num',
-						'order'       => 'ASC',
-						'fields'      => 'ids',
-						'meta_query'  => array(
-							  array(
-								  'key'      => 'course_id',
-								  'compare'  => 'IN',
-								  'value'    => array( $course_id ),
-							  ),
-						  ),
-					);
+					self::kill( $this->id, TYPE_COURSE );
 					
-					return get_posts( $args );
-					
+					// Clear related caches
+					self::kill( 'list-publish-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'list-any-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'object-publish-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( 'object-any-' . $this->id, TYPE_UNIT_STATIC );
 				}
-
 
 				function get_units( $course_id = '', $status = 'any', $count = false ) {
 

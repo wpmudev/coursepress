@@ -19,7 +19,7 @@ if ( !class_exists( 'Unit' ) ) {
 			$this->output	 = $output;
 			
 			// Attempt to load from cache or create new cache object
-			if( ! $this->load( self::TYPE_UNIT, $this->id, $this->details ) ) {
+			if( ! self::load( self::TYPE_UNIT, $this->id, $this->details ) ) {
 				
 				// Get the course				
 				$this->details	 = get_post( $this->id, $this->output );
@@ -28,7 +28,7 @@ if ( !class_exists( 'Unit' ) ) {
 				$this->init_unit( $this->details );
 				
 				// Cache the unit object				
-				$this->cache( self::TYPE_UNIT, $this->id, $this->details );
+				self::cache( self::TYPE_UNIT, $this->id, $this->details );
 				// cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
 			} else {
 				// cp_write_log( 'Unit[' . $this->id . ']: Loaded from cache...');
@@ -112,13 +112,59 @@ if ( !class_exists( 'Unit' ) ) {
 				return true;
 			}
 		}
+		
+		static function get_units_from_course( $course_id, $status = 'publish', $id_only = true ) {
+			
+			$args = array(
+				'post_type'		 => 'unit',
+				'post_status'	 => $status,
+				'meta_key'		 => 'unit_order',
+				'orderby'		 => 'meta_value_num',
+				'order'			 => 'ASC',						
+				'posts_per_page' => '-1',
+				'meta_query'  => array(
+					  array(
+						  'key'      => 'course_id',
+						  'compare'  => 'IN',
+						  'value'    => array( $course_id ),
+					  ),
+				  ),
+			);
+		
+			$type = $id_only ? 'list' : 'object';
+			
+			$args['fields'] = $id_only ? 'ids' : '';
+
+			$units = array();
+
+			// Attempt to load from cache or create new cache object
+			if( ! self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) ) {
+				
+				
+				if( $id_only ) {
+					// Get the units	
+					$units = get_posts( $args );
+				} else {					
+					$posts = get_posts( $args );
+					
+					foreach( $posts as $post ) {
+						$units[] = new Unit( $post->ID );
+					}
+				}
+				
+				// Cache the units list
+				self::cache( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units );
+				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Saved to cache..');
+			} else {
+				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Loaded from cache...');
+			};		
+			
+			return $units;
+		}
 
 		function get_previous_unit_from_the_same_course() {
 
-			// Will load cached object
-			$course = new Course( $this->course_id );
-			
-			$units = $course->details->unit_ids;
+			$units = self::get_units_from_course( $this->course_id );
 						
 			$position = 0;
 			$previous_unit_id = 0;
@@ -242,7 +288,7 @@ if ( !class_exists( 'Unit' ) ) {
 			$post_id = wp_insert_post( $post );
 			
 			// Clear cached object just in case
-			$this->kill( $post_id, TYPE_UNIT );
+			self::kill( $post_id, TYPE_UNIT );
 
 			return $post_id;
 		}
@@ -261,7 +307,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if( ! empty( $drafts ) ) {
 				foreach( $drafts as $draft ) {
 					// Clear possible cached objects because we're deleting them
-					$this->kill( $draft->ID, TYPE_UNIT );
+					self::kill( $draft->ID, TYPE_UNIT );
 					
 					wp_delete_post( $draft->ID, true );					
 				}				
@@ -306,7 +352,14 @@ if ( !class_exists( 'Unit' ) ) {
 			$post_id = wp_insert_post( $post );
 			
 			// Clear cached object because we're updating the object
-			$this->kill( $post_id, TYPE_UNIT );
+			self::kill( $post_id, TYPE_UNIT );
+			
+			// Clear related caches
+			$course_id = $this->course_id;
+			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
 
 			$last_inserted_unit_id = $post_id;
 
@@ -335,7 +388,14 @@ if ( !class_exists( 'Unit' ) ) {
 		function delete_unit( $force_delete ) {
 			
 			// Clear cached object because we're deleting the object.
-			$this->kill( $post_id, TYPE_UNIT );
+			self::kill( $post_id, TYPE_UNIT );
+			
+			// Clear related caches
+			$course_id = $this->course_id;
+			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
 			
 			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit modules
@@ -365,7 +425,14 @@ if ( !class_exists( 'Unit' ) ) {
 			wp_update_post( $post );
 			
 			// Clear cached object because we've modified the object.
-			$this->kill( $post_id, TYPE_UNIT );
+			self::kill( $post_id, TYPE_UNIT );
+			
+			// Clear related caches
+			$course_id = $this->course_id;
+			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
 		}
 
 		function can_show_permalink() {

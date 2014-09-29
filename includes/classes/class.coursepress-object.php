@@ -39,20 +39,19 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 		const TYPE_COURSE = 'coursepress_course';
 		const TYPE_UNIT   = 'coursepress_unit';
 		const TYPE_MODULE = 'coursepress_module';
+		const TYPE_UNIT_STATIC = 'coursepress_unit_static';
 		
-		protected $msg = 'Cool!';
-		
-		protected function load( $type, $key, &$object = null ) {
+		protected static function load( $type, $key, &$object = null ) {
 			$found = false;
 			$object = wp_cache_get( $key, $type, false, $found );
 			return $found;
 		}
 		
-		protected function cache( $type, $key, $object ) {
+		protected static function cache( $type, $key, $object ) {
 			wp_cache_set( $key, $object, $type );
 		}
 		
-		protected function kill( $type, $key ) {
+		protected static function kill( $type, $key ) {
 			wp_cache_delete( $key, $type );
 		}
 	
