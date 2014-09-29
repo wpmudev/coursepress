@@ -40,6 +40,7 @@ if ( !class_exists('Course_Completion') ) {
         function __construct( $id = '', $output = 'OBJECT' ) {
             parent::__construct($id, $output);
             $units = $this->get_units();
+
             foreach ( $units as $key => $unit ) {
                 $this->unit_index[$unit->ID] = $key;
                 

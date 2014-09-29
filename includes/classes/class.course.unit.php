@@ -149,7 +149,8 @@ if ( !class_exists( 'Unit' ) ) {
 
 					// Do it this way so that units initialize correctly and get cached
 					foreach( $posts as $post ) {
-						$units[] = new Unit( $post->ID );
+						$unit_object = new Unit( $post->ID );
+						$units[] = $unit_object->details;
 					}
 				}
 				
@@ -386,7 +387,7 @@ if ( !class_exists( 'Unit' ) ) {
 		function delete_unit( $force_delete ) {
 			
 			// Clear cached object because we're deleting the object.
-			self::kill( self::TYPE_UNIT, $post_id );
+			self::kill( self::TYPE_UNIT, $this->id );
 			
 			// Clear related caches
 			$course_id = $this->course_id;
@@ -420,7 +421,7 @@ if ( !class_exists( 'Unit' ) ) {
 			wp_update_post( $post );
 			
 			// Clear cached object because we've modified the object.
-			self::kill( self::TYPE_UNIT, $post_id );
+			self::kill( self::TYPE_UNIT, $this->id );
 			
 			// Clear related caches
 			$course_id = $this->course_id;

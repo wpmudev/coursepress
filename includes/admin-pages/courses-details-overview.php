@@ -477,8 +477,9 @@ $gateways	 = !empty( $mp_settings[ 'gateways' ][ 'allowed' ] ) ? true : false;
 																		<li>
 																			<label for="course_<?php echo (!isset( $course ) || !empty( $course->details )) ? $course->details->ID : '0'; ?>"><?php echo (!isset( $course ) || !empty( $course->details ) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __( 'Course', 'cp' )); ?></label> <input type="checkbox" checked disabled id="course_<?php echo isset( $course->details ) ? $course->details->ID : ''; ?>" class="hidden_checkbox" /> 
 																			<?php
-																			$units	 = $course->get_units();
-
+																			$course_id = isset( $course ) && isset( $course->details ) && ! empty( $course->details->ID ) ? $course->details->ID : 0;
+																			$units = Unit::get_units_from_course( $course_id, 'any', false );
+																			$units = ! empty( $units ) ? $units : array();
 																			if ( 0 == count( $units ) ) {
 																				?>
 																				<ol>
@@ -1082,7 +1083,7 @@ $gateways	 = !empty( $mp_settings[ 'gateways' ][ 'allowed' ] ) ? true : false;
 
 														<div class="course-price">
 															<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
-															<input type="text" name="mp_price" id="mp_price" value="<?php echo (isset( $mp_product_details )) ? esc_attr( $mp_product_details[ "mp_price" ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
+															<input type="text" name="mp_price" id="mp_price" value="<?php echo (isset( $mp_product_details ) && isset($mp_product_details[ 'mp_price' ])) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
 														</div>
 
 														<div class="clearfix"></div>

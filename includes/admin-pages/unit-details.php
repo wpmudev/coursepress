@@ -100,7 +100,10 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
         <div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>
         <ul id="sortable-units" class="mp-tabs" style="">
             <?php
-            $units = $course->get_units();
+            // $units = $course->get_units();
+			// $course_id = isset( $course ) && isset( $course->details ) && ! empty( $course->details->ID ) ? $course->details->ID : 0;
+			$units = Unit::get_units_from_course( $course_id, 'any', false );
+			$units = ! empty( $units ) ? $units : array();
             ?>
             <input type="hidden" name="unit_count" value="<?php echo $units ? count($units) : 0; ?>" />
             <?php

@@ -55,7 +55,7 @@ if ( !class_exists( 'Course' ) ) {
 		}
 
 		function get_course() {
-			return ! empty( $this->details ) ? $this->details : new stdClass();
+			return ! empty( $this->details ) ? $this->details : false;
 		}
 
 		function course_structure_front( $try_title = '', $show_try = true, $hide_title = false, $echo = true ) {
@@ -488,20 +488,12 @@ if ( !class_exists( 'Course' ) ) {
 					cp_delete_user_meta_by_key( 'enrolled_course_class_' . $this->id );
 					cp_delete_user_meta_by_key( 'enrolled_course_group_' . $this->id );
 
-					//delete all course units
-
-					$args = array(
-						'posts_per_page' => -1,
-						'meta_key'		 => 'course_id',
-						'meta_value'	 => $this->id,
-						'post_status'	 => 'any',
-						'post_type'		 => 'unit' );
-
-					$course_units = get_posts( $args );
+					// Get list of units from cached object
+					$course_units = Unit::get_units_from_course( $this->id, 'any' );
 
 					//Delete course units
 					foreach ( $course_units as $course_unit ) {
-						$unit = new Unit( $course_unit->ID );
+						$unit = new Unit ( $course_unit );
 						$unit->delete_unit( true );
 					}
 
@@ -592,23 +584,9 @@ if ( !class_exists( 'Course' ) ) {
 						$course_id = $this->id;
 					}
 
-					$args = array(
-						'post_type'		 => 'unit',
-						'post_status'	 => $status,
-						'meta_key'		 => 'unit_order',
-						'orderby'		 => 'meta_value_num',
-						'order'			 => 'ASC',						
-						'posts_per_page' => '-1',
-						'meta_query'  => array(
-							  array(
-								  'key'      => 'course_id',
-								  'compare'  => 'IN',
-								  'value'    => array( $course_id ),
-							  ),
-						  ),
-					);
+					// Gets cached object array.
+					$units = Unit::get_units_from_course( $course_id, $status, false );
 					
-					$units = get_posts( $args );
 					if ( $count ) {
 						return count( $units );
 					} else {
