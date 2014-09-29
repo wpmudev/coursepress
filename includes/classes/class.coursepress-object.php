@@ -52,11 +52,9 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 			wp_cache_set( $key, $object, $type );
 		}
 		
-	
-	
-	
-	
-	
+		protected function kill( $type, $key ) {
+			wp_cache_delete( $key, $type );
+		}
 	
 		
 		

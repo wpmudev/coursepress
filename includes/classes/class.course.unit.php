@@ -18,32 +18,32 @@ if ( !class_exists( 'Unit' ) ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
 			
+			// Attempt to load from cache or create new cache object
 			if( ! $this->load( self::TYPE_UNIT, $this->id, $this->details ) ) {
+				
+				// Get the course				
 				$this->details	 = get_post( $this->id, $this->output );
-				$course_id = $this->get_parent_course_id();
-				if( ! empty( $course_id ) ) {
-					$this->details->course_id = $course_id;
-				}
+				
+				// Initialize the unit				
+				$this->init_unit( $this->details );
+				
+				// Cache the unit object				
 				$this->cache( self::TYPE_UNIT, $this->id, $this->details );
-				cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
+				// cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
 			} else {
-				cp_write_log( 'Unit[' . $this->id . ']: Loaded from cache...');
+				// cp_write_log( 'Unit[' . $this->id . ']: Loaded from cache...');
 			};			
 
 			// Will return cached value if it exists
 			$this->course_id = $this->get_parent_course_id();
-			
+						
 		}
 
 		function Unit( $id = '', $output = 'OBJECT' ) {
 			$this->__construct( $id, $output );
 		}
 
-		function get_unit() {
-
-			// $unit = get_post( $this->id, $this->output );
-			$unit = $this->details;
-
+		function init_unit( &$unit ) {
 			if ( !empty( $unit ) ) {
 
 				if ( $unit->post_title == '' ) {
@@ -53,15 +53,20 @@ if ( !class_exists( 'Unit' ) ) {
 				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
 					$unit->post_status = __( 'unpublished', 'cp' );
 				}
-
-				if ( !isset( $unit->details->post_name ) ) {
-					//$unit->details->post_name = '';
-				}
-
-				return $unit;
-			} else {
-				return false;
+				
+				// Set parent ID
+				$course_id = get_post_meta( $unit->ID, 'course_id', true );
+				$unit->course_id = $course_id;
+				
+				$unit->current_unit_order = get_post_meta( $unit->ID, 'unit_order', true );
+				// if ( !isset( $unit->details->post_name ) ) {
+				// 	$unit->details->post_name = '';
+				// }
 			}
+		}
+
+		function get_unit() {
+			return ! empty( $this->details ) ? $this->details : false;
 		}
 
 		function is_unit_available( $unit_id = '' ) {
@@ -108,54 +113,36 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 		}
 
-		function get_previous_unit_from_the_same_course( $unit_id = '', $post_status = 'publish' ) {
+		function get_previous_unit_from_the_same_course() {
 
-			if ( $unit_id == '' ) {
-				$unit_id = $this->id;
-			}
-
-			$current_unit_order = get_post_meta( $unit_id, 'unit_order', true );
-
-			$args = array(
-				'post_type'   => 'unit',
-				'post_status' => 'any',
-				'meta_key'    => 'unit_order',
-				'orderby'     => 'meta_value_num',
-				'order'       => 'ASC',
-				'meta_query'  => array(
-					  array(
-						  'key'      => 'course_id',
-						  'compare'  => 'IN',
-						  'value'    => array( $this->course_id ),
-					  ),
-				  ),
-			);
-
-			$units = get_posts( $args );
+			// Will load cached object
+			$course = new Course( $this->course_id );
+			
+			$units = $course->details->unit_ids;
 						
 			$position = 0;
 			$previous_unit_id = 0;
 
-			if( $unit_id == $current_unit_order ) {
+			if( $this->details->ID == $this->details->current_unit_order ) {
 			  $haystack = array();
 			  foreach( $units as $unit_item ) {
-				  $haystack[] = $unit_item->ID;
+				  $haystack[] = (int) $unit_item;
 			  }
 			  $position = array_search( $unit_id, $haystack );
 			} else {
 			  // Adjust the index to fit in array bounds.
-			  $position = $current_unit_order - 1;
+			  $position = $this->details->current_unit_order - 1;
 			}
 
 			// There is no previous unit...
 			if( 0 == $position ) {
-			  $previous_unit_id = $unit_id;
+			  $previous_unit_id = $this->details->ID;
 
 			} else {
-			  $previous_unit_id = $units[ $position - 1 ]->ID;
+			  $previous_unit_id = (int) $units[ $position - 1 ];
 			}
 			
-			return $unit_id != $previous_unit_id ? $previous_unit_id : false;
+			return $this->details->ID != $previous_unit_id ? $previous_unit_id : false;
   
 		}
 
@@ -253,6 +240,9 @@ if ( !class_exists( 'Unit' ) ) {
 			);
 
 			$post_id = wp_insert_post( $post );
+			
+			// Clear cached object just in case
+			$this->kill( $post_id, TYPE_UNIT );
 
 			return $post_id;
 		}
@@ -270,7 +260,10 @@ if ( !class_exists( 'Unit' ) ) {
 
 			if( ! empty( $drafts ) ) {
 				foreach( $drafts as $draft ) {
-					wp_delete_post( $draft->ID, true );
+					// Clear possible cached objects because we're deleting them
+					$this->kill( $draft->ID, TYPE_UNIT );
+					
+					wp_delete_post( $draft->ID, true );					
 				}				
 			}
 		}
@@ -311,6 +304,9 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 
 			$post_id = wp_insert_post( $post );
+			
+			// Clear cached object because we're updating the object
+			$this->kill( $post_id, TYPE_UNIT );
 
 			$last_inserted_unit_id = $post_id;
 
@@ -337,7 +333,10 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function delete_unit( $force_delete ) {
-			$wpdb;
+			
+			// Clear cached object because we're deleting the object.
+			$this->kill( $post_id, TYPE_UNIT );
+			
 			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit modules
 
@@ -364,6 +363,9 @@ if ( !class_exists( 'Unit' ) ) {
 
 			// Update the post status
 			wp_update_post( $post );
+			
+			// Clear cached object because we've modified the object.
+			$this->kill( $post_id, TYPE_UNIT );
 		}
 
 		function can_show_permalink() {

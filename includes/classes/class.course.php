@@ -16,9 +16,18 @@ if ( !class_exists( 'Course' ) ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
 
+			// Attempt to load from cache or create new cache object
 			if( ! $this->load( self::TYPE_COURSE, $this->id, $this->details ) ) {
+				
+				// Get the course
 				$this->details	 = get_post( $this->id, $this->output );
+				
+				// Initialize the course
+				$this->init_course( $this->details );
+				
+				// Cache the course object
 				$this->cache( self::TYPE_COURSE, $this->id, $this->details );
+
 				// cp_write_log( 'Course[' . $this->id . ']: Saved to cache..');
 			} else {
 				// cp_write_log( 'Course[' . $this->id . ']: Loaded from cache...');
@@ -29,13 +38,9 @@ if ( !class_exists( 'Course' ) ) {
 		function Course( $id = '', $output = 'OBJECT' ) {
 			$this->__construct( $id, $output );
 		}
-
-		function get_course() {
-
-			$course = get_post( $this->id, $this->output );
-
-			if ( !empty( $course ) ) {
-
+		
+		function init_course( &$course ) {
+			if( ! empty( $course ) ) {
 				if ( !isset( $course->post_title ) || $course->post_title == '' ) {
 					$course->post_title = __( 'Untitled', 'cp' );
 				}
@@ -45,11 +50,18 @@ if ( !class_exists( 'Course' ) ) {
 
 				$course->allow_course_discussion = get_post_meta( $this->id, 'allow_course_discussion', true );
 				$course->class_size				 = get_post_meta( $this->id, 'class_size', true );
-
-				return $course;
-			} else {
-				return new stdClass();
+				
+				// Get published unit IDs
+				$course->unit_ids = $this->get_unit_ids( $course->ID );
+				
+				// Get any unit IDs
+				$course->unit_ids_all = $this->get_unit_ids( $course->ID, 'any' );
+				
 			}
+		}
+
+		function get_course() {
+			return ! empty( $this->details ) ? $this->details : new stdClass();
 		}
 
 		function course_structure_front( $try_title = '', $show_try = true, $hide_title = false, $echo = true ) {
@@ -217,20 +229,21 @@ if ( !class_exists( 'Course' ) ) {
 					}
 				}
 
-				static function get_course_by_marketpress_product_id( $marketpress_product_id ) {
+				static function get_course_id_by_marketpress_product_id( $marketpress_product_id ) {
 
 					$args = array(
 						'post_type'		 => 'course',
 						'post_status'	 => 'any',
 						'meta_key'		 => 'marketpress_product',
 						'meta_value'	 => $marketpress_product_id,
-						'posts_per_page' => 1
+						'posts_per_page' => 1,
+						'fields' => 'ids',
 					);
 
 					$post = get_posts( $args );
 
 					if ( $post ) {
-						return $post[ 0 ];
+						return (int) $post[ 0 ];
 					} else {
 						return false;
 					}
@@ -242,13 +255,14 @@ if ( !class_exists( 'Course' ) ) {
 						'name'			 => $slug,
 						'post_type'		 => 'course',
 						'post_status'	 => 'any',
-						'posts_per_page' => 1
+						'posts_per_page' => 1,
+						'fields' => 'ids',						
 					);
 
 					$post = get_posts( $args );
 
 					if ( $post ) {
-						return $post[ 0 ]->ID;
+						return (int) $post[0];
 					} else {
 						return false;
 					}
@@ -263,14 +277,15 @@ if ( !class_exists( 'Course' ) ) {
 					$course_id	 = $course_id ? $course_id : $this->id;
 					$args		 = array(
 						'posts_per_page' => 1,
-						'post_type'		 => 'product',
-						'post_parent'	 => $course_id,
-						'post_status'	 => 'publish'
+						'post_type'      => 'product',
+						'post_parent'    => $course_id,
+						'post_status'    => 'publish',
+						'fields'         => 'ids',
 					);
 
 					$products = get_posts( $args );
 					if ( isset( $products[ 0 ] ) ) {
-						return $products[ 0 ]->ID;
+						return (int) $products[0];
 					} else {
 						return false;
 					}
@@ -297,7 +312,7 @@ if ( !class_exists( 'Course' ) ) {
 						}
 
 						$post_id = wp_insert_post( $post );
-
+						
 						// Only works if the course actually has a thumbnail.
 						set_post_thumbnail( $mp_product_id, get_post_thumbnail_id( $course_id ) );
 
@@ -334,7 +349,7 @@ if ( !class_exists( 'Course' ) ) {
 				function update_course() {
 					global $user_id, $wpdb;
 
-					$course = get_post( $this->id, $this->output );
+					$course = $this->get_course();
 
 					$post_status = empty( $this->data[ 'status' ] ) ? 'publish' : $this->data[ 'status' ];
 
@@ -373,6 +388,9 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					$post_id = wp_insert_post( $post );
+					
+					// Clear cached object because we updated
+					$this->kill( $post_id, TYPE_COURSE );
 
 					//Update post meta
 					if ( $post_id != 0 ) {
@@ -463,8 +481,9 @@ if ( !class_exists( 'Course' ) ) {
 
 				function delete_course( $force_delete = true ) {
 
-					$wpdb;
-
+					// Clear cached object because we're deleting the object
+					$this->kill( $this->id, TYPE_COURSE );
+					
 					wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 
 					/* Delete all usermeta associated to the course */
@@ -565,7 +584,35 @@ if ( !class_exists( 'Course' ) ) {
 					);
 					// Update the post status
 					wp_update_post( $post );
+					
+					// Clear cached object because we updated the object
+					$this->kill( $this->id, TYPE_COURSE );
 				}
+
+
+				// Meant to only be called from init()
+				private function get_unit_ids( $course_id, $unit_status = 'publish' ) {
+										
+					$args = array(
+						'post_type'   => 'unit',
+						'post_status' => $unit_status,
+						'meta_key'    => 'unit_order',
+						'orderby'     => 'meta_value_num',
+						'order'       => 'ASC',
+						'fields'      => 'ids',
+						'meta_query'  => array(
+							  array(
+								  'key'      => 'course_id',
+								  'compare'  => 'IN',
+								  'value'    => array( $course_id ),
+							  ),
+						  ),
+					);
+					
+					return get_posts( $args );
+					
+				}
+
 
 				function get_units( $course_id = '', $status = 'any', $count = false ) {
 
@@ -574,23 +621,21 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					$args = array(
-						'category'		 => '',
-						'order'			 => 'ASC',
 						'post_type'		 => 'unit',
-						'post_mime_type' => '',
-						'post_parent'	 => '',
 						'post_status'	 => $status,
 						'meta_key'		 => 'unit_order',
 						'orderby'		 => 'meta_value_num',
+						'order'			 => 'ASC',						
 						'posts_per_page' => '-1',
-						'meta_query'	 => array(
-							array(
-								'key'	 => 'course_id',
-								'value'	 => $course_id
-							),
-						)
+						'meta_query'  => array(
+							  array(
+								  'key'      => 'course_id',
+								  'compare'  => 'IN',
+								  'value'    => array( $course_id ),
+							  ),
+						  ),
 					);
-
+					
 					$units = get_posts( $args );
 					if ( $count ) {
 						return count( $units );

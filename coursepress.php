@@ -4842,11 +4842,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$purchase_order	 = $mp->get_order( $order->ID );
 					$product_id		 = key( $purchase_order->mp_cart_info );
 
-					$course_details = Course::get_course_by_marketpress_product_id( $product_id );
-
+					$course_details = Course::get_course_id_by_marketpress_product_id( $product_id );
+					$course_details = (int) $course_details;
 					if ( $course_details && !empty( $course_details ) ) {
 						$student = new Student( $order->post_author );
-						$student->enroll_in_course( $course->details->ID );
+						$student->enroll_in_course( $course_details );
 					}
 				}
 
@@ -4928,12 +4928,3 @@ if ( !class_exists( 'CoursePress' ) ) {
 		CoursePress::instance( new CoursePress() );
 		global $coursepress;
 		$coursepress = CoursePress::instance();
-
-
-
-function testing( $args ) {
-	// global $wp_object_cache;
-	// $course = new Course( 128 );
-
-}
-add_filter( 'init', 'testing' ); 
