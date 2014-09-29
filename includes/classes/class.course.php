@@ -384,13 +384,8 @@ if ( !class_exists( 'Course' ) ) {
 					$post_id = wp_insert_post( $post );
 					
 					// Clear cached object because we updated
-					self::kill( $post_id, TYPE_COURSE );
-
-					// Clear related caches
-					self::kill( 'list-publish-' . $post_id, TYPE_UNIT_STATIC );
-					self::kill( 'list-any-' . $post_id, TYPE_UNIT_STATIC );
-					self::kill( 'object-publish-' . $post_id, TYPE_UNIT_STATIC );
-					self::kill( 'object-any-' . $post_id, TYPE_UNIT_STATIC );
+					self::kill( self::TYPE_COURSE, $post_id );
+					self::kill_related( self::TYPE_COURSE, $post_id );
 
 					//Update post meta
 					if ( $post_id != 0 ) {
@@ -482,14 +477,8 @@ if ( !class_exists( 'Course' ) ) {
 				function delete_course( $force_delete = true ) {
 
 					// Clear cached object because we're deleting the object
-					self::kill( $this->id, TYPE_COURSE );
-					
-					// Clear related caches
-					self::kill( 'list-publish-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'list-any-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'object-publish-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'object-any-' . $this->id, TYPE_UNIT_STATIC );
-					
+					self::kill( self::TYPE_COURSE, $this->id );
+					self::kill_related( self::TYPE_COURSE, $this->id );
 					
 					wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 
@@ -593,13 +582,8 @@ if ( !class_exists( 'Course' ) ) {
 					wp_update_post( $post );
 					
 					// Clear cached object because we updated the object
-					self::kill( $this->id, TYPE_COURSE );
-					
-					// Clear related caches
-					self::kill( 'list-publish-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'list-any-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'object-publish-' . $this->id, TYPE_UNIT_STATIC );
-					self::kill( 'object-any-' . $this->id, TYPE_UNIT_STATIC );
+					self::kill( self::TYPE_COURSE, $this->id );
+					self::kill_related( self::TYPE_COURSE, $this->id );
 				}
 
 				function get_units( $course_id = '', $status = 'any', $count = false ) {

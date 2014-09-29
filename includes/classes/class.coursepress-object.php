@@ -55,7 +55,19 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 			wp_cache_delete( $key, $type );
 		}
 	
-		
+		protected static function kill_related( $type, $key ) {
+			switch ( $type ) {
+				
+				case self::TYPE_COURSE:
+					// Course related caches to kill
+					self::kill( self::TYPE_UNIT_STATIC, 'list-publish-' . $key );
+					self::kill( self::TYPE_UNIT_STATIC, 'list-any-' . $key );
+					self::kill( self::TYPE_UNIT_STATIC, 'object-publish-' . $key );
+					self::kill( self::TYPE_UNIT_STATIC, 'object-any-' . $key );
+					break;
+				
+			}
+		}
 		
 		
 	}

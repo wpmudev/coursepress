@@ -146,7 +146,8 @@ if ( !class_exists( 'Unit' ) ) {
 					$units = get_posts( $args );
 				} else {					
 					$posts = get_posts( $args );
-					
+
+					// Do it this way so that units initialize correctly and get cached
 					foreach( $posts as $post ) {
 						$units[] = new Unit( $post->ID );
 					}
@@ -165,7 +166,7 @@ if ( !class_exists( 'Unit' ) ) {
 		function get_previous_unit_from_the_same_course() {
 
 			$units = self::get_units_from_course( $this->course_id );
-						
+
 			$position = 0;
 			$previous_unit_id = 0;
 
@@ -174,7 +175,7 @@ if ( !class_exists( 'Unit' ) ) {
 			  foreach( $units as $unit_item ) {
 				  $haystack[] = (int) $unit_item;
 			  }
-			  $position = array_search( $unit_id, $haystack );
+			  $position = array_search( $this->details->ID, $haystack );
 			} else {
 			  // Adjust the index to fit in array bounds.
 			  $position = $this->details->current_unit_order - 1;
@@ -187,7 +188,7 @@ if ( !class_exists( 'Unit' ) ) {
 			} else {
 			  $previous_unit_id = (int) $units[ $position - 1 ];
 			}
-			
+
 			return $this->details->ID != $previous_unit_id ? $previous_unit_id : false;
   
 		}
@@ -288,7 +289,7 @@ if ( !class_exists( 'Unit' ) ) {
 			$post_id = wp_insert_post( $post );
 			
 			// Clear cached object just in case
-			self::kill( $post_id, TYPE_UNIT );
+			self::kill( self::TYPE_UNIT, $post_id );
 
 			return $post_id;
 		}
@@ -307,7 +308,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if( ! empty( $drafts ) ) {
 				foreach( $drafts as $draft ) {
 					// Clear possible cached objects because we're deleting them
-					self::kill( $draft->ID, TYPE_UNIT );
+					self::kill( self::TYPE_UNIT, $draft->ID );
 					
 					wp_delete_post( $draft->ID, true );					
 				}				
@@ -352,14 +353,11 @@ if ( !class_exists( 'Unit' ) ) {
 			$post_id = wp_insert_post( $post );
 			
 			// Clear cached object because we're updating the object
-			self::kill( $post_id, TYPE_UNIT );
+			self::kill( self::TYPE_UNIT, $post_id );
 			
 			// Clear related caches
 			$course_id = $this->course_id;
-			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill_related( self::TYPE_COURSE, $course_id );
 
 			$last_inserted_unit_id = $post_id;
 
@@ -388,14 +386,11 @@ if ( !class_exists( 'Unit' ) ) {
 		function delete_unit( $force_delete ) {
 			
 			// Clear cached object because we're deleting the object.
-			self::kill( $post_id, TYPE_UNIT );
+			self::kill( self::TYPE_UNIT, $post_id );
 			
 			// Clear related caches
 			$course_id = $this->course_id;
-			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill_related( self::TYPE_COURSE, $course_id );
 			
 			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit modules
@@ -425,14 +420,11 @@ if ( !class_exists( 'Unit' ) ) {
 			wp_update_post( $post );
 			
 			// Clear cached object because we've modified the object.
-			self::kill( $post_id, TYPE_UNIT );
+			self::kill( self::TYPE_UNIT, $post_id );
 			
 			// Clear related caches
 			$course_id = $this->course_id;
-			self::kill( 'list-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'list-any-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-publish-' . $course_id, TYPE_UNIT_STATIC );
-			self::kill( 'object-any-' . $course_id, TYPE_UNIT_STATIC );
+			self::kill_related( self::TYPE_COURSE, $course_id );
 		}
 
 		function can_show_permalink() {
