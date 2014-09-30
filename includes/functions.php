@@ -1711,6 +1711,21 @@ function cp_format_file_size( $bytes ) {
 	return $bytes;
 }
 
+function cp_flush_rewrite_rules() {
+	
+	// Don't allow flush_rewrite_rules when these functions exist and return true.	
+	$restricted = array( 'is_campus', 'is_edublogs' );
+	$prevent = false;
+	
+	foreach( $restricted as $restriction ) {
+		$prevent |= function_exists( $restriction ) && call_user_func( $restriction );
+	}
+	
+	if( ! $prevent ) {
+		flush_rewrite_rules();				
+	}
+}
+
 function cp_search_array( $array, $key, $value ) {
 	$results = array();
 

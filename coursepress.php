@@ -2402,9 +2402,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Register types to register the rewrite rules
 			$this->register_custom_posts();
 
-			// Then flush them
-			flush_rewrite_rules();
-
+			// Then flush them (run it through a check first)
+			cp_flush_rewrite_rules();
+				
 			//First install
 			first_install();
 
@@ -3779,7 +3779,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$role->add_cap( $cap );
 			}
 
-			CoursePress_Capabilities::drop_private_caps( $user->id );
+			CoursePress_Capabilities::drop_private_caps( '', $role );
 		}
 
 		//Functions for handling admin menu pages

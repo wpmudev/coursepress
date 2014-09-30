@@ -37,7 +37,8 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
             update_option( 'use_custom_login_form', 0 );
         }
         
-        flush_rewrite_rules();
+		// Conditional flush_rewrite_rules
+        cp_flush_rewrite_rules();
     }
 }
 ?>

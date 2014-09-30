@@ -414,12 +414,27 @@ class CoursePress_Capabilities {
 		}
 	}
 
-	public static function drop_private_caps( $user_id ) {
-		$user = new WP_User($user_id);
+	public static function drop_private_caps( $user_id = '', $role = '' ) {
+		
+		if( empty( $user_id ) && empty( $role ) ) {
+			return;
+		}
+		
+		$user = false;
+		if( ! empty( $user_id ) ) {
+			$user = new WP_User($user_id);	
+		}
+		
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
 		
 		foreach( $capability_types as $capability_type ) {
-			$user->remove_cap("read_private_{$capability_type}s");			
+			if( ! empty( $user ) ) {
+				$user->remove_cap("read_private_{$capability_type}s");	
+			}
+			if( ! empty( $role ) ) {
+				$role->remove_cap("read_private_{$capability_type}s");	
+			}
+			
 		}
 	}
 	
