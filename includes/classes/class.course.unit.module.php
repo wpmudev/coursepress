@@ -4,13 +4,15 @@ if ( !class_exists( 'Unit_Module' ) ) {
 	class Unit_Module extends CoursePress_Object {
 
 		var $data;
-		var $name			 = 'none';
-		var $label			 = 'None Set';
-		var $description		 = '';
-		var $front_save		 = false;
-		var $response_type	 = '';
+		var $name          = 'none';
+		var $label         = 'None Set';
+		var $description   = '';
+		var $front_save    = false;
+		var $response_type = '';
 		var $details;
-		var $parent_unit		 = '';
+		var $parent_unit   = '';
+		var $unit_id       = 0;
+
 
 		function __construct() {
 			$this->on_create();
@@ -65,6 +67,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			//require( ABSPATH . WPINC . '/pluggable.php' );
 			$post_id = wp_insert_post( $post );
 
+			self::kill( self::TYPE_MODULE, $post_id );
+			self::kill( self::TYPE_UNIT_MODULES, $data->unit_id );
+
 			//Update post meta
 			if ( $post_id != 0 ) {
 				/* if( !$update ) {
@@ -82,6 +87,11 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 		function delete_module( $id, $force_delete = true ) {
 			global $wpdb;
+			
+			self::kill( self::TYPE_MODULE, $id );
+			$unit_id = $this->get_module_unit_id( $id );
+			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
+			
 			wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit module responses
 
@@ -106,6 +116,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 					$modules_to_delete = $_POST[ 'modules_to_execute' ];
 					foreach ( $modules_to_delete as $module_to_delete ) {
 						//echo 'Module to delete:' . $module_to_delete . '<br />';
+						
 						$this->delete_module( $module_to_delete, true );
 						//wp_delete_post( $module_to_delete, true );
 					}
@@ -192,7 +203,22 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		}
 
 		function get_module( $module_id ) {
-			$module = get_post( $module_id );
+			$module = false;
+			
+			// Attempt to load from cache or create new cache object
+			if( ! self::load( self::TYPE_MODULE, $module_id, $module ) ) {
+				
+				// Get the module
+				$module = get_post( $module_id );
+								
+				// Cache the course object
+				self::cache( self::TYPE_MODULE, $module_id, $module );
+
+				// cp_write_log( 'Module[' . $module_id . ']: Saved to cache..');
+			} else {
+				// cp_write_log( 'Module[' . $module_id . ']: Loaded from cache...');
+			};
+
 			return $module;
 		}
 
@@ -215,17 +241,31 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 		function get_modules( $unit_id ) {
 
-			$args = array(
-				'post_type'		 => 'module',
-				'post_status'	 => 'any',
-				'posts_per_page' => -1,
-				'post_parent'	 => $unit_id,
-				'meta_key'		 => 'module_order',
-				'orderby'		 => 'meta_value_num',
-				'order'			 => 'ASC',
-			);
+			$modules = false;
 
-			$modules = get_posts( $args );
+			// Attempt to load from cache or create new cache object
+			if( ! self::load( self::TYPE_UNIT_MODULES, $unit_id, $modules ) ) {
+				
+				// Get the modules
+				$args = array(
+					'post_type'		 => 'module',
+					'post_status'	 => 'any',
+					'posts_per_page' => -1,
+					'post_parent'	 => $unit_id,
+					'meta_key'		 => 'module_order',
+					'orderby'		 => 'meta_value_num',
+					'order'			 => 'ASC',
+				);
+
+				$modules = get_posts( $args );
+								
+				// Cache the course object
+				self::cache( self::TYPE_UNIT_MODULES, $unit_id, $modules );
+
+				// cp_write_log( 'Unit Modules[' . $unit_id . ']: Saved to cache..');
+			} else {
+				// cp_write_log( 'Unit Modules[' . $unit_id . ']: Loaded from cache...');
+			};
 
 			return $modules;
 		}
@@ -737,6 +777,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 			$post_id = wp_insert_post( $post );
 
+			self::kill( self::TYPE_MODULE, $post_id );
+			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
+			
 			return $post_id;
 		}
 
@@ -761,7 +804,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 			$new_module_id = wp_insert_post( $new_module );
 
-
+			
 			/*
 			 * Duplicate module post meta
 			 */

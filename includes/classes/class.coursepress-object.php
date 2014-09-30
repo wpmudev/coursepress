@@ -36,11 +36,14 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 	 */
 	class CoursePress_Object {
 		
+		// Primary CoursePress types
 		const TYPE_COURSE = 'coursepress_course';
 		const TYPE_UNIT   = 'coursepress_unit';
 		const TYPE_MODULE = 'coursepress_module';
+		const TYPE_MODULE_RESPONSE = 'coursepress_module_response';
+		const TYPE_UNIT_MODULES = 'coursepress_unit_modules';
 		const TYPE_UNIT_STATIC = 'coursepress_unit_static';
-		
+				
 		protected static function load( $type, $key, &$object = null ) {
 			$found = false;
 			$object = wp_cache_get( $key, $type, false, $found );

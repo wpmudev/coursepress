@@ -6,7 +6,7 @@ if ( !defined( 'ABSPATH' ) )
 if ( !class_exists( 'Unit' ) ) {
 
 	class Unit extends CoursePress_Object {
-
+		
 		var $id			 = '';
 		var $output		 = 'OBJECT';
 		var $unit		 = array();
@@ -291,6 +291,7 @@ if ( !class_exists( 'Unit' ) ) {
 			
 			// Clear cached object just in case
 			self::kill( self::TYPE_UNIT, $post_id );
+			self::kill( self::TYPE_UNIT_MODULES, $post_id );
 
 			return $post_id;
 		}
@@ -310,7 +311,7 @@ if ( !class_exists( 'Unit' ) ) {
 				foreach( $drafts as $draft ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
-					
+					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
 					wp_delete_post( $draft->ID, true );					
 				}				
 			}
@@ -355,7 +356,7 @@ if ( !class_exists( 'Unit' ) ) {
 			
 			// Clear cached object because we're updating the object
 			self::kill( self::TYPE_UNIT, $post_id );
-			
+			self::kill( self::TYPE_UNIT_MODULES, $post_id );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
@@ -388,7 +389,7 @@ if ( !class_exists( 'Unit' ) ) {
 			
 			// Clear cached object because we're deleting the object.
 			self::kill( self::TYPE_UNIT, $this->id );
-			
+			self::kill( self::TYPE_UNIT_MODULES, $this->id );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
@@ -422,7 +423,7 @@ if ( !class_exists( 'Unit' ) ) {
 			
 			// Clear cached object because we've modified the object.
 			self::kill( self::TYPE_UNIT, $this->id );
-			
+			self::kill( self::TYPE_UNIT_MODULES, $this->id );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
