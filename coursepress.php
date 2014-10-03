@@ -358,6 +358,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * @since 1.0.0
 				 */
 				add_action( 'wp_ajax_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ) );
+				
+				/**
+				 * Returns whether the course passcode is valid (AJAX).
+				 *
+				 * @since 1.0.0
+				 */
+				add_action( 'wp_ajax_cp_valid_passcode', array( &$this, 'cp_valid_passcode' ) );
+				add_action( 'wp_ajax_nopriv_cp_valid_passcode', array( &$this, 'cp_valid_passcode' ) );
 
 				/**
 				 * Returns whether the email already exists for everyone (AJAX).
@@ -1317,6 +1325,21 @@ if ( !class_exists( 'CoursePress' ) ) {
 					exit;
 				}
 				echo email_exists( $_POST[ 'email' ] );
+				exit;
+			}
+		}
+		
+		function cp_valid_passcode(){
+			if ( isset( $_POST[ 'passcode' ] ) ) {
+				$course_id = $_POST['course_id'];
+				$course = new Course($course_id);
+				$course_passcode = $course->details->passcode;
+				
+				if($course_passcode == $_POST['passcode']){
+					echo 'valid';
+				}else{
+					echo 'invalid';
+				}
 				exit;
 			}
 		}
@@ -3895,6 +3918,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'message_password_minimum_length'	 => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'cp_min_password_length', 6 ) ),
 				'minimum_password_lenght'			 => apply_filters( 'cp_min_password_length', 6 ),
 				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),
+				'message_passcode_invalid'				 => __( 'Passcode is not valid.', 'cp' ),
 			) );
 			//admin_url( 'admin-ajax.php' )
 
