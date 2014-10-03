@@ -7,12 +7,13 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.1.1 =
-* Added additional settings for conroling wp-login redirection
+* Added additional settings for controlling wp-login redirection
 * Fixed issue with "Instructor Capabilities" settings access as a student
 * Various database improvements. 
 * Added course progress display to student workbook.  
 * Added unit progress to CoursePress theme on student workbook.  
 * Added categories in the single post and blog archive
+* Fixed issue with hided comment form when plugin is activated
 * Minor changes to enrollment popup window. 
 
 = 1.2.1 =

@@ -1791,6 +1791,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 					return true;
 				}
+			}else{
+				return $open;
 			}
 		}
 
