@@ -140,6 +140,8 @@ if ( !class_exists( 'Unit' ) ) {
 			// Attempt to load from cache or create new cache object
 			if( ! self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) ) {
 				
+				// Clear it out just incase something did load
+				$units = array();
 				
 				if( $id_only ) {
 					// Get the units	
@@ -149,8 +151,10 @@ if ( !class_exists( 'Unit' ) ) {
 
 					// Do it this way so that units initialize correctly and get cached
 					foreach( $posts as $post ) {
+
 						$unit_object = new Unit( $post->ID );
 						$units[] = $unit_object->details;
+
 					}
 				}
 				
