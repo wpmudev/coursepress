@@ -132,19 +132,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @return self
 		 */
 		function __construct() {
-
-			global $wpmudev_notices;
-
 			// Setup CoursePress properties
 			$this->init_vars();
 
-			// Prepare WPMUDev Dashboard Notifications
-			$wpmudev_notices[] = array( 'id' => 913071, 'name' => $this->name, 'screens' => array( 'toplevel_page_courses', $this->screen_base . '_page_course_details', $this->screen_base . '_page_instructors', $this->screen_base . '_page_students', $this->screen_base . '_page_assessment', $this->screen_base . '_page_reports', $this->screen_base . '_page_notifications', $this->screen_base . '_page_settings' ) );
+			if( CoursePress_Capabilities::is_pro() && ! CoursePress_Capabilities::is_campus() ) {
+				// Prepare WPMUDev Dashboard Notifications
+				global $wpmudev_notices;
+			
+				$wpmudev_notices[] = array( 'id' => 913071, 'name' => $this->name, 'screens' => array( 'toplevel_page_courses', $this->screen_base . '_page_course_details', $this->screen_base . '_page_instructors', $this->screen_base . '_page_students', $this->screen_base . '_page_assessment', $this->screen_base . '_page_reports', $this->screen_base . '_page_notifications', $this->screen_base . '_page_settings' ) );
 
-			/**
-			 * Include WPMUDev Dashboard.
-			 */
-			include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
+				/**
+				 * Include WPMUDev Dashboard.
+				 */
+				include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );				
+			}
 
 			// Define custom theme directory for CoursePress theme
 			$this->register_theme_directory();
@@ -177,6 +178,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * CoursePress Capabilities Class.
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
+			
+			/**
+			 * CampusPress/Edublogs Specifics.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-campus.php' );
+			
 
 			//Administration area
 			if ( is_admin() ) {
@@ -433,7 +440,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * @since 1.2.1
 				 *
 				 */
-				do_action( 'coursepress_admin_init' );
+				do_action( 'coursepress_admin_init' );				
 								
 			}
 
