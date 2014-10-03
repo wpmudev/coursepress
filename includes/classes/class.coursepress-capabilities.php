@@ -448,6 +448,23 @@ class CoursePress_Capabilities {
 	public static function is_pro() {
 		return true;
 	}
+
+	/**
+	 * Is this runnning on CampusPress or Edublogs?
+	 *
+	 * @since 1.2.1
+	 *
+	 * @return bool
+	 */
+	public static function is_campus() {
+		$campus_conditions = array( 'is_campus', 'is_edublogs' );
+		$is_campus = false;
+	
+		foreach( $campus_conditions as $condition ) {
+			$is_campus |= function_exists( $condition ) && call_user_func( $condition );
+		}
+		return $is_campus;
+	}
 	
 	
 }
