@@ -403,8 +403,8 @@ if ( !class_exists( 'Unit' ) ) {
 				update_post_meta( $post_id, 'unit_order', $post_id );
 			}
 			
-			$this->delete_all_elements_auto_drafts( $post_id );
-			$this->delete_all_unit_auto_drafts( $course_id );
+			// $this->delete_all_elements_auto_drafts( $post_id );
+			// $this->delete_all_unit_auto_drafts( $course_id );
 			return $post_id;
 		}
 
