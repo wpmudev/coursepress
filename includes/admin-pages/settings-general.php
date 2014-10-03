@@ -225,6 +225,31 @@
                 </table>
             </div>
         </div>
+		
+		<div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e('WP Login Redirection', 'cp'); ?></span></h3>
+            <div class="inside">
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e('Redirect after login', 'cp'); ?></th>
+                            <td>
+                                <a class="help-icon" href="javascript:;"></a>
+                                <div class="tooltip">
+                                    <div class="tooltip-before"></div>
+                                    <div class="tooltip-button">&times;</div>
+                                    <div class="tooltip-content">
+                                        <?php _e('Redirect students to their Dashboard upon login via wp-login form', 'cp') ?>
+                                    </div>
+                                </div>
+                                <input type='checkbox' name='redirect_students_to_dashboard' <?php echo ( ( get_option('redirect_students_to_dashboard', 1) ) ? 'checked' : '' ); ?> />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
 
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e('Course Details Page', 'cp'); ?></span></h3>
