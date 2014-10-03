@@ -134,6 +134,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function __construct() {
 			// Setup CoursePress properties
 			$this->init_vars();
+			
+			/**
+			 * CoursePress Object Class.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-object.php' );
+
+			/**
+			 * CoursePress Capabilities Class.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
+			
 
 			if( CoursePress_Capabilities::is_pro() && ! CoursePress_Capabilities::is_campus() ) {
 				// Prepare WPMUDev Dashboard Notifications
@@ -168,16 +179,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			global $last_inserted_unit_id; //$last_inserted_module_id
 			global $last_inserted_front_page_module_id; //$last_inserted_module_id
-
-			/**
-			 * CoursePress Object Class.
-			 */
-			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-object.php' );
-
-			/**
-			 * CoursePress Capabilities Class.
-			 */
-			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
 			
 			/**
 			 * CampusPress/Edublogs Specifics.

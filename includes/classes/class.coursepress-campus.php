@@ -58,7 +58,7 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 		 *
 		 * @param bool $offer_paid Offer payable courses.
 		 */
-		function removed_paid_feature( $offer_paid ) {
+		function remove_paid_feature( $offer_paid ) {
 			$offer_paid = false;
 			return $offer_paid;
 		}
