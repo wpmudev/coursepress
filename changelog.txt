@@ -13,7 +13,8 @@ CHANGE LOG
 * Added course progress display to student workbook.  
 * Added unit progress to CoursePress theme on student workbook.  
 * Added categories in the single post and blog archive
-* Fixed issue with hided comment form when plugin is activated
+* Fixed issue with hidden comment form when plugin is activated
+* Added passcode fields on login and signup popup forms
 * Minor changes to enrollment popup window. 
 
 = 1.2.1 =
