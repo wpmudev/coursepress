@@ -164,7 +164,6 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 		 *
 		 */
 		function init_tiny_mce_listeners( $initArray ) {
-
 			if ( is_admin() ) {
 				$detect_pages = array(
 					'coursepress_page_course_details',
@@ -177,16 +176,23 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 				if ( in_array( $page, $detect_pages ) ) {
 
 					$initArray[ 'height' ]	 = '360px';
-					$initArray[ 'setup' ]	 = 'function( ed ) {
-							ed.on( \'init\', function( args ) {
-								jQuery( \'#\' + ed.id + \'_parent\' ).bind( \'mousemove\', function ( evt ) {
-																		cp_editor_mouse_move( ed, evt );
-																	} );
-							} );
-							ed.on( \'keydown\', function( args ) {
-								cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
-							} );
+					
+					if( 3.8 < $this->min_version ) {
+						$initArray[ 'setup' ]	 = 'function( ed ) {
+								ed.on( \'keydown\', function( args ) {
+									cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
+								} );
 						}';
+						
+					} else {
+						$initArray[ 'setup' ]	 = 'function( ed ) {
+								ed.onKeyDown.add(function(ed, evt) {
+								  cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
+								});
+						}';
+						
+					}
+					
 				}
 			}
 
