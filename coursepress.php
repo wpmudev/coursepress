@@ -146,6 +146,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-capabilities.php' );
 
 
+			/**
+			 * CoursePress WordPress compatibility hooks.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-compatibility.php' );
+
+
 			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
 				// Prepare WPMUDev Dashboard Notifications
 				global $wpmudev_notices;
@@ -230,15 +236,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * CoursePress Menu meta box.
 				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.menumetabox.php' );
-
-				/**
-				 * Listen to dynamic editor requests.
-				 *
-				 * Used on unit page in admin.
-				 *
-				 * @since 1.0.0
-				 */
-				add_action( 'wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ) );
 
 				/**
 				 * Add instructor to a course (AJAX).
@@ -431,15 +428,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				add_action( 'wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ) );
 
-				/**
-				 * Apply some styles to the WordPress editor (AJAX).
-				 *
-				 * Keeps consistency across course setup and unit setup.
-				 *
-				 * @since 1.0.0
-				 */
-				add_filter( 'mce_css', array( &$this, 'mce_editor_style' ) );
 
+				/**
+				 * Hook WordPress Editor filters and actions.
+				 *
+				 * But do so with WordPress compatibility in mind. Therefore,
+				 * create a new action hook to be used by CoursePress_Compatibility().
+				 *
+				 * @since 1.2.1
+				 */
+				do_action( 'coursepress_editor_compatibility' );
+				
 				/**
 				 * Hook CoursePress admin initialization.
 				 *
@@ -973,13 +972,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			add_action( 'template_redirect', array( &$this, 'instructor_invite_confirmation' ) );
 
 			/**
-			 * Add keydown() event listener for WP Editor.
-			 *
-			 * @since 1.0.0
-			 */
-			add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
-
-			/**
 			 * MarketPress: Making it a little bit more friendly for non-physical goods (aka Courses).
 			 *
 			 * @since 1.0.0
@@ -1137,16 +1129,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$xmlResponse = new WP_Ajax_Response( $response );
 			$xmlResponse->send();
 			ob_end_flush();
-		}
-
-		function cp_format_TinyMCE( $in ) {
-			$in[ 'menubar' ]	 = false;
-			$in[ 'plugins' ]	 = 'wplink, textcolor, hr';
-			$in[ 'toolbar1' ]	 = 'bold, italic, underline, blockquote, hr, strikethrough, bullist, numlist, subscript, superscript, alignleft, aligncenter, alignright, alignjustify, outdent, indent, link, unlink, forecolor, backcolor, undo, redo, removeformat, formatselect, fontselect, fontsizeselect';
-			$in[ 'toolbar2' ]	 = '';
-			$in[ 'toolbar3' ]	 = '';
-			$in[ 'toolbar4' ]	 = '';
-			return $in;
 		}
 
 		function course_checkout_success_msg( $setting, $default ) {
@@ -1893,24 +1875,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 		}
 
-		/* Retrieve wp_editor dynamically ( using in unit admin ) */
-
-		function dynamic_wp_editor() {
-
-			$editor_id = ( ( isset( $_GET[ 'rand_id' ] ) ? $_GET[ 'rand_id' ] : rand( 1, 9999 ) ) );
-
-			$args = array(
-				"textarea_name"	 => ( isset( $_GET[ 'module_name' ] ) ? $_GET[ 'module_name' ] : '' ) . "_content[]",
-				"textarea_rows"	 => 4,
-				"quicktags"		 => false,
-				"teeny"			 => true,
-				"editor_class"	 => 'cp-editor cp-dynamic-editor',
-			);
-
-			wp_editor( htmlspecialchars_decode( ( isset( $_GET[ 'editor_content' ] ) ? $_GET[ 'editor_content' ] : '' ) ), $editor_id, $args );
-
-			exit;
-		}
 
 		function load_plugin_templates() {
 			global $wp_query;
@@ -3666,61 +3630,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			return $pg;
 		}
 
-		/**
-		 * Create a listener for TinyMCE change event
-		 *
-		 */
-		function init_tiny_mce_listeners( $initArray ) {
-
-			if ( is_admin() ) {
-				$detect_pages = array(
-					'coursepress_page_course_details',
-					'coursepress-pro_page_course_details',
-				);
-
-				$page	 = get_current_screen()->id;
-				$tab	 = empty( $_GET[ 'tab' ] ) ? '' : $_GET[ 'tab' ];
-
-				if ( in_array( $page, $detect_pages ) ) {
-					$initArray[ 'height' ]	 = '360px';
-					$initArray[ 'setup' ]	 = 'function( ed ) {
-							ed.on( \'init\', function( args ) {
-								jQuery( \'#\' + ed.id + \'_parent\' ).bind( \'mousemove\', function ( evt ) {
-																		cp_editor_mouse_move( ed, evt );
-																	} );
-							} );
-							ed.on( \'keydown\', function( args ) {
-								cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
-							} );
-						}';
-				}
-			}
-
-			return $initArray;
-		}
-
-		// CoursePress CSS styles for TinyMCE
-		function mce_editor_style( $url ) {
-
-			// Only on these pages
-			$detect_pages = array(
-				'coursepress_page_course_details',
-				'coursepress-pro_page_course_details',
-			);
-
-			$page	 = get_current_screen()->id;
-			$tab	 = empty( $_GET[ 'tab' ] ) ? '' : $_GET[ 'tab' ];
-
-			if ( in_array( $page, $detect_pages ) ) {
-
-				if ( !empty( $url ) )
-					$url .= ',';
-
-				$url .= $this->plugin_url . 'css/editor_style_fix.css';
-			}
-
-			return $url;
-		}
 
 		function refresh_course_calendar() {
 			$ajax_response	 = array();
@@ -4017,13 +3926,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function admin_header_actions() {
-			global $wp_version;
-
-			/* Adding menu icon font */
-			if ( $wp_version >= 3.8 ) {
-				wp_register_style( 'cp-38', $this->plugin_url . 'css/admin-icon.css' );
-				wp_enqueue_style( 'cp-38' );
-			}
 
 			if ( is_admin() ) {
 				if ( ( isset( $_GET[ 'cp_admin_ref' ] ) && $_GET[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) || ( isset( $_POST[ 'cp_admin_ref' ] ) && $_POST[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) ) {
@@ -4073,11 +3975,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 
-				add_filter( 'tiny_mce_before_init', array( &$this, 'cp_format_TinyMCE' ) );
-
 				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js' );
 				wp_enqueue_script( 'wplink' );
-				wp_enqueue_style( 'editor-buttons' );
+
 				wp_localize_script( 'courses_bulk', 'coursepress', array(
 					'delete_instructor_alert'				 => __( 'Please confirm that you want to remove the instructor from this course?', 'cp' ),
 					'delete_pending_instructor_alert'		 => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'cp' ),
@@ -4970,3 +4870,4 @@ if ( !class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
+
