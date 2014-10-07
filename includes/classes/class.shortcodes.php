@@ -19,7 +19,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function __construct() {
 //register plugin shortcodes
 			add_shortcode( 'course_instructors', array( &$this, 'course_instructors' ) );
-			add_shortcode( 'course_instructor_avatar', array( &$this, 'course_instructor_avatar' ) );
+			add_shortcode( 'coursecourse_media_instructor_avatar', array( &$this, 'course_instructor_avatar' ) );
 			add_shortcode( 'instructor_profile_url', array( &$this, 'instructor_profile_url' ) );
 			add_shortcode( 'course_details', array( &$this, 'course_details' ) );
 			add_shortcode( 'courses_student_dashboard', array( &$this, 'courses_student_dashboard' ) );
@@ -1142,11 +1142,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$is_paid = get_post_meta( $course_id, 'paid_course', true );
 			$is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
-			// cp_write_log( date( 'Y-m-d', time() ) );
-			$course_started		 = strtotime( $course->course_start_date ) <= time() ? true : false;
-			$enrollment_started	 = strtotime( $course->enrollment_start_date ) <= time() ? true : false;
-			$course_expired		 = strtotime( $course->course_end_date ) < time() ? true : false;
-			$enrollment_expired	 = strtotime( $course->enrollment_end_date ) < time() ? true : false;
+			$course_started		 = strtotime( $course->course_start_date ) <= current_time( 'timestamp', 0 ) ? true : false;
+			$enrollment_started	 = strtotime( $course->enrollment_start_date ) <= current_time( 'timestamp', 0 ) ? true : false;
+			$course_expired		 = strtotime( $course->course_end_date ) < current_time( 'timestamp', 0 ) ? true : false;
+			$enrollment_expired	 = strtotime( $course->enrollment_end_date ) < current_time( 'timestamp', 0 ) ? true : false;
 			$course_full		 = $course->is_populated();
 
 			$button		 = '';
@@ -1584,7 +1583,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'priority'	 => '', // gives priority to video (or image)
 				'list_page'	 => 'no',
 				'class'		 => '',
-				'wrapper'	 => ''
+				'wrapper'	 => '',
 			), $atts, 'course_thumbnail' ) );
 
 			$course_id	 = (int) $course_id;
@@ -1662,7 +1661,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$content .= trim( ob_get_clean() );
 				$content .= '</div>';
 			}
-
+			
 			return $content;
 		}
 
@@ -1695,7 +1694,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$student = new Student( get_current_user_id() );
 
 			if ( $student && $student->user_enrolled_in_course( $course_id ) ) {
-				if ( ( ( strtotime( $course->course_start_date ) <= time() && strtotime( $course->course_end_date ) >= time() ) || ( strtotime( $course->course_end_date ) >= time() ) ) || $course->open_ended_course == 'on' ) {
+				if ( ( ( strtotime( $course->course_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) || ( strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) ) || $course->open_ended_course == 'on' ) {
 //course is currently active or is not yet active ( will be active in the future )
 					$withdraw_link_visible = true;
 				}
@@ -2485,7 +2484,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$withdraw_link_visible = false;
 
 				if ( $student->user_enrolled_in_course( $course_id ) ) {
-					if ( ( ( strtotime( $course->course_start_date ) <= time() && strtotime( $course->course_end_date ) >= time() ) || ( strtotime( $course->course_end_date ) >= time() ) ) || $course->open_ended_course == 'on' ) {//course is currently active or is not yet active ( will be active in the future )
+					if ( ( ( strtotime( $course->course_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) || ( strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) ) || $course->open_ended_course == 'on' ) {//course is currently active or is not yet active ( will be active in the future )
 						$withdraw_link_visible = true;
 					}
 				}
@@ -2569,10 +2568,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( !$student->user_enrolled_in_course( $course_id ) ) {
 						if ( !$course_obj->is_populated() ) {
 							if ( $course->enroll_type != 'manually' ) {
-								if ( strtotime( $course->course_end_date ) <= time() && $course->open_ended_course == 'off' ) {//Course is no longer active
+								if ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) && $course->open_ended_course == 'off' ) {//Course is no longer active
 									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 								} else {
-									if ( ( $course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime( $course->enrollment_start_date ) <= time() && strtotime( $course->enrollment_end_date ) >= time() ) || $course->open_ended_course == 'on' ) {
+									if ( ( $course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime( $course->enrollment_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->enrollment_end_date ) >= current_time( 'timestamp', 0 ) ) || $course->open_ended_course == 'on' ) {
 										if ( ( $course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course( $course->prerequisite ) ) || $course->init_enroll_type !== 'prerequisite' ) {
 											$course->button .= '<input type="submit" class="apply-button" value="' . __( 'Enroll Now', 'cp' ) . '" />';
 											$course->button .= '<div class="passcode-box">' . do_shortcode( '[course_details field="passcode_input"]' ) . '</div>';
@@ -2580,7 +2579,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											$course->button .= '<span class="apply-button-finished">' . __( 'Prerequisite Required', 'cp' ) . '</span>';
 										}
 									} else {
-										if ( strtotime( $course->enrollment_end_date ) <= time() ) {
+										if ( strtotime( $course->enrollment_end_date ) <= current_time( 'timestamp', 0 ) ) {
 											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 										} else {
 											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
@@ -2595,14 +2594,14 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						}
 					} else {
 						if ( ( $course->course_start_date !== '' && $course->course_end_date !== '' ) || $course->open_ended_course == 'on' ) {//Course is currently active
-							if ( ( strtotime( $course->course_start_date ) <= time() && strtotime( $course->course_end_date ) >= time() ) || $course->open_ended_course == 'on' ) {//Course is currently active
+							if ( ( strtotime( $course->course_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) || $course->open_ended_course == 'on' ) {//Course is currently active
 								$course->button .= '<a href="' . trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ) . '" class="apply-button-enrolled">' . __( 'Go to Class', 'cp' ) . '</a>';
 							} else {
 
-								if ( strtotime( $course->course_start_date ) >= time() ) {//Waiting for a course to start
+								if ( strtotime( $course->course_start_date ) >= current_time( 'timestamp', 0 ) ) {//Waiting for a course to start
 									$course->button .= '<span class="apply-button-pending">' . __( 'You are enrolled', 'cp' ) . '</span>';
 								}
-								if ( strtotime( $course->course_end_date ) <= time() ) {//Course is no longer active
+								if ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) ) {//Course is no longer active
 									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 								}
 							}
@@ -2614,14 +2613,14 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 					if ( $course->enroll_type != 'manually' ) {
 						if ( !$course_obj->is_populated() ) {
-							if ( ( strtotime( $course->course_end_date ) <= time() ) && $course->open_ended_course == 'off' ) {//Course is no longer active
+							if ( ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) ) && $course->open_ended_course == 'off' ) {//Course is no longer active
 								$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 							} else if ( ( $course->course_start_date == '' || $course->course_end_date == '' ) && $course->open_ended_course == 'off' ) {
 								$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 							} else {
 
 
-								if ( ( strtotime( $course->enrollment_end_date ) <= time() ) && $course->open_ended_course == 'off' ) {
+								if ( ( strtotime( $course->enrollment_end_date ) <= current_time( 'timestamp', 0 ) ) && $course->open_ended_course == 'off' ) {
 									$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 								} else {
 									$course->button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . __( 'Signup', 'cp' ) . '</a>';

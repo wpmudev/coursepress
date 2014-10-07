@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.1.1
+  Version: 1.2.1.2
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -61,7 +61,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.1.1';
+		public $version = '1.2.1.2';
 
 		/**
 		 * Plugin friendly name.
@@ -355,7 +355,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * @since 1.0.0
 				 */
 				add_action( 'wp_ajax_cp_popup_email_exists', array( &$this, 'cp_popup_email_exists' ) );
-				
+
 				/**
 				 * Returns whether the course passcode is valid (AJAX).
 				 *
@@ -438,7 +438,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * @since 1.2.1
 				 */
 				do_action( 'coursepress_editor_compatibility' );
-				
+
 				/**
 				 * Hook CoursePress admin initialization.
 				 *
@@ -1310,16 +1310,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 				exit;
 			}
 		}
-		
-		function cp_valid_passcode(){
+
+		function cp_valid_passcode() {
 			if ( isset( $_POST[ 'passcode' ] ) ) {
-				$course_id = $_POST['course_id'];
-				$course = new Course($course_id);
+				$course_id		 = $_POST[ 'course_id' ];
+				$course			 = new Course( $course_id );
 				$course_passcode = $course->details->passcode;
-				
-				if($course_passcode == $_POST['passcode']){
+
+				if ( $course_passcode == $_POST[ 'passcode' ] ) {
 					echo 'valid';
-				}else{
+				} else {
 					echo 'invalid';
 				}
 				exit;
@@ -1796,7 +1796,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 					return true;
 				}
-			}else{
+			} else {
 				return $open;
 			}
 		}
@@ -1874,7 +1874,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 				exit();
 			}
 		}
-
 
 		function load_plugin_templates() {
 			global $wp_query;
@@ -3630,7 +3629,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			return $pg;
 		}
 
-
 		function refresh_course_calendar() {
 			$ajax_response	 = array();
 			$ajax_status	 = 1; //success
@@ -3827,7 +3825,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'message_password_minimum_length'	 => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'cp_min_password_length', 6 ) ),
 				'minimum_password_lenght'			 => apply_filters( 'cp_min_password_length', 6 ),
 				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),
-				'message_passcode_invalid'				 => __( 'Passcode is not valid.', 'cp' ),
+				'message_passcode_invalid'			 => __( 'Passcode is not valid.', 'cp' ),
 			) );
 			//admin_url( 'admin-ajax.php' )
 
@@ -3876,26 +3874,26 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'ok' ) ) {
 				?>
 				<div class ="save_elements_message_ok">
-					<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
 				</div>
-				<?php
-			}
-			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
-				?>
+					<?php
+				}
+				if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
+					?>
 				<div class ="save_elements_message_ok">
-					<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
 				</div>
-				<?php
+					<?php
+				}
+				$this->load_popup_window();
 			}
-			$this->load_popup_window();
-		}
 
-		/* custom header actions */
+			/* custom header actions */
 
-		function head_actions() {
-			$generate_cp_generator_meta = apply_filters( 'generate_cp_generator_meta', true );
-			if ( $generate_cp_generator_meta ) {
-				?>
+			function head_actions() {
+				$generate_cp_generator_meta = apply_filters( 'generate_cp_generator_meta', true );
+				if ( $generate_cp_generator_meta ) {
+					?>
 				<meta name ="generator" content ="<?php echo $this->name . ' ' . $this->version; ?>" />
 				<?php
 			}
@@ -4471,23 +4469,23 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class ="menu">
 					<ul class ='nav-menu'>
-						<?php
-						foreach ( $main_sorted_menu_items as $menu_item ) {
-							?>
+				<?php
+				foreach ( $main_sorted_menu_items as $menu_item ) {
+					?>
 							<li class ='menu-item-<?php echo $menu_item->ID; ?>'><a id ="<?php echo $menu_item->ID; ?>" href ="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-								<?php if ( $menu_item->db_id !== '' ) { ?>
+							<?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class ="sub-menu dropdown-menu">
-										<?php
-										foreach ( $sub_sorted_menu_items as $menu_item ) {
-											?>
+									<?php
+									foreach ( $sub_sorted_menu_items as $menu_item ) {
+										?>
 											<li class ='menu-item-<?php echo $menu_item->ID; ?>'><a id ="<?php echo $menu_item->ID; ?>" href ="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
 										<?php } ?>
 									</ul>
-								<?php } ?>
+									<?php } ?>
 							</li>
-							<?php
-						}
-						?>
+								<?php
+							}
+							?>
 					</ul>
 				</div>
 
@@ -4571,16 +4569,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class ="menu">
 					<ul id ="mobile_menu" class ='mobile_menu'>
-						<?php
-						foreach ( $main_sorted_menu_items as $menu_item ) {
-							?>
+				<?php
+				foreach ( $main_sorted_menu_items as $menu_item ) {
+					?>
 							<li class ='menu-item-<?php echo $menu_item->ID; ?>'><a id ="<?php echo $menu_item->ID; ?>" href ="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-								<?php if ( $menu_item->db_id !== '' ) { ?>
+							<?php if ( $menu_item->db_id !== '' ) { ?>
 									<?php
 									foreach ( $sub_sorted_menu_items as $menu_item ) {
 										?>
 									<li><a href ="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a></li>
-								<?php } ?>
+									<?php } ?>
 							<?php } ?>
 						<?php } ?>
 					</ul>
@@ -4870,4 +4868,3 @@ if ( !class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
-
