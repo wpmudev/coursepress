@@ -60,9 +60,9 @@ class section_break_module extends Unit_Module {
                         "teeny" => false
                     );
 
+					$editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
 					$args = apply_filters('cp_element_editor_args', $args, $this->name, $editor_id);
 					
-                    $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
                     wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
                     ?>
                 </div>
