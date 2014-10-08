@@ -502,3 +502,8 @@ a.button.button-units.button-delete-unit:hover{
     padding-bottom: 22px;
     padding-right: 22px;
 }
+
+/* Fix for < 3.9 editors */
+.editor_in_place table.mceLayout {
+    width: 100% !important;
+}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Incsub ( http://incsub.com/ )
  *
@@ -18,10 +19,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,               
  * MA 02110-1301 USA                                                    
  *
-*/
-
-
-if( ! class_exists( 'CoursePress_Compatibility' ) ) {
+ */
+if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 	/**
 	 * CoursePress class for dealing with WordPress version compatibility
@@ -32,24 +31,22 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 	class CoursePress_Compatibility {
 
 		private $min_version = false;
-		
+
 		function __construct() {
-			
+
 			// Are we dealing with 3.9 and up?
 			if ( self::is_3_9_up() ) {
 				$this->min_version = 3.9;
 			} else {
 				$this->min_version = 3.8;
 			}
-			
+
 			// Administration area
 			if ( is_admin() ) {
-				
-				add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) ); 
-				
-				
+
+				add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) );
 			}
-				add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) ); 			
+			add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) );
 			// Public area
 
 			/**
@@ -60,10 +57,7 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			 * @since 1.2.1
 			 */
 			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_header_actions' ) );
-			
-			
 		}
-
 
 		/**
 		 * Check for WordPress 3.9 and up
@@ -72,14 +66,14 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 		 */
 		public static function is_3_9_up() {
 			global $wp_version;
-			
-			if( 3.9 <= (double) $wp_version ) {
+
+			if ( 3.9 <= (double) $wp_version ) {
 				return true;
 			} else {
 				return false;
 			}
 		}
-		
+
 		/**
 		 * Hook WordPress Editor filters and actions.
 		 *
@@ -88,21 +82,22 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 		public function coursepress_editor_compatibility() {
 
 			// Version Specific Hooks
-			
+
 			switch ( $this->min_version ) {
-				
+
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
-				break;
+					break;
 
 				// Do 3.8 specific hooks for the editor				
 				case 3.8:
-				break;
-				
+					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
+					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
+					break;
 			}
-			
+
 			// Default Hooks
-			
+
 			/**
 			 * Apply some styles to the WordPress editor (AJAX).
 			 *
@@ -111,14 +106,14 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			 * @since 1.0.0
 			 */
 			add_filter( 'mce_css', array( &$this, 'mce_editor_style' ) );
-			
+
 			/**
 			 * Add keydown() event listener for WP Editor.
 			 *
 			 * @since 1.0.0
 			 */
 			add_filter( 'tiny_mce_before_init', array( &$this, 'init_tiny_mce_listeners' ) );
-			
+
 			/**
 			 * Listen to dynamic editor requests.
 			 *
@@ -126,39 +121,31 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			add_action( 'wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ) );			
-						
-			
+			add_action( 'wp_ajax_dynamic_wp_editor', array( &$this, 'dynamic_wp_editor' ) );
 		}
-				
-		
+
 		function admin_header_actions() {
 
-			/* Adding menu icon font */			
+			/* Adding menu icon font */
 			if ( $this->min_version >= 3.8 ) {
 				wp_register_style( 'cp-38', CoursePress::instance()->plugin_url . 'css/admin-icon.css' );
 				wp_enqueue_style( 'cp-38' );
 			}
-			
-			
+
+
 			if ( isset( $_GET[ 'page' ] ) ) {
 				$page = isset( $_GET[ 'page' ] );
 			} else {
 				$page = '';
 			}
-			
+
 			if ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 
 				add_filter( 'tiny_mce_before_init', array( &$this, 'cp_format_TinyMCE' ) );
 				wp_enqueue_style( 'editor-buttons' );
-				
 			}
-			
-			
-			
 		}
-		
-		
+
 		/**
 		 * Create a listener for TinyMCE change event
 		 *
@@ -175,24 +162,21 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 				if ( in_array( $page, $detect_pages ) ) {
 
-					$initArray[ 'height' ]	 = '360px';
-					
-					if( 3.8 < $this->min_version ) {
-						$initArray[ 'setup' ]	 = 'function( ed ) {
+					$initArray[ 'height' ] = '360px';
+
+					if ( 3.8 < $this->min_version ) {
+						$initArray[ 'setup' ] = 'function( ed ) {
 								ed.on( \'keydown\', function( args ) {
 									cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
 								} );
 						}';
-						
 					} else {
-						$initArray[ 'setup' ]	 = 'function( ed ) {
+						$initArray[ 'setup' ] = 'function( ed ) {
 								ed.onKeyDown.add(function(ed, evt) {
 								  cp_editor_key_down( ed, \'' . $page . '\', \'' . $tab . '\' );
 								});
 						}';
-						
 					}
-					
 				}
 			}
 
@@ -221,9 +205,9 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 			return $url;
 		}
-		
-		
+
 		/* Retrieve wp_editor dynamically ( using in unit admin ) */
+
 		function dynamic_wp_editor() {
 
 			$editor_id = ( ( isset( $_GET[ 'rand_id' ] ) ? $_GET[ 'rand_id' ] : rand( 1, 9999 ) ) );
@@ -240,22 +224,30 @@ if( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 			exit;
 		}
-		
-		
-		
-		function cp_format_TinyMCE( $in ) {
 
+		function cp_format_TinyMCE( $in ) {
 			$in[ 'menubar' ]	 = false;
-			$in[ 'plugins' ]	 = 'wplink, textcolor, hr';
+			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', 'wplink, textcolor, hr' );
 			$in[ 'toolbar1' ]	 = 'bold, italic, underline, blockquote, hr, strikethrough, bullist, numlist, subscript, superscript, alignleft, aligncenter, alignright, alignjustify, outdent, indent, link, unlink, forecolor, backcolor, undo, redo, removeformat, formatselect, fontselect, fontsizeselect';
 			$in[ 'toolbar2' ]	 = '';
 			$in[ 'toolbar3' ]	 = '';
 			$in[ 'toolbar4' ]	 = '';
 			return $in;
 		}
-		
-	
-	}	
+
+		function cp_element_editor_args_38( $args, $element_name, $element_id ) {
+			unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
+			return $args;
+		}
+
+		function cp_format_tinymce_plugins_38( $plugins ) {
+			$not_allowed = array( ', textcolor', ', hr' );
+			$plugins	 = str_replace( $not_allowed, '', $plugins );
+			return $plugins;
+		}
+
+	}
+
 }
 
-$coursepress_compatibility = new CoursePress_Compatibility();	
+$coursepress_compatibility = new CoursePress_Compatibility();
