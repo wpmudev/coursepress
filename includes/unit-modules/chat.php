@@ -68,7 +68,7 @@ if ( cp_is_chat_plugin_active() ) {
                         $args = array(
                             "textarea_name" => $this->name . "_content[]",
                             "textarea_rows" => 5,
-                            "quicktags" => false,
+                            "quicktags" => true,
                             "teeny" => false,
 							"editor_class" => 'cp-editor cp-unit-element',
                         );

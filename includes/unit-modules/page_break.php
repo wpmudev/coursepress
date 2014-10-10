@@ -50,7 +50,7 @@ class page_break_module extends Unit_Module {
                 $args = array(
                     "textarea_name" => $this->name . "_content[]",
                     "textarea_rows" => 5,
-                    "quicktags" => false,
+                    "quicktags" => true,
                     "teeny" => false
                 );
 

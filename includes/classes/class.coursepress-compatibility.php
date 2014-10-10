@@ -215,7 +215,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			$args = array(
 				"textarea_name"	 => ( isset( $_GET[ 'module_name' ] ) ? $_GET[ 'module_name' ] : '' ) . "_content[]",
 				"textarea_rows"	 => 4,
-				"quicktags"		 => false,
+				"quicktags"		 => true,
 				"teeny"			 => true,
 				"editor_class"	 => 'cp-editor cp-dynamic-editor',
 			);

@@ -308,7 +308,13 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php //CP_Helper_Tooltip::tooltip( __( 'Provide a few short sentences to describe the course', 'cp' ) );    ?>
 												</label>
 												<?php
-												$args = array( "textarea_name" => "course_excerpt", "editor_class" => 'cp-editor cp-course-overview', "textarea_rows" => 3, "media_buttons" => false, "quicktags" => false );
+												$args = array(
+													"textarea_name" => "course_excerpt",
+													"editor_class" => 'cp-editor cp-course-overview',
+													"textarea_rows" => 3,
+													"media_buttons" => false,
+													"quicktags" => false,
+												);
 
 												if ( !isset( $course_excerpt->post_excerpt ) ) {
 													$course_excerpt					 = new StdClass;
@@ -443,7 +449,11 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 												</label>
 												<p><?php _e( 'This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp' ); ?></p>
 												<?php
-												$args = array( "textarea_name" => "course_description", "editor_class" => 'cp-editor cp-course-overview', "textarea_rows" => 10 );
+												$args = array( 
+													"textarea_name" => "course_description",
+													"editor_class" => 'cp-editor cp-course-overview',
+													"textarea_rows" => 10,
+												);
 
 												if ( !isset( $course_details->post_content ) ) {
 													$course_details					 = new StdClass;
