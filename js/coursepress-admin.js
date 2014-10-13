@@ -268,8 +268,8 @@ jQuery(document).ready(function($) {
                 tinyMCE.init({
                     mode: "exact",
                     elements: rand_id,
-                    plugins: 'wplink, textcolor, hr',
-                    toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+                    plugins: coursepress_editor.plugins.join(','),
+                    toolbar: coursepress_editor.toolbar.join(','),
                     menubar: false
                 });
 
@@ -483,8 +483,8 @@ function coursepress_modules_ready() {
         tinyMCE.init({
             mode: "exact",
             elements: rand_id,
-            plugins: 'wplink, textcolor, hr',
-            toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+            plugins: coursepress_editor.plugins.join(','),
+            toolbar: coursepress_editor.toolbar.join(','),
             menubar: false,
 			height: '360px',
 			content_css: coursepress_units.cp_editor_style,
@@ -926,8 +926,8 @@ jQuery(document).ready(function() {
             tinyMCE.init({
                 mode: "exact",
                 elements: rand_id,
-                plugins: 'wplink, textcolor, hr',
-                toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+                plugins: coursepress_editor.plugins.join(','),
+                toolbar: coursepress_editor.toolbar.join(','),
                 menubar: false
             });
 

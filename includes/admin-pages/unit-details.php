@@ -248,17 +248,26 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php _e('Introduction to this Unit', 'cp'); ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp'); ?></label>
                             <?php
-                            $args = array( "textarea_name" => "unit_description", "textarea_rows" => 10 );
-
-                            if ( !isset($unit_details->post_content) ) {
-                                $unit_details = new StdClass;
-                                $unit_details->post_content = '';
-                            }
-
-                            $desc = '';
-                            wp_editor(htmlspecialchars_decode($unit_details->post_content), "unit_description", $args);
+								
+							// $editor_name = "unit_description";
+							// $editor_id = "unit_description";
+							// $editor_content = htmlspecialchars_decode($unit_details->post_content);
+							//
+							//                             $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10 );
+							//
+							//                             if ( !isset($unit_details->post_content) ) {
+							//                                 $unit_details = new StdClass;
+							//                                 $unit_details->post_content = '';
+							//                             }
+							//
+							//                             $desc = '';
+							//
+							// // Filter $args before showing editor
+							// $args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+							//
+							//                             wp_editor($editor_content, $editor_id, $args);
                             ?>
                                 <br/>
 

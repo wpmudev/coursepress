@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.5 =
+* Visual editor improvements.  
+
 = 1.2.1.4 =
 * Added additional options in settings for pages (instead of virtual pages) for enrollment process, login page, signup page, student dashboard and student settings
 

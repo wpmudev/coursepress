@@ -76,16 +76,21 @@ class video_module extends Unit_Module {
                                                                         <!-- <label class="bold-label"><?php // _e('Content', 'cp');        ?></label>
                                                                         <div class="editor_in_place">
                 <?php
-                // $args = array(
-                //     "textarea_name" => $this->name . "_content[]",
-                //     "textarea_rows" => 5,
-                //     "quicktags" => true,
-                //     "teeny" => true,
-				// "editor_class" => 'cp-editor cp-unit-element',
-                // );
-                //
-                    // $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                // wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+					// $editor_name = $this->name . "_content[]";
+					// $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+					// $editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+																			
+	                // $args = array(
+	                //     "textarea_name" => $editor_name,
+	                //     "textarea_rows" => 5,
+	                //     "quicktags" => true,
+	                //     "teeny" => true,
+					// "editor_class" => 'cp-editor cp-unit-element',
+	                // );
+	                //
+					// $args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+				
+	                // wp_editor( $editor_content, $editor_id, $args );
                 ?>
                                                                         </div> -->
 
