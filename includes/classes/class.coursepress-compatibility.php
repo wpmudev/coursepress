@@ -31,6 +31,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 	class CoursePress_Compatibility {
 
 		private $min_version = false;
+		private $editor_options = array();
 
 		function __construct() {
 
@@ -87,12 +88,14 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
+					$this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
 					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
 				// Do 3.8 specific hooks for the editor				
 				case 3.8:
+					$this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
 					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
 					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );					
@@ -245,16 +248,26 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 		// TinyMCE 4.0
 		function cp_element_editor_args_39plus( $args, $editor_name, $editor_id ) {
-
+			$args['quicktags'] = $this->editor_options['quicktags'];
 			return $args;
 		}
 
 		function prepare_coursepress_editor_39plus() {
+			//array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs', 'textcolor', 'hr' )
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins' => array(
-					'wplink',
-					'textcolor',
-					'hr'
+				'plugins' => array( 
+					'inlinepopups', 
+					'tabfocus', 
+					'paste', 
+					'media', 
+					'fullscreen', 
+					'wordpress', 
+					'wpeditimage', 
+					'wpgallery', 
+					'wplink', 
+					'wpdialogs', 
+					'textcolor', 
+					'hr' 
 				),
 				'toolbar' => array(
 					'bold',
@@ -283,21 +296,38 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 					'formatselect',
 					'fontselect',
 					'fontsizeselect'
-				),								
+				),
+				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
+				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'quicktags' => $this->editor_options['quicktags'], // are we using quicktags?				
 			) );
 		}
 
 
 		// TinyMCE 3.5.9
 		function cp_element_editor_args_38( $args, $editor_name, $editor_id ) {
-			unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
+			$args['quicktags'] = $this->editor_options['quicktags'];			
+			// unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
 			return $args;
 		}
 		
 		function prepare_coursepress_editor_38() {
+			// WP default plugins
+			// array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs' );
+			// WP teeny plugins
+			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
 				'plugins' => array(
-					'wplink',
+					'inlinepopups', 
+					'tabfocus', 
+					'paste', 
+					'media', 
+					'fullscreen', 
+					'wordpress', 
+					'wpeditimage', 
+					'wpgallery', 
+					'wplink', 
+					'wpdialogs', 
 					// 'textcolor',  // not in 3.8
 					// 'hr'	// not in 3.8 
 				),
@@ -328,7 +358,10 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 					'formatselect',
 					'fontselect',
 					'fontsizeselect'
-				),								
+				),
+				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
+				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'quicktags' => false, // Always false for WP 3.8 dynamic editor
 			) );
 		}
 		
