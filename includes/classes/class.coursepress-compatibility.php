@@ -237,67 +237,31 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 
 		function cp_format_TinyMCE( $in ) {
+
 			$in[ 'menubar' ]	 = false;
-			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', 'wplink, textcolor, hr' );
-			$in[ 'toolbar1' ]	 = 'bold, italic, underline, blockquote, hr, strikethrough, bullist, numlist, subscript, superscript, alignleft, aligncenter, alignright, alignjustify, outdent, indent, link, unlink, forecolor, backcolor, undo, redo, removeformat, formatselect, fontselect, fontsizeselect';
+			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', implode( ',', $this->get_plugins() ) );
+			$in[ 'toolbar1' ]	 = implode( ',', $this->get_buttons() );
 			$in[ 'toolbar2' ]	 = '';
 			$in[ 'toolbar3' ]	 = '';
 			$in[ 'toolbar4' ]	 = '';
+						cp_write_log( $in );
 			return $in;
 		}
 
 		// TinyMCE 4.0
 		function cp_element_editor_args_39plus( $args, $editor_name, $editor_id ) {
 			$args['quicktags'] = $this->editor_options['quicktags'];
+			cp_write_log( $editor_name );
+			cp_write_log( $editor_id );
 			return $args;
 		}
 
 		function prepare_coursepress_editor_39plus() {
 			//array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs', 'textcolor', 'hr' )
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins' => array( 
-					'inlinepopups', 
-					'tabfocus', 
-					'paste', 
-					'media', 
-					'fullscreen', 
-					'wordpress', 
-					'wpeditimage', 
-					'wpgallery', 
-					'wplink', 
-					'wpdialogs', 
-					'textcolor', 
-					'hr' 
-				),
-				'toolbar' => array(
-					'bold',
-					'italic',
-					'underline',
-					'blockquote',
-					'hr',
-					'strikethrough',
-					'bullist',
-					'numlist',
-					'subscript',
-					'superscript',
-					'alignleft',
-					'aligncenter',
-					'alignright',
-					'alignjustify',
-					'outdent',
-					'indent',
-					'link',
-					'unlink',
-					'forecolor',
-					'backcolor',
-					'undo',
-					'redo',
-					'removeformat',
-					'formatselect',
-					'fontselect',
-					'fontsizeselect'
-				),
-				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
+				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ),
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters('cp_editor_theme', 'modern'),  // filter it for themers
 				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
 				'quicktags' => $this->editor_options['quicktags'], // are we using quicktags?				
 			) );
@@ -312,26 +276,40 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 		
 		function prepare_coursepress_editor_38() {
+			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
+				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ), 
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
+				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'quicktags' => false, // Always false for WP 3.8 dynamic editor
+			) );
+		}
+		
+		function get_plugins() {
 			// WP default plugins
 			// array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs' );
 			// WP teeny plugins
-			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )
-			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins' => array(
-					'inlinepopups', 
-					'tabfocus', 
-					'paste', 
-					'media', 
-					'fullscreen', 
-					'wordpress', 
-					'wpeditimage', 
-					'wpgallery', 
-					'wplink', 
-					'wpdialogs', 
-					// 'textcolor',  // not in 3.8
-					// 'hr'	// not in 3.8 
-				),
-				'toolbar' => array(
+			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )			
+			$plugins = array(
+				// 'inlinepopups',
+				// 'tabfocus',
+				// 'paste',
+				// 'media',
+				// 'fullscreen',
+				// 'wordpress',
+				// 'wpeditimage',
+				// 'wpgallery',
+				'wplink', 
+				// 'wpdialogs',
+				'textcolor',  // not in 3.8
+				'hr'	// not in 3.8
+			);		
+			
+			return $plugins;
+		}
+		
+		function get_buttons() {
+			$buttons = array(
 					'bold',
 					'italic',
 					'underline',
@@ -358,13 +336,9 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 					'formatselect',
 					'fontselect',
 					'fontsizeselect'
-				),
-				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
-				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
-				'quicktags' => false, // Always false for WP 3.8 dynamic editor
-			) );
+				);
+			return $buttons;
 		}
-		
 
 		function cp_format_tinymce_plugins_38( $plugins ) {
 			$not_allowed = array( ', textcolor', ', hr' );
