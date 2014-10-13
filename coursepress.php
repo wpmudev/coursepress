@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.1.5
+  Version: 1.2.1.4
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -2575,7 +2575,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function get_login_slug( $url = false ) {
 			$default_slug_value = 'student-login';
 			if ( !$url ) {
-				return get_option( 'student_login', $default_slug_value );
+				return get_option( 'login_slug', $default_slug_value );
 			} else {
 				$login_page = get_option( 'coursepress_login_page', '0' );
 				if ( $login_page !== '0' ) {
@@ -2584,7 +2584,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					}
 					return get_permalink( $login_page );
 				} else {
-					return home_url() . '/' . get_option( 'student_login', $default_slug_value );
+					return home_url() . '/' . get_option( 'login_slug', $default_slug_value );
 				}
 			}
 		}
@@ -4003,7 +4003,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			//add_action( 'wp_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
 			wp_enqueue_script( 'jquery' );
 			//wp_enqueue_script( 'jquery-ui-core' );
-			wp_enqueue_script( 'jquery-ui', 'http://code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
+			wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
 			wp_enqueue_script( 'jquery-ui-spinner' );
 
 			// CryptoJS.MD5

@@ -1330,7 +1330,7 @@ jQuery(document).ready(function($) {
                     var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
                             '<div class="instructor-status">PENDING</div>' +
                             remove_button +
-                            '<img class="avatar avatar-80 photo" width="80" height="80" src="http://www.gravatar.com/avatar/' + CryptoJS.MD5(response.data.email) + '" alt="admin">' +
+                            '<img class="avatar avatar-80 photo" width="80" height="80" src="//www.gravatar.com/avatar/' + CryptoJS.MD5(response.data.email) + '" alt="admin">' +
                             '<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
                             '</div>';
 

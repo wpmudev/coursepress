@@ -156,10 +156,10 @@ function coursepress_scripts() {
 	//if ( get_post_type( $post ) == 'unit' ) {
 	//}
 
-	wp_register_style( 'google_fonts_lato', 'http://fonts.googleapis.com/css?family=Lato:300,400' );
+	wp_register_style( 'google_fonts_lato', '//fonts.googleapis.com/css?family=Lato:300,400' );
 	wp_enqueue_style( 'google_fonts_lato' );
 
-	wp_register_style( 'google_fonts_dosis', 'http://fonts.googleapis.com/css?family=Dosis:300,400' );
+	wp_register_style( 'google_fonts_dosis', '//fonts.googleapis.com/css?family=Dosis:300,400' );
 	wp_enqueue_style( 'google_fonts_dosis' );
 }
 
@@ -332,12 +332,16 @@ function dropdown_menu_scripts() {
 add_filter( 'element_content_filter', 'cp_theme_element_content_filter_add_thickbox', 12, 1 );
 
 function cp_theme_element_content_filter_add_thickbox( $content ) {
-	return preg_replace_callback( '#( <a\s[^>]*href )="( [^"]+ )".*<img#', "cp_theme_cp_callback_link", $content );
+	$rule = '#(<a\s[^>]*href)="([^"]+)".*<img#';
+	$rule = str_replace(' ', '', $rule);
+	return preg_replace_callback( $rule, "cp_theme_cp_callback_link", $content );
 }
 
 function cp_theme_cp_callback_link( $match ) {
 	$new_url = str_replace( '../wp-content', WP_CONTENT_URL, $match[ 0 ] );
-	$output	 = preg_replace( '#( http://([^\s]* )\.( jpg|gif|png ) )#', '$1" class="thickbox', $new_url );
+	$rule = '#(//([^\s]*)\.(jpg|gif|png))#';
+	$rule = str_replace(' ', '', $rule);
+	$output	 = preg_replace( $rule, '$1" class="thickbox', $new_url );
 	return $output;
 }
 
