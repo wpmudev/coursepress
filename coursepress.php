@@ -2777,8 +2777,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			do_action( 'coursepress_add_menu_items_after_course_discussions' );
 
 			// Certificates
-			// add_submenu_page( 'courses', __( 'Certificates', 'cp' ), __( 'Certificates', 'cp' ), 'coursepress_certificates_cap', 'certificates', array( &$this, 'coursepress_certificates_admin' ) );
-			// do_action( 'coursepress_add_menu_items_after_course_certificates' );
+			//add_submenu_page( 'courses', __( 'Certificates', 'cp' ), __( 'Certificates', 'cp' ), 'coursepress_certificates_cap', 'certificates', array( &$this, 'coursepress_certificates_admin' ) );
+			//do_action( 'coursepress_add_menu_items_after_course_certificates' );
 
 			add_submenu_page( 'courses', __( 'Settings', 'cp' ), __( 'Settings', 'cp' ), 'coursepress_settings_cap', $this->screen_base . '_settings', array( &$this, 'coursepress_settings_admin' ) );
 			do_action( 'coursepress_add_menu_items_after_settings' );
@@ -2874,6 +2874,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'map_meta_cap'		 => true,
 				'query_var'			 => true
 			);
+			
+			register_post_type( 'module', $args );
 
 			//Register Certificate Templates
 			$args = array(
