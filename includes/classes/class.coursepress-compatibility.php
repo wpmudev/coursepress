@@ -31,6 +31,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 	class CoursePress_Compatibility {
 
 		private $min_version = false;
+		private $editor_options = array();
 
 		function __construct() {
 
@@ -87,12 +88,17 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
+					$this->editor_options['quicktags'] = true;
+					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
+					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
 				// Do 3.8 specific hooks for the editor				
 				case 3.8:
+					$this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
 					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
+					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );					
 					break;
 			}
 
@@ -210,34 +216,128 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 		function dynamic_wp_editor() {
 
+			$editor_name = ( isset( $_GET[ 'module_name' ] ) ? $_GET[ 'module_name' ] : '' ) . "_content[]";
 			$editor_id = ( ( isset( $_GET[ 'rand_id' ] ) ? $_GET[ 'rand_id' ] : rand( 1, 9999 ) ) );
+			$editor_content = htmlspecialchars_decode( ( isset( $_GET[ 'editor_content' ] ) ? $_GET[ 'editor_content' ] : '' ) );
 
 			$args = array(
-				"textarea_name"	 => ( isset( $_GET[ 'module_name' ] ) ? $_GET[ 'module_name' ] : '' ) . "_content[]",
+				"textarea_name"	 => $editor_name,
 				"textarea_rows"	 => 4,
 				"quicktags"		 => true,
 				"teeny"			 => true,
 				"editor_class"	 => 'cp-editor cp-dynamic-editor',
 			);
+			
+			// Filter $args before showing editor
+			$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);			
 
-			wp_editor( htmlspecialchars_decode( ( isset( $_GET[ 'editor_content' ] ) ? $_GET[ 'editor_content' ] : '' ) ), $editor_id, $args );
+			wp_editor( $editor_content, $editor_id, $args );
 
 			exit;
 		}
 
 		function cp_format_TinyMCE( $in ) {
+
 			$in[ 'menubar' ]	 = false;
-			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', 'wplink, textcolor, hr' );
-			$in[ 'toolbar1' ]	 = 'bold, italic, underline, blockquote, hr, strikethrough, bullist, numlist, subscript, superscript, alignleft, aligncenter, alignright, alignjustify, outdent, indent, link, unlink, forecolor, backcolor, undo, redo, removeformat, formatselect, fontselect, fontsizeselect';
+			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', implode( ',', $this->get_plugins() ) );
+			$in[ 'toolbar1' ]	 = implode( ',', $this->get_buttons() );
 			$in[ 'toolbar2' ]	 = '';
 			$in[ 'toolbar3' ]	 = '';
 			$in[ 'toolbar4' ]	 = '';
+						cp_write_log( $in );
 			return $in;
 		}
 
-		function cp_element_editor_args_38( $args, $element_name, $element_id ) {
-			unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
+		// TinyMCE 4.0
+		function cp_element_editor_args_39plus( $args, $editor_name, $editor_id ) {
+			$args['quicktags'] = $this->editor_options['quicktags'];
+			cp_write_log( $editor_name );
+			cp_write_log( $editor_id );
 			return $args;
+		}
+
+		function prepare_coursepress_editor_39plus() {
+			//array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs', 'textcolor', 'hr' )
+			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
+				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ),
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters('cp_editor_theme', 'modern'),  // filter it for themers
+				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'quicktags' => $this->editor_options['quicktags'], // are we using quicktags?				
+			) );
+		}
+
+
+		// TinyMCE 3.5.9
+		function cp_element_editor_args_38( $args, $editor_name, $editor_id ) {
+			$args['quicktags'] = $this->editor_options['quicktags'];			
+			// unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
+			return $args;
+		}
+		
+		function prepare_coursepress_editor_38() {
+			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
+				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ), 
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
+				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'quicktags' => false, // Always false for WP 3.8 dynamic editor
+			) );
+		}
+		
+		function get_plugins() {
+			// WP default plugins
+			// array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs' );
+			// WP teeny plugins
+			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )			
+			$plugins = array(
+				// 'inlinepopups',
+				// 'tabfocus',
+				// 'paste',
+				// 'media',
+				// 'fullscreen',
+				// 'wordpress',
+				// 'wpeditimage',
+				// 'wpgallery',
+				'wplink', 
+				// 'wpdialogs',
+				'textcolor',  // not in 3.8
+				'hr'	// not in 3.8
+			);		
+			
+			return $plugins;
+		}
+		
+		function get_buttons() {
+			$buttons = array(
+					'bold',
+					'italic',
+					'underline',
+					'blockquote',
+					'hr',
+					'strikethrough',
+					'bullist',
+					'numlist',
+					'subscript',
+					'superscript',
+					'alignleft',
+					'aligncenter',
+					'alignright',
+					'alignjustify',
+					'outdent',
+					'indent',
+					'link',
+					'unlink',
+					'forecolor',
+					'backcolor',
+					'undo',
+					'redo',
+					'removeformat',
+					'formatselect',
+					'fontselect',
+					'fontsizeselect'
+				);
+			return $buttons;
 		}
 
 		function cp_format_tinymce_plugins_38( $plugins ) {

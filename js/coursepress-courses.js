@@ -1315,9 +1315,9 @@ jQuery(document).ready(function($) {
         ).done(function(data, status) {
             // Handle return
             if (status == 'success') {
-				console.log( data );
+				// console.log( data );
                 var response = $.parseJSON($(data).find('response_data').text());
-				console.log( response )
+				// console.log( response )
                 var response_type = $($.parseHTML(response.content));
 
                 if ($(response_type).hasClass('status-success')) {
@@ -1806,7 +1806,7 @@ jQuery(document).ready(function($) {
                         if (status == 'success') {
 
                             var response = $.parseJSON($(data).find('response_data').text());
-                            console.log(response);
+                            // console.log(response);
                             // Apply a new nonce when returning
                             if (response && response.toggle) {
                                 $('#course_state_id').attr('data-nonce', response.nonce);

@@ -80,12 +80,21 @@ if ( isset( $_GET['discussion_id'] ) ) {
                                 <br/><br/>
                                 <label for='course_name'><?php _e( 'Discussion Content', 'cp' ); ?></label>
                                 <?php
+								
+								$editor_name = "discussion_description";
+								$editor_id = "discussion_description";
+								$editor_content = htmlspecialchars_decode( isset( $discussion->details->post_content ) ? $discussion->details->post_content : '' );
+								
                                 $args = array(
-									"textarea_name" => "discussion_description",
+									"textarea_name" => $editor_name,
 									"editor_class" => 'cp-editor',
 									"textarea_rows" => 10,
 								);
-                                wp_editor( htmlspecialchars_decode( isset( $discussion->details->post_content ) ? $discussion->details->post_content : '' ), "discussion_description", $args );
+								
+								// Filter $args before showing editor
+								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+								
+                                wp_editor( $editor_content, $editor_id, $args );
                                 ?>
                                 <br/>
 

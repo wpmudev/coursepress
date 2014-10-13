@@ -256,11 +256,15 @@ jQuery(document).ready(function($) {
                 var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
                 var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
+				var switches = 	'<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+					switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
                 var text_editor_whole =
                         '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
                         '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
-                        '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
-                        '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                        '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+					text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';						
+					text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
                         text_editor +
                         '</div></div></div>';
                 jQuery('#' + initial_editor_id).parent().html(text_editor_whole);
@@ -268,11 +272,22 @@ jQuery(document).ready(function($) {
                 tinyMCE.init({
                     mode: "exact",
                     elements: rand_id,
-                    plugins: 'wplink, textcolor, hr',
-                    toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+                    plugins: coursepress_editor.plugins.join(','),
+                    toolbar: coursepress_editor.toolbar.join(','),
+					theme: coursepress_editor.theme,
+					skin: coursepress_editor.skin,
                     menubar: false
                 });
-
+				
+				// Init Quicktags
+				if ( coursepress_editor.quicktags ) {
+					new QTags(rand_id);
+					QTags._buttonsInit();
+					// force the editor to start at its defined mode.
+					switchEditors.go(rand_id, tinyMCE.editors[rand_id]);			
+				}
+		
+				tinyMCE.execCommand('mceRepaint');
 
             }
         }, function() {
@@ -470,25 +485,43 @@ function coursepress_modules_ready() {
 
         var text_editor = '<textarea name="' + moving + '_content[]" id="' + rand_id + '"></textarea>';
 
+		var switches = 	'<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+			switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
+
         var text_editor_whole =
                 '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
                 '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
-                '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
-                '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+			text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
+			text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
                 text_editor +
                 '</div></div></div>';
 
         jQuery('#unit-page-' + current_unit_page + ' .modules_accordion .editor_in_place').last().html(text_editor_whole);
 
+		// Init tinyMCE
         tinyMCE.init({
-            mode: "exact",
-            elements: rand_id,
-            plugins: 'wplink, textcolor, hr',
-            toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+            mode: "specific_textareas",
+	        elements: rand_id,
+	        plugins: coursepress_editor.plugins.join(','),
+	        toolbar: coursepress_editor.toolbar.join(','),
+			theme: coursepress_editor.theme,
+			skin: coursepress_editor.skin,
             menubar: false,
 			height: '360px',
 			content_css: coursepress_units.cp_editor_style,
         });
+
+		// Init Quicktags
+		if ( coursepress_editor.quicktags ) {
+			new QTags(rand_id);
+			QTags._buttonsInit();
+			// force the editor to start at its defined mode.
+			switchEditors.go(rand_id, tinyMCE.editors[rand_id]);			
+		}
+		
+		tinyMCE.execCommand('mceRepaint');
 
         var accordion_elements_count = (jQuery(this).parents('.elements-holder').siblings('.modules_accordion').find('div.module-holder-title').length);//find('.modules_accordion').length
 
@@ -914,11 +947,15 @@ jQuery(document).ready(function() {
             var rand_id = 'rand_id' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100) + '_' + Math.floor((Math.random() * 99999) + 100);
             var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
+			var switches = 	'<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+				switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
             var text_editor_whole =
                     '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
                     '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
-                    '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>' +
-                    '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                    '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+				text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';				
+                text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
                     text_editor +
                     '</div></div></div>';
             jQuery('#' + initial_editor_id).parent().html(text_editor_whole);
@@ -926,12 +963,23 @@ jQuery(document).ready(function() {
             tinyMCE.init({
                 mode: "exact",
                 elements: rand_id,
-                plugins: 'wplink, textcolor, hr',
-                toolbar: "bold,italic,underline,blockquote,hr,strikethrough,bullist,numlist,subscript,superscript,alignleft,aligncenter,alignright,alignjustify,outdent,indent,link,unlink,forecolor,backcolor,undo,redo,removeformat,formatselect,fontselect,fontsizeselect",
+                plugins: coursepress_editor.plugins.join(','),
+                toolbar: coursepress_editor.toolbar.join(','),
+				theme: coursepress_editor.theme,
+				skin: coursepress_editor.skin,				
                 menubar: false
             });
-
-
+			
+			// Init Quicktags
+			if ( coursepress_editor.quicktags ) {
+				new QTags(rand_id);
+				QTags._buttonsInit();
+				// force the editor to start at its defined mode.
+				switchEditors.go(rand_id, tinyMCE.editors[rand_id]);			
+			}
+		
+			tinyMCE.execCommand('mceRepaint');
+			
         }
     }, function() {
         jQuery('a').click(function(e) {

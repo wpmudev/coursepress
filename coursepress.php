@@ -4059,6 +4059,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
 					'allowed_image_extensions'				 => cp_wp_get_image_extensions()
 				) );
+					
+				do_action( 'cp_editor_options' );
 			}
 		}
 

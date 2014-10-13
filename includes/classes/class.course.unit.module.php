@@ -430,7 +430,14 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 		function get_module_response_comment_form( $post_id ) {
 			$post		 = get_post( $post_id );
-			$settings	 = array(
+			
+			$editor_name = "response_comment";
+			$editor_id = "response_comment";
+			$editor_content = $post->response_comment;
+			
+			
+			$args = array(
+				'textarea_name' => $editor_name,				
 				'media_buttons'	 => false,
 				'textarea_rows'	 => 2,
 				'editor_class'	 => 'response_comment'
@@ -438,7 +445,11 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			?>
 			<label><?php _e( 'Comment', 'cp' ); ?></label>
 			<?php
-			return wp_editor( $post->response_comment, 'response_comment', $settings );
+			
+			// Filter $args before showing editor
+			$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+			
+			return wp_editor( $editor_content, $editor_id, $args );
 		}
 
 		function get_module_type( $post_id ) {

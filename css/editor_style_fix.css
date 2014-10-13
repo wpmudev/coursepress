@@ -38,3 +38,7 @@ html .mceContentBody h5 {
 html .mceContentBody h6 {
 	font-size: 0.85em;
 }
+
+.wp-editor-container textarea{
+	width: 100%;
+}

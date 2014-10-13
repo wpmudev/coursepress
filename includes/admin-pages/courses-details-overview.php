@@ -308,8 +308,13 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php //CP_Helper_Tooltip::tooltip( __( 'Provide a few short sentences to describe the course', 'cp' ) );    ?>
 												</label>
 												<?php
+												
+												$editor_name = "course_excerpt";
+												$editor_id = "course_excerpt";
+												$editor_content = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
+													
 												$args = array(
-													"textarea_name" => "course_excerpt",
+													"textarea_name" => $editor_name,
 													"editor_class" => 'cp-editor cp-course-overview',
 													"textarea_rows" => 3,
 													"media_buttons" => false,
@@ -322,7 +327,11 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 												}
 
 												$desc						 = '';
-												wp_editor( htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) ), "course_excerpt", $args );
+												
+												// Filter $args
+												$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+												
+												wp_editor( $editor_content, $editor_id, $args );
 												$supported_image_extensions	 = implode( ", ", cp_wp_get_image_extensions() );
 												?>
 											</div>
@@ -449,8 +458,14 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 												</label>
 												<p><?php _e( 'This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp' ); ?></p>
 												<?php
+												
+												$editor_name = "course_description";
+												$editor_id = "course_description";
+												$editor_content = htmlspecialchars_decode( $course_details->post_content );
+												
+												
 												$args = array( 
-													"textarea_name" => "course_description",
+													"textarea_name" => $editor_name,
 													"editor_class" => 'cp-editor cp-course-overview',
 													"textarea_rows" => 10,
 												);
@@ -461,7 +476,12 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 												}
 
 												$desc	 = '';
-												wp_editor( htmlspecialchars_decode( $course_details->post_content ), "course_description", $args );
+												
+												// Filter $args before showing editor
+												$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+												
+												wp_editor( $editor_content, $editor_id, $args );
+												
 												?>
 											</div>
 
