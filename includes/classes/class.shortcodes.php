@@ -20,6 +20,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //register plugin shortcodes
 			add_shortcode( 'course_instructors', array( &$this, 'course_instructors' ) );
 			add_shortcode( 'coursecourse_media_instructor_avatar', array( &$this, 'course_instructor_avatar' ) );
+			add_shortcode( 'course_instructor_avatar', array( &$this, 'course_instructor_avatar' ) );
 			add_shortcode( 'instructor_profile_url', array( &$this, 'instructor_profile_url' ) );
 			add_shortcode( 'course_details', array( &$this, 'course_details' ) );
 			add_shortcode( 'courses_student_dashboard', array( &$this, 'courses_student_dashboard' ) );
