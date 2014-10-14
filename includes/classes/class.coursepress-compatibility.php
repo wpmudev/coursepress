@@ -35,6 +35,11 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 		function __construct() {
 
+
+			$this->editor_options = array(
+				'quicktags' => true,
+			);
+
 			// Are we dealing with 3.9 and up?
 			if ( self::is_3_9_up() ) {
 				$this->min_version = 3.9;
@@ -74,6 +79,26 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				return false;
 			}
 		}
+		
+		/**
+		 * Alter editor for Unit pages. 
+		 *
+		 * Because of the complexities of the unit builder we might need to suppress
+		 * or alter some editor options.
+		 *
+		 * @since 1.2.1
+		 */
+		public function alter_unit_builder_editor() {
+			if( isset( $_GET['page'] ) && 'course_details' == $_GET['page'] && isset( $_GET['tab'] ) && 'units' == $_GET['tab'] ) {
+				
+				/* 
+				 * Multiple editors on the same page is causing conflicts with Visual/Text tab selection
+				 * so we need to disabled it.  
+				 */
+				$this->editor_options['quicktags'] = false;
+
+			}
+		}
 
 		/**
 		 * Hook WordPress Editor filters and actions.
@@ -88,14 +113,13 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
-					$this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
 					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
 				// Do 3.8 specific hooks for the editor				
 				case 3.8:
-					$this->editor_options['quicktags'] = true;
+					// $this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
 					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
 					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );					
@@ -244,15 +268,13 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			$in[ 'toolbar2' ]	 = '';
 			$in[ 'toolbar3' ]	 = '';
 			$in[ 'toolbar4' ]	 = '';
-						cp_write_log( $in );
+
 			return $in;
 		}
 
 		// TinyMCE 4.0
 		function cp_element_editor_args_39plus( $args, $editor_name, $editor_id ) {
 			$args['quicktags'] = $this->editor_options['quicktags'];
-			cp_write_log( $editor_name );
-			cp_write_log( $editor_id );
 			return $args;
 		}
 
