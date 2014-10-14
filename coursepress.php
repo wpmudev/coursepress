@@ -1074,7 +1074,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Get post types
 			if ( $query->is_search ) {
 				if ( !is_admin() ) {
-					$post_types						 = get_post_types( array( 'public' => true, 'exclude_from_search' => false ), 'objects' );
+					$post_types						 = get_post_types( array( 'public' => true, 'query_var' => true/*, 'exclude_from_search' => false */), 'objects' );
 					$searchable_types				 = array();
 					// Add available post types
 					$remove_mp_products_from_search	 = apply_filters( 'remove_mp_products_from_search', true );
@@ -1089,7 +1089,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 							}
 						}
 					}
-
 					$searchable_types[] = 'course';
 					$query->set( 'post_type', $searchable_types );
 				}
