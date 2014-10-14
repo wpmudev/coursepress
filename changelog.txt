@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.6 =
+* Fixed bug where visual editor prevented unit elements from saving.
+
 = 1.2.1.5 =
 * Fixed issue with instructor's profile avatar shortcode
 * Fixed conflicts with bbPress (not showing topics when CoursePress is active)
