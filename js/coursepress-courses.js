@@ -620,6 +620,7 @@ function step_1_update(attr) {
         _thumbnail_id: _thumbnail_id,
         meta_course_category: $('[name=meta_course_category]').val(),
         meta_course_language: $('[name=meta_course_language]').val(),
+        course_category: $('[name=course_category]').val(),
         // Don't remove
         meta_course_setup_progress: initialVars['meta_course_setup_progress'],
         meta_course_setup_marker: 'step-2',

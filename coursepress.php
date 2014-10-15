@@ -1051,8 +1051,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
 
-			
-			add_filter('get_edit_post_link', array(&$this, 'get_edit_post_link'), 10, 1);
+
+			add_filter( 'get_edit_post_link', array( &$this, 'get_edit_post_link' ), 10, 1 );
 			/**
 			 * Hook CoursePress initialization.
 			 *
@@ -1063,9 +1063,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			do_action( 'coursepress_init' );
 		}
-		
-		function get_edit_post_link($link){
-			$link = str_replace(' ', '', $link);
+
+		function get_edit_post_link( $link ) {
+			$link = str_replace( ' ', '', $link );
 			return $link;
 		}
 
@@ -1081,7 +1081,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Get post types
 			if ( $query->is_search ) {
 				if ( !is_admin() ) {
-					$post_types						 = get_post_types( array( 'public' => true, 'query_var' => true/*, 'exclude_from_search' => false */), 'objects' );
+					$post_types						 = get_post_types( array( 'public' => true, 'query_var' => true/* , 'exclude_from_search' => false */ ), 'objects' );
 					$searchable_types				 = array();
 					// Add available post types
 					$remove_mp_products_from_search	 = apply_filters( 'remove_mp_products_from_search', true );
@@ -1735,8 +1735,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			global $wp_theme_directories;
 			// Allow registration of other theme directories or moving the CoursePress theme.
 			$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-					$this->plugin_dir . 'themes/',
-				)
+				$this->plugin_dir . 'themes/',
+			)
 			);
 			foreach ( $theme_directories as $theme_directory ) {
 				register_theme_directory( $theme_directory );
@@ -2794,14 +2794,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function register_custom_posts() {
 
-			// Register custom taxonomy
-			register_taxonomy( 'course_category', 'course', apply_filters( 'cp_register_course_category', array(
-				"hierarchical"	 => true,
-				'label'			 => __( 'Course Categories', 'cp' ),
-				'singular_label' => __( 'Course Category', 'cp' ) )
-			)
-			);
-
 			//Register Courses post type
 			$args = array(
 				'labels'			 => array( 'name'				 => __( 'Courses', 'cp' ),
@@ -2828,10 +2820,38 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'slug'		 => $this->get_course_slug(),
 					'with_front' => false
 				),
-				'supports'			 => array( 'thumbnail' )
+				'supports'			 => array( 'thumbnail' ),
+				'taxonomies'		 => array( 'course_category' ),
 			);
 
 			register_post_type( 'course', $args );
+			// Register custom taxonomy
+			/*register_taxonomy( 'course_category', 'course', apply_filters( 'cp_register_course_category', array(
+				"hierarchical"	 => true,
+				'label'			 => __( 'Course Categories', 'cp' ),
+				'singular_label' => __( 'Course Category', 'cp' ) )
+			)
+			);*/
+
+			register_taxonomy( 'course_category', 'course', array(
+				'labels'			 => array(
+					'name'			 => 'Course Categories',
+					'singular_name'	 => 'Course Category',
+					'search_items'	 => 'Search Course Categories',
+					'all_items'		 => 'All Course Categories',
+					'edit_item'		 => 'Edit Course Categories',
+					'update_item'	 => 'Update Course Category',
+					'add_new_item'	 => 'Add New Course Category',
+					'new_item_name'	 => 'New Course Category Name',
+					'menu_name'		 => 'Course Category',
+				),
+				'hierarchical'		 => true,
+				'sort'				 => true,
+				'args'				 => array( 'orderby' => 'term_order' ),
+				'rewrite'			 => array( 'slug' => 'course-category' ),
+				'show_admin_column'	 => true
+			)
+			);
 			//add_theme_support( 'post-thumbnails' );
 			//Register Units post type
 			$args = array(
@@ -2880,7 +2900,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'map_meta_cap'		 => true,
 				'query_var'			 => true
 			);
-			
+
 			register_post_type( 'module', $args );
 
 			//Register Certificate Templates
@@ -3042,6 +3062,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 					$course->data[ 'status' ] = 'draft';
 				}
+
+				$course_category = $_POST[ 'course_category' ];
+				wp_set_post_terms( $course_id, $course_category, 'course_category', false );
 
 				if ( !empty( $user_id ) && 0 == $course_id ) {
 					$course->data[ 'uid' ]			 = $user_id;
@@ -4065,7 +4088,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
 					'allowed_image_extensions'				 => cp_wp_get_image_extensions()
 				) );
-					
+
 				do_action( 'cp_editor_options' );
 			}
 		}
