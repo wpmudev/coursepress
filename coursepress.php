@@ -1728,8 +1728,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			global $wp_theme_directories;
 			// Allow registration of other theme directories or moving the CoursePress theme.
 			$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-				$this->plugin_dir . '/themes/',
-			)
+					$this->plugin_dir . 'themes/',
+				)
 			);
 			foreach ( $theme_directories as $theme_directory ) {
 				register_theme_directory( $theme_directory );
