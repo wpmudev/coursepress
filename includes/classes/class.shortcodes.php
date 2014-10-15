@@ -1192,7 +1192,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						}
 					}
 				} else {
-					// nothing to do here when its a manual enrollment
+					// At least show the details button
+					if ( !is_single() || "yes" == $list_page ) {
+						// GO TO COURSE
+						$button_url = get_permalink( $course_id );
+						$button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
+					}
+					
 				}
 
 				// User is logged in, if its a student, lets see if they can access their course.
