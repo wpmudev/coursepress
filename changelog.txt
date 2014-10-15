@@ -9,6 +9,7 @@ CHANGE LOG
 = 1.2.1.5 =
 * Fixed issue with instructor's profile avatar shortcode
 * Fixed conflicts with bbPress (not showing topics when CoursePress is active)
+* Resolved issue with course front-end edit links (caused by empty spaces)
 
 = 1.2.1.4 =
 * Fixed issue with incorrect registration of module post type

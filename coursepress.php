@@ -1051,6 +1051,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
 
+			
+			add_filter('get_edit_post_link', array(&$this, 'get_edit_post_link'), 10, 1);
 			/**
 			 * Hook CoursePress initialization.
 			 *
@@ -1060,6 +1062,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 */
 			do_action( 'coursepress_init' );
+		}
+		
+		function get_edit_post_link($link){
+			$link = str_replace(' ', '', $link);
+			return $link;
 		}
 
 		function add_body_classes( $classes ) {
