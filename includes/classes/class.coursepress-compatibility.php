@@ -51,6 +51,10 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			if ( is_admin() ) {
 
 				add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) );
+				
+				// Fix some anomalies on unit builder page
+				add_action( 'admin_init', array( &$this, 'alter_unit_builder_editor' ) );
+				
 			}
 			add_action( 'coursepress_editor_compatibility', array( &$this, 'coursepress_editor_compatibility' ) );
 			// Public area
@@ -79,7 +83,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				return false;
 			}
 		}
-		
+
 		/**
 		 * Alter editor for Unit pages. 
 		 *
@@ -90,7 +94,6 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		 */
 		public function alter_unit_builder_editor() {
 			if( isset( $_GET['page'] ) && 'course_details' == $_GET['page'] && isset( $_GET['tab'] ) && 'units' == $_GET['tab'] ) {
-				
 				/* 
 				 * Multiple editors on the same page is causing conflicts with Visual/Text tab selection
 				 * so we need to disabled it.  
@@ -170,10 +173,12 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			}
 
 			if ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == 'settings' || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
-
 				add_filter( 'tiny_mce_before_init', array( &$this, 'cp_format_TinyMCE' ) );
+
 				wp_enqueue_style( 'editor-buttons' );
+				
 			}
+			
 		}
 
 		/**
@@ -230,7 +235,13 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				if ( !empty( $url ) )
 					$url .= ',';
 
-				$url .= CoursePress::instance()->plugin_url . 'css/editor_style_fix.css';
+				$url .= CoursePress::instance()->plugin_url . 'css/editor_style_fix.css,';
+				
+				if ( 3.9 <= (double) $wp_version ) {
+				} else {
+					$url .= CoursePress::instance()->plugin_url . 'css/editor_style_fix_38.css,';
+				}
+
 			}
 
 			return $url;
@@ -247,10 +258,13 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			$args = array(
 				"textarea_name"	 => $editor_name,
 				"textarea_rows"	 => 4,
-				"quicktags"		 => true,
 				"teeny"			 => true,
 				"editor_class"	 => 'cp-editor cp-dynamic-editor',
 			);
+			
+			if( $this->editor_options['quicktags'] ) {
+				$args['quicktags'] = $this->editor_options['quicktags'];
+			}
 			
 			// Filter $args before showing editor
 			$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);			
@@ -261,9 +275,11 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 
 		function cp_format_TinyMCE( $in ) {
-
+			$plugins = apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() );
+			$plugins = implode( ',', $plugins );
+			
 			$in[ 'menubar' ]	 = false;
-			$in[ 'plugins' ]	 = apply_filters( 'cp_format_tinymce_plugins', implode( ',', $this->get_plugins() ) );
+			$in[ 'plugins' ]	 = $plugins;
 			$in[ 'toolbar1' ]	 = implode( ',', $this->get_buttons() );
 			$in[ 'toolbar2' ]	 = '';
 			$in[ 'toolbar3' ]	 = '';
@@ -292,7 +308,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 		// TinyMCE 3.5.9
 		function cp_element_editor_args_38( $args, $editor_name, $editor_id ) {
-			$args['quicktags'] = $this->editor_options['quicktags'];			
+			$args['quicktags'] = $this->editor_options['quicktags'];
 			// unset( $args[ "quicktags" ] );//it doesn't work in 3.8 for some reason - should peform further checks
 			return $args;
 		}
@@ -363,8 +379,12 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 
 		function cp_format_tinymce_plugins_38( $plugins ) {
-			$not_allowed = array( ', textcolor', ', hr' );
-			$plugins	 = str_replace( $not_allowed, '', $plugins );
+			$not_allowed = array( 'textcolor', 'hr' );
+			foreach ( $plugins as $key => $value ) {
+				if( in_array( $value, $not_allowed ) ) {
+					unset( $plugins[$key] );
+				}
+			}
 			return $plugins;
 		}
 
