@@ -824,6 +824,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				$post_metas = get_post_meta( $old_module_id );
 				foreach ( $post_metas as $key => $meta_value ) {
 					$value = array_pop( $meta_value );
+					$value = maybe_unserialize( $value );
 					update_post_meta( $new_module_id, $key, $value );
 				}
 			}	

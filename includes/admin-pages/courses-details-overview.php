@@ -131,7 +131,7 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 		'step-4' => 'incomplete',
 		'step-5' => 'incomplete',
 		'step-6' => 'incomplete',
-	) : $course->details->course_setup_progress;
+	) : maybe_unserialize( $course->details->course_setup_progress );
 	$course_setup_marker			 = empty( $course->details->course_setup_marker ) ? 'step-1' : $course->details->course_setup_marker;
 	$course_structure_options		 = $course->details->course_structure_options;
 	$course_structure_time_display	 = $course->details->course_structure_time_display;
@@ -181,6 +181,10 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 	$course_structure_options		 = 'off';
 	$course_structure_time_display	 = 'off';
 }
+
+// Fix issue where previous versions caused nested serial objects when duplicating courses.
+$course_setup_progress = cp_deep_unserialize( $course_setup_progress );
+
 
 // Detect gateways for MarketPress
 // MarketPress 2.x and MarketPress Lite
@@ -276,8 +280,6 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 									}
 								}
 								
-								
-
 								if ( (isset( $_GET[ 'course_id' ] )) || !isset( $_GET[ 'course_id' ] ) && $not_limited ) {
 									?>
 									<!-- Course Overview -->

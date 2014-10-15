@@ -572,13 +572,14 @@ if ( !class_exists( 'Unit' ) ) {
 
 
 			/*
-			 * Duplicate course post meta
+			 * Duplicate unit post meta
 			 */
 
 			if( ! empty( $new_unit_id ) ) {
 				$post_metas = get_post_meta( $old_unit_id );
 				foreach ( $post_metas as $key => $meta_value ) {
 					$value = array_pop( $meta_value );
+					$value = maybe_unserialize( $value );
 					update_post_meta( $new_unit_id, $key, $value );
 				}
 			}	
