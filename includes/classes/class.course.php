@@ -714,6 +714,7 @@ if ( !class_exists( 'Course' ) ) {
 						$post_metas = get_post_meta( $old_course_id );
 						foreach ( $post_metas as $key => $meta_value ) {
 							$value = array_pop( $meta_value );
+							$value = maybe_unserialize( $value );
 							update_post_meta( $new_course_id, $key, $value );
 						}
 					}					

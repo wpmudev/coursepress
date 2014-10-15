@@ -1739,3 +1739,15 @@ function cp_search_array( $array, $key, $value ) {
 
 	return $results;
 }
+
+// fix for recursive serialized objects
+function cp_deep_unserialize( $serialized_object ) {
+	
+	$new_array = maybe_unserialize( $serialized_object );
+	
+	if( is_serialized( $new_array ) ) {
+		$new_array = cp_deep_unserialize( $new_array );
+	}
+	
+	return $new_array;
+}
