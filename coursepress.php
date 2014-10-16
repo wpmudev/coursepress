@@ -1114,6 +1114,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function activate_marketpress_lite() {
+			
+			// Don't allow on campus
+			if( CoursePress_Capabilities::is_campus() ) {
+				return;
+			}
+			
 			$ajax_response = array();
 
 			// Same file regardless of Lite or full version of MP
@@ -4014,7 +4020,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function admin_header_actions() {
 
-			if ( is_admin() ) {
+			if ( is_admin() && ! CoursePress_Capabilities::is_campus() ) {
 				if ( ( isset( $_GET[ 'cp_admin_ref' ] ) && $_GET[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) || ( isset( $_POST[ 'cp_admin_ref' ] ) && $_POST[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) ) {
 					wp_enqueue_style( 'admin_coursepress_marketpress_popup', $this->plugin_url . 'css/admin_marketpress_popup.css', array(), $this->version );
 				}
@@ -4782,6 +4788,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress plugin is installed and active ( using in Course Overview ) */
 
 		function is_marketpress_active() {
+			
+			// Don't allow on campus
+			if( CoursePress_Capabilities::is_campus() ) {
+				return false;
+			}
+			
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4800,6 +4812,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress Lite plugin is installed and active */
 
 		function is_marketpress_lite_active() {
+			
+			// Don't allow on campus
+			if( CoursePress_Capabilities::is_campus() ) {
+				return;
+			}
+			
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4820,6 +4838,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress Lite ( included in CoursePress ) plugin is installed and active */
 
 		function is_cp_marketpress_lite_active() {
+			
+			// Don't allow on campus
+			if( CoursePress_Capabilities::is_campus() ) {
+				return false;
+			}
+			
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4838,6 +4862,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function marketpress_check() {
+			
+			// Don't allow on campus
+			if( CoursePress_Capabilities::is_campus() ) {
+				return false;
+			}
+			
 			if ( CoursePress::instance()->is_marketpress_lite_active() || CoursePress::instance()->is_cp_marketpress_lite_active() || CoursePress::instance()->is_marketpress_active() ) {
 				CoursePress::instance()->marketpress_active = true;
 			} else {
