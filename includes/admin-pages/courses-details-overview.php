@@ -1180,53 +1180,6 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									</div>							
 									<!-- /Enrollment & Course Cost -->
 
-
-									<!-- OLD MARKETPRESS INTEGRATION
-																<div class="full border-divider">
-																	<div class="half">
-																		<h3><?php _e( 'Cost to enroll in the course', 'cp' ); ?></h3>
-																		
-									<?php
-									if ( $coursepress->is_marketpress_active() ) {
-										?>
-																																																					
-										<?php _e( 'MarketPress product', 'cp' ); ?>
-																																																					
-																																																					<a class="help-icon" href="javascript:;"></a>
-																																																					<div class="tooltip">
-																																																					<div class="tooltip-before"></div>
-																																																					<div class="tooltip-button">&times;</div>
-																																																					<div class="tooltip-content">
-										<?php _e( 'For students to pay for this course, you can set up a product in MarketPress and sell the course. Select this course when creating/editing a product.', 'cp' ); ?>
-																																																					</div>
-																																																					</div>
-																																																					
-																																																					<select name="meta_marketpress_product" id="meta_marketpress_product" class="chosen-select">
-																																																					<option value="" <?php selected( $marketpress_product, '', true ); ?>><?php _e( 'None, this course is free', 'cp' ); ?></option>
-										<?php
-										global $post;
-										$args	 = array(
-											'numberposts'	 => -1,
-											'post_type'		 => 'product'
-										);
-										$posts	 = get_posts( $args );
-										foreach ( $posts as $post ) {
-											setup_postdata( $post );
-											?>
-																																																						<option value="<?php echo $post->ID; ?>" <?php selected( $marketpress_product, $post->ID, true ); ?>><?php the_title(); ?></option>
-										<?php } ?>
-																																																					</select>
-																																																					
-																																																					<p><?php _e( 'NOTE: If you wish to sell a course and have not set up a product in MarketPress, please finish creating your course and save it. Once you have saved your course, you can create a product in MarketPress to sell this course, then come back to this "Course Overview" page and select the product you have created. Click <a href="post-new.php?post_type=product" target="_blank">here</a> to open a new window that takes you to the "MarketPress Product page"', 'cp' ); ?></p>
-																																																					
-									<?php } else { ?>
-																																																					<p><?php printf( __( '%s integrates with the <a href="https://premium.wpmudev.org/project/e-commerce/?ref=wordpress.org">MarketPress</a> plugin. Install it it to sell this course online.', 'cp' ), $coursepress->name ); ?></p>
-									<?php } ?>
-									
-																	</div>
-																</div>
-										 // OLD MARKETPRESS INTEGRATION -->
-
 									<!-- OLD GRADEBOOK INTEGRATION
 																									<div class="full border-divider">
 																	<label><?php _e( 'Show Grades Page for Students', 'cp' ); ?>
