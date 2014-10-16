@@ -2,15 +2,15 @@
 
 CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
 
-#### CoursePress Pro (coursepress/pro)  
+## CoursePress Pro (coursepress/pro)  
 
 CoursePress Pro is the official premium plugin that lives on WPMU Dev and will ultimately always be merged back into **master**.
 
-#### CoursePress Campus (coursepress/campus)  
+## CoursePress Campus (coursepress/campus)  
 
 CoursePress Campus is the branch that is integrated with CampusPress/Edublogs.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling and removes paid courses features (all code that is implemented in CoursePress Pro).  
 
-#### CoursePress (coursepress/standard)  
+## CoursePress (coursepress/standard)  
 
 CoursePress is the free limited version that gets published to the WordPress plugin directory.
 
@@ -120,7 +120,13 @@ This is where `git submodule update` fits in. It makes sure that you have the la
 
 ### Releasing
 
-#### CoursePress (wp.org version)
+## CoursePress Campus
+
+Its identical to CoursePress Pro, but be sure to remove marketpress.php, includes/marketpress/* and includes/extra/dashboard and commit the branch.  
+
+It does not get released, but is used by the CampusPress team for CampusPress integrations.
+
+## CoursePress (wp.org version)
 
 CoursePress is identical to CoursePress Pro, but the following changes need to be made:  
 
