@@ -1,10 +1,14 @@
 # README #
 
-CoursePress has two primary development branches: coursepress/pro and coursepress/standard  
+CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
 
 #### CoursePress Pro (coursepress/pro)  
 
 CoursePress Pro is the official premium plugin that lives on WPMU Dev and will ultimately always be merged back into **master**.
+
+#### CoursePress Campus (coursepress/campus)  
+
+CoursePress Campus is the branch that is integrated with CampusPress/Edublogs.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling and removes paid courses features (all code that is implemented in CoursePress Pro).  
 
 #### CoursePress (coursepress/standard)  
 
@@ -129,4 +133,4 @@ CoursePress is identical to CoursePress Pro, but the following changes need to b
 * Change plugin name in ./a-marketpress.php  
 * Change plugin name in ./coursepress.php  
 * Remove WPMUDev Dashboard notifications and require statements  
-* Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php  
+* Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php
