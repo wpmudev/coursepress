@@ -1282,7 +1282,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						// Course is available, so lets go to class
 					} else {
 						// "GO TO CLASS"
-						$button_url = trailingslashit( get_permalink( $course_id ) ) . trailingslashit( $coursepress->get_units_slug() );
+						$button_url = trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress::instance()->get_units_slug() );
 
 						if ( cp_is_course_visited( $course_id ) ) {
 							$access_text = $continue_learning_text;
