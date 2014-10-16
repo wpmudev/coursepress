@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.7 =
+* Resolved issue with plugin update
+
 = 1.2.1.6 =
 * Fixed bug where visual editor prevented unit elements from saving.
 * Fixed bug after duplicating course. Can now edit the course again.
