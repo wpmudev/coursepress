@@ -1355,11 +1355,19 @@ function cp_in_array_r( $needle, $haystack, $strict = false ) {
 }
 
 function cp_suppress_errors() {
+	if( CoursePress_Capabilities::is_campus() ) {
+		return;
+	}
+	
 	ini_set( 'display_errors', 0 );
 	ini_set( 'scream.enabled', false );
 }
 
 function cp_show_errors() {
+	if( CoursePress_Capabilities::is_campus() ) {
+		return;
+	}
+	
 	ini_set( 'display_errors', 1 );
 	ini_set( 'scream.enabled', true );
 }
@@ -1711,19 +1719,25 @@ function cp_format_file_size( $bytes ) {
 	return $bytes;
 }
 
+
+/**
+ * flush_rewrite_rules() wrapper for CoursePress.
+ *
+ * Used to wrap flush_rewrite_rules() so that rewrite flushes can
+ * be prevented in given environments.
+ *
+ * E.g. If we've got CampusPress/Edublogs then this method will have
+ * an early exit.
+ *
+ * @since 1.2.1
+ */
 function cp_flush_rewrite_rules() {
-	
-	// Don't allow flush_rewrite_rules when these functions exist and return true.	
-	$restricted = array( 'is_campus', 'is_edublogs' );
-	$prevent = false;
-	
-	foreach( $restricted as $restriction ) {
-		$prevent |= function_exists( $restriction ) && call_user_func( $restriction );
+
+	if( CoursePress_Capabilities::is_campus() ) {
+		return;
 	}
-	
-	if( ! $prevent ) {
-		flush_rewrite_rules();				
-	}
+
+	flush_rewrite_rules();
 }
 
 function cp_search_array( $array, $key, $value ) {

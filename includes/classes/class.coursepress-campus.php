@@ -47,6 +47,13 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 			 */
 			add_filter( 'coursepress_offer_paid_courses', array( &$this, 'remove_paid_feature' ) );
 			
+			/**
+			 * Remove timeout from wp_remote_ request.
+			 *
+			 * @since 1.2.1
+			 */
+			add_filter( 'cp_force_download_parameters', array( &$this, 'remove_timeout_from_request' ) );
+			
 		}
 
 		/**
@@ -62,6 +69,20 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 			$offer_paid = false;
 			return $offer_paid;
 		}
+
+		/**
+		 * Remove timeout from wp_remote_ request.
+		 *
+		 * @since 1.2.1
+		 */
+		function remove_timeout_from_request( $header_params ) {
+			unset( $header_params['timeout'] )
+			return $header_params;
+		}
+
+
+
+
 
 	
 	}	

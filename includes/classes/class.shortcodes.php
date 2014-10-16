@@ -2710,7 +2710,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			cp_suppress_errors();
 			query_posts( $args );
-//cp_show_errors();
+			cp_show_errors();
 		}
 
 		function course_units_loop( $atts ) {
