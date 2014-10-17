@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.8 =
+* Fixed issue course excerpt (not showing on course single and archive pages)
+* Fixed issue with popup windows (responsive)
+
 = 1.2.1.7 =
 * Resolved issue with plugin update
 

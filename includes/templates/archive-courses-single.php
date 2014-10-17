@@ -20,7 +20,7 @@ if ( ! $course_thumbnail ) {
 
 <?php 
 	// Course summary/excerpt
-	echo do_shortcode( '[course_summary]' );
+	echo do_shortcode( '[course_summary length="50"]' );
 ?>
 
 <div class="quick-course-info <?php echo ( isset( $extended_class ) ? esc_attr( $extended_class ) : '' ); ?>">

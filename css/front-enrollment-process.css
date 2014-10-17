@@ -248,7 +248,7 @@ button.apply-button-green{
         width: 88%;
         margin-left: 0%;
         margin-right: 5%;
-        height: 100% !important;
+        height: 100%;
     }
 
     .cp_popup_overall{
@@ -257,6 +257,26 @@ button.apply-button-green{
 
     .cp_popup_close_button {
         position: fixed;
+        top: 20px;
+        right: 25px;
+    }
+}
+
+@media ( max-width: 480px ) {
+    .cp_popup_window{
+        width: 88%;
+        margin-left: 0%;
+        margin-right: 5%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .cp_popup_overall{
+        height: auto;
+    }
+
+    .cp_popup_close_button {
+        position: absolute;
         top: 20px;
         right: 25px;
     }

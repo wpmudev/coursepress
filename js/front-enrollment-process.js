@@ -113,7 +113,7 @@ jQuery( document ).ready( function( $ ) {
                                         //valid data, continue with submit
                                         validate_mark_no_error_field( 'cp_popup_password' );
                                         validate_mark_no_error_field( 'cp_popup_password_confirmation' );
-                                        
+
                                         var step = 'process_login';
                                         open_popup( step, $( '.apply-button.login' ).attr( 'data-course-id' ) );
                                     } else {
@@ -360,8 +360,18 @@ jQuery( document ).ready( function( $ ) {
 
     // Extend jQuery with $.center() function to center elements in the middle of the screen
     jQuery.fn.center = function() {
-        this.css( 'position', 'fixed' );
-        this.css( 'top', ( $( window ).height() / 2 ) - ( this.outerHeight() / 2 ) );
+        if ( $( document ).width() <= 480 ) {
+            this.css( 'position', 'absolute' );
+            $('.cp_popup_window').height($( document ).height());
+            this.css( 'top', 0 );
+            this.css('max-height', '100%');
+        } else {
+            $('.cp_popup_window').height('auto');
+            this.css( 'position', 'fixed' );
+            this.css( 'top', ( $( window ).height() / 2 ) - ( this.outerHeight() / 2 ) );
+            //this.css('max-height', '100%');
+        }
+        
         this.css( 'left', ( $( window ).width() / 2 ) - ( this.outerWidth() / 2 ) );
         return this;
     }
@@ -387,7 +397,9 @@ jQuery( document ).ready( function( $ ) {
     // When the window scrolls, make sure we keep the popup in the center.
     $( window ).resize( function() {
         $( '.cp_popup_window' ).center();
+        
         $( ".cp_popup_overall" ).height( $( document ).height() );
+        
     } );
 
     $( ".cp_popup_overall" ).height( $( document ).height() );

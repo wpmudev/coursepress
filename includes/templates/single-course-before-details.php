@@ -3,7 +3,7 @@
 echo do_shortcode( '[course_media]' );
 
 // Show course summary/excerpt
-echo do_shortcode( '[course_summary]' );
+echo do_shortcode( '[course_summary length="50"]' );
 ?>
 
 <div class="divider"></div>
