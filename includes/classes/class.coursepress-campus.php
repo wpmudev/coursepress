@@ -54,6 +54,12 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 			 */
 			add_filter( 'cp_force_download_parameters', array( &$this, 'remove_timeout_from_request' ) );
 			
+			// Shortcode Filters
+			$this->add_shortcode_filters();
+			
+			
+			
+			
 		}
 
 		/**
@@ -76,14 +82,44 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 		 * @since 1.2.1
 		 */
 		function remove_timeout_from_request( $header_params ) {
-			unset( $header_params['timeout'] )
+			unset( $header_params['timeout'] );
 			return $header_params;
 		}
 
+		/*
+		 * ======== SHORTCODE FILTERS ========
+		 */
+		
+		/**
+		 * Add filters for shortcodes.
+		 *
+		 * @since 1.2.1
+		 */
+		function add_shortcode_filters() {
 
+			add_filter( 'shortcode_atts_course_cost', array( &$this, 'remove_shortcode_cost_labels' ), 10, 3 );
+			add_filter( 'shortcode_atts_course_structure', array( &$this, 'remove_shortcode_cost_labels' ), 10, 3 );
+			
+		}
 
+		/**
+		 * Remove FREE price label from shortcodes. 
+		 *
+		 * @since 1.2.1
+		 */			
+		function remove_shortcode_cost_labels( $out, $pairs, $atts ) {
 
+			if( isset( $out['show_icon'] ) ) {
+				$out['show_icon'] = false;
+			}
+			if( isset( $out['no_cost_text'] ) ) {
+				$out['no_cost_text'] = '';
+			}
 
+			return $out;
+		}
+		
+		
 	
 	}	
 }
