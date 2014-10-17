@@ -1649,11 +1649,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			return $return_data;
 		}
 
-		function flush_rules() {
-			global $wp_rewrite;
-			$wp_rewrite->flush_rules();
-		}
-
 		function instructor_save_extra_profile_fields( $user_id ) {
 			if ( !current_user_can( 'edit_user', $user_id ) )
 				return false;
@@ -1908,7 +1903,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 				header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
 				header( 'Content-Transfer-Encoding: binary' );
 				header( 'Connection: close' );
-				echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), array( 'timeout' => 60, 'user-agent' => $this->name . ' / ' . $this->version . ';' ) );
+				
+				/**
+				 * Filter used to alter header params. E.g. removing 'timeout'.
+				 */
+				$force_download_parameters =  apply_filters( 'cp_force_download_parameters', array( 'timeout' => 60, 'user-agent' => $this->name . ' / ' . $this->version . ';' ) );
+				echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 				exit();
 			}
 		}
@@ -2653,30 +2653,30 @@ if ( !class_exists( 'CoursePress' ) ) {
 		//Load unit elements / modules / building blocks and other add-ons and plugins
 		function load_modules() {
 
-			// if( defined( 'DOING_AJAX' ) && DOING_AJAX ) { cp_write_log( 'doing ajax' ); }
+			global $mem_modules;
 
-			global $mem_modules, $front_page_modules;
+			$dir = $this->plugin_dir . 'includes/unit-modules/';
 
-			if ( is_dir( $this->plugin_dir . 'includes/unit-modules' ) ) {
-				if ( $dh = opendir( $this->plugin_dir . 'includes/unit-modules' ) ) {
-					$mem_modules = array();
-					while ( ( $module		 = readdir( $dh ) ) !== false ) {
-						if ( substr( $module, -4 ) == '.php' ) {
-							$mem_modules[] = $module;
-						}
-					}
-					closedir( $dh );
-					sort( $mem_modules );
+			$mem_modules = apply_filters( 'coursepress_mem_modules_files', array(
+				$dir . 'audio.php',
+				$dir . 'chat.php',
+				$dir . 'checkbox_input.php',
+				$dir . 'file.php',
+				$dir . 'file_input.php',
+				$dir . 'image.php',
+				$dir . 'page_break.php',
+				$dir . 'radio_input.php',
+				$dir . 'section_break.php',
+				$dir . 'text.php',
+				$dir . 'text_input.php',
+				$dir . 'video.php'
+			) );
+			sort( $mem_modules );
 
-					foreach ( $mem_modules as $mem_module )
-						include_once( $this->plugin_dir . 'includes/unit-modules/' . $mem_module );
-				}
+			foreach ( $mem_modules as $mem_module ) {
+				include_once( $this->plugin_dir . 'includes/unit-modules/' . $mem_module );
 			}
 
-			// Not sure if this is a good idea.
-			// if ( ! $this->is_marketpress_active() && ! $this->is_marketpress_lite_active() && ! $this->is_marketpress_lite_active() ) {
-			//     $this->install_and_activate_plugin( '/' . $this->dir_name . '/marketpress.php' );
-			// }
 			$this->load_certificate_template_elements();
 
 			do_action( 'coursepress_modules_loaded' );
@@ -2686,46 +2686,44 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$dir = $this->plugin_dir . 'includes/certificate-elements/';
 
-//search the dir for files
-			$certificate_template_elements = array();
-
-			if ( !is_dir( $dir ) )
-				return;
-			if ( !$dh		 = opendir( $dir ) )
-				return;
-			while ( ( $plugin	 = readdir( $dh ) ) !== false ) {
-				if ( substr( $plugin, -4 ) == '.php' )
-					$certificate_template_elements[] = $dir . '/' . $plugin;
+			$certificate_template_elements = apply_filters( 'coursepress_certificate_template_elements_files', array(
+				$dir . 'certificate_title.php',
+				$dir . 'course_name.php',
+				$dir . 'issue_date.php',
+				$dir . 'issued_by.php',
+				$dir . 'logo_element.php',
+				$dir . 'student_name.php',
+				$dir . 'website.php',
+			) );
+			sort( $certificate_template_elements );			
+			
+			//include them suppressing errors
+			foreach ( $certificate_template_elements as $file ) {
+				include( $file );				
 			}
-			closedir( $dh );
-			sort( $certificate_template_elements );
-
-//include them suppressing errors
-			foreach ( $certificate_template_elements as $file )
-				include( $file );
-
-//allow plugins from an external location to register themselves
+			
+			//allow plugins from an external location to register themselves
 			do_action( 'cp_load_certificate_template_elements' );
+			
 		}
 
 		function load_widgets() {
+			
+			$dir = $this->plugin_dir . '/includes/widgets/';
 
-			// if( defined( 'DOING_AJAX' ) && DOING_AJAX ) { cp_write_log( 'doing ajax' ); }
+			$widgets = apply_filters( 'coursepress_widget_files', array(
+				$dir . 'course-calendar.php',
+				$dir . 'course-structure.php',
+				$dir . 'featured-course.php',
+				$dir . 'latest-courses.php'
+			) );
+			
+			sort( $widgets );
 
-			if ( is_dir( $this->plugin_dir . '/includes/widgets' ) ) {
-				if ( $dh = opendir( $this->plugin_dir . '/includes/widgets' ) ) {
-					$widgets	 = array();
-					while ( ( $widget		 = readdir( $dh ) ) !== false )
-						if ( substr( $widget, -4 ) == '.php' )
-							$widgets[]	 = $widget;
-					closedir( $dh );
-					sort( $widgets );
-
-					foreach ( $widgets as $widget ) {
-						include_once( $this->plugin_dir . '/includes/widgets/' . $widget );
-					}
-				}
+			foreach ( $widgets as $file ) {
+				include_once( $file );	
 			}
+			
 		}
 
 		function add_admin_menu_network() {
