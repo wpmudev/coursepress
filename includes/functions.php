@@ -1702,6 +1702,11 @@ function cp_get_file_size( $url, $human = true ) {
 			$bytes = 0;
 		}
 	}
+	
+	if($bytes = 0){
+		$human = false;
+	}
+	
 	return $human ? cp_format_file_size( $bytes ) : $bytes;
 }
 
