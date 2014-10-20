@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.1.9=
+* Added new settings (Privacy) for controlling visibility of instructor username in the URL
+* Resolved issues with cp_get_file_size functions and fatal error if filesize cannot be retrieved
+
 = 1.2.1.8 =
 * Fixed issue course excerpt (not showing on course single and archive pages)
 * Fixed issue with popup windows (responsive)
