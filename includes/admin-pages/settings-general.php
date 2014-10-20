@@ -526,7 +526,30 @@
                 </table>
             </div>
         </div>
-
+		
+		<div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Privacy', 'cp' ); ?></span></h3>
+            <div class="inside">
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e( 'Show Instructor Username in URL', 'cp' ); ?></th>
+                            <td>
+                                <a class="help-icon" href="javascript:;"></a>
+                                <div class="tooltip">
+                                    <div class="tooltip-before"></div>
+                                    <div class="tooltip-button">&times;</div>
+                                    <div class="tooltip-content">
+										<?php _e( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'cp' ) ?>
+                                    </div>
+                                </div>
+                                <input type='checkbox' name='option_show_instructor_username' <?php echo ( ( get_option( 'show_instructor_username', 1 ) ) ? 'checked' : '' ); ?> />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Course Details Page', 'cp' ); ?></span></h3>

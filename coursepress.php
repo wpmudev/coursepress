@@ -1114,12 +1114,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function activate_marketpress_lite() {
-			
+
 			// Don't allow on campus
-			if( CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_campus() ) {
 				return;
 			}
-			
+
 			$ajax_response = array();
 
 			// Same file regardless of Lite or full version of MP
@@ -1903,11 +1903,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
 				header( 'Content-Transfer-Encoding: binary' );
 				header( 'Connection: close' );
-				
+
 				/**
 				 * Filter used to alter header params. E.g. removing 'timeout'.
 				 */
-				$force_download_parameters =  apply_filters( 'cp_force_download_parameters', array( 'timeout' => 60, 'user-agent' => $this->name . ' / ' . $this->version . ';' ) );
+				$force_download_parameters = apply_filters( 'cp_force_download_parameters', array( 'timeout' => 60, 'user-agent' => $this->name . ' / ' . $this->version . ';' ) );
 				echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 				exit();
 			}
@@ -2019,11 +2019,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			/* Show Instructor single template only if the user is an instructor of at least 1 course */
-			if ( array_key_exists( 'instructor_username', $wp->query_vars ) && 0 < Instructor::get_courses_number( cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] )->ID ) ) {
+			if ( array_key_exists( 'instructor_username', $wp->query_vars ) ) {//&& 0 < Instructor::get_courses_number( cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] )->ID ) 
 				$this->remove_pre_next_post();
 				$vars							 = array();
 				$vars[ 'instructor_username' ]	 = $wp->query_vars[ 'instructor_username' ];
-				$vars[ 'user' ]					 = cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] );
+
+				if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
+					$vars[ 'user' ] = get_user_by( 'login', $wp->query_vars[ 'instructor_username' ] ); //cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] );
+				} else {
+					global $wpdb;
+					$cached_username = wp_cache_get( $wp->query_vars[ 'instructor_username' ] );
+					if ( false === $cached_username ) {
+						$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM " . $wpdb->users . " WHERE MD5(user_login) = '%s'", $wp->query_vars[ 'instructor_username' ] ) );
+						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $username );
+					} else {
+						$username = wp_cache_get( $wp->query_vars[ 'instructor_username' ] );
+					}
+					$vars[ 'user' ] = get_user_by( 'login', $username );
+				}
 
 				$theme_file = locate_template( array( 'single-instructor.php' ) );
 
@@ -2695,20 +2708,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$dir . 'student_name.php',
 				$dir . 'website.php',
 			) );
-			sort( $certificate_template_elements );			
-			
+			sort( $certificate_template_elements );
+
 			//include them suppressing errors
 			foreach ( $certificate_template_elements as $file ) {
-				include( $file );				
+				include( $file );
 			}
-			
+
 			//allow plugins from an external location to register themselves
 			do_action( 'cp_load_certificate_template_elements' );
-			
 		}
 
 		function load_widgets() {
-			
+
 			$dir = $this->plugin_dir . '/includes/widgets/';
 
 			$widgets = apply_filters( 'coursepress_widget_files', array(
@@ -2717,13 +2729,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$dir . 'featured-course.php',
 				$dir . 'latest-courses.php'
 			) );
-			
+
 			sort( $widgets );
 
 			foreach ( $widgets as $file ) {
-				include_once( $file );	
+				include_once( $file );
 			}
-			
 		}
 
 		function add_admin_menu_network() {
@@ -2830,12 +2841,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			register_post_type( 'course', $args );
 			// Register custom taxonomy
-			/*register_taxonomy( 'course_category', 'course', apply_filters( 'cp_register_course_category', array(
-				"hierarchical"	 => true,
-				'label'			 => __( 'Course Categories', 'cp' ),
-				'singular_label' => __( 'Course Category', 'cp' ) )
-			)
-			);*/
+			/* register_taxonomy( 'course_category', 'course', apply_filters( 'cp_register_course_category', array(
+			  "hierarchical"	 => true,
+			  'label'			 => __( 'Course Categories', 'cp' ),
+			  'singular_label' => __( 'Course Category', 'cp' ) )
+			  )
+			  ); */
 
 			register_taxonomy( 'course_category', 'course', array(
 				'labels'			 => array(
@@ -4018,7 +4029,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function admin_header_actions() {
 
-			if ( is_admin() && ! CoursePress_Capabilities::is_campus() ) {
+			if ( is_admin() && !CoursePress_Capabilities::is_campus() ) {
 				if ( ( isset( $_GET[ 'cp_admin_ref' ] ) && $_GET[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) || ( isset( $_POST[ 'cp_admin_ref' ] ) && $_POST[ 'cp_admin_ref' ] == 'cp_course_creation_page' ) ) {
 					wp_enqueue_style( 'admin_coursepress_marketpress_popup', $this->plugin_url . 'css/admin_marketpress_popup.css', array(), $this->version );
 				}
@@ -4786,12 +4797,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress plugin is installed and active ( using in Course Overview ) */
 
 		function is_marketpress_active() {
-			
+
 			// Don't allow on campus
-			if( CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_campus() ) {
 				return false;
 			}
-			
+
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4810,12 +4821,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress Lite plugin is installed and active */
 
 		function is_marketpress_lite_active() {
-			
+
 			// Don't allow on campus
-			if( CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_campus() ) {
 				return;
 			}
-			
+
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4836,12 +4847,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Check if MarketPress Lite ( included in CoursePress ) plugin is installed and active */
 
 		function is_cp_marketpress_lite_active() {
-			
+
 			// Don't allow on campus
-			if( CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_campus() ) {
 				return false;
 			}
-			
+
 			$plugins = get_option( 'active_plugins' );
 
 			if ( is_multisite() ) {
@@ -4860,12 +4871,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function marketpress_check() {
-			
+
 			// Don't allow on campus
-			if( CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_campus() ) {
 				return false;
 			}
-			
+
 			if ( CoursePress::instance()->is_marketpress_lite_active() || CoursePress::instance()->is_cp_marketpress_lite_active() || CoursePress::instance()->is_marketpress_active() ) {
 				CoursePress::instance()->marketpress_active = true;
 			} else {

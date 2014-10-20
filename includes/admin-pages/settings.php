@@ -42,6 +42,12 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
         } else {
             update_option( 'redirect_students_to_dashboard', 0 );
         }
+		
+		if ( isset( $_POST['option_show_instructor_username'] ) ) {
+            update_option( 'show_instructor_username', 1 );
+        } else {
+            update_option( 'show_instructor_username', 0 );
+        }
         
 		// Conditional flush_rewrite_rules
         cp_flush_rewrite_rules();
