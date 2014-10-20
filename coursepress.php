@@ -2033,7 +2033,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM " . $wpdb->users . " WHERE MD5(user_login) = '%s'", $wp->query_vars[ 'instructor_username' ] ) );
 						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $username );
 					} else {
-						$username = wp_cache_get( $wp->query_vars[ 'instructor_username' ] );
+						$username = $cached_username;
 					}
 					$vars[ 'user' ] = get_user_by( 'login', $username );
 				}
