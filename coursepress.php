@@ -2674,7 +2674,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			sort( $mem_modules );
 
 			foreach ( $mem_modules as $mem_module ) {
-				include_once( $this->plugin_dir . 'includes/unit-modules/' . $mem_module );
+				include_once( $mem_module );
 			}
 
 			$this->load_certificate_template_elements();
