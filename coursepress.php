@@ -2028,10 +2028,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$vars[ 'user' ] = get_user_by( 'login', $wp->query_vars[ 'instructor_username' ] ); //cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] );
 				} else {
 					global $wpdb;
-					$cached_username = wp_cache_get( $wp->query_vars[ 'instructor_username' ] );
+					$cached_username = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash' );
 					if ( false === $cached_username ) {
 						$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM " . $wpdb->users . " WHERE MD5(user_login) = '%s'", $wp->query_vars[ 'instructor_username' ] ) );
-						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $username );
+						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $username, 'cp_instructor_hash' );
 					} else {
 						$username = $cached_username;
 					}
