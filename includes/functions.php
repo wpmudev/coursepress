@@ -1685,7 +1685,7 @@ function cp_minify_output( $buffer ) {
 }
 
 function cp_get_file_size( $url, $human = true ) {
-
+	$bytes = 0;
 	// If its not a path... its probably a URL
 	if ( !preg_match( '/^\//', $url ) ) {
 		$header = wp_remote_get( $url );
@@ -1695,8 +1695,12 @@ function cp_get_file_size( $url, $human = true ) {
 			$bytes = 0;
 		}
 	} else {
-		$bytes	 = filesize( $url );
-		$bytes	 = !empty( $bytes ) ? $bytes : 0;
+		try{
+			$bytes	 = filesize( $url );
+			$bytes	 = !empty( $bytes ) ? $bytes : 0;				
+		} catch(Exception $e) {
+			$bytes = 0;
+		}
 	}
 	return $human ? cp_format_file_size( $bytes ) : $bytes;
 }
