@@ -2237,7 +2237,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( !empty( $instructors ) ) {
 					foreach ( $instructors as $instructor ) {
 
-						$profile_href = trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login );
+						$profile_href = trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . ( get_option( 'show_instructor_username', 1 ) == 1 ) ? trailingslashit( $instructor->user_login ) : md5(trailingslashit( $instructor->user_login ));
 
 						switch ( $style ) {
 
@@ -2359,7 +2359,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$instructor = get_userdata( $instructor_id );
 
 			if ( $instructor_id ) {
-				return trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . trailingslashit( $instructor->user_login );
+				return trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug ) . ( get_option( 'show_instructor_username', 1 ) == 1 ) ? trailingslashit( $instructor->user_login ) : md5(trailingslashit( $instructor->user_login ));
 			}
 		}
 
