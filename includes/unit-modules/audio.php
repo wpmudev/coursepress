@@ -123,7 +123,7 @@ class audio_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Add audio files with player to the unit', 'cp');
         $this->label = __('Audio', 'cp');
         $this->save_module_data();

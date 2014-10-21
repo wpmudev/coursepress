@@ -116,15 +116,15 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
-					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
+					add_filter( 'coursepress_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
 					add_action( 'coursepress_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
 				// Do 3.8 specific hooks for the editor				
 				case 3.8:
 					// $this->editor_options['quicktags'] = true;
-					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
-					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
+					add_filter( 'coursepress_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
+					add_filter( 'coursepress_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
 					add_action( 'coursepress_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );
 					break;
 			}
@@ -267,7 +267,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			}
 			
 			// Filter $args before showing editor
-			$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);			
+			$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 
 			wp_editor( $editor_content, $editor_id, $args );
 
@@ -275,7 +275,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 
 		function cp_format_TinyMCE( $in ) {
-			$plugins = apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() );
+			$plugins = apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() );
 			$plugins = implode( ',', $plugins );
 			
 			$in[ 'menubar' ]	 = false;
@@ -297,10 +297,10 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		function prepare_coursepress_editor_39plus() {
 			//array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs', 'textcolor', 'hr' )
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ),
+				'plugins' => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
 				'toolbar' => $this->get_buttons(),
-				'theme' => apply_filters('cp_editor_theme', 'modern'),  // filter it for themers
-				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'theme' => apply_filters('coursepress_editor_theme', 'modern'),  // filter it for themers
+				'skin' => apply_filters('coursepress_editor_skin', 'wp_theme'), // filter it for themers
 				'quicktags' => $this->editor_options['quicktags'], // are we using quicktags?				
 			) );
 		}
@@ -315,10 +315,10 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 		
 		function prepare_coursepress_editor_38() {
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins' => apply_filters( 'cp_format_tinymce_plugins', $this->get_plugins() ), 
+				'plugins' => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
 				'toolbar' => $this->get_buttons(),
-				'theme' => apply_filters('cp_editor_theme', 'advanced'),  // filter it for themers
-				'skin' => apply_filters('cp_editor_skin', 'wp_theme'), // filter it for themers
+				'theme' => apply_filters('coursepress_editor_theme', 'advanced'),  // filter it for themers
+				'skin' => apply_filters('coursepress_editor_skin', 'wp_theme'), // filter it for themers
 				'quicktags' => false, // Always false for WP 3.8 dynamic editor
 			) );
 		}

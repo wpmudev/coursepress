@@ -6,7 +6,7 @@ class cp_certificate_title_element extends CP_Certificate_Template_Elements {
 	var $element_title	 = '';
 
 	function on_creation() {
-		$this->element_title = apply_filters( 'cp_certificate_title_element_title', __( 'Certificate Title', 'cp' ) );
+		$this->element_title = apply_filters( 'coursepress_certificate_title_element_title', __( 'Certificate Title', 'cp' ) );
 		
 	}
 

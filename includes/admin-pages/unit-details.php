@@ -265,7 +265,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 							//                             $desc = '';
 							//
 							// // Filter $args before showing editor
-							// $args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+							// $args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 							//
 							//                             wp_editor($editor_content, $editor_id, $args);
                             ?>

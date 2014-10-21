@@ -52,7 +52,7 @@ if( ! class_exists( 'CoursePress_Campus' ) ) {
 			 *
 			 * @since 1.2.1
 			 */
-			add_filter( 'cp_force_download_parameters', array( &$this, 'remove_timeout_from_request' ) );
+			add_filter( 'coursepress_force_download_parameters', array( &$this, 'remove_timeout_from_request' ) );
 			
 			// Shortcode Filters
 			$this->add_shortcode_filters();

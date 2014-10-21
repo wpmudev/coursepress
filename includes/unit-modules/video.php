@@ -88,7 +88,7 @@ class video_module extends Unit_Module {
 					// "editor_class" => 'cp-editor cp-unit-element',
 	                // );
 	                //
-					// $args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+					// $args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 				
 	                // wp_editor( $editor_content, $editor_id, $args );
                 ?>
@@ -124,7 +124,7 @@ class video_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         add_filter('wp_video_shortcode', array( &$this, 'cp_video_shortcode' ));
         $this->description = __('Allows adding video files and video embeds to the unit', 'cp');
         $this->label = __('Video', 'cp');

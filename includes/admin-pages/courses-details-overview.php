@@ -330,7 +330,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												$desc = '';
 
 												// Filter $args
-												$args = apply_filters( 'cp_element_editor_args', $args, $editor_name, $editor_id );
+												$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
 
 												wp_editor( $editor_content, $editor_id, $args );
 												$supported_image_extensions = implode( ", ", cp_wp_get_image_extensions() );
@@ -480,7 +480,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												$desc = '';
 
 												// Filter $args before showing editor
-												$args = apply_filters( 'cp_element_editor_args', $args, $editor_name, $editor_id );
+												$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
 
 												wp_editor( $editor_content, $editor_id, $args );
 												?>

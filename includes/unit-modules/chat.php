@@ -79,7 +79,7 @@ if ( cp_is_chat_plugin_active() ) {
                         );
 						
 						// Filter $args before showing editor
-						$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+						$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 
                         wp_editor( $editor_content, $editor_id, $args);
                         ?>
@@ -97,7 +97,7 @@ if ( cp_is_chat_plugin_active() ) {
         }
 
         function on_create() {
-            $this->order = apply_filters($this->name . '_order', $this->order);
+            $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
             $this->description = __('Add a chat box from the Wordpress Chat plugin', 'cp');
             $this->label = __('Live Chat', 'cp');
             $this->save_module_data();

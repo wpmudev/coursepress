@@ -1145,7 +1145,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						), 'objects' );
 					$searchable_types = array();
 					// Add available post types
-					$remove_mp_products_from_search = apply_filters( 'remove_mp_products_from_search', true );
+					$remove_mp_products_from_search = apply_filters( 'coursepress_remove_mp_products_from_search', true );
 					if ( $post_types ) {
 						foreach ( $post_types as $type ) {
 							if ( $remove_mp_products_from_search ) {
@@ -1988,7 +1988,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				/**
 				 * Filter used to alter header params. E.g. removing 'timeout'.
 				 */
-				$force_download_parameters = apply_filters( 'cp_force_download_parameters', array(
+				$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
 						'timeout'    => 60,
 						'user-agent' => $this->name . ' / ' . $this->version . ';'
 					) );
@@ -2972,7 +2972,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			register_post_type( 'course', $args );
 			// Register custom taxonomy
-			/* register_taxonomy( 'course_category', 'course', apply_filters( 'cp_register_course_category', array(
+			/* register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
 			  "hierarchical"	 => true,
 			  'label'			 => __( 'Course Categories', 'cp' ),
 			  'singular_label' => __( 'Course Category', 'cp' ) )
@@ -4070,8 +4070,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				'message_email_exists'            => __( 'E-mail already exists or invalid. Please choose another one.' ),
 				'message_emails_dont_match'       => __( "E-mails mismatch." ),
 				'message_passwords_dont_match'    => __( "Passwords mismatch." ),
-				'message_password_minimum_length' => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'cp_min_password_length', 6 ) ),
-				'minimum_password_lenght'         => apply_filters( 'cp_min_password_length', 6 ),
+				'message_password_minimum_length' => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
+				'minimum_password_lenght'         => apply_filters( 'coursepress_min_password_length', 6 ),
 				'message_login_error'             => __( 'Username and/or password is not valid.', 'cp' ),
 				'message_passcode_invalid'        => __( 'Passcode is not valid.', 'cp' ),
 			) );
@@ -4142,7 +4142,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		/* custom header actions */
 
 		function head_actions() {
-			$generate_cp_generator_meta = apply_filters( 'generate_cp_generator_meta', true );
+			$generate_cp_generator_meta = apply_filters( 'coursepress_generator_meta', true );
 			if ( $generate_cp_generator_meta ) {
 				?>
 				<meta name="generator" content="<?php echo $this->name . ' ' . $this->version; ?>"/>

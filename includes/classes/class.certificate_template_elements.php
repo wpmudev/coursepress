@@ -45,7 +45,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_all_set_elements() {
 			$set_elements = array();
 
-			for ( $i = 1; $i <= apply_filters( 'cp_certificate_template_row_number', 15 ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 15 ); $i++ ) {
 				$rows_elements = get_post_meta( $this->id, 'rows_' . $i, true );
 				if ( isset( $rows_elements ) && $rows_elements !== '' ) {
 					$element_class_names = explode( ',', $rows_elements );

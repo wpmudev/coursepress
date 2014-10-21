@@ -447,7 +447,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			<?php
 			
 			// Filter $args before showing editor
-			$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+			$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 			
 			return wp_editor( $editor_content, $editor_id, $args );
 		}

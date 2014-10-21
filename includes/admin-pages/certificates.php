@@ -101,7 +101,7 @@ $columns			 = $templates->get_columns();
 				foreach ( $wp_templates_search->get_results() as $template ) {
 
 					$template_obj	 = new CP_Certificate_Template( $template->ID );
-					$template_object = apply_filters( 'cp_template_object_details', $template_obj->details );
+					$template_object = apply_filters( 'coursepress_template_object_details', $template_obj->details );
 
 					$style	 = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
 					?>
@@ -123,7 +123,7 @@ $columns			 = $templates->get_columns();
 							} else {
 								?>
 								<td>
-									<?php echo apply_filters( 'cp_template_field_value', $template_object->$key ); ?>
+									<?php echo apply_filters( 'coursepress_template_field_value', $template_object->$key ); ?>
 								</td>
 								<?php
 							}
@@ -177,7 +177,7 @@ $columns			 = $templates->get_columns();
 						<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw">
 							<h4><?php _e( 'Certificate', 'cp' ); ?></h4>
 							<div class="rows">
-								<?php for ( $i = 1; $i <= apply_filters( 'cp_certificate_template_row_number', 15 ); $i++ ) { ?>
+								<?php for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 15 ); $i++ ) { ?>
 									<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
 										<?php
 										if ( isset( $post_id ) ) {
@@ -206,7 +206,7 @@ $columns			 = $templates->get_columns();
 								<?php } ?>
 
 							</div>
-							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'cp_certificate_template_row_number', 15 ); ?>" />
+							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'coursepress_certificate_template_row_number', 15 ); ?>" />
 						</div><!--wp-content-wrap-->
 					</div><!--post-body-content-->
 

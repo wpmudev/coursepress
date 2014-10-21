@@ -241,9 +241,9 @@ if ( !class_exists( 'Unit' ) ) {
 				$seconds = $total_seconds % 60;
 
 				if ( $minutes >= 1 || $seconds >= 1 ) {
-					return apply_filters( 'cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
+					return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
 				} else {
-					return apply_filters( 'cp_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
+					return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
 				}
 			}
 		}
@@ -273,9 +273,9 @@ if ( !class_exists( 'Unit' ) ) {
 			$seconds = $total_seconds % 60;
 
 			if ( $minutes >= 1 || $seconds >= 1 ) {
-				return apply_filters( 'cp_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
+				return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ($minutes . ':' . ($seconds <= 9 ? '0' . $seconds : $seconds) . ' min' ) );
 			} else {
-				return apply_filters( 'cp_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
+				return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
 			}
 		}
 

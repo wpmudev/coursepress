@@ -56,7 +56,7 @@ function cp_filter_content( $content, $none_allowed = false ) {
 
 function cp_allowed_post_tags() {
 	$allowed_tags = wp_kses_allowed_html( 'post' );
-	return apply_filters( 'cp_allowes_post_tags', $allowed_tags );
+	return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
 }
 
 function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {

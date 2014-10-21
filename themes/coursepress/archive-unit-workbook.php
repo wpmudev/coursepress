@@ -86,7 +86,7 @@ add_thickbox();
                 $units++;
             }
             ?>
-                    <div class="total_grade"><?php echo apply_filters('grade_caption', ( __('TOTAL:', 'cp'))); ?> <?php echo apply_filters('grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
+                    <div class="total_grade"><?php echo apply_filters('coursepress_grade_caption', ( __('TOTAL:', 'cp'))); ?> <?php echo apply_filters('coursepress_grade_total', ( $grades > 0 ? ( round($grades / $units, 0) ) : 0 ) . '%'); ?></div>
             <?php
         } else {
             ?>

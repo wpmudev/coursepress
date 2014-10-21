@@ -47,7 +47,7 @@
 								
                                 $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 								// Filter $args before showing editor
-								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
                                 wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>
@@ -98,7 +98,7 @@
 								
                                 $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 								// Filter $args before showing editor
-								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
                                 wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>
@@ -150,7 +150,7 @@
 								
 	                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 									// Filter $args before showing editor
-									$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+									$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 	                                wp_editor( $editor_content, $editor_id, $args);
                                     ?>
                                 </td>
@@ -202,7 +202,7 @@
 								
                                 $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 								// Filter $args before showing editor
-								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
                                 wp_editor( $editor_content, $editor_id, $args);
 								
                                 ?>
@@ -254,7 +254,7 @@
 								
                                 $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 								// Filter $args before showing editor
-								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
                                 wp_editor( $editor_content, $editor_id, $args);
 								
                                 ?>
@@ -305,7 +305,7 @@
 								
                                 $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 								// Filter $args before showing editor
-								$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);								
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
                                 wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>

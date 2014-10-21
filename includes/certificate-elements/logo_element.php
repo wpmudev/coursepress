@@ -6,7 +6,7 @@ class cp_logo_element extends CP_Certificate_Template_Elements {
 	var $element_title	 = 'Logo';
 
 	function on_creation() {
-		$this->element_title = apply_filters( 'cp_logo_element_title', __( 'Logo', 'cp' ) );
+		$this->element_title = apply_filters( 'coursepress_logo_element_title', __( 'Logo', 'cp' ) );
 	}
 
 	function admin_content() {

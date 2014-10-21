@@ -3525,7 +3525,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					_e( 'Page cannot be found', 'cp' );
 			}
 
-			$content = wpautop( ob_get_clean(), apply_filters( 'cp_pages_content_preserve_line_breaks', true ) );
+			$content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
 			return $content;
 		}
 
@@ -3626,7 +3626,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							if ( isset( $_POST[ 'student-settings-submit' ] ) ) {
 
 								check_admin_referer( 'student_signup' );
-								$min_password_length = apply_filters( 'cp_min_password_length', 6 );
+								$min_password_length = apply_filters( 'coursepress_min_password_length', 6 );
 
 								$student_data	 = array();
 								$form_errors	 = 0;

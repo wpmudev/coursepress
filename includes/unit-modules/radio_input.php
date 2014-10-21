@@ -203,7 +203,7 @@ class radio_input_module extends Unit_Module {
 						"editor_class" => 'cp-editor cp-unit-element',						
                     );
 
-					$args = apply_filters('cp_element_editor_args', $args, $editor_name, $editor_id);
+					$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 					
                     wp_editor($editor_content, $editor_id, $args);
                     ?>
@@ -297,7 +297,7 @@ class radio_input_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Multiple choice question where only one option can be selected', 'cp');
         $this->label = __('Single Choice', 'cp');
         $this->save_module_data();
