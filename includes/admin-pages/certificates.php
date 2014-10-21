@@ -275,7 +275,7 @@ $columns			 = $templates->get_columns();
 													<?php $template_elements->get_full_background_image(); ?>
 												</div>
 												<?php
-												do_action( 'cp_template_document_settings' );
+												do_action( 'coursepress_template_document_settings' );
 												?>
 											</div>
 											<div class="clear"></div>
@@ -338,7 +338,7 @@ $columns			 = $templates->get_columns();
 							$template_elements->get_document_orientation();
 							$template_elements->get_document_margins();
 							$template_elements->get_full_background_image();
-							do_action( 'cp_template_document_settings' );
+							do_action( 'coursepress_template_document_settings' );
 							?>
 							<br /><br />
 

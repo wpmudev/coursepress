@@ -31,7 +31,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			echo $this->get_font_colors();
 			echo $this->get_cell_alignment();
 			echo $this->get_element_margins();
-			do_action( 'cp_template_admin_content' );
+			do_action( 'coursepress_template_admin_content' );
 		}
 
 		function template_content() {
@@ -66,7 +66,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value="A6" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A6', true ); ?>><?php echo esc_attr_e( 'A6 (105 × 148)', 'cp' ); ?></option>
 				<option value="A7" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A7', true ); ?>><?php echo esc_attr_e( 'A7 (74 × 105)', 'cp' ); ?></option>
 				<option value="A8" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', 'cp' ); ?></option>
-				<?php do_action( 'cp_additional_template_document_size' ); ?>
+				<?php do_action( 'coursepress_additional_template_document_size' ); ?>
 			</select>
 			<?php
 		}
@@ -183,7 +183,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value='symbol' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
 				<option value='times' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
 				<option value='zapfdingbats' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
-				<?php do_action( 'cp_template_font' ); ?>
+				<?php do_action( 'coursepress_template_font' ); ?>
 			</select>
 			<?php
 		}

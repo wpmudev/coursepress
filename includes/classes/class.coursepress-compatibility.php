@@ -117,7 +117,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				// Do 3.9+ specific hooks for the editor
 				case 3.9:
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_39plus' ), 10, 3 );
-					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
+					add_action( 'coursepress_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
 				// Do 3.8 specific hooks for the editor				
@@ -125,7 +125,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 					// $this->editor_options['quicktags'] = true;
 					add_filter( 'cp_element_editor_args', array( &$this, 'cp_element_editor_args_38' ), 10, 3 );
 					add_filter( 'cp_format_tinymce_plugins', array( &$this, 'cp_format_tinymce_plugins_38' ), 10, 1 );
-					add_action( 'cp_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );					
+					add_action( 'coursepress_editor_options', array( &$this, 'prepare_coursepress_editor_38' ) );
 					break;
 			}
 

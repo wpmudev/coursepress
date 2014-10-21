@@ -149,7 +149,7 @@ if ( !class_exists( 'CP_Certificate_Templates' ) ) {
 					foreach ( $_POST as $key => $value ) {
 						if ( preg_match( "/_post_meta/i", $key ) ) {//every field name with sufix "_post_meta" will be saved as post meta automatically
 							update_post_meta( $post_id, str_replace( '_post_meta', '', $key ), $value );
-							do_action( 'cp_template_post_metas' );
+							do_action( 'coursepress_template_post_metas' );
 						}
 					}
 				}
