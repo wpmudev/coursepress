@@ -126,6 +126,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 		public static $gateway = array();
 
 		/**
+		 * Used for naming plugin screens.
+		 *
+		 * Changes depending on CoursePress Pro or CoursePress.
+		 *
+		 * @since 1.2.1
+		 * @var string
+		 */
+		public $screen_base = '';
+
+		/**
 		 * CoursePress constructor.
 		 *
 		 * @since 1.0.0
