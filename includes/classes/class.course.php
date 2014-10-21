@@ -18,13 +18,13 @@ if ( !class_exists( 'Course' ) ) {
 
 			// Attempt to load from cache or create new cache object
 			if( ! self::load( self::TYPE_COURSE, $this->id, $this->details ) ) {
-				
+
 				// Get the course
 				$this->details	 = get_post( $this->id, $this->output );
-				
+
 				// Initialize the course
 				$this->init_course( $this->details );
-				
+
 				// Cache the course object
 				self::cache( self::TYPE_COURSE, $this->id, $this->details );
 
@@ -33,12 +33,18 @@ if ( !class_exists( 'Course' ) ) {
 				// cp_write_log( 'Course[' . $this->id . ']: Loaded from cache...');
 			};
 
+			/**
+			 * Perform action after a course object is created.
+			 *
+			 * @since 1.2.1
+			 */
+			add_action( 'coursepress_course_init', $course );
 		}
 
 		function Course( $id = '', $output = 'OBJECT' ) {
 			$this->__construct( $id, $output );
 		}
-		
+
 		function init_course( &$course ) {
 			if( ! empty( $course ) ) {
 				if ( !isset( $course->post_title ) || $course->post_title == '' ) {
@@ -50,7 +56,7 @@ if ( !class_exists( 'Course' ) ) {
 
 				$course->allow_course_discussion = get_post_meta( $this->id, 'allow_course_discussion', true );
 				$course->class_size				 = get_post_meta( $this->id, 'class_size', true );
-				
+
 			}
 		}
 
@@ -158,7 +164,7 @@ if ( !class_exists( 'Course' ) ) {
 												</li>
 												<?php
 											}
-										}//page visible 
+										}//page visible
 										?>
 
 									</ul>
@@ -177,7 +183,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function is_open_ended() {
-					
+
 				}
 
 				static function get_course_featured_url( $course_id = false ) {
@@ -250,7 +256,7 @@ if ( !class_exists( 'Course' ) ) {
 						'post_type'		 => 'course',
 						'post_status'	 => 'any',
 						'posts_per_page' => 1,
-						'fields' => 'ids',						
+						'fields' => 'ids',
 					);
 
 					$post = get_posts( $args );
@@ -306,7 +312,7 @@ if ( !class_exists( 'Course' ) ) {
 						}
 
 						$post_id = wp_insert_post( $post );
-						
+
 						// Only works if the course actually has a thumbnail.
 						set_post_thumbnail( $mp_product_id, get_post_thumbnail_id( $course_id ) );
 
@@ -345,6 +351,8 @@ if ( !class_exists( 'Course' ) ) {
 
 					$course = $this->get_course();
 
+					$new_course = false;
+
 					$post_status = empty( $this->data[ 'status' ] ) ? 'publish' : $this->data[ 'status' ];
 
 					if ( $_POST[ 'course_name' ] != '' && $_POST[ 'course_name' ] != __( 'Untitled', 'cp' ) ) {
@@ -370,6 +378,7 @@ if ( !class_exists( 'Course' ) ) {
 						$post[ 'post_content' ]	 = cp_filter_content( empty( $_POST[ 'course_description' ] ) ? $course->post_content : $_POST[ 'course_description' ]  );
 						$post[ 'post_title' ]	 = cp_filter_content( (empty( $_POST[ 'course_name' ] ) ? $course->post_title : $_POST[ 'course_name' ] ), true );
 					} else {
+						$new_course = true;
 						$post[ 'post_excerpt' ] = cp_filter_content( $_POST[ 'course_excerpt' ] );
 						if ( isset( $_POST[ 'course_description' ] ) ) {
 							$post[ 'post_content' ] = cp_filter_content( $_POST[ 'course_description' ] );
@@ -382,7 +391,7 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					$post_id = wp_insert_post( $post );
-					
+
 					// Clear cached object because we updated
 					self::kill( self::TYPE_COURSE, $post_id );
 					self::kill_related( self::TYPE_COURSE, $post_id );
@@ -462,12 +471,30 @@ if ( !class_exists( 'Course' ) ) {
 									foreach ( $_POST[ 'instructor' ] as $instructor_id ) {
 										update_user_meta( $instructor_id, 'course_' . $post_id, $post_id ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
 									}
-								} // only add meta if array is sent	
+								} // only add meta if array is sent
 							}
 						}
 
 						if ( isset( $_POST[ 'meta_paid_course' ] ) ) {
 							$this->update_mp_product( $post_id );
+						}
+
+						if( $new_course ) {
+
+							/**
+							 * Perform action after course has been created.
+							 *
+							 * @since 1.2.1
+							 */
+							do_action( 'coursepress_course_created', $post_id );
+						} else {
+
+							/**
+							 * Perform action after course has been updated.
+							 *
+							 * @since 1.2.1
+							 */
+							do_action( 'coursepress_course_updated', $post_id );
 						}
 
 						return $post_id;
@@ -476,10 +503,31 @@ if ( !class_exists( 'Course' ) ) {
 
 				function delete_course( $force_delete = true ) {
 
+					$force_delete = apply_filters( 'coursepress_course_force_delete', $force_delete );
+
+					/**
+					 * Allow course deletion to be cancelled when filter returns true.
+					 *
+					 * @since 1.2.1
+					 */
+					if( apply_filters( 'coursepress_course_cancel_delete', false, $this->id ) ) {
+
+						/**
+						 * Perform actions if the deletion was cancelled.
+						 *
+						 * @since 1.2.1
+						 */
+						do_action( 'coursepress_course_delete_cancelled', $this->id );
+						return false;
+					}
+
+					// Get object before it gets destroyed
+					$course = new Course( $this->id );
+
 					// Clear cached object because we're deleting the object
 					self::kill( self::TYPE_COURSE, $this->id );
 					self::kill_related( self::TYPE_COURSE, $this->id );
-					
+
 					wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 
 					/* Delete all usermeta associated to the course */
@@ -504,6 +552,15 @@ if ( !class_exists( 'Course' ) ) {
 					//Delete course notification
 					$notification = new Notification();
 					$notification->delete_notification( true, $this->id );
+
+					/**
+					 * Perform actions after a course is deleted.
+					 *
+					 * @var $course  The course object if the ID or post_title is needed.
+					 *
+					 * @since 1.2.1
+					 */
+					do_action( 'coursepress_course_deleted', $course );
 				}
 
 				function can_show_permalink() {
@@ -530,7 +587,7 @@ if ( !class_exists( 'Course' ) ) {
 						'meta_value'	 => $course_id,
 						'meta_compare'	 => '',
 						'meta_query'	 => array(),
-						// Only include instructors, not students				
+						// Only include instructors, not students
 						'include'		 => $instructors,
 						'orderby'		 => 'display_name',
 						'order'			 => 'ASC',
@@ -572,10 +629,20 @@ if ( !class_exists( 'Course' ) ) {
 					);
 					// Update the post status
 					wp_update_post( $post );
-					
+
 					// Clear cached object because we updated the object
 					self::kill( self::TYPE_COURSE, $this->id );
 					self::kill_related( self::TYPE_COURSE, $this->id );
+
+					/**
+					 * Perform actions when course status is changed.
+					 *
+					 * var $this->id  The course id
+					 * var $post_status The new status
+					 *
+					 * @since 1.2.1
+					 */
+					do_action( 'coursepress_course_status_changed', $this->id, $post_status );
 				}
 
 				function get_units( $course_id = '', $status = 'any', $count = false ) {
@@ -586,7 +653,7 @@ if ( !class_exists( 'Course' ) ) {
 
 					// Gets cached object array.
 					$units = Unit::get_units_from_course( $course_id, $status, false );
-					
+
 					if ( $count ) {
 						return count( $units );
 					} else {
@@ -692,6 +759,22 @@ if ( !class_exists( 'Course' ) ) {
 						$course_id = $this->id;
 					}
 
+					/**
+					 * Allow course duplication to be cancelled when filter returns true.
+					 *
+					 * @since 1.2.1
+					 */
+					if( apply_filters( 'coursepress_course_cancel_duplicate', false, $course_id ) ) {
+
+						/**
+						 * Perform actions if the duplication was cancelled.
+						 *
+						 * @since 1.2.1
+						 */
+						do_action( 'coursepress_course_duplicate_cancelled', $course_id );
+						return false;
+					}
+
 					/* Duplicate course and change some data */
 
 					$new_course		 = $this->get_course();
@@ -709,7 +792,7 @@ if ( !class_exists( 'Course' ) ) {
 					/*
 					 * Duplicate course post meta
 					 */
-					
+
 					if( ! empty( $new_course_id ) ) {
 						$post_metas = get_post_meta( $old_course_id );
 						foreach ( $post_metas as $key => $meta_value ) {
@@ -717,7 +800,7 @@ if ( !class_exists( 'Course' ) ) {
 							$value = maybe_unserialize( $value );
 							update_post_meta( $new_course_id, $key, $value );
 						}
-					}					
+					}
 
 					$units = $this->get_units( $old_course_id );
 
@@ -725,7 +808,9 @@ if ( !class_exists( 'Course' ) ) {
 						$unt = new Unit( $unit->ID );
 						$unt->duplicate( $unit->ID, $new_course_id );
 					}
-					
+
+					do_action( 'coursepress_course_duplicated', $new_course_id );
+
 				}
 
 			}
