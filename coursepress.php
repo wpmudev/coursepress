@@ -5097,11 +5097,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//ob_end_clean();
 			ob_start();
 
-			include_once( $this->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php' );
-			require_once( $this->plugin_dir . 'includes/external/tcpdf/tcpdf.php' );
+			// Use CoursePress_PDF which extends TCPDF
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-pdf.php' );
 
 			// create new PDF document
-			$pdf = new TCPDF( PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
+			$pdf = new CoursePress_PDF( PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
 
 			// set document information
 			$pdf->SetCreator( $this->name );

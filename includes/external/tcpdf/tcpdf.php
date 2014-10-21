@@ -5086,49 +5086,13 @@ class TCPDF {
 	 * @since 4.0.013 (2008-07-28)
 	 */
 	protected function getFontsList() {
-
-		// Saving system resources, we wont scan the font directory.
-		$fonts = array(
-			'courier.php',
-			'courierb.php',
-			'courierbi.php',
-			'courieri.php',
-			'helvetica.php',
-			'helveticab.php',
-			'helveticabi.php',
-			'helveticai.php',
-			'pdfacourierb.php',
-			'pdfacourierbi.php',
-			'pdfacourieri.php',
-			'pdfahelvetica.php',
-			'pdfahelveticab.php',
-			'pdfahelveticabi.php',
-			'pdfahelveticai.php',
-			'pdfasymbol.php',
-			'pdfatimes.php',
-			'pdfatimesb.php',
-			'pdfatimesbi.php',
-			'pdfatimesi.php',
-			'pdfazapfdingbats.php',
-			'symbol.php',
-			'times.php',
-			'timesb.php',
-			'timesbi.php',
-			'timesi.php',
-			'zapfdingbats.php',
-		);
-
-		foreach( $fonts as $font ) {
-			array_push( $this->fontlist, strtolower( $this->_getfontpath() . $font ) );
-		}
-
-		/*$fontsdir = opendir($this->_getfontpath());
+		$fontsdir = opendir($this->_getfontpath());
 		while (($file = readdir($fontsdir)) !== false) {
 			if (substr($file, -4) == '.php') {
 				array_push($this->fontlist, strtolower(basename($file, '.php')));
 			}
 		}
-		closedir($fontsdir);*/
+		closedir($fontsdir);
 	}
 
 	/**

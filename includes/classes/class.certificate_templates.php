@@ -38,7 +38,10 @@ if ( !class_exists( 'CP_Certificate_Templates' ) ) {
 
 			// create new PDF document
 
-			$pdf = new TCPDF( $metas[ 'document_template_orientation' ], PDF_UNIT, apply_filters( 'coursepress_additional_template_document_size_output', $metas[ 'document_template_size' ] ), true, apply_filters( 'coursepress_template_document_encoding', bloginfo( 'charset' ) ), false );
+			// Use CoursePress_PDF which extends TCPDF
+			require_once( CoursePress::instance()->plugin_dir . 'includes/classes/class.coursepress-pdf.php' );
+
+			$pdf = new CoursePress_PDF( $metas[ 'document_template_orientation' ], PDF_UNIT, apply_filters( 'coursepress_additional_template_document_size_output', $metas[ 'document_template_size' ] ), true, apply_filters( 'coursepress_template_document_encoding', bloginfo( 'charset' ) ), false );
 
 			$pdf->setPrintHeader( false );
 			$pdf->setPrintFooter( false );
