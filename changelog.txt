@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.2.0=
+* Added new option in settings for PDF report font & Added new fonts
 * More consistent filters and actions for developers (more to come).
 * Improved database performance with new instructor 'Privacy' setting (may need to re-add instructors to old courses if you use the privacy option).
 

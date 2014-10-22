@@ -62,7 +62,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.1.9';
+		public $version = '1.2.2.0';
 
 		/**
 		 * Plugin friendly name.
@@ -5142,7 +5142,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 //			$pdf->setLanguageArray( $l );
 			// ---------------------------------------------------------
 			// set font
-			$pdf->SetFont( 'helvetica', '', 12 );
+			$reports_font = get_option( 'reports_font', 'helvetica' );
+			$pdf->SetFont( $reports_font, '', apply_filters('cp_report_font_size', 12) );
 			// add a page
 			$pdf->AddPage();
 			$html = '';

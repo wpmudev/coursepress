@@ -155,277 +155,277 @@
 								?>' />&nbsp;/
 								<hr />
 							</td>
-					</tr>
-					<!--<tr valign="top">
-						<th scope="row"><?php _e( 'Course New Discussion Page', 'cp' ); ?></th>
-						<td>
-					<?php
-					$option_name	 = 'coursepress_new_discussion_page';
-					$page_shortcode	 = '[cp_pages page="new_discussion"]';
-					$pages_args		 = array(
-						'selected'			 => get_option( $option_name, 0 ),
-						'echo'				 => 1,
-						'show_option_none'	 => 'Use virtual page',
-						'option_none_value'	 => 0,
-						'name'				 => 'option_' . $option_name
-					);
+						</tr>
+						<!--<tr valign="top">
+							<th scope="row"><?php _e( 'Course New Discussion Page', 'cp' ); ?></th>
+							<td>
+						<?php
+						$option_name	 = 'coursepress_new_discussion_page';
+						$page_shortcode	 = '[cp_pages page="new_discussion"]';
+						$pages_args		 = array(
+							'selected'			 => get_option( $option_name, 0 ),
+							'echo'				 => 1,
+							'show_option_none'	 => 'Use virtual page',
+							'option_none_value'	 => 0,
+							'name'				 => 'option_' . $option_name
+						);
 
-					wp_dropdown_pages( $pages_args );
-					?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+						wp_dropdown_pages( $pages_args );
+						?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+	
+								<hr />
+							</td>
+						</tr>-->
 
-							<hr />
-						</td>
-					</tr>-->
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Course Grades Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
+								?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php echo esc_attr( $this->get_grades_slug() );
+								?>' />&nbsp;/
+								<hr />
+							</td>
+						</tr>
+						<!--<tr valign="top">
+							<th scope="row"><?php _e( 'Course Grades Page', 'cp' ); ?></th>
+							<td>
+						<?php
+						$option_name	 = 'coursepress_grades_page';
+						$page_shortcode	 = '[cp_pages page="grades"]';
+						$pages_args		 = array(
+							'selected'			 => get_option( $option_name, 0 ),
+							'echo'				 => 1,
+							'show_option_none'	 => 'Use virtual page',
+							'option_none_value'	 => 0,
+							'name'				 => 'option_' . $option_name
+						);
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Course Grades Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
-							?>&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php echo esc_attr( $this->get_grades_slug() );
-							?>' />&nbsp;/
-							<hr />
-						</td>
-					</tr>
-					<!--<tr valign="top">
-						<th scope="row"><?php _e( 'Course Grades Page', 'cp' ); ?></th>
-						<td>
-					<?php
-					$option_name	 = 'coursepress_grades_page';
-					$page_shortcode	 = '[cp_pages page="grades"]';
-					$pages_args		 = array(
-						'selected'			 => get_option( $option_name, 0 ),
-						'echo'				 => 1,
-						'show_option_none'	 => 'Use virtual page',
-						'option_none_value'	 => 0,
-						'name'				 => 'option_' . $option_name
-					);
+						wp_dropdown_pages( $pages_args );
+						?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+	
+								<hr />
+							</td>
+						</tr>-->
 
-					wp_dropdown_pages( $pages_args );
-					?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Course Workbook Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
+								?>&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php echo esc_attr( $this->get_workbook_slug() );
+								?>' />&nbsp;/
+								<hr />
+							</td>
+						</tr>
+						<!--<tr valign="top">
+							<th scope="row"><?php _e( 'Course Workbook Page', 'cp' ); ?></th>
+							<td>
+						<?php
+						$option_name	 = 'coursepress_workbook_page';
+						$page_shortcode	 = '[cp_pages page="workbook"]';
+						$pages_args		 = array(
+							'selected'			 => get_option( $option_name, 0 ),
+							'echo'				 => 1,
+							'show_option_none'	 => 'Use virtual page',
+							'option_none_value'	 => 0,
+							'name'				 => 'option_' . $option_name
+						);
 
-							<hr />
-						</td>
-					</tr>-->
+						wp_dropdown_pages( $pages_args );
+						?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+	
+								<hr />
+							</td>
+						</tr>-->
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Course Workbook Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
-							?>&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php echo esc_attr( $this->get_workbook_slug() );
-							?>' />&nbsp;/
-							<hr />
-						</td>
-					</tr>
-					<!--<tr valign="top">
-						<th scope="row"><?php _e( 'Course Workbook Page', 'cp' ); ?></th>
-						<td>
-					<?php
-					$option_name	 = 'coursepress_workbook_page';
-					$page_shortcode	 = '[cp_pages page="workbook"]';
-					$pages_args		 = array(
-						'selected'			 => get_option( $option_name, 0 ),
-						'echo'				 => 1,
-						'show_option_none'	 => 'Use virtual page',
-						'option_none_value'	 => 0,
-						'name'				 => 'option_' . $option_name
-					);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Enrollment Process page', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( $this->get_enrollment_process_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Enrollment Process Page', 'cp' ); ?></th>
+							<td>
+								<?php
+								$option_name	 = 'coursepress_enrollment_process_page';
+								$page_shortcode	 = '[cp_pages page="enrollment_process"]';
+								$pages_args		 = array(
+									'selected'			 => get_option( $option_name, 0 ),
+									'echo'				 => 1,
+									'show_option_none'	 => 'Use virtual page',
+									'option_none_value'	 => 0,
+									'name'				 => 'option_' . $option_name
+								);
 
-					wp_dropdown_pages( $pages_args );
-					?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+								wp_dropdown_pages( $pages_args );
+								?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-							<hr />
-						</td>
-					</tr>-->
+								<hr />
+							</td>
+						</tr>
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Enrollment Process page', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( $this->get_enrollment_process_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Enrollment Process Page', 'cp' ); ?></th>
-						<td>
-							<?php
-							$option_name	 = 'coursepress_enrollment_process_page';
-							$page_shortcode	 = '[cp_pages page="enrollment_process"]';
-							$pages_args		 = array(
-								'selected'			 => get_option( $option_name, 0 ),
-								'echo'				 => 1,
-								'show_option_none'	 => 'Use virtual page',
-								'option_none_value'	 => 0,
-								'name'				 => 'option_' . $option_name
-							);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Login Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( $this->get_login_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Login Page', 'cp' ); ?></th>
+							<td>
+								<?php
+								$option_name	 = 'coursepress_login_page';
+								$page_shortcode	 = '[cp_pages page="student_login"]';
+								$pages_args		 = array(
+									'selected'			 => get_option( $option_name, 0 ),
+									'echo'				 => 1,
+									'show_option_none'	 => 'Use virtual page',
+									'option_none_value'	 => 0,
+									'name'				 => 'option_' . $option_name
+								);
 
-							wp_dropdown_pages( $pages_args );
-							?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+								wp_dropdown_pages( $pages_args );
+								?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-							<hr />
-						</td>
-					</tr>
+								<hr />
+							</td>
+						</tr>
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Login Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( $this->get_login_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Login Page', 'cp' ); ?></th>
-						<td>
-							<?php
-							$option_name	 = 'coursepress_login_page';
-							$page_shortcode	 = '[cp_pages page="student_login"]';
-							$pages_args		 = array(
-								'selected'			 => get_option( $option_name, 0 ),
-								'echo'				 => 1,
-								'show_option_none'	 => 'Use virtual page',
-								'option_none_value'	 => 0,
-								'name'				 => 'option_' . $option_name
-							);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Sign Up Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( $this->get_signup_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Sign Up Page', 'cp' ); ?></th>
+							<td>
+								<?php
+								$option_name	 = 'coursepress_signup_page';
+								$page_shortcode	 = '[cp_pages page="student_signup"]';
+								$pages_args		 = array(
+									'selected'			 => get_option( $option_name, 0 ),
+									'echo'				 => 1,
+									'show_option_none'	 => 'Use virtual page',
+									'option_none_value'	 => 0,
+									'name'				 => 'option_' . $option_name
+								);
 
-							wp_dropdown_pages( $pages_args );
-							?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+								wp_dropdown_pages( $pages_args );
+								?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-							<hr />
-						</td>
-					</tr>
+								<hr />
+							</td>
+						</tr>
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Sign Up Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( $this->get_signup_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Sign Up Page', 'cp' ); ?></th>
-						<td>
-							<?php
-							$option_name	 = 'coursepress_signup_page';
-							$page_shortcode	 = '[cp_pages page="student_signup"]';
-							$pages_args		 = array(
-								'selected'			 => get_option( $option_name, 0 ),
-								'echo'				 => 1,
-								'show_option_none'	 => 'Use virtual page',
-								'option_none_value'	 => 0,
-								'name'				 => 'option_' . $option_name
-							);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Student Dashboard Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_dashboard_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Student Dashboard Page', 'cp' ); ?></th>
+							<td>
+								<?php
+								$option_name	 = 'coursepress_student_dashboard_page';
+								$page_shortcode	 = '[cp_pages page="student_dashboard"]';
+								$pages_args		 = array(
+									'selected'			 => get_option( $option_name, 0 ),
+									'echo'				 => 1,
+									'show_option_none'	 => 'Use virtual page',
+									'option_none_value'	 => 0,
+									'name'				 => 'option_' . $option_name
+								);
 
-							wp_dropdown_pages( $pages_args );
-							?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+								wp_dropdown_pages( $pages_args );
+								?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-							<hr />
-						</td>
-					</tr>
+								<hr />
+							</td>
+						</tr>
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Student Dashboard Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_dashboard_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Student Dashboard Page', 'cp' ); ?></th>
-						<td>
-							<?php
-							$option_name	 = 'coursepress_student_dashboard_page';
-							$page_shortcode	 = '[cp_pages page="student_dashboard"]';
-							$pages_args		 = array(
-								'selected'			 => get_option( $option_name, 0 ),
-								'echo'				 => 1,
-								'show_option_none'	 => 'Use virtual page',
-								'option_none_value'	 => 0,
-								'name'				 => 'option_' . $option_name
-							);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Student Settings page', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_settings_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Student Settings Page', 'cp' ); ?></th>
+							<td>
+								<?php
+								$option_name	 = 'coursepress_student_settings_page';
+								$page_shortcode	 = '[cp_pages page="student_settings"]';
+								$pages_args		 = array(
+									'selected'			 => get_option( $option_name, 0 ),
+									'echo'				 => 1,
+									'show_option_none'	 => 'Use virtual page',
+									'option_none_value'	 => 0,
+									'name'				 => 'option_' . $option_name
+								);
 
-							wp_dropdown_pages( $pages_args );
-							?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+								wp_dropdown_pages( $pages_args );
+								?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-							<hr />
-						</td>
-					</tr>
+								<hr />
+							</td>
+						</tr>
 
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Student Settings page', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_settings_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Student Settings Page', 'cp' ); ?></th>
-						<td>
-							<?php
-							$option_name	 = 'coursepress_student_settings_page';
-							$page_shortcode	 = '[cp_pages page="student_settings"]';
-							$pages_args		 = array(
-								'selected'			 => get_option( $option_name, 0 ),
-								'echo'				 => 1,
-								'show_option_none'	 => 'Use virtual page',
-								'option_none_value'	 => 0,
-								'name'				 => 'option_' . $option_name
-							);
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Instructor Profile Slug', 'cp' ); ?></th>
+							<td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php echo esc_attr( $this->get_instructor_profile_slug() );
+								?>' />&nbsp;/
+							</td>
+						</tr>
+						<!--<tr valign="top">
+							<th scope="row"><?php _e( 'Instructor Profile Page', 'cp' ); ?></th>
+							<td>
+						<?php
+						$option_name	 = 'coursepress_instructor_profile_page';
+						$page_shortcode	 = '[cp_pages page="instructor_profile"]';
+						$pages_args		 = array(
+							'selected'			 => get_option( $option_name, 0 ),
+							'echo'				 => 1,
+							'show_option_none'	 => 'Use virtual page',
+							'option_none_value'	 => 0,
+							'name'				 => 'option_' . $option_name
+						);
 
-							wp_dropdown_pages( $pages_args );
-							?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
-
-							<hr />
-						</td>
-					</tr>
-
-					<tr valign="top">
-						<th scope="row"><?php _e( 'Instructor Profile Slug', 'cp' ); ?></th>
-						<td>
-							<?php
-							echo esc_html( trailingslashit( home_url() ) );
-							?>&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php echo esc_attr( $this->get_instructor_profile_slug() );
-							?>' />&nbsp;/
-						</td>
-					</tr>
-					<!--<tr valign="top">
-						<th scope="row"><?php _e( 'Instructor Profile Page', 'cp' ); ?></th>
-						<td>
-					<?php
-					$option_name	 = 'coursepress_instructor_profile_page';
-					$page_shortcode	 = '[cp_pages page="instructor_profile"]';
-					$pages_args		 = array(
-						'selected'			 => get_option( $option_name, 0 ),
-						'echo'				 => 1,
-						'show_option_none'	 => 'Use virtual page',
-						'option_none_value'	 => 0,
-						'name'				 => 'option_' . $option_name
-					);
-
-					wp_dropdown_pages( $pages_args );
-					?>
-							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
-
-						</td>
-					</tr>-->
+						wp_dropdown_pages( $pages_args );
+						?>
+								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+	
+							</td>
+						</tr>-->
 
                     </tbody>
                 </table>
@@ -526,7 +526,7 @@
                 </table>
             </div>
         </div>
-		
+
 		<div class="postbox">
             <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Privacy', 'cp' ); ?></span></h3>
             <div class="inside">
@@ -566,7 +566,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);         ?>><?php // _e( 'Thumbnail', 'cp' );         ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);          ?>><?php // _e( 'Thumbnail', 'cp' );          ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -603,7 +603,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);         ?>><?php // _e( 'Thumbnail', 'cp' );         ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);          ?>><?php // _e( 'Thumbnail', 'cp' );          ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -646,6 +646,57 @@
                             </td>
                         </tr>
 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+		<div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Reports', 'cp' ); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e( 'Select font which will be used in the PDF reports.', 'cp' ); ?></p>
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row"><?php _e( 'Font', 'cp' ); ?></th>
+                            <td>
+								<?php
+								$reports_font = get_option( 'reports_font', 'helvetica' );
+								?>
+								<select name="option_reports_font">
+									<option value='aealarabiya' <?php selected( $reports_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'tc' ); ?></option>
+									<option value='aefurat' <?php selected( $reports_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'tc' ); ?></option>
+									<option value='cid0cs' <?php selected( $reports_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'tc' ); ?></option>
+									<option value='cid0jp' <?php selected( $reports_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'tc' ); ?></option>
+									<option value='cid0kr' <?php selected( $reports_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'tc' ); ?></option>
+									<option value='courier <?php selected( $reports_font, 'courier', true ); ?>'><?php _e( 'Courier', 'tc' ); ?></option>
+									<option value='dejavusans' <?php selected( $reports_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'tc' ); ?></option>
+									<option value='dejavusanscondensed' <?php selected($reports_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'tc' ); ?></option>
+									<option value='dejavusansextralight' <?php selected($reports_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'tc' ); ?></option>
+									<option value='dejavusansmono' <?php selected( $reports_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'tc' ); ?></option>
+									<option value='dejavuserif' <?php selected( $reports_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'tc' ); ?></option>
+									<option value='dejavuserifcondensed' <?php selected($reports_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'tc' ); ?></option>
+									<option value='freemono' <?php selected( $reports_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'tc' ); ?></option>
+									<option value='freesans' <?php selected( $reports_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'tc' ); ?></option>
+									<option value='freeserif' <?php selected( $reports_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'tc' ); ?></option>
+									<option value='helvetica' <?php selected( $reports_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'tc' ); ?></option>
+									<option value='hysmyeongjostdmedium' <?php selected( $reports_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'tc' ); ?></option>
+									<option value='kozgopromedium' <?php selected( $reports_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'tc' ); ?></option>
+									<option value='kozminproregular' <?php selected( $reports_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'tc' ); ?></option>
+									<option value='msungstdlight' <?php selected( $reports_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'tc' ); ?></option>
+									<option value='pdfacourier' <?php selected( $reports_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'tc' ); ?></option>
+									<option value='pdfahelvetica' <?php selected( $reports_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'tc' ); ?></option>
+									<option value='pdfasymbol' <?php selected( $reports_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'tc' ); ?></option>
+									<option value='pdfatimes' <?php selected( $reports_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'tc' ); ?></option>
+									<option value='pdfazapfdingbats' <?php selected( $reports_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'tc' ); ?></option>
+									<option value='stsongstdlight' <?php selected( $reports_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'tc' ); ?></option>
+									<option value='symbol' <?php selected( $reports_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'tc' ); ?></option>
+									<option value='times' <?php selected( $reports_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'tc' ); ?></option>
+									<option value='zapfdingbats' <?php selected( $reports_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'tc' ); ?></option>
+									<?php do_action( 'tc_ticket_font' ); ?>
+								</select>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
