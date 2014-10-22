@@ -38,7 +38,7 @@ if ( !class_exists( 'Course' ) ) {
 			 *
 			 * @since 1.2.1
 			 */
-			do_action( 'coursepress_course_init', $course );
+			do_action( 'coursepress_course_init', $this );
 		}
 
 		function Course( $id = '', $output = 'OBJECT' ) {

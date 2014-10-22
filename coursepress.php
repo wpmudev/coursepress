@@ -281,6 +281,16 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				add_action( 'wp_ajax_remove_course_instructor', array( &$this, 'remove_course_instructor' ) );
 
 				/**
+				 * Add instructor MD5 as meta.
+				 *
+				 * Used to conceal instructor ids.
+				 *
+				 * @since 1.2.1
+				 */
+				add_action( 'coursepress_course_instructor_added', array( &$this, 'create_instructor_hash' ), 10, 2 );
+				add_action( 'coursepress_instructor_invite_confirmed', array( &$this, 'create_instructor_hash' ), 10, 2 );
+
+				/**
 				 * Update course during setup (AJAX).
 				 *
 				 * This method is executed during setup in the 'Course Overview'.
@@ -2109,19 +2119,17 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				$vars                          = array();
 				$vars[ 'instructor_username' ] = $wp->query_vars[ 'instructor_username' ];
 
-				if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
-					$vars[ 'user' ] = get_user_by( 'login', $wp->query_vars[ 'instructor_username' ] ); //cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] );
-				} else {
-					global $wpdb;
-					$cached_username = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash' );
-					if ( false === $cached_username ) {
-						$username = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM " . $wpdb->users . " WHERE MD5(user_login) = '%s'", $wp->query_vars[ 'instructor_username' ] ) );
-						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $username, 'cp_instructor_hash' );
+				$user = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash');
+				if( false === $user ) {
+					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
+						$user = Instructor::instructor_by_login( $wp->query_vars[ 'instructor_username' ] );
 					} else {
-						$username = $cached_username;
+						$user = Instructor::instructor_by_hash($wp->query_vars[ 'instructor_username' ]);
+						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $user, 'cp_instructor_hash' );
 					}
-					$vars[ 'user' ] = get_user_by( 'login', $username );
 				}
+
+				$vars[ 'user' ] = $user;
 
 				$theme_file = locate_template( array( 'single-instructor.php' ) );
 
@@ -3543,6 +3551,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$xmlResponse = new WP_Ajax_Response( $response );
 			$xmlResponse->send();
 			ob_end_flush();
+		}
+
+		// Create instructor MD5 user meta key if it doesn't exist
+		function create_instructor_hash( $course_id, $instructor_id ) {
+			Instructor::create_hash( $instructor_id );
 		}
 
 		function send_instructor_invite() {
@@ -5126,7 +5139,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//set image scale factor
 			//$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
 			//set some language-dependent strings
-			$pdf->setLanguageArray( $l );
+//			$pdf->setLanguageArray( $l );
 			// ---------------------------------------------------------
 			// set font
 			$pdf->SetFont( 'helvetica', '', 12 );

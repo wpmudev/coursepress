@@ -93,6 +93,41 @@ if ( !class_exists( 'Instructor' ) ) {
             //}
         }
 
+	    public static function instructor_by_hash( $hash ) {
+			global $wpdb;
+
+		    $sql = $wpdb->prepare( "SELECT user_id FROM wp_usermeta WHERE meta_key = %s;", $hash );
+			$user_id = $wpdb->get_var( $sql );
+
+		    if( ! empty( $user_id ) ) {
+				return( new Instructor( $user_id ) );
+		    } else {
+			    return false;
+		    }
+	    }
+
+	    public static function instructor_by_login( $login ) {
+		    $user = get_user_by( 'login', $login );
+		    if( ! empty( $user ) ) {
+			    // relying on core's caching here
+			    return( new Instructor( $user->ID ) );
+		    } else {
+			    return false;
+		    }
+	    }
+
+	    public static function create_hash( $user_id ) {
+		    $user = get_user_by( 'id', $user_id );
+		    $hash = md5( $user->user_login );
+
+		    /*
+		     * Just in case someone is actually using this hash for something,
+		     * we'll populate it with current value. Will be an empty array if
+		     * nothing exists. We're only interested in the key anyway.
+		     */
+		    update_user_meta( $user->ID, $hash, get_user_meta( $user->ID, $hash ) );
+	    }
+
     }
 
 }
