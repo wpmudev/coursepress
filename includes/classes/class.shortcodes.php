@@ -2714,9 +2714,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'p'			 => $unit_id
 			);
 
-			cp_suppress_errors();
+			ob_start();
 			query_posts( $args );
-			cp_show_errors();
+			ob_clean();
 		}
 
 		function course_units_loop( $atts ) {

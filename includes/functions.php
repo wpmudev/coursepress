@@ -1354,24 +1354,6 @@ function cp_in_array_r( $needle, $haystack, $strict = false ) {
 	return false;
 }
 
-function cp_suppress_errors() {
-	if ( CoursePress_Capabilities::is_campus() ) {
-		return;
-	}
-
-	ini_set( 'display_errors', 0 );
-	ini_set( 'scream.enabled', false );
-}
-
-function cp_show_errors() {
-	if ( CoursePress_Capabilities::is_campus() ) {
-		return;
-	}
-
-	ini_set( 'display_errors', 1 );
-	ini_set( 'scream.enabled', true );
-}
-
 function cp_replace_img_src( $original_img_tag, $new_src_url ) {
 	$doc = new DOMDocument();
 	$doc->loadHTML( $original_img_tag );

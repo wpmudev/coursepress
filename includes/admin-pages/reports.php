@@ -7,7 +7,7 @@ $s = ( isset($_GET['s']) ? $_GET['s'] : '' );
 
 /* * **************************GENERATING REPORT******************************** */
 if ( isset($_POST['units']) && isset($_POST['users']) ) {
-    //cp_suppress_errors();
+
     ob_end_clean();
     ob_start();
     $course_id = ( int ) $_POST['course_id'];
