@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.0=
+* More consistent filters and actions for developers (more to come).
+* Improved database performance with new instructor 'Privacy' setting (may need to re-add instructors to old courses if you use the privacy option).
+
 = 1.2.1.9=
 * Added new settings (Privacy) for controlling visibility of instructor username in the URL
 * Resolved issues with cp_get_file_size functions and fatal error if filesize cannot be retrieved
