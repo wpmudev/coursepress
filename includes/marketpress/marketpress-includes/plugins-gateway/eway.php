@@ -184,13 +184,13 @@ class MP_Gateway_eWay_Shared extends MP_Gateway_API {
 			$total += $shipping_price;
 			$shipping_tax = ($mp->shipping_tax_price($shipping_price) - $shipping_price);
     }
-    
+
     //tax line if tax inclusive pricing is off. It it's on it would screw up the totals
     if ( ! $mp->get_setting('tax->tax_inclusive') ) {
     	$tax_price = ($mp->tax_price(false) + $shipping_tax);
 			$total += $tax_price;
     }
-    
+				
     $params['Amount'] = number_format( round( $total, 2 ), 2, '.', '');
     
     $result = $this->api_call('https://au.ewaygateway.com/Request', $params);

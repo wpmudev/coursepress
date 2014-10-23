@@ -4,14 +4,6 @@ Author: Aaron Edwards (incsub)
 Change Log:
 ----------------------------------------------------------------------
 
-2.9.5.4
-----------------------------------------------------------------------
-- Fixed: Shipping tax not being calculated correctly when using tax-inclusive pricing
-- Fixed: Out of stock products are still showing when "Hide out of stock items" is enabled
-- Fixed: Extra title showing above the default product image in grid view
-- Fixed: Pinterest pin-it button doesn't open in new window/tab
-- Fixed: Store menu items regenerate themselves after being deleted
-
 2.9.5.3
 ----------------------------------------------------------------------
 - Fixed: Invalid measurement errors when using UPS shipping and a base country that uses the metric system http://wp.mu/a5s
