@@ -1,0 +1,174 @@
+/* Lumebox jQuery plugin
+ * Copyright Anders Zakrisson/Sogeti 2009-2010
+ * http://anders.zakrisson.se, http://www.sogeti.se
+ * This software is released under the GPL License.
+ */
+ 
+ html.lumebox, body.lumebox {
+	background-color: #000;
+ }
+ 
+ .lumebox-hidden {
+	display: none;
+}
+
+#lumebox-bg {
+    display: none;
+    position: fixed;
+    _position: absolute; /* hack for internet explorer 6*/
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 99911;
+}
+
+#lumebox-loading {
+    position: absolute;
+	left: 1em;
+	bottom: 1em;
+	background-color: #111;
+	padding: 0.5em;
+	z-index: 99913;
+	color: #aaa;
+	-webkit-box-shadow: 2px 2px 14px #000;
+	-moz-box-shadow: 1px 1px 12px #000;
+	box-shadow: 2px 2px 14px #000;
+}
+
+#lumebox-loading img {
+	position: relative;
+	top: 3px;
+}
+
+#lumebox-popup {
+    display: none;
+    position: absolute;
+    z-index: 99912;
+	margin: 20px;
+	-webkit-box-shadow: 2px 2px 14px #000;
+	-moz-box-shadow: 1px 1px 12px #000;
+	box-shadow: 2px 2px 14px #000;
+}
+
+#lumebox-popup.mobile {
+    display: none;
+    position: absolute;
+    z-index: 99912;
+	margin: 0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+#lumebox-topmenu {
+	position: absolute;
+	width: 100%;
+	height: 30px;
+	z-index: 99914;
+	padding: 5px 0 0 5px;
+}
+
+#lumebox-close {
+	position: relative;
+	top: -10px;
+	left: -10px;
+}
+
+#lumebox-counter {
+	float: right;
+	font: 2em "Century Gothic", sans-serif;
+	color: #ccc;
+}
+
+#lumebox-popup.mobile #lumebox-topmenu {
+	position: fixed;
+	_position: absolute; /* hack for internet explorer 6*/
+	top: 0px;
+	left: 0px;
+	z-index: 99914;
+	padding: 5px 0 0 5px;
+}
+
+#lumebox-popup.mobile #lumebox-close {
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+#lumebox-previous {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 50%;
+	min-height: 30px;
+	z-index: 99913;
+}
+
+#lumebox-next {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 50%;
+	min-height: 30px;
+	z-index: 99913;
+}
+
+#lumebox-content {
+    margin: 0 auto;
+    z-index: 99912;
+	color: #ccc;
+	position: relative;
+}
+
+#lumebox-content .hentry {
+    padding: 0 20px 20px 20px;
+	background-color: #fff;
+	color: #383838;
+}
+
+#lumebox-content h2{
+    margin-left: 40px;
+	padding: 10px 0 20px 0;
+}
+
+#lumebox-content p {
+    padding: 15px 0 0 0;
+    margin: 0;
+}
+
+#lumebox-content img {
+    display: block;
+	clear: both;
+	margin: 0 auto;
+}
+
+#lumebox-popup.mobile #lumebox-caption {
+	position: absolute;
+    bottom: 0px;
+	padding: 10px;
+	background-color: rgba(0,0,0,0.6);
+}
+
+#lumebox-caption {
+    padding: 10px;
+    margin: 0;
+    min-height: 20px;
+	background-color: #383838;
+}
+
+#lumebox-help {
+    padding: 10px;
+    margin: 0;
+    min-height: 20px;
+	background-color: #383838;
+}
+
+.lumebox-preLoaded {
+	display: none;	
+}

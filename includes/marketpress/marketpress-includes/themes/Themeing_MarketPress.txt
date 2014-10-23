@@ -1,0 +1,89 @@
+Themeing MarketPress
+-------------------------------------------------------------------------------
+
+There are two methods to create custom designs for MarketPress stores:
+
+Basic Styles:
+
+  Basic styles are comprised of a css file and an optional images folder that is loaded
+  and applied on store pages. To create a basic style:
+  
+  1. Create a css file in the /wp-content/marketpress-styles/ directory with your custom styles. It
+      may be easiest to copy our default.css theme and modify it.
+  2. Make sure to add the custom theme header with your theme's name at the top of the css file:
+      /*
+      MarketPress Style: CUSTOMNAME
+      */
+      Including this header will cause your custom theme to show in the dropdown on the
+      Store Settings -> Presentation page so it may be selected.
+  3. You can also optionally create a subdirectory for your css images in the /wp-content/marketpress-styles/ folder and
+      link to images within it with relative urls like "image-folder/my-image.jpg".
+      
+
+Advanced Themes:
+
+  MarketPress uses custom post types to display it's products. This means that you can use
+  the same WP theme templating system you are familiar with. We simply provide a customized
+  subset of template functions so you don't have to worry about dealing with post meta. Template
+  functions are fully documented and can be found in the /marketpress/marketpress-includes/template-functions.php file. 
+
+  
+  E.g. to create a custom product page:
+
+  1. Make a copy of the page.php template file in your theme directory and rename it mp_product.php
+
+  2. mp_product.php must use the mp_* functions instead of the_content(), see template-functions.php for a list of functions relevant to products.
+
+
+  MarketPress searches your current theme folder for template files specific to store pages. If
+  a template file does not exist it loads the theme's page template instead. Just like WP, the
+  plugin will search for templates in order of priority from top to bottom. Here are possible
+  file names for store templates in order:
+  
+  Single Product Page
+    mp_product-PRODUCTNAME.php
+    mp_product-PRODUCTID.php
+    mp_product.php
+    
+  Store Page
+    mp_store.php
+    
+  Cart/Checkout Page
+    mp_cart.php
+    
+  Order Status Page
+    mp_orderstatus.php
+    
+  Product List Page
+    mp_productlist.php
+    
+  Product Category List Page
+    mp_category-CATEGORYSLUG.php
+    mp_category-CATEGORYID.php
+    mp_category.php
+    mp_taxonomy.php
+    mp_productlist.php
+    
+  Product Tag List Page
+    mp_tag-TAGSLUG.php
+    mp_tag-TAGID.php
+    mp_tag.php
+    mp_taxonomy.php
+    mp_productlist.php
+
+  --------------------------------------------------
+  Global Listings - Will only work on main site/blog
+  --------------------------------------------------
+  Product List Page
+    mp_global_products.php
+    mp_productlist.php
+    
+  Product Category List Page
+    mp_global_category-CATEGORYSLUG.php
+    mp_global_category.php
+    mp_global_category_list.php
+    
+  Product Tag List Page
+    mp_global_tag-TAGSLUG.php
+    mp_global_tag.php
+    mp_global_tag_list.php
