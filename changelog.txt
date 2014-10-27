@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.1=
+* Fixed issues caused e-newsletter plugin to show blank page in admin
+* Updated translation files
+
 = 1.2.2.0=
 * Added new option in settings for PDF report font & Added new fonts
 * Updated MarketPress to 2.9.5.4
