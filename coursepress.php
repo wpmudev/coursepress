@@ -1229,7 +1229,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				// Thank you for signing up for Course Name Here. We hope you enjoy your experience.
 				$setting = sprintf( __( '<p>Thank you for signing up for <a href ="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp' ), get_permalink( $cookie[ 1 ] ), get_the_title( $cookie[ 1 ] ) );
 
-				setcookie( $cookie_id, array() );
+				setcookie( $cookie_id, '' );
 				add_filter( 'gettext', array( &$this, 'alter_tracking_text' ), 20, 3 );
 			}
 
