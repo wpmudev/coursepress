@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.2.2.1=
 * Fixed issues caused e-newsletter plugin to show blank page in admin
+* Fixed possible issues with MarketPress update
 * Updated translation files
 
 = 1.2.2.0=
