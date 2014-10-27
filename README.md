@@ -1,12 +1,16 @@
 # README #
 
-CoursePress has two primary development branches: coursepress/pro and coursepress/standard  
+CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
 
-#### CoursePress Pro (coursepress/pro)  
+## CoursePress Pro (coursepress/pro)  
 
 CoursePress Pro is the official premium plugin that lives on WPMU Dev and will ultimately always be merged back into **master**.
 
-#### CoursePress (coursepress/standard)  
+## CoursePress Campus (coursepress/campus)  
+
+CoursePress Campus is the branch that is integrated with CampusPress/Edublogs.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling and removes paid courses features (all code that is implemented in CoursePress Pro).  
+
+## CoursePress (coursepress/standard)  
 
 CoursePress is the free limited version that gets published to the WordPress plugin directory.
 
@@ -113,3 +117,26 @@ MarketPress is now updated for CoursePress Pro.
 
 This is where `git submodule update` fits in. It makes sure that you have the latest submodule in your branch updated to the commit ID of the submodule in your branch.  
 
+
+### Releasing
+
+## CoursePress Campus
+
+Its identical to CoursePress Pro, but be sure to remove marketpress.php, includes/marketpress/* and includes/extra/dashboard and commit the branch.  
+
+It does not get released, but is used by the CampusPress team for CampusPress integrations.
+
+## CoursePress (wp.org version)
+
+CoursePress is identical to CoursePress Pro, but the following changes need to be made:  
+
+* Copy/Merge ALL code from Pro to Standard (**dont remove readme.txt**)
+* Remove /includes/marketpress/  
+* Remove ./marketpress.php  
+* Add MarketPress Lite to /includes/wordpress-ecommerce
+* Copy MarketPress Lite's marketpress.php to ./a-marketpress.php  
+* Update paths in ./a-marketpress.php  
+* Change plugin name in ./a-marketpress.php  
+* Change plugin name in ./coursepress.php  
+* Remove WPMUDev Dashboard notifications and require statements  
+* Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php
