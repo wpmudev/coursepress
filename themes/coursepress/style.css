@@ -4,7 +4,7 @@ Theme URI: http://premium.wpmudev.org/
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Description: Specialized theme for CoursePress
-Version: 1.0b
+Version: 1.0
 License: GNU General Public License
 License URI: license.txt
 Text Domain: coursepress
@@ -599,6 +599,7 @@ h1.site-title a:hover{
     border-bottom: 1px solid #c9ced2;
     border-left: 1px solid #c9ced2;
     border-right: 1px solid #c9ced2;
+    border-top: 1px solid #c9ced2;
     display: block;
     line-height: 22px;
     padding: 10px;
@@ -622,7 +623,7 @@ h1.site-title a:hover{
 .main-navigation ul.sub-menu li{
     margin-left:0px;
     padding-top: 0px;
-    margin-top: 0px;
+    margin-top: -1px;
 }
 
 .main-navigation ul ul a:hover {
@@ -1164,19 +1165,44 @@ a.rsswidget{
     position: relative;
 }
 
+.course-featured-media iframe,  
+.course-featured-media object,  
+.course-featured-media embed,
+.course-featured-media .wp-video-shortcode,
+.course-featured-media .mejs-layer,
+.course-featured-media .mejs-container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.course-featured-media .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
+}
+
 .course-video iframe,  
 .course-video object,  
 .course-video embed,
-.course-video .mejs-container,
+.course-video .wp-video-shortcode,
 .course-video .mejs-layer,
-.course-video .wp-video-shortcode
+.course-video .mejs-container
 {
     position: absolute;
     top: 0;
     left: 0;
-    max-width: 100% !important;
-    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
 }
+
+.course-video .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
+}
+
 
 .entry-content-excerpt{
     float: right;
@@ -2138,6 +2164,33 @@ h1.notification-title{
     background: #5dd5fb;
 }
 
+/* Front video */
+
+.front-single-module .video_player{
+    margin-top: 0px;
+}
+
+.front-single-module.video_module .wp-caption {
+    width: 100% !important;
+}
+
+.front-single-module .mejs-layer,
+.front-single-module .mejs-container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.front-single-module .video_player .wp-video{
+    width: 100% !important;
+    height: inherit !important;
+}
+
+/* End front video */
+
 /* UNITS FANCY DROPDOWN SELECT */
 
 .units_dropdown_holder{
@@ -2722,6 +2775,68 @@ li.current_page_item a{
 
 }
 
+.post-type-archive-course .video_player{
+    margin-top: 0px;
+    border-bottom: 0px;
+    position: relative;
+}
+
+.post-type-archive-course .video_player iframe{
+    width: inherit;
+    height: inherit;
+}
+
+.fcp_featured_widget .video_player .wp-video{
+    max-height: 132px !important;
+}
+
+.fcp_featured_widget .video_player{
+    margin-top: 0px;
+}
+
+.type-course .course-video .video_player .wp-video{
+    height: inherit !important;
+}
+
+.post-type-archive-course .content-area .video_player .wp-video{
+    height: inherit !important;
+}
+
+.entry-content .wp-video{
+    width: 100% !important;
+}
+
+.entry-content .mejs-container, 
+.entry-content .mejs-embed, 
+.entry-content .mejs-embed body, 
+.entry-content .mejs-container 
+.entry-content .mejs-controls{
+    width: 100% !important;
+}
+
+.post-type-archive-course .content-area .course-featured-media .mejs-container{
+    height: inherit !important;
+}
+
+.post-type-archive-course .content-area .mejs-inner .mejs-mediaelement{
+    background-color: black;
+}
+
+.course-featured-media{
+    line-height: 0px;
+}
+
+.workbook-title {
+	position:relative;
+}
+.workbook-course-progress {
+	font-size: 16px;
+	float:right;
+	position:absolute;
+	bottom:5px;
+	right: 0;
+}
+
 /*
 RESPONSIVE
 */
@@ -2748,6 +2863,10 @@ RESPONSIVE
         width: 96%;
         margin-left: 2%;
         margin-right: 2%;
+    }
+
+    .course-video{
+        height: auto;
     }
 
     .post-type-archive-course section.article-content-right{

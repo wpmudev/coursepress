@@ -81,13 +81,13 @@ get_header();
                 }
             } else {
                 ?>
-                <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later."); ?></h1>
+                <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later.", "cp"); ?></h1>
                 <?php
             }
             ?>
         </ul>
         <br clear="all" />
-        <?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+        <?php cp_numeric_posts_nav('navigation-pagination'); ?>
     </main><!-- #main -->
 </div><!-- #primary -->
 <?php get_sidebar('footer'); ?>

@@ -2,22 +2,18 @@
 global $action, $page;
 wp_reset_vars( array( 'action', 'page' ) );
 
-$page = $_GET['page'];
+$page = sanitize_text_field( $_GET['page'] );
 
-$tab = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : '';
+$tab = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : '';
 if ( empty( $tab ) ) {
     if ( current_user_can( 'manage_options' ) ) {
         $tab = 'general';
-    } /*else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
-        $tab = 'groups';
-    }*/ else if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_shortcode_page_cap' ) ) {
-        $tab = 'shortcodes';
     } else {
         die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
     }
 }
 
-if ( isset( $_POST['_wpnonce'] ) ) {
+if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
     if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'update-coursepress-options' ) ) {
         foreach ( $_POST as $key => $value ) {
             if ( preg_match( "/option_/i", $key ) ) {//every field name with prefix "option_" will be saved as an option
@@ -40,13 +36,26 @@ if ( isset( $_POST['_wpnonce'] ) ) {
         } else {
             update_option( 'use_custom_login_form', 0 );
         }
+		
+		if ( isset( $_POST['redirect_students_to_dashboard'] ) ) {
+            update_option( 'redirect_students_to_dashboard', 1 );
+        } else {
+            update_option( 'redirect_students_to_dashboard', 0 );
+        }
+		
+		if ( isset( $_POST['option_show_instructor_username'] ) ) {
+            update_option( 'show_instructor_username', 1 );
+        } else {
+            update_option( 'show_instructor_username', 0 );
+        }
         
-        flush_rewrite_rules();
+		// Conditional flush_rewrite_rules
+        cp_flush_rewrite_rules();
     }
 }
 ?>
 
-<div class='wrap mp-wrap nocoursesub' id="settings-wrap">
+<div class='wrap mp-wrap nocoursesub cp-wrap' id="settings-wrap">
     <div class="icon32 icon32-posts-page" id="icon-options-general"><br></div>
     <h2><?php _e( 'Settings', 'cp' ); ?></h2>
 
@@ -69,7 +78,7 @@ if ( isset( $_POST['_wpnonce'] ) ) {
         //$menus['groups'] = __( 'Class Groups', 'cp' ); //to do in the next release
     }*/
 
-    if ( current_user_can( 'manage_options' ) || current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( 'manage_options' ) ) {
         /* $menus['payment'] = __( 'Payment Settings', 'cp' ); */
         $menus['email'] = __( 'E-mail Settings', 'cp' );
     }

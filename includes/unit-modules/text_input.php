@@ -97,7 +97,7 @@ class text_input_module extends Unit_Module {
             $grade = $unit_module->get_response_grade($response->ID);
         }
         ?>
-        <?php if ( ( isset($data->answer_length) && $data->answer_length == 'single' ) || (!isset($data->answer_length) ) ) { ?>
+        <?php if ( ( isset($data->checked_length) && $data->checked_length == 'single' ) || (!isset($data->checked_length) ) ) { ?>
             <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
                 <?php if ( $data->post_title != '' && $this->display_title_on_front($data) ) { ?>
                     <h2 class="module_title"><?php echo $data->post_title; ?></h2>
@@ -149,7 +149,7 @@ class text_input_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -160,6 +160,7 @@ class text_input_module extends Unit_Module {
             </h3>
 
             <div class="module-content">
+                <input type="hidden" name="<?php echo $this->name; ?>_checked_index[]" class='checked_index' value="0" />
                 <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
                 <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
                 <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
@@ -188,22 +189,28 @@ class text_input_module extends Unit_Module {
 
             <div class="editor_in_place">
                 <?php
+				$editor_name = $this->name . "_content[]";
+				$editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+				$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+				
                 $args = array(
-                    "textarea_name" => $this->name . "_content[]",
+                    "textarea_name" => $editor_name,
                     "textarea_rows" => 5,
-                    "quicktags" => false,
-                    "teeny" => false
+                    "quicktags" => true,
+                    "teeny" => false,
+					"editor_class" => 'cp-editor cp-unit-element',					
                 );
 
-                $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+				$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+				
+                wp_editor( $editor_content, $editor_id, $args );
                 ?>
             </div>
 
             <div class="answer_length">  
                 <label class="bold-label"><?php _e('Answer Length', 'cp'); ?></label>
-                <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="single" <?php ?> <?php echo ( isset($data->answer_length) && $data->answer_length == 'single' ? 'checked' : (!isset($data->answer_length) ) ? 'checked' : '' ) ?> /> <?php _e('Single Line', 'cp'); ?><br /><br />
-                <input type="radio" name="<?php echo $this->name; ?>_answer_length[]" value="multi" <?php echo ( isset($data->answer_length) && $data->answer_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e('Multiple Lines', 'cp'); ?>
+                <input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value="single" <?php ?> <?php echo ( isset($data->checked_length) && $data->checked_length == 'single' ? 'checked' : (!isset($data->checked_length) ) ? 'checked' : '' ) ?> /> <?php _e('Single Line', 'cp'); ?><br /><br />
+                <input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset($data->module_order) ? $data->module_order : 999 ) . '][]'; ?>" value="multi" <?php echo ( isset($data->checked_length) && $data->checked_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e('Multiple Lines', 'cp'); ?>
             </div>
 
             <?php echo $this->placeholder_element($data); ?>
@@ -217,8 +224,9 @@ class text_input_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Allow students to enter a single line of text', 'cp');
+        $this->label = __('Answer Field', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -247,6 +255,7 @@ class text_input_module extends Unit_Module {
                             $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
                             $data->title = $_POST[$this->name . '_title'][$key];
                             $data->content = $_POST[$this->name . '_content'][$key];
+                            $data->metas['checked_length'] = $_POST[$this->name . '_checked_index'][$key];
                             $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
                             $data->metas['placeholder_text'] = $_POST[$this->name . '_placeholder_text'][$key];
                             $data->metas['answer_length'] = $_POST[$this->name . '_answer_length'][$key];
@@ -321,5 +330,5 @@ class text_input_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_input_module', 'text_input_module', 'input');
+cp_register_module('text_input_module', 'text_input_module', 'input');
 ?>

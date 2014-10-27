@@ -992,8 +992,9 @@ div.course-liquid-left {
     clear: left;
     width: 100%;
     margin-right: -325px;
-    min-width: 320px;
+    min-width: 200px;
 }
+
 div.course-liquid-right {
     float: right;
     clear: right;
@@ -1356,6 +1357,10 @@ div.levelinformation {
     padding-bottom:5px;    
 }
 
+.answer_length{
+    margin-top:15px; 
+}
+
 .answer_length label{
     margin-top:10px;    
     padding-bottom:5px;    
@@ -1695,6 +1700,14 @@ a .remove-btn:hover{
     font-weight: bold;
 }
 
+.module-holder-text_module .module-content .show_title_on_front,
+.module-holder-image_module .module-content .show_title_on_front,
+.module-holder-chat_module .module-content .show_title_on_front,
+.module-holder-video_module .module-content .show_title_on_front,
+.module-holder-audio_module .module-content .show_title_on_front,
+.module-holder-file_module .module-content .show_title_on_front{
+    width: 100%;
+}
 
 .mandatory_answer, .group-check label.mandatory_answer{
     width: 20%;
@@ -1846,6 +1859,10 @@ label.bold-label{
 .course-section.step .course-section-title h3 {
     line-height: 48px;
     font-weight: normal;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 20px;
 }
 
 .course-section.step.active .course-section-title {
@@ -2003,11 +2020,12 @@ label.bold-label{
 
 .course-section div.wide.narrow .instructor-invite input[type="text"],
 .course-section div.wide.narrow .instructor-invite input[type="email"] {
-    width: 280px;
+    max-width: 280px;
     margin-bottom: 10px;
     display: block;
     float: left;
     clear: right;
+    
 }
 
 .course-section div.wide.narrow .instructors-info {

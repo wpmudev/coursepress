@@ -39,7 +39,7 @@ class text_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -70,15 +70,22 @@ class text_module extends Unit_Module {
 
                 <div class="editor_in_place">
                     <?php
-                    $args = array(
-                        "textarea_name" => $this->name . "_content[]",
-                        "textarea_rows" => 5,
-                        "quicktags" => false,
-                        "teeny" => false
-                    );
-
+					
+					$editor_name = $this->name . "_content[]";
                     $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                    wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+					$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+					
+                    $args = array(
+                        "textarea_name" => $editor_name,
+                        "textarea_rows" => 5,
+                        "quicktags" => true,
+                        "teeny" => false,
+						"editor_class" => 'cp-editor cp-unit-element',						
+                    );
+					
+					$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+					
+                    wp_editor( $editor_content, $editor_id, $args);
                     ?>
 
 
@@ -94,8 +101,9 @@ class text_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Add text block to the unit.', 'cp');
+        $this->label = __('Text', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -142,5 +150,5 @@ class text_module extends Unit_Module {
 
 }
 
-coursepress_register_module('text_module', 'text_module', 'output');
+cp_register_module('text_module', 'text_module', 'output');
 ?>

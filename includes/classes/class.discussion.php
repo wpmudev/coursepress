@@ -35,7 +35,7 @@ if ( !class_exists('Discussion') ) {
 
         function get_unit_name() {
             if ( !isset($this->details->unit_id) || $this->details->unit_id == '' ) {
-                return __('General', 'coursepress');
+                return __('General', 'cp');
             } else {
                 $unit_obj = new Unit($this->details->unit_id);
                 $unit = $unit_obj->get_unit();
@@ -70,9 +70,9 @@ if ( !class_exists('Discussion') ) {
 
             $post = array(
                 'post_author' => $user_id,
-                'post_content' => ( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
+                'post_content' => cp_filter_content( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
                 'post_status' => $post_status,
-                'post_title' => ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ),
+                'post_title' => cp_filter_content( ($discussion_title == '' ? $_POST['discussion_name'] : $discussion_title), true ),
                 'post_type' => 'discussions',
             );
 
@@ -94,7 +94,7 @@ if ( !class_exists('Discussion') ) {
 
                 foreach ( $_POST as $key => $value ) {
                     if ( preg_match("/meta_/i", $key) ) {//every field name with prefix "meta_" will be saved as post meta automatically
-                        update_post_meta($post_id, str_replace('meta_', '', $key), $value);
+                        update_post_meta($post_id, str_replace('meta_', '', $key), cp_filter_content($value));
                     }
                 }
             }

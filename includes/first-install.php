@@ -93,10 +93,10 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
     if ( $_courses_count == 0 ) {
         $new_course = array(
             'post_author' => $course_author,
-            'post_excerpt' => $course_excerpt,
-            'post_content' => $course_content,
+            'post_excerpt' => cp_filter_content($course_excerpt),
+            'post_content' => cp_filter_content($course_content),
             'post_status' => $course_status,
-            'post_title' => $course_title,
+            'post_title' => cp_filter_content($course_title, true),
             'post_type' => 'course',
         );
 
@@ -107,28 +107,28 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             //update_user_meta( $course_author, 'course_' . $course_id, $course_id ); //only could be a user with "Intructor" role so admin can't be assigned
 
             //Set hero video
-            update_post_meta( $course_id, 'course_video_url', $course_hero_video_url );
+            update_post_meta( $course_id, 'course_video_url', cp_filter_content($course_hero_video_url, true) );
 
             //Set course class size
-            update_post_meta( $course_id, 'class_size', $course_class_size );
+            update_post_meta( $course_id, 'class_size', cp_filter_content($course_class_size) );
 
             //Set who can enroll to the course
-            update_post_meta( $course_id, 'enroll_type', $course_who_can_enroll );
+            update_post_meta( $course_id, 'enroll_type', cp_filter_content($course_who_can_enroll, true) );
 
             //Set course language
-            update_post_meta( $course_id, 'course_language', $course_language );
+            update_post_meta( $course_id, 'course_language', cp_filter_content($course_language, true) );
 
             //Course is open-ended? Start date, but no end date.
-            update_post_meta( $course_id, 'open_ended_course', $course_open_ended );
+            update_post_meta( $course_id, 'open_ended_course', cp_filter_content($course_open_ended) );
 			
 			//Students can enroll anytime?
-			update_post_meta( $course_id, 'open_ended_enrollment', $course_open_ended_enrollment );
+			update_post_meta( $course_id, 'open_ended_enrollment', cp_filter_content($course_open_ended_enrollment) );
 
             //Allow course discussion?
-            update_post_meta( $course_id, 'allow_course_discussion', $course_allow_discussion );
+            update_post_meta( $course_id, 'allow_course_discussion', cp_filter_content($course_allow_discussion) );
 
             //Show grade page?
-            update_post_meta( $course_id, 'allow_course_grades_page', $course_show_grade_page );
+            update_post_meta( $course_id, 'allow_course_grades_page', cp_filter_content($course_show_grade_page) );
 
             /*
              *
@@ -142,9 +142,9 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
             $new_unit = array(
                 'post_author' => $course_author,
-                'post_content' => $unit_content,
+                'post_content' => cp_filter_content($unit_content),
                 'post_status' => $unit_status, //$post_status
-                'post_title' => $unit_title,
+                'post_title' => cp_filter_content($unit_title, true),
                 'post_type' => 'unit',
             );
 
@@ -179,9 +179,9 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
             $new_unit = array(
                 'post_author' => $course_author,
-                'post_content' => $unit_content,
+                'post_content' => cp_filter_content($unit_content),
                 'post_status' => $unit_status, //$post_status
-                'post_title' => $unit_title,
+                'post_title' => cp_filter_content($unit_title, true),
                 'post_type' => 'unit',
             );
 
@@ -216,9 +216,9 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
 
             $new_unit = array(
                 'post_author' => $course_author,
-                'post_content' => $unit_content,
+                'post_content' => cp_filter_content($unit_content),
                 'post_status' => $unit_status, //$post_status
-                'post_title' => $unit_title,
+                'post_title' => cp_filter_content($unit_title, true),
                 'post_type' => 'unit',
             );
 

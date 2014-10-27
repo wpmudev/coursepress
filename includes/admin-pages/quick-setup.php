@@ -1,4 +1,4 @@
-<div class="wrap about-wrap">
+<div class="wrap about-wrap cp-wrap">
 
     <h1><?php _e('Welcome to', 'cp'); ?> <?php echo $this->name; ?></h1>
 
@@ -8,7 +8,7 @@
         ?>
         <br />
         <?php
-        _e('It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.');
+        _e('It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.', 'cp');
         ?>
         <br />
         <?php
@@ -19,7 +19,7 @@
         printf(__('%s has also installed - but not activated - MarketPress Lite.', 'cp'), $this->name);
         ?>
         <br />
-        <?php _e('For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.'); ?>
+        <?php _e('For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.', 'cp'); ?>
     </div>
 
     <h1><?php _e('Let’s Get Started', 'cp'); ?></h1>
@@ -29,10 +29,10 @@
 
         <div class="about-text">
             <ul>
-                <li><?php _e('Add course title and description'); ?></li>
-                <li><?php _e('Assign course instructor'); ?></li>
-                <li><?php _e('Configure attendance and access settings'); ?></li>
-                <li><?php _e('Set up payment gateways for paid courses'); ?></li>
+                <li><?php _e('Add course title and description', 'cp'); ?></li>
+                <li><?php _e('Assign course instructor', 'cp'); ?></li>
+                <li><?php _e('Configure attendance and access settings', 'cp'); ?></li>
+                <li><?php _e('Set up payment gateways for paid courses', 'cp'); ?></li>
             </ul>
 
         </div>

@@ -1,7 +1,8 @@
 <?php
 
 if ( !defined( 'ABSPATH' ) )
-    exit; // Exit if accessed directly
+    exit; // Exit if accessed directlyinclude 'class.discussionsearch.php';
+    
 
 if ( !class_exists( 'Discussion_Search' ) ) {
 
@@ -37,10 +38,11 @@ if ( !class_exists( 'Discussion_Search' ) ) {
         }
 
         function get_results( $count = false ) {
-            global $wpdb;
             $offset = ($this->page_num - 1 ) * $this->discussion_per_page;
             if ( $this->search_term !== '' ) {
-                $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = %s AND (post_title LIKE %s OR post_content LIKE %s) ORDER BY post_date DESC LIMIT %d OFFSET %d", $this->post_type, '%' . $this->search_term . '%', '%' . $this->search_term . '%', $this->discussion_per_page, $offset), OBJECT);
+				$search_args = $this->args;
+				$search_args['s'] = $this->search_term;
+                $results = get_posts( $search_args );
                 if ( $count ) {
                     return count($results);
                 } else {
@@ -67,8 +69,10 @@ if ( !class_exists( 'Discussion_Search' ) ) {
             $pagination->Items( $this->get_count_of_all_discussions() );
             $pagination->limit( $this->discussion_per_page );
             $pagination->parameterName = 'page_num';
+            $pagination->nextT = __('Next', 'cp');
+            $pagination->prevT = __('Previous', 'cp');
             if ( $this->search_term != '' ) {
-                $pagination->target( "admin.php?page=discussion&s=".$this->search_term );
+                $pagination->target( esc_url("admin.php?page=discussion&s=".$this->search_term) );
             } else {
                 $pagination->target( "admin.php?page=discussion" );
             }

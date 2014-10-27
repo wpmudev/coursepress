@@ -1,5 +1,15 @@
 /* Left side navifation ( Admin Menu ) is collapsed */
-@media only screen and ( max-width: 900px ) {
+@media only screen and ( max-width: 1180px ) {
+    .instructors .manage-column.column-courses,
+    .instructors .column-courses{
+        display: none;
+    }
+}
+
+@media only screen and ( max-width: 1000px ) {
+    .instructors .column-registration-date{
+        display: none;
+    }
 }
 
 /* Menu bar goes responsive */

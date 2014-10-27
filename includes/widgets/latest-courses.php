@@ -35,8 +35,14 @@ class CP_Latest_Courses extends WP_Widget {
 
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
-        $instance['title'] = $new_instance['title'];
-        $instance['button_title'] = $new_instance['button_title'];
+		// Admin on single sites, Super admin on network
+		if ( current_user_can( 'unfiltered_html' ) ) {
+	        $instance['title'] = $new_instance['title'];
+	        $instance['button_title'] = $new_instance['button_title'];
+		} else {
+	        $instance['title'] = strip_tags( $new_instance['title'] );
+	        $instance['button_title'] = strip_tags( $new_instance['button_title'] );
+		}
         $instance['limit'] = $new_instance['limit'];
         return $instance;
     }
@@ -60,7 +66,7 @@ class CP_Latest_Courses extends WP_Widget {
         ?>
 
         <div class="cp_featured_widget_course_link">
-            <a href="<?php echo trailingslashit(site_url() . '/' . $coursepress->get_course_slug()); ?>"><?php echo $instance['button_title']; ?></a>
+            <a href="<?php echo esc_url( trailingslashit(home_url() . '/' . $coursepress->get_course_slug()) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></a>
         </div>
 
         <?php

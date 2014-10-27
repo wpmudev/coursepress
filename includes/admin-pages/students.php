@@ -66,7 +66,7 @@ if ( isset($_GET['action']) && ( $_GET['action'] == 'edit' || $_GET['action'] ==
 // Query the users
     $wp_user_search = new Student_Search($usersearch, $page_num);
     ?>
-    <div class="wrap nosubsub students">
+    <div class="wrap nosubsub students cp-wrap">
         <div class="icon32" id="icon-users"><br></div>
         <h2><?php _e('Students', 'cp'); ?><?php if ( current_user_can('manage_options') ) { ?><a class="add-new-h2" href="user-new.php"><?php _e('Add New', 'cp'); ?></a><?php } ?><?php if ( current_user_can('coursepress_add_new_students_cap') && !current_user_can('manage_options') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=students&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
@@ -119,7 +119,7 @@ if ( isset($_GET['action']) && ( $_GET['action'] == 'edit' || $_GET['action'] ==
 
                 <?php
                 $columns = array(
-                    "ID" => __('Student ID', 'cp'),
+                    "ID" => __('ID', 'cp'),
                     "username" => __('Username', 'cp'),
                     "user_fullname" => __('Full Name', 'cp'),
                     "user_firstname" => __('First Name', 'cp'),

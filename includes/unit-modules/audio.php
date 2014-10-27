@@ -62,7 +62,7 @@ class audio_module extends Unit_Module {
 
         <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+            <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                 <span class="h3-label">
                     <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -90,9 +90,9 @@ class audio_module extends Unit_Module {
                 <?php echo $this->show_title_on_front_element($data); ?>
 
                 <div class="audio_url_holder">
-                    <label><?php _e('Put a URL or Browse for an audio file. Supported audio extensions ( ' . $supported_audio_extensions . ' )', 'cp'); ?>
+                    <label><?php echo sprintf(__('Put a URL or Browse for an audio file. Supported audio extensions ( %s )', 'cp'), $supported_audio_extensions); ?>
                         <input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr(( isset($data->audio_url) ? $data->audio_url : '')); ?>" />
-                        <input class="audio_url_button" type="button" value="<?php _e('Browse', 'ub'); ?>" />
+                        <input class="audio_url_button" type="button" value="<?php _e('Browse', 'cp'); ?>" />
                         <div class="invalid_extension_message"><?php echo sprintf(__('Extension of the file is not valid. Please use one of the following: %s', 'cp'), $supported_audio_extensions); ?></div>
                     </label>
                 </div>
@@ -123,8 +123,9 @@ class audio_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Add audio files with player to the unit', 'cp');
+        $this->label = __('Audio', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -182,5 +183,5 @@ class audio_module extends Unit_Module {
 
 }
 
-coursepress_register_module('audio_module', 'audio_module', 'output');
+cp_register_module('audio_module', 'audio_module', 'output');
 ?>

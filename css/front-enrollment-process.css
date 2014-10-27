@@ -34,12 +34,13 @@
 
 .cp_popup_button_container {
     text-align: right;
+	position:relative;
 }
 
 .cp_popup_window button.apply-button.enroll-success {
     clear: both;
     float: none;
-    margin: 0;
+    margin: 20px auto 0 auto;
     position: relative;
     top: 25px;
 }
@@ -71,7 +72,7 @@ a.cp_login_step{
 }
 
 .cp_popup_success_message {
-    margin-top: 50px;
+    margin-top: 25px;
 }
 
 label.cp_popup_col_2.second-child{
@@ -99,6 +100,7 @@ label.cp_popup_col_2.second-child{
 
 .cp_popup_window label{
     margin-bottom: 20px;
+    display: block;
 }
 
 .cp_popup_loading{
@@ -161,7 +163,6 @@ label.cp_popup_col_2.second-child{
 }
 
 .cp_error_field{
-    //border-color: #d0021b !important;
     border: none !important;
     border: 1px solid #d0021b !important;
 }
@@ -220,12 +221,34 @@ button.apply-button-green{
     box-shadow: none;
 }
 
+
+.cp_popup_success_message {
+	margin: 0 50px;
+}
+.cp_popup_success_message,
+.cp_popup_success_message p {
+	font-size: 16px;
+}
+
+.cp_popup_success_message .congratulations-image,
+.cp_popup_congratulations_title { 
+	text-align: center;
+}
+.cp_popup_success_message .congratulations-image img {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.cp_popup_success_message .congratulations-image {
+	margin: 25px auto;
+}
+
 @media ( max-width: 520px ) {
     .cp_popup_window{
         width: 88%;
         margin-left: 0%;
         margin-right: 5%;
-        height: 100% !important;
+        height: 100%;
     }
 
     .cp_popup_overall{
@@ -234,6 +257,26 @@ button.apply-button-green{
 
     .cp_popup_close_button {
         position: fixed;
+        top: 20px;
+        right: 25px;
+    }
+}
+
+@media ( max-width: 480px ) {
+    .cp_popup_window{
+        width: 88%;
+        margin-left: 0%;
+        margin-right: 5%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .cp_popup_overall{
+        height: auto;
+    }
+
+    .cp_popup_close_button {
+        position: absolute;
         top: 20px;
         right: 25px;
     }

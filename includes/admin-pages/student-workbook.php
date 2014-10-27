@@ -16,7 +16,7 @@ if ( isset( $_POST['course_id'] ) ) {
     }
 }
 ?>
-<div class="wrap nocoursesub">
+<div class="wrap nocoursesub student-workbook cp-wrap">
     <a href="<?php echo admin_url( 'admin.php?page=students' );?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
     <h2><?php _e( 'Student Workbook', 'cp' ); ?></h2>
 
@@ -58,7 +58,7 @@ if ( isset( $_POST['course_id'] ) ) {
                             </div>
                             <div>
                                 <span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
-                                <span class="info"><?php echo $student->get_courses_number(); ?></span>
+                                <span class="info"><?php echo Student::get_courses_number( $student->ID ); ?></span>
                             </div>
                             <div>
                                 <span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
@@ -308,13 +308,13 @@ if ( isset( $_POST['course_id'] ) ) {
                                                                                     if ( isset( $grade_data ) ) {
                                                                                         ?>
                                                                                         <a class="response_grade" alt="<?php
-                                                                                        _e( 'Grade by ' );
+                                                                                        _e( 'Grade by ', 'cp' );
                                                                                         echo $instructor_name->display_name;
-                                                                                        _e( ' on ' . $grade_time );
+                                                                                        echo sprintf(__(' on %s', 'cp'), $grade_time);
                                                                                         ?>" title="<?php
-                                                                                           _e( 'Grade by ' );
+                                                                                           _e( 'Grade by ', 'cp' );
                                                                                            echo $instructor_name->display_name;
-                                                                                           _e( ' on ' . $grade_time );
+                                                                                           echo sprintf(__(' on %s', 'cp'), $grade_time);
                                                                                            ?>"><?php echo $grade; ?>%</a>
                                                                                            <?php
                                                                                        } else {

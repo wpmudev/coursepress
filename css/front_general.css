@@ -571,6 +571,7 @@ h1.notification-title{
     text-align: right;
     float: right;
     padding-top: 7px;
+	font-weight:normal;
 }
 
 .module_title h2 span{
@@ -1273,4 +1274,42 @@ h1.title.completed-courses-title {
 	background-size: 16px 16px;
 	background-position: right center;
 	background-repeat: no-repeat;
+}
+
+/* Front video */
+
+.front-single-module .video_player .wp-video{
+    max-width: 100%;
+    height: inherit;
+}
+
+.front-single-module .video_player{
+    margin-top: 0px;
+}
+
+.front-single-module .mejs-layer,
+.front-single-module .mejs-container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.front-single-module .video_player .wp-video{
+    max-width: 100%;
+    min-height: 350px;
+}
+
+/* End front video */
+.workbook-title {
+	position: relative;
+}
+.workbook-course-progress {
+	font-size: 14px;
+	font-weight: normal;
+	position:absolute;
+	bottom: 2px;
+	right:0;
 }

@@ -52,6 +52,10 @@ jQuery(document).ready(function($) {
             var vl = jQuery(this).parent().find('.radio_answer').val();
             jQuery(this).closest(".module-content").find('.checked_index').val(vl);
         });
+        
+        jQuery("input[name*='text_input_module_answer_length']:checked").each(function() {
+            jQuery(this).closest(".module-content").find('.checked_index').val(jQuery(this).val());
+        });
 
         jQuery("input[name*='audio_module_loop']").each(function(i, obj) {
             jQuery(this).attr("name", "audio_module_loop[" + jQuery(this).closest(".module-content").find('.module_order').val() + ']');
@@ -229,18 +233,44 @@ jQuery(document).ready(function($)
     jQuery('.video_url_button').live('click', function()
     {
         var target_url_field = jQuery(this).prevAll(".video_url:first");
+		var target_id_field = jQuery(this).prevAll(".attachment_id:first");
+		var caption_field = jQuery(this).parents('.module-content').find('.caption-source .element_title_description');
+
+	    wp.media.string.props = function(props, attachment)
+	    {
+
+	        jQuery(target_url_field).val(props.url);
+
+			if (attachment !== undefined){
+				            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+				                $(target_url_field).removeClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').hide();
+				            } else {//extension is not allowed
+				                $(target_url_field).addClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').show();
+				            }
+			} else {
+				jQuery(target_id_field).val(0);
+			}
+
+			return props;
+	    };
 
         wp.media.editor.send.attachment = function(props, attachment)
         {
-            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
-                $(target_url_field).removeClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').hide();
-            } else {//extension is not allowed
-                $(target_url_field).addClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').show();
-            }
-            jQuery(target_url_field).val(attachment.url);
-			jQuery(target_url_field).parents('.module-holder-title').find('.media-caption-description').html( '"' + attachment.caption + '"' );
+			if (attachment !== undefined){
+	            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+	                $(target_url_field).removeClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').hide();
+	            } else {//extension is not allowed
+	                $(target_url_field).addClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').show();
+	            }
+
+	            jQuery(target_url_field).val(attachment.url);
+				jQuery(target_id_field).val(attachment.id);
+				jQuery(target_url_field).parents('.module-holder-title').find('.media-caption-description').html( '"' + attachment.caption + '"' );
+			}
         };
 
         wp.media.editor.open(this);
@@ -301,20 +331,49 @@ jQuery(document).ready(function()
     {
 
         var target_url_field = jQuery(this).prevAll(".image_url:first");
+		var target_id_field = jQuery(this).prevAll(".attachment_id:first");
 		var caption_field = jQuery(this).parents('.module-content').find('.caption-source .element_title_description');
+
+        wp.media.string.props = function(props, attachment)
+        {
+
+            jQuery(target_url_field).val(props.url);
+
+
+			if (attachment !== undefined){
+				            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+				                $(target_url_field).removeClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').hide();
+				            } else {//extension is not allowed
+				                $(target_url_field).addClass('invalid_extension_field');
+				                $(target_url_field).parent().find('.invalid_extension_message').show();
+				            }
+			} else {
+				jQuery(target_id_field).val(0);
+			}
+
+			return props;
+        };
+		
         wp.media.editor.send.attachment = function(props, attachment)
         {
-			console.log( attachment );
-            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
-                $(target_url_field).removeClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').hide();
-            } else {//extension is not allowed
-                $(target_url_field).addClass('invalid_extension_field');
-                $(target_url_field).parent().find('.invalid_extension_message').show();
-            }
-            jQuery(target_url_field).val(attachment.url);
-			jQuery(caption_field).html( '"' + attachment.caption + '"' );
+
+			if (attachment !== undefined){
+				// console.log( attachment );
+	            if (cp_is_extension_allowed(attachment.url, target_url_field)) {//extension is allowed
+	                $(target_url_field).removeClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').hide();
+	            } else {//extension is not allowed
+	                $(target_url_field).addClass('invalid_extension_field');
+	                $(target_url_field).parent().find('.invalid_extension_message').show();
+	            }
+	            jQuery(target_url_field).val(attachment.url);
+				jQuery(target_id_field).val(attachment.id);
+				jQuery(caption_field).html( '"' + attachment.caption + '"' );				
+			}
+			
         };
+		
         wp.media.editor.open(this);
         return false;
     });
@@ -370,7 +429,12 @@ var active_editor;
 function cp_editor_key_down(ed, page, tab) {
     $ = jQuery;
 
-    if (page == 'coursepress_page_course_details') {
+	var courseDetailsPages = [
+		'coursepress_page_course_details',
+		'coursepress-pro_page_course_details'
+	];
+
+	if ( $.inArray( page, courseDetailsPages ) ) {
         if (tab == '' || tab == 'overview') {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
@@ -419,23 +483,28 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
         var response = $.parseJSON($(data).find('response_data').text());
         // console.log(response);
         // Apply a new nonce when returning
+		console.log( response );
         if (response && response.success) {
             $('#course-ajax-check').data('nonce', response.nonce);
-            $('#course-ajax-check').data('cap', response.cap);
             $('#course-ajax-check').data('id', response.course_id);
             $('[name=course_id]').val(response.course_id);
             if (response.mp_product_id) {
                 $('[name=meta_mp_product_id]').val(response.mp_product_id);
             }
 
+	        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+	        var uid = $('#instructor-ajax-check').data('uid');
+
             // Add user as instructor
             if (step == 'step-1' && response.instructor) {
-                $.post(
-                        'admin-ajax.php', {
-                            action: 'add_course_instructor',
-                            user_id: response.instructor,
-                            course_id: response.course_id,
-                        }
+		        $.post(
+		                'admin-ajax.php', {
+		                    action: 'add_course_instructor',
+		                    instructor_id: response.instructor,
+				            instructor_nonce: instructor_nonce,					
+		                    course_id: response.course_id,
+				            user_id: uid,					
+		                }
                 ).done(function(data, status) {
 
                     var instructor_id = response.instructor;
@@ -446,7 +515,6 @@ function autosave_course_setup_done(data, status, step, statusElement, nextActio
                         $('.instructor-avatar-holder.empty').hide();
                         $('#instructors-info').append('<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />');
                     }
-
 
                     //window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
 
@@ -545,14 +613,14 @@ function step_1_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
-        uid: initialVars['uid'],
+        user_id: initialVars['user_id'],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
         _thumbnail_id: _thumbnail_id,
         meta_course_category: $('[name=meta_course_category]').val(),
         meta_course_language: $('[name=meta_course_language]').val(),
+        course_category: $('[name=course_category]').val(),
         // Don't remove
         meta_course_setup_progress: initialVars['meta_course_setup_progress'],
         meta_course_setup_marker: 'step-2',
@@ -612,7 +680,7 @@ function step_2_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_course_video_url: $('[name=meta_course_video_url]').val(),
         course_description: content,
@@ -647,7 +715,7 @@ function step_3_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         instructor: instructors,
         // Don't remove
@@ -666,7 +734,7 @@ function step_4_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_open_ended_course: $('[name=meta_open_ended_course]').is(':checked') ? 'on' : 'off',
         meta_course_start_date: $('[name=meta_course_start_date]').val(),
@@ -690,7 +758,7 @@ function step_5_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_limit_class_size: $('[name=meta_limit_class_size]').is(':checked') ? 'on' : 'off',
         meta_class_size: $('[name=meta_class_size]').val(),
@@ -724,7 +792,7 @@ function step_6_update(attr) {
         course_id: initialVars['course_id'],
         course_name: initialVars['course_name'],
         course_nonce: initialVars['course_nonce'],
-        required_cap: initialVars['required_cap'],
+        user_id: initialVars['user_id'],
         // Alter as required
         meta_enroll_type: $('[name=meta_enroll_type]').val(),
         meta_prerequisite: prerequisite_val,
@@ -923,7 +991,6 @@ function courseAutoUpdate(step, nextAction) {
         var meta_course_setup_progress = get_meta_course_setup_progress();
 
         var course_nonce = $('#course-ajax-check').data('nonce');
-        var required_cap = $('#course-ajax-check').data('cap');
         var uid = $('#course-ajax-check').data('uid');
 
         var initial_vars = {
@@ -931,8 +998,7 @@ function courseAutoUpdate(step, nextAction) {
             course_id: course_id,
             course_name: $('[name=course_name]').val(),
             course_nonce: course_nonce,
-            required_cap: required_cap,
-            uid: uid,
+            user_id: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
         }
@@ -1234,6 +1300,8 @@ jQuery(document).ready(function($) {
             $('[name=course_id]').val(course_id);
         }
 
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
 
         $.post(
                 'admin-ajax.php', {
@@ -1242,12 +1310,15 @@ jQuery(document).ready(function($) {
                     last_name: $('[name=invite_instructor_last_name]').val(),
                     email: $('[name=invite_instructor_email]').val(),
                     course_id: course_id,
+					user_id: uid,
+					instructor_nonce: instructor_nonce,
                 }
         ).done(function(data, status) {
             // Handle return
             if (status == 'success') {
-
+				// console.log( data );
                 var response = $.parseJSON($(data).find('response_data').text());
+				// console.log( response )
                 var response_type = $($.parseHTML(response.content));
 
                 if ($(response_type).hasClass('status-success')) {
@@ -1260,7 +1331,7 @@ jQuery(document).ready(function($) {
                     var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
                             '<div class="instructor-status">PENDING</div>' +
                             remove_button +
-                            '<img class="avatar avatar-80 photo" width="80" height="80" src="http://www.gravatar.com/avatar/' + CryptoJS.MD5(response.data.email) + '" alt="admin">' +
+                            '<img class="avatar avatar-80 photo" width="80" height="80" src="//www.gravatar.com/avatar/' + CryptoJS.MD5(response.data.email) + '" alt="admin">' +
                             '<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
                             '</div>';
 
@@ -1358,12 +1429,17 @@ jQuery(document).ready(function($) {
 
         // Mark as dirty
         mark_dirty(this);
+		
+        var instructor_nonce = $('#instructor-ajax-check').data('nonce');
+        var uid = $('#instructor-ajax-check').data('uid');
 
         $.post(
                 'admin-ajax.php', {
                     action: 'add_course_instructor',
-                    user_id: instructor_id,
+                    instructor_id: instructor_id,
+		            instructor_nonce: instructor_nonce,					
                     course_id: course_id,
+		            user_id: uid,					
                 }
         ).done(function(data, status) {
             // Handle return
@@ -1630,9 +1706,16 @@ jQuery(document).ready(function($) {
                         var unit_state = 'publish';
                     }
 
+			        // Course ID
+			        var course_id = $('[name=course_id]').val();
+			        if (!course_id) {
+			            course_id = $.urlParam('course_id');
+			            $('[name=course_id]').val(course_id);
+			        }
+
                     var unit_id = $(this).parent().find('.unit_state_id').attr('data-id');
                     var unit_nonce = $(this).parent().find('.unit_state_id').attr('data-nonce');
-                    var required_cap = $(this).parent().find('.unit_state_id').attr('data-cap');
+			        var uid = $('#course-ajax-check').data('uid');
 
                     if (unit_id !== '') {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
@@ -1641,7 +1724,8 @@ jQuery(document).ready(function($) {
                                     unit_state: unit_state,
                                     unit_id: unit_id,
                                     unit_nonce: unit_nonce,
-                                    required_cap: required_cap,
+									course_id: course_id,
+									user_id: uid,
                                 }
                         ).done(function(data, status) {
                             if (status == 'success') {
@@ -1651,7 +1735,6 @@ jQuery(document).ready(function($) {
                                 // Apply a new nonce when returning
                                 if (response && response.toggle) {
                                     $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-nonce', response.nonce);
-                                    $($(selector).parents('form')[0]).find('.unit_state_id').attr('data-cap', response.cap);
                                     // Else, toggle back.	
                                 } else {
                                     if ($(selector).hasClass('on')) {
@@ -1710,25 +1793,24 @@ jQuery(document).ready(function($) {
 
                     var course_id = $('#course_state_id').attr('data-id');
                     var course_nonce = $('#course_state_id').attr('data-nonce');
-                    var required_cap = $('#course_state_id').attr('data-cap');
-
+			        var uid = $('#course-ajax-check').data('uid');
+					
                     $.post(
                             'admin-ajax.php', {
                                 action: 'change_course_state',
                                 course_state: course_state,
                                 course_id: course_id,
                                 course_nonce: course_nonce,
-                                required_cap: required_cap,
+								user_id: uid,
                             }
                     ).done(function(data, status) {
                         if (status == 'success') {
 
                             var response = $.parseJSON($(data).find('response_data').text());
-                            console.log(response);
+                            // console.log(response);
                             // Apply a new nonce when returning
                             if (response && response.toggle) {
                                 $('#course_state_id').attr('data-nonce', response.nonce);
-                                $('#course_state_id').attr('data-cap', response.cap);
                                 // Else, toggle back.	
                             } else {
                                 if ($(selector).hasClass('on')) {

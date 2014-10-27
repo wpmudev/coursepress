@@ -1,6 +1,6 @@
 <?php $page = $_GET['page']; ?>
 
-<div id="poststuff" class="metabox-holder m-settings email-settings">
+<div id="poststuff" class="metabox-holder m-settings email-settings cp-wrap">
     <form action='' method='post'>
 
         <input type='hidden' name='page' value='<?php echo esc_attr($page); ?>' />
@@ -41,8 +41,14 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', 'cp'); ?></p>
                                 <?php
-                                $args = array( "textarea_name" => "option_registration_content_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_registration_content_email()), "option_registration_content_email", $args);
+								$editor_name = "option_registration_content_email";
+			                    $editor_id = "option_registration_content_email";
+								$editor_content = stripslashes(coursepress_get_registration_content_email());
+								
+                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+                                wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>
                         </tr>
@@ -86,8 +92,14 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS', 'cp'); ?></p>
                                 <?php
-                                $args = array( "textarea_name" => "option_enrollment_content_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_enrollment_content_email()), "option_enrollment_content_email", $args);
+								$editor_name = "option_enrollment_content_email";
+			                    $editor_id = "option_enrollment_content_email";
+								$editor_content = stripslashes(coursepress_get_enrollment_content_email());
+								
+                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+                                wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>
                         </tr>
@@ -132,8 +144,14 @@
                                 <td>
                                     <p class="description"><?php _e('These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'cp'); ?></p>
                                     <?php
-                                    $args = array( "textarea_name" => "option_mp_order_content_email", "textarea_rows" => 10, 'wpautop' => true );
-                                    wp_editor(stripslashes(coursepress_get_mp_order_content_email()), "option_mp_order_content_email", $args);
+									$editor_name = "option_mp_order_content_email";
+				                    $editor_id = "option_mp_order_content_email";
+									$editor_content = stripslashes(coursepress_get_mp_order_content_email());
+								
+	                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+									// Filter $args before showing editor
+									$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+	                                wp_editor( $editor_content, $editor_id, $args);
                                     ?>
                                 </td>
                             </tr>
@@ -178,8 +196,15 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS', 'cp'); ?></p>
                                 <?php
-                                $args = array( "textarea_name" => "option_invitation_content_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_invitation_content_email()), "option_invitation_content_email", $args);
+								$editor_name = "option_invitation_content_email";
+			                    $editor_id = "option_invitation_content_email";
+								$editor_content = stripslashes(coursepress_get_invitation_content_email());
+								
+                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+                                wp_editor( $editor_content, $editor_id, $args);
+								
                                 ?>
                             </td>
                         </tr>
@@ -223,8 +248,15 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, PASSCODE', 'cp'); ?></p>
                                 <?php
-                                $args = array( "textarea_name" => "option_invitation_content_passcode_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_invitation_content_passcode_email()), "option_invitation_content_passcode_email", $args);
+								$editor_name = "option_invitation_content_passcode_email";
+			                    $editor_id = "option_invitation_content_passcode_email";
+								$editor_content = stripslashes(coursepress_get_invitation_content_passcode_email());
+								
+                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+                                wp_editor( $editor_content, $editor_id, $args);
+								
                                 ?>
                             </td>
                         </tr>
@@ -258,7 +290,7 @@
                         <tr>
                             <th><?php _e('E-mail Subject', 'cp'); ?></th>
                             <td>
-                                <input type="text" name="option_instructor_invitation_email_subject" value="<?php echo esc_attr(coursepress_get_instructor_invitation_email_subject()); ?>" />
+                                <input type="text" name="option_instructor_invitation_email_subject" value="<?php echo esc_attr(cp_get_instructor_invitation_email_subject()); ?>" />
                             </td>
                         </tr>
 
@@ -267,8 +299,14 @@
                             <td>
                                 <p class="description"><?php _e('These codes will be replaced with actual data: INSTRUCTOR_FIRST_NAME, INSTRUCTOR_LAST_NAME, INSTRUCTOR_EMAIL, CONFIRMATION_LINK, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', 'cp'); ?></p>
                                 <?php
-                                $args = array( "textarea_name" => "option_instructor_invitation_email", "textarea_rows" => 10, 'wpautop' => true );
-                                wp_editor(stripslashes(coursepress_get_instructor_invitation_email()), "option_instructor_invitation_email", $args);
+								$editor_name = "option_instructor_invitation_email";
+			                    $editor_id = "option_instructor_invitation_email";
+								$editor_content = stripslashes(cp_get_instructor_invitation_email());
+								
+                                $args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+                                wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                             </td>
                         </tr>

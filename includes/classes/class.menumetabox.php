@@ -48,12 +48,12 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 				<ul id="posttype-<?php echo $post_type_name; ?>-tabs" class="posttype-tabs add-menu-item-tabs">
 					<li <?php echo ( 'cp-published' == $current_tab ? ' class="tabs"' : '' ); ?>>
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-published" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg($post_type_name . '-tab', 'cp-published', remove_query_arg($removed_args))); ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-published">
-							<?php _e( 'Courses' ); ?>
+							<?php _e( 'Courses', 'cp' ); ?>
 						</a>
 					</li>					
 					<li <?php echo ( 'cp-special-pages' == $current_tab ? ' class="tabs"' : '' ); ?>>
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-special-pages" href="<?php if ( $nav_menu_selected_id ) echo esc_url(add_query_arg($post_type_name . '-tab', 'cp-special-pages', remove_query_arg($removed_args))); ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-special-pages">
-							<?php _e( 'Pages' ); ?>
+							<?php _e( 'Pages', 'cp' ); ?>
 						</a>
 					</li>										
 				</ul><!-- .posttype-tabs -->
@@ -161,10 +161,10 @@ if ( !class_exists( 'CoursePress_Menu_Metabox' ) ) {
 								),
 								remove_query_arg( $removed_args )
 							));
-						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e('Select All'); ?></a>						
+						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e('Select All', 'cp'); ?></a>						
 					</span>
 					<span class="add-to-menu">
-						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>" />
+						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'cp' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>" />
 						<span class="spinner"></span>
 					</span>
 				</p>

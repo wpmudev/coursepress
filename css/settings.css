@@ -499,7 +499,7 @@ x:-o-prefocus,
 }
 
 .course-holder-wrap .chosen-container{
-    width: 80%;
+    max-width: 80%;
     margin-right: 2%;
 }
 
@@ -1116,6 +1116,7 @@ x:-o-prefocus,
     min-height: 0;
     overflow: hidden;
 }
+
 .ui-accordion .ui-accordion-icons {
     padding-left: 2.2em;
 }
@@ -2670,7 +2671,7 @@ label.error:before {
     border-radius: 4px 0 0 4px;
     border-width: 1px 0 1px 1px;
     font-weight: 700;
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
     text-transform: capitalize;
 }
 
@@ -2846,7 +2847,7 @@ label.error:before {
 
 .x{
     display: inline-block;
-    font-family: FontAwesome;
+    font-family: CP_Font_Awesome;
     font-style: normal;
     font-weight: normal;
     line-height: 1;
@@ -2875,70 +2876,70 @@ wrap mp-wrap nocoursesub mp-wrap{
 
 
 #poststuff .cp-shortcode-heading { 
-	font-size: 18pt;
+    font-size: 18pt;
 }
 #poststuff .cp-shortcode-title {
-	padding-top:14px;
-	color: #0074a2;
+    padding-top:14px;
+    color: #0074a2;
 }
 
 #poststuff .cp-shortcode-subheading {
-	margin: 10px 0 0;
-	padding: 0;
-	text-decoration: underline;	
+    margin: 10px 0 0;
+    padding: 0;
+    text-decoration: underline;	
 }
 
 #poststuff ul.cp-shortcode-options {
-	margin: 5px 0;
-	
+    margin: 5px 0;
+
 }
 
 #poststuff ul.cp-shortcode-options li {
-	line-height: 1.4em;
+    line-height: 1.4em;
 }
 
 #poststuff ul.cp-shortcode-options li span {
-	color: #D54E21;
+    color: #D54E21;
 }
 
 #poststuff .cp-shortcode-code {
-	line-height: 1.4em;	
-	font-size:16px;
-	font-weight: 600;
-/*	font-family: monospace;*/
+    line-height: 1.4em;	
+    font-size:16px;
+    font-weight: 600;
+    /*	font-family: monospace;*/
 }
 
 #poststuff.cp-shortcode-box code {
-	display: block;
+    display: block;
 }
 
 #poststuff .cp-shortcode-alt {
-	border: 1px solid #efefef;
-	border-style: solid none;
-	padding: 5px 0;
+    border: 1px solid #efefef;
+    border-style: solid none;
+    padding: 5px 0;
 }
 
 .button.cp-activate-mp-lite:hover,
 .button.cp-activate-mp-lite {
-	background: none repeat scroll 0 0 #6dc36c;
-	border: 1px solid #68b268;
-	color: #fff;
-	margin-top: 15px;
-	outline: medium none;
-	box-shadow: 0 1px 0 #6be285 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
+    background: none repeat scroll 0 0 #6dc36c;
+    border: 1px solid #68b268;
+    color: #fff;
+    margin-top: 15px;
+    outline: medium none;
+    box-shadow: 0 1px 0 #6be285 inset, 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 .button.cp-activate-mp-lite:hover {
-	background: #68b268;
+    background: #68b268;
 }
 
 .permalinks-error {
-	border-left: 2px solid #ff0000;
-	padding-left: 10px;
+    border-left: 2px solid #ff0000;
+    padding-left: 10px;
 }
 
 .permalinks-error .setup-permalinks-button {
-	width: 300px !important;
-	background-color: orange !important;
-	font-weight: bold;
-	font-size: 18px;
+    width: 300px !important;
+    background-color: orange !important;
+    font-weight: bold;
+    font-size: 18px;
 }

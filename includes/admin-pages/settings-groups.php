@@ -8,7 +8,7 @@ if ( isset( $_POST['item_title'] ) ) {
 
 <?php $page = $_GET['page']; ?>
 
-<div id="poststuff" class="metabox-holder m-settings">
+<div id="poststuff" class="metabox-holder m-settings cp-wrap">
     <form action='' method='post'>
 
         <input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>' />

@@ -971,5 +971,14 @@ a .remove-btn{
     display: none;
 }	
 
+.instructors th{
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.instructors .manage-column.column-ID{
+    width: 2%;
+}
 
 /* Instructor profile */

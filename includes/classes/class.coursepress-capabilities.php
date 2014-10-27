@@ -98,8 +98,11 @@ class CoursePress_Capabilities {
 		    'coursepress_delete_my_notification_cap' => 1, 					
 		    'coursepress_change_notification_status_cap' => 0, 					
 		    'coursepress_change_my_notification_status_cap' => 1,
-                    
-                    
+			/* Certificates*/
+			'coursepress_certificates_cap' => 0,
+			'coursepress_create_certificates_cap' => 0,
+			'coursepress_update_certificates_cap' => 0, 
+			'coursepress_delete_certificates_cap' => 0, 
 		),
 	);
 
@@ -411,12 +414,27 @@ class CoursePress_Capabilities {
 		}
 	}
 
-	public static function drop_private_caps( $user_id ) {
-		$user = new WP_User($user_id);
+	public static function drop_private_caps( $user_id = '', $role = '' ) {
+		
+		if( empty( $user_id ) && empty( $role ) ) {
+			return;
+		}
+		
+		$user = false;
+		if( ! empty( $user_id ) ) {
+			$user = new WP_User($user_id);	
+		}
+		
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
 		
 		foreach( $capability_types as $capability_type ) {
-			$user->remove_cap("read_private_{$capability_type}s");			
+			if( ! empty( $user ) ) {
+				$user->remove_cap("read_private_{$capability_type}s");	
+			}
+			if( ! empty( $role ) ) {
+				$role->remove_cap("read_private_{$capability_type}s");	
+			}
+			
 		}
 	}
 	
@@ -429,6 +447,23 @@ class CoursePress_Capabilities {
 	 */
 	public static function is_pro() {
 		return true;
+	}
+
+	/**
+	 * Is this runnning on CampusPress or Edublogs?
+	 *
+	 * @since 1.2.1
+	 *
+	 * @return bool
+	 */
+	public static function is_campus() {
+		$campus_conditions = array( 'is_campus', 'is_edublogs' );
+		$is_campus = false;
+	
+		foreach( $campus_conditions as $condition ) {
+			$is_campus |= function_exists( $condition ) && call_user_func( $condition );
+		}
+		return $is_campus;
 	}
 	
 	

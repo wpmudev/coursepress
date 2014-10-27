@@ -1,3 +1,71 @@
+@media only screen and ( max-width: 1720px ) {
+    .module-content .show_title_on_front,
+    .mandatory_answer, .group-check label.mandatory_answer{
+        width: 32%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .second-group-check.group-check label:first-child{
+        width: 64%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .second-group-check.group-check label.limit_attampts_label{
+        width: 32%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media only screen and ( max-width: 1200px ) {
+    .module-content .show_title_on_front,
+    .mandatory_answer, .group-check label.mandatory_answer{
+        width: 49%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .second-group-check.group-check label:first-child{
+        width: 49%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .second-group-check.group-check label.limit_attampts_label{
+        width: 49%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media only screen and ( max-width: 1175px ) {
+    .module-content .show_title_on_front,
+    .mandatory_answer, .group-check label.mandatory_answer{
+        width: 49%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .second-group-check.group-check{
+        margin-left: 1px;
+    }
+    
+    .second-group-check.group-check label:first-child{
+        width: 100%;
+        margin-left: 24px;
+        margin-right: 0px;
+        margin-bottom: 20px;
+    }
+    
+    .second-group-check.group-check label.limit_attampts_label{
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
 @media only screen and ( max-width: 1480px ) {
     .module-content input[type="text"].radio_answer{
         width: 94%;
@@ -19,6 +87,47 @@
     .video_url_holder input.video_url_button,
     .file_url_holder input.file_url_button{
         width: 10%;
+    }
+    
+    .unit-details .file_url_holder{
+        float: left;
+    }
+    
+    .unit-details .file_url_holder input.image_url{
+        float: left;
+        width: 86%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.image_url_button{
+        float: left;
+        width: 12%;
+    }
+    
+    .unit-details .audio_url_holder{
+        float: left;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url{
+        float: left;
+        width: 86%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url_button{
+        float: left;
+        width: 12%;
+    }
+    
+    .unit-details .file_url_holder input.file_url{
+        float: left;
+        width: 86%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.file_url_button{
+        float: left;
+        width: 12%;
     }
 }
 
@@ -69,7 +178,72 @@
     .file_url_holder input.file_url_button{
         width: 12%;
     }
+    
+    .unit-details .file_url_holder input.image_url{
+        float: left;
+        width: 80%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.image_url_button{
+        float: left;
+        width: 18%;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url{
+        float: left;
+        width: 80%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url_button{
+        float: left;
+        width: 18%;
+    }
+    
+    .unit-details .file_url_holder input.file_url{
+        float: left;
+        width: 80%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.file_url_button{
+        float: left;
+        width: 18%;
+    }
 
+}
+
+
+@media only screen and ( max-width: 960px ) {
+    .module-content .show_title_on_front,
+    .mandatory_answer, .group-check label.mandatory_answer{
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .module-content .group-check{
+        margin-bottom: 0px;
+    }
+    
+    .module-content .group-check.second-group-check{
+        margin-top: 0px;
+        margin-bottom: 20px;
+    }
+    
+    .second-group-check.group-check label:first-child{
+        width: 100%;
+        margin-left: 24px;
+        margin-right: 0px;
+        margin-bottom: 10px;
+    }
+    
+    .second-group-check.group-check label.limit_attampts_label{
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
 }
 
 @media only screen and ( max-width: 960px ) {
@@ -148,6 +322,18 @@
     .tree .tree-page-right {
         width: 43.2%;
     }
+
+    .course-details .nav-tab {
+        font-size: 0.7em;
+    }
+
+    .course-details .course-state .publish-course-message{
+        font-size: 13px;
+    }
+
+    .course-details .nav-tab{
+
+    }
 }
 
 @media only screen and ( max-width: 660px ) {
@@ -210,6 +396,25 @@
     .course-section .course-form .course-structure table{
         margin: 20px 0 20px 0px;
     }
+
+    .course-details .nav-tab {
+        font-size: 0.7em;
+    }
+    
+    .course-details #students_accordion .additional_class_actions,
+    .course-details #students_accordion .additional_class_actions_add_student{
+        width: 98%;
+    }
+
+
+    .course-state {
+        display: inline-block;
+        float: none;
+        margin-right: 2px;
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 }
 
 @media ( max-width: 570px ) {
@@ -222,6 +427,25 @@
     .file_url_holder input.file_url_button{
         width: 17%;
     }
+
+    .course-section .course-form div.narrow {
+        width: 100%;
+    }
+    
+    #students_accordion .manage-column.column-user_lastname,
+    #students_accordion .manage-column.column-last_name{
+        display: none;
+    }
+    
+}
+
+/* List table anomalies */
+@media ( max-width: 555px ) {
+    #students_accordion .additional_class_actions_add_student,
+    #students_accordion .additional_class_actions { 
+        width: 100%; 
+    }
+
 }
 
 @media only screen and ( max-width: 550px ) {
@@ -258,36 +482,13 @@
     .tree .tree-page-right {
         width: 48.8%;
     }
-}
 
-
-@media ( max-width: 450px ) {
-    .video_url_holder input.video_url,
-    .file_url_holder input.file_url{
-        width: 79%;
+    .course-details .nav-tab {
+        font-size: 0.7em;
+        //max-width: 100px;
+        //text-overflow: ellipsis;
+        //overflow: hidden;
     }
-
-    .video_url_holder input.video_url_button,
-    .file_url_holder input.file_url_button{
-        width: 18%;
-    }
-}
-
-/* List table anomalies */
-@media ( max-width: 439px ) {
-    .unit-details .nav-tab{
-        padding: 10px;
-    }
-}
-
-
-/* List table anomalies */
-@media ( max-width: 555px ) {
-    #students_accordion .additional_class_actions_add_student,
-    #students_accordion .additional_class_actions { 
-        width: 100%; 
-    }
-
 }
 
 /* For extra small devices */
@@ -311,5 +512,79 @@
     .unit-details .nav-tab{
         font-size: 0.8em;
         padding: 13px;
+    }
+    
+    #students_accordion .manage-column.column-user_firstname,
+    #students_accordion .manage-column.column-first_name{
+        display: none;
+    }
+    
+    .unit-details .file_url_holder input.image_url{
+        float: left;
+        width: 75%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.image_url_button{
+        float: left;
+        width: 23%;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url{
+        float: left;
+        width: 75%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .audio_url_holder input.audio_url_button{
+        float: left;
+        width: 23%;
+    }
+    
+    .unit-details .file_url_holder input.file_url{
+        float: left;
+        width: 75%;
+        margin-right: 1%;
+    }
+    
+    .unit-details .file_url_holder input.file_url_button{
+        float: left;
+        width: 23%;
+    }
+}
+
+@media ( max-width: 450px ) {
+    .video_url_holder input.video_url,
+    .file_url_holder input.file_url{
+        width: 79%;
+    }
+
+    .video_url_holder input.video_url_button,
+    .file_url_holder input.file_url_button{
+        width: 18%;
+    }
+}
+
+/* List table anomalies */
+@media ( max-width: 439px ) {
+    .unit-details .nav-tab{
+        padding: 10px;
+    }
+}
+
+@media ( max-width: 400px ) {
+    .course-details .nav-tab{
+        width: 90.8%;
+        max-width: 100%;
+    }
+
+    .course-details h2.nav-tab-wrapper, .course-details h3.nav-tab-wrapper{
+        margin-left: 0px;
+        padding-left: 0px;
+    }
+    
+    #students_accordion .manage-column.column-ID,
+    #students_accordion .manage-column.column-id{
+        display: none;
     }
 }

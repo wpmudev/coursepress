@@ -54,11 +54,11 @@ if ( isset( $_POST['new_question_submit'] ) ) {
                 <?php echo do_shortcode( '[units_dropdown course_id="' . $course_id . '" include_general="true" general_title="Course General"]' ) ?>
                 <div class="new_question">
                     <div class="rounded"><span>Q</span></div>
-                    <input type="text" name="question_title" placeholder="<?php _e( 'Title of your question', 'coursepress' ); ?>" />
-                    <textarea name="question_description" placeholder="<?php _e( 'Question description...', 'coursepress' ); ?>"></textarea>
+                    <input type="text" name="question_title" placeholder="<?php _e( 'Title of your question', 'cp' ); ?>" />
+                    <textarea name="question_description" placeholder="<?php _e( 'Question description...', 'cp' ); ?>"></textarea>
 
-                    <input type="submit" class="button_submit" name="new_question_submit" value="<?php _e( 'Ask this Question', 'coursepress' ); ?>">
-                    <a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/" class="button_cancel"><?php _e( 'Cancel', 'coursepress' ); ?></a>
+                    <input type="submit" class="button_submit" name="new_question_submit" value="<?php _e( 'Ask this Question', 'cp' ); ?>">
+                    <a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/" class="button_cancel"><?php _e( 'Cancel', 'cp' ); ?></a>
 
                     <?php wp_nonce_field( 'new_question' ); ?>
                 </div>

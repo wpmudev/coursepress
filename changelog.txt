@@ -2,5 +2,150 @@ Plugin Name: CoursePress Pro
 Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
 
 CHANGE LOG
-----------------------------------------------------------------------
-1.0 First Release.
+=================================================
+
+== Changelog ==
+
+= 1.2.2.1=
+* Fixed issues caused e-newsletter plugin to show blank page in admin
+* Fixed possible issues with MarketPress update
+* Fixed issues with clearing cookie data in course checkout message
+* Updated translation files
+
+= 1.2.2.0=
+* Added new option in settings for PDF report font & Added new fonts
+* Updated MarketPress to 2.9.5.4
+* More consistent filters and actions for developers (more to come).
+* Improved database performance with new instructor 'Privacy' setting (may need to re-add instructors to old courses if you use the privacy option).
+
+= 1.2.1.9=
+* Added new settings (Privacy) for controlling visibility of instructor username in the URL
+* Resolved issues with cp_get_file_size functions and fatal error if filesize cannot be retrieved
+
+= 1.2.1.8 =
+* Fixed issue course excerpt (not showing on course single and archive pages)
+* Fixed issue with popup windows (responsive)
+
+= 1.2.1.7 =
+* Resolved issue with plugin update
+
+= 1.2.1.6 =
+* Fixed bug where visual editor prevented unit elements from saving.
+* Fixed bug after duplicating course. Can now edit the course again.
+
+= 1.2.1.5 =
+* Fixed issue with instructor's profile avatar shortcode
+* Fixed conflicts with bbPress (not showing topics when CoursePress is active)
+* Resolved issue with course front-end edit links (caused by empty spaces)
+
+= 1.2.1.4 =
+* Fixed issue with incorrect registration of module post type
+* Fixed issues with hard coded http:\\ resources (google fonts and images in the theme and plugin)
+* Fixed issue with not saving Login Slug
+* Added additional options in settings for pages (instead of virtual pages) for enrollment process, login page, signup page, student dashboard and student settings
+* Visual editor improvements.  
+* Small code improvements
+
+= 1.2.1.3 =
+* Fixed issue with MarketPress product page infinite loop when CoursePress is active
+* Fixed issue with instructor avatars preview
+
+= 1.2.1.2 =
+* Fixed issue with enrollment date and time (it uses now current_time( 'timestamp') instead of time())
+* Fixed issue with media shortcode display in the CoursePress theme
+* Fixed issue with course archive for courses without media set
+
+= 1.2.1.1 =
+* Added additional settings for controlling wp-login redirection
+* Fixed issue with "Instructor Capabilities" settings access as a student
+* Various database improvements. 
+* Added course progress display to student workbook.  
+* Added unit progress to CoursePress theme on student workbook.  
+* Added categories in the single post and blog archive
+* Fixed issue with hidden comment form when plugin is activated
+* Added passcode fields on login and signup popup forms
+* Minor changes to enrollment popup window. 
+
+= 1.2.1 =
+* Fixed issue with incorrectly displayed footer on student login page
+* Fixed issue with BuddyPress autocomplete on Compose Message page
+* Added a number of hooks in the main CoursePress class
+
+= 1.2 =
+* Added Duplicate Course feature
+* Fixed issue with "units" slugs
+* Fixed jQuery conflicts with theme options in WPMU Dev themes  
+* Added Unit restriction options to avoid confusion between 'completed answers' and 'successfull/passed answers'.  
+* Fixed unit restriction checking on front end 'Units' page. Will now show restrictions required from previous unit.
+
+= 1.1.1 = 
+* Fixed issue with protection of the next unit when previous unit has set "User needs to complete current unit in order to access the next one"
+* Fixed bug with removing a Single Choice element from a Unit
+
+= 1.1.0 =
+* Fixed issue with course limits in PRO version
+
+= 1.0.9 =
+* Resolved issue with details button on courses archive and inconsistent shortcode used
+
+= 1.0.8 = 
+-------------------------------------------------
+* Upgraded MarketPress Bundle to 2.9.5.3
+* Added warning message (for admins) to the course overview page if "anyone can register" is not selected
+* Fixed issue with instructor capabilities settings and saving
+* Fixes possible issues with rewrite rules formating and avoid 404s
+* Fixed issue with non-protected discussions for students who didn't enroll to the course
+* Fixed issue with visibility of the draft units for admins and instructors* Fixed up issues with course completion checking  
+* Added file size indicator next to downloadable files  
+
+= 1.0.7 = 
+-------------------------------------------------
+* Resolved issues with wrong pre_get_posts filtering within the admin
+
+= 1.0.6 = 
+-------------------------------------------------
+* Improved security
+* Fixed: Auto-update issue with text editor in course setup  
+* Slightly larger content editor for more convenient editing
+* Fixed: Course completion now calculates correctly
+* Resolved issue with incorrect saving of Single Line / Multiple Lines option in input text element
+* Added student username (and link to the student's profile) in the assessment column
+* Dynamic MarketPress path set
+
+= 1.0.5 =
+-------------------------------------------------
+* Resolved issues with displaced content when PopUp Pro plugin is active
+* Resolved issue with (not honoring) WP Settings for registrations
+* CoursePress Theme CSS fixes
+* Settings changes and Improved security  
+
+
+= 1.0.4 =
+-------------------------------------------------
+* Shortcode changes and Improved security
+* Fixed textdomain issues
+* Resolved potential issue if Mcrypt library is not installed on server
+
+= 1.0.3 =
+-------------------------------------------------
+* Improved security
+* Resolved CSS issues with MarketPress popup called from CoursePress
+* Fixed issue with theme location in the CoursePress theme
+* Fixed CSS issue with uploaded videos in CoursePress theme (plus better responsive)
+* Resolved issue with output buffer in shortcodes
+* Added missing text domain on a number of places
+* Other code improvements
+
+= 1.0.2 =
+-------------------------------------------------
+* Resolved issue with mobile menu
+* Resolved issue with listing images, videos and overlapping content in the CoursePress theme
+* Responsive fixes for admin pages
+
+= 1.0.1 =
+-------------------------------------------------
+* Resolved issue with deleting media files (selected in elements) upon deleting a unit or a module.
+
+= 1.0.0 =
+-------------------------------------------------
+* 1.0 First Release.

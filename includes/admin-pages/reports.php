@@ -7,7 +7,7 @@ $s = ( isset($_GET['s']) ? $_GET['s'] : '' );
 
 /* * **************************GENERATING REPORT******************************** */
 if ( isset($_POST['units']) && isset($_POST['users']) ) {
-    //cp_suppress_errors();
+
     ob_end_clean();
     ob_start();
     $course_id = ( int ) $_POST['course_id'];
@@ -269,7 +269,7 @@ if ( isset($_GET['s']) ) {
 // Query the users
 $wp_user_search = new Student_Search($usersearch, $page_num);
 ?>
-<div class="wrap nosubsub reports">
+<div class="wrap nosubsub reports cp-wrap">
     <div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
     <h2><?php _e('Reports', 'cp'); ?></h2>
 
@@ -374,7 +374,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
 
     <?php
     $columns = array(
-        "ID" => __('Student ID', 'cp'),
+        "ID" => __('ID', 'cp'),
         "user_fullname" => __('Full Name', 'cp'),
         "user_firstname" => __('First Name', 'cp'),
         "user_lastname" => __('Surname', 'cp'),
@@ -384,7 +384,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     );
 
     $col_sizes = array(
-        '8', '10', '10', '10', '10', '5'
+        '4', '10', '10', '10', '10', '5'
     );
     ?>
     <form method="post" id="generate-report">
@@ -392,7 +392,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         <table cellspacing="0" class="widefat fixed shadow-table">
             <thead>
                 <tr>
-                    <th class="manage-column column-cb check-column" style="width:5%;" id="cb" scope="col"><input type="checkbox"></th>
+                    <th class="manage-column column-cb check-column" style="width:3%;" id="cb" scope="col"><input type="checkbox"></th>
                     <?php
                     $n = 0;
                     foreach ( $columns as $key => $col ) {
@@ -483,7 +483,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
         <div class="tablenav">
             <div class="alignleft actions">
                 <select name="units" class="chosen-select">
-                    <option value=""><?php _e('All Units') ?></option>
+                    <option value=""><?php _e('All Units', 'cp') ?></option>
                     <?php
                     $course = new Course($current_course_id);
                     $course_units = $course->get_units();

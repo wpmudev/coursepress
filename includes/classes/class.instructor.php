@@ -12,8 +12,6 @@ if ( !class_exists( 'Instructor' ) ) {
         var $courses_number = 0;
 
         function __construct( $ID, $name = '' ) {
-            global $wpdb;
-
             if ( $ID != 0 ) {
                 parent::__construct( $ID, $name );
             }
@@ -29,14 +27,25 @@ if ( !class_exists( 'Instructor' ) ) {
             $this->__construct( $ID, $name );
         }
 
-        function get_assigned_courses_ids( $status = 'all' ) {
-            global $wpdb;
+		static function get_course_meta_keys( $user_id ) {
+			$meta = get_user_meta( $user_id );
+			$meta = array_filter( array_keys( $meta ), array( 'Instructor', 'filter_course_meta_array' ) );
+			return $meta;
+		}
+		
+		static function filter_course_meta_array( $var ) {
+			if( preg_match( '/^course\_/', $var) ) {
+				return $var;
+			}			
+		}
 
+        function get_assigned_courses_ids( $status = 'all' ) {
             $assigned_courses = array();
-            $courses = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_key LIKE 'course_%%' AND user_id = %d", $this->ID ), OBJECT );
+			
+			$courses = Instructor::get_course_meta_keys( $this->ID );
 
             foreach ( $courses as $course ) {
-                $course_id = str_replace( 'course_', '', $course->meta_key );
+                $course_id = str_replace( 'course_', '', $course );
                 if ( $status !== 'all' ) {
                     if ( get_post_status( $course_id ) == $status ) {
                         $assigned_courses[] = $course_id;
@@ -65,13 +74,12 @@ if ( !class_exists( 'Instructor' ) ) {
 
         //Get number of instructor's assigned courses
         static function get_courses_number( $user_id = false ) {
-            global $wpdb;
 			
 			if ( ! $user_id ) {
 				return 0;
 			}
 			
-            $courses_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( * ) as cnt FROM $wpdb->usermeta um, $wpdb->posts p WHERE ( um.user_id = %d AND um.meta_key LIKE 'course_%%' ) AND ( p.ID = um.meta_value )", $user_id ) );
+            $courses_count = count( Instructor::get_course_meta_keys( $user_id ) );
             return $courses_count;
         }
 
@@ -84,6 +92,41 @@ if ( !class_exists( 'Instructor' ) ) {
                 CoursePress::instance()->drop_instructor_capabilities( $this->ID );
             //}
         }
+
+	    public static function instructor_by_hash( $hash ) {
+			global $wpdb;
+
+		    $sql = $wpdb->prepare( "SELECT user_id FROM wp_usermeta WHERE meta_key = %s;", $hash );
+			$user_id = $wpdb->get_var( $sql );
+
+		    if( ! empty( $user_id ) ) {
+				return( new Instructor( $user_id ) );
+		    } else {
+			    return false;
+		    }
+	    }
+
+	    public static function instructor_by_login( $login ) {
+		    $user = get_user_by( 'login', $login );
+		    if( ! empty( $user ) ) {
+			    // relying on core's caching here
+			    return( new Instructor( $user->ID ) );
+		    } else {
+			    return false;
+		    }
+	    }
+
+	    public static function create_hash( $user_id ) {
+		    $user = get_user_by( 'id', $user_id );
+		    $hash = md5( $user->user_login );
+
+		    /*
+		     * Just in case someone is actually using this hash for something,
+		     * we'll populate it with current value. Will be an empty array if
+		     * nothing exists. We're only interested in the key anyway.
+		     */
+		    update_user_meta( $user->ID, $hash, get_user_meta( $user->ID, $hash ) );
+	    }
 
     }
 

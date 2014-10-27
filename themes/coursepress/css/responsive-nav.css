@@ -76,6 +76,7 @@
     border-left: 1px solid #c9ced2;
     border-right: 1px solid #c9ced2;
     display: block;
+	outline: none;
     line-height: 22px;
     padding: 10px;
     width: auto;
@@ -89,10 +90,12 @@
     
     .main-navigation a.nav-toggle{
         display: block;
+		outline: none;
     }
     
     #mobile_menu, .mobile_menu{
         display: block;
+		outline: none;
     }
 }
 

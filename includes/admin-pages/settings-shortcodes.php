@@ -1,4 +1,4 @@
-<div id="poststuff" class="metabox-holder m-settings cp-shortcode-box">
+<div id="poststuff" class="metabox-holder m-settings cp-shortcode-box cp-wrap">
     <form action='' method='post'>
 
         <div class="postbox">

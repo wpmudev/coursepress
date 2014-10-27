@@ -6,27 +6,27 @@
  */
 global $coursepress, $wp;
 $course_id = do_shortcode('[get_parent_course_id]');
-
+$course_id = (int) $course_id;
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
 ?>
 
 <?php
 do_shortcode('[course_unit_archive_submenu]');
-echo __('<h2>Notifications</h2>', 'cp');
 ?>
+<h2><?php _e('Notifications', 'cp'); ?></h2>
 <div class="clearfix"></div>
 
 <ul class="notification-archive-list">
     <?php
-    $page = ( isset($wp->query_vars['paged']) ) ? $wp->query_vars['paged'] : 1;
+    $page = ( isset($wp->query_vars['paged']) ) ? (int) $wp->query_vars['paged'] : 1;
     do_shortcode('[course_notifications_loop]');
     ?>
     <?php if ( have_posts() ) { ?>
         <?php
         while ( have_posts() ) {
             the_post();
-			remove_filter( 'the_content', 'wpautop' );
+            remove_filter('the_content', 'wpautop');
             ?>
             <li>
                 <div class="notification-archive-single-meta">
@@ -45,10 +45,10 @@ echo __('<h2>Notifications</h2>', 'cp');
         }
     } else {
         ?>
-        <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later."); ?></h1>
+        <h1 class="zero-course-units"><?php _e("0 notifications. Please check back later.", "cp"); ?></h1>
         <?php
     }
     ?>
 </ul>
 <br clear="all" />
-<?php coursepress_numeric_posts_nav('navigation-pagination'); ?>
+<?php cp_numeric_posts_nav('navigation-pagination'); ?>

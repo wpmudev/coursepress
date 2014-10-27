@@ -1,6 +1,6 @@
 <?php
 global $action, $page;
-global $page, $user_id, $coursepress_admin_notice;
+global $page, $user_id, $cp_admin_notice;
 global $coursepress;
 
 $notification_id = '';
@@ -46,7 +46,7 @@ if ( isset($_GET['notification_id']) ) {
 }
 ?>
 
-<div class="wrap nosubsub">
+<div class="wrap nosubsub cp-wrap">
     <div class="icon32" id="icon-themes"><br></div>
 
     <h2><?php _e('Notification', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_notification_cap') || current_user_can('coursepress_create_my_notification_cap') || current_user_can('coursepress_create_my_assigned_notification_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=notifications&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
@@ -145,8 +145,21 @@ if ( isset($_GET['notification_id']) ) {
                                 <br/><br/>
                                 <label for='course_name'><?php _e('Notification Content', 'cp'); ?></label>
                                 <?php
-                                $args = array( "textarea_name" => "notification_description", "textarea_rows" => 10 );
-                                wp_editor(htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : '' ), "notification_description", $args);
+								
+								$editor_name = "notification_description";
+								$editor_id = "notification_description";
+								$editor_content = htmlspecialchars_decode(isset($notification->details->post_content) ? $notification->details->post_content : '' );
+								
+                                $args = array(
+									"textarea_name" => $editor_name,
+									"editor_class" => 'cp-editor',
+									"textarea_rows" => 10,
+								);
+								
+								// Filter $args before showing editor
+								$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+								
+                                wp_editor( $editor_content, $editor_id, $args);
                                 ?>
                                 <br/>
 
@@ -160,7 +173,7 @@ if ( isset($_GET['notification_id']) ) {
                                         <input type="submit" value = "<?php ( $notification_id == 0 ? _e('Create', 'cp') : _e('Update', 'cp') ); ?>" class = "button-primary" />
                                         <?php
                                     } else {
-                                        _e('You do not have required permissions for this action');
+                                        _e('You do not have required permissions for this action', 'cp');
                                     }
                                     ?>
                                 </div>

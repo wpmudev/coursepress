@@ -63,9 +63,9 @@ if ( !class_exists( 'Notification' ) ) {
 
             $post = array(
                 'post_author' => $user_id,
-                'post_content' => $_POST['notification_description'],
+                'post_content' => cp_filter_content($_POST['notification_description']),
                 'post_status' => 'publish',
-                'post_title' => $_POST['notification_name'],
+                'post_title' => cp_filter_content($_POST['notification_name'], true),
                 'post_type' => 'notifications',
             );
 
@@ -79,7 +79,7 @@ if ( !class_exists( 'Notification' ) ) {
             if ( $post_id != 0 ) {
                 foreach ( $_POST as $key => $value ) {
                     if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
-                        update_post_meta( $post_id, str_replace( 'meta_', '', $key ), $value );
+                        update_post_meta( $post_id, str_replace( 'meta_', '', $key ), cp_filter_content($value) );
                     }
                 }
             }

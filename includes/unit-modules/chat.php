@@ -1,5 +1,5 @@
 <?php
-if ( is_chat_plugin_active() ) {
+if ( cp_is_chat_plugin_active() ) {
 
     class chat_module extends Unit_Module {
 
@@ -37,7 +37,7 @@ if ( is_chat_plugin_active() ) {
 
             <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
 
-                <h3 class="module-title sidebar-name <?php echo!empty($data->active_module) ? 'is_active_module' : ''; ?>" data-panel="<?php echo!empty($data->panel) ? $data->panel : ''; ?>" data-id="<?php echo!empty($data->ID) ? $data->ID : ''; ?>">
+                <h3 class="module-title sidebar-name <?php echo (!empty($data->active_module) ? 'is_active_module' : ''); ?>" data-panel="<?php echo (!empty($data->panel) ? $data->panel : ''); ?>" data-id="<?php echo (!empty($data->ID) ? $data->ID : ''); ?>">
                     <span class="h3-label">
                         <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : __('Untitled', 'cp') ); ?></span>
                         <span class="h3-label-right"><?php echo $this->label; ?></span>
@@ -65,15 +65,23 @@ if ( is_chat_plugin_active() ) {
                     <div class="editor_in_place">
 
                         <?php
+						
+						$editor_name = $this->name . "_content[]";
+						$editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+						$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+						
                         $args = array(
-                            "textarea_name" => $this->name . "_content[]",
+                            "textarea_name" => $editor_name,
                             "textarea_rows" => 5,
-                            "quicktags" => false,
-                            "teeny" => false
+                            "quicktags" => true,
+                            "teeny" => false,
+							"editor_class" => 'cp-editor cp-unit-element',
                         );
+						
+						// Filter $args before showing editor
+						$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
 
-                        $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                        wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+                        wp_editor( $editor_content, $editor_id, $args);
                         ?>
                     </div>
 
@@ -89,8 +97,9 @@ if ( is_chat_plugin_active() ) {
         }
 
         function on_create() {
-            $this->order = apply_filters($this->name . '_order', $this->order);
+            $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
             $this->description = __('Add a chat box from the Wordpress Chat plugin', 'cp');
+            $this->label = __('Live Chat', 'cp');
             $this->save_module_data();
             parent::additional_module_actions();
         }
@@ -137,6 +146,6 @@ if ( is_chat_plugin_active() ) {
 
     }
 
-    coursepress_register_module('chat_module', 'chat_module', 'output');
+    cp_register_module('chat_module', 'chat_module', 'output');
 }
 ?>

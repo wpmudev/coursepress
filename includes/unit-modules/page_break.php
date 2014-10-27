@@ -47,15 +47,21 @@ class page_break_module extends Unit_Module {
             <div class="editor_in_place" style="display:none;">
 
                 <?php
+				
+				$editor_name = $this->name . "_content[]";
+				$editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+				$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+				
                 $args = array(
-                    "textarea_name" => $this->name . "_content[]",
+                    "textarea_name" => $editor_name,
                     "textarea_rows" => 5,
-                    "quicktags" => false,
+                    "quicktags" => true,
                     "teeny" => false
                 );
 
-                $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-                wp_editor(htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : '')), $editor_id, $args);
+				$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+				
+                wp_editor( $editor_content, $editor_id, $args);
                 ?>
             </div>
 
@@ -79,8 +85,9 @@ class page_break_module extends Unit_Module {
     }
 
     function on_create() {
-        $this->order = apply_filters($this->name . '_order', $this->order);
+        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
         $this->description = __('Breaks the Unit into more pages', 'cp');
+        $this->label = __('Page Break', 'cp');
         $this->save_module_data();
         parent::additional_module_actions();
     }
@@ -120,5 +127,5 @@ class page_break_module extends Unit_Module {
 
 }
 
-coursepress_register_module('page_break_module', 'page_break_module', 'invisible');
+cp_register_module('page_break_module', 'page_break_module', 'invisible');
 ?>

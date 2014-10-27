@@ -16,7 +16,7 @@ if ( isset( $_POST['course_id'] ) ) {
     }
 }
 ?>
-<div class="wrap nocoursesub">
+<div class="wrap nocoursesub cp-wrap">
     <a href="<?php echo admin_url( 'admin.php?page=students' );?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
     <h2><?php _e( 'Student Profile', 'cp' ); ?></h2>
 
@@ -64,7 +64,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
-                                    <span class="info"><?php echo $student->get_courses_number(); ?></span>
+                                    <span class="info"><?php echo Student::get_courses_number( $student->ID ); ?></span>
                                 </div>
                                 <div>
                                     <span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
@@ -113,7 +113,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
                                             <div class="student-course-bottom">
 
-                                                <div class="course-summary"><?php echo get_the_course_excerpt( $course_object->ID ); ?></div>
+                                                <div class="course-summary"><?php echo cp_get_the_course_excerpt( $course_object->ID ); ?></div>
 
                                                 <div class="course-info-holder">
                                                     <span class="course_info_caption"><?php _e( 'Start', 'cp' ); ?> <i class="fa fa-calendar"></i></span>
@@ -144,7 +144,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                         if ( $course_object->open_ended_course == 'on' ) {
                                                             echo '&infin;';
                                                         } else {
-                                                            echo get_number_of_days_between_dates( $course_object->course_start_date, $course_object->course_end_date );
+                                                            echo cp_get_number_of_days_between_dates( $course_object->course_start_date, $course_object->course_end_date );
                                                         }
                                                         ?> <?php _e( 'Days', 'cp' ); ?>
                                                     </span>
@@ -165,7 +165,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                             <label class="class-label">
                                                                 <?php _e( 'Class', 'cp' ); ?>
 
-                                                                <select name="course_class" data-placeholder="'.__( 'Choose a Class...', 'cp' ).'" id="course_class_<?php echo $course_object->ID; ?>">
+                                                                <select name="course_class" data-placeholder="'<?php _e( 'Choose a Class...', 'cp' ); ?>'" id="course_class_<?php echo $course_object->ID; ?>">
 
                                                                     <option value=""<?php echo ( $student->{'enrolled_course_class_' . $course_object->ID} == '' ? ' selected="selected"' : '' ); ?>><?php _e( 'Default', 'cp' ); ?></option>
                                                                     <?php

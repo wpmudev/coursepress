@@ -8,7 +8,7 @@ $discussion = new Discussion( get_the_ID() );
     <header class="entry-header">
 
         <div class="discussion-archive-single-meta">
-            <div class="discussion-comments-circle"><span class="comments-count"><?php _e( 'Q', 'coursepress' ); ?></span></div>
+            <div class="discussion-comments-circle"><span class="comments-count"><?php _e( 'Q', 'cp' ); ?></span></div>
         </div>
 
         <div class="discussion-archive-single">
@@ -18,7 +18,7 @@ $discussion = new Discussion( get_the_ID() );
                 <?php the_content(); ?>
             </div><!-- .entry-content -->
             <div class="discussion-meta">
-                <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion->get_unit_name(); ?></span> | <span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress' );?></span>
+                <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion->get_unit_name(); ?></span> | <span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'cp' );?></span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -29,7 +29,7 @@ $discussion = new Discussion( get_the_ID() );
             if ( comments_open() || '0' != get_comments_number() ) {
                 comments_template( '/comments-discussion.php' );
             }else{
-                _e( 'Comments are disabled', 'coursepress' );
+                _e( 'Comments are disabled', 'cp' );
             }
             ?>
         </div>
@@ -37,6 +37,6 @@ $discussion = new Discussion( get_the_ID() );
     </header><!-- .entry-header -->
 
     <footer class="entry-meta">
-        <?php edit_post_link( __( 'Edit', 'coursepress' ), '<span class="edit-link">', '</span>' ); ?>
+        <?php edit_post_link( __( 'Edit', 'cp' ), '<span class="edit-link">', '</span>' ); ?>
     </footer><!-- .entry-meta -->
 </article><!-- #post-## -->

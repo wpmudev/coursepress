@@ -178,7 +178,7 @@ class CoursePress_Pagination {
                 }
             }
 
-            $this->pagination .= '&nbsp;<span class="paging-input">' . $this->page . ' of <span class="total-pages">' . $lastpage . '</span></span>&nbsp;';
+            $this->pagination .= '&nbsp;<span class="paging-input">' . $this->page . ' '.__('of', 'cp').' <span class="total-pages">' . $lastpage . '</span></span>&nbsp;';
 
             if ( $this->page ) {
                 if ( $this->page < $counter - 1 )
@@ -186,7 +186,7 @@ class CoursePress_Pagination {
                 else
                     $this->pagination .= "&nbsp;<a class=\"next-page disabled\">&rsaquo;</a>&nbsp;<a class=\"last-page disabled\">&raquo;</a>";
                 if ( $this->showCounter )
-                    $this->pagination .= "<div class=\"pagination_data\">( $this->total_pages Pages )</div>";
+                    $this->pagination .= "<div class=\"pagination_data\">(". $this->total_pages." ".__('Pages', 'cp')."   )</div>";
             }
         }
 
