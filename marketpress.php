@@ -7,7 +7,6 @@ Description: The complete WordPress ecommerce plugin - works perfectly with Budd
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Text Domain: mp
-WDP ID: 144
 
 Copyright 2009-2014 Incsub (http://incsub.com)
 Author - Aaron Edwards
