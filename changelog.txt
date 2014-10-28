@@ -6,6 +6,13 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.2=
+* Fixed up issue with translation files not working properly.
+  - Updated languages files.
+  - Updated cp-en_GB translation (Enrollment vs Enrolment).
+  - Placing translations in /coursepress/languages now works correctly.
+* Added additional hooks for developers in class.course.unit.php and class.course.unit.module.php.
+
 = 1.2.2.1=
 * Fixed issues caused e-newsletter plugin to show blank page in admin
 * Fixed possible issues with MarketPress update
