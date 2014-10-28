@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.2.1
+  Version: 1.2.2.2
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -62,7 +62,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.2.1';
+		public $version = '1.2.2.2';
 
 		/**
 		 * Plugin friendly name.
@@ -1932,7 +1932,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function add_custom_media_library_sizes( $sizes ) {
-			$sizes[ 'course_thumb' ] = __( 'Course Image' );
+			$sizes[ 'course_thumb' ] = __( 'Course Image' , 'cp');
 
 			return $sizes;
 		}
@@ -2744,7 +2744,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( $this->location == 'mu-plugins' ) {
 				load_muplugin_textdomain( 'cp', '/languages/' );
 			} else if ( $this->location == 'subfolder-plugins' ) {
-				load_plugin_textdomain( 'cp', false, '/' . $this->plugin_dir . '/languages/' );
+				load_plugin_textdomain( 'cp', false, $this->dir_name . '/languages/' );
 			} else if ( $this->location == 'plugins' ) {
 				load_plugin_textdomain( 'cp', false, '/languages/' );
 			}
@@ -4079,10 +4079,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'admin_ajax_url'					 => admin_url( 'admin-ajax.php' ),
 				'message_all_fields_are_required'	 => __( 'All fields are required.', 'cp' ),
 				'message_username_minimum_length'	 => __( 'Username must be at least 4 characters in length', 'cp' ),
-				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.' ),
-				'message_email_exists'				 => __( 'E-mail already exists or invalid. Please choose another one.' ),
-				'message_emails_dont_match'			 => __( "E-mails mismatch." ),
-				'message_passwords_dont_match'		 => __( "Passwords mismatch." ),
+				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.' , 'cp'),
+				'message_email_exists'				 => __( 'E-mail already exists or invalid. Please choose another one.' , 'cp'),
+				'message_emails_dont_match'			 => __( "E-mails mismatch." , 'cp'),
+				'message_passwords_dont_match'		 => __( "Passwords mismatch." , 'cp'),
 				'message_password_minimum_length'	 => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
 				'minimum_password_lenght'			 => apply_filters( 'coursepress_min_password_length', 6 ),
 				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),

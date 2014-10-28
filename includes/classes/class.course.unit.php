@@ -36,7 +36,14 @@ if ( !class_exists( 'Unit' ) ) {
 
 			// Will return cached value if it exists
 			$this->course_id = $this->get_parent_course_id();
-						
+
+			/**
+			 * Perform action after a Unit object is created.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_unit_init', $this );
+
 		}
 
 		function Unit( $id = '', $output = 'OBJECT' ) {
@@ -80,6 +87,7 @@ if ( !class_exists( 'Unit' ) ) {
 				$unit_details = $unit->get_unit();
 			}
 
+			/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
 			/* Check if previous has conditions */
@@ -107,10 +115,28 @@ if ( !class_exists( 'Unit' ) ) {
 			$this->status['date_restriction']['result'] = $current_date >= $unit_details->unit_availability;
 			
 			if ( ! $this->status['date_restriction']['result'] || !$available ) {
-				return false;
+				$available = false;
 			} else {
-				return true;
+				$available = true;
 			}
+
+			/**
+			 * Perform action if unit is available.
+			 *
+			 * @since 1.2.2
+			 **/
+			do_action( 'coursepress_unit_availble', $available, $unit_id );
+
+			/**
+			 * Return filtered value.
+			 *
+			 * Can be used by other plugins to filter unit availability.
+			 *
+			 * @since 1.2.2
+			 **/
+			$available = apply_filters( 'coursepress_filter_unit_availability', $available, $unit_id );
+
+			return $available;
 		}
 		
 		static function get_units_from_course( $course_id, $status = 'publish', $id_only = true ) {
@@ -373,12 +399,14 @@ if ( !class_exists( 'Unit' ) ) {
 				'post_parent'	 => $_POST[ 'course_id' ]
 			);
 
+			$new_unit = true;
 			if ( isset( $_POST[ 'unit_id' ] ) ) {
 				$post[ 'ID' ] = $_POST[ 'unit_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+				$new_unit = false;
 			}
 
 			$post_id = wp_insert_post( $post );
-			
+
 			// Clear cached object because we're updating the object
 			self::kill( self::TYPE_UNIT, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $post_id );
@@ -405,6 +433,13 @@ if ( !class_exists( 'Unit' ) ) {
 			
 			// $this->delete_all_elements_auto_drafts( $post_id );
 			// $this->delete_all_unit_auto_drafts( $course_id );
+
+			if( $new_unit ) {
+				do_action( 'coursepress_unit_created', $post_id );
+			} else {
+				do_action( 'coursepress_unit_updated', $post_id );
+			}
+
 			return $post_id;
 		}
 
@@ -413,7 +448,25 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function delete_unit( $force_delete ) {
-			
+
+			/**
+			 * Allow Unit deletion to be cancelled when filter returns true.
+			 *
+			 * @since 1.2.2
+			 */
+			if( apply_filters( 'coursepress_unit_cancel_delete', false, $this->id ) ) {
+
+				/**
+				 * Perform actions if the deletion was cancelled.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_unit_delete_cancelled', $this->id );
+				return false;
+			}
+
+			$the_unit = new Unit( $this->id );
+
 			// Clear cached object because we're deleting the object.
 			self::kill( self::TYPE_UNIT, $this->id );
 			self::kill( self::TYPE_UNIT_MODULES, $this->id );
@@ -437,6 +490,15 @@ if ( !class_exists( 'Unit' ) ) {
 				$module = new Unit_Module( $units_module->ID );
 				$module->delete_module( true );
 			}
+
+			/**
+			 * Perform actions after a Unit is deleted.
+			 *
+			 * @var $course  The Unit object if the ID or post_title is needed.
+			 *
+			 * @since 1.2.1
+			 */
+			do_action( 'coursepress_unit_deleted', $the_unit );
 		}
 
 		function change_status( $post_status ) {
@@ -454,6 +516,16 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
+
+			/**
+			 * Perform actions when Unit status is changed.
+			 *
+			 * var $this->id  The Unit id
+			 * var $post_status The new status
+			 *
+			 * @since 1.2.1
+			 */
+			do_action( 'coursepress_unit_status_changed', $this->id, $post_status );
 		}
 
 		function can_show_permalink() {
@@ -556,6 +628,22 @@ if ( !class_exists( 'Unit' ) ) {
 				$unit_id = $this->id;
 			}
 
+			/**
+			 * Allow Unit duplication to be cancelled when filter returns true.
+			 *
+			 * @since 1.2.2
+			 */
+			if( apply_filters( 'coursepress_unit_cancel_duplicate', false, $unit_id ) ) {
+
+				/**
+				 * Perform actions if the duplication was cancelled.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_unit_duplicate_cancelled', $unit_id );
+				return false;
+			}
+
 			/* Duplicate course and change some data */
 
 			$new_unit	 = $this->get_unit();
@@ -592,6 +680,13 @@ if ( !class_exists( 'Unit' ) ) {
 				$module = new Unit_Module( $unit_module->ID );
 				$module->duplicate( $unit_module->ID, $new_unit_id );
 			}
+
+			/**
+			 * Perform action when the unit is duplicated.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_unit_duplicated', $new_unit_id );
 		}
 
 	}

@@ -23,20 +23,20 @@
 		</label>
 	<?php } ?>
 
-    <input type="hidden" value="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  ); ?>" name="course_id" />
+    <input type="hidden" value="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  , 'cp'); ?>" name="course_id" />
 
     <div class="cp_popup_buttons login_buttons">
 		<?php wp_nonce_field( 'popup_login_nonce', 'submit_login_data' ); ?>
         <div class="validation_errors"></div>
 
-        <input type="hidden" name="data-course-id" id="data-course-id" value="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  ); ?>" />
+        <input type="hidden" name="data-course-id" id="data-course-id" value="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  , 'cp'); ?>" />
 
         <label class="cp_popup_col_2">
-            <a href="" class="cp_signup_step" data-course-id="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  ); ?>"><?php _e( 'Create an Account', 'cp' ); ?></a>
+            <a href="" class="cp_signup_step" data-course-id="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  , 'cp'); ?>"><?php _e( 'Create an Account', 'cp' ); ?></a>
         </label>
 
         <label class="cp_popup_col_2 second-child">
-            <button class="apply-button login" data-course-id="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  ); ?>"><?php _e( 'Login', 'cp' ); ?></button>
+            <button class="apply-button login" data-course-id="<?php esc_attr_e( isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' '  , 'cp'); ?>"><?php _e( 'Login', 'cp' ); ?></button>
         </label>
     </div>
 </form>
