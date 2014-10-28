@@ -57,11 +57,10 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				'post_type'		 => ( isset( $data->post_type ) ? $data->post_type : 'module' ),
 			);
 
+			$new_module = true;
 			if ( isset( $data->ID ) && $data->ID != '' && $data->ID != 0 ) {
 				$post[ 'ID' ] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-				//$update = true;
-			} else {
-				//$update = false;
+				$new_module = false;
 			}
 
 			//require( ABSPATH . WPINC . '/pluggable.php' );
@@ -82,14 +81,51 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				}
 			}
 
+			if( $new_module ) {
+
+				/**
+				 * Perform action after module has been created.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_unit_module_created', $post_id, $data->unit_id );
+			} else {
+
+				/**
+				 * Perform action after module has been updated.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_unit_module_updated', $post_id, $data->unit_id );
+			}
+
 			return $post_id;
 		}
 
 		function delete_module( $id, $force_delete = true ) {
 			global $wpdb;
+
+			$unit_id = $this->get_module_unit_id( $id );
+
+			/**
+			 * Allow Unit Module deletion to be cancelled when filter returns true.
+			 *
+			 * @since 1.2.2
+			 */
+			if( apply_filters( 'coursepress_unit_module_cancel_delete', false, $id, $unit_id ) ) {
+
+				/**
+				 * Perform actions if the deletion was cancelled.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_unit_module_delete_cancelled', $id, $unit_id );
+				return false;
+			}
+
+			$the_module = $this;
 			
 			self::kill( self::TYPE_MODULE, $id );
-			$unit_id = $this->get_module_unit_id( $id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
 			
 			wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
@@ -107,6 +143,15 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			foreach ( $units_module_responses as $units_module_response ) {
 				wp_delete_post( $units_module_response->ID, true );
 			}
+
+			/**
+			 * Perform actions after a Unit Module is deleted.
+			 *
+			 * @var $the_module  The Unit Module object
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_unit_module_deleted', $the_module, $unit_id );
 		}
 
 		function check_for_modules_to_delete() {
