@@ -61,7 +61,7 @@ class radio_input_module extends Unit_Module {
     function get_response( $user_ID, $response_request_ID, $status = 'publish', $limit = 1 ) {
 
         $already_respond_posts_args = array(
-            'posts_per_page' => 1,
+            'posts_per_page' => $limit,
             'post_author' => $user_ID,
 			'author' => $user_ID,
             'post_type' => 'module_response',
