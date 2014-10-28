@@ -103,12 +103,12 @@ class audio_module extends Unit_Module {
                     $data_loop = ( isset($data->loop) ? $data->loop : 'No' );
                     $data_autoplay = ( isset($data->autoplay) ? $data->autoplay : 'No' );
                     ?>
-                    <input type="radio" name="<?php echo $this->name . '_loop[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked($data_loop, 'Yes', true); ?>/> <?php _e('Yes'); ?><br /><br />
-                    <input type="radio" name="<?php echo $this->name . '_loop[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked($data_loop, 'No', true); ?>/> <?php _e('No'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name . '_loop[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked($data_loop, 'Yes', true); ?>/> <?php _e('Yes', 'cp'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name . '_loop[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked($data_loop, 'No', true); ?>/> <?php _e('No', 'cp'); ?><br /><br />
 
                     <label><?php _e('Autoplay', 'cp'); ?></label>
-                    <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>/> <?php _e('Yes'); ?><br /><br />
-                    <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked($data_autoplay, 'No', true); ?>/> <?php _e('No'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>/> <?php _e('Yes', 'cp'); ?><br /><br />
+                    <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked($data_autoplay, 'No', true); ?>/> <?php _e('No', 'cp'); ?><br /><br />
                 </div>
 
                 <?php

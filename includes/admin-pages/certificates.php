@@ -283,7 +283,7 @@ $columns			 = $templates->get_columns();
 
 										<div id="major-publishing-actions">
 											<div id="delete-action">
-												<a class="preview button" href="" target="wp-preview-695" id="post-preview"><?php _e( 'Preview', 'tc' ) ?></a>
+												<a class="preview button" href="" target="wp-preview-695" id="post-preview"><?php _e( 'Preview', 'cp' ) ?></a>
 											</div>
 
 											<div id="publishing-action">
