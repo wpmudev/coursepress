@@ -31,7 +31,7 @@ add_thickbox();
         </div>
 
         <?php
-        do_shortcode('[course_unit_archive_submenu]');
+        echo do_shortcode('[course_unit_archive_submenu]');
         ?>
 		<?php
 			if( 100 == (int) $progress) {

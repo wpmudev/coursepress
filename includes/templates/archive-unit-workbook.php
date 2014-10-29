@@ -27,7 +27,7 @@ if ( 100 == ( int ) $progress ) {
 
 ?>
 
-<?php do_shortcode('[course_unit_archive_submenu]'); ?>
+<?php echo do_shortcode('[course_unit_archive_submenu]'); ?>
 
 <h2 class="workbook-title">
     <?php echo __('Workbook', 'cp');

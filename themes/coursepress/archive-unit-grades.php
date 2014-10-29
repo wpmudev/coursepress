@@ -24,7 +24,7 @@ get_header();
         </div>
 
         <?php
-        do_shortcode('[course_unit_archive_submenu]');
+        echo do_shortcode('[course_unit_archive_submenu]');
         ?>
 
         <div class="clearfix"></div>

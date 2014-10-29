@@ -11,7 +11,7 @@ $course_id = (int) $course_id;
 $coursepress->check_access($course_id);
 ?>
 <?php
-do_shortcode('[course_unit_archive_submenu]');
+echo do_shortcode('[course_unit_archive_submenu]');
 ?>
 
 <h2><?php _e('Discussions', 'cp'); ?></h2>
