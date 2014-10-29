@@ -6,7 +6,7 @@ do_shortcode( '[course_units_loop]' ); //required for getting unit results
 ?>
 
 <?php
-do_shortcode( '[course_unit_archive_submenu]' );
+echo do_shortcode( '[course_unit_archive_submenu]' );
 $complete_message	 = '';
 if ( 100 == (int) $progress ) {
 	$complete_message = '<div class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</div>';
@@ -31,7 +31,7 @@ echo ' ' . $complete_message; ?></h2>
 				<li class="<?php echo esc_attr( $additional_li_class ); ?>">
 					<div class='<?php echo esc_attr( $additional_class ); ?>'></div>
 					<a href="<?php echo esc_url( do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ) ); ?>" rel="bookmark"><?php the_title().' '.(get_post_status() !== 'publish' && cp_can_see_unit_draft() ? _e(' [DRAFT]', 'cp') :  ''); ?></a><?php echo do_shortcode( '[course_unit_details field="percent" format="true" style="flat"]' ); ?>
-				<?php do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
+				<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
 				</li>
 				<?php
 			endwhile;

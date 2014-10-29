@@ -3,7 +3,7 @@ global $wp;
 
 $paged = isset($wp->query_vars['paged']) ? absint($wp->query_vars['paged']) : 1;
 
-do_shortcode('[course_unit_archive_submenu]');
+echo do_shortcode('[course_unit_archive_submenu]');
 ?>
 <h2><?php echo get_the_title((int) $unit_id); ?></h2>
 

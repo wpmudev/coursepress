@@ -2395,6 +2395,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			} else {
 				$subpage = '';
 			}
+			ob_start();
 			?>
 			<div class="submenu-main-container">
 				<ul id="submenu-main" class="submenu nav-submenu">
@@ -2421,6 +2422,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				</ul><!--submenu-main-->
 			</div><!--submenu-main-container-->
 			<?php
+			$content = ob_get_clean();
+			return $content;
 		}
 
 		function courses_urls( $atts ) {
@@ -3459,8 +3462,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				// redefine your own textarea ( the comment body )
 				'comment_field'			 => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
 			);
-
+			ob_start();
 			comment_form( $comments_args, $unit_id );
+			$content = ob_get_clean();
+			return $content;
 		}
 
 		function student_registration_form() {
@@ -3879,6 +3884,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		}
 
 		function module_status( $atts ) {
+			ob_start();
 			extract( shortcode_atts( array( 'course_id' => false, 'unit_id' => false, 'format' => true ), $atts ) );
 			$format = (bool) $format;
 			if ( $course_id ) {
@@ -3936,9 +3942,12 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					?></span>
 				<?php
 			}
+			$content = ob_get_clean();
+			return $content;
 		}
 
 		function student_workbook_table( $args ) {
+			ob_start();
 			extract( shortcode_atts(
 			array(
 				'module_column_title'				 => __( 'Element', 'cp' ),
@@ -4205,6 +4214,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				<?php endif; ?>
 			</table>
 			<?php
+			$content = ob_get_clean();
+			return $content;
 		}
 
 		public static function instance( $instance = null ) {

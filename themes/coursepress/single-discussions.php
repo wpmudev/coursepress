@@ -22,7 +22,7 @@ get_header();
             </div>
             
             <?php
-            do_shortcode( '[course_unit_archive_submenu course_id="' . $course_id . '"]' );
+            echo do_shortcode( '[course_unit_archive_submenu course_id="' . $course_id . '"]' );
             ?>
 
             <div class="clearfix"></div>

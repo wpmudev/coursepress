@@ -3865,7 +3865,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						', 'cp' ) );
 
 						ob_start();
-						do_shortcode( '[course_signup page ="login" login_title ="" redirect_url ="' . urlencode( home_url( $_SERVER[ 'REQUEST_URI' ] ) ) . '" signup_url ="' . CoursePress::instance()->get_signup_slug( true ) . '" logout_url ="' . CoursePress::instance()->get_signup_slug( true ) . '"]' );
+						echo do_shortcode( '[course_signup page ="login" login_title ="" redirect_url ="' . urlencode( home_url( $_SERVER[ 'REQUEST_URI' ] ) ) . '" signup_url ="' . CoursePress::instance()->get_signup_slug( true ) . '" logout_url ="' . CoursePress::instance()->get_signup_slug( true ) . '"]' );
 						$content .= ob_get_clean();
 					}
 				}

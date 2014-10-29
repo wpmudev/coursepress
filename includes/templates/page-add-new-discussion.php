@@ -33,7 +33,7 @@ if ( isset( $_POST['new_question_submit'] ) ) {
 }
 ?>        
 <?php
-do_shortcode( '[course_unit_archive_submenu]' );
+echo do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 <p class="<?php echo esc_attr( 'form-info-' . $form_message_class ); ?>"><?php echo esc_html($form_message); ?></p>
 <form id="new_question_form" name="new_question_form" method="post" class="new_question_form">

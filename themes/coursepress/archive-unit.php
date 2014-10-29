@@ -24,7 +24,7 @@ get_header();
         </div>
 
 		<?php
-		do_shortcode( '[course_unit_archive_submenu]' );
+		echo do_shortcode( '[course_unit_archive_submenu]' );
 		?>
 		<?php
 		if ( 100 == (int) $progress ) {
@@ -73,7 +73,7 @@ get_header();
 						<div class="unit-archive-single">
 							<?php echo do_shortcode( '[course_unit_details field="percent" format="true" style="extended"]' ); ?>
 							<a class="unit-archive-single-title" href="<?php echo do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ); ?>" rel="bookmark"><?php the_title() . ' ' . (get_post_status() !== 'publish' && current_user_can( 'manage_options' ) ? _e( ' [DRAFT]', 'cp' ) : ''); ?></a>
-							<?php do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
+							<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
 						</div>
 					</li>
 					<?php
