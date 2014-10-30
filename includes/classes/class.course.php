@@ -319,9 +319,9 @@ if ( !class_exists( 'Course' ) ) {
 						$automatic_sku = $_POST[ 'meta_auto_sku' ];
 
 						if ( $automatic_sku == 'on' ) {
-							$sku = $automatic_sku_number;
+							$sku[0] = $automatic_sku_number;
 						} else {
-							$sku = cp_filter_content( (!empty( $_POST[ 'mp_sku' ] ) ? $_POST[ 'mp_sku' ] : '' ), true );
+							$sku[0] = cp_filter_content( (!empty( $_POST[ 'mp_sku' ] ) ? $_POST[ 'mp_sku' ] : '' ), true );
 						}
 
 						update_post_meta( $this->id, 'mp_product_id', $post_id );

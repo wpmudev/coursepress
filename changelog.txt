@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.3=
+* Resolved issue with incorrect SKU being returned in checkout process.
+
 = 1.2.2.2=
 * Fixed issue with not showing HTML tags in excerpt
 * Resolved issues with UTF-8 characters in filename in the TCPDF library
