@@ -20,3 +20,9 @@ html.wp-toolbar{
 #adminmenuback{
     display: none;
 }
+
+.wpmudev-message,
+.wpmudev-new,
+.updated{
+    display: none !important;
+}

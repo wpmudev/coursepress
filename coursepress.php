@@ -47,6 +47,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 	 */
 	class CoursePress {
 
+		public $mp_file = '198613_marketpress-ecommerce-2.9.5.4.zip';
+
 		/**
 		 * Current running instance of CoursePress.
 		 *
@@ -483,6 +485,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 *
 				 */
 				do_action( 'coursepress_admin_init' );
+
+				/*
+				 * Plugin activation class
+				 */
+				require_once($this->plugin_dir . 'includes/classes/class.plugin-activation.php');
 			}
 
 			/**
@@ -1932,7 +1939,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function add_custom_media_library_sizes( $sizes ) {
-			$sizes[ 'course_thumb' ] = __( 'Course Image' , 'cp');
+			$sizes[ 'course_thumb' ] = __( 'Course Image', 'cp' );
 
 			return $sizes;
 		}
@@ -4065,6 +4072,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			include_once( $this->plugin_dir . 'includes/admin-pages/settings-email.php' );
 		}
 
+		function show_settings_marketpress() {
+			include_once( $this->plugin_dir . 'includes/admin-pages/settings-marketpress.php' );
+		}
+
 		function show_unit_details( $unit_page_num = 1, $active_element = 1, $preview_redirect_url ) {
 			require_once( $this->plugin_dir . 'includes/admin-pages/unit-details.php' );
 		}
@@ -4079,10 +4090,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'admin_ajax_url'					 => admin_url( 'admin-ajax.php' ),
 				'message_all_fields_are_required'	 => __( 'All fields are required.', 'cp' ),
 				'message_username_minimum_length'	 => __( 'Username must be at least 4 characters in length', 'cp' ),
-				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.' , 'cp'),
-				'message_email_exists'				 => __( 'E-mail already exists or invalid. Please choose another one.' , 'cp'),
-				'message_emails_dont_match'			 => __( "E-mails mismatch." , 'cp'),
-				'message_passwords_dont_match'		 => __( "Passwords mismatch." , 'cp'),
+				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.', 'cp' ),
+				'message_email_exists'				 => __( 'E-mail already exists or invalid. Please choose another one.', 'cp' ),
+				'message_emails_dont_match'			 => __( "E-mails mismatch.", 'cp' ),
+				'message_passwords_dont_match'		 => __( "Passwords mismatch.", 'cp' ),
 				'message_password_minimum_length'	 => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
 				'minimum_password_lenght'			 => apply_filters( 'coursepress_min_password_length', 6 ),
 				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),
@@ -4138,26 +4149,26 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
 				</div>
-				<?php
-			}
-			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
-				?>
+					<?php
+				}
+				if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
+					?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
 				</div>
-				<?php
+					<?php
+				}
+				$this->load_popup_window();
 			}
-			$this->load_popup_window();
-		}
 
-		/* custom header actions */
+			/* custom header actions */
 
-		function head_actions() {
-			$generate_cp_generator_meta = apply_filters( 'coursepress_generator_meta', true );
-			if ( $generate_cp_generator_meta ) {
-				?>
+			function head_actions() {
+				$generate_cp_generator_meta = apply_filters( 'coursepress_generator_meta', true );
+				if ( $generate_cp_generator_meta ) {
+					?>
 				<meta name="generator" content="<?php echo $this->name . ' ' . $this->version; ?>"/>
 				<?php
 			}
@@ -4240,7 +4251,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				wp_enqueue_script( 'cp-chosen-config', $this->plugin_url . 'js/chosen-config.js', array( 'cp-settings' ), $this->version, true );
 			}
 
-			$page = isset($_GET['page']) ? $_GET['page'] : '';
+			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
 
 			if ( ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == $this->screen_base . '_settings') || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js' );
@@ -4750,27 +4761,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class="menu">
 					<ul class='nav-menu'>
-						<?php
-						foreach ( $main_sorted_menu_items as $menu_item ) {
-							?>
+				<?php
+				foreach ( $main_sorted_menu_items as $menu_item ) {
+					?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-																				   <?php if ( $menu_item->db_id !== '' ) { ?>
+					<?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
-										<?php
-										foreach ( $sub_sorted_menu_items as $menu_item ) {
-											?>
+																					   <?php
+																					   foreach ( $sub_sorted_menu_items as $menu_item ) {
+																						   ?>
 											<li class='menu-item-<?php echo $menu_item->ID; ?>'><a
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-										<?php } ?>
+						<?php } ?>
 									</ul>
-								<?php } ?>
+									<?php } ?>
 							</li>
-							<?php
-						}
-						?>
+								<?php
+							}
+							?>
 					</ul>
 				</div>
 
@@ -4854,19 +4865,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class="menu">
 					<ul id="mobile_menu" class='mobile_menu'>
-						<?php
-						foreach ( $main_sorted_menu_items as $menu_item ) {
-							?>
+				<?php
+				foreach ( $main_sorted_menu_items as $menu_item ) {
+					?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 							</li>
-							<?php if ( $menu_item->db_id !== '' ) { ?>
+					<?php if ( $menu_item->db_id !== '' ) { ?>
 								<?php
 								foreach ( $sub_sorted_menu_items as $menu_item ) {
 									?>
 									<li><a href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 									</li>
-								<?php } ?>
+						<?php } ?>
 							<?php } ?>
 						<?php } ?>
 					</ul>
