@@ -121,10 +121,14 @@ if ( !class_exists('Course_Completion') ) {
         function init_pages_visited( $student_id = 0 ) {
 
             foreach ( $this->units as $unit ) {
-                $pages = get_user_meta($student_id, 'visited_unit_pages_' . $unit->ID . '_page', true);
-                $pages = explode(',', $pages);
-                unset($pages[0]);
-                $unit->pages_visited = $pages;
+                $pages = get_user_option('visited_unit_pages_' . $unit->ID . '_page', $student_id );
+	            if ( $pages ) {
+		            $pages = explode(',', $pages);
+		            //unset($pages[0]);
+		            $unit->pages_visited = $pages;
+	            } else {
+		            $unit->pages_visited = array();
+	            }
             }
         }
 

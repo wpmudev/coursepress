@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.3 =
+* Improved CoursePress for multi-site.
+* Improved CoursePress security for multi-site.
+
 = 1.2.2.2=
 * Fixed up issue with translation files not working properly.
   - Updated languages files.

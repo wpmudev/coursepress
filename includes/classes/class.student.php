@@ -24,18 +24,25 @@ if ( !class_exists('Student') ) {
             $this->first_name = get_user_meta($ID, 'first_name', true);
             $this->last_name = get_user_meta($ID, 'last_name', true);
             $this->courses_number = Student::get_courses_number( $this->ID );
+
         }
 
         function Student( $ID, $name = '' ) {
             $this->__construct($ID, $name);
         }
 
-        //Check if the user is alrady enrolled in the course
-        function user_enrolled_in_course( $course_id ) {
-            if ( get_user_meta($this->ID, 'enrolled_course_date_' . $course_id, true) ) {
+        // Check if the user is already enrolled in the course
+	    // 3rd parameter is to deal with legacy
+        function user_enrolled_in_course( $course_id , $user_id = false, $action = '' ) {
+
+	        if( empty ( $user_id ) ) {
+		        $user_id = $this->ID;
+	        }
+
+            if ( get_user_option( 'enrolled_course_date_' . $course_id, $user_id ) ) {
                 return true;
             } else {
-                return false;
+	            return false;
             }
         }
 
@@ -62,7 +69,7 @@ if ( !class_exists('Student') ) {
                 $user_ID = $this->ID;
             }
 
-            $get_old_values = get_user_meta($user_ID, 'visited_units', true);
+            $get_old_values = get_user_option( 'visited_units', $user_ID );
             $get_old_values = explode('|', $get_old_values);
 
             if ( cp_in_array_r($unit_ID, $get_old_values) ) {
@@ -77,7 +84,7 @@ if ( !class_exists('Student') ) {
                 $user_ID = $this->ID;
             }
 
-            $get_old_values = get_user_meta($user_ID, 'visited_courses', false);
+            $get_old_values = get_user_option( 'visited_courses', $user_ID );
 
             if ( $get_old_values == false ) {
                 $get_old_values = array();
@@ -95,10 +102,11 @@ if ( !class_exists('Student') ) {
             global $cp;
             $current_time = current_time('mysql');
 
-            update_user_meta($this->ID, 'enrolled_course_date_' . $course_id, $current_time); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
-            update_user_meta($this->ID, 'enrolled_course_class_' . $course_id, $class);
-            update_user_meta($this->ID, 'enrolled_course_group_' . $course_id, $group);
-            update_user_meta($this->ID, 'role', 'student'); //alternative to roles used
+	        $global_option = ! is_multisite();
+            update_user_option($this->ID, 'enrolled_course_date_' . $course_id, $current_time, $global_option ); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
+            update_user_option($this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option );
+            update_user_option($this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option );
+            update_user_option($this->ID, 'role', 'student', $global_option ); //alternative to roles used
 
             $email_args['email_type'] = 'enrollment_confirmation';
             $email_args['course_id'] = $course_id;
@@ -120,12 +128,18 @@ if ( !class_exists('Student') ) {
 
             $current_time = current_time('mysql');
 
+	        $global_option = ! is_multisite();
+	        delete_user_option($this->ID, 'enrolled_course_date_' . $course_id, $global_option );
+	        delete_user_option($this->ID, 'enrolled_course_class_' . $course_id, $global_option );
+	        delete_user_option($this->ID, 'enrolled_course_group_' . $course_id, $global_option );
+
+	        // Legacy
             delete_user_meta($this->ID, 'enrolled_course_date_' . $course_id);
             delete_user_meta($this->ID, 'enrolled_course_class_' . $course_id);
             delete_user_meta($this->ID, 'enrolled_course_group_' . $course_id);
 
             if ( $keep_withdrawed_record ) {
-                update_user_meta($this->ID, 'withdrawed_course_date_' . $course_id, $current_time); //keep a record of all withdrawed students
+                update_user_option($this->ID, 'withdrawed_course_date_' . $course_id, $current_time, $global_option ); //keep a record of all withdrawed students
             }
         }
 
@@ -142,19 +156,44 @@ if ( !class_exists('Student') ) {
 		static function get_course_enrollment_meta( $user_id ) {
 			$meta = get_user_meta( $user_id );
 			if( $meta ) {
-				$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );				
+				// Get only the enrolled courses
+				$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );
+				// Map only the course IDs back to the array
+				$meta = array_map( array( 'Student', 'course_id_from_meta' ), $meta );
 			}
+
 			return $meta;
 		}
-		
-		static function filter_course_meta_array( $var ) {
-			if( preg_match( '/^enrolled\_course\_date\_/', $var) ) {
-				$course_id = str_replace('enrolled_course_date_', '', $var );
-				if( ! empty( $course_id ) ) {
-					return $var;					
-				}
-			}			
-		}
+
+	    static function filter_course_meta_array( $var ) {
+		    if( ! empty( Student::course_id_from_meta( $var ) ) ) {
+			    return $var;
+		    }
+	    }
+
+	    static function course_id_from_meta( $meta_value ) {
+		    global $wpdb;
+		    $prefix      = $wpdb->prefix;
+		    $base_prefix = $wpdb->base_prefix;
+
+		    if ( preg_match( '/enrolled\_course\_date\_/', $meta_value ) ) {
+
+			    if ( preg_match( '/^' . $base_prefix . '/', $meta_value ) ) {
+				    $course_id = str_replace( $prefix . 'enrolled_course_date_', '', $meta_value );
+			    } else {
+				    // old style, but should support it at least in the listings
+				    $course_id = str_replace( 'enrolled_course_date_', '', $meta_value );
+			    }
+
+			    if ( ! empty( $course_id ) ) {
+				    return $course_id;
+			    } else {
+				    return false;
+			    }
+		    } else {
+			    return false;
+		    }
+	    }
 
         // alias to get_enrolled_course_ids()
         function get_assigned_courses_ids() {
@@ -162,20 +201,8 @@ if ( !class_exists('Student') ) {
         }
 
         function get_enrolled_courses_ids() {
-
-            $enrolled_courses = array();
-			$courses = Student::get_course_enrollment_meta( $this->ID );
-			if( ! $courses ) {
-				return array();
-			}
-            foreach ( $courses as $course ) {
-                $course_id = str_replace('enrolled_course_date_', '', $course );
-				if( !empty( $course_id ) ) {
-	                $enrolled_courses[] = $course_id;
-				}
-            }
-
-            return $enrolled_courses;
+			// get_course_enrollment_meta returns the course_ids
+            return Student::get_course_enrollment_meta( $this->ID );
         }
 
         //Get number of courses student enrolled in
@@ -192,24 +219,28 @@ if ( !class_exists('Student') ) {
                 wp_delete_user($this->ID); //without reassign				
             } else {
                 $this->withdraw_from_all_courses();
-                delete_user_meta($this->ID, 'role');
+
+	            $global_option = ! is_multisite();
+	            delete_user_option( $this->ID, 'role', $global_option );
+	            // Legacy
+	            delete_user_meta( $this->ID, 'role' );
             }
         }
 
         function has_access_to_course( $course_id = '', $user_id = '' ) {
-            global $wpdb;
-
-            if ( empty( $user_id ) ) {
-                $user_id = get_current_user_id();
-            }
-
-            if ( empty( $course_id ) ) {
-                return false;
-            }
-			
-			$courses = $this->get_enrolled_courses_ids();
-
-            return is_array( $courses ) ? in_array( $course_id, $courses ) : false;
+//            global $wpdb;
+//
+//            if ( empty( $user_id ) ) {
+//                $user_id = get_current_user_id();
+//            }
+//
+//            if ( empty( $course_id ) ) {
+//                return false;
+//            }
+//			$courses = $this->get_enrolled_courses_ids();
+//	        return $this->user_enrolled_in_course( $course_id );
+//            return is_array( $courses ) ? in_array( $course_id, $courses ) : false;
+	        return $this->user_enrolled_in_course( $course_id, $user_id );
         }
 
         function get_number_of_responses( $course_id ) {
@@ -279,7 +310,8 @@ if ( !class_exists('Student') ) {
         }
 
         function update_student_group( $course_id, $group ) {
-            if ( update_user_meta($this->ID, 'enrolled_course_group_' . $course_id, $group) ) {
+	        $global_option = ! is_multisite();
+            if ( update_user_option($this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option ) ) {
                 return true;
             } else {
                 return false;
@@ -287,7 +319,8 @@ if ( !class_exists('Student') ) {
         }
 
         function update_student_class( $course_id, $class ) {
-            if ( update_user_meta($this->ID, 'enrolled_course_class_' . $course_id, $class) ) {
+	        $global_option = ! is_multisite();
+            if ( update_user_option($this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option ) ) {
                 return true;
             } else {
                 return false;
