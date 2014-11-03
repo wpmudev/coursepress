@@ -2776,6 +2776,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			$this->screen_base = str_replace( ' ', '-', strtolower( $this->name ) );
+			$GLOBALS['screen_base'] = $this->screen_base;
 		}
 
 		//Load unit elements / modules / building blocks and other add-ons and plugins

@@ -1091,10 +1091,10 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															if ( !CoursePress_Capabilities::is_pro() ) {
 																echo sprintf( __(
 																'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
-																'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="'.admin_url('admin.php?page=coursepress-pro_settings&tab=cp-marketpress').'">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
+																'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="'.admin_url('admin.php?page='.$this->screen_base . '_settings'.'&tab=cp-marketpress').'">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
 															} else {
 																echo sprintf( __( 'The full version of MarketPress has been bundled with %s.<br />' .
-																'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="'.admin_url('admin.php?page=coursepress-pro_settings&tab=cp-marketpress').'">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
+																'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="'.admin_url('admin.php?page='.$this->screen_base . '_settings'.'&tab=cp-marketpress').'">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
 															}
 															?>
 														</div>

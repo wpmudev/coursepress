@@ -87,11 +87,11 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 		 * @see CP_Plugin_Activation::init()
 		 */
 		public function __construct() {
-			global $coursepress, $plugin_dir;
+			global $coursepress, $plugin_dir, $screen_base;
 
 			//Menu where plugin could be installed
 			$this->tab	 = 'cp-marketpress';
-			$this->menu	 = 'coursepress-pro_settings&tab=' . $this->tab;
+			$this->menu	 = $screen_base . '_settings&tab=' . $this->tab;
 
 
 			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
@@ -123,7 +123,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 
 			$this->config = array(
 				'default_path'	 => '', // Default absolute path to pre-packaged plugins.
-				'menu'			 => 'coursepress-pro_settings&tab=' . $this->tab, // Menu slug.
+				'menu'			 => $screen_base . '_settings&tab=' . $this->tab, // Menu slug.
 				'has_notices'	 => true, // Show admin notices or not.
 				'dismissable'	 => true, // If false, a user cannot dismiss the nag message.
 				'dismiss_msg'	 => '', // If 'dismissable' is false, this message will be output at top of nag.
