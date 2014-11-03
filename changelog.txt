@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.2.3=
+* Changed the method of activation and installation of MarketPress
 * Resolved issue with incorrect SKU being returned in checkout process.
 
 = 1.2.2.2=
