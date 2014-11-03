@@ -4149,26 +4149,26 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-				<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
+					<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
 				</div>
-					<?php
-				}
-				if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
-					?>
-				<div class="save_elements_message_ok">
-				<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
-				</div>
-					<?php
-				}
-				$this->load_popup_window();
+				<?php
 			}
+			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
+				?>
+				<div class="save_elements_message_ok">
+					<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
+				</div>
+				<?php
+			}
+			$this->load_popup_window();
+		}
 
-			/* custom header actions */
+		/* custom header actions */
 
-			function head_actions() {
-				$generate_cp_generator_meta = apply_filters( 'coursepress_generator_meta', true );
-				if ( $generate_cp_generator_meta ) {
-					?>
+		function head_actions() {
+			$generate_cp_generator_meta = apply_filters( 'coursepress_generator_meta', true );
+			if ( $generate_cp_generator_meta ) {
+				?>
 				<meta name="generator" content="<?php echo $this->name . ' ' . $this->version; ?>"/>
 				<?php
 			}
@@ -4761,27 +4761,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class="menu">
 					<ul class='nav-menu'>
-				<?php
-				foreach ( $main_sorted_menu_items as $menu_item ) {
-					?>
+						<?php
+						foreach ( $main_sorted_menu_items as $menu_item ) {
+							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-					<?php if ( $menu_item->db_id !== '' ) { ?>
+																				   <?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
-																					   <?php
-																					   foreach ( $sub_sorted_menu_items as $menu_item ) {
-																						   ?>
+										<?php
+										foreach ( $sub_sorted_menu_items as $menu_item ) {
+											?>
 											<li class='menu-item-<?php echo $menu_item->ID; ?>'><a
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-						<?php } ?>
+										<?php } ?>
 									</ul>
-									<?php } ?>
+								<?php } ?>
 							</li>
-								<?php
-							}
-							?>
+							<?php
+						}
+						?>
 					</ul>
 				</div>
 
@@ -4865,19 +4865,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 				?>
 				<div class="menu">
 					<ul id="mobile_menu" class='mobile_menu'>
-				<?php
-				foreach ( $main_sorted_menu_items as $menu_item ) {
-					?>
+						<?php
+						foreach ( $main_sorted_menu_items as $menu_item ) {
+							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 							</li>
-					<?php if ( $menu_item->db_id !== '' ) { ?>
+							<?php if ( $menu_item->db_id !== '' ) { ?>
 								<?php
 								foreach ( $sub_sorted_menu_items as $menu_item ) {
 									?>
 									<li><a href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 									</li>
-						<?php } ?>
+								<?php } ?>
 							<?php } ?>
 						<?php } ?>
 					</ul>
@@ -5043,7 +5043,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		/* Check if MarketPress Lite ( included in CoursePress ) plugin is installed and active */
 
-		function is_cp_marketpress_lite_active() {
+		function is_cp_marketpress_lite_active( $req_plugin = '' ) {
 
 			// Don't allow on campus
 			if ( CoursePress_Capabilities::is_campus() ) {
@@ -5058,7 +5058,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$active_sitewide_plugins = array();
 			}
 
-			$required_plugin = 'coursepress/marketpress.php';
+			if ( $req_plugin !== '' ) {
+				$required_plugin = $req_plugin;
+			} else {
+				$required_plugin = 'marketpress/marketpress.php';
+			}
 
 			if ( in_array( $required_plugin, $plugins ) || cp_is_plugin_network_active( $required_plugin ) || preg_grep( '/^marketpress.*/', $plugins ) || cp_preg_array_key_exists( '/^marketpress.*/', $active_sitewide_plugins ) ) {
 				return true;

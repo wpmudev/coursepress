@@ -2737,6 +2737,7 @@ label.error:before {
     border: 1px solid #ccc;
     overflow: hidden;
     padding: 20px;
+    min-height: 172px;
 }
 
 .mp-wrap .mp-settings .section.static {
