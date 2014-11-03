@@ -10,8 +10,6 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 	 */
 	class CP_Plugin_Activation {
 
-		public $mp_file = '198613_marketpress-ecommerce-2.9.5.6.zip';
-
 		/**
 		 *
 		 * @var CP_Plugin_Activation
