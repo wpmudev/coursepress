@@ -102,7 +102,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'base_path'		 => 'marketpress/marketpress.php',
 						'source'		 => $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file, // The plugin source.
 						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
-						'external_url'	 => 'http://premium.wpmudev.org/project/e-commerce/', // If set, overrides default API URL and points to an external URL.
+						'external_url'	 => '', // http://premium.wpmudev.org/project/e-commerce/
 					),
 				);
 			}
@@ -114,7 +114,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'base_path'		 => 'wordpress-ecommerce/marketpress.php',
 						'source'		 => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip', //without protocol (i.e. https://) because it may be killed by mod_security
 						'source_message' => __( 'WordPress.org Repository', 'cp' ),
-						'external_url'	 => 'https://wordpress.org/plugins/wordpress-ecommerce/', // If set, overrides default API URL and points to an external URL.
+						'external_url'	 => '', // https://wordpress.org/plugins/wordpress-ecommerce/
 					),
 				);
 			}
@@ -350,10 +350,12 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 								<th scope="col" id="source" class="manage-column column-source" style=""><?php _e( 'Source', 'cp' ); ?></th>
 								<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', 'cp' ); ?></th>	</tr>
 						</thead>
-
+						<?php
+						$is_link = isset($this->plugin[ 'external_url' ]) && $this->plugin[ 'external_url' ] !== '' ? true : false;
+						?>
 						<tbody id="the-list" data-wp-lists="list:plugin">
 							<tr class="alternate">
-								<td class="plugin column-plugin"><strong><a href="<?php echo $this->plugin[ 'external_url' ]; ?>" title="<?php echo $this->plugin[ 'name' ]; ?>" target="_blank"><?php echo $this->plugin[ 'name' ]; ?></a></strong>
+								<td class="plugin column-plugin"><strong><?php if($is_link) { ?><a href="<?php echo $this->plugin[ 'external_url' ]; ?>" title="<?php echo $this->plugin[ 'name' ]; ?>" target="_blank"><?php } echo $this->plugin[ 'name' ]; if($is_link){?></a><?php } ?></strong>
 									<div class="row-actions">
 										<span class="install">
 											<?php

@@ -166,7 +166,8 @@ if ( !class_exists('Student') ) {
 		}
 
 	    static function filter_course_meta_array( $var ) {
-		    if( ! empty( Student::course_id_from_meta( $var ) ) ) {
+			$course_id_from_meta = Student::course_id_from_meta( $var );
+		    if( ! empty( $course_id_from_meta ) ) {
 			    return $var;
 		    }
 	    }
