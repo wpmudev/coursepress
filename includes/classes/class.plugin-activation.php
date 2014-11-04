@@ -112,9 +112,9 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'name'			 => 'MarketPress - WordPress eCommerce', // The plugin name.
 						'slug'			 => 'wordpress-ecommerce', // The plugin slug (typically the folder name).
 						'base_path'		 => 'wordpress-ecommerce/marketpress.php',
-						'source'		 => 'https://downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
+						'source'		 => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip', //without protocol (i.e. https://) because it may be killed by mod_security
 						'source_message' => __( 'WordPress.org Repository', 'cp' ),
-						'external_url'	 => 'https://downloads.wordpress.org/plugin/wordpress-ecommerce/', // If set, overrides default API URL and points to an external URL.
+						'external_url'	 => 'https://wordpress.org/plugins/wordpress-ecommerce/', // If set, overrides default API URL and points to an external URL.
 					),
 				);
 			}
@@ -249,27 +249,27 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 
 			return $status;
 		}
-		
-		public function get_plugin_activation_title($plugin_dir){
+
+		public function get_plugin_activation_title( $plugin_dir ) {
 			$status = '';
 			if ( !$this->is_plugin_installed( '/' . $plugin_dir ) ) {
 				$installed = false;
-			}else{
+			} else {
 				$installed = true;
 			}
 
 			if ( !is_plugin_active( $this->plugin[ 'base_path' ] ) ) {
-				if($installed){
+				if ( $installed ) {
 					$active = false;
-					$status .=  __( 'Activate ', 'cp' );
-				}else{
-					$status .=  __( 'Install & Activate ', 'cp' );
+					$status .= __( 'Activate ', 'cp' );
+				} else {
+					$status .= __( 'Install & Activate ', 'cp' );
 				}
-			}else{
+			} else {
 				$active = true;
 			}
-			
-			if($active && $installed){
+
+			if ( $active && $installed ) {
 				$status = '';
 			}
 
@@ -333,7 +333,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 			}
 			?>
 			<div class="cp wrap">
-				<h2><?php echo $this->get_plugin_activation_title($this->plugin[ 'slug' ]).$this->plugin[ 'name' ]; ?></h2><br />
+				<h2><?php echo $this->get_plugin_activation_title( $this->plugin[ 'slug' ] ) . $this->plugin[ 'name' ]; ?></h2><br />
 
 				<?php
 				if ( isset( $this->message ) ) {
@@ -449,7 +449,11 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				$nonce = 'install-plugin_' . $plugin[ 'slug' ];
 
 				// Prefix a default path to pre-packaged plugins.
-				$source = $plugin[ 'source' ];
+				if ( !CoursePress_Capabilities::is_pro() ) {
+					$source = 'https://' . $plugin[ 'source' ];//added protocol to avoid mod_security
+				}else{
+					$source = $plugin[ 'source' ];
+				}
 
 				// Create a new instance of Plugin_Upgrader.
 				$upgrader	 = new Plugin_Upgrader( $skin		 = new Plugin_Installer_Skin( compact( 'type', 'title', 'url', 'nonce', 'plugin', 'api' ) ) );
