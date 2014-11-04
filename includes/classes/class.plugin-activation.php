@@ -137,7 +137,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				'notice_can_install_recommended' => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'cp' ), $this->plugin[ 'name' ] ),
 				'install_link'					 => sprintf( __( 'Install %1$s', 'cp' ), $this->plugin[ 'name' ] ),
 				'activate_link'					 => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'cp' ), $this->plugin[ 'name' ] ),
-				'return'						 => __( 'Return to Plugins Installer', 'cp' ),
+				'return'						 => __( 'Return to MarketPress Installer', 'cp' ),
 				'dashboard'						 => __( 'Return to the dashboard', 'cp' ),
 				'plugin_activated'				 => __( 'Plugin activated successfully.', 'cp' ),
 				'activated_successfully'		 => __( 'The following plugin was activated successfully:', 'cp' ),
@@ -294,7 +294,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'plugin_name'		 => $this->plugin[ 'name' ],
 						'plugin_source'		 => $this->plugin[ 'source' ],
 						'cp-plugin-install'	 => 'install-plugin',
-					), network_admin_url( 'admin.php' )
+					), admin_url( 'admin.php' )
 					), 'cp-plugin-install'
 					), $item[ 'sanitized_plugin' ]
 					),
@@ -312,7 +312,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'plugin_source'				 => $this->plugin[ 'source' ],
 						'cp-activate-plugin'		 => 'activate-plugin',
 						'cp-activate-plugin-nonce'	 => wp_create_nonce( 'cp-activate-plugin' ),
-					), network_admin_url( 'admin.php' )
+					), admin_url( 'admin.php' )
 					), $item[ 'sanitized_plugin' ]
 					),
 				);
@@ -420,7 +420,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 					'plugin_name'		 => $plugin[ 'name' ],
 					'plugin_source'		 => $plugin[ 'source' ],
 					'cp-plugin-install'	 => 'install-plugin',
-				), network_admin_url( 'admin.php' )
+				), admin_url( 'admin.php' )
 				), 'cp-plugin-install'
 				);
 
@@ -464,7 +464,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				$complete = array();
 
 				if ( !$this->is_plugin_active( $this->plugin[ 'base_path' ] ) ) {
-					echo '<p><a href="' . add_query_arg( 'page', $this->menu, network_admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings[ 'return' ] ) . '" target="_parent">' . $this->strings[ 'return' ] . '</a></p>';
+					echo '<p><a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings[ 'return' ] ) . '" target="_parent">' . $this->strings[ 'return' ] . '</a></p>';
 					$complete[] = $plugin;
 				}
 				// Nothing to store.
@@ -477,7 +477,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 
 				// All plugins are active, so we display the complete string and hide the plugin menu.
 				if ( empty( $complete ) ) {
-					echo '<p>' . sprintf( $this->strings[ 'complete' ], '<a href="' . network_admin_url() . '" title="' . __( 'Return to the Dashboard', 'cp' ) . '">' . __( 'Return to the Dashboard', 'cp' ) . '</a>' ) . '</p>';
+					echo '<p>' . sprintf( $this->strings[ 'complete' ], '<a href="' . admin_url() . '" title="' . __( 'Return to the Dashboard', 'cp' ) . '">' . __( 'Return to the Dashboard', 'cp' ) . '</a>' ) . '</p>';
 					echo '<style type="text/css">#adminmenu .wp-submenu li.current { display: none !important; }</style>';
 				}
 
@@ -499,7 +499,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 
 				if ( is_wp_error( $activate ) ) {
 					echo '<div id="message" class="error"><p>' . $activate->get_error_message() . '</p></div>';
-					echo '<p><a href="' . add_query_arg( 'page', $this->menu, network_admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings[ 'return' ] ) . '" target="_parent">' . $this->strings[ 'return' ] . '</a></p>';
+					echo '<p><a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings[ 'return' ] ) . '" target="_parent">' . $this->strings[ 'return' ] . '</a></p>';
 					return true; // End it here if there is an error with activation.
 				} else {
 					// Make sure message doesn't display again if bulk activation is performed immediately after a single activation.
@@ -588,8 +588,8 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 					}
 
 					// Setup variables to determine if action links are needed.
-					$show_install_link	 = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, network_admin_url( 'admin.php' ) ) . '">' . $this->strings[ 'install_link' ] . '</a>' : '';
-					$show_activate_link	 = $activate_link ? '<a href="' . add_query_arg( 'page', $this->menu, network_admin_url( 'admin.php' ) ) . '">' . $this->strings[ 'activate_link' ] . '</a>' : '';
+					$show_install_link	 = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings[ 'install_link' ] . '</a>' : '';
+					$show_activate_link	 = $activate_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings[ 'activate_link' ] . '</a>' : '';
 
 					// Define all of the action links.
 					$action_links = apply_filters(
