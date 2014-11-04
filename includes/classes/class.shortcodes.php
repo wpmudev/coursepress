@@ -648,7 +648,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$is_enrolled	 = $student->has_access_to_course( $course_id );
 				$enrollment_date = '';
 				if ( $is_enrolled ) {
-					$enrollment_date = get_user_meta( get_current_user_id(), 'enrolled_course_date_' . $course_id, true );
+					$enrollment_date = get_user_option( 'enrolled_course_date_' . $course_id );
 					$enrollment_date = date( $date_format, strtotime( $enrollment_date ) );
 					$label			 = $label_enrolled;
 				}
@@ -2849,12 +2849,16 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$course	 = new Course( $course_id );
 			$units	 = $course->get_units( $course_id, 'publish' );
 
-			$student = new Student( get_current_user_id() );
+			$user_id = get_current_user_id();
+			$student = new Student( $user_id );
 //redirect to the parent course page if not enrolled
 			if ( !current_user_can( 'manage_options' ) ) {//If current user is not admin, check if he can access to the units
 				if ( $course->details->post_author != get_current_user_id() ) {//check if user is an author of a course ( probably instructor )
 					if ( !current_user_can( 'coursepress_view_all_units_cap' ) ) {//check if the instructor, even if it's not the author of the course, maybe has a capability given by the admin
-						if ( !$student->has_access_to_course( $course_id ) ) {//if it's not an instructor who made the course, check if he is enrolled to course
+
+						//if it's not an instructor who made the course, check if he is enrolled to course
+						// Added 3rd parameter to deal with legacy meta data
+						if ( !$student->user_enrolled_in_course( $course_id, $user_id, 'update_meta' ) ) {
 // if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 //ob_start();
 							wp_redirect( get_permalink( $course_id ) ); //if not, redirect him to the course page so he may enroll it if the enrollment is available

@@ -103,8 +103,9 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
         $course_id = wp_insert_post( $new_course );
         
         if ( $course_id != 0 ) {
+	        // $global_option = ! is_multisite();
             //Set a instructor - for the example, instructor will be the author of the post
-            //update_user_meta( $course_author, 'course_' . $course_id, $course_id ); //only could be a user with "Intructor" role so admin can't be assigned
+            //update_user_option( $course_author, 'course_' . $course_id, $course_id, $global_option ); //only could be a user with "Intructor" role so admin can't be assigned
 
             //Set hero video
             update_post_meta( $course_id, 'course_video_url', cp_filter_content($course_hero_video_url, true) );

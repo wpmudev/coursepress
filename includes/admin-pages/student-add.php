@@ -42,7 +42,8 @@ if ( isset( $_POST['submit'] ) ) {
 
                 if ( $form_errors == 0 ) {
                     if ( $student_id = $student->add_student( $student_data ) !== 0 ) {
-                        add_user_meta( $student_id, 'role', 'student' );
+	                    $global_option = ! is_multisite();
+                        update_user_option( $student_id, 'role', 'student', $global_option );
                         $form_message = __( 'Account created successfully!', 'cp' );
                         $form_message_class = 'updated';
                         /* $email_args['email_type'] = 'student_registration';

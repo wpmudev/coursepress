@@ -21,6 +21,7 @@ if ( !class_exists( 'Instructor' ) ) {
             $this->first_name = get_user_meta( $ID, 'first_name', true );
             $this->last_name = get_user_meta( $ID, 'last_name', true );
             $this->courses_number = Instructor::get_courses_number( $ID );
+
         }
 
         function Instructor( $ID, $name = '' ) {
@@ -34,7 +35,8 @@ if ( !class_exists( 'Instructor' ) ) {
 		}
 		
 		static function filter_course_meta_array( $var ) {
-			if( preg_match( '/^course\_/', $var) ) {
+			global $wpdb;
+			if( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ) {
 				return $var;
 			}			
 		}
@@ -59,6 +61,13 @@ if ( !class_exists( 'Instructor' ) ) {
         }
 
         function unassign_from_course( $course_id = 0 ) {
+	        $global_option = ! is_multisite();
+	        delete_user_option( $this->ID, 'course_' . $course_id, $global_option );
+	        delete_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $global_option );
+	        delete_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $global_option  );
+	        delete_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $global_option );
+
+	        // Legacy
             delete_user_meta( $this->ID, 'course_' . $course_id );
             delete_user_meta( $this->ID, 'enrolled_course_date_' . $course_id );
             delete_user_meta( $this->ID, 'enrolled_course_class_' . $course_id );
@@ -87,6 +96,9 @@ if ( !class_exists( 'Instructor' ) ) {
             /*if ( $delete_user ) {
                 wp_delete_user( $this->ID ); //without reassign
             }else{//just delete the meta which says that user is an instructor*/
+		        $global_option = ! is_multisite();
+		        delete_user_option( $this->ID, 'role_ins', 'instructor', $global_option );
+	            // Legacy
                 delete_user_meta( $this->ID, 'role_ins', 'instructor' );
                 $this->unassign_from_all_courses();
                 CoursePress::instance()->drop_instructor_capabilities( $this->ID );
@@ -119,13 +131,13 @@ if ( !class_exists( 'Instructor' ) ) {
 	    public static function create_hash( $user_id ) {
 		    $user = get_user_by( 'id', $user_id );
 		    $hash = md5( $user->user_login );
-
+		    $global_option = ! is_multisite();
 		    /*
 		     * Just in case someone is actually using this hash for something,
 		     * we'll populate it with current value. Will be an empty array if
 		     * nothing exists. We're only interested in the key anyway.
 		     */
-		    update_user_meta( $user->ID, $hash, get_user_meta( $user->ID, $hash ) );
+		    update_user_option( $user->ID, $hash, get_user_option( $hash, $user->ID ), $global_option );
 	    }
 
     }

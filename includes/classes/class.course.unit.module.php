@@ -574,7 +574,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 						unset( $ungraded_responses[ $array_order_num ] );
 					}
 
-					if ( get_user_meta( $ungraded_response->post_author, 'role', true ) !== 'student' ) {
+					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
 						unset( $ungraded_responses[ $array_order_num ] );
 					}
 					$array_order_num++;
@@ -621,7 +621,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 						unset( $ungraded_responses[ $array_order_num ] );
 					}
 
-					if ( get_user_meta( $ungraded_response->post_author, 'role', true ) !== 'student' ) {
+					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
 						unset( $ungraded_responses[ $array_order_num ] );
 					}
 

@@ -66,7 +66,8 @@ function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $st
 	if ( !$student_id ) {
 		$student_id = get_current_user_ID();
 	}
-	update_user_meta( $student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num );
+	$global_option = ! is_multisite();
+	update_user_option( $student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num, $global_option );
 }
 
 function cp_set_visited_course( $unit_id, $student_id = false ) {
@@ -76,7 +77,7 @@ function cp_set_visited_course( $unit_id, $student_id = false ) {
 	}
 
 	$course_id		 = wp_get_post_parent_id( $unit_id );
-	$visited_courses = get_user_meta( $student_id, 'visited_course_units_' . $course_id, true );
+	$visited_courses = get_user_option( 'visited_course_units_' . $course_id, $student_id );
 
 	if ( $visited_courses === false ) {
 		$visited_courses = $course_id;
@@ -87,7 +88,8 @@ function cp_set_visited_course( $unit_id, $student_id = false ) {
 		}
 		$visited_courses = implode( ',', $visited_courses );
 	}
-	update_user_meta( $student_id, 'visited_course_units_' . $course_id, $visited_courses );
+	$global_option = ! is_multisite();
+	update_user_option( $student_id, 'visited_course_units_' . $course_id, $visited_courses, $global_option );
 }
 
 function cp_is_course_visited( $course_id, $student_id = false ) {
@@ -95,7 +97,7 @@ function cp_is_course_visited( $course_id, $student_id = false ) {
 		$student_id = get_current_user_ID();
 	}
 
-	$visited_courses = get_user_meta( $student_id, 'visited_course_units_' . $course_id, true );
+	$visited_courses = get_user_option( 'visited_course_units_' . $course_id, $student_id );
 
 	if ( $visited_courses ) {
 		$visited_courses = (explode( ',', $visited_courses ));
@@ -126,9 +128,9 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
 		$student_id = get_current_user_ID();
 	}
 
-
-//delete_user_meta($student_id, 'visited_unit_pages_' . $unit_id . '_page');
-	$visited_pages = get_user_meta( $student_id, 'visited_unit_pages_' . $unit_id . '_page', true );
+//$global_option = ! is_multisite();
+//delete_user_option($student_id, 'visited_unit_pages_' . $unit_id . '_page', $global_option);
+	$visited_pages = get_user_option( 'visited_unit_pages_' . $unit_id . '_page', $student_id );
 
 	if ( $visited_pages === false ) {
 		$visited_pages = $page_num;
@@ -140,7 +142,8 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
 		$visited_pages = implode( ',', $visited_pages );
 	}
 
-	update_user_meta( $student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages );
+	$global_option = ! is_multisite();
+	update_user_option( $student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages, $global_option );
 	cp_set_visited_course( $unit_id, $student_id );
 }
 
@@ -148,7 +151,7 @@ function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = fa
 	if ( !$student_id ) {
 		$student_id = get_current_user_ID();
 	}
-	$visited_pages = get_user_meta( $student_id, 'visited_unit_pages_' . $unit_id . '_page', true );
+	$visited_pages = get_user_option( 'visited_unit_pages_' . $unit_id . '_page', $student_id );
 	if ( $visited_pages ) {
 		return count( explode( ',', $visited_pages ) ) - 1;
 	} else {
@@ -160,7 +163,7 @@ function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
 	if ( !$student_id ) {
 		$student_id = get_current_user_ID();
 	}
-	$last_visited_unit_page = get_user_meta( $student_id, 'last_visited_unit_' . $unit_id . '_page', true );
+	$last_visited_unit_page = get_user_option( 'last_visited_unit_' . $unit_id . '_page', $student_id );
 	if ( $last_visited_unit_page ) {
 		return $last_visited_unit_page;
 	} else {
@@ -1020,7 +1023,11 @@ if ( !function_exists( 'cp_delete_user_meta_by_key' ) ) {
 		global $wpdb;
 
 		// if ( $wpdb->query($wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", $meta_key)) ) {
-		if ( delete_metadata( 'user', 0, $meta_key, '', true ) ) {
+		$legacy = delete_metadata( 'user', 0, $meta_key, '', true );
+
+		$meta_key = $wpdb->prefix . $meta_key;
+
+		if ( $legacy || delete_metadata( 'user', 0, $meta_key, '', true ) ) {
 			return true;
 		} else {
 			return false;

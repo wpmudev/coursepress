@@ -469,7 +469,8 @@ if ( !class_exists( 'Course' ) ) {
 
 
 									foreach ( $_POST[ 'instructor' ] as $instructor_id ) {
-										update_user_meta( $instructor_id, 'course_' . $post_id, $post_id ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
+										$global_option = ! is_multisite();
+										update_user_option( $instructor_id, 'course_' . $post_id, $post_id, $global_option ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
 									}
 								} // only add meta if array is sent
 							}
