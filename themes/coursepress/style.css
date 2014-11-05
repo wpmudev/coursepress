@@ -2827,14 +2827,26 @@ li.current_page_item a{
 }
 
 .workbook-title {
-	position:relative;
+    position:relative;
 }
 .workbook-course-progress {
-	font-size: 16px;
-	float:right;
-	position:absolute;
-	bottom:5px;
-	right: 0;
+    font-size: 16px;
+    float:right;
+    position:absolute;
+    bottom:5px;
+    right: 0;
+}
+
+.hamb{
+    float: right;
+}
+
+.hamb span{
+    background: #878786;
+    height: 3px;
+    display: block;
+    width: 20px;
+    margin-bottom: 3px;
 }
 
 /*
