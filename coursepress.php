@@ -3458,7 +3458,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$user_id		 = (int) $_POST[ 'user_id' ];
 			$course_id		 = (int) $_POST[ 'course_id' ];
 			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
-			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );
+			// Course creator should be able to assign self as instructor (or many other things will break)
+			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id ) ? true : $instructor_id == $user_id ? true : false;
 			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
 			$ajax_response	 = array();
 
