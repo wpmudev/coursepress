@@ -10,6 +10,7 @@ CHANGE LOG
 * Improved CoursePress for multi-site.
 * Improved CoursePress security for multi-site.
 * Improved UX for MarketPress in the admin (MarketPress activation and installation menu, links and messages shown to users who don't have required permissions)
+* Future integration with Ultimate Facebook plugin to better promote courses on Facebook using OpenGraph data. (Currently works with CoursePress theme, but requires future Ultimate Facebook 2.7.8+ for all other themes.)
 
 = 1.2.2.3=
 * Changed the method of activation and installation of MarketPress
