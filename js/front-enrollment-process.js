@@ -249,11 +249,23 @@ jQuery( document ).ready( function( $ ) {
                                                             }
                                                         } );
                                                     } else {
-                                                        validate_mark_no_error_field( 'cp_popup_password' );
-                                                        validate_mark_no_error_field( 'cp_popup_password_confirmation' );
-                                                        var step = $( '.cp_popup_content [name="signup-next-step"]' ).val();
-                                                        open_popup( step, $( '#data-course-id' ).attr( 'data-course-id' ), $( '#popup_signup_form' ).serialize() );
 
+                                                        if ( $( '#popup_signup_form #tos_agree' ).length ) {
+                                                            if ( $( '#tos_agree' ).is( ':checked' ) ) {
+                                                                //continue
+                                                            } else {
+                                                                errors++;
+                                                                $( '.validation_errors' ).html( cp_vars.message_tos_invalid );
+                                                                //validate_mark_error_field( 'cp_popup_passcode' );
+                                                            }
+                                                        }
+
+                                                        if ( errors == 0 ) {
+                                                            validate_mark_no_error_field( 'cp_popup_password' );
+                                                            validate_mark_no_error_field( 'cp_popup_password_confirmation' );
+                                                            var step = $( '.cp_popup_content [name="signup-next-step"]' ).val();
+                                                            open_popup( step, $( '#data-course-id' ).attr( 'data-course-id' ), $( '#popup_signup_form' ).serialize() );
+                                                        }
                                                     }
                                                 }
                                             }
@@ -362,16 +374,16 @@ jQuery( document ).ready( function( $ ) {
     jQuery.fn.center = function() {
         if ( $( document ).width() <= 480 ) {
             this.css( 'position', 'absolute' );
-            $('.cp_popup_window').height($( document ).height());
+            $( '.cp_popup_window' ).height( $( document ).height() );
             this.css( 'top', 0 );
-            this.css('max-height', '100%');
+            this.css( 'max-height', '100%' );
         } else {
-            $('.cp_popup_window').height('auto');
+            $( '.cp_popup_window' ).height( 'auto' );
             this.css( 'position', 'fixed' );
             this.css( 'top', ( $( window ).height() / 2 ) - ( this.outerHeight() / 2 ) );
             //this.css('max-height', '100%');
         }
-        
+
         this.css( 'left', ( $( window ).width() / 2 ) - ( this.outerWidth() / 2 ) );
         return this;
     }
@@ -397,9 +409,9 @@ jQuery( document ).ready( function( $ ) {
     // When the window scrolls, make sure we keep the popup in the center.
     $( window ).resize( function() {
         $( '.cp_popup_window' ).center();
-        
+
         $( ".cp_popup_overall" ).height( $( document ).height() );
-        
+
     } );
 
     $( ".cp_popup_overall" ).height( $( document ).height() );

@@ -48,6 +48,12 @@ if (isset($_POST['_wpnonce']) && current_user_can('manage_options')) {
         } else {
             update_option('show_instructor_username', 0);
         }
+		
+		if (isset($_POST['option_show_tos'])) {
+            update_option('show_tos', 1);
+        } else {
+            update_option('show_tos', 0);
+        }
 
         // Conditional flush_rewrite_rules
         cp_flush_rewrite_rules();

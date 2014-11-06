@@ -35,6 +35,14 @@
 		</label>
 
 		<?php
+		if ( shortcode_exists( 'signup-tos' ) ) {
+			if ( get_option( 'show_tos', 0 ) == '1' ) {
+				echo do_shortcode( '[signup-tos]' );
+			}
+		}
+		?>
+
+		<?php
 		$course_id	 = isset( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : ' ';
 		$course		 = new Course( $course_id );
 		if ( $course->details->enroll_type == 'passcode' ) {

@@ -566,7 +566,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);          ?>><?php // _e( 'Thumbnail', 'cp' );          ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);           ?>><?php // _e( 'Thumbnail', 'cp' );           ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -603,7 +603,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);          ?>><?php // _e( 'Thumbnail', 'cp' );          ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);           ?>><?php // _e( 'Thumbnail', 'cp' );           ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -661,38 +661,38 @@
                             <th scope="row"><?php _e( 'Font', 'cp' ); ?></th>
                             <td>
 								<?php
-								$reports_font = get_option( 'reports_font', 'helvetica' );
+								$reports_font		 = get_option( 'reports_font', 'helvetica' );
 								?>
 								<select name="option_reports_font">
-									<option value='aealarabiya' <?php selected( $reports_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp'); ?></option>
-									<option value='aefurat' <?php selected( $reports_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp'); ?></option>
-									<option value='cid0cs' <?php selected( $reports_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'cp'); ?></option>
-									<option value='cid0jp' <?php selected( $reports_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'cp'); ?></option>
-									<option value='cid0kr' <?php selected( $reports_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'cp'); ?></option>
-									<option value='courier <?php selected( $reports_font, 'courier', true ); ?>'><?php _e( 'Courier', 'cp'); ?></option>
-									<option value='dejavusans' <?php selected( $reports_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'cp'); ?></option>
-									<option value='dejavusanscondensed' <?php selected($reports_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'cp'); ?></option>
-									<option value='dejavusansextralight' <?php selected($reports_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'cp'); ?></option>
-									<option value='dejavusansmono' <?php selected( $reports_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'cp'); ?></option>
-									<option value='dejavuserif' <?php selected( $reports_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'cp'); ?></option>
-									<option value='dejavuserifcondensed' <?php selected($reports_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'cp'); ?></option>
-									<option value='freemono' <?php selected( $reports_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'cp'); ?></option>
-									<option value='freesans' <?php selected( $reports_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'cp'); ?></option>
-									<option value='freeserif' <?php selected( $reports_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'cp'); ?></option>
-									<option value='helvetica' <?php selected( $reports_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'cp'); ?></option>
-									<option value='hysmyeongjostdmedium' <?php selected( $reports_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'cp'); ?></option>
-									<option value='kozgopromedium' <?php selected( $reports_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'cp'); ?></option>
-									<option value='kozminproregular' <?php selected( $reports_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'cp'); ?></option>
-									<option value='msungstdlight' <?php selected( $reports_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'cp'); ?></option>
-									<option value='pdfacourier' <?php selected( $reports_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'cp'); ?></option>
-									<option value='pdfahelvetica' <?php selected( $reports_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'cp'); ?></option>
-									<option value='pdfasymbol' <?php selected( $reports_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'cp'); ?></option>
-									<option value='pdfatimes' <?php selected( $reports_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'cp'); ?></option>
-									<option value='pdfazapfdingbats' <?php selected( $reports_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'cp'); ?></option>
-									<option value='stsongstdlight' <?php selected( $reports_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'cp'); ?></option>
-									<option value='symbol' <?php selected( $reports_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp'); ?></option>
-									<option value='times' <?php selected( $reports_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp'); ?></option>
-									<option value='zapfdingbats' <?php selected( $reports_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp'); ?></option>
+									<option value='aealarabiya' <?php selected( $reports_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
+									<option value='aefurat' <?php selected( $reports_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp' ); ?></option>
+									<option value='cid0cs' <?php selected( $reports_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'cp' ); ?></option>
+									<option value='cid0jp' <?php selected( $reports_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'cp' ); ?></option>
+									<option value='cid0kr' <?php selected( $reports_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'cp' ); ?></option>
+									<option value='courier <?php selected( $reports_font, 'courier', true ); ?>'><?php _e( 'Courier', 'cp' ); ?></option>
+									<option value='dejavusans' <?php selected( $reports_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'cp' ); ?></option>
+									<option value='dejavusanscondensed' <?php selected( $reports_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'cp' ); ?></option>
+									<option value='dejavusansextralight' <?php selected( $reports_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'cp' ); ?></option>
+									<option value='dejavusansmono' <?php selected( $reports_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'cp' ); ?></option>
+									<option value='dejavuserif' <?php selected( $reports_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'cp' ); ?></option>
+									<option value='dejavuserifcondensed' <?php selected( $reports_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'cp' ); ?></option>
+									<option value='freemono' <?php selected( $reports_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'cp' ); ?></option>
+									<option value='freesans' <?php selected( $reports_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'cp' ); ?></option>
+									<option value='freeserif' <?php selected( $reports_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'cp' ); ?></option>
+									<option value='helvetica' <?php selected( $reports_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'cp' ); ?></option>
+									<option value='hysmyeongjostdmedium' <?php selected( $reports_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'cp' ); ?></option>
+									<option value='kozgopromedium' <?php selected( $reports_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'cp' ); ?></option>
+									<option value='kozminproregular' <?php selected( $reports_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'cp' ); ?></option>
+									<option value='msungstdlight' <?php selected( $reports_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'cp' ); ?></option>
+									<option value='pdfacourier' <?php selected( $reports_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'cp' ); ?></option>
+									<option value='pdfahelvetica' <?php selected( $reports_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'cp' ); ?></option>
+									<option value='pdfasymbol' <?php selected( $reports_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'cp' ); ?></option>
+									<option value='pdfatimes' <?php selected( $reports_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'cp' ); ?></option>
+									<option value='pdfazapfdingbats' <?php selected( $reports_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'cp' ); ?></option>
+									<option value='stsongstdlight' <?php selected( $reports_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'cp' ); ?></option>
+									<option value='symbol' <?php selected( $reports_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
+									<option value='times' <?php selected( $reports_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
+									<option value='zapfdingbats' <?php selected( $reports_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
 									<?php do_action( 'tc_ticket_font' ); ?>
 								</select>
                             </td>
@@ -701,6 +701,32 @@
                 </table>
             </div>
         </div>
+
+		<?php if ( shortcode_exists( 'signup-tos' ) ) { ?>
+			<div class="postbox">
+	            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Signup TOS', 'cp' ); ?></span></h3>
+	            <div class="inside">
+	                <table class="form-table">
+	                    <tbody>
+	                        <tr valign="top">
+	                            <th scope="row"><?php _e( 'Show Terms of Service', 'cp' ); ?></th>
+	                            <td>
+	                                <a class="help-icon" href="javascript:;"></a>
+	                                <div class="tooltip">
+	                                    <div class="tooltip-before"></div>
+	                                    <div class="tooltip-button">&times;</div>
+	                                    <div class="tooltip-content">
+											<?php _e( 'If checked, user will be forced to agree to terms of services added in "Terms of Service" (Signup TOS) plugin', 'cp' ) ?>
+	                                    </div>
+	                                </div>
+	                                <input type='checkbox' name='option_show_tos' <?php echo ( ( get_option( 'show_tos', 0 ) ) ? 'checked' : '' ); ?> />
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	            </div>
+	        </div>
+		<?php } ?>
 
 		<?php
 		do_action( 'coursepress_general_options_page' );

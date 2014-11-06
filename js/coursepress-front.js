@@ -31,3 +31,8 @@ jQuery(document).ready(function($) {
 jQuery(document).ready(function($) {
     jQuery(".knob").knob();
 });
+
+jQuery(document).ready(function($){
+$('#tos_agree').parent().find('br').remove();
+$('[name="tos_agree"]').parent().find('br').remove();
+});
