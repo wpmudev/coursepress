@@ -164,6 +164,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-compatibility.php' );
 
+			/**
+			 * CoursePress Plugin Integrations.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-integration.php' );
 
 			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
 				// Prepare WPMUDev Dashboard Notifications
@@ -2516,7 +2520,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 						if ( locate_template( array( 'single-course.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
 							//just output the content
 						} else {
-							if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
+
+							//if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
+							if( get_post_type() == 'course') {
 								$prepend_content = $this->get_template_details( $this->plugin_dir . 'includes/templates/single-course-before-details.php' );
 								$content		 = do_shortcode( $prepend_content . $content );
 							} else {
