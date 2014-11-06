@@ -26,7 +26,7 @@
 }
 
 .disable-pointer-events {
-    pointer-events: none !important;
+    /*pointer-events: none !important;*/
 }
 
 .main-navigation a.nav-toggle{
