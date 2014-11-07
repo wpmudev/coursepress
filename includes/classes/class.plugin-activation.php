@@ -94,13 +94,14 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 			$this->menu	 = $screen_base . '_settings&tab=' . $this->tab;
 
 
+			
 			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
 				$this->plugin = array(
 					array(
 						'name'			 => 'MarketPress', // The plugin name.
 						'slug'			 => 'marketpress', // The plugin slug (typically the folder name).
 						'base_path'		 => 'marketpress/marketpress.php',
-						'source'		 => $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file, // The plugin source.
+						'source'		 => is_object($coursepress) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '', // The plugin source.
 						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
 						'external_url'	 => '', // http://premium.wpmudev.org/project/e-commerce/
 					),
