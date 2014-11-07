@@ -7,8 +7,11 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.2.5 =
+* Fixed issues with Multisite manual student enrollment
 * Fixed: CoursePress theme navigation restored in responsive/mobile views.
 * Improved some responsive elements of the CoursePress theme.
+* Fixed issue with mobile menu not appearing on the some Android devices
+* Small code improvements
 
 = 1.2.2.4 =
 * Added integration with "Terms of Service" plugin http://premium.wpmudev.org/project/terms-of-service/
