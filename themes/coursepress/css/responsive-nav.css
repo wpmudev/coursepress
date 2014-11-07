@@ -1,5 +1,3 @@
-/*! responsive-nav.js 1.0.32 by @viljamis */
-
 .nav-collapse ul {
     margin: 0;
     padding: 0;
@@ -130,6 +128,11 @@
 
     .video_player iframe,
     .video_player { height: 240px;}
+
+    #mobile_menu:last-child, 
+    .mobile_menu:last-child{
+        display: none !important;
+    }
 }
 
 @media screen and ( min-width: 791px ) {
