@@ -375,8 +375,8 @@ jQuery( document ).ready( function( $ ) {
         if ( $( document ).width() <= 480 ) {
             this.css( 'position', 'absolute' );
             $( '.cp_popup_window' ).height( $( document ).height() );
-            this.css( 'top', 0 );
-            this.css( 'max-height', '100%' );
+            this.css( 'top', $( document ).scrollTop() );
+            this.css( 'max-height', '150%' );
         } else {
             $( '.cp_popup_window' ).height( 'auto' );
             this.css( 'position', 'fixed' );
@@ -386,7 +386,7 @@ jQuery( document ).ready( function( $ ) {
 
         this.css( 'left', ( $( window ).width() / 2 ) - ( this.outerWidth() / 2 ) );
         return this;
-    }
+    };
 
     // Extend jQuery with $.autoHeight() function to adjust the height of an element to its contents.
     jQuery.fn.autoHeight = function( child ) {
@@ -404,7 +404,7 @@ jQuery( document ).ready( function( $ ) {
 
         this.css( 'height', new_height );
         return this;
-    }
+    };
 
     // When the window scrolls, make sure we keep the popup in the center.
     $( window ).resize( function() {
