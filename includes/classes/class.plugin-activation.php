@@ -94,14 +94,14 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 			$this->menu	 = $screen_base . '_settings&tab=' . $this->tab;
 
 
-			
+
 			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
 				$this->plugin = array(
 					array(
 						'name'			 => 'MarketPress', // The plugin name.
 						'slug'			 => 'marketpress', // The plugin slug (typically the folder name).
 						'base_path'		 => 'marketpress/marketpress.php',
-						'source'		 => is_object($coursepress) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '', // The plugin source.
+						'source'		 => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '', // The plugin source.
 						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
 						'external_url'	 => '', // http://premium.wpmudev.org/project/e-commerce/
 					),
@@ -136,6 +136,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				'installing'					 => sprintf( __( 'Installing Plugin: %s', 'cp' ), $this->plugin[ 'name' ] ),
 				'oops'							 => __( 'Something went wrong with the plugin API.', 'cp' ),
 				'notice_can_install_recommended' => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'cp' ), $this->plugin[ 'name' ] ),
+				'notice_can_activate_recommended'=> '',
 				'install_link'					 => sprintf( __( 'Install %1$s', 'cp' ), $this->plugin[ 'name' ] ),
 				'activate_link'					 => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'cp' ), $this->plugin[ 'name' ] ),
 				'return'						 => __( 'Return to MarketPress Installer', 'cp' ),
@@ -259,6 +260,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				$installed = true;
 			}
 
+			$active = false;
 			if ( !is_plugin_active( $this->plugin[ 'base_path' ] ) ) {
 				if ( $installed ) {
 					$active = false;
@@ -297,7 +299,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'cp-plugin-install'	 => 'install-plugin',
 					), admin_url( 'admin.php' )
 					), 'cp-plugin-install'
-					), $item[ 'sanitized_plugin' ]
+					), $this->plugin[ 'name' ]
 					),
 				);
 			}
@@ -314,7 +316,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						'cp-activate-plugin'		 => 'activate-plugin',
 						'cp-activate-plugin-nonce'	 => wp_create_nonce( 'cp-activate-plugin' ),
 					), admin_url( 'admin.php' )
-					), $item[ 'sanitized_plugin' ]
+					), $this->plugin[ 'name' ]
 					),
 				);
 			}
@@ -352,20 +354,21 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 								<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', 'cp' ); ?></th>	</tr>
 						</thead>
 						<?php
-						$is_link = isset($this->plugin[ 'external_url' ]) && $this->plugin[ 'external_url' ] !== '' ? true : false;
+						$is_link = isset( $this->plugin[ 'external_url' ] ) && $this->plugin[ 'external_url' ] !== '' ? true : false;
 						?>
 						<tbody id="the-list" data-wp-lists="list:plugin">
 							<tr class="alternate">
-								<td class="plugin column-plugin"><strong><?php if($is_link) { ?><a href="<?php echo $this->plugin[ 'external_url' ]; ?>" title="<?php echo $this->plugin[ 'name' ]; ?>" target="_blank"><?php } echo $this->plugin[ 'name' ]; if($is_link){?></a><?php } ?></strong>
+								<td class="plugin column-plugin"><strong><?php if ( $is_link ) { ?><a href="<?php echo $this->plugin[ 'external_url' ]; ?>" title="<?php echo $this->plugin[ 'name' ]; ?>" target="_blank"><?php } echo $this->plugin[ 'name' ];
+			if ( $is_link ) { ?></a><?php } ?></strong>
 									<div class="row-actions">
 										<span class="install">
 											<?php
 											$action_link = $this->get_plugin_action_link();
 											if ( current_user_can( 'install_plugins' ) ) {
-												echo $action_link[ 'install' ];
+												echo isset( $action_link[ 'install' ] ) ? $action_link[ 'install' ] : '';
 											}
 											if ( current_user_can( 'activate_plugins' ) ) {
-												echo $action_link[ 'activate' ];
+												echo isset( $action_link[ 'activate' ] ) ? $action_link[ 'activate' ] : '';
 											}
 											?>
 										</span>
@@ -373,7 +376,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 								</td>
 								<td class="source column-source"><?php echo $this->plugin[ 'source_message' ]; ?></td>
 								<td class="status column-status">
-									<?php echo $this->get_plugin_status( $this->plugin[ 'slug' ] ); ?>
+			<?php echo $this->get_plugin_status( $this->plugin[ 'slug' ] ); ?>
 								</td>
 							</tr>
 						</tbody>
@@ -453,8 +456,8 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 
 				// Prefix a default path to pre-packaged plugins.
 				if ( !CoursePress_Capabilities::is_pro() ) {
-					$source = 'https://' . $plugin[ 'source' ];//added protocol to avoid mod_security
-				}else{
+					$source = 'https://' . $plugin[ 'source' ]; //added protocol to avoid mod_security
+				} else {
 					$source = $plugin[ 'source' ];
 				}
 
@@ -549,7 +552,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 				$activate_link_count = 0; // Used to determine plurality of activate action link text.
 
 				$plugin = $this->plugin;
-
+				
 				// Not installed.
 				if ( !$this->is_plugin_installed( '/' . $this->plugin[ 'slug' ] ) ) {
 					$install_link = true; // We need to display the 'install' action link.
@@ -591,7 +594,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 						$last_plugin = array_pop( $plugin_groups );
 						$imploded	 = empty( $plugin_groups ) ? '<em>' . $last_plugin . '</em>' : '<em>' . ( implode( ', ', $plugin_groups ) . '</em> and <em>' . $last_plugin . '</em>' );
 
-						$rendered .= '<p>' . $this->strings[ $type ] . '</p>';
+						$rendered .= '<p>' . isset( $this->strings[ $type ] ) ? $this->strings[ $type ] : '' . '</p>';
 					}
 
 					// Setup variables to determine if action links are needed.
