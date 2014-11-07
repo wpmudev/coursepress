@@ -1829,7 +1829,7 @@ li.submenu-item a{
 }
 
 li.submenu-units a{
-    background: url( 'images/icon-units.png' );
+    background: url( 'images/icon-units.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;
@@ -1837,7 +1837,7 @@ li.submenu-units a{
 }
 
 li.submenu-notifications a{
-    background: url( 'images/icon-notifications.png' );
+    background: url( 'images/icon-notifications.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;
@@ -1845,7 +1845,7 @@ li.submenu-notifications a{
 }
 
 li.submenu-discussions a{
-    background: url( 'images/icon-discussions.png' );
+    background: url( 'images/icon-discussions.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;
@@ -1853,7 +1853,7 @@ li.submenu-discussions a{
 }
 
 li.submenu-info a{
-    background: url( 'images/icon-info.png' );
+    background: url( 'images/icon-info.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;
@@ -1861,7 +1861,7 @@ li.submenu-info a{
 }
 
 li.submenu-grades a{
-    background: url( 'images/icon-grades.png' );
+    background: url( 'images/icon-grades.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;
@@ -1869,7 +1869,7 @@ li.submenu-grades a{
 }
 
 li.submenu-workbook a{
-    background: url( 'images/icon-workbook.png' );
+    background: url( 'images/icon-workbook.svg' );
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 25px;

@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.5 =
+* Fixed: CoursePress theme navigation restored in responsive/mobile views.
+* Improved some responsive elements of the CoursePress theme.
+
 = 1.2.2.4 =
 * Added integration with "Terms of Service" plugin http://premium.wpmudev.org/project/terms-of-service/
 * Improved CoursePress for multi-site.
