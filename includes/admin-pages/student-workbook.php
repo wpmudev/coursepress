@@ -112,7 +112,7 @@ if ( isset( $_POST['course_id'] ) ) {
                                                     $course_object = $course_obj->get_course();
 
                                                     //$count = $unit_module_main->get_ungraded_response_count( $course->ID );
-
+													$x = $course_obj->get_number_of_students();
                                                     if ( $course_obj->get_number_of_students() >= 1 ) {
                                                         $courses_with_students++;
                                                         if ( isset( $course_object->ID ) ) {

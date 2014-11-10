@@ -574,7 +574,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				static function get_course_instructors( $course_id = false ) {
-
+					global $wpdb;
 					if ( !$course_id ) {
 						return false;
 					}
@@ -583,7 +583,6 @@ if ( !class_exists( 'Course' ) ) {
 					$instructors = get_post_meta( $course_id, 'instructors', true );
 
 					$args = array(
-						'blog_id'		 => $GLOBALS[ 'blog_id' ],
 						'meta_key'		 => 'course_' . $course_id,
 						'meta_value'	 => $course_id,
 						'meta_compare'	 => '',
@@ -597,6 +596,11 @@ if ( !class_exists( 'Course' ) ) {
 						'number'		 => '',
 						'count_total'	 => false,
 					);
+
+					if( is_multisite() ) {
+						$args['blog_id'] = get_current_blog_id();
+						$args['meta_key'] = $wpdb->prefix . 'course_' . $course_id;
+					}
 
 					return get_users( $args );
 				}
@@ -685,13 +689,22 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function get_number_of_students( $course_id = '' ) {
+					global $wpdb;
+
 					if ( $course_id == '' ) {
 						$course_id = $this->id;
 					}
 
+					$meta_key = '';
+					if( is_multisite() ) {
+						$meta_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
+					} else {
+						$meta_key = 'enrolled_course_class_' . $course_id;
+					}
+
 					$args = array(
 						/* 'role' => 'student', */
-						'meta_key' => 'enrolled_course_class_' . $course_id,
+						'meta_key' => $meta_key,
 					);
 
 					$wp_user_search = new WP_User_Query( $args );

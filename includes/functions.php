@@ -823,12 +823,15 @@ function cp_admin_notice( $notice, $type = 'updated' ) {
 function cp_get_number_of_instructors() {
 
 	$args = array(
-		'blog_id'		 => $GLOBALS[ 'blog_id' ],
 		//'role' => 'instructor',
 		'count_total'	 => false,
 		'fields'		 => array( 'display_name', 'ID' ),
 		'who'			 => ''
 	);
+
+	if( is_multisite() ) {
+		$args['blog_id'] = get_current_blog_id();
+	}
 
 	$instructors = get_users( $args );
 
@@ -836,14 +839,13 @@ function cp_get_number_of_instructors() {
 }
 
 function cp_instructors_avatars( $course_id, $remove_buttons = true, $just_count = false ) {
-	global $post_id;
+	global $post_id, $wpdb;
 
 	$content = '';
 
 	//coursepress_courses_cap
 
 	$args = array(
-		'blog_id'		 => $GLOBALS[ 'blog_id' ],
 		//'role' => 'instructor',
 		'meta_key'		 => 'course_' . $course_id,
 		'meta_value'	 => $course_id,
@@ -861,8 +863,12 @@ function cp_instructors_avatars( $course_id, $remove_buttons = true, $just_count
 		'who'			 => ''
 	);
 
-	$instructors = get_users( $args );
+	if( is_multisite() ) {
+		$args['blog_id'] = get_current_blog_id();
+		$args['meta_key'] = $wpdb->prefix . 'course_' . $course_id;
+	}
 
+	$instructors = get_users( $args );
 
 	if ( $just_count == true ) {
 		return count( $instructors );
@@ -886,7 +892,6 @@ function cp_instructors_avatars_array( $args = array() ) {
     var instructor_avatars = new Array();';
 
 	$args = array(
-		'blog_id'		 => $GLOBALS[ 'blog_id' ],
 		//'role' => 'instructor',
 		'meta_key'		 => ( isset( $args[ 'meta_key' ] ) ? $args[ 'meta_key' ] : '' ),
 		'meta_value'	 => ( isset( $args[ 'meta_value' ] ) ? $args[ 'meta_value' ] : '' ),
@@ -903,6 +908,10 @@ function cp_instructors_avatars_array( $args = array() ) {
 		'fields'		 => array( 'display_name', 'ID' ),
 		'who'			 => ''
 	);
+
+	if( is_multisite() ) {
+		$args['blog_id'] = get_current_blog_id();
+	}
 
 	$instructors = get_users( $args );
 
@@ -943,7 +952,6 @@ function cp_students_drop_down() {
 	$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
 
 	$args = array(
-		'blog_id'		 => $GLOBALS[ 'blog_id' ],
 		'role'			 => '',
 		'meta_key'		 => '',
 		'meta_value'	 => '',
@@ -960,6 +968,10 @@ function cp_students_drop_down() {
 		'fields'		 => array( 'display_name', 'ID' ),
 		'who'			 => ''
 	);
+
+	if( is_multisite() ) {
+		$args['blog_id'] = get_current_blog_id();
+	}
 
 	$students = get_users( $args );
 
@@ -982,7 +994,6 @@ function cp_instructors_drop_down( $class = '' ) {
 	$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'cp' ) . '" class="' . $class . '">';
 
 	$args = array(
-		'blog_id'		 => $GLOBALS[ 'blog_id' ],
 		//'role' => 'instructor',
 		'meta_key'		 => '',
 		'meta_value'	 => '',
@@ -1000,6 +1011,10 @@ function cp_instructors_drop_down( $class = '' ) {
 		'fields'		 => array( 'display_name', 'ID' ),
 		'who'			 => ''
 	);
+
+	if( is_multisite() ) {
+		$args['blog_id'] = get_current_blog_id();
+	}
 
 	$instructors = get_users( $args );
 

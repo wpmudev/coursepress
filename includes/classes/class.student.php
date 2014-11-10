@@ -101,7 +101,7 @@ if ( !class_exists( 'Student' ) ) {
 			global $cp;
 			$current_time = current_time( 'mysql' );
 
-			$global_option = true;
+			$global_option = ! is_multisite();
 			
 			update_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $current_time, $global_option ); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
 			update_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option );
@@ -128,7 +128,7 @@ if ( !class_exists( 'Student' ) ) {
 
 			$current_time = current_time( 'mysql' );
 
-			$global_option = true;
+			$global_option = ! is_multisite();
 
 			delete_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $global_option );
 			delete_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $global_option );
@@ -177,11 +177,23 @@ if ( !class_exists( 'Student' ) ) {
 			global $wpdb;
 			$prefix		 = $wpdb->prefix;
 			$base_prefix = $wpdb->base_prefix;
+			$current_blog = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
 
 			if ( preg_match( '/enrolled\_course\_date\_/', $meta_value ) ) {
 
 				if ( preg_match( '/^' . $base_prefix . '/', $meta_value ) ) {
-					$course_id = str_replace( $prefix . 'enrolled_course_date_', '', $meta_value );
+
+					// Get the blog ID that this meta key belongs to
+					$blog_id = '';
+					preg_match('/(?<=' . $base_prefix . ')\d*/', $meta_value, $blog_id);
+					$blog_id = $blog_id[0];
+
+					// Only for current site...
+					if( $current_blog != $blog_id ) {
+						return false;
+					}
+
+					$course_id = str_replace( $base_prefix . $blog_id . '_enrolled_course_date_', '', $meta_value );
 				} else {
 					// old style, but should support it at least in the listings
 					$course_id = str_replace( 'enrolled_course_date_', '', $meta_value );
@@ -222,7 +234,7 @@ if ( !class_exists( 'Student' ) ) {
 			} else {
 				$this->withdraw_from_all_courses();
 
-				$global_option = true;
+				$global_option = ! is_multisite();
 
 				delete_user_option( $this->ID, 'role', $global_option );
 				// Legacy
@@ -313,7 +325,7 @@ if ( !class_exists( 'Student' ) ) {
 		}
 
 		function update_student_group( $course_id, $group ) {
-			$global_option = true;
+			$global_option = ! is_multisite();
 			
 			if ( update_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option ) ) {
 				return true;
@@ -323,7 +335,7 @@ if ( !class_exists( 'Student' ) ) {
 		}
 
 		function update_student_class( $course_id, $class ) {
-			$global_option = true;
+			$global_option = ! is_multisite();
 			
 			if ( update_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option ) ) {
 				return true;

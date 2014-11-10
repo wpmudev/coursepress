@@ -12,6 +12,7 @@ if ( !class_exists( 'Student_Search' ) ) {
         var $additional_url_args = array();
 
         function __construct( $search_term = '', $page_num = '', $search_args = array(), $meta_args = array(), $additional_url_args = array() ) {
+			global $wpdb;
 
             $this->additional_url_args = $additional_url_args;
 
@@ -30,7 +31,7 @@ if ( !class_exists( 'Student_Search' ) ) {
                     /* 'fields' => 'all_with_meta' */
             );
 
-            $search_args['meta_key'] = 'role';//( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
+	        $search_args[ 'meta_key' ] = 'role';//( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
             $search_args['meta_value'] = 'student';//( isset( $search_args['meta_value'] ) ? $search_args['meta_value'] : '' );
 
             if ( !empty( $meta_args ) ) {
@@ -39,10 +40,13 @@ if ( !class_exists( 'Student_Search' ) ) {
                 $args = $meta_args;
             }
 
+	        if( is_multisite() ) {
+		        $args[ 'meta_key' ] = $wpdb->prefix . 'role';
+		        $args[ 'blog_id' ] = get_current_blog_id();
+	        }
+
             $this->query_vars = wp_parse_args( $args, array(
-                'blog_id' => $GLOBALS['blog_id'],
                 //'role' => 'student',
-                'meta_key' => $search_args['meta_key'],
                 'meta_value' => $search_args['meta_value'],
                 'meta_compare' => '',
                 'include' => array(),
@@ -57,6 +61,7 @@ if ( !class_exists( 'Student_Search' ) ) {
                 'fields' => 'all_with_meta',
                 'who' => ''
             ) );
+
 
 			add_action('pre_user_query', array( &$this, 'add_first_and_last' ) );
 			

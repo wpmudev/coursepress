@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.6 =
+* Multisite improvements for students and instructors.
+
 = 1.2.2.5 =
 * Fixed issues with Multisite manual student enrollment
 * Fixed: CoursePress theme navigation restored in responsive/mobile views.

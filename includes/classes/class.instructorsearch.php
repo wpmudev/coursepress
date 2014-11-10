@@ -10,6 +10,7 @@ if ( !class_exists( 'Instructor_Search' ) ) {
         var $search_errors = false;
 
         function __construct( $search_term = '', $page_num = '' ) {
+			global $wpdb;
 
             $this->search_term = $search_term;
             $this->raw_page = ( '' == $page_num ) ? false : ( int ) $page_num;
@@ -21,10 +22,16 @@ if ( !class_exists( 'Instructor_Search' ) ) {
                 'fields' => 'all'
             );
 
+	        $meta_key = 'role_ins';
+	        if( is_multisite() ) {
+		        $args['blog_id'] = get_current_blog_id();
+		        $args['meta_key'] = $wpdb->prefix . 'role_ins';
+	        } else {
+		        $args['meta_key'] = 'role_ins';
+	        }
+
             $this->query_vars = wp_parse_args( $args, array(
-                'blog_id' => $GLOBALS['blog_id'],
                 //'role' => 'instructor',
-                'meta_key' => 'role_ins',//just 'role' if the user may be instructor OR student, not both
                 'meta_value' => 'instructor',
                 'meta_compare' => '',			
                 'include' => array(),
@@ -40,6 +47,8 @@ if ( !class_exists( 'Instructor_Search' ) ) {
                 'fields' => 'all',
                 'who' => ''
                     ) );
+
+	        $this->query_vars = $args;
 
 			add_action('pre_user_query', array( &$this, 'add_first_and_last' ) );
 

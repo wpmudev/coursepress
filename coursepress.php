@@ -932,6 +932,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			add_action( 'wp_login', array( &$this, 'set_latest_student_activity_upon_login' ), 10, 2 );
 
 			/**
+			 * Upgrade legacy instructor meta on login.
+			 *
+			 * @since 1.0.0
+			 */
+			add_action( 'init', array( &$this, 'upgrade_instructor_meta' ) );
+
+			/**
 			 * Did MarketPress process a successful order.
 			 *
 			 * If MarketPress payment was successful, then enrol the user.
@@ -2037,6 +2044,62 @@ if ( !class_exists( 'CoursePress' ) ) {
 					}
 				}
 			}
+		}
+
+		/* Upgrade Instructor Meta */
+
+		function upgrade_instructor_meta() {
+			global $wpdb;
+
+			$user_id = get_current_user_id();
+			$original_blog_id = get_current_blog_id();
+			// If they are not an instructor, don't do it
+			if( get_user_meta( $user_id, 'role_ins' ) ) {
+
+				// Please note: Patterns uses capturing groups which allows us to pull blog_id and course_id from the matches.
+				$pattern = '';
+				if( is_multisite() ) {
+					$pattern = '/^' . $wpdb->base_prefix . '(?<=' . $wpdb->base_prefix . ')(\d*)_course_(\d*)$/';
+				} else {
+					// Nothing to do for single site.
+					return false;
+				}
+
+				$all_meta = get_user_meta( $user_id );
+
+				foreach( $all_meta as $meta_key => $meta_value ) {
+
+					$matches = '';
+					if( preg_match( $pattern, $meta_key, $matches ) ) {
+						$blog_id = (int) $matches[1] != 0 ? $matches[1] : '';
+						$course_id = $matches[2];
+
+						// Use update_user_meta for some extra control
+						if( ! empty( $blog_id ) ) {
+							update_user_meta( $user_id, $wpdb->base_prefix . $blog_id . '_role_ins', 'instructor' );
+
+							switch_to_blog( $blog_id );
+							$instructors = get_post_meta( $course_id, 'instructors', true );
+
+							// User is not yet an instructor
+							if ( ! in_array( $user_id, $instructors ) ) {
+								$instructors[] = $user_id;
+								update_post_meta( $course_id, 'instructors', $instructors );
+							}
+						} else {
+							// Update failed...
+							return false;
+						}
+
+						switch_to_blog( $original_blog_id );
+						delete_user_meta( $user_id, 'role_ins' );
+					}
+
+
+				}
+
+			}
+
 		}
 
 		/* Force requested file downlaod */
@@ -3589,6 +3652,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$assigned_courses_ids = $instructor->get_assigned_courses_ids();
 				if ( empty( $assigned_courses_ids ) ) {
 					$this->drop_instructor_capabilities( $instructor_id );
+
+					delete_user_option( $instructor_id, 'role_ins', $global_option );
+
+					// Legacy
+					delete_user_meta( $instructor_id, 'role_ins' );
 				}
 
 				$ajax_response[ 'instructor_removed' ] = true;

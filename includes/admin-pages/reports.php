@@ -386,6 +386,16 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     $col_sizes = array(
         '4', '10', '10', '10', '10', '5'
     );
+
+    $class_meta_query_key = '';
+    if( is_multisite() ) {
+	    $class_meta_query_key = $wpdb->prefix . 'enrolled_course_class_' . $current_course_id;
+    } else {
+	    $class_meta_query_key = 'enrolled_course_class_' . $current_course_id;
+    }
+
+
+
     ?>
     <form method="post" id="generate-report">
         <input type="hidden" name="course_id" value="<?php echo $current_course_id; ?>" />
@@ -420,7 +430,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                     $args = array(
                         'meta_query' => array(
                             array(
-                                'key' => 'enrolled_course_class_' . $current_course_id,
+                                'key' => $class_meta_query_key,
                                 'value' => $classes,
                             ) )
                     );
@@ -428,7 +438,7 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
                     $args = array(
                         'meta_query' => array(
                             array(
-                                'key' => 'enrolled_course_class_' . $current_course_id
+                                'key' => $class_meta_query_key
                             ) )
                     );
                 }

@@ -1,6 +1,12 @@
 <?php
 $user_id = isset($_GET['user_id']) ? ( int ) $_GET['user_id'] : '';
 $course_id = isset($_GET['course_id']) ? ( int ) $_GET['course_id'] : '';
+$class_meta_query_key = '';
+if( is_multisite() ) {
+	$class_meta_query_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
+} else {
+	$class_meta_query_key = 'enrolled_course_class_' . $course_id;
+}
 ?>
 
 <div class="wrap nosubsub cp-wrap">
@@ -259,7 +265,7 @@ $course_id = isset($_GET['course_id']) ? ( int ) $_GET['course_id'] : '';
                                 $args = array(
                                     'meta_query' => array(
                                         array(
-                                            'key' => 'enrolled_course_class_' . $current_course_id,
+                                            'key' => $class_meta_query_key,
                                             'value' => $classes,
                                         ) )
                                 );
@@ -267,7 +273,7 @@ $course_id = isset($_GET['course_id']) ? ( int ) $_GET['course_id'] : '';
                                 $args = array(
                                     'meta_query' => array(
                                         array(
-                                            'key' => 'enrolled_course_class_' . $current_course_id
+                                            'key' => $class_meta_query_key
                                         ) )
                                 );
                             }

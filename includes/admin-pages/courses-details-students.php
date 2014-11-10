@@ -1,4 +1,5 @@
 <?php
+global $wpdb;
 $course_id = ( int ) $_GET['course_id'];
 $course = new Course($course_id);
 
@@ -6,6 +7,14 @@ $instructor = new Instructor(get_current_user_id());
 $instructor_courses = $instructor->get_assigned_courses_ids();
 
 $my_course = in_array($course_id, $instructor_courses);
+
+$class_meta_query_key = '';
+if( is_multisite() ) {
+	$class_meta_query_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
+} else {
+	$class_meta_query_key = 'enrolled_course_class_' . $course_id;
+}
+
 /* Invite a Student */
 if ( isset($_POST['invite_student']) ) {
     check_admin_referer('student_invitation');
@@ -62,7 +71,7 @@ if ( isset($_GET['delete_class']) ) {
         $args = array(
             'meta_query' => array(
                 array(
-                    'key' => 'enrolled_course_class_' . $course_id,
+                    'key' => $class_meta_query_key,
                     'value' => $old_class,
                 ) )
         );
@@ -108,7 +117,7 @@ if ( isset($_GET['withdraw_all']) ) {
         $args = array(
             'meta_query' => array(
                 array(
-                    'key' => 'enrolled_course_class_' . $course_id,
+                    'key' => $class_meta_query_key,
                     'value' => $old_class,
                 ) )
         );
@@ -162,13 +171,18 @@ if ( current_user_can('manage_options') || ( current_user_can('coursepress_withd
 $students = new Student_Search();
 ?>
 <?php
-$search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
+
+if( is_multisite() ) {
+	$search_args['meta_key'] = $wpdb->prefix . 'enrolled_course_group_' . $course_id;
+} else {
+	$search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
+}
 $search_args['meta_value'] = ( isset($class) ? $class : '' );
 
 $args = array(
     'meta_query' => array(
         array(
-            'key' => 'enrolled_course_class_' . $course_id,
+            'key' => $class_meta_query_key,
             'value' => '',
         ) )
 );
@@ -178,13 +192,17 @@ $wp_user_search = new WP_User_Query($args);
 
 <div id="students_accordion" class="cp-wrap">
     <?php
-    $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
+    if( is_multisite() ) {
+	    $search_args['meta_key'] = $wpdb->prefix . 'enrolled_course_group_' . $course_id;
+    } else {
+	    $search_args['meta_key'] = 'enrolled_course_group_' . $course_id;
+    }
     $search_args['meta_value'] = ( isset($class) ? $class : '' );
 
     $args = array(
         'meta_query' => array(
             array(
-                'key' => 'enrolled_course_class_' . $course_id,
+                'key' => $class_meta_query_key,
                 'value' => '',
             ) )
     );
@@ -315,7 +333,7 @@ $wp_user_search = new WP_User_Query($args);
       $args = array(
       'meta_query' => array(
       array(
-      'key' => 'enrolled_course_class_' . $course_id,
+      'key' => $class_meta_query_key,
       'value' => $class,
       ) )
       );
