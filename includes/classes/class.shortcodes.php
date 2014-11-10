@@ -30,6 +30,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_units', array( &$this, 'course_units' ) );
 			add_shortcode( 'course_units_loop', array( &$this, 'course_units_loop' ) );
 			add_shortcode( 'course_notifications_loop', array( &$this, 'course_notifications_loop' ) );
+			add_shortcode( 'courses_loop', array( &$this, 'courses_loop' ) );
 			add_shortcode( 'course_discussion_loop', array( &$this, 'course_discussion_loop' ) );
 			add_shortcode( 'course_unit_single', array( &$this, 'course_unit_single' ) );
 			add_shortcode( 'course_unit_details', array( &$this, 'course_unit_details' ) );
@@ -2757,6 +2758,28 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			query_posts( $args );
 		}
 
+		function courses_loop( $atts ) {
+			global $wp;
+			if ( array_key_exists( 'course_category', $wp->query_vars ) ) {
+				$page		 = ( isset( $wp->query_vars[ 'paged' ] ) ) ? $wp->query_vars[ 'paged' ] : 1;
+				$query_args	 = array(
+					'order'			 => 'DESC',
+					'post_type'		 => 'course',
+					'post_status'	 => 'publish',
+					'paged'			 => $page,
+					'tax_query'		 => array(
+						array(
+							'taxonomy'	 => 'course_category',
+							'field'		 => 'slug',
+							'terms'		 => array( $wp->query_vars['course_category'] ),
+						)
+					)
+				);
+
+				query_posts( $query_args );
+			}
+		}
+
 		function course_notifications_loop( $atts ) {
 			global $wp;
 
@@ -3801,12 +3824,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 									<input type="password" name="password_confirmation" value="" />
 								</label>
 								<br clear="both" /><br />
-								
-								<?php if ( shortcode_exists( 'signup-tos' ) ) { 
+
+								<?php
+								if ( shortcode_exists( 'signup-tos' ) ) {
 									if ( get_option( 'show_tos', 0 ) == '1' ) {
-									?>
-									<label class="full"><?php echo do_shortcode( '[signup-tos]' ); ?></label>
-									<?php
+										?>
+										<label class="full"><?php echo do_shortcode( '[signup-tos]' ); ?></label>
+										<?php
 									}
 								}
 								?>
@@ -4200,7 +4224,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											}
 											?>
 									</td>
-								<?php }//general col visibility                    ?>
+								<?php }//general col visibility                     ?>
 							</tr>
 							<?php
 							$current_row++;

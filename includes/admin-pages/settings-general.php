@@ -27,6 +27,20 @@
 								<hr />
                             </td>
                         </tr>
+						
+						<tr valign="top">
+                            <th scope="row"><?php _e( 'Course Category Slug', 'cp' ); ?></th>
+                            <td>
+								<?php
+								echo esc_html( trailingslashit( home_url() ) );
+								?>&nbsp;<input type='text' name='option_coursepress_course_category_slug' id='course_category_slug' value='<?php echo esc_attr( $this->get_course_category_slug() );
+								?>' />&nbsp;/
+
+                                <p class='description'><?php _e( 'Your course category URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ).'/'.$this->get_course_category_slug(); ?><?php _e( '/your-category-slug/', 'cp' ); ?></p>
+								<hr />
+                            </td>
+                        </tr>
+	
 						<!--<tr valign="top">
                             <th scope="row"><?php _e( 'Course Page', 'cp' ); ?></th>
                             <td>

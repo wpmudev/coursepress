@@ -618,7 +618,7 @@ function step_1_update(attr) {
         course_excerpt: content,
         meta_featured_url: $('[name=meta_featured_url]').val(),
         _thumbnail_id: _thumbnail_id,
-        meta_course_category: $('[name=meta_course_category]').val(),
+        //meta_course_category: $('[name=meta_course_category]').val(),
         meta_course_language: $('[name=meta_course_language]').val(),
         course_category: $('[name=course_category]').val(),
         // Don't remove

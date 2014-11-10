@@ -1,4 +1,3 @@
-
 function mp_chosen( $elm ) {
 	$elm.chosen();
 }

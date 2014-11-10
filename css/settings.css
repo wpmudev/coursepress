@@ -730,6 +730,22 @@ x:-o-prefocus,
     line-height: normal;
     border-radius: 0;
 }
+
+.course-details .chosen-container-multi .chosen-choices li.search-field input[type=text]{
+    margin: 1px 0;
+    padding: 5px;
+    height: 24px;
+    outline: 0;
+    border: 0!important;
+    background: transparent!important;
+    box-shadow: none;
+    color: #000;
+    font-size: 100%;
+    font-family: sans-serif;
+    line-height: normal;
+    border-radius: 0;
+}
+
 .chosen-container-multi .chosen-choices li.search-field .default {
     color: #999999;
 }
