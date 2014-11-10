@@ -220,7 +220,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 		// CoursePress CSS styles for TinyMCE
 		function mce_editor_style( $url ) {
-
+			global $wp_version;
 			// Only on these pages
 			$detect_pages = array(
 				'coursepress_page_course_details',

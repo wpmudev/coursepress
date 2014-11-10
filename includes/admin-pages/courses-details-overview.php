@@ -122,7 +122,7 @@ if (isset($_GET['course_id'])) {
     $paid_course = $coursepress->marketpress_active ? $course->details->paid_course : false;
     $auto_sku = $course->details->auto_sku;
     $course_terms = wp_get_post_terms((int) $_GET['course_id'], 'course_category');
-    $course_category = is_array($course_terms) ? $course_terms[0]->term_id : 0; //$course->details->course_category;
+    $course_category = is_array($course_terms) ? (isset($course_terms[0]) ? $course_terms[0]->term_id : 0) : 0; //$course->details->course_category;
     $language = $course->details->course_language;
     $course_video_url = $course->details->course_video_url;
     $course_setup_progress = empty($course->details->course_setup_progress) ? array(
