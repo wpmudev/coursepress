@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.2.2.5 =
 * Multisite improvements for students and instructors.
+* Added course categories and course categories widget (in order to make it work please re-save CoursePress settings)
 * Fixed: CoursePress theme navigation restored in responsive/mobile views.
 * Improved some responsive elements of the CoursePress theme.
 * Fixed issue with mobile menu not appearing on the some Android devices
