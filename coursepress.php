@@ -2271,6 +2271,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$vars[ 'instructor_username' ]	 = $wp->query_vars[ 'instructor_username' ];
 
 				$user = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash' );
+			
 				if ( false === $user ) {
 					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
 						$user = Instructor::instructor_by_login( $wp->query_vars[ 'instructor_username' ] );

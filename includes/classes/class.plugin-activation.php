@@ -678,7 +678,7 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 		}
 
 		protected function is_cp_plugin_installation_page() {
-			if ( isset( $_GET[ 'tab' ] ) && $this->menu === $_GET[ 'page' ] ) {
+			if ( isset( $_GET[ 'tab' ] ) && isset($_GET[ 'page' ]) && $this->menu === $_GET[ 'page' ] ) {
 				return true;
 			}
 			return false;

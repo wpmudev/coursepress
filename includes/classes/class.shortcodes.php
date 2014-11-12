@@ -2238,7 +2238,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					foreach ( $instructors as $instructor ) {
 
 						$profile_href = trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug );
-						$profile_href .= get_option( 'show_instructor_username', 1 ) == 1 ? trailingslashit( $instructor->user_login ) : md5( trailingslashit( $instructor->user_login ) );
+						$profile_href .= get_option( 'show_instructor_username', 1 ) == 1 ? trailingslashit( $instructor->user_login ) : trailingslashit( md5( $instructor->user_login )) ;
 
 						switch ( $style ) {
 
