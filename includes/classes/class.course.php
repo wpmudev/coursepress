@@ -330,6 +330,7 @@ if ( !class_exists( 'Course' ) ) {
 						$price		 = cp_filter_content( (!empty( $_POST[ 'mp_price' ] ) ? $_POST[ 'mp_price' ] : 0 ), true );
 						$sale_price	 = cp_filter_content( (!empty( $_POST[ 'mp_sale_price' ] ) ? $_POST[ 'mp_sale_price' ] : 0 ), true );
 						update_post_meta( $post_id, 'mp_sku', $sku );
+						update_post_meta( $post_id, 'mp_var_name', serialize(array()) );
 						update_post_meta( $post_id, 'mp_price', $price );
 						update_post_meta( $post_id, 'mp_sale_price', $sale_price );
 						update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( $_POST[ 'mp_is_sale' ] ), true );

@@ -9,7 +9,9 @@ CHANGE LOG
 = 1.2.2.6 =
 * Fixed issue with wrong MD5 for instructor username in shortcodes which caused broken instructor single page if "Show Instructor Username in URL" option is not selected
 * Fixed issue with table prefix (instructor_by_hash)
+* Fixed issue with SKU not being shown on course overview page and product list in MarketPress
 * Fix broken redirect to cart on signup
+* Small code improvements
 
 = 1.2.2.5 =
 * Multisite improvements for students and instructors.

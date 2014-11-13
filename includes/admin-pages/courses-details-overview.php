@@ -451,13 +451,13 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												<div class="video_url_holder mp-wrap">
 													<label for='meta_course_video_url'>
-		<?php _e( 'Featured Video', 'cp' ); ?><br />
+														<?php _e( 'Featured Video', 'cp' ); ?><br />
 														<span><?php _e( 'This is used on the Course Overview page and will be displayed with the course description.', 'cp' ); ?></span>
 													</label>
 													<input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr( $course_video_url ); ?>" placeholder="<?php
-														   _e( 'Add URL or Browse', 'cp' );
-														   echo ' ( ' . $supported_video_extensions . ' )';
-														   ?>" />
+													_e( 'Add URL or Browse', 'cp' );
+													echo ' ( ' . $supported_video_extensions . ' )';
+													?>" />
 
 													<input type="button" class="course_video_url_button button-secondary" value="<?php _e( 'Browse', 'cp' ); ?>" />
 													<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_video_extensions ); ?></div>
@@ -466,8 +466,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="wide">
 												<label for='course_description' class="required">
-		<?php _e( 'Course Description', 'cp' ); ?>
-												<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
+													<?php _e( 'Course Description', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
 												</label>
 												<p><?php _e( 'This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp' ); ?></p>
 												<?php
@@ -499,8 +499,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<!-- PLACEHOLDER -->
 											<div class="wide">
 												<label>
-		<?php _e( 'Course Structure', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
+													<?php _e( 'Course Structure', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
 													<br />
 													<span><?php _e( 'This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'cp' ); ?></span>
 												</label>
@@ -536,8 +536,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																						<label><?php _e( 'There are currently no units to display', 'cp' ); ?></label> 
 																					</li>
 																				</ol>
-																				<?php } else {
-																					?>
+																			<?php } else {
+																				?>
 																				<ol>
 																					<?php
 																					$module = new Unit_Module();
@@ -596,7 +596,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 																											<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
 																												<div class="tree-page-left">
-						<?php echo (isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' )); ?>
+																													<?php echo (isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' )); ?>
 																												</div>
 																												<div class="tree-page-right">
 																													<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
@@ -680,7 +680,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																										}
 																										?>
 																									</li>
-				<?php } ?>
+																								<?php } ?>
 
 																							</ol>
 																						</li>
@@ -782,13 +782,13 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 											<div class="wide narrow">
 												<label>
-		<?php _e( 'Course Instructor(s)', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );                 ?>
+													<?php _e( 'Course Instructor(s)', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );                 ?>
 													<br />
 													<span><?php _e( 'Select one or more instructor to facilitate this course', 'cp' ); ?></span>
 												</label>
 
-		<?php if ( CoursePress_Capabilities::can_assign_course_instructor( $course_id ) ) { ?>
+												<?php if ( CoursePress_Capabilities::can_assign_course_instructor( $course_id ) ) { ?>
 													<?php cp_instructors_avatars_array(); ?>
 
 													<div class="clearfix"></div>
@@ -818,18 +818,18 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													$can_manage_instructors = CoursePress_Capabilities::can_assign_course_instructor( $course_id );
 													?>
 
-		<?php cp_instructors_avatars( $course_id, $can_manage_instructors ); ?>
-		<?php cp_instructors_pending( $course_id, $can_manage_instructors ); ?>
+													<?php cp_instructors_avatars( $course_id, $can_manage_instructors ); ?>
+													<?php cp_instructors_pending( $course_id, $can_manage_instructors ); ?>
 												</div>
 
 												<div class="clearfix"></div>
-		<?php if ( $can_manage_instructors || 0 == $course_id ) : ?>						
+												<?php if ( $can_manage_instructors || 0 == $course_id ) : ?>						
 													<hr />
 													<!-- INVITE INSTRUCTOR -->
 
 													<label>
-			<?php _e( 'Invite New Instructor', 'cp' ); ?>
-			<?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );                 ?>
+														<?php _e( 'Invite New Instructor', 'cp' ); ?>
+														<?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );                 ?>
 														<br />
 														<span><?php _e( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ); ?></span>
 													</label>										
@@ -844,7 +844,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e( 'Send Invite', 'cp' ); ?>">
 														</div>
 													</div>
-		<?php endif; ?>
+												<?php endif; ?>
 
 
 											</div>
@@ -872,8 +872,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo esc_attr( $set_status ); ?>" />
 											<div class="wide course-dates"> 
 												<label>
-		<?php _e( 'Course Dates', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );                 ?>
+													<?php _e( 'Course Dates', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );                 ?>
 												</label>	
 
 												<div class="course-date-override">    
@@ -897,8 +897,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="wide enrollment-dates">                             
 												<label>
-		<?php _e( 'Enrollment Dates', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );                 ?>
+													<?php _e( 'Enrollment Dates', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );                 ?>
 												</label>	
 
 												<div class="enrollment-date-override">    
@@ -946,7 +946,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<label for='meta_class-size'>
 														<input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
 														<span><?php _e( 'Limit class size', 'cp' ); ?></span>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );                  ?>
+														<?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );                  ?>
 														<br />
 														<span><?php _e( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ); ?></span>
 													</label>
@@ -958,7 +958,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label for='meta_allow_course_discussion'>
 													<input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Allow Course Discussion', 'cp' ); ?></span>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );                  ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );                  ?>
 													<br />
 													<span><?php _e( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ); ?></span>
 												</label>
@@ -966,7 +966,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label for='meta_allow_workbook_page'>
 													<input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Show student Workbook', 'cp' ); ?></span>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );                  ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );                  ?>
 													<br />
 													<span><?php _e( 'If checked, students can see their progress and grades.', 'cp' ); ?></span>
 												</label>										
@@ -1006,24 +1006,24 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="narrow">
 												<label for='meta_enroll_type'>
-		<?php _e( 'Who can Enroll in this course', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );                  ?>
+													<?php _e( 'Who can Enroll in this course', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );                  ?>
 													<br />
 													<span><?php _e( 'Select the limitations on accessing and enrolling in this course.', 'cp' ); ?></span>
 												</label>
 
 												<select class="wide" name="meta_enroll_type" id="enroll_type">
-		<?php if ( cp_user_can_register() ) { ?>
+													<?php if ( cp_user_can_register() ) { ?>
 														<option value="anyone" <?php echo ( $enroll_type == 'anyone' ? 'selected=""' : '' ) ?>><?php _e( ' Anyone ', 'cp' ); ?></option>
 														<option value="passcode" <?php echo ( $enroll_type == 'passcode' ? 'selected=""' : '' ) ?>><?php _e( 'Anyone with a pass code', 'cp' ); ?></option>
 														<option value="prerequisite" <?php echo ( $enroll_type == 'prerequisite' ? 'selected=""' : '' ) ?>><?php _e( 'Anyone who completed the prerequisite course', 'cp' ); ?></option>
-		<?php } ?>
+													<?php } ?>
 													<option value="manually" <?php echo ( $enroll_type == 'manually' ? 'selected=""' : '' ) ?>><?php _e( 'Manually added only', 'cp' ); ?></option>
 												</select>
 
 												<?php if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
 													<span class="course_settings_enrollment_message"><?php _e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?></span>
-		<?php } ?>
+												<?php } ?>
 											</div>
 
 											<div class='wide' id='manually_added_holder'>
@@ -1032,8 +1032,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="wide" id="enroll_type_prerequisite_holder" <?php echo ( $enroll_type <> 'prerequisite' ? 'style="display:none"' : '' ) ?>>
 												<label for='meta_enroll_type'>
-		<?php _e( 'Prerequisite Course', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );                  ?>
+													<?php _e( 'Prerequisite Course', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );                  ?>
 												</label>
 												<p><?php _e( 'Students will need to complete the following prerequisite course in order to enroll.', 'cp' ); ?></p>
 												<select name="meta_prerequisite" class="chosen-select">
@@ -1062,8 +1062,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="narrow" id="enroll_type_holder" <?php echo ( $enroll_type <> 'passcode' ? 'style="display:none"' : '' ) ?>>
 												<label for='meta_enroll_type'>
-		<?php _e( 'Pass Code', 'cp' ); ?>
-		<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );                  ?>
+													<?php _e( 'Pass Code', 'cp' ); ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );                  ?>
 												</label>
 												<p><?php _e( 'Students will need to enter this pass code in order to enroll.', 'cp' ); ?></p>
 
@@ -1076,7 +1076,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											if ( $offer_paid ) :
 												?>
 												<hr />
-			<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////                     ?>
+												<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////                     ?>
 												<div class="narrow product">
 													<!-- MarketPress not Active -->
 
@@ -1085,7 +1085,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													if ( $coursepress->marketpress_active || (current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' )) ) {
 														?>
 														<label>
-				<?php _e( 'Cost to participate in this course', 'cp' ); ?>
+															<?php _e( 'Cost to participate in this course', 'cp' ); ?>
 														</label>
 
 														<div class="course-paid" id="marketpressprompt">
@@ -1100,7 +1100,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 														<div class="cp-markertpress-not-active <?php echo $coursepress->marketpress_active ? 'hidden' : ''; ?>">
 															<div id="marketpressprompt-box">
 																<label>
-																<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
+																	<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
 																</label>
 
 																<?php
@@ -1115,8 +1115,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																?>
 															</div>
 														</div>  <!-- cp-marketpress-not-active -->
-														<?php } ?>
-														<?php if ( current_user_can( 'manage_options' ) || (!current_user_can( 'manage_options' ) && $gateways) ) { ?>
+													<?php } ?>
+													<?php if ( current_user_can( 'manage_options' ) || (!current_user_can( 'manage_options' ) && $gateways) ) { ?>
 														<div class="cp-markertpress-is-active <?php echo!$coursepress->marketpress_active ? 'hidden' : ''; ?>">
 															<?php
 															$mp_product_id = $course->mp_product_id();
@@ -1131,6 +1131,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																$mp_product_details = get_post_custom( $course_id );
 															}
 
+															if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
+																$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
+															}else{
+																$marketpress_product_sku = '';
+															}
+
 															$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
 															?>
 
@@ -1139,11 +1145,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
 																<div class="course-sku">
 																	<p><input type="checkbox" name="meta_auto_sku" <?php echo ( isset( $auto_sku ) && $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
-																	<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?></p>
+																		<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?></p>
 																	<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
-																	if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
-																		echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
-																	}
+																	/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
+																	  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
+																	  } */
+																	echo esc_attr( isset($marketpress_product_sku[0]) ? $marketpress_product_sku[0] : ''  );
 																	?>" <?php echo $input_state; ?> />
 																</div>
 
@@ -1160,14 +1167,14 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																			checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' );
 																		}
 																		?>" <?php echo $input_state; ?>  />
-				<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
+																		<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
 																	<span class="price-label <?php isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) && checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
 																	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo (!empty( $mp_product_details[ 'mp_sale_price' ] ) ? esc_attr( $mp_product_details[ "mp_sale_price" ][ 0 ] ) : 0); ?>" <?php echo $input_state; ?>  />
 																</div>
 
 																<div class="clearfix"></div>
 
-																	<?php if ( current_user_can( 'manage_options' ) ) { ?>
+																<?php if ( current_user_can( 'manage_options' ) ) { ?>
 																	<div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
 																		<?php
 																		//Try to dequeue need-help script to avoid need-help popup
@@ -1179,10 +1186,10 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 																		<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>												
 																	</div>
-														<?php } ?>
+																<?php } ?>
 															</div>
 														</div>
-			<?php } ?><!-- cp-markertpress-is-active -->
+													<?php } ?><!-- cp-markertpress-is-active -->
 													<!--_e('Please ask administrator to enable at least one payment gateway.', 'cp');-->
 												</div>
 
@@ -1190,7 +1197,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											// End check for Campus.
 											endif;
 											?>
-		<?php // END ///////////////////////////////                     ?>
+											<?php // END ///////////////////////////////                     ?>
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
@@ -1208,7 +1215,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																													<div class="tooltip-before"></div>
 																													<div class="tooltip-button">&times;</div>
 																													<div class="tooltip-content">
-		<?php _e( 'If checked, students can see their course performance and grades by units.', 'cp' ) ?>
+									<?php _e( 'If checked, students can see their course performance and grades by units.', 'cp' ) ?>
 																													</div>
 																											</div>
 									
@@ -1218,8 +1225,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									// OLD GRADEBOOK INTEGRATION -->
 
 
-									<?php } else {
-										?>
+								<?php } else {
+									?>
 									<div class="limited_courses_message">
 										<?php
 										printf( __( 'While %s is suitable for offering a few courses, you may have bigger goals for your site. %s takes the features you love from %s and unlocks the ability to create an unlimited number of courses. And get 12 payment gateways making it even easier to accept payments for your premium content.' ), $this->name, '<a href="http://premium.wpmudev.org/project/coursepress-pro/">' . __( 'CoursePress PRO' ) . '</a>', $this->name );
@@ -1240,12 +1247,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 						if ( $course_id !== 0 ) {
 							?>
 																																																				<a href="<?php echo admin_url( 'admin.php?page=' . (int) $_GET[ 'page' ] . '&tab=units&course_id=' . (int) $_GET[ 'course_id' ] ); ?>" class="button-secondary"><?php _e( 'Add Units &raquo;', 'cp' ); ?></a> 
-	<?php } ?>
+						<?php } ?>
 						</div>
 						-->
 
 					</div>
-<?php } ?>
+				<?php } ?>
             </div>
 
         </div> <!-- course-liquid-left -->
