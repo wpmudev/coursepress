@@ -1471,12 +1471,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			if ( empty( $args ) && isset( $_POST[ 'data' ] ) ) {
-				$args = $_POST[ 'data' ];
+				//$args = $_POST[ 'data' ];
+				parse_str( $_POST[ 'data' ], $args );
 			}
 
 			$ajax_response = array();
 
-			$course_id = !empty( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : 0;
+			$course_id = !empty( $_REQUEST[ 'course_id' ] ) ? (int) $_REQUEST[ 'course_id' ] : ( isset( $args['course_id'] ) && ! empty( $args['course_id'] ) ? $args['course_id'] : 0 );
 
 			$is_paid = get_post_meta( $course_id, 'paid_course', true );
 			$is_paid = $is_paid && 'on' == $is_paid ? true : false;
