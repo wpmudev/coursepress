@@ -8,7 +8,8 @@ if ( !class_exists('Course_Calendar') ) {
 		// Example:
 		// $cal = new Course_Calendar( array( 'course_id'=>4 ) );
 		// echo $cal->create_calendar("< Previous", "Next >");
-		private $days_of_week = array( 'S', 'M', 'T', 'W', 'T', 'F', 'S' );
+		//private $days_of_week = array( 'S', 'M', 'T', 'W', 'T', 'F', 'S' );
+		private $days_of_week = array( 0, 1, 2, 3, 4, 5, 6 );
 		
 		private $first_day = false;
 		private $day_of_week = false;
@@ -27,6 +28,7 @@ if ( !class_exists('Course_Calendar') ) {
 		private $next_month = false;
 				
         function __construct( $args ) {
+			global $wp_locale;
 			
 			extract( cp_default_args( array(
 				'month' => false,
@@ -82,19 +84,20 @@ if ( !class_exists('Course_Calendar') ) {
 				// still needs implementing
 				// $this->previous_month = $this->get_previous_month( $this->date );
 				// $this->next_month = $this->get_next_month( $this->date );
-			}
+			}	
 			
 			$this->first_day = $this->first_day_of_month( $month, $year );
 			$this->number_of_days = $this->number_of_days_in_month( $month, $year );
 			$this->date = $this->date ? $this->date : $this->get_date_pieces( $month, $year );
 			$this->day_of_week = $this->date['wday'];
-			$this->month_name = $this->date['month'];
+			$this->month_name = $wp_locale->month[sprintf("%02s", $this->date['mon'])];
 			$this->year = $year;
 			$this->month = $month;
 			$this->course_id = $course_id ? $course_id : false;
         }
 		
 		function create_calendar( $pre = '«', $next = '»' ) {
+			global $wp_locale;
 			$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
 			$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
 			$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
@@ -104,8 +107,10 @@ if ( !class_exists('Course_Calendar') ) {
 			$calendar .= "</caption>";
 	        $calendar .= "<tr>";
 	        // Headers
+			$week_day_names = array_keys($wp_locale->weekday_initial);
+
 	        foreach($this->days_of_week as $day) {
-	             $calendar .= "<th class='week-days'>$day</th>";
+	             $calendar .= "<th class='week-days'>".$wp_locale->weekday_initial[$week_day_names[$day]]."</th>";
 	        } 
 			
 			$current_day = 1;

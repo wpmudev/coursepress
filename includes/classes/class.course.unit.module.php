@@ -372,12 +372,15 @@ if ( !class_exists( 'Unit_Module' ) ) {
 						exit;
 					} else {
 						wp_redirect( cp_full_url( $_SERVER ) ) . '?saved=ok';
+						exit;
 					}
 				} else {
 					if ( $_POST[ 'event_origin' ] == 'button' ) {
 						wp_redirect( get_permalink( $course_id ) . trailingslashit( $coursepress->get_units_slug() ) );
+						exit;
 					} else {
 						wp_redirect( cp_full_url( $_SERVER ) );
+						exit;
 					}
 					/* if ( $paged != 1 ) {
 					  //wp_redirect( cp_full_url( $_SERVER ) );
@@ -395,6 +398,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				if ( isset( $_POST[ 'submit_modules_data_save' ] ) ) {
 					//wp_redirect( $_SERVER['REQUEST_URI'] . '?saved=ok' );
 					wp_redirect( cp_full_url( $_SERVER ) . '?saved=ok' );
+					exit;
 					//exit;
 				} else {
 					//wp_redirect( get_permalink( $unit_id ) . trailingslashit( 'page' ) . trailingslashit( $unit_module_page_number ) );

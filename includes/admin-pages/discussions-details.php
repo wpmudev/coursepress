@@ -24,6 +24,7 @@ if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'
 
     if ( $_POST['action'] == 'update' ) {
         wp_redirect(admin_url('admin.php?page=' . $page . '&ms=du'));
+		exit;
     }
 
     if ( $new_post_id !== 0 ) {

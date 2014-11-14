@@ -62,10 +62,10 @@ if ( isset($_POST['action']) && $_POST['action'] == 'update_unit' ) {
 
             if ( isset($_GET['ms']) ) {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id . '&ms=' . $_GET['ms'] . '&active_element=' . $active_element . (isset($preview_redirect_url) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ) . '&unit_page_num=' . (isset($unit_page_num) ? $unit_page_num : 1) . '#unit-page-' . (isset($unit_page_num) ? $unit_page_num : 1)));
-                //exit;
+                exit;
             } else {
                 wp_redirect(admin_url('admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=edit&unit_id=' . $new_post_id));
-                //exit;
+                exit;
             }
         } else {
             //an error occured

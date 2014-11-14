@@ -50,7 +50,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -82,7 +82,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -114,7 +114,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -146,7 +146,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -179,7 +179,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -211,7 +211,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -243,7 +243,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -274,7 +274,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => 'Use virtual page',
+									'show_option_none'	 => __('Use virtual page', 'cp'),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -305,7 +305,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => 'Use virtual page',
+									'show_option_none'	 => __('Use virtual page', 'cp'),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -336,7 +336,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => 'Use virtual page',
+									'show_option_none'	 => __('Use virtual page', 'cp'),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -367,7 +367,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => 'Use virtual page',
+									'show_option_none'	 => __('Use virtual page', 'cp'),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -398,7 +398,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => 'Use virtual page',
+									'show_option_none'	 => __('Use virtual page', 'cp'),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -429,7 +429,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => 'Use virtual page',
+							'show_option_none'	 => __('Use virtual page', 'cp'),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);

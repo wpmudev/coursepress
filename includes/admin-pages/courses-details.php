@@ -7,6 +7,7 @@ $wp_course_search = new Course_Search();
 if ( $wp_course_search->is_light ) {
     if ( $wp_course_search->get_count_of_all_courses() >= 10 && !isset($_GET['course_id'])) {
         wp_redirect(admin_url('admin.php?page=courses'));
+		exit;
     }
 }
 

@@ -658,7 +658,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' );
+%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' );
 
 	return get_option( 'invitation_content_passcode_email', $default_invitation_content_passcode_email );
 }
@@ -690,7 +690,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
+%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
 	return get_option( 'invitation_content_email', $default_invitation_content_email );
 }
 
@@ -716,7 +716,7 @@ Congratulations! You have registered account with %2$s successfully! You may log
 Get started by exploring our courses here: %4$s
 
 Yours sincerely,
-%5$s Team' ), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
+%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
 
 	return get_option( 'registration_content_email', $default_registration_content_email );
 }
@@ -745,7 +745,7 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 Yours sincerely,
-%5$s Team' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
+%5$s Team', 'cp' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
 
 	return get_option( 'mp_order_content_email', $default_mp_order_content_email );
 }
@@ -774,7 +774,7 @@ You may check all courses you are enrolled in here: %3$s.
 Or you can explore other courses in your %4$s
 
 Yours sincerely,
-%5$s Team' ), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
+%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
 
 	return get_option( 'enrollment_content_email', $default_enrollment_content_email );
 }

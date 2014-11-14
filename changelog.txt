@@ -6,6 +6,12 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.7 =
+* Resolving translation issues on general settings page and email body (functions), 
+* Course calendar locale for month and day of the week names
+* Other small code improvements
+* ! Integration with automessage plugin (started, work in progress)
+
 = 1.2.2.6 =
 * Fixed issue with wrong MD5 for instructor username in shortcodes which caused broken instructor single page if "Show Instructor Username in URL" option is not selected
 * Fixed issue with table prefix (instructor_by_hash)

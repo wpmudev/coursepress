@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.2.6
+  Version: 1.2.2.7
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.2.6';
+		public $version = '1.2.2.7';
 
 		/**
 		 * Plugin friendly name.
@@ -1139,6 +1139,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			add_filter( 'get_edit_post_link', array( &$this, 'get_edit_post_link' ), 10, 1 );
 
 			/**
+			 * Class to manage integration with automessage plugin (if installed)
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.automessage-integration.php' );
+			
+			/**
 			 * Hook CoursePress initialization.
 			 *
 			 * Allows plugins and themes to add aditional hooks during CoursePress constructor.
@@ -1477,7 +1482,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$ajax_response = array();
 
-			$course_id = !empty( $_REQUEST[ 'course_id' ] ) ? (int) $_REQUEST[ 'course_id' ] : ( isset( $args['course_id'] ) && ! empty( $args['course_id'] ) ? $args['course_id'] : 0 );
+			$course_id = !empty( $_REQUEST[ 'course_id' ] ) ? (int) $_REQUEST[ 'course_id' ] : ( isset( $args[ 'course_id' ] ) && !empty( $args[ 'course_id' ] ) ? $args[ 'course_id' ] : 0 );
 
 			$is_paid = get_post_meta( $course_id, 'paid_course', true );
 			$is_paid = $is_paid && 'on' == $is_paid ? true : false;
@@ -1840,6 +1845,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					if ( $post->post_parent !== 0 ) {
 						$course = new Course( $post->post_parent );
 						wp_redirect( $course->get_permalink() );
+						exit;
 					}
 				}
 			}
@@ -2272,7 +2278,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$vars[ 'instructor_username' ]	 = $wp->query_vars[ 'instructor_username' ];
 
 				$user = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash' );
-			
+
 				if ( false === $user ) {
 					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
 						$user = Instructor::instructor_by_login( $wp->query_vars[ 'instructor_username' ] );

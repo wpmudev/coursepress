@@ -118,6 +118,9 @@ if ( !class_exists( 'Student' ) ) {
 			if ( is_email( $email_args[ 'student_email' ] ) ) {
 				coursepress_send_email( $email_args );
 			}
+			
+			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
+			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
 
 			return true;
 			//TO DO: add new payment status if it's paid

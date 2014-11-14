@@ -17,10 +17,10 @@ if ( !class_exists( 'Course' ) ) {
 			$this->output	 = $output;
 
 			// Attempt to load from cache or create new cache object
-			if( ! self::load( self::TYPE_COURSE, $this->id, $this->details ) ) {
+			if ( !self::load( self::TYPE_COURSE, $this->id, $this->details ) ) {
 
 				// Get the course
-				$this->details	 = get_post( $this->id, $this->output );
+				$this->details = get_post( $this->id, $this->output );
 
 				// Initialize the course
 				$this->init_course( $this->details );
@@ -46,7 +46,7 @@ if ( !class_exists( 'Course' ) ) {
 		}
 
 		function init_course( &$course ) {
-			if( ! empty( $course ) ) {
+			if ( !empty( $course ) ) {
 				if ( !isset( $course->post_title ) || $course->post_title == '' ) {
 					$course->post_title = __( 'Untitled', 'cp' );
 				}
@@ -56,12 +56,11 @@ if ( !class_exists( 'Course' ) ) {
 
 				$course->allow_course_discussion = get_post_meta( $this->id, 'allow_course_discussion', true );
 				$course->class_size				 = get_post_meta( $this->id, 'class_size', true );
-
 			}
 		}
 
 		function get_course() {
-			return ! empty( $this->details ) ? $this->details : false;
+			return !empty( $this->details ) ? $this->details : false;
 		}
 
 		function course_structure_front( $try_title = '', $show_try = true, $hide_title = false, $echo = true ) {
@@ -183,7 +182,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function is_open_ended() {
-
+					
 				}
 
 				static function get_course_featured_url( $course_id = false ) {
@@ -237,7 +236,7 @@ if ( !class_exists( 'Course' ) ) {
 						'meta_key'		 => 'marketpress_product',
 						'meta_value'	 => $marketpress_product_id,
 						'posts_per_page' => 1,
-						'fields' => 'ids',
+						'fields'		 => 'ids',
 					);
 
 					$post = get_posts( $args );
@@ -256,13 +255,13 @@ if ( !class_exists( 'Course' ) ) {
 						'post_type'		 => 'course',
 						'post_status'	 => 'any',
 						'posts_per_page' => 1,
-						'fields' => 'ids',
+						'fields'		 => 'ids',
 					);
 
 					$post = get_posts( $args );
 
 					if ( $post ) {
-						return (int) $post[0];
+						return (int) $post[ 0 ];
 					} else {
 						return false;
 					}
@@ -277,15 +276,15 @@ if ( !class_exists( 'Course' ) ) {
 					$course_id	 = $course_id ? $course_id : $this->id;
 					$args		 = array(
 						'posts_per_page' => 1,
-						'post_type'      => 'product',
-						'post_parent'    => $course_id,
-						'post_status'    => 'publish',
-						'fields'         => 'ids',
+						'post_type'		 => 'product',
+						'post_parent'	 => $course_id,
+						'post_status'	 => 'publish',
+						'fields'		 => 'ids',
 					);
 
 					$products = get_posts( $args );
 					if ( isset( $products[ 0 ] ) ) {
-						return (int) $products[0];
+						return (int) $products[ 0 ];
 					} else {
 						return false;
 					}
@@ -319,9 +318,9 @@ if ( !class_exists( 'Course' ) ) {
 						$automatic_sku = $_POST[ 'meta_auto_sku' ];
 
 						if ( $automatic_sku == 'on' ) {
-							$sku[0] = $automatic_sku_number;
+							$sku[ 0 ] = $automatic_sku_number;
 						} else {
-							$sku[0] = cp_filter_content( (!empty( $_POST[ 'mp_sku' ] ) ? $_POST[ 'mp_sku' ] : '' ), true );
+							$sku[ 0 ] = cp_filter_content( (!empty( $_POST[ 'mp_sku' ] ) ? $_POST[ 'mp_sku' ] : '' ), true );
 						}
 
 						update_post_meta( $this->id, 'mp_product_id', $post_id );
@@ -330,7 +329,7 @@ if ( !class_exists( 'Course' ) ) {
 						$price		 = cp_filter_content( (!empty( $_POST[ 'mp_price' ] ) ? $_POST[ 'mp_price' ] : 0 ), true );
 						$sale_price	 = cp_filter_content( (!empty( $_POST[ 'mp_sale_price' ] ) ? $_POST[ 'mp_sale_price' ] : 0 ), true );
 						update_post_meta( $post_id, 'mp_sku', $sku );
-						update_post_meta( $post_id, 'mp_var_name', serialize(array()) );
+						update_post_meta( $post_id, 'mp_var_name', serialize( array() ) );
 						update_post_meta( $post_id, 'mp_price', $price );
 						update_post_meta( $post_id, 'mp_sale_price', $sale_price );
 						update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( $_POST[ 'mp_is_sale' ] ), true );
@@ -379,8 +378,8 @@ if ( !class_exists( 'Course' ) ) {
 						$post[ 'post_content' ]	 = cp_filter_content( empty( $_POST[ 'course_description' ] ) ? $course->post_content : $_POST[ 'course_description' ]  );
 						$post[ 'post_title' ]	 = cp_filter_content( (empty( $_POST[ 'course_name' ] ) ? $course->post_title : $_POST[ 'course_name' ] ), true );
 					} else {
-						$new_course = true;
-						$post[ 'post_excerpt' ] = cp_filter_content( $_POST[ 'course_excerpt' ] );
+						$new_course				 = true;
+						$post[ 'post_excerpt' ]	 = cp_filter_content( $_POST[ 'course_excerpt' ] );
 						if ( isset( $_POST[ 'course_description' ] ) ) {
 							$post[ 'post_content' ] = cp_filter_content( $_POST[ 'course_description' ] );
 						}
@@ -470,7 +469,7 @@ if ( !class_exists( 'Course' ) ) {
 
 
 									foreach ( $_POST[ 'instructor' ] as $instructor_id ) {
-										$global_option = ! is_multisite();
+										$global_option = !is_multisite();
 										update_user_option( $instructor_id, 'course_' . $post_id, $post_id, $global_option ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
 									}
 								} // only add meta if array is sent
@@ -481,7 +480,7 @@ if ( !class_exists( 'Course' ) ) {
 							$this->update_mp_product( $post_id );
 						}
 
-						if( $new_course ) {
+						if ( $new_course ) {
 
 							/**
 							 * Perform action after course has been created.
@@ -512,7 +511,7 @@ if ( !class_exists( 'Course' ) ) {
 					 *
 					 * @since 1.2.1
 					 */
-					if( apply_filters( 'coursepress_course_cancel_delete', false, $this->id ) ) {
+					if ( apply_filters( 'coursepress_course_cancel_delete', false, $this->id ) ) {
 
 						/**
 						 * Perform actions if the deletion was cancelled.
@@ -543,7 +542,7 @@ if ( !class_exists( 'Course' ) ) {
 
 					//Delete course units
 					foreach ( $course_units as $course_unit ) {
-						$unit = new Unit ( $course_unit );
+						$unit = new Unit( $course_unit );
 						$unit->delete_unit( true );
 					}
 
@@ -574,6 +573,27 @@ if ( !class_exists( 'Course' ) ) {
 					}
 				}
 
+				static function get_course_instructors_ids( $course_id = false ) {
+					if ( !$course_id ) {
+						return false;
+					}
+
+					$instructors	 = get_post_meta( $course_id, 'instructors', true );
+					$instructor_id_i = 0;
+					if ( isset( $instructors ) ) {
+						foreach ( $instructors as $instructor_id ) {
+							$instructors[ $instructor_id_i ] = (int) $instructor_id;//make sure all are numeric values (it wasn't always the case, like for '1')
+							if ( $instructor_id == 0 ) {
+								unset( $instructors[ $instructor_id_i ] ); //remove zeros and empty values
+							}
+
+							$instructor_id_i++;
+						}
+					}
+					//re-index array
+					return array_values( $instructors );
+				}
+
 				static function get_course_instructors( $course_id = false ) {
 					global $wpdb;
 					if ( !$course_id ) {
@@ -598,9 +618,9 @@ if ( !class_exists( 'Course' ) ) {
 						'count_total'	 => false,
 					);
 
-					if( is_multisite() ) {
-						$args['blog_id'] = get_current_blog_id();
-						$args['meta_key'] = $wpdb->prefix . 'course_' . $course_id;
+					if ( is_multisite() ) {
+						$args[ 'blog_id' ]	 = get_current_blog_id();
+						$args[ 'meta_key' ]	 = $wpdb->prefix . 'course_' . $course_id;
 					}
 
 					return get_users( $args );
@@ -697,7 +717,7 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					$meta_key = '';
-					if( is_multisite() ) {
+					if ( is_multisite() ) {
 						$meta_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
 					} else {
 						$meta_key = 'enrolled_course_class_' . $course_id;
@@ -779,7 +799,7 @@ if ( !class_exists( 'Course' ) ) {
 					 *
 					 * @since 1.2.1
 					 */
-					if( apply_filters( 'coursepress_course_cancel_duplicate', false, $course_id ) ) {
+					if ( apply_filters( 'coursepress_course_cancel_duplicate', false, $course_id ) ) {
 
 						/**
 						 * Perform actions if the duplication was cancelled.
@@ -808,11 +828,11 @@ if ( !class_exists( 'Course' ) ) {
 					 * Duplicate course post meta
 					 */
 
-					if( ! empty( $new_course_id ) ) {
+					if ( !empty( $new_course_id ) ) {
 						$post_metas = get_post_meta( $old_course_id );
 						foreach ( $post_metas as $key => $meta_value ) {
-							$value = array_pop( $meta_value );
-							$value = maybe_unserialize( $value );
+							$value	 = array_pop( $meta_value );
+							$value	 = maybe_unserialize( $value );
 							update_post_meta( $new_course_id, $key, $value );
 						}
 					}
@@ -825,7 +845,6 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					do_action( 'coursepress_course_duplicated', $new_course_id );
-
 				}
 
 			}
