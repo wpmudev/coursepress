@@ -26,3 +26,7 @@ html.wp-toolbar{
 .updated{
     display: none !important;
 }
+
+#mp-need-help {
+    display: none !important;
+}
