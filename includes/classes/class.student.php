@@ -24,6 +24,13 @@ if ( !class_exists( 'Student' ) ) {
 			$this->first_name		 = get_user_meta( $ID, 'first_name', true );
 			$this->last_name		 = get_user_meta( $ID, 'last_name', true );
 			$this->courses_number	 = Student::get_courses_number( $this->ID );
+
+			/**
+			 * Perform action after a Student object is created.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_student_init', $this );
 		}
 
 		function Student( $ID, $name = '' ) {
@@ -108,12 +115,15 @@ if ( !class_exists( 'Student' ) ) {
 			update_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option );
 			update_user_option( $this->ID, 'role', 'student', $global_option ); //alternative to roles used
 
-			$email_args[ 'email_type' ]			 = 'enrollment_confirmation';
-			$email_args[ 'course_id' ]			 = $course_id;
-			$email_args[ 'dashboard_address' ]	 = CoursePress::instance()->get_student_dashboard_slug( true );
-			$email_args[ 'student_first_name' ]	 = $this->user_firstname;
-			$email_args[ 'student_last_name' ]	 = $this->user_lastname;
-			$email_args[ 'student_email' ]		 = $this->user_email;
+
+			$email_args = apply_filters( 'coursepress_student_enrollment_email_args', array(
+				'email_type' => 'enrollment_confirmation',
+				'course_id' => $course_id,
+				'dashboard_address' => CoursePress::instance()->get_student_dashboard_slug( true ),
+				'student_first_name' => $this->user_firstname,
+				'student_last_name' => $this->user_lastname,
+				'student_email' => $this->user_email
+			) );
 
 			if ( is_email( $email_args[ 'student_email' ] ) ) {
 				coursepress_send_email( $email_args );
@@ -121,6 +131,13 @@ if ( !class_exists( 'Student' ) ) {
 			
 			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
 			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
+
+			/**
+			 * Perform action after a Student is enrolled.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_student_enrolled', $this->ID, $course_id );
 
 			return true;
 			//TO DO: add new payment status if it's paid
@@ -145,6 +162,14 @@ if ( !class_exists( 'Student' ) ) {
 			if ( $keep_withdrawed_record ) {
 				update_user_option( $this->ID, 'withdrawed_course_date_' . $course_id, $current_time, $global_option ); //keep a record of all withdrawed students
 			}
+
+			/**
+			 * Perform action after a Student is withdrawn.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_student_withdrawn', $this->ID, $course_id );
+
 		}
 
 		//Withdraw from all courses
@@ -320,7 +345,16 @@ if ( !class_exists( 'Student' ) ) {
 		}
 
 		function update_student_data( $student_data ) {
+			$student_data = apply_filters( 'coursepress_student_update_data', $student_data );
 			if ( wp_update_user( $student_data ) ) {
+
+				/**
+				 * Perform action after a Student object is updated.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_student_updated', $this->ID );
+
 				return true;
 			} else {
 				return false;
@@ -331,6 +365,14 @@ if ( !class_exists( 'Student' ) ) {
 			$global_option = ! is_multisite();
 			
 			if ( update_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option ) ) {
+
+				/**
+				 * Perform action after updating a Student's group.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_student_group_updated', $this->ID, $course_id, $group );
+
 				return true;
 			} else {
 				return false;
@@ -339,8 +381,16 @@ if ( !class_exists( 'Student' ) ) {
 
 		function update_student_class( $course_id, $class ) {
 			$global_option = ! is_multisite();
-			
+
 			if ( update_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option ) ) {
+
+				/**
+				 * Perform action after updating a Student's class.
+				 *
+				 * @since 1.2.2
+				 */
+				do_action( 'coursepress_student_group_updated', $this->ID, $course_id, $class );
+
 				return true;
 			} else {
 				return false;
