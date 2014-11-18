@@ -7,7 +7,8 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.2.7 =
-* Resolving translation issues on general settings page and email body (functions), 
+* Resolving translation issues on general settings page and email body (functions)
+* Included new translation file containing all localization strings
 * Course calendar locale for month and day of the week names
 * Other small code improvements
 * ! Integration with automessage plugin (started, work in progress)
