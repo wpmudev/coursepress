@@ -35,7 +35,7 @@ if ( !class_exists( 'Instructor' ) ) {
 
 		static function filter_course_meta_array( $var ) {
 			global $wpdb;
-			if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ) {
+			if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) || preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) ) {
 				return $var;
 			}
 		}

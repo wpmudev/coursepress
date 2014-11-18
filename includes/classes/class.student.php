@@ -211,6 +211,9 @@ if ( !class_exists( 'Student' ) ) {
 			$prefix		 = $wpdb->prefix;
 			$base_prefix = $wpdb->base_prefix;
 			$current_blog = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
+			if( is_multisite() && empty( $current_blog ) && defined( 'BLOG_ID_CURRENT_SITE' ) ) {
+				$current_blog = BLOG_ID_CURRENT_SITE;
+			}
 
 			if ( preg_match( '/enrolled\_course\_date\_/', $meta_value ) ) {
 
@@ -221,12 +224,19 @@ if ( !class_exists( 'Student' ) ) {
 					preg_match('/(?<=' . $base_prefix . ')\d*/', $meta_value, $blog_id);
 					$blog_id = $blog_id[0];
 
+					// First site...
+					if( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == $current_blog ) {
+						$blog_id = $current_blog;
+						$course_id = str_replace( $base_prefix . 'enrolled_course_date_', '', $meta_value );
+					} else {
+						$course_id = str_replace( $base_prefix . $blog_id . '_enrolled_course_date_', '', $meta_value );
+					}
+
 					// Only for current site...
 					if( $current_blog != $blog_id ) {
 						return false;
 					}
 
-					$course_id = str_replace( $base_prefix . $blog_id . '_enrolled_course_date_', '', $meta_value );
 				} else {
 					// old style, but should support it at least in the listings
 					$course_id = str_replace( 'enrolled_course_date_', '', $meta_value );
