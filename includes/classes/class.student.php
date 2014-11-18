@@ -131,6 +131,8 @@ if ( !class_exists( 'Student' ) ) {
 			
 			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
 			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
+			do_action('student_enrolled_student_notification', $this->ID, $course_id);
+			
 
 			/**
 			 * Perform action after a Student is enrolled.
@@ -168,6 +170,9 @@ if ( !class_exists( 'Student' ) ) {
 			 *
 			 * @since 1.2.2
 			 */
+			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
+			do_action('student_withdraw_from_course_instructor_notification', $this->ID, $course_id, $instructors);
+			do_action('student_withdraw_from_course_student_notification', $this->ID, $course_id);
 			do_action( 'coursepress_student_withdrawn', $this->ID, $course_id );
 
 		}

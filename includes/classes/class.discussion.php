@@ -84,6 +84,14 @@ if ( !class_exists('Discussion') ) {
 
             //Update post meta
             if ( $post_id != 0 ) {
+				
+				if(!isset($_POST['discussion_id'])){//new discussion added
+					$instructors = Course::get_course_instructors_ids( $course_id );
+					do_action( 'new_discussion_added_instructor_notification', $user_id, $course_id, $instructors );
+					
+					$students = Course::get_course_students_ids( $course_id );
+					do_action( 'new_discussion_added_student_notification', $user_id, $course_id, $students );
+				}
 
                 if ( $unit_id == '' ) {
                     $unit_id = $_POST['units_dropdown'];
