@@ -121,6 +121,7 @@ if ( !class_exists( 'Student' ) ) {
 			
 			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
 			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
+			do_action('student_enrolled_student_notification', $this->ID, $course_id);
 
 			return true;
 			//TO DO: add new payment status if it's paid
@@ -145,6 +146,10 @@ if ( !class_exists( 'Student' ) ) {
 			if ( $keep_withdrawed_record ) {
 				update_user_option( $this->ID, 'withdrawed_course_date_' . $course_id, $current_time, $global_option ); //keep a record of all withdrawed students
 			}
+			
+			$instructors = Course::get_course_instructors_ids( $course_id );
+			do_action( 'student_withdraw_from_course_instructor_notification', $this->ID, $course_id, $instructors );
+			do_action( 'student_withdraw_from_course_student_notification', $this->ID, $course_id );
 		}
 
 		//Withdraw from all courses

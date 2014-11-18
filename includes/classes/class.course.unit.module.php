@@ -4,15 +4,14 @@ if ( !class_exists( 'Unit_Module' ) ) {
 	class Unit_Module extends CoursePress_Object {
 
 		var $data;
-		var $name          = 'none';
-		var $label         = 'None Set';
-		var $description   = '';
-		var $front_save    = false;
-		var $response_type = '';
+		var $name			 = 'none';
+		var $label			 = 'None Set';
+		var $description		 = '';
+		var $front_save		 = false;
+		var $response_type	 = '';
 		var $details;
-		var $parent_unit   = '';
-		var $unit_id       = 0;
-
+		var $parent_unit		 = '';
+		var $unit_id			 = 0;
 
 		function __construct() {
 			$this->on_create();
@@ -59,8 +58,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 			$new_module = true;
 			if ( isset( $data->ID ) && $data->ID != '' && $data->ID != 0 ) {
-				$post[ 'ID' ] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-				$new_module = false;
+				$post[ 'ID' ]	 = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+				$new_module		 = false;
 			}
 
 			//require( ABSPATH . WPINC . '/pluggable.php' );
@@ -81,7 +80,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				}
 			}
 
-			if( $new_module ) {
+			if ( $new_module ) {
 
 				/**
 				 * Perform action after module has been created.
@@ -112,7 +111,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			 *
 			 * @since 1.2.2
 			 */
-			if( apply_filters( 'coursepress_unit_module_cancel_delete', false, $id, $unit_id ) ) {
+			if ( apply_filters( 'coursepress_unit_module_cancel_delete', false, $id, $unit_id ) ) {
 
 				/**
 				 * Perform actions if the deletion was cancelled.
@@ -124,10 +123,10 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			}
 
 			$the_module = $this;
-			
+
 			self::kill( self::TYPE_MODULE, $id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
-			
+
 			wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit module responses
 
@@ -161,7 +160,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 					$modules_to_delete = $_POST[ 'modules_to_execute' ];
 					foreach ( $modules_to_delete as $module_to_delete ) {
 						//echo 'Module to delete:' . $module_to_delete . '<br />';
-						
+
 						$this->delete_module( $module_to_delete, true );
 						//wp_delete_post( $module_to_delete, true );
 					}
@@ -235,9 +234,14 @@ if ( !class_exists( 'Unit_Module' ) ) {
 					}
 				}
 
+				$instructors = Course::get_course_instructors_ids( $course_id );
+				
 				//SET AUTO GRADE IF REQUESTED BY A MODULE
 				if ( isset( $data->auto_grade ) && is_numeric( $data->auto_grade ) ) {
 					$this->save_response_grade( $post_id, $data->auto_grade );
+					do_action( 'student_response_not_required_grade_instructor_notification', get_current_user_id(), $course_id, $instructors );
+				} else {
+					do_action( 'student_response_required_grade_instructor_notification', get_current_user_id(), $course_id, $instructors );
 				}
 
 				//$coursepress->set_latest_activity( get_current_user_id() );
@@ -249,13 +253,13 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 		function get_module( $module_id ) {
 			$module = false;
-			
+
 			// Attempt to load from cache or create new cache object
-			if( ! self::load( self::TYPE_MODULE, $module_id, $module ) ) {
-				
+			if ( !self::load( self::TYPE_MODULE, $module_id, $module ) ) {
+
 				// Get the module
 				$module = get_post( $module_id );
-								
+
 				// Cache the course object
 				self::cache( self::TYPE_MODULE, $module_id, $module );
 
@@ -289,8 +293,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			$modules = false;
 
 			// Attempt to load from cache or create new cache object
-			if( ! self::load( self::TYPE_UNIT_MODULES, $unit_id, $modules ) ) {
-				
+			if ( !self::load( self::TYPE_UNIT_MODULES, $unit_id, $modules ) ) {
+
 				// Get the modules
 				$args = array(
 					'post_type'		 => 'module',
@@ -303,7 +307,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				);
 
 				$modules = get_posts( $args );
-								
+
 				// Cache the course object
 				self::cache( self::TYPE_UNIT_MODULES, $unit_id, $modules );
 
@@ -478,15 +482,15 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		}
 
 		function get_module_response_comment_form( $post_id ) {
-			$post		 = get_post( $post_id );
-			
-			$editor_name = "response_comment";
-			$editor_id = "response_comment";
-			$editor_content = $post->response_comment;
-			
-			
+			$post = get_post( $post_id );
+
+			$editor_name	 = "response_comment";
+			$editor_id		 = "response_comment";
+			$editor_content	 = $post->response_comment;
+
+
 			$args = array(
-				'textarea_name' => $editor_name,				
+				'textarea_name'	 => $editor_name,
 				'media_buttons'	 => false,
 				'textarea_rows'	 => 2,
 				'editor_class'	 => 'response_comment'
@@ -494,10 +498,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			?>
 			<label><?php _e( 'Comment', 'cp' ); ?></label>
 			<?php
-			
 			// Filter $args before showing editor
-			$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
-			
+			$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+
 			return wp_editor( $editor_content, $editor_id, $args );
 		}
 
@@ -647,7 +650,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			<label class="mandatory_answer">
 				<input type="checkbox" name="<?php echo $this->name; ?>_mandatory_answer[]" value="yes" <?php echo ( isset( $data->mandatory_answer ) && $data->mandatory_answer == 'yes' ? 'checked' : (!isset( $data->mandatory_answer ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_mandatory_answer_field[]" value="<?php echo ( (isset( $data->mandatory_answer ) && $data->mandatory_answer == 'yes') || !isset( $data->mandatory_answer ) ? 'yes' : 'no' ) ?>" />
-				<?php _e( 'Mandatory Answer', 'cp' ); ?><br />
+			<?php _e( 'Mandatory Answer', 'cp' ); ?><br />
 				<span class="element_title_description"><?php _e( 'A response is required to continue', 'cp' ); ?></span>
 			</label>
 			<?php
@@ -658,7 +661,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			<label class="mandatory_answer">
 				<input type="checkbox" class="assessable_checkbox" name="<?php echo $this->name; ?>_gradable_answer[]" value="yes" <?php echo ( isset( $data->gradable_answer ) && $data->gradable_answer == 'yes' ? 'checked' : (!isset( $data->gradable_answer ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_gradable_answer_field[]" value="<?php echo ( (isset( $data->gradable_answer ) && $data->gradable_answer == 'yes') || !isset( $data->gradable_answer ) ? 'yes' : 'no' ) ?>" />				
-				<?php _e( 'Assessable', 'cp' ); ?><br />
+			<?php _e( 'Assessable', 'cp' ); ?><br />
 				<span class="element_title_description"><?php _e( 'The answer will be graded', 'cp' ); ?></span>
 			</label>
 			<?php
@@ -680,7 +683,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			<label class="show_title_on_front">
 				<input type="checkbox" name="<?php echo $this->name; ?>_show_title_on_front[]" value="yes" <?php echo ( isset( $data->show_title_on_front ) && $data->show_title_on_front == 'yes' ? 'checked' : (!isset( $data->show_title_on_front ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_show_title_field[]" value="<?php echo ( (isset( $data->show_title_on_front ) && $data->show_title_on_front == 'yes') || !isset( $data->show_title_on_front ) ? 'yes' : 'no' ) ?>" />
-				<?php _e( 'Show Title', 'cp' ); ?><br />
+			<?php _e( 'Show Title', 'cp' ); ?><br />
 				<span class="element_title_description"><?php _e( 'The title is displayed as a heading', 'cp' ); ?></span>
 			</label>
 			<?php
@@ -689,7 +692,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		function minimum_grade_element( $data ) {
 			?>
 			<label class="minimum_grade_required_label">
-				<?php _e( 'Minimum grade required', 'cp' ); ?><input type="text" class="grade_spinner" name="<?php echo $this->name; ?>_minimum_grade_required[]" value="<?php echo ( isset( $data->minimum_grade_required ) ? $data->minimum_grade_required : 100 ); ?>" /><br />
+			<?php _e( 'Minimum grade required', 'cp' ); ?><input type="text" class="grade_spinner" name="<?php echo $this->name; ?>_minimum_grade_required[]" value="<?php echo ( isset( $data->minimum_grade_required ) ? $data->minimum_grade_required : 100 ); ?>" /><br />
 				<span class="element_title_description"><?php _e( 'Set the minimum grade (%) required to pass the task', 'cp' ); ?></span>
 			</label>
 			<?php
@@ -700,7 +703,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			<label class="limit_attampts_label">
 				<input type="checkbox" class="limit_attempts_checkbox" name="<?php echo $this->name; ?>_limit_attempts[]" value="yes" <?php echo ( isset( $data->limit_attempts ) && $data->limit_attempts == 'yes' ? 'checked' : (!isset( $data->limit_attempts ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_limit_attempts_field[]" value="<?php echo ( (isset( $data->limit_attempts ) && $data->limit_attempts == 'yes') || !isset( $data->limit_attempts ) ? 'yes' : 'no' ) ?>" />								
-				<?php _e( 'Limit Attempts', 'cp' ); ?><input type="text" class="attempts_spinner" name="<?php echo $this->name; ?>_limit_attempts_value[]" value="<?php echo ( isset( $data->limit_attempts_value ) ? $data->limit_attempts_value : 1 ); ?>" /><br>
+			<?php _e( 'Limit Attempts', 'cp' ); ?><input type="text" class="attempts_spinner" name="<?php echo $this->name; ?>_limit_attempts_value[]" value="<?php echo ( isset( $data->limit_attempts_value ) ? $data->limit_attempts_value : 1 ); ?>" /><br>
 				<span class="element_title_description"><?php _e( 'Limit attempts of this task', 'cp' ); ?></span>
 			</label>
 			<?php
@@ -715,43 +718,43 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				}
 				?>
 				<div class="module_mandatory">
-					<?php echo $message; ?>
+				<?php echo $message; ?>
 				</div>
-				<?php
-			}
-		}
-
-		function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false, $show_grade = true,
-									  $total_correct = false, $total_answers = false ) {
-			$number_of_answers = (int) count( $responses ) + (int) count( $last_public_response );
-
-			$limit_attempts			 = $data->limit_attempts; //yes or no
-			$limit_attempts_value	 = $data->limit_attempts_value;
-			$attempts_remaining		 = $limit_attempts_value - $number_of_answers;
-
-			if ( isset( $limit_attempts ) && $limit_attempts == 'yes' && 'yes' == $data->gradable_answer ) {
-				$limit_attempts_value = $limit_attempts_value;
-			} else {
-				$limit_attempts_value = -1; //unlimited
-			}
-
-			if ( $grade && $data->gradable_answer ) {
-
-				if ( $grade[ 'grade' ] < $data->minimum_grade_required && $data->mandatory_answer ) {
-					$this->mandatory_message( $data );
+					<?php
 				}
-				?>
+			}
+
+			function grade_status_and_resubmit( $data, $grade, $responses, $last_public_response = false, $show_grade = true,
+									   $total_correct = false, $total_answers = false ) {
+				$number_of_answers = (int) count( $responses ) + (int) count( $last_public_response );
+
+				$limit_attempts			 = $data->limit_attempts; //yes or no
+				$limit_attempts_value	 = $data->limit_attempts_value;
+				$attempts_remaining		 = $limit_attempts_value - $number_of_answers;
+
+				if ( isset( $limit_attempts ) && $limit_attempts == 'yes' && 'yes' == $data->gradable_answer ) {
+					$limit_attempts_value = $limit_attempts_value;
+				} else {
+					$limit_attempts_value = -1; //unlimited
+				}
+
+				if ( $grade && $data->gradable_answer ) {
+
+					if ( $grade[ 'grade' ] < $data->minimum_grade_required && $data->mandatory_answer ) {
+						$this->mandatory_message( $data );
+					}
+					?>
 				<div class="module_grade">
 					<div class="module_grade_left">
-						<?php
-						if ( $grade[ 'grade' ] < 100 ) {
-							if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
-								$response		 = $this->get_response( get_current_user_id(), $data->ID );
-								$unit_id		 = wp_get_post_parent_id( $data->ID );
-								$paged			 = isset( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
-								$permalink		 = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
-								$resubmit_url	 = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
-								?>
+				<?php
+				if ( $grade[ 'grade' ] < 100 ) {
+					if ( ($number_of_answers < $limit_attempts_value) || $limit_attempts_value == -1 ) {
+						$response		 = $this->get_response( get_current_user_id(), $data->ID );
+						$unit_id		 = wp_get_post_parent_id( $data->ID );
+						$paged			 = isset( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
+						$permalink		 = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
+						$resubmit_url	 = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
+						?>
 								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Resubmit', 'cp' ); ?></a>
 								<?php
 								if ( $attempts_remaining > 0 ) {
@@ -766,7 +769,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 						?>
 					</div>
 					<div class="module_grade_right">
-						<?php if ( $show_grade ) : ?>
+				<?php if ( $show_grade ) : ?>
 							<?php
 							echo __( 'Graded: ', 'cp' ) . $grade[ 'grade' ] . '%';
 							if ( isset( $data->minimum_grade_required ) && is_numeric( $data->minimum_grade_required ) ) {
@@ -839,7 +842,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 			self::kill( self::TYPE_MODULE, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
-			
+
 			return $post_id;
 		}
 
@@ -864,20 +867,19 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 			$new_module_id = wp_insert_post( $new_module );
 
-			
+
 			/*
 			 * Duplicate module post meta
 			 */
 
-			if( ! empty( $new_module_id ) ) {
+			if ( !empty( $new_module_id ) ) {
 				$post_metas = get_post_meta( $old_module_id );
 				foreach ( $post_metas as $key => $meta_value ) {
-					$value = array_pop( $meta_value );
-					$value = maybe_unserialize( $value );
+					$value	 = array_pop( $meta_value );
+					$value	 = maybe_unserialize( $value );
 					update_post_meta( $new_module_id, $key, $value );
 				}
-			}	
-			
+			}
 		}
 
 		function get_module_delete_link() {
