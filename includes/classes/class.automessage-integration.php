@@ -36,11 +36,7 @@ if ( !class_exists( 'CP_Automessage_Integration' ) ) {
 			//Student Withdraw from a course - Instructor(s) Notification
 			$hooks[ 'student_withdraw_from_course_instructor_notification' ]						 = array( 'action_nicename' => __( 'Student Withdraw from a Course - Instructor(s) Notification', 'cp' ) );
 			$hooks[ 'student_withdraw_from_course_instructor_notification' ][ 'arg_with_user_id' ]	 = 3; //$user_id, $course_id, $instructors (3)
-			
-			//Student Withdraw from a course - Instructor(s) Notification
-			$hooks[ 'student_withdraw_from_course_instructor_notification' ]						 = array( 'action_nicename' => __( 'Student Withdraw from a Course - Instructor(s) Notification', 'cp' ) );
-			$hooks[ 'student_withdraw_from_course_instructor_notification' ][ 'arg_with_user_id' ]	 = 3; //$user_id, $course_id, $instructors (3)
-	
+		
 			//Student Withdraw from a course - Student Notification
 			$hooks[ 'student_withdraw_from_course_student_notification' ]						 = array( 'action_nicename' => __( 'Student Withdraw from a Course - Student Notification', 'cp' ) );
 			$hooks[ 'student_withdraw_from_course_student_notification' ][ 'arg_with_user_id' ]	 = 1; //$user_id (1), $course_id
