@@ -12,6 +12,7 @@ CHANGE LOG
 * Course calendar locale for month and day of the week names
 * Other small code improvements
 * ! Integration with automessage plugin (started, work in progress)
+* Fix for primary blog on multisite installs.
 
 = 1.2.2.6 =
 * Fixed issue with wrong MD5 for instructor username in shortcodes which caused broken instructor single page if "Show Instructor Username in URL" option is not selected
