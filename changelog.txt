@@ -9,12 +9,12 @@ CHANGE LOG
 = 1.2.2.7 =
 * Resolving translation issues on general settings page and email body (functions)
 * Included new translation file containing all localization strings
-* Course calendar locale for month and day of the week names
-* Other small code improvements
-* ! Integration with automessage plugin (started, work in progress)
+* Added course calendar locale for month and day of the week names
 * Fixed: Primary blog tweaks on multisite installs.
 * Fixed: Instructor capabilities on multisite installs.
 * Fixed: [course_list show_media="yes"] now correctly shows the media defined in settings.
+* Updated MarketPress (2.9.5.8)
+* Other small code improvements
 
 = 1.2.2.6 =
 * Fixed issue with wrong MD5 for instructor username in shortcodes which caused broken instructor single page if "Show Instructor Username in URL" option is not selected
