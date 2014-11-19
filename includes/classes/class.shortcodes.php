@@ -1891,8 +1891,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$show_divider		 = sanitize_html_class( $show_divider );
 			$show_title			 = sanitize_html_class( $show_title );
 			$show_media			 = sanitize_html_class( $show_media );
-			$media_type			 = sanitize_text_field( $media_type );
-			$media_priority		 = sanitize_text_field( $media_priority );
+			$media_type			 = !empty( $media_type ) ? sanitize_text_field( $media_type ) : 'image';
+			$media_priority		 = !empty( $media_priority ) ? sanitize_text_field( $media_priority ) : 'image';
 			$admin_links		 = (bool) $admin_links;
 			$manage_link_title	 = sanitize_text_field( $manage_link_title );
 			$finished_link_title = sanitize_text_field( $finished_link_title );
