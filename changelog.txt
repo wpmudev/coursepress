@@ -14,6 +14,7 @@ CHANGE LOG
 * ! Integration with automessage plugin (started, work in progress)
 * Fixed: Primary blog tweaks on multisite installs.
 * Fixed: Instructor capabilities on multisite installs.
+* Fixed: [course_list show_media="yes"] now correctly shows the media defined in settings.
 
 = 1.2.2.6 =
 * Fixed issue with wrong MD5 for instructor username in shortcodes which caused broken instructor single page if "Show Instructor Username in URL" option is not selected
