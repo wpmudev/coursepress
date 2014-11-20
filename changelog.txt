@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.8 = !!! NOT YET RELEASED
+* Critical Fix: Fixed bug preventing elements being added to units.
+
 = 1.2.2.7 =
 * Resolving translation issues on general settings page and email body (functions)
 * Included new translation file containing all localization strings
