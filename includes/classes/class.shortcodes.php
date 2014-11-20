@@ -2238,7 +2238,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					foreach ( $instructors as $instructor ) {
 
 						$profile_href = trailingslashit( site_url() ) . trailingslashit( $instructor_profile_slug );
-						$profile_href .= get_option( 'show_instructor_username', 1 ) == 1 ? trailingslashit( $instructor->user_login ) : trailingslashit( md5( $instructor->user_login )) ;
+						$profile_href .= get_option( 'show_instructor_username', 1 ) == 1 ? trailingslashit( $instructor->user_login ) : trailingslashit( md5( $instructor->user_login ) );
 
 						switch ( $style ) {
 
@@ -2763,7 +2763,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( array_key_exists( 'course_category', $wp->query_vars ) ) {
 				$page		 = ( isset( $wp->query_vars[ 'paged' ] ) ) ? $wp->query_vars[ 'paged' ] : 1;
 				$query_args	 = array(
-					'order'			 => 'DESC',
 					'post_type'		 => 'course',
 					'post_status'	 => 'publish',
 					'paged'			 => $page,
@@ -2771,10 +2770,29 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						array(
 							'taxonomy'	 => 'course_category',
 							'field'		 => 'slug',
-							'terms'		 => array( $wp->query_vars['course_category'] ),
+							'terms'		 => array( $wp->query_vars[ 'course_category' ] ),
 						)
 					)
 				);
+
+				$selected_course_order_by_type	 = get_option( 'course_order_by_type', 'DESC' );
+				$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+
+				if ( $selected_course_order_by == 'course_order' ) {
+					$query_args[ 'meta_key' ]		 = 'course_order';
+					$query_args[ 'meta_query' ]	 = array(
+						'relation' => 'OR',
+						array(
+							'key'		 => 'course_order',
+							'compare'	 => 'NOT EXISTS'
+						),
+					);
+					$query_args[ 'orderby' ]		 = 'meta_value';
+					$query_args[ 'order' ]		 = $selected_course_order_by_type;
+				} else {
+					$query_args[ 'orderby' ]	 = $selected_course_order_by;
+					$query_args[ 'order' ]	 = $selected_course_order_by_type;
+				}
 
 				query_posts( $query_args );
 			}

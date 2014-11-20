@@ -1,13 +1,13 @@
 <?php
 global $coursepress;
 
-if(isset($_GET['course_action']) && isset($_GET['course_id'])){
-	if($_GET['course_action'] == 'duplicate'){
-		 if (isset($_GET['duplicating_nonce']) && wp_verify_nonce($_GET['duplicating_nonce'], 'duplicating_course')) {
-			 $course_id = (int)$_GET['course_id'];
-			 $course = new Course($course_id);
-			 $course->duplicate();
-		 }
+if ( isset( $_GET[ 'course_action' ] ) && isset( $_GET[ 'course_id' ] ) ) {
+	if ( $_GET[ 'course_action' ] == 'duplicate' ) {
+		if ( isset( $_GET[ 'duplicating_nonce' ] ) && wp_verify_nonce( $_GET[ 'duplicating_nonce' ], 'duplicating_course' ) ) {
+			$course_id	 = (int) $_GET[ 'course_id' ];
+			$course		 = new Course( $course_id );
+			$course->duplicate();
+		}
 	}
 }
 
@@ -122,6 +122,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 	}
 	?>
 	<div class="wrap nosubsub cp-wrap">
+		<input type="hidden" name="course_page_number" id="course_page_number" value="<?php echo (int)$page_num;?>" />
 		<div class="icon32" id="icon-themes"><br></div>
 		<h2><?php _e( 'Courses', 'cp' ); ?>
 			<?php
@@ -219,12 +220,14 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 							?>
 						</tr>
 					</thead>
-
-					<tbody>
+					<?php 
+					$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+					?>
+					<tbody class="<?php if($selected_course_order_by == 'course_order'){ echo 'course-rows';}?>">
 						<?php
 						$style			 = '';
 						$can_list_count	 = 0;
-
+						$list_order = 1;
 						foreach ( $wp_course_search->get_results() as $course ) {
 
 							$instructor			 = new Instructor( get_current_user_id() );
@@ -257,15 +260,15 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 							$course_obj		 = new Course( $course->ID );
 							$course_object	 = $course_obj->get_course();
 
-							$style = ( 'alternate' == $style ) ? '' : 'alternate';
+							$style = ''; //( 'alternate' == $style ) ? '' : 'alternate';
 							?>
-							<tr id='user-<?php echo $course_object->ID; ?>' class="<?php echo $style; ?>">
+							<tr id='user-<?php echo $course_object->ID; ?>' class="<?php echo $style; ?> course-row">
 								<th scope='row' class='check-column'>
 									<input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
 								</th>
 								<td class="column-course <?php echo $style; ?>"><?php if ( $can_update ) { ?><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id=' . $course_object->ID ); ?>"><?php } ?><strong><?php echo $course_object->post_title; ?></strong><?php if ( $can_update ) { ?></a><?php } ?><br />
 									<!-- <div class="course-thumbnail"><img src="<?php echo Course::get_course_thumbnail( $course->ID ); ?>" alt="<?php echo esc_attr( $course_object->post_title ); ?>" /></div> -->
-									<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID, 55 ); ?></div>
+									<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID, apply_filters('course_admin_excerpt_length', 55)); ?></div>
 									<div class="column-course-units visible-small visible-extra-small">
 										<strong><?php _e( 'Units', 'cp' ); ?>:</strong>
 										<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?>,
@@ -295,21 +298,21 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 											if ( $wp_course_search->is_light ) {
 												if ( $wp_course_search->get_count_of_all_courses() < $wp_course_search->courses_per_page ) {
 													?>
-													 | <span class="units"><a href="<?php echo wp_nonce_url(admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce'); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
+													| <span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
 													<?php
 												}
 											} else {
 												?>
-												 | <span class="units"><a href="<?php echo wp_nonce_url(admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce'); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
-											<?php
+												| <span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
+												<?php
 											}
 										}
 										?>	
 									</div>
 								</td>
 								<td class="column-units <?php echo $style; ?>">
-		<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?><br />
-		<?php echo $course_obj->get_units( '', 'publish', true ); ?> <?php _e( 'Published', 'cp' ); ?>
+									<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?><br />
+									<?php echo $course_obj->get_units( '', 'publish', true ); ?> <?php _e( 'Published', 'cp' ); ?>
 								</td>
 								<td class="center column-students <?php echo $style; ?>"><?php if ( $can_update || $my_course ) { ?><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php } ?><?php echo $course_obj->get_number_of_students(); ?><?php if ( $can_update || $my_course ) { ?></a> <?php } ?></td>
 								<td class="column-status <?php echo $style; ?>">
@@ -327,45 +330,47 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 								</td>
 
 								<td class="column-remove <?php echo $style; ?>">
-		<?php if ( $can_delete ) { ?>
+									<?php if ( $can_delete ) { ?>
 										<a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&action=delete&course_id=' . $course_object->ID ), 'delete_course_' . $course_object->ID, 'cp_nonce' ); ?>" onClick="return removeCourse();">
 											<i class="fa fa-times-circle cp-move-icon remove-btn"></i>
 										</a>
-		<?php } ?>
+									<?php } ?>
 								</td>
-
-							</tr>
-							<?php
-						}
-						?>
-
+						<input type="hidden" class="course_order" value="<?php echo $list_order; ?>" name="course_order_<?php echo $course_object->ID; ?>" />
+		                <input type="hidden" name="course_id" class="course_id" value="<?php echo $course_object->ID; ?>" />
+						</tr>
 						<?php
-						if ( count( $wp_course_search->get_results() ) == 0 ) {
-							?>
-							<tr>
-								<td colspan="6"><div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div></td>
-							</tr>
-							<?php
-						}
+						$list_order++;
+					}
+					?>
 
-						if ( $can_list_count == 0 && !current_user_can( 'manage_options' ) ) {//shows only to instructors
-							?>
-							<tr>
-								<td colspan="6"><div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div></td>
-							</tr>
-							<?php
-						}
+					<?php
+					if ( count( $wp_course_search->get_results() ) == 0 ) {
 						?>
+						<tr>
+							<td colspan="6"><div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div></td>
+						</tr>
+						<?php
+					}
+
+					if ( $can_list_count == 0 && !current_user_can( 'manage_options' ) ) {//shows only to instructors
+						?>
+						<tr>
+							<td colspan="6"><div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div></td>
+						</tr>
+						<?php
+					}
+					?>
 					</tbody>
 				</table><!--/widefat shadow-table-->
 
 				<div class="tablenav">
 					<?php if ( !$wp_course_search->is_light ) { ?>
 						<div class="tablenav-pages"><?php $wp_course_search->page_links(); ?></div>
-	<?php } ?>
+					<?php } ?>
 				</div><!--/tablenav-->
 
 			</form>
 
 		</div><!--/wrap-->
-<?php } ?>
+	<?php } ?>

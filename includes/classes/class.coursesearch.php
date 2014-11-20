@@ -22,15 +22,31 @@ if ( !class_exists('Course_Search') ) {
             $this->raw_page = ( '' == $page_num ) ? false : ( int ) $page_num;
             $this->page_num = ( int ) ( '' == $page_num ) ? 1 : $page_num;
 
+			$selected_course_order_by_type	 = get_option( 'course_order_by_type', 'DESC' );
+			$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+			
             $args = array(
-                //'s' => $this->search_term,
                 'posts_per_page' => $this->courses_per_page,
                 'offset' => ( $this->page_num - 1 ) * $this->courses_per_page,
-                'orderby' => 'post_date',
-                'order' => 'DESC',
                 'post_type' => $this->post_type,
-                'post_status' => 'any'
+                'post_status' => 'any',
             );
+			
+			if($selected_course_order_by == 'course_order'){
+				$args['meta_key'] = 'course_order';
+				$args['meta_query'] = array(
+                    'relation' => 'OR',
+                    array(
+                        'key' => 'course_order',
+                        'compare' => 'NOT EXISTS'
+                    ),
+                );
+				$args['orderby'] = 'meta_value';
+				$args['order'] = $selected_course_order_by_type;
+			}else{
+				$args['orderby'] = $selected_course_order_by;
+				$args['order'] = $selected_course_order_by_type;
+			}
 
             $this->args = $args;
         }

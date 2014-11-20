@@ -78,7 +78,7 @@ a .remove-btn{
 }
 
 .column-course .row-actions{
-/*    text-transform: uppercase;*/
+    /*    text-transform: uppercase;*/
 }
 
 /* Column Widths */
@@ -164,7 +164,7 @@ a .remove-btn{
 }
 
 .courses-state .control.disabled {
-	background: #eaeaea;
+    background: #eaeaea;
 }
 
 .courses-state .publish-course-message{
@@ -191,4 +191,20 @@ a .remove-btn{
 
 .courses-state .draft.on{
     color:red;
+}
+
+
+.course-rows .course-row{
+    background-color: #ffff;
+}
+
+
+.course-rows .course-row:nth-child(2n){
+    background-color: #f9f9f9;
+}
+
+.course-row-ui-state-highlight{
+    background-color: #eaeaea;
+    height: 90px;
+    width: 100%;
 }

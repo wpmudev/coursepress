@@ -877,6 +877,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			add_action( 'pre_get_posts', array( &$this, 'course_archive_categories' ) );
 
+			add_action( 'pre_get_posts', array( &$this, 'course_archive' ) );
+
+
 			/**
 			 * Filter searches.
 			 *
@@ -897,6 +900,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * @since 1.0.0
 			 */
 			add_action( 'wp_ajax_update_units_positions', array( $this, 'update_units_positions' ) );
+
+			/**
+			 * Update course positions of reordering (AJAX).
+			 *
+			 */
+			add_action( 'wp_ajax_update_course_positions', array( $this, 'update_course_positions' ) );
 
 			/**
 			 * Apply custom filter to WP query variables (AJAX).
@@ -1142,7 +1151,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * Class to manage integration with automessage plugin (if installed)
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.automessage-integration.php' );
-			
+
 			/**
 			 * Hook CoursePress initialization.
 			 *
@@ -2087,7 +2096,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						if ( !empty( $blog_id ) ) {
 
 							// Deal with inconsistency in *_user_option() functions for first blog
-							if( 1 == $blog_id ) {
+							if ( 1 == $blog_id ) {
 								update_user_meta( $user_id, $wpdb->base_prefix . 'role_ins', 'instructor' );
 							} else {
 								update_user_meta( $user_id, $wpdb->base_prefix . $blog_id . '_role_ins', 'instructor' );
@@ -2143,6 +2152,34 @@ if ( !class_exists( 'CoursePress' ) ) {
 				) );
 				echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 				exit();
+			}
+		}
+
+		function course_archive( $query ) {
+			if ( is_post_type_archive( 'course' ) ) {
+				$selected_course_order_by_type	 = get_option( 'course_order_by_type', 'DESC' );
+				$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+
+				if ( $selected_course_order_by == 'course_order' ) {
+					set_query_var( 'meta_query', array(
+						'relation' => 'OR',
+						array(
+							'key'		 => 'course_order',
+							'compare'	 => 'NOT EXISTS',
+						),
+						array(
+							'key'		 => 'course_order',
+							'compare'	 => 'EXISTS',
+						)
+					)
+					);
+					set_query_var( 'meta_key', 'course_order' );
+					set_query_var( 'orderby', 'meta_value' );
+					set_query_var( 'order', $selected_course_order_by_type );
+				} else {
+					set_query_var( 'orderby', $selected_course_order_by );
+					set_query_var( 'order', $selected_course_order_by_type );
+				}
 			}
 		}
 
@@ -2716,6 +2753,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 			foreach ( $positions as $position ) {
 				$response .= 'Position #' . $i . ': ' . $position . '<br />';
 				update_post_meta( $position, 'unit_order', $i );
+				$i ++;
+			}
+			//echo $response; //just for debugging purposes
+			die();
+		}
+
+		function update_course_positions() {
+			global $wpdb;
+
+			$course_page_number	 = $_REQUEST[ 'course_page_number' ] * 999;
+			$positions			 = explode( ",", $_REQUEST[ 'positions' ] );
+			$response			 = '';
+			$i					 = 1;
+			foreach ( $positions as $position ) {
+				$response .= 'Position #' . $i . ': ' . $position . '<br />';
+				update_post_meta( $position, 'course_order', (int) $course_page_number + (int) $i );
+				/* $post = array( 'ID'		 => $position,
+				  'menu_order' => $i ); */
+				wp_update_post( $post );
 				$i ++;
 			}
 			//echo $response; //just for debugging purposes

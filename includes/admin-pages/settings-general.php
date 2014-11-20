@@ -27,7 +27,7 @@
 								<hr />
                             </td>
                         </tr>
-						
+
 						<tr valign="top">
                             <th scope="row"><?php _e( 'Course Category Slug', 'cp' ); ?></th>
                             <td>
@@ -36,32 +36,32 @@
 								?>&nbsp;<input type='text' name='option_coursepress_course_category_slug' id='course_category_slug' value='<?php echo esc_attr( $this->get_course_category_slug() );
 								?>' />&nbsp;/
 
-                                <p class='description'><?php _e( 'Your course category URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ).'/'.$this->get_course_category_slug(); ?><?php _e( '/your-category-slug/', 'cp' ); ?></p>
+                                <p class='description'><?php _e( 'Your course category URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ) . '/' . $this->get_course_category_slug(); ?><?php _e( '/your-category-slug/', 'cp' ); ?></p>
 								<hr />
                             </td>
                         </tr>
-	
-						<!--<tr valign="top">
-                            <th scope="row"><?php _e( 'Course Page', 'cp' ); ?></th>
-                            <td>
+
+					<!--<tr valign="top">
+						<th scope="row"><?php _e( 'Course Page', 'cp' ); ?></th>
+						<td>
 						<?php
 						$option_name	 = 'coursepress_course_page';
 						$page_shortcode	 = '[cp_pages page="course"]';
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
 
 						wp_dropdown_pages( $pages_args );
 						?>
-								<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
+							<p class='description'><?php printf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>' . $page_shortcode . '</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ); ?></p>
 
-								<hr />
-                            </td>
-                        </tr>-->
+							<hr />
+						</td>
+					</tr>-->
 
                         <tr valign="top">
                             <th scope="row"><?php _e( 'Units Slug', 'cp' ); ?></th>
@@ -82,7 +82,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -114,7 +114,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -146,7 +146,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -179,7 +179,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -211,7 +211,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -243,7 +243,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -274,7 +274,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => __('Use virtual page', 'cp'),
+									'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -305,7 +305,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => __('Use virtual page', 'cp'),
+									'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -336,7 +336,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => __('Use virtual page', 'cp'),
+									'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -367,7 +367,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => __('Use virtual page', 'cp'),
+									'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -398,7 +398,7 @@
 								$pages_args		 = array(
 									'selected'			 => get_option( $option_name, 0 ),
 									'echo'				 => 1,
-									'show_option_none'	 => __('Use virtual page', 'cp'),
+									'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 									'option_none_value'	 => 0,
 									'name'				 => 'option_' . $option_name
 								);
@@ -429,7 +429,7 @@
 						$pages_args		 = array(
 							'selected'			 => get_option( $option_name, 0 ),
 							'echo'				 => 1,
-							'show_option_none'	 => __('Use virtual page', 'cp'),
+							'show_option_none'	 => __( 'Use virtual page', 'cp' ),
 							'option_none_value'	 => 0,
 							'name'				 => 'option_' . $option_name
 						);
@@ -580,7 +580,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);           ?>><?php // _e( 'Thumbnail', 'cp' );           ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);            ?>><?php // _e( 'Thumbnail', 'cp' );            ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -617,7 +617,7 @@
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);           ?>><?php // _e( 'Thumbnail', 'cp' );           ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);            ?>><?php // _e( 'Thumbnail', 'cp' );            ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -657,6 +657,37 @@
                             <th scope="row"><?php _e( 'Image Height', 'cp' ); ?></th>
                             <td>
                                 <input type='text' name='option_course_image_height' value="<?php echo esc_attr( get_option( 'course_image_height', 225 ) ); ?>"  />
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+		<div class="postbox">
+            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Course Order', 'cp' ); ?></span></h3>
+            <div class="inside">
+                <p class='description'><?php _e( 'Order of courses in admin and on front. If you choose "Post Order Number", you will have option to reorder courses from within the Courses admin page.', 'cp' ); ?></p>				
+                <table class="form-table">
+                    <tbody>
+
+                        <tr valign="top">
+                            <th scope="row"><?php _e( 'Order By', 'cp' ); ?></th><td>
+								<?php $selected_course_order_by		 = get_option( 'course_order_by', 'post_date' ); ?>
+                                <select name="option_course_order_by" class="widefat" id="option_course_order_by">
+                                    <option value="post_date" <?php selected( $selected_course_order_by, 'post_date', true ); ?>><?php _e( 'Post Date', 'cp' ); ?></option>
+                                    <option value="course_order" <?php selected( $selected_course_order_by, 'course_order', true ); ?>><?php _e( 'Post Order Number', 'cp' ); ?></option>					
+								</select>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><?php _e( 'Type', 'cp' ); ?><td>
+								<?php $selected_course_order_by_type	 = get_option( 'course_order_by_type', 'DESC' ); ?>
+                                <select name="option_course_order_by_type" class="widefat" id="option_course_order_by_type">
+                                    <option value="DESC" <?php selected( $selected_course_order_by_type, 'DESC', true ); ?>><?php _e( 'Descending', 'cp' ); ?></option>
+                                    <option value="ASC" <?php selected( $selected_course_order_by_type, 'ASC', true ); ?>><?php _e( 'Ascending', 'cp' ); ?></option>					
+                                </select>
                             </td>
                         </tr>
 
@@ -718,28 +749,28 @@
 
 		<?php if ( shortcode_exists( 'signup-tos' ) ) { ?>
 			<div class="postbox">
-	            <h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Signup TOS', 'cp' ); ?></span></h3>
-	            <div class="inside">
-	                <table class="form-table">
-	                    <tbody>
-	                        <tr valign="top">
-	                            <th scope="row"><?php _e( 'Show Terms of Service', 'cp' ); ?></th>
-	                            <td>
-	                                <a class="help-icon" href="javascript:;"></a>
-	                                <div class="tooltip">
-	                                    <div class="tooltip-before"></div>
-	                                    <div class="tooltip-button">&times;</div>
-	                                    <div class="tooltip-content">
+				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Signup TOS', 'cp' ); ?></span></h3>
+				<div class="inside">
+					<table class="form-table">
+						<tbody>
+							<tr valign="top">
+								<th scope="row"><?php _e( 'Show Terms of Service', 'cp' ); ?></th>
+								<td>
+									<a class="help-icon" href="javascript:;"></a>
+									<div class="tooltip">
+										<div class="tooltip-before"></div>
+										<div class="tooltip-button">&times;</div>
+										<div class="tooltip-content">
 											<?php _e( 'If checked, user will be forced to agree to terms of services added in "Terms of Service" (Signup TOS) plugin', 'cp' ) ?>
-	                                    </div>
-	                                </div>
-	                                <input type='checkbox' name='option_show_tos' <?php echo ( ( get_option( 'show_tos', 0 ) ) ? 'checked' : '' ); ?> />
-	                            </td>
-	                        </tr>
-	                    </tbody>
-	                </table>
-	            </div>
-	        </div>
+										</div>
+									</div>
+									<input type='checkbox' name='option_show_tos' <?php echo ( ( get_option( 'show_tos', 0 ) ) ? 'checked' : '' ); ?> />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<?php } ?>
 
 		<?php
