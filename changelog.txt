@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.2.9 =
+* Added course reordering on courses admin page (drag & drop)
+* Added new options under CoursePress general settings for controlling course order in admin and front 
+
 = 1.2.2.8 =
 * Critical Fix: Fixed bug preventing elements being added to units.
 
