@@ -94,7 +94,8 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 		$coursesearch = '';
 	}
 
-	$wp_course_search = new Course_Search( $coursesearch, $page_num );
+	$show_courses_per_page	 = isset( $_GET[ 'courses_per_page' ] ) ? $_GET[ 'courses_per_page' ] : 10;
+	$wp_course_search		 = new Course_Search( $coursesearch, $page_num, $show_courses_per_page );
 
 	if ( isset( $_GET[ 'course_id' ] ) ) {
 		$course = new Course( $_GET[ 'course_id' ] );
@@ -122,7 +123,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 	}
 	?>
 	<div class="wrap nosubsub cp-wrap">
-		<input type="hidden" name="course_page_number" id="course_page_number" value="<?php echo (int)$page_num;?>" />
+		<input type="hidden" name="course_page_number" id="course_page_number" value="<?php echo (int) $page_num; ?>" />
 		<div class="icon32" id="icon-themes"><br></div>
 		<h2><?php _e( 'Courses', 'cp' ); ?>
 			<?php
@@ -220,55 +221,59 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 							?>
 						</tr>
 					</thead>
-					<?php 
-					$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+					<?php
+					$selected_course_order_by = get_option( 'course_order_by', 'post_date' );
 					?>
-					<tbody class="<?php if($selected_course_order_by == 'course_order'){ echo 'course-rows';}?>">
-						<?php
-						$style			 = '';
-						$can_list_count	 = 0;
-						$list_order = 1;
-						foreach ( $wp_course_search->get_results() as $course ) {
+					<tbody class="<?php
+					if ( $selected_course_order_by == 'course_order' ) {
+						echo 'course-rows';
+					}
+					?>">
+							   <?php
+							   $style			 = '';
+							   $can_list_count	 = 0;
+							   $list_order		 = 1;
+							   foreach ( $wp_course_search->get_results() as $course ) {
 
-							$instructor			 = new Instructor( get_current_user_id() );
-							$instructor_courses	 = $instructor->get_assigned_courses_ids();
+								   $instructor			 = new Instructor( get_current_user_id() );
+								   $instructor_courses	 = $instructor->get_assigned_courses_ids();
 
-							$my_course = in_array( $course->ID, $instructor_courses );
+								   $my_course = in_array( $course->ID, $instructor_courses );
 
-							$can_list = false;
+								   $can_list = false;
 
-							// $can_create = CoursePress_Capabilities::can_creare_course();
-							$can_update				 = CoursePress_Capabilities::can_update_course( $course->ID );
-							$can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID );
-							$can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID );
-							$can_create_unit		 = CoursePress_Capabilities::can_create_course_unit( $course->ID );
-							$can_update_unit		 = CoursePress_Capabilities::can_update_course_unit( $course->ID );
-							$can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID );
-							$can_delete_unit		 = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
-							$can_publish_unit		 = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
-							$my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID );
-							$creator				 = CoursePress_Capabilities::is_course_creator( $course->ID );
-							$zero_instructor_courses = false;
+								   // $can_create = CoursePress_Capabilities::can_creare_course();
+								   $can_update				 = CoursePress_Capabilities::can_update_course( $course->ID );
+								   $can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID );
+								   $can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID );
+								   $can_create_unit		 = CoursePress_Capabilities::can_create_course_unit( $course->ID );
+								   $can_update_unit		 = CoursePress_Capabilities::can_update_course_unit( $course->ID );
+								   $can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID );
+								   $can_delete_unit		 = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
+								   $can_publish_unit		 = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
+								   $my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID );
+								   $creator				 = CoursePress_Capabilities::is_course_creator( $course->ID );
+								   $zero_instructor_courses = false;
 
-							if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
-								continue;
-							} else {
-								$can_list = true;
-								$can_list_count++;
-							}
+								   if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
+									   continue;
+								   } else {
+									   $can_list = true;
+									   $can_list_count++;
+								   }
 
-							$course_obj		 = new Course( $course->ID );
-							$course_object	 = $course_obj->get_course();
+								   $course_obj		 = new Course( $course->ID );
+								   $course_object	 = $course_obj->get_course();
 
-							$style = ''; //( 'alternate' == $style ) ? '' : 'alternate';
-							?>
+								   $style = ''; //( 'alternate' == $style ) ? '' : 'alternate';
+								   ?>
 							<tr id='user-<?php echo $course_object->ID; ?>' class="<?php echo $style; ?> course-row">
 								<th scope='row' class='check-column'>
 									<input type='checkbox' name='courses[]' id='user_<?php echo $course_object->ID; ?>' class='' value='<?php echo $course_object->ID; ?>' />
 								</th>
 								<td class="column-course <?php echo $style; ?>"><?php if ( $can_update ) { ?><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id=' . $course_object->ID ); ?>"><?php } ?><strong><?php echo $course_object->post_title; ?></strong><?php if ( $can_update ) { ?></a><?php } ?><br />
 									<!-- <div class="course-thumbnail"><img src="<?php echo Course::get_course_thumbnail( $course->ID ); ?>" alt="<?php echo esc_attr( $course_object->post_title ); ?>" /></div> -->
-									<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID, apply_filters('course_admin_excerpt_length', 55)); ?></div>
+									<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID, apply_filters( 'course_admin_excerpt_length', 55 ) ); ?></div>
 									<div class="column-course-units visible-small visible-extra-small">
 										<strong><?php _e( 'Units', 'cp' ); ?>:</strong>
 										<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?>,
@@ -337,7 +342,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 									<?php } ?>
 								</td>
 						<input type="hidden" class="course_order" value="<?php echo $list_order; ?>" name="course_order_<?php echo $course_object->ID; ?>" />
-		                <input type="hidden" name="course_id" class="course_id" value="<?php echo $course_object->ID; ?>" />
+						<input type="hidden" name="course_id" class="course_id" value="<?php echo $course_object->ID; ?>" />
 						</tr>
 						<?php
 						$list_order++;
@@ -363,14 +368,33 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					?>
 					</tbody>
 				</table><!--/widefat shadow-table-->
-
-				<div class="tablenav">
-					<?php if ( !$wp_course_search->is_light ) { ?>
-						<div class="tablenav-pages"><?php $wp_course_search->page_links(); ?></div>
-					<?php } ?>
-				</div><!--/tablenav-->
-
 			</form>
+			<div class="tablenav">
+				<?php if ( !$wp_course_search->is_light ) { ?>
+					<form id="posts-filter" action="" method="get">
+						<div class="alignleft actions bulkactions">
+							<input type="hidden" name="page" value="courses" />
+							<input type="hidden" name="page_num" value="<?php echo esc_attr($page_num);?>" />
+							<select name="courses_per_page" id="courses_per_page">
+								<option value="10" <?php selected( $show_courses_per_page, 10, true );?>><?php _e( 'Show 10 rows', 'cp' ); ?></option>
+								<option value="20" <?php selected( $show_courses_per_page, 20, true );?>><?php _e( 'Show 20 rows', 'cp' ); ?></option>
+								<option value="30" <?php selected( $show_courses_per_page, 30, true );?>><?php _e( 'Show 30 rows', 'cp' ); ?></option>
+								<option value="40" <?php selected( $show_courses_per_page, 40, true );?>><?php _e( 'Show 40 rows', 'cp' ); ?></option>
+								<option value="50" <?php selected( $show_courses_per_page, 50, true );?>><?php _e( 'Show 50 rows', 'cp' ); ?></option>
+								<option value="60" <?php selected( $show_courses_per_page, 60, true );?>><?php _e( 'Show 60 rows', 'cp' ); ?></option>
+								<option value="70" <?php selected( $show_courses_per_page, 70, true );?>><?php _e( 'Show 70 rows', 'cp' ); ?></option>
+								<option value="80" <?php selected( $show_courses_per_page, 80, true );?>><?php _e( 'Show 80 rows', 'cp' ); ?></option>
+								<option value="90" <?php selected( $show_courses_per_page, 90, true );?>><?php _e( 'Show 90 rows', 'cp' ); ?></option>
+								<option value="100" <?php selected( $show_courses_per_page, 100, true );?>><?php _e( 'Show 100 rows', 'cp' ); ?></option>
+							</select>
+							<input type="submit" name="" class="button action" value="Apply">
+						</div>
+					</form>
+
+					<div class="tablenav-pages"><?php $wp_course_search->page_links( $show_courses_per_page ); ?></div>
+				<?php } ?>
+			</div><!--/tablenav-->
+
 
 		</div><!--/wrap-->
 	<?php } ?>
