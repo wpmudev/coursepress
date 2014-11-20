@@ -6,7 +6,7 @@ CHANGE LOG
 
 == Changelog ==
 
-= 1.2.2.8 = !!! NOT YET RELEASED
+= 1.2.2.8 =
 * Critical Fix: Fixed bug preventing elements being added to units.
 
 = 1.2.2.7 =

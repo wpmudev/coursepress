@@ -2085,7 +2085,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						// Use update_user_meta for some extra control
 						if ( !empty( $blog_id ) ) {
-							update_user_meta( $user_id, $wpdb->base_prefix . $blog_id . '_role_ins', 'instructor' );
+
+							// Deal with inconsistency in *_user_option() functions for first blog
+							if( 1 == $blog_id ) {
+								update_user_meta( $user_id, $wpdb->base_prefix . 'role_ins', 'instructor' );
+							} else {
+								update_user_meta( $user_id, $wpdb->base_prefix . $blog_id . '_role_ins', 'instructor' );
+							}
 
 							switch_to_blog( $blog_id );
 							$instructors = get_post_meta( $course_id, 'instructors', true );
