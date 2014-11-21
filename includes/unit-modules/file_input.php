@@ -172,12 +172,12 @@ class file_input_module extends Unit_Module {
 
 			<label class="bold-label"><?php _e( 'Content', 'cp' ); ?></label>
 
-			<div class="editor_in_place">                    <?php
-				
-				$editor_name = $this->name . "_content[]";
-				$editor_id = ( esc_attr( isset( $data->ID ) ? 'editor_' . $data->ID : rand( 1, 9999 )  ) );
-				$editor_content = htmlspecialchars_decode( ( isset( $data->post_content ) ? $data->post_content : '' ) );
-				
+			<div class="editor_in_place">
+				<?php
+				$editor_name	 = $this->name . "_content[]";
+				$editor_id		 = ( esc_attr( isset( $data->ID ) ? 'editor_' . $data->ID : rand( 1, 9999 )  ) );
+				$editor_content	 = htmlspecialchars_decode( ( isset( $data->post_content ) ? $data->post_content : '' ) );
+
 				$args = array(
 					"textarea_name"	 => $editor_name,
 					"textarea_rows"	 => 5,
@@ -217,15 +217,15 @@ class file_input_module extends Unit_Module {
 			foreach ( array_keys( $_POST[ 'module_type' ] ) as $module_type => $module_value ) {
 
 				if ( $module_value == $this->name ) {
-					$data						 = new stdClass();
-					$data->ID					 = '';
-					$data->unit_id				 = '';
-					$data->title				 = '';
-					$data->excerpt				 = '';
-					$data->content				 = '';
-					$data->metas				 = array();
+					$data							 = new stdClass();
+					$data->ID						 = '';
+					$data->unit_id					 = '';
+					$data->title					 = '';
+					$data->excerpt					 = '';
+					$data->content					 = '';
+					$data->metas					 = array();
 					$data->metas[ 'module_type' ]	 = $this->name;
-					$data->post_type			 = 'module';
+					$data->post_type				 = 'module';
 
 					if ( isset( $_POST[ $this->name . '_id' ] ) ) {
 						foreach ( $_POST[ $this->name . '_id' ] as $key => $value ) {
@@ -235,7 +235,7 @@ class file_input_module extends Unit_Module {
 							$data->content							 = $_POST[ $this->name . '_content' ][ $key ];
 							$data->metas[ 'module_order' ]			 = $_POST[ $this->name . '_module_order' ][ $key ];
 							$data->metas[ 'limit_attempts_value' ]	 = $_POST[ $this->name . '_limit_attempts_value' ][ $key ];
-							$data->metas[ 'minimum_grade_required' ]	 = $_POST[ $this->name . '_minimum_grade_required' ][ $key ];
+							$data->metas[ 'minimum_grade_required' ] = $_POST[ $this->name . '_minimum_grade_required' ][ $key ];
 
 							// if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
 							//     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];

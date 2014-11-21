@@ -110,6 +110,28 @@ class audio_module extends Unit_Module {
                     <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked($data_autoplay, 'Yes', true); ?>/> <?php _e('Yes', 'cp'); ?><br /><br />
                     <input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset($data->module_order) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked($data_autoplay, 'No', true); ?>/> <?php _e('No', 'cp'); ?><br /><br />
                 </div>
+				
+				<div class="editor_in_place" style="display: none;">
+                    <?php
+					
+					$editor_name = $this->name . "_content[]";
+                    $editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
+					$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
+					
+                    $args = array(
+                        "textarea_name" => $editor_name,
+                        "textarea_rows" => 5,
+                        "quicktags" => true,
+                        "teeny" => false,
+						"editor_class" => 'cp-editor cp-unit-element',						
+                    );
+					
+					$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
+					
+                    wp_editor( $editor_content, $editor_id, $args);
+                    ?>
+
+                </div>
 
                 <?php
                 parent::get_module_delete_link();
