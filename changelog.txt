@@ -11,6 +11,7 @@ CHANGE LOG
 * Added new options under CoursePress general settings for controlling course order in admin and front 
 * Added option for displaying different number of rows on the courses admin page
 * New hooks for developers and code improvements
+* Fixed issues with loosing element content 
 
 = 1.2.2.8 =
 * Critical Fix: Fixed bug preventing elements being added to units.
