@@ -473,7 +473,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<?php
 												$editor_name	 = "course_description";
 												$editor_id		 = "course_description";
-												$editor_content	 = htmlspecialchars_decode( $course_details->post_content );
+												$editor_content	 = htmlspecialchars_decode( isset($course_details->post_content) ? $course_details->post_content : '' );
 
 
 												$args = array(
