@@ -21,7 +21,6 @@ if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) ) {
 		$user_capabilities	 = $role->wp_capabilities;
 
 		if ( isset( $_POST[ 'instructor_capability' ] ) ) {
-
 			update_option( 'coursepress_instructor_capabilities', $_POST[ 'instructor_capability' ] );
 			foreach ( $user_capabilities as $key => $old_cap ) {
 				// Make sure to only remove CoursePress instructor capabilities
@@ -60,6 +59,7 @@ $capability_boxes = array(
 	//'instructor_capabilities_classes' => __( 'Classes', 'cp' ),
 	'instructor_capabilities_students'		 => __( 'Students', 'cp' ),
 	'instructor_capabilities_notifications'	 => __( 'Notifications', 'cp' ),
+	'instructor_capabilities_discussions'	 => __( 'Discussions', 'cp' ),
  //'instructor_capabilities_groups' => __( 'Settings Pages', 'cp' ),
 );
 
@@ -71,6 +71,7 @@ $instructor_capabilities_general = array(
 	'coursepress_assessment_cap'	 => __( 'Assessment', 'cp' ),
 	'coursepress_reports_cap'		 => __( 'Reports', 'cp' ),
 	'coursepress_notifications_cap'	 => __( 'Notifications', 'cp' ),
+	'coursepress_discussions_cap'	 => __( 'Discussions', 'cp' ),
 	'coursepress_settings_cap'		 => __( 'Access to the Settings menu item', 'cp' ),
 );
 
@@ -144,6 +145,16 @@ $instructor_capabilities_notifications = array(
 	'coursepress_delete_my_notification_cap'			 => __( 'Delete notifications made by the instructor only', 'cp' ),
 	'coursepress_change_notification_status_cap'		 => __( 'Change status of every notification', 'cp' ),
 	'coursepress_change_my_notification_status_cap'		 => __( 'Change statuses of notifications made by the instructor only', 'cp' )
+);
+
+$instructor_capabilities_discussions = array(
+	'coursepress_create_discussion_cap'				 => __( 'Create new discussions', 'cp' ),
+	'coursepress_create_my_discussion_cap'			 => __( 'Create new discussions for courses created by the instructor only', 'cp' ),
+	'coursepress_create_my_assigned_discussion_cap'	 => __( 'Create new discussions for courses assigned to the instructor only', 'cp' ),
+	'coursepress_update_discussion_cap'				 => __( 'Update every discussions', 'cp' ),
+	'coursepress_update_my_discussion_cap'			 => __( 'Update discussions made by the instructor only', 'cp' ),
+	'coursepress_delete_discussion_cap'				 => __( 'Delete every discussions', 'cp' ),
+	'coursepress_delete_my_discussion_cap'			 => __( 'Delete discussions made by the instructor only', 'cp' ),
 );
 ?>
 <div id="poststuff" class="metabox-holder m-settings cp-wrap">

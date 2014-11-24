@@ -9,7 +9,13 @@ if ( empty( $tab ) ) {
 	if ( current_user_can( 'manage_options' ) ) {
 		$tab = 'general';
 	} else {
-		die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
+		?>
+<div id="error-page">
+	<p><?php _e( 'You do not have required permissions to access Settings.', 'cp' );?></p>
+</div>
+<?php
+exit;
+		//die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
 	}
 }
 

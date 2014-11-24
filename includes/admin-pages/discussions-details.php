@@ -50,7 +50,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 <div class="wrap nosubsub discussions-details cp-wrap">
     <div class="icon32" id="icon-themes"><br></div>
 
-    <h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) ) { ?><a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' );?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
+	<h2><?php _e('Discussion', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_discussion_cap') || current_user_can('coursepress_create_my_discussion_cap') || current_user_can('coursepress_create_my_assigned_discussion_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
     <div class='wrap nocoursesub'>
         <form action='<?php echo esc_attr(admin_url('admin.php?page=' . $page . ( ( $discussion_id !== 0 ) ? '&discussion_id=' . $discussion_id : '' ) . '&action=' . $action . ( ( $discussion_id !== 0 ) ? '&ms=du' : '&ms=da' ))); ?>' name='discussion-add' method='post'>
@@ -113,11 +113,33 @@ if ( isset( $_GET['discussion_id'] ) ) {
                                         );
 
                                         $courses = get_posts( $args );
+										
+										foreach ( $courses as $course ) {
 
-                                        foreach ( $courses as $course ) {
-                                            ?>
-                                            <option value="<?php echo $course->ID; ?>" <?php selected( $meta_course_id, $course->ID ); ?>><?php echo $course->post_title; ?></option>
-                                            <?php
+                                            //if ( $notification_id == 0 ) {
+
+                                            $instructor = new Instructor(get_current_user_id());
+                                            $instructor_courses = $instructor->get_assigned_courses_ids();
+
+                                            $my_course = in_array($course->ID, $instructor_courses);
+                                            $my_course = CoursePress_Capabilities::is_course_instructor($course->ID);
+                                            //}
+
+                                            if ( $discussion_id == 0 ) {
+                                                if ( current_user_can('manage_options') || current_user_can('coursepress_create_discussion_cap') || (current_user_can('coursepress_create_my_discussion_cap') && $course->post_author == get_current_user_ID()) || (current_user_can('coursepress_create_my_assigned_discussion_cap') && $my_course) ) {
+                                                    ?>
+                                                    <option value="<?php echo $course->ID; ?>" <?php selected($meta_course_id, $course->ID); ?>><?php echo $course->post_title; ?></option>
+                                                    <?php
+                                                    $available_course_options++;
+                                                }
+                                            } else {//check for update capabilities
+                                                if ( current_user_can('manage_options') || current_user_can('coursepress_update_discussion_cap') || (current_user_can('coursepress_update_my_discussion_cap') && $notification_details->post_author == get_current_user_ID()) /* || (current_user_can('coursepress_create_my_assigned_notification_cap') && $my_course) */ ) {
+                                                    ?>
+                                                    <option value="<?php echo $course->ID; ?>" <?php selected($meta_course_id, $course->ID); ?>><?php echo $course->post_title; ?></option>
+                                                    <?php
+                                                    $available_course_options++;
+                                                }
+                                            }
                                         }
                                         ?>
                                     </select>

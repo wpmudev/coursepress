@@ -71,7 +71,7 @@ if ( ( isset($_GET['action']) && $_GET['action'] == 'add_new' && isset($_GET['pa
     ?>
     <div class="wrap nosubsub cp-wrap">
         <div class="icon32" id="icon-themes"><br></div>
-        <h2><?php _e('Discussions', 'cp'); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can('coursepress_create_discussion_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
+		<h2><?php _e('Discussions', 'cp'); ?><?php if ( current_user_can('manage_options') || current_user_can('coursepress_create_discussion_cap') || current_user_can('coursepress_create_my_discussion_cap') || current_user_can('coursepress_create_my_assigned_discussion_cap') ) { ?><a class="add-new-h2" href="<?php echo admin_url('admin.php?page=discussions&action=add_new'); ?>"><?php _e('Add New', 'cp'); ?></a><?php } ?></h2>
 
         <?php
         $ms['da'] = __('New Discussion added successfully!', 'cp');
