@@ -524,9 +524,10 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
             var current_page = jQuery('#unit-pages .ui-tabs-nav .ui-state-active a').html();
             var elements_count = jQuery('#unit-page-1 .modules_accordion .module-holder-title').length;
+			var current_page_elements_count = jQuery('#unit-page-' + current_page + ' .modules_accordion .module-holder-title').length;
             //jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
 
-            if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && elements_count == 1)) {
+            if ((current_page == 1 && elements_count == 0) || (current_page >= 2 && current_page_elements_count == 1)) {
                 jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').show();
             } else {
                 jQuery('#unit-page-' + current_page + ' .elements-holder .no-elements').hide();

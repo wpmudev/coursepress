@@ -11,6 +11,7 @@ CHANGE LOG
 * CSS improvements (added better CSS styles on the feature course buttons in the CoursePress theme)
 * Resolved issue with saving course categories
 * Resolved translation issues
+* Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
 * Other code improvements
 
 = 1.2.2.9 =
