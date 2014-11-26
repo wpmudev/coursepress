@@ -170,7 +170,7 @@ if ( !class_exists( 'Student' ) ) {
 			 *
 			 * @since 1.2.2
 			 */
-			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
+			$instructors = Course::get_course_instructors_ids( $course_id );
 			do_action('student_withdraw_from_course_instructor_notification', $this->ID, $course_id, $instructors);
 			do_action('student_withdraw_from_course_student_notification', $this->ID, $course_id);
 			do_action( 'coursepress_student_withdrawn', $this->ID, $course_id );

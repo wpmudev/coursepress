@@ -3481,15 +3481,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$course->data[ 'status' ] = 'draft';
 				}
 
-				$course_categories = $_POST[ 'course_category' ];
+				if ( !empty( $_POST[ 'meta_course_setup_marker' ] ) && 'step-2' == $_POST[ 'meta_course_setup_marker' ] ) {
+					$course_categories = $_POST[ 'course_category' ];
 
-				wp_delete_object_term_relationships( $course_id, 'course_category' );
+					wp_delete_object_term_relationships( $course_id, 'course_category' );
 
-				foreach ( $course_categories as $course_category ) {
-					wp_set_post_terms( $course_id, $course_category, 'course_category', true );
+					foreach ( $course_categories as $course_category ) {
+						wp_set_post_terms( $course_id, $course_category, 'course_category', true );
+					}
 				}
-				//wp_set_post_terms( $course_id, $course_categories, 'course_category', false );
-
+				
 				if ( !empty( $user_id ) && 0 == $course_id ) {
 					$course->data[ 'uid' ]			 = $user_id;
 					$ajax_response[ 'instructor' ]	 = $user_id;

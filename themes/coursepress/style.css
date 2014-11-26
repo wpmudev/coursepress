@@ -2849,6 +2849,28 @@ li.current_page_item a{
     margin-bottom: 3px;
 }
 
+
+.featured-course-link button {
+    background: none repeat scroll 0 0 #0facd9;
+    border: medium none;
+    border-radius: 0;
+    box-shadow: none;
+    color: #fff;
+    display: block;
+    font-family: "Dosis",sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    margin-top: 1px;
+    min-width: 240px;
+    overflow: hidden;
+    padding: 6px 30px;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-shadow: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 /*
 RESPONSIVE
 */

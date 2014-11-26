@@ -40,7 +40,7 @@ $course_language = $course->details->course_language;
 				<?php echo do_shortcode( '[course_dates show_alt_display="yes"]' ); //change to yes for 'Open-ended' ?>
 				<?php echo do_shortcode( '[course_enrollment_dates show_alt_display="no"]' ); //change to yes for 'Open-ended' ?>
 				<?php echo do_shortcode( '[course_class_size]' ); ?>
-				<?php echo do_shortcode( '[course_enrollment_type label="Who can Enroll: "]' ); ?>
+				<?php echo do_shortcode( '[course_enrollment_type label="'.__('Who can Enroll: ', 'cp').'"]' ); ?>
 				<?php echo do_shortcode( '[course_language]' ); ?>				
 				<?php echo do_shortcode( '[course_cost]' ); ?>	
 
@@ -119,7 +119,7 @@ $course_language = $course->details->course_language;
 						<p>
 							<?php echo author_description_excerpt( $instructor->ID, 50 ); ?>
 						</p>
-						<a href="<?php echo do_shortcode( '[instructor_profile_url instructor_id="' . $instructor->ID . '"]' ); ?>" class="full-instructor-profile"><?php _e( 'View Full Profile' ); ?></a>
+						<a href="<?php echo do_shortcode( '[instructor_profile_url instructor_id="' . $instructor->ID . '"]' ); ?>" class="full-instructor-profile"><?php _e( 'View Full Profile', 'cp' ); ?></a>
 					</div>
 				<?php } ?>
 			</div>

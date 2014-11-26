@@ -384,8 +384,9 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												$terms = get_terms( $taxonomies, $args );
 
-												$course_terms		 = wp_get_post_terms( $course_id, 'course_category', array() );
-												$course_terms_array	 = array();
+												$course_terms = wp_get_post_terms( $course_id, 'course_category', array() );
+
+												$course_terms_array = array();
 												foreach ( $course_terms as $course_term ) {
 													$course_terms_array[] = $course_term->term_id;
 												}
@@ -473,7 +474,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<?php
 												$editor_name	 = "course_description";
 												$editor_id		 = "course_description";
-												$editor_content	 = htmlspecialchars_decode( isset($course_details->post_content) ? $course_details->post_content : '' );
+												$editor_content	 = htmlspecialchars_decode( isset( $course_details->post_content ) ? $course_details->post_content : ''  );
 
 
 												$args = array(
@@ -1133,7 +1134,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 															if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
 																$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
-															}else{
+															} else {
 																$marketpress_product_sku = '';
 															}
 
@@ -1150,7 +1151,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																	/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
 																	  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
 																	  } */
-																	echo esc_attr( isset($marketpress_product_sku[0]) ? $marketpress_product_sku[0] : ''  );
+																	echo esc_attr( isset( $marketpress_product_sku[ 0 ] ) ? $marketpress_product_sku[ 0 ] : ''  );
 																	?>" <?php echo $input_state; ?> />
 																</div>
 

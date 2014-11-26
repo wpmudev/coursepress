@@ -51,7 +51,7 @@ if ( isset( $_POST['new_question_submit'] ) ) {
 
         <form id="new_question_form" name="new_question_form" method="post" class="new_question_form">
             <div class="add_new_discussion">
-                <?php echo do_shortcode( '[units_dropdown course_id="' . $course_id . '" include_general="true" general_title="Course General"]' ) ?>
+                <?php echo do_shortcode( '[units_dropdown course_id="' . $course_id . '" include_general="true" general_title="'.__('Course General', 'cp').'"]' ) ?>
                 <div class="new_question">
                     <div class="rounded"><span>Q</span></div>
                     <input type="text" name="question_title" placeholder="<?php _e( 'Title of your question', 'cp' ); ?>" />
