@@ -1157,17 +1157,16 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 																<div class="course-price">
 																	<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
-																	<input type="text" name="mp_price" id="mp_price" value="<?php echo (isset( $mp_product_details ) && isset( $mp_product_details[ 'mp_price' ] )) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
+																	<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $mp_product_details[ 'mp_price' ][ 0 ] ) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
 																</div>
 
 																<div class="clearfix"></div>
 
 																<div class="course-sale-price">
-																	<p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php
-																		if ( isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) ) {
-																			checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' );
-																		}
-																		?>" <?php echo $input_state; ?>  />
+																	<?php
+																	$mp_is_sale	 = isset( $mp_product_details[ "mp_is_sale" ][ 0 ] ) ? $mp_product_details[ "mp_is_sale" ][ 0 ] : 0;
+																	?>
+																	<p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $mp_is_sale ); ?>" <?php checked( $mp_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
 																		<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
 																	<span class="price-label <?php isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) && checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
 																	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo (!empty( $mp_product_details[ 'mp_sale_price' ] ) ? esc_attr( $mp_product_details[ "mp_sale_price" ][ 0 ] ) : 0); ?>" <?php echo $input_state; ?>  />

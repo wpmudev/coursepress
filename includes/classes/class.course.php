@@ -332,7 +332,7 @@ if ( !class_exists( 'Course' ) ) {
 						update_post_meta( $post_id, 'mp_var_name', serialize( array() ) );
 						update_post_meta( $post_id, 'mp_price', $price );
 						update_post_meta( $post_id, 'mp_sale_price', $sale_price );
-						update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( $_POST[ 'mp_is_sale' ] ), true );
+						update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( (!empty( $_POST[ 'mp_is_sale' ] ) ? $_POST[ 'mp_is_sale' ] : '' ), true ) );
 						update_post_meta( $post_id, 'mp_file', get_permalink( $this->id ) );
 						update_post_meta( $post_id, 'cp_course_id', $this->id );
 
@@ -402,6 +402,7 @@ if ( !class_exists( 'Course' ) ) {
 							if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
 								update_post_meta( $post_id, str_replace( 'meta_', '', $key ), cp_filter_content( $value ) );
 							}
+							
 							if ( preg_match( "/mp_/i", $key ) ) {
 								update_post_meta( $post_id, $key, cp_filter_content( $value ) );
 							}

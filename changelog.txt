@@ -14,6 +14,7 @@ CHANGE LOG
 * Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
 * Added support for WordPress "Week Starts On" day in the course date fields and the Unit Availability field
 * Resolved issue where users saving their own profiles remove instructor capabilities
+* Resolved issue with MarketPress sale price (not being saved)
 * Resolved issue with primary blog on multisite
 * Other code improvements
 
