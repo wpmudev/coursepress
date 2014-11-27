@@ -9,6 +9,7 @@ jQuery(function() {
     jQuery('.dateinput').datepicker({
         dateFormat: 'yy-mm-dd'
     });
+    
 
 });
 

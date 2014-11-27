@@ -560,7 +560,8 @@ jQuery( function() {
         },
     } );
     jQuery( '.dateinput' ).datepicker( {
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'yy-mm-dd',
+        firstDay: coursepress.start_of_week
     } );
 } );
 

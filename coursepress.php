@@ -3490,7 +3490,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						wp_set_post_terms( $course_id, $course_category, 'course_category', true );
 					}
 				}
-				
+
 				if ( !empty( $user_id ) && 0 == $course_id ) {
 					$course->data[ 'uid' ]			 = $user_id;
 					$ajax_response[ 'instructor' ]	 = $user_id;
@@ -4558,7 +4558,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'unit_page_num'							 => ( isset( $_GET[ 'unit_page_num' ] ) && $_GET[ 'unit_page_num' ] !== '' ? $_GET[ 'unit_page_num' ] : 1 ),
 					'allowed_video_extensions'				 => wp_get_video_extensions(),
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
-					'allowed_image_extensions'				 => cp_wp_get_image_extensions()
+					'allowed_image_extensions'				 => cp_wp_get_image_extensions(),
+					'start_of_week'						 => get_option( 'start_of_week', 0 )
 				) );
 
 				do_action( 'coursepress_editor_options' );

@@ -12,6 +12,7 @@ CHANGE LOG
 * Resolved issue with saving course categories
 * Resolved translation issues
 * Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
+* Added support for WordPress "Week Starts On" day in the course date fields and the Unit Availability field
 * Other code improvements
 
 = 1.2.2.9 =
