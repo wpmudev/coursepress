@@ -58,7 +58,7 @@ if ( isset( $_POST['submit'] ) ) {
                     }
                 }
             } else {
-                $form_message = __( 'User with the same e-mail already exists.', 'cp' );
+                $form_message = __( 'Sorry, that email address is already used!', 'cp' );
                 $form_message_class = 'error';
             }
         } else {
