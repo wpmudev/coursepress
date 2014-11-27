@@ -12,6 +12,7 @@ CHANGE LOG
 * Resolved issue with saving course categories
 * Resolved translation issues
 * Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
+* Resolved issue where users saving their own profiles remove instructor capabilities
 * Other code improvements
 
 = 1.2.2.9 =
