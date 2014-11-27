@@ -6,13 +6,15 @@ CHANGE LOG
 
 == Changelog ==
 
-= 1.2.3.0 =
+= 1.2.3 =
 * Added additional set of instructor capabilities for Discussions
 * CSS improvements (added better CSS styles on the feature course buttons in the CoursePress theme)
 * Resolved issue with saving course categories
 * Resolved translation issues
 * Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
 * Added support for WordPress "Week Starts On" day in the course date fields and the Unit Availability field
+* Resolved issue where users saving their own profiles remove instructor capabilities
+* Resolved issue with primary blog on multisite
 * Other code improvements
 
 = 1.2.2.9 =

@@ -1770,21 +1770,26 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function instructor_save_extra_profile_fields( $user_id ) {
-			if ( !current_user_can( 'edit_user', $user_id ) ) {
+			
+			if ( ! current_user_can( 'edit_user', $user_id ) ) {
 				return false;
 			}
 
-			check_admin_referer( 'update-user_' . $user_id );
-			$global_option = !is_multisite();
-			if ( $_POST[ 'cp_instructor_capabilities' ] == 'grant' ) {
-				update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
-				CoursePress::instance()->assign_instructor_capabilities( $user_id );
-			} else {
-				delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
-				// Legacy
-				delete_user_meta( $user_id, 'role_ins', 'instructor' );
-				CoursePress::instance()->drop_instructor_capabilities( $user_id );
+			if ( current_user_can( 'manage_options ' ) ) {
+
+				check_admin_referer( 'update-user_' . $user_id );
+				$global_option = ! is_multisite();
+				if ( $_POST[ 'cp_instructor_capabilities' ] == 'grant' ) {
+					update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
+					CoursePress::instance()->assign_instructor_capabilities( $user_id );
+				} else {
+					delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
+					// Legacy
+					delete_user_meta( $user_id, 'role_ins', 'instructor' );
+					CoursePress::instance()->drop_instructor_capabilities( $user_id );
+				}
 			}
+
 		}
 
 		function instructor_extra_profile_fields( $user ) {
