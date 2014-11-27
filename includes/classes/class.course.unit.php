@@ -6,7 +6,7 @@ if ( !defined( 'ABSPATH' ) )
 if ( !class_exists( 'Unit' ) ) {
 
 	class Unit extends CoursePress_Object {
-		
+
 		var $id			 = '';
 		var $output		 = 'OBJECT';
 		var $unit		 = array();
@@ -17,22 +17,22 @@ if ( !class_exists( 'Unit' ) ) {
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
-			
+
 			// Attempt to load from cache or create new cache object
-			if( ! self::load( self::TYPE_UNIT, $this->id, $this->details ) ) {
-				
+			if ( !self::load( self::TYPE_UNIT, $this->id, $this->details ) ) {
+
 				// Get the course				
-				$this->details	 = get_post( $this->id, $this->output );
-				
+				$this->details = get_post( $this->id, $this->output );
+
 				// Initialize the unit				
 				$this->init_unit( $this->details );
-				
+
 				// Cache the unit object				
 				self::cache( self::TYPE_UNIT, $this->id, $this->details );
 				// cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
 			} else {
 				// cp_write_log( 'Unit[' . $this->id . ']: Loaded from cache...');
-			};			
+			};
 
 			// Will return cached value if it exists
 			$this->course_id = $this->get_parent_course_id();
@@ -43,7 +43,6 @@ if ( !class_exists( 'Unit' ) ) {
 			 * @since 1.2.2
 			 */
 			do_action( 'coursepress_unit_init', $this );
-
 		}
 
 		function Unit( $id = '', $output = 'OBJECT' ) {
@@ -60,11 +59,11 @@ if ( !class_exists( 'Unit' ) ) {
 				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
 					$unit->post_status = __( 'unpublished', 'cp' );
 				}
-				
+
 				// Set parent ID
-				$course_id = get_post_meta( $unit->ID, 'course_id', true );
+				$course_id		 = get_post_meta( $unit->ID, 'course_id', true );
 				$unit->course_id = $course_id;
-				
+
 				$unit->current_unit_order = get_post_meta( $unit->ID, 'unit_order', true );
 				// if ( !isset( $unit->details->post_name ) ) {
 				// 	$unit->details->post_name = '';
@@ -73,48 +72,48 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit() {
-			return ! empty( $this->details ) ? $this->details : false;
+			return !empty( $this->details ) ? $this->details : false;
 		}
 
 		function is_unit_available( $unit_id = '' ) {
 
 			$unit_details = false;
 			if ( $unit_id == '' ) {
-				$unit_details = $this->get_unit();
-				$unit_id = $this->id;
+				$unit_details	 = $this->get_unit();
+				$unit_id		 = $this->id;
 			} else {
-				$unit = new Unit( (int) $unit_id );
-				$unit_details = $unit->get_unit();
+				$unit			 = new Unit( (int) $unit_id );
+				$unit_details	 = $unit->get_unit();
 			}
 
 			/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
 			/* Check if previous has conditions */
-			$previous_unit_id                         = $this->get_previous_unit_from_the_same_course( $unit_id );
-			$force_current_unit_completion            = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : '';
-			$force_current_unit_successful_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : '';
+			$previous_unit_id							 = $this->get_previous_unit_from_the_same_course( $unit_id );
+			$force_current_unit_completion				 = !empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : '';
+			$force_current_unit_successful_completion	 = !empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : '';
 
 			$available = true;
 
-			$completion	= new Course_Completion( $this->course_id );
+			$completion = new Course_Completion( $this->course_id );
 			$completion->init_student_status();
-			
-			$mandatory_done = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
-			$unit_completed = 100 == $completion->unit_progress( $previous_unit_id );
 
-			$this->status['mandatory_required']['enabled'] = ! empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
-			$this->status['mandatory_required']['result'] = $mandatory_done;
-			
-			$this->status['completion_required']['enabled'] = ! empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion;
-			$this->status['completion_required']['result'] = $unit_completed;
-				
-			$available = $this->status['mandatory_required']['enabled'] ? $this->status['mandatory_required']['result'] : $available;
-			$available = $this->status['completion_required']['enabled'] ? $this->status['completion_required']['result'] : $available;
+			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
+			$unit_completed	 = 100 == $completion->unit_progress( $previous_unit_id );
 
-			$this->status['date_restriction']['result'] = $current_date >= $unit_details->unit_availability;
-			
-			if ( ! $this->status['date_restriction']['result'] || !$available ) {
+			$this->status[ 'mandatory_required' ][ 'enabled' ]	 = !empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
+			$this->status[ 'mandatory_required' ][ 'result' ]	 = $mandatory_done;
+
+			$this->status[ 'completion_required' ][ 'enabled' ]	 = !empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion;
+			$this->status[ 'completion_required' ][ 'result' ]	 = $unit_completed;
+
+			$available	 = $this->status[ 'mandatory_required' ][ 'enabled' ] ? $this->status[ 'mandatory_required' ][ 'result' ] : $available;
+			$available	 = $this->status[ 'completion_required' ][ 'enabled' ] ? $this->status[ 'completion_required' ][ 'result' ] : $available;
+
+			$this->status[ 'date_restriction' ][ 'result' ] = $current_date >= $unit_details->unit_availability;
+
+			if ( !$this->status[ 'date_restriction' ][ 'result' ] || !$available ) {
 				$available = false;
 			} else {
 				$available = true;
@@ -124,7 +123,7 @@ if ( !class_exists( 'Unit' ) ) {
 			 * Perform action if unit is available.
 			 *
 			 * @since 1.2.2
-			 **/
+			 * */
 			do_action( 'coursepress_unit_availble', $available, $unit_id );
 
 			/**
@@ -133,64 +132,63 @@ if ( !class_exists( 'Unit' ) ) {
 			 * Can be used by other plugins to filter unit availability.
 			 *
 			 * @since 1.2.2
-			 **/
+			 * */
 			$available = apply_filters( 'coursepress_filter_unit_availability', $available, $unit_id );
 
 			return $available;
 		}
-		
+
 		static function get_units_from_course( $course_id, $status = 'publish', $id_only = true ) {
-			
+
 			$args = array(
 				'post_type'		 => 'unit',
 				'post_status'	 => $status,
 				'meta_key'		 => 'unit_order',
 				'orderby'		 => 'meta_value_num',
-				'order'			 => 'ASC',						
+				'order'			 => 'ASC',
 				'posts_per_page' => '-1',
-				'meta_query'  => array(
-					  array(
-						  'key'      => 'course_id',
-						  'compare'  => 'IN',
-						  'value'    => array( $course_id ),
-					  ),
-				  ),
+				'meta_query'	 => array(
+					array(
+						'key'		 => 'course_id',
+						'compare'	 => 'IN',
+						'value'		 => array( $course_id ),
+					),
+				),
 			);
-		
+
 			$type = $id_only ? 'list' : 'object';
-			
-			$args['fields'] = $id_only ? 'ids' : '';
+
+			$args[ 'fields' ] = $id_only ? 'ids' : '';
 
 			$units = array();
 
 			// Attempt to load from cache or create new cache object
-			if( ! self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) ) {
-				
+			if ( !self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) ) {
+
 				// Clear it out just incase something did load
 				$units = array();
-				
-				if( $id_only ) {
+
+				if ( $id_only ) {
 					// Get the units	
 					$units = get_posts( $args );
-				} else {					
+				} else {
 					$posts = get_posts( $args );
 
 					// Do it this way so that units initialize correctly and get cached
-					foreach( $posts as $post ) {
+					foreach ( $posts as $post ) {
 
 						$unit_object = new Unit( $post->ID );
-						$units[] = $unit_object->details;
-
+						$units[]	 = $unit_object->details;
 					}
 				}
-				
+
 				// Cache the units list
 				self::cache( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units );
 				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Saved to cache..');
 			} else {
 				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Loaded from cache...');
-			};		
-			
+			};
+
 			return $units;
 		}
 
@@ -198,30 +196,28 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$units = self::get_units_from_course( $this->course_id );
 
-			$position = 0;
-			$previous_unit_id = 0;
+			$position			 = 0;
+			$previous_unit_id	 = 0;
 
-			if( $this->details->ID == $this->details->current_unit_order ) {
-			  $haystack = array();
-			  foreach( $units as $unit_item ) {
-				  $haystack[] = (int) $unit_item;
-			  }
-			  $position = array_search( $this->details->ID, $haystack );
+			if ( $this->details->ID == $this->details->current_unit_order ) {
+				$haystack = array();
+				foreach ( $units as $unit_item ) {
+					$haystack[] = (int) $unit_item;
+				}
+				$position = array_search( $this->details->ID, $haystack );
 			} else {
-			  // Adjust the index to fit in array bounds.
-			  $position = $this->details->current_unit_order - 1;
+				// Adjust the index to fit in array bounds.
+				$position = $this->details->current_unit_order - 1;
 			}
 
 			// There is no previous unit...
-			if( 0 == $position ) {
-			  $previous_unit_id = $this->details->ID;
-
+			if ( 0 == $position ) {
+				$previous_unit_id = $this->details->ID;
 			} else {
-			  $previous_unit_id = (int) $units[ $position - 1 ];
+				$previous_unit_id = (int) $units[ $position - 1 ];
 			}
 
 			return $this->details->ID != $previous_unit_id ? $previous_unit_id : false;
-  
 		}
 
 		function get_unit_page_time_estimation( $unit_id, $page_num ) {
@@ -318,7 +314,7 @@ if ( !class_exists( 'Unit' ) ) {
 			);
 
 			$post_id = wp_insert_post( $post );
-			
+
 			// Clear cached object just in case
 			self::kill( self::TYPE_UNIT, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $post_id );
@@ -334,19 +330,19 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 
 			$unit_id = (int) $unit_id;
-			
-			$drafts = get_posts( array( 'post_type'=>array('module','unit'), 'post_status'=>'auto-draft', 'post_parent'=>$unit_id, 'post_per_page'=>-1 ) );
 
-			if( ! empty( $drafts ) ) {
-				foreach( $drafts as $draft ) {
+			$drafts = get_posts( array( 'post_type' => array( 'module', 'unit' ), 'post_status' => 'auto-draft', 'post_parent' => $unit_id, 'post_per_page' => -1 ) );
+
+			if ( !empty( $drafts ) ) {
+				foreach ( $drafts as $draft ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
-					wp_delete_post( $draft->ID, true );					
-				}				
+					wp_delete_post( $draft->ID, true );
+				}
 			}
 		}
-		
+
 		function delete_all_unit_auto_drafts( $course_id = false ) {
 			global $wpdb;
 
@@ -355,18 +351,18 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 
 			$course_id = (int) $course_id;
-			
-			$drafts = get_posts( array( 'post_type'=>array('module','unit'), 'post_status'=>'auto-draft', 'post_parent'=>$course_id, 'post_per_page'=>-1 ) );
 
-			if( ! empty( $drafts ) ) {
-				foreach( $drafts as $draft ) {
+			$drafts = get_posts( array( 'post_type' => array( 'module', 'unit' ), 'post_status' => 'auto-draft', 'post_parent' => $course_id, 'post_per_page' => -1 ) );
+
+			if ( !empty( $drafts ) ) {
+				foreach ( $drafts as $draft ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
-					wp_delete_post( $draft->ID, true );					
-				}				
+					wp_delete_post( $draft->ID, true );
+				}
 			}
-		}		
+		}
 
 		function update_unit() {
 			global $user_id, $last_inserted_unit_id;
@@ -401,8 +397,8 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$new_unit = true;
 			if ( isset( $_POST[ 'unit_id' ] ) ) {
-				$post[ 'ID' ] = $_POST[ 'unit_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
-				$new_unit = false;
+				$post[ 'ID' ]	 = $_POST[ 'unit_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+				$new_unit		 = false;
 			}
 
 			$post_id = wp_insert_post( $post );
@@ -422,7 +418,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			update_post_meta( $post_id, 'force_current_unit_completion', cp_filter_content( $_POST[ 'force_current_unit_completion' ] ) );
 			update_post_meta( $post_id, 'force_current_unit_successful_completion', cp_filter_content( $_POST[ 'force_current_unit_successful_completion' ] ) );
-			
+
 			update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
 
 			update_post_meta( $post_id, 'show_page_title', cp_filter_content( $_POST[ 'show_page_title_field' ] ) );
@@ -430,11 +426,11 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( !get_post_meta( $post_id, 'unit_order', true ) ) {
 				update_post_meta( $post_id, 'unit_order', $post_id );
 			}
-			
+
 			// $this->delete_all_elements_auto_drafts( $post_id );
 			// $this->delete_all_unit_auto_drafts( $course_id );
 
-			if( $new_unit ) {
+			if ( $new_unit ) {
 				do_action( 'coursepress_unit_created', $post_id );
 			} else {
 				do_action( 'coursepress_unit_updated', $post_id );
@@ -454,7 +450,7 @@ if ( !class_exists( 'Unit' ) ) {
 			 *
 			 * @since 1.2.2
 			 */
-			if( apply_filters( 'coursepress_unit_cancel_delete', false, $this->id ) ) {
+			if ( apply_filters( 'coursepress_unit_cancel_delete', false, $this->id ) ) {
 
 				/**
 				 * Perform actions if the deletion was cancelled.
@@ -473,7 +469,7 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
-			
+
 			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
 			//Delete unit modules
 
@@ -509,7 +505,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			// Update the post status
 			wp_update_post( $post );
-			
+
 			// Clear cached object because we've modified the object.
 			self::kill( self::TYPE_UNIT, $this->id );
 			self::kill( self::TYPE_UNIT_MODULES, $this->id );
@@ -554,9 +550,17 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_id_by_name( $slug ) {
-			$post = get_posts( array( 'post_type'=>array('unit'), 'name'=>$slug, 'post_per_page'=>1 ) );
-			$post = ! empty($post) && is_array( $post ) ? array_pop( $post ) : false;
-			return ! empty( $post ) ? $post->ID : false;
+			$post	 = get_posts(
+			array(
+				'post_type'		 => array( 'unit' ),
+				'name'			 => $slug,
+				'post_per_page'	 => 1,
+				'post_status'	 => (cp_can_see_unit_draft() ? 'any' : 'publish')
+			)
+			);
+			//var_dump( $post );
+			$post	 = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : false;
+			return !empty( $post ) ? $post->ID : false;
 		}
 
 		function get_parent_course_id( $unit_id = '' ) {
@@ -564,10 +568,10 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( $unit_id == '' ) {
 
 				// If its already loaded from cache, return that value.
-				if( isset( $this->details ) && isset( $this->details->course_id ) ) {
+				if ( isset( $this->details ) && isset( $this->details->course_id ) ) {
 					return $this->details->course_id;
 				}
-				
+
 				$unit_id = $this->id;
 			}
 
@@ -633,7 +637,7 @@ if ( !class_exists( 'Unit' ) ) {
 			 *
 			 * @since 1.2.2
 			 */
-			if( apply_filters( 'coursepress_unit_cancel_duplicate', false, $unit_id ) ) {
+			if ( apply_filters( 'coursepress_unit_cancel_duplicate', false, $unit_id ) ) {
 
 				/**
 				 * Perform actions if the duplication was cancelled.
@@ -663,14 +667,14 @@ if ( !class_exists( 'Unit' ) ) {
 			 * Duplicate unit post meta
 			 */
 
-			if( ! empty( $new_unit_id ) ) {
+			if ( !empty( $new_unit_id ) ) {
 				$post_metas = get_post_meta( $old_unit_id );
 				foreach ( $post_metas as $key => $meta_value ) {
-					$value = array_pop( $meta_value );
-					$value = maybe_unserialize( $value );
+					$value	 = array_pop( $meta_value );
+					$value	 = maybe_unserialize( $value );
 					update_post_meta( $new_unit_id, $key, $value );
 				}
-			}	
+			}
 
 			update_post_meta( $new_unit_id, 'course_id', $course_id );
 
