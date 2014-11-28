@@ -16,6 +16,7 @@ CHANGE LOG
 * Resolved issue where users saving their own profiles remove instructor capabilities
 * Resolved issue with MarketPress sale price (not being saved)
 * Resolved issue with primary blog on multisite
+* Resolved issue with pagination class (not displaying more than 10 pages)
 * Other code improvements
 
 = 1.2.2.9 =

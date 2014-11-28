@@ -2,130 +2,129 @@
 
 class page_break_module extends Unit_Module {
 
-    var $order = 12;
-    var $name = 'page_break_module';
-    var $label = 'Page Break';
-    var $description = '';
-    var $front_save = false;
-    var $response_type = '';
-    var $visible = false;
+	var $order			 = 12;
+	var $name			 = 'page_break_module';
+	var $label			 = 'Page Break';
+	var $description		 = '';
+	var $front_save		 = false;
+	var $response_type	 = '';
+	var $visible			 = false;
 
-    function __construct() {
-        $this->on_create();
-    }
+	function __construct() {
+		$this->on_create();
+	}
 
-    function page_break_module() {
-        $this->__construct();
-    }
+	function page_break_module() {
+		$this->__construct();
+	}
 
-    function front_main( $data ) {
-        ?>
-        <div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
-            <!--BREAK HERE-->
-        </div>
-        <?php
-    }
+	function front_main( $data ) {
+		?>
+		<div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
+			<!--BREAK HERE-->
+		</div>
+		<?php
+	}
 
-    function admin_main( $data ) {
-        ?>
+	function admin_main( $data ) {
+		?>
 
-        <div class="<?php if ( empty($data) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty($data) ) { ?>style="display:none;"<?php } ?>>
+		<div class="<?php if ( empty( $data ) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty( $data ) ) { ?>style="display:none;"<?php } ?>>
 
-            <h3 class="module-title sidebar-name notmovable">
-                <span class="h3-label">
+			<h3 class="module-title sidebar-name notmovable">
+				<span class="h3-label">
 
-                    <span class="h3-label-left"><?php echo ( isset($data->post_title) && $data->post_title !== '' ? $data->post_title : $this->label ); ?></span>
-                    <span class="page-break-dashed"></span>
-                    <span class="page-break-right-fix">...</span>
-                    <span class="h3-label-right"><?php echo $this->label; ?></span>
-                    <?php
-                    parent::get_module_move_link();
-                    ?>
-                </span>
-            </h3>
+					<span class="h3-label-left"><?php echo ( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : $this->label ); ?></span>
+					<span class="page-break-dashed"></span>
+					<span class="page-break-right-fix">...</span>
+					<span class="h3-label-right"><?php echo $this->label; ?></span>
+					<?php
+					parent::get_module_move_link();
+					?>
+				</span>
+			</h3>
 
-            <div class="editor_in_place" style="display:none;">
+			<div class="editor_in_place">
+				<?php
+				$editor_name	 = $this->name . "_content[]";
+				$editor_id		 = ( esc_attr( isset( $data->ID ) ? 'editor_' . $data->ID : rand( 1, 9999 )  ) );
+				$editor_content	 = htmlspecialchars_decode( ( isset( $data->post_content ) ? $data->post_content : '' ) );
 
-                <?php
-				
-				$editor_name = $this->name . "_content[]";
-				$editor_id = ( esc_attr(isset($data->ID) ? 'editor_' . $data->ID : rand(1, 9999) ) );
-				$editor_content = htmlspecialchars_decode(( isset($data->post_content) ? $data->post_content : ''));
-				
-                $args = array(
-                    "textarea_name" => $editor_name,
-                    "textarea_rows" => 5,
-                    "quicktags" => true,
-                    "teeny" => false
-                );
+				$args = array(
+					"textarea_name"	 => $editor_name,
+					"textarea_rows"	 => 5,
+					"quicktags"		 => true,
+					"teeny"			 => false,
+					"editor_class"	 => 'cp-editor cp-unit-element',
+				);
 
-				$args = apply_filters('coursepress_element_editor_args', $args, $editor_name, $editor_id);
-				
-                wp_editor( $editor_content, $editor_id, $args);
-                ?>
-            </div>
+				$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
 
-            <!--<div class="module-content">-->
-            <input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset($data->module_order) ? $data->module_order : 999 ); ?>" />
-            <input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
-            <input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
+				wp_editor( $editor_content, $editor_id, $args );
+				?>
+			</div>
 
-            <input type="hidden" class="element_id" value="<?php echo esc_attr(isset($data->ID) ? $data->ID : '' ); ?>" />
+			<!--<div class="module-content">-->
+			<input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset( $data->module_order ) ? $data->module_order : 999 ); ?>" />
+			<input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
+			<input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : ''  ); ?>" />
 
-            <input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr(isset($data->post_title) ? $data->post_title : '' ); ?>" />
+			<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : ''  ); ?>" />
 
-                                                                                                        <!--<p><?php echo $this->description; ?></p>-->
-            <!--</div>-->
-            <?php
-            parent::get_module_delete_link();
-            ?>
-        </div>
+			<input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : ''  ); ?>" />
 
-        <?php
-    }
+		                                                                                                        <!--<p><?php echo $this->description; ?></p>-->
+			<!--</div>-->
+			<?php
+			parent::get_module_delete_link();
+			?>
+		</div>
 
-    function on_create() {
-        $this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order);
-        $this->description = __('Breaks the Unit into more pages', 'cp');
-        $this->label = __('Page Break', 'cp');
-        $this->save_module_data();
-        parent::additional_module_actions();
-    }
+		<?php
+	}
 
-    function save_module_data() {
-        global $wpdb, $last_inserted_unit_id, $save_elements;
+	function on_create() {
+		$this->order		 = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
+		$this->description	 = __( 'Breaks the Unit into more pages', 'cp' );
+		$this->label		 = __( 'Page Break', 'cp' );
+		$this->save_module_data();
+		parent::additional_module_actions();
+	}
 
-        if ( isset($_POST['module_type']) && ( $save_elements == true ) ) {
+	function save_module_data() {
+		global $wpdb, $last_inserted_unit_id, $save_elements;
 
-            foreach ( array_keys($_POST['module_type']) as $module_type => $module_value ) {
+		if ( isset( $_POST[ 'module_type' ] ) && ( $save_elements == true ) ) {
 
-                if ( $module_value == $this->name ) {
-                    $data = new stdClass();
-                    $data->ID = '';
-                    $data->unit_id = '';
-                    $data->title = '';
-                    $data->excerpt = '';
-                    $data->content = '';
-                    $data->metas = array();
-                    $data->metas['module_type'] = $this->name;
-                    $data->post_type = 'module';
+			foreach ( array_keys( $_POST[ 'module_type' ] ) as $module_type => $module_value ) {
 
-                    if ( isset($_POST[$this->name . '_id']) ) {
-                        foreach ( $_POST[$this->name . '_id'] as $key => $value ) {
-                            $data->ID = $_POST[$this->name . '_id'][$key];
-                            $data->unit_id = ( ( isset($_POST['unit_id']) and ( isset($_POST['unit']) && $_POST['unit'] != '' ) ) ? $_POST['unit_id'] : $last_inserted_unit_id );
-                            $data->title = $_POST[$this->name . '_title'][$key];
-                            $data->content = ''; //$_POST[$this->name . '_content'][$key];
-                            $data->metas['module_order'] = $_POST[$this->name . '_module_order'][$key];
-                            parent::update_module($data);
-                        }
-                    }
-                }
-            }
-        }
-    }
+				if ( $module_value == $this->name ) {
+					$data						 = new stdClass();
+					$data->ID					 = '';
+					$data->unit_id				 = '';
+					$data->title				 = '';
+					$data->excerpt				 = '';
+					$data->content				 = '';
+					$data->metas				 = array();
+					$data->metas[ 'module_type' ]	 = $this->name;
+					$data->post_type			 = 'module';
+
+					if ( isset( $_POST[ $this->name . '_id' ] ) ) {
+						foreach ( $_POST[ $this->name . '_id' ] as $key => $value ) {
+							$data->ID					 = $_POST[ $this->name . '_id' ][ $key ];
+							$data->unit_id				 = ( ( isset( $_POST[ 'unit_id' ] ) and ( isset( $_POST[ 'unit' ] ) && $_POST[ 'unit' ] != '' ) ) ? $_POST[ 'unit_id' ] : $last_inserted_unit_id );
+							$data->title				 = $_POST[ $this->name . '_title' ][ $key ];
+							$data->content				 = ''; //$_POST[$this->name . '_content'][$key];
+							$data->metas[ 'module_order' ] = $_POST[ $this->name . '_module_order' ][ $key ];
+							parent::update_module( $data );
+						}
+					}
+				}
+			}
+		}
+	}
 
 }
 
-cp_register_module('page_break_module', 'page_break_module', 'invisible');
+cp_register_module( 'page_break_module', 'page_break_module', 'invisible' );
 ?>
