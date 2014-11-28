@@ -169,14 +169,14 @@ class CoursePress_Pagination {
                     $this->pagination .= "<a class=\"first-page disabled\">&laquo;</a>&nbsp;<a class=\"prev-page disabled\">&lsaquo;</a>&nbsp;"; //<span class=\"disabled\">&lsaquo;</span>";
             }
             //pages	
-            if ( $lastpage < 7 + ( $this->adjacents * 2 ) ) {//not enough pages to bother breaking it up
+            //if ( $lastpage < 7 + ( $this->adjacents * 2 ) ) {//not enough pages to bother breaking it up
                 for ( $counter = 1; $counter <= $lastpage; $counter++ ) {
                     /* if ( $counter == $this->page )
                       $this->pagination .= "<span class=\"current-page\">$counter</span>";
                       else
                       $this->pagination .= "<a href=\"" . $this->get_pagenum_link( $counter ) . "\">$counter</a>"; */
                 }
-            }
+            //}
 
             $this->pagination .= '&nbsp;<span class="paging-input">' . $this->page . ' '.__('of', 'cp').' <span class="total-pages">' . $lastpage . '</span></span>&nbsp;';
 
