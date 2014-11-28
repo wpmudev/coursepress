@@ -69,7 +69,7 @@ if ( post_password_required() ) {
         'title_reply' => __( 'Answer the Question', 'cp' ),
         'title_reply_to' => __( 'Leave a Reply to %s' ),
         'cancel_reply_link' => __( 'Cancel Reply' ),
-        'label_submit' => __( 'Answer the Question' ),
+        'label_submit' => __( 'Answer the Question', 'cp' ),
         'comment_field' => '<p class="comment-form-comment"><label for="comment">' .
         '</label><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" palceholder="' . __( 'Write a response', 'cp' ) . '">' .
         '</textarea></p>',
