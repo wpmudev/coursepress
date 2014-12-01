@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.3 =
+* Updated MarketPress to 2.9.5.9
 * Added additional set of instructor capabilities for Discussions
 * CSS improvements (added better CSS styles on the feature course buttons in the CoursePress theme)
 * Resolved issue with saving course categories
