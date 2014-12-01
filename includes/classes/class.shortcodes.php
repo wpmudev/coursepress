@@ -2712,9 +2712,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				}
 			}
 
+			//echo $unit_id;
+
 			$args = array(
-				'post_type'	 => 'unit',
-				'p'			 => $unit_id
+				'post_type'		 => 'unit',
+				//'post_id'		 => $unit_id,
+				'post__in' => array($unit_id),
+				'post_status'	 => cp_can_see_unit_draft() ? 'any' : 'publish',
 			);
 
 			ob_start();
@@ -2779,7 +2783,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
 
 				if ( $selected_course_order_by == 'course_order' ) {
-					$query_args[ 'meta_key' ]		 = 'course_order';
+					$query_args[ 'meta_key' ]	 = 'course_order';
 					$query_args[ 'meta_query' ]	 = array(
 						'relation' => 'OR',
 						array(
@@ -2787,10 +2791,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							'compare'	 => 'NOT EXISTS'
 						),
 					);
-					$query_args[ 'orderby' ]		 = 'meta_value';
+					$query_args[ 'orderby' ]	 = 'meta_value';
 					$query_args[ 'order' ]		 = $selected_course_order_by_type;
 				} else {
-					$query_args[ 'orderby' ]	 = $selected_course_order_by;
+					$query_args[ 'orderby' ] = $selected_course_order_by;
 					$query_args[ 'order' ]	 = $selected_course_order_by_type;
 				}
 

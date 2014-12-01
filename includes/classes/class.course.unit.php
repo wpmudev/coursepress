@@ -550,16 +550,22 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_id_by_name( $slug ) {
-			$post	 = get_posts(
-			array(
-				'post_type'		 => array( 'unit' ),
-				'name'			 => $slug,
-				'post_per_page'	 => 1,
-				'post_status'	 => (cp_can_see_unit_draft() ? 'any' : 'publish')
-			)
-			);
-			//var_dump( $post );
-			$post	 = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : false;
+
+			if ( !cp_can_see_unit_draft() ) {
+				$post = get_posts(
+				array(
+					'post_type'			 => array( 'unit' ),
+					'name'				 => $slug,
+					'post_per_page'		 => 1,
+					'post_status'		 => 'publish',
+					'suppress_filters'	 => false,
+				)
+				);
+			} else {
+				$post_id = cp_get_id_by_post_name($slug);
+				$post = get_post( $post_id );
+			}
+			
 			return !empty( $post ) ? $post->ID : false;
 		}
 

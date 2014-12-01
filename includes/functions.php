@@ -13,6 +13,12 @@
   return $url;
   } */
 
+function cp_get_id_by_post_name( $post_name ) {
+	global $wpdb;
+	$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $post_name ) );
+	return $id;
+}
+
 function cp_can_see_unit_draft() {
 	if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_unit_cap' ) ) {
 		return true;
@@ -66,7 +72,7 @@ function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $st
 	if ( !$student_id ) {
 		$student_id = get_current_user_ID();
 	}
-	$global_option = ! is_multisite();
+	$global_option = !is_multisite();
 	update_user_option( $student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num, $global_option );
 }
 
@@ -88,7 +94,7 @@ function cp_set_visited_course( $unit_id, $student_id = false ) {
 		}
 		$visited_courses = implode( ',', $visited_courses );
 	}
-	$global_option = ! is_multisite();
+	$global_option = !is_multisite();
 	update_user_option( $student_id, 'visited_course_units_' . $course_id, $visited_courses, $global_option );
 }
 
@@ -142,7 +148,7 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
 		$visited_pages = implode( ',', $visited_pages );
 	}
 
-	$global_option = ! is_multisite();
+	$global_option = !is_multisite();
 	update_user_option( $student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages, $global_option );
 	cp_set_visited_course( $unit_id, $student_id );
 }
@@ -829,8 +835,8 @@ function cp_get_number_of_instructors() {
 		'who'			 => ''
 	);
 
-	if( is_multisite() ) {
-		$args['blog_id'] = get_current_blog_id();
+	if ( is_multisite() ) {
+		$args[ 'blog_id' ] = get_current_blog_id();
 	}
 
 	$instructors = get_users( $args );
@@ -863,9 +869,9 @@ function cp_instructors_avatars( $course_id, $remove_buttons = true, $just_count
 		'who'			 => ''
 	);
 
-	if( is_multisite() ) {
-		$args['blog_id'] = get_current_blog_id();
-		$args['meta_key'] = $wpdb->prefix . 'course_' . $course_id;
+	if ( is_multisite() ) {
+		$args[ 'blog_id' ]	 = get_current_blog_id();
+		$args[ 'meta_key' ]	 = $wpdb->prefix . 'course_' . $course_id;
 	}
 
 	$instructors = get_users( $args );
@@ -909,8 +915,8 @@ function cp_instructors_avatars_array( $args = array() ) {
 		'who'			 => ''
 	);
 
-	if( is_multisite() ) {
-		$args['blog_id'] = get_current_blog_id();
+	if ( is_multisite() ) {
+		$args[ 'blog_id' ] = get_current_blog_id();
 	}
 
 	$instructors = get_users( $args );
@@ -969,8 +975,8 @@ function cp_students_drop_down() {
 		'who'			 => ''
 	);
 
-	if( is_multisite() ) {
-		$args['blog_id'] = get_current_blog_id();
+	if ( is_multisite() ) {
+		$args[ 'blog_id' ] = get_current_blog_id();
 	}
 
 	$students = get_users( $args );
@@ -1012,8 +1018,8 @@ function cp_instructors_drop_down( $class = '' ) {
 		'who'			 => ''
 	);
 
-	if( is_multisite() ) {
-		$args['blog_id'] = get_current_blog_id();
+	if ( is_multisite() ) {
+		$args[ 'blog_id' ] = get_current_blog_id();
 	}
 
 	$instructors = get_users( $args );
@@ -1524,20 +1530,20 @@ function cp_default_args( $pairs, $atts, $shortcode = '' ) {
 if ( !function_exists( 'cp_length' ) ) {
 
 	function cp_length( $text, $excerpt_length ) {
-		/*$text			 = strip_shortcodes( $text );
-		//$text = apply_filters( 'the_content', $text );
-		$excerpt_more	 = '...';
-		$text			 = str_replace( ']]>', ']]&gt;', $text );
-		$text			 = strip_tags( $text );
-		$words			 = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
-		if ( count( $words ) > $excerpt_length ) {
-			array_pop( $words );
-			$text	 = implode( ' ', $words );
-			$text	 = $text . $excerpt_more;
-		} else {
-			$text = implode( ' ', $words );
-		}*/
-		$text = truncateHtml($text, $excerpt_length);
+		/* $text			 = strip_shortcodes( $text );
+		  //$text = apply_filters( 'the_content', $text );
+		  $excerpt_more	 = '...';
+		  $text			 = str_replace( ']]>', ']]&gt;', $text );
+		  $text			 = strip_tags( $text );
+		  $words			 = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
+		  if ( count( $words ) > $excerpt_length ) {
+		  array_pop( $words );
+		  $text	 = implode( ' ', $words );
+		  $text	 = $text . $excerpt_more;
+		  } else {
+		  $text = implode( ' ', $words );
+		  } */
+		$text = truncateHtml( $text, $excerpt_length );
 		return $text;
 	}
 
