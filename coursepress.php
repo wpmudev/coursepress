@@ -5489,16 +5489,3 @@ if ( !class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
-
-add_action( 'course_step_1_fields', 'course_step_1_extra_fields', 10, 1 );
-
-function course_step_1_extra_fields( $course_id ) {
-	$course_subtitle = get_post_meta( $course_id, 'course_subtitle', true );
-	$course_subtitle = isset( $course_subtitle ) ? $course_subtitle : '';
-	?>
-	<div class="wide">
-		<label for="course_subtitle" class="required"><?php _e( 'Course Subtitle', 'cp' ); ?></label>
-		<input class="wide" type="text" name="meta_course_subtitle" id="course_subtitle" value="<?php echo esc_attr( $course_subtitle ); ?>" />
-	</div>
-	<?php
-}
