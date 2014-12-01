@@ -10,14 +10,15 @@ CHANGE LOG
 * Updated MarketPress to 2.9.5.9
 * Added additional set of instructor capabilities for Discussions
 * CSS improvements (added better CSS styles on the feature course buttons in the CoursePress theme)
+* Updated translation file
 * Resolved issue with saving course categories
-* Resolved translation issues
-* Resolved issue with showing "No elements have been added to this page yet" on the last unit page without need
+* Resolved issue with showing "No elements have been added to this page yet" on the last unit page
 * Added support for WordPress "Week Starts On" day in the course date fields and the Unit Availability field
 * Resolved issue where users saving their own profiles remove instructor capabilities
 * Resolved issue with MarketPress sale price (not being saved)
 * Resolved issue with primary blog on multisite
 * Resolved issue with pagination class (not displaying more than 10 pages)
+* Resolved issue with not showing draft units preview
 * Other code improvements
 
 = 1.2.2.9 =
