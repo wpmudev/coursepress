@@ -402,7 +402,7 @@ if ( !class_exists( 'Course' ) ) {
 							if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
 								update_post_meta( $post_id, str_replace( 'meta_', '', $key ), cp_filter_content( $value ) );
 							}
-							
+
 							if ( preg_match( "/mp_/i", $key ) ) {
 								update_post_meta( $post_id, $key, cp_filter_content( $value ) );
 							}
@@ -583,7 +583,7 @@ if ( !class_exists( 'Course' ) ) {
 					$instructor_id_i = 0;
 					if ( isset( $instructors ) ) {
 						foreach ( $instructors as $instructor_id ) {
-							$instructors[ $instructor_id_i ] = (int) $instructor_id;//make sure all are numeric values (it wasn't always the case, like for '1')
+							$instructors[ $instructor_id_i ] = (int) $instructor_id; //make sure all are numeric values (it wasn't always the case, like for '1')
 							if ( $instructor_id == 0 ) {
 								unset( $instructors[ $instructor_id_i ] ); //remove zeros and empty values
 							}
@@ -594,7 +594,7 @@ if ( !class_exists( 'Course' ) ) {
 					//re-index array
 					return array_values( $instructors );
 				}
-				
+
 				static function get_course_students_ids( $course_id = false ) {
 					if ( !$course_id ) {
 						return false;
@@ -613,14 +613,13 @@ if ( !class_exists( 'Course' ) ) {
 					);
 
 					$wp_user_search = new WP_User_Query( $args );
-					
+
 					$student_id_i = 0;
 					if ( isset( $wp_user_search ) ) {
 						foreach ( $wp_user_search->results as $student ) {
-							$students[ $student_id_i ] = (int) $student->ID;//make sure all are numeric values (it wasn't always the case, like for '1')
+							$students[ $student_id_i ] = (int) $student->ID; //make sure all are numeric values (it wasn't always the case, like for '1')
 							$student_id_i++;
 						}
-						
 					}
 					//re-index array
 					return array_values( $students );
@@ -868,6 +867,17 @@ if ( !class_exists( 'Course' ) ) {
 							update_post_meta( $new_course_id, $key, $value );
 						}
 					}
+
+					delete_post_meta( $new_course_id, 'meta_mp_product_id' );
+					delete_post_meta( $new_course_id, 'mp_product_id' );
+					delete_post_meta( $new_course_id, 'mp_sale_price' );
+					delete_post_meta( $new_course_id, 'mp_price' );
+					delete_post_meta( $new_course_id, 'mp_is_sale' );
+					delete_post_meta( $new_course_id, 'mp_sku' );
+					delete_post_meta( $new_course_id, 'auto_sku' );
+					delete_post_meta( $new_course_id, 'paid_course' );
+					delete_post_meta( $new_course_id, 'marketpress_product' );
+					
 
 					$units = $this->get_units( $old_course_id );
 

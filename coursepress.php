@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.3
+  Version: 1.2.3.1
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.3';
+		public $version = '1.2.3.1';
 
 		/**
 		 * Plugin friendly name.
@@ -1770,15 +1770,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function instructor_save_extra_profile_fields( $user_id ) {
-			
-			if ( ! current_user_can( 'edit_user', $user_id ) ) {
+
+			if ( !current_user_can( 'edit_user', $user_id ) ) {
 				return false;
 			}
 
 			if ( current_user_can( 'manage_options ' ) ) {
 
 				check_admin_referer( 'update-user_' . $user_id );
-				$global_option = ! is_multisite();
+				$global_option = !is_multisite();
 				if ( $_POST[ 'cp_instructor_capabilities' ] == 'grant' ) {
 					update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 					CoursePress::instance()->assign_instructor_capabilities( $user_id );
@@ -1789,7 +1789,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 					CoursePress::instance()->drop_instructor_capabilities( $user_id );
 				}
 			}
-
 		}
 
 		function instructor_extra_profile_fields( $user ) {
@@ -1944,8 +1943,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				//have access
 			} else {
 				if ( !current_user_can( 'manage_options' ) ) {
-					$student = new Student( get_current_user_id() );
-					if ( !$student->has_access_to_course( $course_id ) ) {
+					$student	 = new Student( get_current_user_id() );
+					$instructor	 = new Instructor( get_current_user_id() );
+					if ( !$student->has_access_to_course( $course_id ) && !$instructor->is_assigned_to_course( get_current_user_id(), $course_id ) ) {
 						wp_redirect( get_permalink( $course_id ) );
 						exit;
 					}
@@ -2557,7 +2557,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 
 					if ( $theme_file != '' ) {
-						do_shortcode( '[course_unit_single unit_id="'.$vars[ 'unit_id' ].'"]' ); //required for getting unit results
+						do_shortcode( '[course_unit_single unit_id="' . $vars[ 'unit_id' ] . '"]' ); //required for getting unit results
 						require_once( $theme_file );
 						exit;
 					} else {
@@ -2802,7 +2802,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			cp_flush_rewrite_rules();
 
 			//First install
-			first_install();
+			$installed = get_option( 'cp_first_install', false );
+			if ( $installed ) {
+				first_install();
+			}
 
 			//Welcome Screen
 			//$this->coursepress_plugin_do_activation_redirect();
@@ -3254,13 +3257,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'labels'			 => array(
 					'name'			 => __( 'Course Categories', 'cp' ),
 					'singular_name'	 => __( 'Course Category', 'cp' ),
-					'search_items'	 => __( 'Search Course Categories', 'cp'),
-					'all_items'		 => __('All Course Categories', 'cp' ),
-					'edit_item'		 => __('Edit Course Categories', 'cp' ),
-					'update_item'	 => __('Update Course Category', 'cp' ),
-					'add_new_item'	 => __('Add New Course Category', 'cp' ),
-					'new_item_name'	 => __('New Course Category Name', 'cp' ),
-					'menu_name'		 => __('Course Category', 'cp' ),
+					'search_items'	 => __( 'Search Course Categories', 'cp' ),
+					'all_items'		 => __( 'All Course Categories', 'cp' ),
+					'edit_item'		 => __( 'Edit Course Categories', 'cp' ),
+					'update_item'	 => __( 'Update Course Category', 'cp' ),
+					'add_new_item'	 => __( 'Add New Course Category', 'cp' ),
+					'new_item_name'	 => __( 'New Course Category Name', 'cp' ),
+					'menu_name'		 => __( 'Course Category', 'cp' ),
 				),
 				'hierarchical'		 => true,
 				'sort'				 => true,
@@ -4564,7 +4567,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'allowed_video_extensions'				 => wp_get_video_extensions(),
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
 					'allowed_image_extensions'				 => cp_wp_get_image_extensions(),
-					'start_of_week'						 => get_option( 'start_of_week', 0 )
+					'start_of_week'							 => get_option( 'start_of_week', 0 )
 				) );
 
 				do_action( 'coursepress_editor_options' );
@@ -5486,3 +5489,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
+
+add_action( 'course_step_1_fields', 'course_step_1_extra_fields', 10, 1 );
+
+function course_step_1_extra_fields( $course_id ) {
+	$course_subtitle = get_post_meta( $course_id, 'course_subtitle', true );
+	$course_subtitle = isset( $course_subtitle ) ? $course_subtitle : '';
+	?>
+	<div class="wide">
+		<label for="course_subtitle" class="required"><?php _e( 'Course Subtitle', 'cp' ); ?></label>
+		<input class="wide" type="text" name="meta_course_subtitle" id="course_subtitle" value="<?php echo esc_attr( $course_subtitle ); ?>" />
+	</div>
+	<?php
+}

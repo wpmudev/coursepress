@@ -36,7 +36,7 @@ if ( !class_exists( 'Instructor' ) ) {
 		static function filter_course_meta_array( $var ) {
 			global $wpdb;
 			if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ||
-			     ( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) ) ) {
+			( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) ) ) {
 				return $var;
 			}
 		}
@@ -51,9 +51,9 @@ if ( !class_exists( 'Instructor' ) ) {
 				$course_id = $course;
 
 				// Dealing with multisite nuances
-				if( is_multisite() ) {
+				if ( is_multisite() ) {
 					// Primary blog?
-					if( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
+					if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
 						$course_id = str_replace( $wpdb->base_prefix, '', $course_id );
 					} else {
 						$course_id = str_replace( $wpdb->prefix, '', $course_id );
@@ -62,7 +62,7 @@ if ( !class_exists( 'Instructor' ) ) {
 
 				$course_id = (int) str_replace( 'course_', '', $course_id );
 
-				if( ! empty ( $course_id ) ) {
+				if ( !empty( $course_id ) ) {
 					if ( $status !== 'all' ) {
 						if ( get_post_status( $course_id ) == $status ) {
 							$assigned_courses[] = $course_id;
@@ -106,6 +106,15 @@ if ( !class_exists( 'Instructor' ) ) {
 
 			$courses_count = count( Instructor::get_course_meta_keys( $user_id ) );
 			return $courses_count;
+		}
+
+		function is_assigned_to_course($course_id, $instructor_id) {
+			$instructor_course_id = get_user_option( 'course_' . $course_id, $instructor_id );
+			if ( !empty( $instructor_course_id ) ) {
+				return true;
+			}else{
+				return false;
+			}
 		}
 
 		function delete_instructor( $delete_user = true ) {

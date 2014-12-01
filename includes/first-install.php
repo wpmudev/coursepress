@@ -407,5 +407,6 @@ Donec sit amet erat eros. Mauris volutpat massa libero, pretium fermentum magna 
             $unit_element->update_module( $data );
         }
     }
+	update_option('cp_first_install', true);
 }
 ?>

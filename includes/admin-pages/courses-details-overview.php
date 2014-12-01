@@ -413,6 +413,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<input type="text" name="meta_course_language" value="<?php echo esc_attr( stripslashes( $language ) ); ?>" />
 											</div>
 
+											<?php do_action( 'course_step_1_fields', $course_id ); ?>
+
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
 												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />
@@ -759,7 +761,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												</div>
 											</div>
 
-
+											<?php do_action( 'course_step_2_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
@@ -850,6 +852,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											</div>
 
+											<?php do_action( 'course_step_3_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
@@ -922,6 +925,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<div class="clearfix"></div>								
 											</div><!--/all-course-dates-->
 
+											<?php do_action( 'course_step_4_fields', $course_id ); ?>
+											
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
@@ -973,6 +978,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												</label>										
 
 											</div>
+
+											<?php do_action( 'course_step_5_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
@@ -1198,6 +1205,9 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											endif;
 											?>
 											<?php // END ///////////////////////////////                     ?>
+
+											<?php do_action( 'course_step_6_fields', $course_id ); ?>
+
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
