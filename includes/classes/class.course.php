@@ -421,13 +421,15 @@ if ( !class_exists( 'Course' ) ) {
 									}
 								}
 							} // meta_course_category
+
 							//Add featured image
-							if ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) && isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) {
+							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) || isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) {
 
 								$course_image_width	 = get_option( 'course_image_width', 235 );
 								$course_image_height = get_option( 'course_image_height', 225 );
 
 								$upload_dir_info = wp_upload_dir();
+
 								$fl				 = trailingslashit( $upload_dir_info[ 'path' ] ) . basename( $_POST[ 'meta_featured_url' ] );
 
 								$image = wp_get_image_editor( $fl ); // Return an implementation that extends <tt>WP_Image_Editor</tt>
@@ -437,15 +439,15 @@ if ( !class_exists( 'Course' ) ) {
 									$image_size = $image->get_size();
 
 									if ( ( $image_size[ 'width' ] < $course_image_width || $image_size[ 'height' ] < $course_image_height ) || ( $image_size[ 'width' ] == $course_image_width && $image_size[ 'height' ] == $course_image_height ) ) {
-										update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $_POST[ 'meta_featured_url' ] ), true );
+										update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $_POST[ 'meta_featured_url' ] ) );
 									} else {
 										$ext			 = pathinfo( $fl, PATHINFO_EXTENSION );
 										$new_file_name	 = str_replace( '.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename( $_POST[ 'meta_featured_url' ] ) );
 										$new_file_path	 = str_replace( basename( $_POST[ 'meta_featured_url' ] ), $new_file_name, $_POST[ 'meta_featured_url' ] );
-										update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $new_file_path ), true );
+										update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $new_file_path ) );
 									}
 								} else {
-									update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $_POST[ 'meta_featured_url' ], true ), true );
+									update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $_POST[ 'meta_featured_url' ], true ) );
 								}
 							} else {
 								if ( isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] == '' ) {
@@ -454,7 +456,7 @@ if ( !class_exists( 'Course' ) ) {
 							}
 
 							//Add instructors
-							if ( isset( $_POST[ 'instructor' ] ) ) {
+							if ( 'instructor' == $key && isset( $_POST[ 'instructor' ] ) ) {
 
 								//Get last instructor ID array in order to compare with posted one
 								$old_post_meta = get_post_meta( $post_id, 'instructors', false );
