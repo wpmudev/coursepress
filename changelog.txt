@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.3.3 =
+* Fixed issue with thumbnails not displaying or getting generated for courses.
+
 = 1.2.3.2 =
 * Fixed translation file
 
