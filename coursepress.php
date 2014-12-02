@@ -1182,26 +1182,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Get post types
 			if ( $query->is_search ) {
 				if ( !is_admin() ) {
-					$post_types						 = get_post_types( array(
-						'public'	 => true,
-						'query_var'	 => true
-					/* , 'exclude_from_search' => false */
-					), 'objects' );
+					$post_types = get_post_types( array( 'exclude_from_search' => false ), 'objects' );
+
+					//var_dump($post_types);
 					$searchable_types				 = array();
 					// Add available post types
 					$remove_mp_products_from_search	 = apply_filters( 'coursepress_remove_mp_products_from_search', true );
 					if ( $post_types ) {
 						foreach ( $post_types as $type ) {
-							if ( $remove_mp_products_from_search ) {
-								if ( $type->name != 'product' ) {//remove MP products from search so we won't have duplicated posts in search
-									$searchable_types[] = $type->name;
-								}
-							} else {
-								$searchable_types[] = $type->name;
-							}
+							//if ( $remove_mp_products_from_search ) {
+							//if ( $type->name != 'product' ) {//remove MP products from search so we won't have duplicated posts in search
+							//	$searchable_types[] = $type->name;
+							//}
+							//} else {
+							$searchable_types[] = $type->name;
 						}
+						//}
 					}
-					$searchable_types[] = 'course';
+					//$searchable_types[] = 'course';
 					$query->set( 'post_type', $searchable_types );
 				}
 			}
@@ -3212,7 +3210,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			//Register Courses post type
 			$args = array(
-				'labels'			 => array(
+				'labels'				 => array(
 					'name'				 => __( 'Courses', 'cp' ),
 					'singular_name'		 => __( 'Course', 'cp' ),
 					'add_new'			 => __( 'Create New', 'cp' ),
@@ -3226,19 +3224,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
 					'view'				 => __( 'View Course', 'cp' )
 				),
-				'public'			 => false,
-				'has_archive'		 => true,
-				'show_ui'			 => false,
-				'publicly_queryable' => true,
-				'capability_type'	 => 'course',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true,
-				'rewrite'			 => array(
+				'public'				 => false,
+				'exclude_from_search'	 => false,
+				'has_archive'			 => true,
+				'show_ui'				 => false,
+				'publicly_queryable'	 => true,
+				'capability_type'		 => 'course',
+				'map_meta_cap'			 => true,
+				'query_var'				 => true,
+				'rewrite'				 => array(
 					'slug'		 => $this->get_course_slug(),
 					'with_front' => false
 				),
-				'supports'			 => array( 'thumbnail' ),
-				'taxonomies'		 => array( 'course_category' ),
+				'supports'				 => array( 'thumbnail' ),
+				'taxonomies'			 => array( 'course_category' ),
 			);
 
 			register_post_type( 'course', $args );
