@@ -209,7 +209,7 @@ jQuery( document ).ready( function( $ ) {
         var id = "unit-page-" + next_page;
         var li = '<li><a href="#' + id + '">' + next_page + '</a><span class="arrow-down"></span></li>';
         var tabs_html = jQuery( '.ui-tabs-nav' ).html();
-        var add_page_plus = '<li class="ui-state-default ui-corner-top"><a id="add_new_unit_page" class="ui-tabs-anchor">+</a></li>';
+        var add_page_plus = '<li class="ui-state-default ui-corner-top add_new_unit_page"><a id="add_new_unit_page" class="ui-tabs-anchor">+</a></li>';
 
         tabs_html = tabs_html.replace( add_page_plus, '' );
 
@@ -1338,4 +1338,120 @@ jQuery( document ).ready( function( $ ) {
             update_course_sortable_indexes();
         }
     } );
+
+    function prepare_element_to_delete( module_to_execute_id ) {
+        jQuery( '<input>' ).attr( {
+            type: 'hidden',
+            name: 'modules_to_execute[]',
+            value: module_to_execute_id
+        } ).appendTo( '#unit-add' );
+    }
+
+    function update_unit_page_order_and_numbers() {
+        jQuery( '#unit-pages li.ui-state-default' ).each( function( i, obj ) {
+            if ( $( this ).find( 'a.ui-tabs-anchor' ).attr( 'id' ) !== 'add_new_unit_page' ) {
+                $( '#unit-pages #unit-page-' + $( this ).find( 'a.ui-tabs-anchor' ).text() ).attr( 'data-weight', i + 1 );
+                $( this ).find( 'a.ui-tabs-anchor' ).text( i + 1 );
+            }
+        } );
+
+        var $wrapper = $( '#unit-pages' ),
+            $unit_pages = $wrapper.find( '.unit-page-holder' );
+        [ ].sort.call( $unit_pages, function( a, b ) {
+            return +$( a ).attr( 'data-weight' ) - +$( b ).attr( 'data-weight' );
+        } );
+        $unit_pages.each( function() {
+            $wrapper.append( this );
+        } );
+
+        var unit_pages = jQuery( "#unit-pages .ui-tabs-nav li" ).size() - 2;
+        var current_unit_page = 1;
+
+        jQuery( '.unit-page-holder' ).each( function( i, obj ) {
+            if ( current_unit_page == 1 ) {
+                if ( $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).length ) {
+                    //we have page break on the first page, now we have to remove it
+                    var module_to_delete_id = $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).find( '.unit_element_id' ).val();
+                    prepare_element_to_delete( module_to_delete_id );
+                } else {
+                    //do nothing
+                }
+            } else {
+                if ( $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).length ) {
+                    //do nothing
+                } else {
+                    //we don't have page break on other pages and have to add it
+                    var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
+                    var cloned = jQuery( '.draggable-module-holder-page_break_module' ).html();
+                    cloned = '<div class="module-holder-page_break_module module-holder-title" id="' + rand_id + '_temp">' + cloned + '</div>';
+
+                    jQuery( '#' + $( this ).attr( 'id' ) + ' .modules_accordion' ).prepend( cloned );
+                    jQuery.post(
+                        'admin-ajax.php', {
+                            action: 'create_unit_element_draft',
+                            unit_id: jQuery( '#unit_id' ).val(),
+                            temp_unit_id: rand_id,
+                        }
+                    ).done( function( data, status ) {
+                        jQuery( '#' + rand_id + '_temp' ).find( '.unit_element_id' ).val( data );
+                        jQuery( '#' + rand_id + '_temp' ).find( '.element_id' ).val( data );
+                        //update_sortable_module_indexes();
+                    } );
+                }
+            }
+
+            update_sortable_module_indexes_page_sort( $( this ).attr( 'id' ), current_unit_page );
+            current_unit_page++;
+        } );
+        //update_sortable_module_indexes();
+    }
+
+    function update_sortable_module_indexes_page_sort( page_id, page_num ) {
+
+        jQuery( '#' + page_id + ' .module_order' ).each( function( i, obj ) {
+            jQuery( this ).val( page_num * ( i + 1 ) );
+        } );
+
+        jQuery( "input[name*='audio_module_loop']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "audio_module_loop[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+
+        jQuery( "input[name*='audio_module_autoplay']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "audio_module_autoplay[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+
+        jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+        jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+        jQuery( "input[name*='checkbox_answers']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+        jQuery( "input[name*='checkbox_check']" ).each( function( i, obj ) {
+            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        } );
+
+        var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
+        var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
+
+        if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        } else {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        }
+    }
+
+
+    /*jQuery( "#unit-pages ul" ).sortable( {
+        placeholder: "unit-page-placeholder",
+        //items: "",
+        items: "li:not( .add_new_unit_page )",
+        stop: function( event, ui ) {
+            update_unit_page_order_and_numbers();
+            update_sortable_module_indexes_page_sort();
+        }
+    } );*/
+    
 } );
