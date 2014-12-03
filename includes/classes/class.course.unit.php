@@ -566,7 +566,7 @@ if ( !class_exists( 'Unit' ) ) {
 				$post = get_post( $post_id );
 			}
 
-			$post	 = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : false;
+			$post	 = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : $post;
 
 			return !empty( $post ) ? $post->ID : false;
 		}
