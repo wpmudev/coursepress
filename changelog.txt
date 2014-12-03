@@ -9,6 +9,7 @@ CHANGE LOG
 = 1.2.3.3 =
 * Fixed issue with thumbnails not displaying or getting generated for courses.
 * Fixed issues with WordPress search when CoursePress plugin is active
+* Fixed oEmbeds when pasting links to supported websites in Unit Elements.
 
 = 1.2.3.2 =
 * Fixed translation file
