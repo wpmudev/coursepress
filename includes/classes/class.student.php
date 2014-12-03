@@ -286,8 +286,8 @@ if ( !class_exists( 'Student' ) ) {
 		}
 
 		function has_access_to_course( $course_id = '', $user_id = '' ) {
-//            global $wpdb;
-//
+            global $wpdb;
+
 //            if ( empty( $user_id ) ) {
 //                $user_id = get_current_user_id();
 //            }

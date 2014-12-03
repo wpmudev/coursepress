@@ -292,7 +292,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
                                         ?>
                                         <li><a href="#unit-page-<?php echo $i; ?>"><?php echo $i; ?></a><span class="arrow-down"></span></li>
                                     <?php } ?>
-                                    <li class="ui-state-default ui-corner-top"><a id="add_new_unit_page" class="ui-tabs-anchor">+</a></li>
+                                    <li class="ui-state-default ui-corner-top add_new_unit_page"><a id="add_new_unit_page" class="ui-tabs-anchor">+</a></li>
                                 </ul>
 
                                 <?php
@@ -307,7 +307,7 @@ $preview_redirect = isset($_REQUEST['preview_redirect']) ? $_REQUEST['preview_re
 
                                 for ( $i = 1; $i <= $unit_pages; $i++ ) {
                                     ?>
-                                    <div id="unit-page-<?php echo $i; ?>">
+                                    <div id="unit-page-<?php echo $i; ?>" class='unit-page-holder'>
                                         <div class='course-details elements-holder'>
                                             <div class="unit_page_title">
                                                 <label><?php _e('Page Label', 'cp'); ?>

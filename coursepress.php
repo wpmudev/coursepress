@@ -1940,14 +1940,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( $this->is_preview( $unit_id ) ) {
 				//have access
 			} else {
-				if ( !current_user_can( 'manage_options' ) ) {
 					$student	 = new Student( get_current_user_id() );
 					$instructor	 = new Instructor( get_current_user_id() );
-					if ( !$student->has_access_to_course( $course_id ) && !$instructor->is_assigned_to_course( get_current_user_id(), $course_id ) ) {
+					$has_access = false;
+					
+					if(current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( get_current_user_id(), $course_id )){
+						$has_access = true;
+					}
+					
+					if ( !$has_access) {
 						wp_redirect( get_permalink( $course_id ) );
 						exit;
 					}
-				}
 			}
 
 			return true;
