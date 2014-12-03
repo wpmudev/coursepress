@@ -87,15 +87,19 @@ if ( !class_exists( 'CP_Plugin_Activation' ) ) {
 		 * @see CP_Plugin_Activation::init()
 		 */
 		public function __construct() {
+			
+			// Bail out if we're on Campus
+			if ( CoursePress_Capabilities::is_campus() ) {
+				return false;
+			}
+			
 			global $coursepress, $plugin_dir, $screen_base;
 
 			//Menu where plugin could be installed
 			$this->tab	 = 'cp-marketpress';
 			$this->menu	 = $screen_base . '_settings&tab=' . $this->tab;
 
-
-
-			if ( CoursePress_Capabilities::is_pro() && !CoursePress_Capabilities::is_campus() ) {
+			if ( CoursePress_Capabilities::is_pro() ) {
 				$this->plugin = array(
 					array(
 						'name'			 => 'MarketPress', // The plugin name.
