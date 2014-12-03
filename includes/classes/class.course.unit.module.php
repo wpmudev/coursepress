@@ -14,6 +14,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		var $unit_id			 = 0;
 
 		function __construct() {
+			add_filter( 'element_content_filter', array( $this, 'add_oembeds' ) );
 			$this->on_create();
 			$this->check_for_modules_to_delete();
 		}
@@ -919,6 +920,44 @@ if ( !class_exists( 'Unit_Module' ) ) {
 
 		function admin_main( $data ) {
 			
+		}
+
+		function add_oembeds( $html ) {
+
+			$matches = array();
+			$new_content = '';
+			$pre_half = '';
+			$post_half = '';
+			$p_offset = 0;
+			$p_length = 0;
+			$o_length = 0;
+
+			$content = str_replace('</p>', '</p> ', $html );
+			preg_match_all("/(?<!href|src='|\")(https?:\/\/\S*)/i", $content, $matches, PREG_OFFSET_CAPTURE );
+
+			if( ! empty( $matches[0] ) ) {
+				foreach( $matches[0] as $match ) {
+					$url = str_replace( '</p>', '', $match[0] );
+					$offset = $match[1];
+					$length = strlen( $url );
+
+					$embed = wp_oembed_get($url);
+					if( ! empty( $embed ) ) {
+						$new_offset = ( $offset - ( $p_offset + $o_length ) ) + ( $p_offset + $p_length );
+						$pre_half = substr( $content, 0, $new_offset );
+						$post_half = substr( $content, $new_offset + $length, strlen( $content ) - ( $new_offset + $length ) );
+						$content  = $pre_half . $embed . $post_half;
+						$p_offset = $offset;
+						$o_length = $length;
+						$p_length = strlen( $embed );
+					}
+
+				}
+
+			}
+
+			return $content;
+
 		}
 
 	}
