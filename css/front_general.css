@@ -1222,7 +1222,17 @@ span.non_assessed_element{
 .course-list-current,
 .course-list-completed,
 .course-list-managed {
+}
 
+div.dashboard-completed-courses-list,
+div.dashboard-current-courses-list,
+div.dashboard-random-courses-list,
+div.dashboard-managed-courses-list {
+    clear:both;
+}
+
+.enroll-box button, .course-item button, .course-list-item button {
+    min-height: 30px;
 }
 
 h1.title.managed-courses-title,
