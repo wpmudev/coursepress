@@ -2025,7 +2025,7 @@ label.bold-label{
     display: block;
     float: left;
     clear: right;
-    
+
 }
 
 .course-section div.wide.narrow .instructors-info {
@@ -2838,4 +2838,14 @@ label.minimum_grade_required_label{
     font-size: 12px;
     font-weight: normal;
     margin-bottom: 15px;
+}
+
+.editor_in_place textarea{
+    width: 100%;
+    margin: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    height: 382px;
+    border: 0;
+    outline: 0;
 }

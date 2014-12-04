@@ -98,7 +98,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				 * Multiple editors on the same page is causing conflicts with Visual/Text tab selection
 				 * so we need to disabled it.  
 				 */
-				$this->editor_options['quicktags'] = false;
+				$this->editor_options['quicktags'] = true;
 
 			}
 		}
