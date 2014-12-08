@@ -170,7 +170,7 @@ $columns			 = $templates->get_columns();
 						<div id="titlediv">
 							<div id="titlewrap">
 								<label class="" id="title-prompt-text" for="title"></label>
-								<input type="text" name="template_title" size="30" value="" id="title" placeholder="<?php _e( 'Certificate Template Title', 'cp' ); ?>" autocomplete="off">
+								<input type="text" name="template_title" size="30" value="<?php echo esc_attr(isset($template->details->post_title) ? $template->details->post_title : '');?>" id="title" placeholder="<?php _e( 'Certificate Template Title', 'cp' ); ?>" autocomplete="off">
 							</div>
 						</div>
 

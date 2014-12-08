@@ -58,45 +58,50 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_document_sizes() {
+			$document_template_size = isset( $this->template_metas[ 'document_template_size' ][ 0 ] ) ? $this->template_metas[ 'document_template_size' ][ 0 ] : 'A4';
 			?>
 			<label><?php _e( 'Certificate Paper Size', 'cp' ); ?></label>
 			<select name="document_template_size_post_meta">
-				<option value="A4" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A4', true ); ?>><?php echo esc_attr_e( 'A4 (210 × 297)', 'cp' ); ?></option>
-				<option value="A5" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A5', true ); ?>><?php echo esc_attr_e( 'A5 (148 × 210)', 'cp' ); ?></option>
-				<option value="A6" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A6', true ); ?>><?php echo esc_attr_e( 'A6 (105 × 148)', 'cp' ); ?></option>
-				<option value="A7" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A7', true ); ?>><?php echo esc_attr_e( 'A7 (74 × 105)', 'cp' ); ?></option>
-				<option value="A8" <?php selected( isset( $this->template_metas[ 'document_template_size' ] ) ? $this->template_metas[ 'document_template_size' ] : 'A4', 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', 'cp' ); ?></option>
+				<option value="A4" <?php selected( $document_template_size, 'A4', true ); ?>><?php echo esc_attr_e( 'A4 (210 × 297)', 'cp' ); ?></option>
+				<option value="A5" <?php selected( $document_template_size, 'A5', true ); ?>><?php echo esc_attr_e( 'A5 (148 × 210)', 'cp' ); ?></option>
+				<option value="A6" <?php selected( $document_template_size, 'A6', true ); ?>><?php echo esc_attr_e( 'A6 (105 × 148)', 'cp' ); ?></option>
+				<option value="A7" <?php selected( $document_template_size, 'A7', true ); ?>><?php echo esc_attr_e( 'A7 (74 × 105)', 'cp' ); ?></option>
+				<option value="A8" <?php selected( $document_template_size, 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', 'cp' ); ?></option>
 				<?php do_action( 'coursepress_additional_template_document_size' ); ?>
 			</select>
 			<?php
 		}
 
 		function get_document_orientation() {
+			$document_template_orientation = isset( $this->template_metas[ 'document_template_orientation' ][ 0 ] ) ? $this->template_metas[ 'document_template_orientation' ][ 0 ] : 'P';
 			?>
 			<label><?php _e( 'Orientation', 'cp' ); ?></label>
 			<select name="document_template_orientation_post_meta">
-				<option value="P" <?php selected( isset( $this->template_metas[ 'document_template_orientation' ] ) ? $this->template_metas[ 'document_template_orientation' ] : 'P', 'P', true ); ?>><?php echo esc_attr_e( 'Portrait', 'cp' ); ?></option>
-				<option value="L" <?php selected( isset( $this->template_metas[ 'document_template_orientation' ] ) ? $this->template_metas[ 'document_template_orientation' ] : 'P', 'L', true ); ?>><?php echo esc_attr_e( 'Landscape', 'cp' ); ?></option>
+				<option value="P" <?php selected( $document_template_orientation, 'P', true ); ?>><?php echo esc_attr_e( 'Portrait', 'cp' ); ?></option>
+				<option value="L" <?php selected( $document_template_orientation, 'L', true ); ?>><?php echo esc_attr_e( 'Landscape', 'cp' ); ?></option>
 			</select>
 			<?php
 		}
 
-		function get_document_margins($top = 10, $right = 10, $left = 10) {
+		function get_document_margins( $top = 10, $right = 10, $left = 10 ) {
+			$top_margin		 = isset( $this->template_metas[ 'document_template_top_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_top_margin' ][ 0 ] : $top;
+			$right_margin	 = isset( $this->template_metas[ 'document_template_right_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_right_margin' ][ 0 ] : $right;
+			$left_margin	 = isset( $this->template_metas[ 'document_template_left_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_left_margin' ][ 0 ] : $left;
 			?>
 			<label><?php _e( 'Document Margins', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_top_margin' ] ) ? $this->template_metas[ 'document_template_top_margin' ] : $top  ); ?>" />
-			<?php _e( 'Right', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_right_margin' ] ) ? $this->template_metas[ 'document_template_right_margin' ] : $right  ); ?>" />
-			<?php _e( 'Left', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ 'document_template_left_margin' ] ) ? $this->template_metas[ 'document_template_left_margin' ] : $left  ); ?>" />
+			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( $top_margin ); ?>" />
+			<?php _e( 'Right', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( $right_margin ); ?>" />
+			<?php _e( 'Left', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( $left_margin ); ?>" />
 			</p>
 			<?php
 		}
 
 		function get_full_background_image() {
+			$template_background_image = (isset( $this->template_metas[ 'document_template_background_image' ][ 0 ] ) && $this->template_metas[ 'document_template_background_image' ][ 0 ] !== '' ? $this->template_metas[ 'document_template_background_image' ][ 0 ] : '' );
 			?>
 			<label><?php _e( 'Certificate Background Image', 'cp' ); ?></label>
-			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( (isset( $this->template_metas[ 'document_template_background_image' ] ) && $this->template_metas[ 'document_template_background_image' ] !== '' ? $this->template_metas[ 'document_template_background_image' ] : '' ) ); ?>" />
+			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( $template_background_image ); ?>" />
 			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>" />
-
 			<?php
 		}
 
@@ -112,10 +117,12 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_element_margins() {
+			$top_padding	 = isset( $this->template_metas[ $this->element_name . '_top_padding' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][ 0 ] : '0';
+			$bottom_padding	 = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] : '0';
 			?>
 			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_top_padding' ] ) ? $this->template_metas[ $this->element_name . '_top_padding' ] : '0'  ); ?>" />
-			<?php _e( 'Bottom', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_bottom_padding' ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ] : '0'  ); ?>" />
+			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" />
+			<?php _e( 'Bottom', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( $bottom_padding ); ?>" />
 			</p>
 			<?php
 		}
@@ -123,15 +130,19 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_font_style() {
 			?>
 			<label><?php _e( 'Font Style', 'cp' ); ?></label>
+
 			<select name="<?php echo $this->element_name; ?>_font_style_post_meta">
-				<option value="" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', '', true ); ?>><?php echo _e( 'Regular', 'cp' ); ?></option>
-				<option value="B" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'B', true ); ?>><?php echo _e( 'Bold', 'cp' ); ?></option>
-				<option value="BI" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'BI', true ); ?>><?php echo _e( 'Bold + Italic', 'cp' ); ?></option>
-				<option value="BU" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'BU', true ); ?>><?php echo _e( 'Bold + Underline', 'cp' ); ?></option>
-				<option value="BIU" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'BIU', true ); ?>><?php echo _e( 'Bold + Underline + Italic', 'cp' ); ?></option>
-				<option value="I" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'I', true ); ?>><?php echo _e( 'Italic', 'cp' ); ?></option>
-				<option value="IU" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'IU', true ); ?>><?php echo _e( 'Italic + Underline', 'cp' ); ?></option>
-				<option value="U" <?php selected( isset( $this->template_metas[ $this->element_name . '_font_style' ] ) ? $this->template_metas[ $this->element_name . '_font_style' ] : '', 'U', true ); ?>><?php echo _e( 'Underline', 'cp' ); ?></option>
+				<?php
+				$font_style = isset( $this->template_metas[ $this->element_name . '_font_style' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_font_style' ][ 0 ] : '';
+				?>
+				<option value="" <?php selected( $font_style, '', true ); ?>><?php echo _e( 'Regular', 'cp' ); ?></option>
+				<option value="B" <?php selected( $font_style, 'B', true ); ?>><?php echo _e( 'Bold', 'cp' ); ?></option>
+				<option value="BI" <?php selected( $font_style, 'BI', true ); ?>><?php echo _e( 'Bold + Italic', 'cp' ); ?></option>
+				<option value="BU" <?php selected( $font_style, 'BU', true ); ?>><?php echo _e( 'Bold + Underline', 'cp' ); ?></option>
+				<option value="BIU" <?php selected( $font_style, 'BIU', true ); ?>><?php echo _e( 'Bold + Underline + Italic', 'cp' ); ?></option>
+				<option value="I" <?php selected( $font_style, 'I', true ); ?>><?php echo _e( 'Italic', 'cp' ); ?></option>
+				<option value="IU" <?php selected( $font_style, 'IU', true ); ?>><?php echo _e( 'Italic + Underline', 'cp' ); ?></option>
+				<option value="U" <?php selected( $font_style, 'U', true ); ?>><?php echo _e( 'Underline', 'cp' ); ?></option>
 			</select>
 			<?php
 		}
@@ -153,36 +164,39 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function tcpdf_get_fonts( $prefix = 'document', $default_font = 'helvetica' ) {
 			?>
 			<label><?php _e( 'Font', 'cp' ); ?></label>
-			<select name="document_font_post_meta">
-				<option value='aealarabiya' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
-				<option value='aefurat' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp' ); ?></option>
-				<option value='cid0cs' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'cp' ); ?></option>
-				<option value='cid0jp' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'cp' ); ?></option>
-				<option value='cid0kr' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'cp' ); ?></option>
-				<option value='courier <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'courier', true ); ?>'><?php _e( 'Courier', 'cp' ); ?></option>
-				<option value='dejavusans' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'cp' ); ?></option>
-				<option value='dejavusanscondensed' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'cp' ); ?></option>
-				<option value='dejavusansextralight' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'cp' ); ?></option>
-				<option value='dejavusansmono' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'cp' ); ?></option>
-				<option value='dejavuserif' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'cp' ); ?></option>
-				<option value='dejavuserifcondensed' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'cp' ); ?></option>
-				<option value='freemono' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'cp' ); ?></option>
-				<option value='freesans' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'cp' ); ?></option>
-				<option value='freeserif' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'cp' ); ?></option>
-				<option value='helvetica' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'cp' ); ?></option>
-				<option value='hysmyeongjostdmedium' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'cp' ); ?></option>
-				<option value='kozgopromedium' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'cp' ); ?></option>
-				<option value='kozminproregular' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'cp' ); ?></option>
-				<option value='msungstdlight' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'cp' ); ?></option>
-				<option value='pdfacourier' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'cp' ); ?></option>
-				<option value='pdfahelvetica' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'cp' ); ?></option>
-				<option value='pdfasymbol' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'cp' ); ?></option>
-				<option value='pdfatimes' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'cp' ); ?></option>
-				<option value='pdfazapfdingbats' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'cp' ); ?></option>
-				<option value='stsongstdlight' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'cp' ); ?></option>
-				<option value='symbol' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
-				<option value='times' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
-				<option value='zapfdingbats' <?php selected( isset( $this->template_metas[ $prefix . '_font' ] ) ? $this->template_metas[ $prefix . '_font' ] : $default_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
+			<select name="<?php echo $prefix; ?>_font_post_meta">
+				<?php
+				$document_font = isset( $this->template_metas[ $prefix . '_font' ][ 0 ] ) ? $this->template_metas[ $prefix . '_font' ][ 0 ] : $default_font;
+				?>
+				<option value='aealarabiya' <?php selected( $document_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
+				<option value='aefurat' <?php selected( $document_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp' ); ?></option>
+				<option value='cid0cs' <?php selected( $document_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'cp' ); ?></option>
+				<option value='cid0jp' <?php selected( $document_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'cp' ); ?></option>
+				<option value='cid0kr' <?php selected( $document_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'cp' ); ?></option>
+				<option value='courier <?php selected( $document_font, 'courier', true ); ?>'><?php _e( 'Courier', 'cp' ); ?></option>
+				<option value='dejavusans' <?php selected( $document_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'cp' ); ?></option>
+				<option value='dejavusanscondensed' <?php selected( $document_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'cp' ); ?></option>
+				<option value='dejavusansextralight' <?php selected( $document_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'cp' ); ?></option>
+				<option value='dejavusansmono' <?php selected( $document_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'cp' ); ?></option>
+				<option value='dejavuserif' <?php selected( $document_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'cp' ); ?></option>
+				<option value='dejavuserifcondensed' <?php selected( $document_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'cp' ); ?></option>
+				<option value='freemono' <?php selected( $document_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'cp' ); ?></option>
+				<option value='freesans' <?php selected( $document_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'cp' ); ?></option>
+				<option value='freeserif' <?php selected( $document_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'cp' ); ?></option>
+				<option value='helvetica' <?php selected( $document_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'cp' ); ?></option>
+				<option value='hysmyeongjostdmedium' <?php selected( $document_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'cp' ); ?></option>
+				<option value='kozgopromedium' <?php selected( $document_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'cp' ); ?></option>
+				<option value='kozminproregular' <?php selected( $document_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'cp' ); ?></option>
+				<option value='msungstdlight' <?php selected( $document_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'cp' ); ?></option>
+				<option value='pdfacourier' <?php selected( $document_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'cp' ); ?></option>
+				<option value='pdfahelvetica' <?php selected( $document_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'cp' ); ?></option>
+				<option value='pdfasymbol' <?php selected( $document_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'cp' ); ?></option>
+				<option value='pdfatimes' <?php selected( $document_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'cp' ); ?></option>
+				<option value='pdfazapfdingbats' <?php selected( $document_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'cp' ); ?></option>
+				<option value='stsongstdlight' <?php selected( $document_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'cp' ); ?></option>
+				<option value='symbol' <?php selected( $document_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
+				<option value='times' <?php selected( $document_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
+				<option value='zapfdingbats' <?php selected( $document_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
 				<?php do_action( 'coursepress_template_font' ); ?>
 			</select>
 			<?php

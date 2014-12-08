@@ -1940,18 +1940,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( $this->is_preview( $unit_id ) ) {
 				//have access
 			} else {
-					$student	 = new Student( get_current_user_id() );
-					$instructor	 = new Instructor( get_current_user_id() );
-					$has_access = false;
-					
-					if(current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( get_current_user_id(), $course_id )){
-						$has_access = true;
-					}
-					
-					if ( !$has_access) {
-						wp_redirect( get_permalink( $course_id ) );
-						exit;
-					}
+				$student	 = new Student( get_current_user_id() );
+				$instructor	 = new Instructor( get_current_user_id() );
+				$has_access	 = false;
+
+				if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( get_current_user_id(), $course_id ) ) {
+					$has_access = true;
+				}
+
+				if ( !$has_access ) {
+					wp_redirect( get_permalink( $course_id ) );
+					exit;
+				}
 			}
 
 			return true;
@@ -3198,8 +3198,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			do_action( 'coursepress_add_menu_items_after_course_discussions' );
 
 			// Certificates
-			//add_submenu_page( 'courses', __( 'Certificates', 'cp' ), __( 'Certificates', 'cp' ), 'coursepress_certificates_cap', 'certificates', array( &$this, 'coursepress_certificates_admin' ) );
-			//do_action( 'coursepress_add_menu_items_after_course_certificates' );
+			if ( defined( 'CP_EA' ) && CP_EA == TRUE) {
+				add_submenu_page( 'courses', __( 'Certificates', 'cp' ), __( 'Certificates', 'cp' ), 'coursepress_certificates_cap', 'certificates', array( &$this, 'coursepress_certificates_admin' ) );
+				do_action( 'coursepress_add_menu_items_after_course_certificates' );
+			}
 
 			add_submenu_page( 'courses', __( 'Settings', 'cp' ), __( 'Settings', 'cp' ), 'coursepress_settings_cap', $this->screen_base . '_settings', array(
 				&$this,
