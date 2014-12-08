@@ -116,6 +116,55 @@ class CoursePress_Capabilities {
 		),
 	);
 
+	/** 
+	 * Constructor
+	 *
+	 * @since 1.2.3.3 
+	 */
+	function __construct() {
+
+		add_action( 'set_user_role', array( &$this, 'assign_role_capabilities' ), 10, 3 );
+		
+	}
+	
+	/**
+	 * Assign appropriate CoursePress capabilities for roles  
+	 *
+	 * @since 1.2.3.3.
+	 *
+	 */
+	public function assign_role_capabilities( $user_id, $role, $old_role ) {
+
+		$capability_types = self::$capabilities[ 'instructor' ];
+
+		if( 'administrator' == $role ) {
+
+			$user = new WP_User( $user_id );
+
+			foreach ( $capability_types as $key => $value ) {
+				$user->add_cap( $key );
+			}
+
+		} else {
+
+			$user = new Instructor( $user_id );
+			$instructor_courses	 = $user->get_assigned_courses_ids();
+
+			// Remove all CoursePress capabilities
+			foreach ( $capability_types as $key => $value ) {
+				$user->remove_cap( $key );
+			}
+
+			// If they are an instructor, give them their appropriate capabilities back
+			if( ! empty( $instructor_courses ) ) {
+				CoursePress::instance()->assign_instructor_capabilities( $user_id );
+			}
+
+		}
+	}
+
+	
+
 	/**
 	 * Can the user create a course?  
 	 *
@@ -473,3 +522,6 @@ class CoursePress_Capabilities {
 	}
 
 }
+
+// Creating a bit of a non-instance, but doing it so that we can get to user's hooks
+$coursepress_capabilities = new CoursePress_Capabilities();
