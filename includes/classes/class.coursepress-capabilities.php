@@ -124,6 +124,7 @@ class CoursePress_Capabilities {
 	function __construct() {
 
 		add_action( 'set_user_role', array( &$this, 'assign_role_capabilities' ), 10, 3 );
+		add_action( 'wp_login', array( &$this, 'restore_capabilities_on_login'), 10, 2 );
 		
 	}
 	
@@ -139,11 +140,7 @@ class CoursePress_Capabilities {
 
 		if( 'administrator' == $role ) {
 
-			$user = new WP_User( $user_id );
-
-			foreach ( $capability_types as $key => $value ) {
-				$user->add_cap( $key );
-			}
+			self::assign_admin_capabilities( $user_id );
 
 		} else {
 
@@ -163,6 +160,35 @@ class CoursePress_Capabilities {
 		}
 	}
 
+	/**
+	 * Make sure the admin has required capabilities
+	 *
+	 * @since 1.2.3.3.
+	 *
+	 */
+	public function restore_capabilities_on_login( $user_login, $user ) {
+		if( user_can( $user, 'manage_options' ) && ! user_can( $user, 'coursepress_dashboard_cap' ) ) {
+			self::assign_admin_capabilities( $user->ID );
+		}
+	}
+
+	/**
+	 * Can the user create a course?  
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public static function assign_admin_capabilities( $user_id ) {
+
+		$user = new WP_User( $user_id );
+		$capability_types = self::$capabilities[ 'instructor' ];
+
+		foreach ( $capability_types as $key => $value ) {
+			$user->add_cap( $key );
+		}
+		
+	}
 	
 
 	/**
