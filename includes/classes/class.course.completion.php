@@ -36,6 +36,7 @@ if ( !class_exists('Course_Completion') ) {
         var $units = array();
         var $unit_index = array();
         var $completion_status = 'unfinished';
+	    var $student_id = 0;
 
         function __construct( $id = '', $output = 'OBJECT' ) {
             parent::__construct($id, $output);
@@ -265,22 +266,26 @@ if ( !class_exists('Course_Completion') ) {
         }
 
         function init_student_status( $student_id = 0 ) {
-            $student_id = !empty($student_id) ? $student_id : get_current_user_id();
+            $this->student_id = !empty($student_id) ? $student_id : get_current_user_id();
 
-            $this->init_pages_visited($student_id);
-            $this->check_pages_visited($student_id);
+            $this->init_pages_visited($this->student_id);
+            $this->check_pages_visited($this->student_id);
 
-            $this->init_mandatory_modules_answered($student_id);
-            $this->check_mandatory_modules_answered($student_id);
+            $this->init_mandatory_modules_answered($this->student_id);
+            $this->check_mandatory_modules_answered($this->student_id);
 
-            $this->init_gradable_modules_passed($student_id);
-            $this->check_gradable_modules_passed($student_id);
+            $this->init_gradable_modules_passed($this->student_id);
+            $this->check_gradable_modules_passed($this->student_id);
 			
             $this->get_remaining_mandatory_items();
 
             $this->get_total_steps();
             $this->get_completed_steps();
             $this->get_completion();
+
+	        if( $this->is_course_complete() ) {
+		        do_action( 'coursepress_set_course_completed', $this->student_id, $this->id );
+	        }
         }
 
         function unit_progress( $unit_id ) {
@@ -376,7 +381,13 @@ if ( !class_exists('Course_Completion') ) {
         function is_course_complete() {
             $course_complete = !empty($this->units) ? true : false;
             foreach ( $this->units as $unit ) {
-                $course_complete &= $this->is_unit_complete($unit->ID);
+	            $unit_completed = $this->is_unit_complete($unit->ID);
+
+	            if( $unit_completed ) {
+		            do_action( 'coursepress_set_unit_completed', $this->student_id, $this->id, $unit->ID );
+	            }
+
+                $course_complete &= $unit_completed;
             }
 
             return $course_complete;

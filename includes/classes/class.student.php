@@ -25,6 +25,10 @@ if ( !class_exists( 'Student' ) ) {
 			$this->last_name		 = get_user_meta( $ID, 'last_name', true );
 			$this->courses_number	 = Student::get_courses_number( $this->ID );
 
+			/* Add hooks to handle completion data */
+			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
+			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
+
 			/**
 			 * Perform action after a Student object is created.
 			 *
@@ -416,6 +420,51 @@ if ( !class_exists( 'Student' ) ) {
 			$student_data[ 'role' ]			 = 'subscriber';
 			$student_data[ 'first_name' ]	 = str_replace( '\\', '', $student_data[ 'first_name' ] );
 			return wp_insert_user( $student_data );
+		}
+
+		function add_course_completed_meta( $student_id, $course_id ) {
+
+			$global_option = ! is_multisite();
+
+			$course_completed_details = get_user_option( '_course_' . $course_id . '_completed', $student_id );
+
+			// If a course has not yet been marked as completed, mark it complete.
+			if( empty( $course_completed_details ) || ( ! isset( $course_completed_details['completed'] ) ) || ( isset( $course_completed_details['completed'] ) && empty ( $course_completed_details['completed'] ) ) ) {
+				$course_completed_details['completed'] = true;
+				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
+
+				// Will only fire once when a course is marked as complete, should not trigger again.
+				do_action( 'coursepress_student_course_completed', $student_id, $course_id );
+			}
+
+		}
+
+		function add_unit_completed_meta( $student_id, $course_id, $unit_id ) {
+
+			$global_option = ! is_multisite();
+
+			$course_completed_details = get_user_option( '_course_' . $course_id . '_completed', $student_id );
+
+			// If a course completion details don't exist, create it, only then add units to it.
+			if( empty( $course_completed_details ) ||  ! isset( $course_completed_details['completed'] ) ) {
+				$course_completed_details = array( 'completed' => false );
+			}
+
+			// Get units marked as completed or create the array
+			$units = isset( $course_completed_details['units'] ) ? $course_completed_details['units'] : array();
+			$unit_ids = array_keys( $units );
+
+			// Only update the user option if there is something to add
+			if( ! in_array( $unit_id, $unit_ids ) ) {
+				$units[ $unit_id ] = true;
+				$course_completed_details['units'] = $units;
+
+				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
+
+				// Will only fire once when a unit is marked as complete, should not trigger again.
+				do_action( 'coursepress_student_course_unit_completed', $student_id, $course_id, $unit_id );
+			}
+
 		}
 
 	}
