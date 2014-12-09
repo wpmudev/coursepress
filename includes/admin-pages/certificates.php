@@ -8,7 +8,7 @@ $page					 = $_GET[ 'page' ];
 
 if ( isset( $_POST[ 'add_new_template' ] ) ) {
 	if ( check_admin_referer( 'save_template' ) ) {
-		if ( current_user_can( 'coursepress_create_certificates_cap' ) || current_user_can('manage_options') ) {
+		if ( current_user_can( 'coursepress_create_certificates_cap' ) || current_user_can( 'manage_options' ) ) {
 			$templates->add_new_template();
 			$message = __( 'Certificate Template data has been successfully saved.', 'cp' );
 		} else {
@@ -17,7 +17,7 @@ if ( isset( $_POST[ 'add_new_template' ] ) ) {
 	}
 }
 
-if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && (current_user_can( 'coursepress_update_certificates_cap' )  || current_user_can('manage_options')) ) {
+if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && (current_user_can( 'coursepress_update_certificates_cap' ) || current_user_can( 'manage_options' )) ) {
 	$post_id				 = (int) $_GET[ 'ID' ];
 	$template				 = new CP_Certificate_Template( $post_id );
 	$template_elements		 = new CP_Certificate_Template_Elements( $post_id );
@@ -27,7 +27,7 @@ if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'edit' && (current_user_
 if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delete' ) {
 	if ( !isset( $_POST[ '_wpnonce' ] ) ) {
 		check_admin_referer( 'delete_' . $_GET[ 'ID' ] );
-		if ( current_user_can( 'coursepress_delete_certificates_cap' ) || current_user_can('manage_options') ) {
+		if ( current_user_can( 'coursepress_delete_certificates_cap' ) || current_user_can( 'manage_options' ) ) {
 			$template	 = new CP_Certificate_Template( (int) $_GET[ 'ID' ] );
 			$template->delete_template();
 			$message	 = __( 'Certificate Template has been successfully deleted.', 'cp' );
@@ -53,7 +53,7 @@ $wp_templates_search = new CP_Certificate_Templates_Search( $templatessearch, $p
 $fields				 = $templates->get_template_col_fields();
 $columns			 = $templates->get_columns();
 ?>
-<div class="wrap cp-wrap">
+<div class="wrap cp-wrap certificates-wrap">
     <h2><?php _e( 'Certificate Templates', 'cp' ); ?><?php if ( isset( $_GET[ 'action' ] ) && ($_GET[ 'action' ] == 'edit' || $_GET[ 'action' ] == 'add_new') ) { ?><a href="admin.php?page=<?php echo $_GET[ 'page' ]; ?>" class="add-new-h2"><?php _e( 'Back', 'cp' ); ?></a><?php } else { ?><a href="<?php echo admin_url( 'admin.php?page=' . $_GET[ 'page' ] . '&action=add_new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
 	<?php
@@ -170,15 +170,16 @@ $columns			 = $templates->get_columns();
 						<div id="titlediv">
 							<div id="titlewrap">
 								<label class="" id="title-prompt-text" for="title"></label>
-								<input type="text" name="template_title" size="30" value="<?php echo esc_attr(isset($template->details->post_title) ? $template->details->post_title : '');?>" id="title" placeholder="<?php _e( 'Certificate Template Title', 'cp' ); ?>" autocomplete="off">
+								<input type="text" name="template_title" size="30" value="<?php echo esc_attr( isset( $template->details->post_title ) ? $template->details->post_title : ''  ); ?>" id="title" placeholder="<?php _e( 'Certificate Template Title', 'cp' ); ?>" autocomplete="off">
 							</div>
 						</div>
 
 						<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw">
-							<h4><?php _e( 'Certificate', 'cp' ); ?></h4>
+							<h2><?php _e( 'Certificate Layout', 'cp' ); ?></h2>
 							<div class="rows">
-								<?php for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 15 ); $i++ ) { ?>
-									<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
+								<?php for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 20 ); $i++ ) { ?>
+											<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><!--<span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span>--><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
+										<i class="fa fa-arrows-v cp-move-icon"></i>
 										<?php
 										if ( isset( $post_id ) ) {
 											$rows_elements = get_post_meta( $post_id, 'rows_' . $i, true );
@@ -204,7 +205,6 @@ $columns			 = $templates->get_columns();
 										?>
 									</ul>
 								<?php } ?>
-
 							</div>
 							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'coursepress_certificate_template_row_number', 15 ); ?>" />
 						</div><!--wp-content-wrap-->
@@ -240,7 +240,7 @@ $columns			 = $templates->get_columns();
 														?>
 													</ul>
 												</div>
-										
+
 											</div>
 											<div class="clear"></div>
 										</div>

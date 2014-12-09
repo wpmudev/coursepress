@@ -1,5 +1,15 @@
 jQuery( document ).ready( function( $ ) {
 
+    $( ".rows" ).sortable( {
+        items: 'ul',
+        receive: function( template, ui ) {
+            update_rows();
+        },
+        stop: function( template, ui ) {
+            update_rows();
+        }
+    } );
+
     var template_classes = new Array();
     var parent_id = 0;
 
@@ -12,7 +22,8 @@ jQuery( document ).ready( function( $ ) {
             $( ".rows ul li" ).last().addClass( "last_child" );
 
             var $this = $( this );
-            if ( $this.children( 'li' ).length > 4) {
+
+            if ( $this.children( 'li' ).length > 4 ) {
                 $( ui.sender ).sortable( 'cancel' );
             }
         },
@@ -25,7 +36,14 @@ jQuery( document ).ready( function( $ ) {
     $( ".sortables" ).disableSelection();
 
 
-    function update_li() {
+    function update_rows() {
+        $( ".rows ul" ).each( function( index ) {
+            $( this ).attr( 'id', 'row_' + ( index + 1 ) );
+            $( this ).find( '.rows_classes' ).attr( 'name', 'rows_' + ( index + 1 ) + '_post_meta' );
+        } );
+    }
+
+    function update_li( ) {
 
         var children_num = 0;
         var current_child_num = 0;
@@ -60,9 +78,12 @@ jQuery( document ).ready( function( $ ) {
             } );
 
             $( this ).find( 'li' ).each( function() {
-
                 $( this ).height( maxHeight );
             } );
+        } );
+
+        $( "#side-sortables .sortables li" ).each( function() {
+            $( this ).height( 'auto' );
         } );
     }
 

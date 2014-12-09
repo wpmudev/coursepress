@@ -78,7 +78,7 @@
 
 .rows ul{
     width: 98%;
-    margin-bottom: 30px;
+    margin-bottom: -1px;/*30px;*/
     padding-left: 14px;
     padding-right: 14px;
     padding-top: 14px;
@@ -213,4 +213,29 @@
 
 .rows li.ui-state-default.cols.last_child{
     margin-right: 0%;
+}
+
+.certificates-wrap .rows ul{
+    background: #f7f7f7;
+}
+
+.certificates-wrap.cp-wrap .update .fa,
+.certificates-wrap.cp-wrap .fa {
+    /*display: inline-block;*/
+    font-family: CP_Font_Awesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    right: -2px;
+    top: 7px;
+    display: none;
+}
+
+/* + .cp-move-icon*/
+.certificates-wrap.cp-wrap ul:hover{
+    background-color: #fff;
+    cursor: move;
 }

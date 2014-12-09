@@ -106,12 +106,13 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_cell_alignment() {
+			$cell_alignment = isset( $this->template_metas[ $this->element_name . '_cell_alignment' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ][ 0 ] : 'left';
 			?>
 			<label><?php _e( 'Cell Alignment', 'cp' ); ?></label>
 			<select name="<?php echo $this->element_name; ?>_cell_alignment_post_meta">
-				<option value="left" <?php selected( isset( $this->template_metas[ $this->element_name . '_cell_alignment' ] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ] : 'left', 'left', true ); ?>><?php echo esc_attr_e( 'Left', 'cp' ); ?></option>
-				<option value="right" <?php selected( isset( $this->template_metas[ $this->element_name . '_cell_alignment' ] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ] : 'left', 'right', true ); ?>><?php echo esc_attr_e( 'Right', 'cp' ); ?></option>
-				<option value="center" <?php selected( isset( $this->template_metas[ $this->element_name . '_cell_alignment' ] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ] : 'left', 'center', true ); ?>><?php echo esc_attr_e( 'Center', 'cp' ); ?></option>
+				<option value="left" <?php selected( $cell_alignment, 'left', true ); ?>><?php echo esc_attr_e( 'Left', 'cp' ); ?></option>
+				<option value="right" <?php selected( $cell_alignment, 'right', true ); ?>><?php echo esc_attr_e( 'Right', 'cp' ); ?></option>
+				<option value="center" <?php selected( $cell_alignment, 'center', true ); ?>><?php echo esc_attr_e( 'Center', 'cp' ); ?></option>
 			</select>
 			<?php
 		}
@@ -155,9 +156,10 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_font_colors( $label = 'Font Color', $field_name = 'font_color', $default_color = '#000000' ) {
+			$font_color = isset( $this->template_metas[ $this->element_name . '_' . $field_name ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ][ 0 ] : $default_color;
 			?>
 			<label><?php echo $label; ?></label>
-			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color  ); ?>" />
+			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( $font_color ); ?>" />
 			<?php
 		}
 
@@ -203,6 +205,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_font_sizes( $box_title = false, $default_font_size = false ) {
+			$font_size = isset( $this->template_metas[ $this->element_name . '_font_size' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_font_size' ][ 0 ] : ($default_font_size ? $default_font_size : 14);
 			?>
 			<label><?php
 				if ( $box_title ) {
@@ -215,7 +218,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<?php
 				for ( $i = 8; $i <= 100; $i++ ) {
 					?>
-					<option value='<?php echo $i; ?>' <?php selected( isset( $this->template_metas[ $this->element_name . '_font_size' ] ) ? $this->template_metas[ $this->element_name . '_font_size' ] : ($default_font_size ? $default_font_size : 14), $i, true ); ?>><?php echo $i; ?> <?php _e( 'pt', 'cp' ); ?></option>
+					<option value='<?php echo $i; ?>' <?php selected( $font_size, $i, true ); ?>><?php echo $i; ?> <?php _e( 'pt', 'cp' ); ?></option>
 					<?php
 				}
 				?>
