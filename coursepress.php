@@ -3072,11 +3072,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$dir = $this->plugin_dir . 'includes/certificate-elements/';
 
 			$certificate_template_elements = apply_filters( 'coursepress_certificate_template_elements_files', array(
-				$dir . 'certificate_title.php',
+				$dir . 'text.php',
 				$dir . 'course_name.php',
 				$dir . 'issue_date.php',
-				$dir . 'issued_by.php',
-				$dir . 'logo_element.php',
+				$dir . 'logo.php',
 				$dir . 'student_name.php',
 				$dir . 'website.php',
 			) );
@@ -3198,7 +3197,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			do_action( 'coursepress_add_menu_items_after_course_discussions' );
 
 			// Certificates
-			if ( defined( 'CP_EA' ) && CP_EA == TRUE) {
+			if ( defined( 'CP_EA' ) && CP_EA == TRUE ) {
 				add_submenu_page( 'courses', __( 'Certificates', 'cp' ), __( 'Certificates', 'cp' ), 'coursepress_certificates_cap', 'certificates', array( &$this, 'coursepress_certificates_admin' ) );
 				do_action( 'coursepress_add_menu_items_after_course_certificates' );
 			}
@@ -4651,16 +4650,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function admin_coursepress_page_certificates() {
+			wp_enqueue_style( 'thickbox' );
+			wp_enqueue_script( 'thickbox' );
+			wp_enqueue_media();
+			wp_enqueue_script( 'media-upload' );
+			
 			wp_enqueue_style( 'certificates', $this->plugin_url . 'css/admin_coursepress_page_certificates.css', array(), $this->version );
-			wp_enqueue_script( 'assessment-admin', $this->plugin_url . 'js/certificates-admin.js', array(
+			wp_enqueue_script( 'certificates-admin', $this->plugin_url . 'js/certificates-admin.js', array(
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-sortable',
 				'jquery-ui-draggable',
 				'jquery-ui-droppable',
 				'jquery-ui-accordion',
-				'wp-color-picker'
-			), false, false );
+				'wp-color-picker',
+				'thickbox',
+				'media-upload'
+			), $this->version );
+
+			wp_localize_script( 'certificates-admin', 'certificate', array(
+				'max_elements_message' => __( 'Maximum of 4 certificate elements are allowed per row.', 'cp' ),
+			) );
 			//wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
 			//wp_enqueue_script( 'jquery-ui-core' );
 			//wp_enqueue_script( 'jquery-ui-tabs' );

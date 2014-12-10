@@ -760,7 +760,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'			 => in_the_loop() ? get_the_ID() : '',
 				'course'			 => false,
-				'label'				 => __( 'Price: ', 'cp' ),
+				'label'				 => __( 'Price:&nbsp;', 'cp' ),
 				'label_tag'			 => 'strong',
 				'label_delimeter'	 => ': ',
 				'no_cost_text'		 => __( 'FREE', 'cp' ),
@@ -2174,7 +2174,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course'			 => false,
 				'label'				 => __( 'Instructor', 'cp' ),
 				'label_plural'		 => __( 'Instructors', 'cp' ),
-				'label_delimeter'	 => ': ',
+				'label_delimeter'	 => ':&nbsp;',
 				'label_tag'			 => '',
 				'count'				 => false, // deprecated
 				'list'				 => false, // deprecated

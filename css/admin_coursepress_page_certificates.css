@@ -236,12 +236,21 @@
 
 /* + .cp-move-icon*/
 .certificates-wrap.cp-wrap ul:hover{
-    background-color: #fff;
+   // background-color: #fff;
     cursor: move;
+}
+
+.certificate-layout ul:hover{
+    background-color: rgba(239, 137, 44, 0.05);
 }
 
 .element_content label, #template_document_settings label {
     width: 100%;
     margin: 10px 0px 5px 0px;
     display: block;
+}
+
+.ui-draggable-dragging{
+    width: 225px !important;
+    border: 1px dashed;
 }

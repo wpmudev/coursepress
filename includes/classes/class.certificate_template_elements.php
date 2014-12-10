@@ -122,7 +122,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			$bottom_padding	 = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] : '0';
 			?>
 			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" />
+			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" /><br />
 			<?php _e( 'Bottom', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( $bottom_padding ); ?>" />
 			</p>
 			<?php

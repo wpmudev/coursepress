@@ -174,11 +174,11 @@ $columns			 = $templates->get_columns();
 							</div>
 						</div>
 
-						<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw">
+						<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw certificate-layout">
 							<h2><?php _e( 'Certificate Layout', 'cp' ); ?></h2>
 							<div class="rows">
 								<?php for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 20 ); $i++ ) { ?>
-											<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><!--<span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span>--><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
+														<ul id="row_<?php echo $i; ?>" class="sortables droptrue"><!--<span class="row_num_info"><?php _e( 'Row', 'cp' ); ?> <?php echo $i; ?></span>--><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value="" />
 										<i class="fa fa-arrows-v cp-move-icon"></i>
 										<?php
 										if ( isset( $post_id ) ) {
@@ -206,7 +206,7 @@ $columns			 = $templates->get_columns();
 									</ul>
 								<?php } ?>
 							</div>
-							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'coursepress_certificate_template_row_number', 15 ); ?>" />
+							<input type="hidden" name="rows_number_post_meta" value="<?php echo apply_filters( 'coursepress_certificate_template_row_number', 20 ); ?>" />
 						</div><!--wp-content-wrap-->
 					</div><!--post-body-content-->
 
@@ -221,21 +221,21 @@ $columns			 = $templates->get_columns();
 
 											<div id="minor-publishing-actions">
 												<div class="misc-pub-section">
-													<ul class="sortables droptrue" id="certificate_elements">
+													<ul class="draggable droptrue sortables" id="certificate_elements"><!-- droptrue sortables-->
 														<?php
 														foreach ( $cp_template_elements as $element ) {
 															$element_class = new $element[ 0 ];
 
-															if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
-																?>
-																<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
-																	<div class="element_title"><?php echo $element[ 1 ]; ?></div>
-																	<div class="element_content">
-																		<?php echo $element_class->admin_content(); ?>
-																	</div>
-																</li>
-																<?php
-															}
+															//if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
+															?>
+															<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
+																<div class="element_title"><?php echo $element[ 1 ]; ?></div>
+																<div class="element_content">
+																	<?php echo $element_class->admin_content(); ?>
+																</div>
+															</li>
+															<?php
+															//}
 														}
 														?>
 													</ul>
@@ -303,52 +303,6 @@ $columns			 = $templates->get_columns();
 
 				</div><!--post-body-->
 
-				<?php if ( 1 == 0 ) { ?>
-					<h4><?php _e( 'Certificate Elements', 'cp' ); ?></h4>
-
-
-					<ul class="sortables droptrue" id="certificate_elements">
-						<?php
-						foreach ( $cp_template_elements as $element ) {
-							$element_class = new $element[ 0 ];
-
-							if ( !in_array( $element[ 0 ], $template_elements_set ) ) {
-								?>
-								<li class="ui-state-default" data-class="<?php echo $element[ 0 ]; ?>">
-									<div class="element_title"><?php echo $element[ 1 ]; ?></div>
-									<div class="element_content">
-										<?php echo $element_class->admin_content(); ?>
-									</div>
-								</li>
-								<?php
-							}
-						}
-						?>
-					</ul>
-
-
-					<?php submit_button( __( 'Save', 'cp' ), 'primary', 'add_new_template', true ); ?>
-
-					<div class="right-holder">
-						<h4><?php _e( 'Certificate PDF Settings', 'cp' ); ?></h4>
-						<div id="template_document_settings">
-							<?php
-							$template_elements->tcpdf_get_fonts();
-							$template_elements->get_document_sizes();
-							$template_elements->get_document_orientation();
-							$template_elements->get_document_margins();
-							$template_elements->get_full_background_image();
-							do_action( 'coursepress_template_document_settings' );
-							?>
-							<br /><br />
-
-						</div>
-					</div>
-
-					<div class="right-holder">
-						<?php submit_button( __( 'Preview', 'cp' ), 'primary', 'preview', false ); ?>
-					</div>
-				<?php } ?>
 			</div><!--post stuff-->
 		</form>
 	</div><!--wrap-->

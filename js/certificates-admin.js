@@ -13,19 +13,35 @@ jQuery( document ).ready( function( $ ) {
     var template_classes = new Array();
     var parent_id = 0;
 
-    $( "ul.sortables" ).sortable( {
+    $( ".draggable li" ).draggable( {
+        helper: "clone",
+        connectToSortable: ".certificate-layout ul.sortables"
+    } );
+
+    /*$( "#side-sortables ul.sortables" ).sortable( {
+     connectWith: 'ul',
+     forcePlaceholderSize: true,
+     helper: "clone",
+     //placeholder: "ui-state-highlight",
+     receive: function( template, ui ) {
+     },
+     } );*/
+
+    $( ".certificate-layout ul.sortables" ).sortable( {
         connectWith: 'ul',
         forcePlaceholderSize: true,
         //placeholder: "ui-state-highlight",
         receive: function( template, ui ) {
-            update_li();
             $( ".rows ul li" ).last().addClass( "last_child" );
 
             var $this = $( this );
 
             if ( $this.children( 'li' ).length > 4 ) {
-                $( ui.sender ).sortable( 'cancel' );
+                alert( certificate.max_elements_message );
+                $( this ).data().uiSortable.currentItem.remove();
             }
+
+            update_li();
         },
         stop: function( template, ui ) {
             update_li();
@@ -93,6 +109,19 @@ jQuery( document ).ready( function( $ ) {
 
     $( window ).resize( function() {
         cp_fix_template_elements_sizes();
+    } );
+
+
+    /* Native WP media browser for file module (for instructors) */
+    $( '.file_url_button' ).live( 'click', function()
+    {
+        var target_url_field = jQuery( this ).prevAll( ".file_url:first" );
+        wp.media.editor.send.attachment = function( props, attachment )
+        {
+            $( target_url_field ).val( attachment.url );
+        };
+        wp.media.editor.open( this );
+        return false;
     } );
 
 } );
