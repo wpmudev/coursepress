@@ -1,3 +1,6 @@
 [submodule "includes/external/dashboard"]
 	path = includes/external/dashboard
 	url = git@bitbucket.org:incsub/wpmudev-dashboard-notification.git
+[submodule "themes/coursepress"]
+	path = themes/coursepress
+	url = git@bitbucket.org:incsub/coursepress-theme.git
