@@ -1,0 +1,562 @@
+# Copyright (C) 2014 WPMU DEV
+# This file is distributed under the GNU General Public License.
+msgid ""
+msgstr ""
+"Project-Id-Version: CoursePress 1.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/theme/coursepress\n"
+"POT-Creation-Date: 2014-11-18 10:07:08+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: 404.php:15
+msgid "Oops! That page can&rsquo;t be found."
+msgstr ""
+
+#: 404.php:19
+msgid ""
+"It looks like nothing was found at this location. Maybe try one of the links "
+"below or a search?"
+msgstr ""
+
+#: 404.php:27
+msgid "Most Used Categories"
+msgstr ""
+
+#. translators: %1$s: smiley
+#: 404.php:44
+msgid "Try looking in the monthly archives. %1$s"
+msgstr ""
+
+#: archive-course.php:19 single-instructor.php:26
+msgid "Courses"
+msgstr ""
+
+#: archive-discussions.php:28
+msgid "Ask a Question"
+msgstr ""
+
+#: archive-discussions.php:76 content-discussion.php:21
+msgid "Comments"
+msgstr ""
+
+#: archive-discussions.php:86
+msgid "0 discussions. Start one, ask a question."
+msgstr ""
+
+#: archive-notifications.php:84
+msgid "0 notifications. Please check back later."
+msgstr ""
+
+#: archive-unit-grades.php:46 archive-unit-workbook.php:79
+msgid "of"
+msgstr ""
+
+#: archive-unit-grades.php:46 archive-unit-workbook.php:79
+msgid "mandatory elements completed"
+msgstr ""
+
+#: archive-unit-grades.php:46 archive-unit-workbook.php:79
+msgid "elements graded"
+msgstr ""
+
+#: archive-unit-grades.php:48
+msgid "Read-only"
+msgstr ""
+
+#: archive-unit-grades.php:56 archive-unit-workbook.php:89
+msgid "TOTAL:"
+msgstr ""
+
+#: archive-unit-grades.php:60 archive-unit-workbook.php:93 archive-unit.php:83
+msgid "0 units in the course currently. Please check back later."
+msgstr ""
+
+#: archive-unit-workbook.php:22 archive-unit-workbook.php:52
+msgid "completed"
+msgstr ""
+
+#: archive-unit-workbook.php:38 archive-unit.php:31
+msgid "Course Complete"
+msgstr ""
+
+#: archive-unit-workbook.php:63
+msgid "0 Units in the course"
+msgstr ""
+
+#: archive-unit-workbook.php:81
+msgid "Read only"
+msgstr ""
+
+#: archive-unit.php:75
+msgid " [DRAFT]"
+msgstr ""
+
+#: archive.php:31
+msgid "Author: %s"
+msgstr ""
+
+#: archive.php:39
+msgid "Day: %s"
+msgstr ""
+
+#: archive.php:42
+msgid "Month: %s"
+msgstr ""
+
+#: archive.php:42
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr ""
+
+#: archive.php:45
+msgid "Year: %s"
+msgstr ""
+
+#: archive.php:45
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr ""
+
+#: archive.php:48
+msgid "Asides"
+msgstr ""
+
+#: archive.php:51
+msgid "Images"
+msgstr ""
+
+#: archive.php:54
+msgid "Videos"
+msgstr ""
+
+#: archive.php:57
+msgid "Quotes"
+msgstr ""
+
+#: archive.php:60
+msgid "Links"
+msgstr ""
+
+#: archive.php:63 sidebar.php:17
+msgid "Archives"
+msgstr ""
+
+#: comments-discussion.php:30 comments-discussion.php:50 comments.php:37
+#: comments.php:57
+msgid "Comment navigation"
+msgstr ""
+
+#: comments-discussion.php:31 comments-discussion.php:51 comments.php:38
+#: comments.php:58
+msgid "&larr; Older Comments"
+msgstr ""
+
+#: comments-discussion.php:32 comments-discussion.php:52 comments.php:39
+#: comments.php:59
+msgid "Newer Comments &rarr;"
+msgstr ""
+
+#: comments-discussion.php:62 comments.php:69
+msgid "Comments are closed."
+msgstr ""
+
+#: comments-discussion.php:69 comments-discussion.php:72
+msgid "Answer the Question"
+msgstr ""
+
+#: comments-discussion.php:70
+msgid "Leave a Reply to %s"
+msgstr ""
+
+#: comments-discussion.php:71
+msgid "Cancel Reply"
+msgstr ""
+
+#: comments-discussion.php:74
+msgid "Write a response"
+msgstr ""
+
+#: comments.php:30
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-course-overview.php:57
+msgid "SHARE"
+msgstr ""
+
+#: content-course-overview.php:71
+msgid "About the Course"
+msgstr ""
+
+#: content-course-overview.php:75
+msgid "Course Structure"
+msgstr ""
+
+#: content-course-overview.php:84 content-course.php:55 content-page.php:18
+#: content-single.php:20 content.php:27
+msgid "Pages:"
+msgstr ""
+
+#: content-course-overview.php:92
+msgid "Instructors"
+msgstr ""
+
+#: content-course-overview.php:122
+msgid "View Full Profile"
+msgstr ""
+
+#. translators: used between list items, there is a space after the comma
+#: content-course-overview.php:134 content-course-overview.php:137
+#: content-course.php:75 content-course.php:85 content-single.php:30
+#: content-single.php:32 content.php:38 content.php:48
+msgid ", "
+msgstr ""
+
+#: content-course-overview.php:142 content-single.php:37
+msgid ""
+"This entry was tagged %2$s. Bookmark the <a href=\"%3$s\" rel=\"bookmark"
+"\">permalink</a>."
+msgstr ""
+
+#: content-course-overview.php:150 content-single.php:44
+msgid ""
+"This entry was posted in %1$s and tagged %2$s. Bookmark the <a href=\"%3$s\" "
+"rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: content-course-overview.php:152 content-single.php:46
+msgid ""
+"This entry was posted in %1$s. Bookmark the <a href=\"%3$s\" rel=\"bookmark"
+"\">permalink</a>."
+msgstr ""
+
+#: content-course-overview.php:161 content-discussion.php:40
+#: content-page.php:23 content-single.php:55 content.php:61
+#: inc/template-tags.php:87 inc/template-tags.php:110
+#: inc/template-tags.php:154 inc/template-tags.php:179
+msgid "Edit"
+msgstr ""
+
+#: content-course.php:64
+msgid "Details"
+msgstr ""
+
+#: content-course.php:64
+msgid "Not Available"
+msgstr ""
+
+#: content-course.php:79
+msgid "Courses in %1$s"
+msgstr ""
+
+#: content-course.php:89 content.php:52
+msgid "Tagged %1$s"
+msgstr ""
+
+#: content-discussion.php:11
+msgid "Q"
+msgstr ""
+
+#: content-discussion.php:32
+msgid "Comments are disabled"
+msgstr ""
+
+#: content-none.php:13
+msgid "No Courses Found"
+msgstr ""
+
+#: content-none.php:19
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: content-none.php:23
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: content-none.php:28
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: content-single.php:39
+msgid "Bookmark the <a href=\"%3$s\" rel=\"bookmark\">permalink</a>."
+msgstr ""
+
+#: content.php:24
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: content.php:42
+msgid "Posted in %1$s"
+msgstr ""
+
+#: content.php:58
+msgid "Leave a comment"
+msgstr ""
+
+#: content.php:58
+msgid "1 Comment"
+msgstr ""
+
+#: content.php:58
+msgid "% Comments"
+msgstr ""
+
+#: functions.php:80
+msgid "Primary Menu"
+msgstr ""
+
+#: functions.php:84
+msgid "Footer Menu"
+msgstr ""
+
+#: functions.php:110
+msgid "Sidebar"
+msgstr ""
+
+#: functions.php:119
+msgid "Footer"
+msgstr ""
+
+#: header.php:61
+msgid "Skip to content"
+msgstr ""
+
+#: inc/customizer.php:24
+msgid "Body Text Color"
+msgstr ""
+
+#: inc/customizer.php:30
+msgid "Content Text Color"
+msgstr ""
+
+#: inc/customizer.php:36
+msgid "Content Header Color"
+msgstr ""
+
+#: inc/customizer.php:42
+msgid "Content Links Color"
+msgstr ""
+
+#: inc/customizer.php:48
+msgid "Content Links Hover Color"
+msgstr ""
+
+#: inc/customizer.php:54
+msgid "Main Navigation Links Color"
+msgstr ""
+
+#: inc/customizer.php:60
+msgid "Main Navigation Links Hover Color"
+msgstr ""
+
+#: inc/customizer.php:66
+msgid "Footer Background Color"
+msgstr ""
+
+#: inc/customizer.php:72
+msgid "Footer Links Color"
+msgstr ""
+
+#: inc/customizer.php:78
+msgid "Footer Links Hover Color"
+msgstr ""
+
+#: inc/customizer.php:84
+msgid "Widgets Title Color"
+msgstr ""
+
+#: inc/customizer.php:118
+msgid "Logo"
+msgstr ""
+
+#: inc/customizer.php:125
+msgid "Upload a logo"
+msgstr ""
+
+#: inc/extras.php:63
+msgid "Page %s"
+msgstr ""
+
+#: inc/template-tags.php:23
+msgid "Posts navigation"
+msgstr ""
+
+#: inc/template-tags.php:27
+msgid "<span class=\"meta-nav\">&larr;</span> Older posts"
+msgstr ""
+
+#: inc/template-tags.php:31
+msgid "Newer posts <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: inc/template-tags.php:59
+msgid "Post navigation"
+msgstr ""
+
+#: inc/template-tags.php:62
+msgctxt "Previous post link"
+msgid "<span class=\"meta-nav\">&larr;</span> %title"
+msgstr ""
+
+#: inc/template-tags.php:63
+msgctxt "Next post link"
+msgid "%title <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: inc/template-tags.php:87 inc/template-tags.php:154
+msgid "Pingback:"
+msgstr ""
+
+#: inc/template-tags.php:101
+msgid "%s <span class=\"says\">says:</span>"
+msgstr ""
+
+#: inc/template-tags.php:107
+msgctxt "1: date, 2: time"
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: inc/template-tags.php:114 inc/template-tags.php:167
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: inc/template-tags.php:163
+msgid "A"
+msgstr ""
+
+#: inc/template-tags.php:215
+msgid ""
+"<span class=\"posted-on\">Posted on %1$s</span><span class=\"byline\"> by "
+"%2$s</span>"
+msgstr ""
+
+#: page-add-new-discussion.php:28
+msgid "Question description is required."
+msgstr ""
+
+#: page-add-new-discussion.php:32
+msgid "Question title is required."
+msgstr ""
+
+#: page-add-new-discussion.php:57
+msgid "Title of your question"
+msgstr ""
+
+#: page-add-new-discussion.php:58
+msgid "Question description..."
+msgstr ""
+
+#: page-add-new-discussion.php:60
+msgid "Ask this Question"
+msgstr ""
+
+#: page-add-new-discussion.php:61
+msgid "Cancel"
+msgstr ""
+
+#: part-contact.php:28
+msgid "E-mail sent successfully! We will respond as soon as possible."
+msgstr ""
+
+#: part-contact.php:31
+msgid ""
+"An error occured while trying to send the e-mail. Please try again later."
+msgstr ""
+
+#: part-contact.php:35
+msgid "E-mail address is not valid."
+msgstr ""
+
+#: part-contact.php:39
+msgid "All fields are required."
+msgstr ""
+
+#: part-contact.php:53
+msgid "Your Name"
+msgstr ""
+
+#: part-contact.php:58
+msgid "Your E-mail"
+msgstr ""
+
+#: part-contact.php:63
+msgid "Subject"
+msgstr ""
+
+#: part-contact.php:68
+msgid "Message"
+msgstr ""
+
+#: part-contact.php:72
+msgid "Send"
+msgstr ""
+
+#: search.php:16
+msgid "Search Results for: %s"
+msgstr ""
+
+#: searchform.php:10
+msgctxt "label"
+msgid "Search for:"
+msgstr ""
+
+#: searchform.php:11
+msgctxt "placeholder"
+msgid "Search &hellip;"
+msgstr ""
+
+#: searchform.php:13
+msgctxt "submit button"
+msgid "Search"
+msgstr ""
+
+#: sidebar.php:24
+msgid "Meta"
+msgstr ""
+
+#. Theme Name of the plugin/theme
+msgid "CoursePress"
+msgstr ""
+
+#. #-#-#-#-#  coursepress.pot (CoursePress 1.0)  #-#-#-#-#
+#. Theme URI of the plugin/theme
+#. #-#-#-#-#  coursepress.pot (CoursePress 1.0)  #-#-#-#-#
+#. Author URI of the plugin/theme
+msgid "http://premium.wpmudev.org/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Specialized theme for CoursePress"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WPMU DEV"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Contact Page"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Page ( sidebar widgets )"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Page ( without widgets )"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Default ( footer widgets )"
+msgstr ""
