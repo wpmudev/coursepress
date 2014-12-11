@@ -1,6 +1,6 @@
 # README #
 
-CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
+CoursePress has three primary branches: coursepress/pro, coursepress/campus and coursepress/standard.
 
 ## CoursePress Pro (coursepress/pro)  
 
@@ -8,7 +8,9 @@ CoursePress Pro is the official premium plugin that lives on WPMU Dev and will u
 
 ## CoursePress Campus (coursepress/campus)  
 
-CoursePress Campus is the branch that is integrated with CampusPress/Edublogs.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling and removes paid courses features (all code that is implemented in CoursePress Pro).  
+CoursePress Campus is the branch that is integrated with CampusPress.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling, the CoursePress theme and removes paid courses features (all code that is implemented in CoursePress Pro).  The theme is included via a submodule instead ( [CoursePress Theme Repository](https://bitbucket.org/incsub/coursepress-theme/src) ).  
+
+All development of CoursePress Campus needs to happen on the **coursepress/campus-dev** branch before merging it to the coursepress/campus branch (see releasing below).
 
 ## CoursePress (coursepress/standard)  
 
@@ -24,16 +26,16 @@ When cloning CoursePress to your local repo please use the --recursive flag as p
 
 This will ensure you grab all the required submodules.  
 
-**Note: ** If you already have a cloned repo, you will need to *init* the submodule.  
+**Note: ** If you already have a cloned repo, you will need to *init* the submodule.  You may need to do this in the branches.
 
     git submodule init --   
     git submodule update  
 
 #### Checking out branches  
 
-When checking out the *coursepress/pro* or *coursepress/standard* branches please make sure that you run 'git clean -dff' and then 'git submodule update'.  
+When checking out branches please make sure that you run 'git clean -dff' and then 'git submodule update'.  
 
-This is required as CoursePress Pro uses MarketPress as a submodule and CoursePress uses a version of MarketPress Lite and checking out the branches without cleaning up and initialising will cause a bit of a mess in your staging environment.
+This is required as CoursePress makes use of submodules, and different branches could be using different submodules. Checking out the branches without cleaning up and initialising will cause a bit of a mess in your staging environment.
 
 Examples:
 
@@ -51,6 +53,12 @@ Please note the double -f flag in the clean command. This is required to clean d
 
 #### Working with MarketPress in coursepress/pro  
 
+CoursePress uses the latest (at the time) release package of MarketPress instead of a submodule as this caused several issues with bundling. Make sure that the latest package is always released and placed in includes/plugins and update the `public $mp_file` to reflect the latest plugin file.
+
+#### Working with the CoursePress Theme
+
+As of CoursePress Pro version 1.2.3.4 the theme is no longer included in the CoursePress repo, but included via a submodule. This is to work better with integration with CampusPress.  To make sure the latest theme updates are included in a release, make sure the submodules are properly updated.
+
 ##### Properly Update the Repo
 
 **Note:**  
@@ -59,12 +67,12 @@ Please note the double -f flag in the clean command. This is required to clean d
 You can verify this by running the following commands:  
 
     # This will show the 'actual' commit ID used within coursepress/pro branch
-	git ls-files --stage | grep "includes/marketpress"
+	git ls-files --stage | grep "themes/coursepress"
 	
 	# This will show the commit ID of the local repo (pushing to origin will not keep this ID!)  
 	git submodule status  
 
-To completely update MarketPress in coursepress/pro you will need to go to the submodule folder and do the following:  
+To completely update the theme you will need to go to the themes/coursepress folder and do the following:  
 
     # Checkout 'master' because submodules often end up in a detached HEAD state  
 	git checkout master  
@@ -72,59 +80,34 @@ To completely update MarketPress in coursepress/pro you will need to go to the s
 	# Pull the update  
 	git pull origin master  
 
-Now when you run a `git status` in the coursepress/pro branch you will see that the submodule has been updated.
+Now when you run a `git status` you will see that the submodule has been updated.
 
     git status
-	# ... modified:   includes/marketpress (new commits)
-
-##### Preparing MarketPress for CoursePress Pro
-
-**Copy** (not move) `includes/marketpress/marketpress.php` to CoursePress root folder.  
-
-Edit the new file to make it CoursePress friendly:  
-
-    // Change name and version 
-	/*  
-	Plugin Name: MarketPress (CoursePress Pro Bundle)  
-	Version: 2.9.5.3   
-
-Remove the dashboard as CoursePress is now responsible.
-
-Find includes/requires and update accordingly:  
-
-    // localization()
-	$lang_dir = dirname(plugin_basename($this->plugin_file)) . 'includes/marketpress/marketpress-includes/languages/';
+	# ... modified:   themes/coursepress (new commits)
 	
-	// init_vars()  
-	$this->plugin_dir = plugin_dir_path(__FILE__) . 'includes/marketpress/marketpress-includes/';
-	$this->plugin_url = plugin_dir_url(__FILE__) . 'includes/marketpress/marketpress-includes/';
-
-With these changes in place it should be good to go.
-
-    git status
-	# ... modified:   includes/marketpress (new commits)
-	# ... modified:   marketpress.php
-
 Now add, commit and push:  
 
     git add . -A  
 	git commit  
 	git push  
 
-MarketPress is now updated for CoursePress Pro.
+The theme should now be updated.
 
-##### Someone else updated MarketPress Bundle  
+##### When someone else updated the theme  
 
-This is where `git submodule update` fits in. It makes sure that you have the latest submodule in your branch updated to the commit ID of the submodule in your branch.  
-
+When running `git submodule update` it makes sure that you have the latest submodule in your branch updated to the latest commit ID of the submodule. Perhaps even do this after fetching changes from the repo.  
 
 ### Releasing
 
 ## CoursePress Campus
 
-Its identical to CoursePress Pro, but be sure to remove marketpress.php, includes/marketpress/* and includes/extra/dashboard and commit the branch.  
+CoursePress Campus is identical to CoursePress Pro, except that the theme is removed and the dashboard notification plugin is removed.  To release an update to CoursePress Campus, make sure  that coursepress/campus-dev is working properly, then checkout the coursepress/campus repo and merge in the development branch.  
 
-It does not get released, but is used by the CampusPress team for CampusPress integrations.
+    git checkout coursepress/campus  
+	git merge coursepress/campus-dev   
+	git commit    
+
+It does not get released as a package, but is used by the CampusPress team for CampusPress integrations.
 
 ## CoursePress (wp.org version)
 
