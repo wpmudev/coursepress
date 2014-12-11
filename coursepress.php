@@ -148,6 +148,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Setup CoursePress properties
 			$this->init_vars();
 
+			// Register Globals
+			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
+			$GLOBALS[ 'course_slug' ]				 = $this->get_course_slug();
+			$GLOBALS[ 'units_slug' ]				 = $this->get_units_slug();
+			$GLOBALS[ 'notifications_slug' ]		 = $this->get_notifications_slug();
+			$GLOBALS[ 'module_slug' ]				 = $this->get_module_slug();
+			$GLOBALS[ 'instructor_profile_slug' ]	 = $this->get_instructor_profile_slug();
+			$GLOBALS[ 'enrollment_process_url' ]	 = $this->get_enrollment_process_slug( true );
+			$GLOBALS[ 'signup_url' ]				 = $this->get_signup_slug( true );
+
 			/**
 			 * CoursePress Object Class.
 			 */
@@ -196,16 +206,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			// Define custom theme directory for CoursePress theme
 			$this->register_theme_directory();
-
-			// Register Globals
-			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
-			$GLOBALS[ 'course_slug' ]				 = $this->get_course_slug();
-			$GLOBALS[ 'units_slug' ]				 = $this->get_units_slug();
-			$GLOBALS[ 'notifications_slug' ]		 = $this->get_notifications_slug();
-			$GLOBALS[ 'module_slug' ]				 = $this->get_module_slug();
-			$GLOBALS[ 'instructor_profile_slug' ]	 = $this->get_instructor_profile_slug();
-			$GLOBALS[ 'enrollment_process_url' ]	 = $this->get_enrollment_process_slug( true );
-			$GLOBALS[ 'signup_url' ]				 = $this->get_signup_slug( true );
 
 			// Install Plugin
 			register_activation_hook( __FILE__, array( $this, 'install' ) );
