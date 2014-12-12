@@ -1360,6 +1360,7 @@ jQuery( document ).ready( function( $ ) {
         [ ].sort.call( $unit_pages, function( a, b ) {
             return +$( a ).attr( 'data-weight' ) - +$( b ).attr( 'data-weight' );
         } );
+
         $unit_pages.each( function() {
             $wrapper.append( this );
         } );
@@ -1368,38 +1369,6 @@ jQuery( document ).ready( function( $ ) {
         var current_unit_page = 1;
 
         jQuery( '.unit-page-holder' ).each( function( i, obj ) {
-            if ( current_unit_page == 1 ) {
-                if ( $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).length ) {
-                    //we have page break on the first page, now we have to remove it
-                    var module_to_delete_id = $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).find( '.unit_element_id' ).val();
-                    prepare_element_to_delete( module_to_delete_id );
-                } else {
-                    //do nothing
-                }
-            } else {
-                if ( $( '#' + $( this ).attr( 'id' ) ).find( '.module-holder-page_break_module' ).length ) {
-                    //do nothing
-                } else {
-                    //we don't have page break on other pages and have to add it
-                    var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
-                    var cloned = jQuery( '.draggable-module-holder-page_break_module' ).html();
-                    cloned = '<div class="module-holder-page_break_module module-holder-title" id="' + rand_id + '_temp">' + cloned + '</div>';
-
-                    jQuery( '#' + $( this ).attr( 'id' ) + ' .modules_accordion' ).prepend( cloned );
-                    jQuery.post(
-                        'admin-ajax.php', {
-                            action: 'create_unit_element_draft',
-                            unit_id: jQuery( '#unit_id' ).val(),
-                            temp_unit_id: rand_id,
-                        }
-                    ).done( function( data, status ) {
-                        jQuery( '#' + rand_id + '_temp' ).find( '.unit_element_id' ).val( data );
-                        jQuery( '#' + rand_id + '_temp' ).find( '.element_id' ).val( data );
-                        //update_sortable_module_indexes();
-                    } );
-                }
-            }
-
             update_sortable_module_indexes_page_sort( $( this ).attr( 'id' ), current_unit_page );
             current_unit_page++;
         } );
@@ -1410,6 +1379,10 @@ jQuery( document ).ready( function( $ ) {
 
         jQuery( '#' + page_id + ' .module_order' ).each( function( i, obj ) {
             jQuery( this ).val( page_num * ( i + 1 ) );
+        } );
+
+        jQuery( '#' + page_id + ' .module_page' ).each( function( i, obj ) {
+            jQuery( this ).val( page_num );
         } );
 
         jQuery( "input[name*='audio_module_loop']" ).each( function( i, obj ) {
@@ -1442,9 +1415,11 @@ jQuery( document ).ready( function( $ ) {
             jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
         }
     }
+    
+    update_unit_page_order_and_numbers();
 
 
-    /*jQuery( "#unit-pages ul" ).sortable( {
+    jQuery( "#unit-pages ul" ).sortable( {
         placeholder: "unit-page-placeholder",
         //items: "",
         items: "li:not( .add_new_unit_page )",
@@ -1452,6 +1427,6 @@ jQuery( document ).ready( function( $ ) {
             update_unit_page_order_and_numbers();
             update_sortable_module_indexes_page_sort();
         }
-    } );*/
-    
+    } );
+
 } );

@@ -56,7 +56,7 @@ class video_module extends Unit_Module {
 			</h3>
 
 			<div class="module-content">
-
+				<input type="hidden" name="<?php echo $this->name; ?>_module_page[]" class="module_page" value="<?php echo ( isset( $data->module_page ) ? $data->module_page : '' ); ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset( $data->module_order ) ? $data->module_order : 999 ); ?>" />
 				<input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : ''  ); ?>" />
@@ -106,8 +106,8 @@ class video_module extends Unit_Module {
 
 				<!--<div class="video_additional_controls">
 
-					<label><?php // _e('Player Width ( pixels )', 'cp');    ?></label>
-					<input type="text" name="<?php // echo $this->name;    ?>_player_width[]" value="<?php //echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) );    ?>" />
+					<label><?php // _e('Player Width ( pixels )', 'cp');     ?></label>
+					<input type="text" name="<?php // echo $this->name;     ?>_player_width[]" value="<?php //echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) );     ?>" />
 
 				</div>-->
 
@@ -201,15 +201,15 @@ class video_module extends Unit_Module {
 			foreach ( array_keys( $_POST[ 'module_type' ] ) as $module_type => $module_value ) {
 
 				if ( $module_value == $this->name ) {
-					$data						 = new stdClass();
-					$data->ID					 = '';
-					$data->unit_id				 = '';
-					$data->title				 = '';
-					$data->excerpt				 = '';
-					$data->content				 = '';
-					$data->metas				 = array();
+					$data							 = new stdClass();
+					$data->ID						 = '';
+					$data->unit_id					 = '';
+					$data->title					 = '';
+					$data->excerpt					 = '';
+					$data->content					 = '';
+					$data->metas					 = array();
 					$data->metas[ 'module_type' ]	 = $this->name;
-					$data->post_type			 = 'module';
+					$data->post_type				 = 'module';
 
 					if ( isset( $_POST[ $this->name . '_id' ] ) ) {
 						foreach ( $_POST[ $this->name . '_id' ] as $key => $value ) {
@@ -220,6 +220,7 @@ class video_module extends Unit_Module {
 								$data->content = $_POST[ $this->name . '_content' ][ $key ];
 							}
 							$data->metas[ 'module_order' ]	 = $_POST[ $this->name . '_module_order' ][ $key ];
+							$data->metas[ 'module_page' ]	 = $_POST[ $this->name . '_module_page' ][ $key ];
 							$data->metas[ 'video_url' ]		 = $_POST[ $this->name . '_video_url' ][ $key ];
 							$data->metas[ 'attachment_id' ]	 = $_POST[ $this->name . '_attachment_id' ][ $key ];
 							if ( !empty( $_POST[ $this->name . '_player_width' ] ) ) {
@@ -237,7 +238,7 @@ class video_module extends Unit_Module {
 							$data->metas[ 'show_title_on_front' ]	 = $_POST[ $this->name . '_show_title_field' ][ $key ];
 							$data->metas[ 'show_media_caption' ]	 = $_POST[ $this->name . '_show_caption_field' ][ $key ];
 							$data->metas[ 'caption_custom_text' ]	 = $_POST[ $this->name . '_caption_custom_text' ][ $key ];
-							$data->metas[ 'caption_field' ]		 = $_POST[ $this->name . '_caption_field' ][ $key ];
+							$data->metas[ 'caption_field' ]			 = $_POST[ $this->name . '_caption_field' ][ $key ];
 
 
 							parent::update_module( $data );

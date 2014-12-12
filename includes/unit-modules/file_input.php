@@ -146,6 +146,7 @@ class file_input_module extends Unit_Module {
 			</h3>
 
 			<div class="module-content">
+				<input type="hidden" name="<?php echo $this->name; ?>_module_page[]" class="module_page" value="<?php echo ( isset( $data->module_page ) ? $data->module_page : '' ); ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset( $data->module_order ) ? $data->module_order : 999 ); ?>" />
 				<input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : ''  ); ?>" />
@@ -234,6 +235,7 @@ class file_input_module extends Unit_Module {
 							$data->title							 = $_POST[ $this->name . '_title' ][ $key ];
 							$data->content							 = $_POST[ $this->name . '_content' ][ $key ];
 							$data->metas[ 'module_order' ]			 = $_POST[ $this->name . '_module_order' ][ $key ];
+							$data->metas[ 'module_page' ]			 = $_POST[ $this->name . '_module_page' ][ $key ];
 							$data->metas[ 'limit_attempts_value' ]	 = $_POST[ $this->name . '_limit_attempts_value' ][ $key ];
 							$data->metas[ 'minimum_grade_required' ] = $_POST[ $this->name . '_minimum_grade_required' ][ $key ];
 

@@ -30,7 +30,7 @@ class page_break_module extends Unit_Module {
 		?>
 
 		<div class="<?php if ( empty( $data ) ) { ?>draggable-<?php } ?>module-holder-<?php echo $this->name; ?> module-holder-title" <?php if ( empty( $data ) ) { ?>style="display:none;"<?php } ?>>
-
+			<input type="hidden" name="<?php echo $this->name; ?>_module_page[]" class="module_page" value="<?php echo ( isset( $data->module_page ) ? $data->module_page : '' ); ?>" />
 			<h3 class="module-title sidebar-name notmovable">
 				<span class="h3-label">
 
@@ -73,7 +73,7 @@ class page_break_module extends Unit_Module {
 
 			<input type="hidden" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : ''  ); ?>" />
 
-		                                                                                                        <!--<p><?php echo $this->description; ?></p>-->
+																														<!--<p><?php echo $this->description; ?></p>-->
 			<!--</div>-->
 			<?php
 			parent::get_module_delete_link();
@@ -99,23 +99,24 @@ class page_break_module extends Unit_Module {
 			foreach ( array_keys( $_POST[ 'module_type' ] ) as $module_type => $module_value ) {
 
 				if ( $module_value == $this->name ) {
-					$data						 = new stdClass();
-					$data->ID					 = '';
-					$data->unit_id				 = '';
-					$data->title				 = '';
-					$data->excerpt				 = '';
-					$data->content				 = '';
-					$data->metas				 = array();
+					$data							 = new stdClass();
+					$data->ID						 = '';
+					$data->unit_id					 = '';
+					$data->title					 = '';
+					$data->excerpt					 = '';
+					$data->content					 = '';
+					$data->metas					 = array();
 					$data->metas[ 'module_type' ]	 = $this->name;
-					$data->post_type			 = 'module';
+					$data->post_type				 = 'module';
 
 					if ( isset( $_POST[ $this->name . '_id' ] ) ) {
 						foreach ( $_POST[ $this->name . '_id' ] as $key => $value ) {
-							$data->ID					 = $_POST[ $this->name . '_id' ][ $key ];
-							$data->unit_id				 = ( ( isset( $_POST[ 'unit_id' ] ) and ( isset( $_POST[ 'unit' ] ) && $_POST[ 'unit' ] != '' ) ) ? $_POST[ 'unit_id' ] : $last_inserted_unit_id );
-							$data->title				 = $_POST[ $this->name . '_title' ][ $key ];
-							$data->content				 = ''; //$_POST[$this->name . '_content'][$key];
-							$data->metas[ 'module_order' ] = $_POST[ $this->name . '_module_order' ][ $key ];
+							$data->ID						 = $_POST[ $this->name . '_id' ][ $key ];
+							$data->unit_id					 = ( ( isset( $_POST[ 'unit_id' ] ) and ( isset( $_POST[ 'unit' ] ) && $_POST[ 'unit' ] != '' ) ) ? $_POST[ 'unit_id' ] : $last_inserted_unit_id );
+							$data->title					 = $_POST[ $this->name . '_title' ][ $key ];
+							$data->content					 = ''; //$_POST[$this->name . '_content'][$key];
+							$data->metas[ 'module_order' ]	 = $_POST[ $this->name . '_module_order' ][ $key ];
+							$data->metas[ 'module_page' ]	 = $_POST[ $this->name . '_module_page' ][ $key ];
 							parent::update_module( $data );
 						}
 					}

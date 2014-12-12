@@ -35,7 +35,7 @@ class file_module extends Unit_Module {
 
 				if ( $file_size > 0 ) {
 					$filesize = '<small>(' . esc_html( $file_size ) . ')</small>';
-				}else{
+				} else {
 					$filesize = '';
 				}
 
@@ -70,6 +70,7 @@ class file_module extends Unit_Module {
 			</h3>
 
 			<div class="module-content">
+				<input type="hidden" name="<?php echo $this->name; ?>_module_page[]" class="module_page" value="<?php echo ( isset( $data->module_page ) ? $data->module_page : '' ); ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_module_order[]" class="module_order" value="<?php echo ( isset( $data->module_order ) ? $data->module_order : 999 ); ?>" />
 				<input type="hidden" name="module_type[]" value="<?php echo $this->name; ?>" />
 				<input type="hidden" name="<?php echo $this->name; ?>_id[]" class="unit_element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : ''  ); ?>" />
@@ -115,9 +116,9 @@ class file_module extends Unit_Module {
 					</label>
 				</div>
 
-		<?php
-		parent::get_module_delete_link();
-		?>
+				<?php
+				parent::get_module_delete_link();
+				?>
 			</div>
 
 		</div>
@@ -141,24 +142,25 @@ class file_module extends Unit_Module {
 			foreach ( array_keys( $_POST[ 'module_type' ] ) as $module_type => $module_value ) {
 
 				if ( $module_value == $this->name ) {
-					$data						 = new stdClass();
-					$data->ID					 = '';
-					$data->unit_id				 = '';
-					$data->title				 = '';
-					$data->excerpt				 = '';
-					$data->content				 = '';
-					$data->metas				 = array();
+					$data							 = new stdClass();
+					$data->ID						 = '';
+					$data->unit_id					 = '';
+					$data->title					 = '';
+					$data->excerpt					 = '';
+					$data->content					 = '';
+					$data->metas					 = array();
 					$data->metas[ 'module_type' ]	 = $this->name;
-					$data->post_type			 = 'module';
+					$data->post_type				 = 'module';
 
 					if ( isset( $_POST[ $this->name . '_id' ] ) ) {
 						foreach ( $_POST[ $this->name . '_id' ] as $key => $value ) {
-							$data->ID							 = $_POST[ $this->name . '_id' ][ $key ];
-							$data->unit_id						 = ( ( isset( $_POST[ 'unit_id' ] ) and ( isset( $_POST[ 'unit' ] ) && $_POST[ 'unit' ] != '' ) ) ? $_POST[ 'unit_id' ] : $last_inserted_unit_id );
-							$data->title						 = $_POST[ $this->name . '_title' ][ $key ];
-							$data->metas[ 'module_order' ]		 = $_POST[ $this->name . '_module_order' ][ $key ];
-							$data->metas[ 'link_text' ]			 = $_POST[ $this->name . '_link_text' ][ $key ];
-							$data->metas[ 'file_url' ]			 = $_POST[ $this->name . '_file_url' ][ $key ];
+							$data->ID								 = $_POST[ $this->name . '_id' ][ $key ];
+							$data->unit_id							 = ( ( isset( $_POST[ 'unit_id' ] ) and ( isset( $_POST[ 'unit' ] ) && $_POST[ 'unit' ] != '' ) ) ? $_POST[ 'unit_id' ] : $last_inserted_unit_id );
+							$data->title							 = $_POST[ $this->name . '_title' ][ $key ];
+							$data->metas[ 'module_order' ]			 = $_POST[ $this->name . '_module_order' ][ $key ];
+							$data->metas[ 'module_page' ]				 = $_POST[ $this->name . '_module_page' ][ $key ];
+							$data->metas[ 'link_text' ]				 = $_POST[ $this->name . '_link_text' ][ $key ];
+							$data->metas[ 'file_url' ]				 = $_POST[ $this->name . '_file_url' ][ $key ];
 							$data->metas[ 'time_estimation' ]		 = $_POST[ $this->name . '_time_estimation' ][ $key ];
 							// if ( isset($_POST[$this->name . '_show_title_on_front'][$key]) ) {
 							//     $data->metas['show_title_on_front'] = $_POST[$this->name . '_show_title_on_front'][$key];
