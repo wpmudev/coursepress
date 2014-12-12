@@ -38,7 +38,7 @@ if ( !class_exists( 'CoursePress_Integration' ) ) {
 			add_action( 'wp_head', array( &$this, 'wp_head_ufb_integration' ) );
 
 			// Initialise TinCan Integration
-			new CoursePress_TinCan();
+			//new CoursePress_TinCan();
 
 		}
 
