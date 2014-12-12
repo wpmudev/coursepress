@@ -28,6 +28,11 @@ if ( !class_exists( 'Student' ) ) {
 			/* Add hooks to handle completion data */
 			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
 			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
+			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
+			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
+			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
+
+			/* Add hooks to handle other tracking */
 
 			/**
 			 * Perform action after a Student object is created.
@@ -463,6 +468,127 @@ if ( !class_exists( 'Student' ) ) {
 
 				// Will only fire once when a unit is marked as complete, should not trigger again.
 				do_action( 'coursepress_student_course_unit_completed', $student_id, $course_id, $unit_id );
+			}
+
+		}
+
+		public function add_pages_viewed_meta( $student_id, $course_id, $unit_id ) {
+			$global_option = ! is_multisite();
+
+			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+
+			$update_option = false;
+
+			// If a course progress don't exist, create it.
+			if( empty( $course_progress ) ) {
+				$course_progress = array();
+			}
+
+			// Get units to mark pages as viewed
+			$units = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
+			$unit_ids = array_keys( $units );
+
+			if( ! in_array( $unit_id, $unit_ids ) ) {
+				// Add something new
+				$units[ $unit_id ] = array( 'all_pages_viewed' => true );
+				do_action( 'coursepress_student_course_unit_pages_viewed', $student_id, $course_id, $unit_id );
+				$update_option = true;
+			} else {
+				// Or update if needed
+				if( ! isset( $units[ $unit_id ]['all_pages_viewed'] ) || empty( $units[ $unit_id ]['all_pages_viewed'] ) ) {
+					$units[ $unit_id ]['all_pages_viewed'] = true;
+					do_action( 'coursepress_student_course_unit_pages_viewed', $student_id, $course_id, $unit_id );
+					$update_option = true;
+				}
+			}
+
+			if( $update_option ) {
+				$course_progress['units'] = $units;
+				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
+			}
+
+		}
+
+		public function add_mandatory_questions_meta( $student_id, $course_id, $unit_id, $module_id ) {
+			$global_option = ! is_multisite();
+
+			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+
+			$update_option = false;
+
+			// If a course progress don't exist, create it.
+			if( empty( $course_progress ) ) {
+				$course_progress = array();
+			}
+
+			// Get units to mark pages as viewed
+			$units = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
+			$unit_ids = array_keys( $units );
+
+			if( ! in_array( $unit_id, $unit_ids ) ) {
+				// Add something new
+				$units[ $unit_id ] = array( 'mandatory_questions_answered' => array( $module_id => true ) );
+				do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
+				$update_option = true;
+			} else {
+				// Or update if needed
+				if( isset( $units[ $unit_id ]['mandatory_questions_answered'] ) && ( ! isset( $units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] ) || empty( $units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] ) ) ) {
+					$units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] = true;
+					do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
+					$update_option = true;
+				} else {
+					// If the unit already has data, but mandatory_questions_answered is unset
+					$units[ $unit_id ]['mandatory_questions_answered'] =  array( $module_id => true );
+					do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
+					$update_option = true;
+				}
+			}
+
+			if( $update_option ) {
+				$course_progress['units'] = $units;
+				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
+			}
+
+		}
+
+		public function add_questions_passed_meta( $student_id, $course_id, $unit_id, $module_id ) {
+			$global_option = ! is_multisite();
+
+			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+
+			$update_option = false;
+
+			// If a course progress don't exist, create it.
+			if( empty( $course_progress ) ) {
+				$course_progress = array();
+			}
+
+			// Get units to mark pages as viewed
+			$units = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
+			$unit_ids = array_keys( $units );
+
+			if( ! in_array( $unit_id, $unit_ids ) ) {
+				// Add something new
+				$units[ $unit_id ] = array( 'gradable_questions_passed' => array( $module_id => true ) );
+				do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+				$update_option = true;
+			} else {
+				// Or update if needed
+				if( isset( $units[ $unit_id ]['gradable_questions_passed'] ) && ( ! isset( $units[ $unit_id ]['gradable_questions_passed'][ $module_id ] ) || empty( $units[ $unit_id ]['gradable_questions_passed'][ $module_id ] ) ) ) {
+					$units[ $unit_id ]['gradable_questions_passed'][ $module_id ] = true;
+					do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+					$update_option = true;
+				} else {
+					// If the unit already has data, but gradable_questions_passed is unset
+					$units[ $unit_id ]['gradable_questions_passed'] =  array( $module_id => true );
+					do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+					$update_option = true;
+				}
+			}
+
+			if( $update_option ) {
+				$course_progress['units'] = $units;
+				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
 
 		}
