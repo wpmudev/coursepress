@@ -37,8 +37,10 @@ if ( !class_exists( 'CoursePress_Integration' ) ) {
 			// Ultimate Facebook (2.7.8+)
 			add_action( 'wp_head', array( &$this, 'wp_head_ufb_integration' ) );
 
-		}
+			// Initialise TinCan Integration
+			new CoursePress_TinCan();
 
+		}
 
 		/* ----- [BEGIN] ULTIMATE FACEBOOK ----- */
 
