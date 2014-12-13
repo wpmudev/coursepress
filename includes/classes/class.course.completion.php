@@ -138,6 +138,7 @@ if ( !class_exists('Course_Completion') ) {
                 $visited = $unit->pages_visited;
                 if ( $unit->page_count == count($visited) ) {
                     $unit->all_pages_viewed = true;
+	                do_action( 'coursepress_set_all_unit_pages_viewed', $student_id, $this->id, $unit->ID );
                 } else {
                     $unit->all_pages_viewed = false;
                 }
@@ -156,6 +157,7 @@ if ( !class_exists('Course_Completion') ) {
 
                     if ( !empty($response) ) {
                         $unit->mandatory_answered[$key] = true;
+	                    do_action( 'coursepress_set_mandatory_question_answered', $this->student_id, $this->id, $unit->ID, $mod_id );
                     } else {
                         $unit->mandatory_answered[$key] = false;
                     }
@@ -194,6 +196,9 @@ if ( !class_exists('Course_Completion') ) {
                         $unit_module = new Unit_Module();
                         $grade = $unit_module->get_response_grade($response->ID);
                         $success = $grade['grade'] >= $minimum_grade ? true : false;
+	                    if( $success ) {
+		                    do_action( 'coursepress_set_gradable_question_passed', $this->student_id, $this->id, $unit->ID, $mod_id );
+	                    }
                     }
 
                     $unit->gradable_passed[$key] = $success;
