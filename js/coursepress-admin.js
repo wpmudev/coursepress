@@ -402,6 +402,147 @@ function coursepress_no_elements( elements_number ) {
 
 }
 
+
+function update_sortable_module_indexes_page_sort( page_id, page_num ) {
+    // alert(page_num);
+    jQuery( '#' + page_id + ' .module_order' ).each( function( i, obj ) {
+        jQuery( this ).val( page_num * ( i + 1 ) );
+    } );
+    /*
+     *  jQuery( '#' + page_id + ' .module_page' ).each( function( i, obj ) {
+     jQuery( this ).val( page_num );
+     } );
+     * 
+     */
+
+
+    jQuery( "input[name*='audio_module_loop']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "audio_module_loop[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+
+    jQuery( "input[name*='audio_module_autoplay']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "audio_module_autoplay[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+
+    jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+    jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+    jQuery( "input[name*='checkbox_answers']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+    jQuery( "input[name*='checkbox_check']" ).each( function( i, obj ) {
+        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+    } );
+
+    var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
+    var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
+
+    if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+    } else {
+        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+    }
+}
+
+function update_module_page_number() {
+    var curr_page = 1;
+    jQuery( '#unit-pages li.ui-state-default' ).each( function( i, obj ) {
+        if ( $( this ).find( 'a.ui-tabs-anchor' ).attr( 'id' ) !== 'add_new_unit_page' ) {
+            //$( '#unit-pages #unit-page-' + $( this ).find( 'a.ui-tabs-anchor' ).text() ).attr( 'data-weight', i + 1 );
+            //$( this ).find( 'a.ui-tabs-anchor' ).text( i + 1 );
+
+            var holder_id = $( this ).find( 'a.ui-tabs-anchor' ).attr( 'href' );
+            var res = holder_id.replace( "unit-page-", "" );
+
+            $( holder_id ).find( '.module_page' ).val( curr_page );
+            curr_page++;
+        }
+    } );
+}
+
+function update_unit_page_order_and_numbers() {
+
+    var curr_page = 1;
+
+    jQuery( '#unit-pages li.ui-state-default' ).each( function( i, obj ) {
+        if ( $( this ).find( 'a.ui-tabs-anchor' ).attr( 'id' ) !== 'add_new_unit_page' ) {
+            $( '#unit-pages #unit-page-' + $( this ).find( 'a.ui-tabs-anchor' ).text() ).attr( 'data-weight', i + 1 );
+            $( this ).find( 'a.ui-tabs-anchor' ).text( i + 1 );
+
+            var holder_id = $( this ).find( 'a.ui-tabs-anchor' ).attr( 'href' );
+            var res = holder_id.replace( "unit-page-", "" );
+
+            $( holder_id ).find( '.module_page' ).val( curr_page );
+            $( holder_id ).find( '.page_title' ).attr( 'name', 'page_title[page_' + curr_page + ']' );
+            $( holder_id ).find( '.page_title' ).attr( 'id', 'page_title[page_' + curr_page + ']' );
+            curr_page++;
+        }
+    } );
+
+    var $wrapper = $( '#unit-pages' ),
+        $unit_pages = $wrapper.find( '.unit-page-holder' );
+    [ ].sort.call( $unit_pages, function( a, b ) {
+        return +$( a ).attr( 'data-weight' ) - +$( b ).attr( 'data-weight' );
+    } );
+
+    $unit_pages.each( function() {
+        $wrapper.append( this );
+    } );
+
+    /* REPAINT ALL EDITORS AFTER RESORTING PAGES */
+    update_sortable_module_indexes();
+    //ui.draggable.attr( 'id' ) or ui.draggable.get( 0 ).id or ui.draggable[0].id
+
+    /* Dynamic WP Editor */
+    var nth_child_num = ui.item.index() + 1;
+    var editor_id = jQuery( ".module-holder-title:nth-child( " + nth_child_num + " ) .wp-editor-wrap" ).attr( 'id' );
+    var initial_editor_id = editor_id;
+
+    editor_id = editor_id.replace( "-wrap", "" );
+    editor_id = editor_id.replace( "wp-", "" );
+    editor_content = get_tinymce_content( editor_id );
+
+    var textarea_name = ( jQuery( '#' + initial_editor_id + ' textarea' ).attr( 'name' ) );
+    var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
+    var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
+
+    var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+    switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
+    var text_editor_whole =
+        '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+        '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+        '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+    text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
+    text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+        text_editor +
+        '</div></div></div>';
+    jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
+
+    tinyMCE.init( {
+        mode: "exact",
+        elements: rand_id,
+        plugins: coursepress_editor.plugins.join( ',' ),
+        toolbar: coursepress_editor.toolbar.join( ',' ),
+        theme: coursepress_editor.theme,
+        skin: coursepress_editor.skin,
+        menubar: false
+    } );
+
+    // Init Quicktags
+    if ( coursepress_editor.quicktags ) {
+        new QTags( rand_id );
+        QTags._buttonsInit();
+        // force the editor to start at its defined mode.
+        switchEditors.go( rand_id, tinyMCE.editors[rand_id] );
+    }
+
+    tinyMCE.execCommand( 'mceRepaint' );
+}
+
 function coursepress_modules_ready() {
 
     jQuery( '.draggable-module' ).draggable( {
@@ -414,6 +555,7 @@ function coursepress_modules_ready() {
 
         }
     } );
+
     jQuery( '.elements-holder div.output-element, .elements-holder div.input-element' ).live( 'click', function() {//.unit-module-add, 
 
         var current_unit_page = 0;//current selected unit page
@@ -545,6 +687,8 @@ function coursepress_modules_ready() {
             jQuery( '#' + rand_id + '_temp' ).find( '.element_id' ).val( data );
         } );
 
+        //update_unit_page_order_and_numbers();
+        update_module_page_number();
     } );
 }
 
@@ -1347,77 +1491,7 @@ jQuery( document ).ready( function( $ ) {
         } ).appendTo( '#unit-add' );
     }
 
-    function update_unit_page_order_and_numbers() {
-        jQuery( '#unit-pages li.ui-state-default' ).each( function( i, obj ) {
-            if ( $( this ).find( 'a.ui-tabs-anchor' ).attr( 'id' ) !== 'add_new_unit_page' ) {
-                $( '#unit-pages #unit-page-' + $( this ).find( 'a.ui-tabs-anchor' ).text() ).attr( 'data-weight', i + 1 );
-                $( this ).find( 'a.ui-tabs-anchor' ).text( i + 1 );
-            }
-        } );
-
-        var $wrapper = $( '#unit-pages' ),
-            $unit_pages = $wrapper.find( '.unit-page-holder' );
-        [ ].sort.call( $unit_pages, function( a, b ) {
-            return +$( a ).attr( 'data-weight' ) - +$( b ).attr( 'data-weight' );
-        } );
-
-        $unit_pages.each( function() {
-            $wrapper.append( this );
-        } );
-
-        var unit_pages = jQuery( "#unit-pages .ui-tabs-nav li" ).size() - 2;
-        var current_unit_page = 1;
-
-        jQuery( '.unit-page-holder' ).each( function( i, obj ) {
-            update_sortable_module_indexes_page_sort( $( this ).attr( 'id' ), current_unit_page );
-            current_unit_page++;
-        } );
-        //update_sortable_module_indexes();
-    }
-
-    function update_sortable_module_indexes_page_sort( page_id, page_num ) {
-
-        jQuery( '#' + page_id + ' .module_order' ).each( function( i, obj ) {
-            jQuery( this ).val( page_num * ( i + 1 ) );
-        } );
-
-        jQuery( '#' + page_id + ' .module_page' ).each( function( i, obj ) {
-            jQuery( this ).val( page_num );
-        } );
-
-        jQuery( "input[name*='audio_module_loop']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "audio_module_loop[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-
-        jQuery( "input[name*='audio_module_autoplay']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "audio_module_autoplay[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-
-        jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-        jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-        jQuery( "input[name*='checkbox_answers']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-        jQuery( "input[name*='checkbox_check']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-
-        var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
-        var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
-
-        if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
-            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
-        } else {
-            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
-        }
-    }
-    
     update_unit_page_order_and_numbers();
-
 
     jQuery( "#unit-pages ul" ).sortable( {
         placeholder: "unit-page-placeholder",
@@ -1425,7 +1499,7 @@ jQuery( document ).ready( function( $ ) {
         items: "li:not( .add_new_unit_page )",
         stop: function( event, ui ) {
             update_unit_page_order_and_numbers();
-            update_sortable_module_indexes_page_sort();
+            //update_sortable_module_indexes_page_sort();
         }
     } );
 

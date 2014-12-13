@@ -193,7 +193,6 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_previous_unit_from_the_same_course() {
-
 			$units = self::get_units_from_course( $this->course_id );
 
 			$position			 = 0;
@@ -412,6 +411,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$last_inserted_unit_id = $post_id;
 
+			update_post_meta( $post_id, 'unit_pagination', '1' );
 			update_post_meta( $post_id, 'course_id', (int) $_POST[ 'course_id' ] );
 
 			update_post_meta( $post_id, 'unit_availability', cp_filter_content( $_POST[ 'unit_availability' ] ) );
@@ -440,7 +440,14 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_page_name( $page_number ) {
-			return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ($page_number - 1) ] : '';
+			$unit_pagination_meta	 = get_post_meta( $this->details->ID, 'unit_pagination', true );
+			$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+			
+			if ( $unit_pagination ) {
+				return !empty( $this->details->page_title[ 'page_' . $page_number ] ) ? $this->details->page_title['page_' . (int) $page_number ] : '';
+			} else {
+				return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ($page_number - 1) ] : '';
+			}
 		}
 
 		function delete_unit( $force_delete ) {
@@ -562,11 +569,11 @@ if ( !class_exists( 'Unit' ) ) {
 				)
 				);
 			} else {
-				$post_id = cp_get_id_by_post_name($slug);
-				$post = get_post( $post_id );
+				$post_id = cp_get_id_by_post_name( $slug );
+				$post	 = get_post( $post_id );
 			}
 
-			$post	 = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : $post;
+			$post = !empty( $post ) && is_array( $post ) ? array_pop( $post ) : $post;
 
 			return !empty( $post ) ? $post->ID : false;
 		}
