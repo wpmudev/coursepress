@@ -463,6 +463,7 @@ function update_module_page_number() {
     } );
 }
 
+
 function update_unit_page_order_and_numbers() {
 
     var curr_page = 1;
@@ -492,53 +493,68 @@ function update_unit_page_order_and_numbers() {
         $wrapper.append( this );
     } );
 
+}
+
+function cp_repaint_all_editors(){
+    
     /* REPAINT ALL EDITORS AFTER RESORTING PAGES */
-    update_sortable_module_indexes();
+    //update_sortable_module_indexes();
     //ui.draggable.attr( 'id' ) or ui.draggable.get( 0 ).id or ui.draggable[0].id
 
     /* Dynamic WP Editor */
-    var nth_child_num = ui.item.index() + 1;
-    var editor_id = jQuery( ".module-holder-title:nth-child( " + nth_child_num + " ) .wp-editor-wrap" ).attr( 'id' );
-    var initial_editor_id = editor_id;
+    jQuery( '.unit-page-holder .wp-editor-wrap' ).each( function( i, obj ) {
+        
+        var nth_child_num = i + 1;
+        var editor_id = $(this).attr( 'id' );
+        var initial_editor_id = editor_id;
 
-    editor_id = editor_id.replace( "-wrap", "" );
-    editor_id = editor_id.replace( "wp-", "" );
-    editor_content = get_tinymce_content( editor_id );
+        editor_id = editor_id.replace( "-wrap", "" );
+        editor_id = editor_id.replace( "wp-", "" );
+        //editor_content = get_tinymce_content_new( editor_id );
 
-    var textarea_name = ( jQuery( '#' + initial_editor_id + ' textarea' ).attr( 'name' ) );
-    var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
-    var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
+        tinyMCE.init( {
+// General options
+            mode: "specific_textareas",
+            editor_selector: "mceEditor",
+        } );
 
-    var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-    switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        editor_content = tinyMCE.get( editor_id ).getContent();
 
-    var text_editor_whole =
-        '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
-        '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
-        '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
-    text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
-    text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
-        text_editor +
-        '</div></div></div>';
-    jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
+        var textarea_name = ( jQuery( '#' + initial_editor_id + ' textarea' ).attr( 'name' ) );
+        var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
+        var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-    tinyMCE.init( {
-        mode: "exact",
-        elements: rand_id,
-        plugins: coursepress_editor.plugins.join( ',' ),
-        toolbar: coursepress_editor.toolbar.join( ',' ),
-        theme: coursepress_editor.theme,
-        skin: coursepress_editor.skin,
-        menubar: false
+        var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+        switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
+        var text_editor_whole =
+            '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+            '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+            '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+        text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
+        text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+            text_editor +
+            '</div></div></div>';
+        jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
+
+        tinyMCE.init( {
+            mode: "exact",
+            elements: rand_id,
+            plugins: coursepress_editor.plugins.join( ',' ),
+            toolbar: coursepress_editor.toolbar.join( ',' ),
+            theme: coursepress_editor.theme,
+            skin: coursepress_editor.skin,
+            menubar: false
+        } );
+
+        // Init Quicktags
+        if ( coursepress_editor.quicktags ) {
+            new QTags( rand_id );
+            QTags._buttonsInit();
+            // force the editor to start at its defined mode.
+            switchEditors.go( rand_id, tinyMCE.editors[rand_id] );
+        }
     } );
-
-    // Init Quicktags
-    if ( coursepress_editor.quicktags ) {
-        new QTags( rand_id );
-        QTags._buttonsInit();
-        // force the editor to start at its defined mode.
-        switchEditors.go( rand_id, tinyMCE.editors[rand_id] );
-    }
 
     tinyMCE.execCommand( 'mceRepaint' );
 }
@@ -1499,6 +1515,7 @@ jQuery( document ).ready( function( $ ) {
         items: "li:not( .add_new_unit_page )",
         stop: function( event, ui ) {
             update_unit_page_order_and_numbers();
+            cp_repaint_all_editors();
             //update_sortable_module_indexes_page_sort();
         }
     } );
