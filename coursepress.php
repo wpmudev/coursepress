@@ -4376,7 +4376,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function header_actions() {//front
 			global $post, $wp_query, $mp;
 			wp_enqueue_style( 'font_awesome', $this->plugin_url . 'css/font-awesome.css' );
-			wp_enqueue_script( 'enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ) );
+			wp_enqueue_script( 'enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ), $this->version );
 			wp_localize_script( 'enrollment_process', 'cp_vars', array(
 				'admin_ajax_url'					 => admin_url( 'admin-ajax.php' ),
 				'message_all_fields_are_required'	 => __( 'All fields are required.', 'cp' ),
@@ -4393,11 +4393,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			) );
 			//admin_url( 'admin-ajax.php' )
 
-			wp_enqueue_script( 'coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ) );
+			wp_enqueue_script( 'coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ), $this->version );
 
-			wp_enqueue_script( 'coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ) );
+			wp_enqueue_script( 'coursepress_calendar', $this->plugin_url . 'js/coursepress-calendar.js', array( 'jquery' ), $this->version );
 			if ( $post && !$this->is_preview( $post->ID ) && !isset( $_GET[ 'try' ] ) ) {
-				wp_enqueue_script( 'coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ) );
+				wp_enqueue_script( 'coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ), $this->version );
 			}
 			$course_id			 = do_shortcode( '[get_parent_course_id]' );
 			$units_archive_url	 = is_numeric( $course_id ) ? get_permalink( $course_id ) . trailingslashit( $this->get_units_slug() ) : '';
@@ -4412,7 +4412,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				wp_enqueue_style( 'front_enrollment_process', $this->plugin_url . 'css/front-enrollment-process.css', array(), $this->version );
 			}
 
-			wp_enqueue_script( 'coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), '20120207', true );
+			wp_enqueue_script( 'coursepress-knob', $this->plugin_url . 'js/jquery.knob.js', array(), $this->version, true );
 
 			if ( isset( $wp_query->query_vars[ 'order_id' ] ) || isset( $_GET[ 'order_id' ] ) ) {
 				$order_id = isset( $wp_query->query_vars[ 'order_id' ] ) ? $wp_query->query_vars[ 'order_id' ] : ( isset( $_GET[ 'order_id' ] ) ? $_GET[ 'order_id' ] : '' );
@@ -4546,7 +4546,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
 
 			if ( ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == $this->screen_base . '_settings') || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
-				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js' );
+
+				$unit_pagination_meta	 = get_post_meta( (int) $_GET[ 'course_id' ], 'unit_pagination', true );
+				$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+
+				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
 				wp_enqueue_script( 'wplink' );
 
 				wp_localize_script( 'courses_bulk', 'coursepress', array(
@@ -4571,7 +4575,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'allowed_video_extensions'				 => wp_get_video_extensions(),
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
 					'allowed_image_extensions'				 => cp_wp_get_image_extensions(),
-					'start_of_week'							 => get_option( 'start_of_week', 0 )
+					'start_of_week'							 => get_option( 'start_of_week', 0 ),
+					'unit_pagination'						 => $unit_pagination ? 1 : 0
 				) );
 
 				do_action( 'coursepress_editor_options' );
@@ -4579,7 +4584,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function admin_coursepress_page_course_details() {
-			wp_enqueue_script( 'courses-units', $this->plugin_url . 'js/coursepress-courses.js' );
+			wp_enqueue_script( 'courses-units', $this->plugin_url . 'js/coursepress-courses.js', array(), $this->version );
+
+			$unit_pagination_meta	 = get_post_meta( (int) $_GET[ 'course_id' ], 'unit_pagination', true );
+			$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
 
 			wp_localize_script( 'courses-units', 'coursepress_units', array(
 				'withdraw_class_alert'			 => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
@@ -4601,6 +4609,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'required_sale_price'			 => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
 				'section_error'					 => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
 				'cp_editor_style'				 => $this->plugin_url . 'css/editor_style_fix.css',
+				'unit_pagination'				 => $unit_pagination ? 1 : 0
 			) );
 
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
@@ -4609,7 +4618,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function admin_coursepress_page_settings() {
-			wp_enqueue_script( 'settings_groups', $this->plugin_url . 'js/admin-settings-groups.js' );
+			wp_enqueue_script( 'settings_groups', $this->plugin_url . 'js/admin-settings-groups.js', array(), $this->version );
 			wp_localize_script( 'settings_groups', 'group_settings', array(
 				'remove_string'		 => __( 'Remove', 'cp' ),
 				'delete_group_alert' => __( 'Please confirm that you want to permanently delete the group?', 'cp' )
@@ -4634,7 +4643,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_coursepress_page_reports() {
 			wp_enqueue_style( 'reports', $this->plugin_url . 'css/admin_coursepress_page_reports.css', array(), $this->version );
 			wp_enqueue_style( 'reports_responsive', $this->plugin_url . 'css/admin_coursepress_page_reports_responsive.css', array(), $this->version );
-			wp_enqueue_script( 'reports-admin', $this->plugin_url . 'js/reports-admin.js' );
+			wp_enqueue_script( 'reports-admin', $this->plugin_url . 'js/reports-admin.js', array(), $this->version );
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' ); //need to change this to built-in
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
@@ -4643,7 +4652,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_coursepress_page_assessment() {
 			wp_enqueue_style( 'assessment', $this->plugin_url . 'css/admin_coursepress_page_assessment.css', array(), $this->version );
 			wp_enqueue_style( 'assessment_responsive', $this->plugin_url . 'css/admin_coursepress_page_assessment_responsive.css', array(), $this->version );
-			wp_enqueue_script( 'assessment-admin', $this->plugin_url . 'js/assessment-admin.js' );
+			wp_enqueue_script( 'assessment-admin', $this->plugin_url . 'js/assessment-admin.js', array(), $this->version );
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
 			wp_enqueue_script( 'jquery-ui-core' );
 			wp_enqueue_script( 'jquery-ui-tabs' );
@@ -4654,7 +4663,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_media();
 			wp_enqueue_script( 'media-upload' );
-			
+
 			wp_enqueue_style( 'certificates', $this->plugin_url . 'css/admin_coursepress_page_certificates.css', array(), $this->version );
 			wp_enqueue_script( 'certificates-admin', $this->plugin_url . 'js/certificates-admin.js', array(
 				'jquery',
@@ -4679,7 +4688,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_coursepress_page_students() {
 			wp_enqueue_style( 'students', $this->plugin_url . 'css/admin_coursepress_page_students.css', array(), $this->version );
 			wp_enqueue_style( 'students_responsive', $this->plugin_url . 'css/admin_coursepress_page_students_responsive.css', array(), $this->version );
-			wp_enqueue_script( 'students', $this->plugin_url . 'js/students-admin.js' );
+			wp_enqueue_script( 'students', $this->plugin_url . 'js/students-admin.js', array(), $this->version );
 			wp_localize_script( 'students', 'student', array(
 				'delete_student_alert' => __( 'Please confirm that you want to remove the student and the all associated records?', 'cp' ),
 			) );
@@ -4688,7 +4697,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_coursepress_page_instructors() {
 			wp_enqueue_style( 'instructors', $this->plugin_url . 'css/admin_coursepress_page_instructors.css', array(), $this->version );
 			wp_enqueue_style( 'instructors_responsive', $this->plugin_url . 'css/admin_coursepress_page_instructors_responsive.css', array(), $this->version );
-			wp_enqueue_script( 'instructors', $this->plugin_url . 'js/instructors-admin.js' );
+			wp_enqueue_script( 'instructors', $this->plugin_url . 'js/instructors-admin.js', array(), $this->version );
 			wp_localize_script( 'instructors', 'instructor', array(
 				'delete_instructors_alert' => __( 'Please confirm that you want to remove the instructor and the all associated records?', 'cp' ),
 			) );

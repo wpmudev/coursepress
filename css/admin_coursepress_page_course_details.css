@@ -33,6 +33,15 @@
     width: 100%; 
     height: 105px; 
     background: #fff;
+    display: block;
+}
+
+.unit-page-placeholder{
+    padding-bottom: 0px !important;
+    background: #fff;
+    border: 1px dashed #0074a2;
+    width: 30px;
+    height: 25px;
 }
 
 .unit_pages_preloader .preloader_image{
@@ -44,6 +53,7 @@
     font-size: 14px;
     color: #72788c;
     text-align: center;
+    display: block
 }
 
 .arrow-down {

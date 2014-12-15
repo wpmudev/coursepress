@@ -186,11 +186,20 @@ jQuery( document ).ready( function()
 
         //alert('Current page: '+current_unit_page+', elements count: '+accordion_elements_count);
 
-        if ( ( current_unit_page == 1 && accordion_elements_count == 0 ) || ( current_unit_page >= 2 && accordion_elements_count == 1 ) ) {
-            jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
-        } else {
-            jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+        if ( coursepress_units.unit_pagination == 0 ) {
+            if ( ( current_unit_page == 1 && accordion_elements_count == 0 ) || ( current_unit_page >= 2 && accordion_elements_count == 1 ) ) {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+            }
+        }else{
+            if ( accordion_elements_count == 0 ) {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+            }
         }
+        
     } );
 
     jQuery( '.audio_url_button' ).live( 'click', function()

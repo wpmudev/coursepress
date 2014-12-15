@@ -71,7 +71,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>instructot_id</span> – <?php _e( 'The user id of the instructor.', 'cp' ); ?></li>
+								<li><span>instructor_id</span> – <?php _e( 'The user id of the instructor.', 'cp' ); ?></li>
 							</ul>
 	
 							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>

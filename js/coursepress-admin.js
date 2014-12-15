@@ -94,10 +94,18 @@ jQuery( document ).ready( function( $ ) {
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
 
-        if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
-            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        if ( coursepress_units.unit_pagination == 0 ) {
+            if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+                jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+            }
         } else {
-            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+            if ( elements_count == 0 ) {
+                jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+            }
         }
     } );
 
@@ -304,7 +312,7 @@ jQuery( document ).ready( function( $ ) {
         var cloned = jQuery( '.draggable-module-holder-page_break_module' ).html();
         cloned = '<div class="module-holder-page_break_module module-holder-title" id="' + rand_id + '_temp">' + cloned + '</div>';
 
-        jQuery( '#unit-page-' + next_page + ' .modules_accordion' ).append( cloned );
+        //jQuery( '#unit-page-' + next_page + ' .modules_accordion' ).append( cloned );
 
         jQuery( '#unit-page-' + next_page + ' .modules_accordion' ).accordion( "refresh" );
 
@@ -442,10 +450,18 @@ function update_sortable_module_indexes_page_sort( page_id, page_num ) {
     var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
     var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
 
-    if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
-        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+    if ( coursepress.unit_pagination == 0 ) {
+        if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        } else {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        }
     } else {
-        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        if ( elements_count == 0 ) {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        } else {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        }
     }
 }
 
@@ -467,7 +483,7 @@ function update_module_page_number() {
 
 
 function update_unit_page_order_and_numbers() {
-
+    jQuery( '.unit-pages-navigation' ).css( 'opacity', '0.5' );
     var curr_page = 1;
 
     jQuery( '#unit-pages li.ui-state-default' ).each( function( i, obj ) {
@@ -688,10 +704,18 @@ function coursepress_modules_ready() {
         jQuery( this ).parent().parent().find( '.modules_accordion div.module-holder-title' ).last().find( '.module-title' ).attr( 'data-panel', accordion_elements_count );
         jQuery( this ).parent().parent().find( '.modules_accordion div.module-holder-title' ).last().find( '.module-title' ).attr( 'data-id', -1 );
 
-        if ( ( current_unit_page == 1 && accordion_elements_count == 0 ) || ( current_unit_page >= 2 && accordion_elements_count == 1 ) ) {
-            jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
+        if ( coursepress.unit_pagination == 0 ) {
+            if ( ( current_unit_page == 1 && accordion_elements_count == 0 ) || ( current_unit_page >= 2 && accordion_elements_count == 1 ) ) {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+            }
         } else {
-            jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+            if ( accordion_elements_count == 0 ) {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
+            } else {
+                jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
+            }
         }
 
         jQuery.post(
@@ -757,10 +781,18 @@ function update_sortable_module_indexes() {
     var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
     var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
 
-    if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
-        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+    if ( coursepress.unit_pagination == 0 ) {
+        if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        } else {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        }
     } else {
-        jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        if ( elements_count == 0 ) {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+        } else {
+            jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+        }
     }
 }
 
@@ -1514,11 +1546,19 @@ jQuery( document ).ready( function( $ ) {
     jQuery( "#unit-pages ul" ).sortable( {
         placeholder: "unit-page-placeholder",
         //items: "",
-        items: "li:not( .add_new_unit_page )",
-        stop: function( event, ui ) {
+        items: "li:not( .add_new_unit_page, .unit-pages-title )",
+        activate: function( event, ui ) {
+            //alert( 'received!' );
+            jQuery( '.unit-pages-navigation' ).css( 'opacity', '0.7' );
+        },
+        update: function( event, ui ) {
             update_unit_page_order_and_numbers();
             cp_repaint_all_editors();
+            jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
             //update_sortable_module_indexes_page_sort();
+        },
+        stop: function( event, ui ) {
+            jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
         }
     } );
 

@@ -254,7 +254,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');            ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                ?></label>
 							<?php
 							// $editor_name = "unit_description";
 							// $editor_id = "unit_description";
@@ -438,7 +438,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                             </div>
 
 							<div class="unit_pages_preloader">
-								<div class="preloader_image"><?php _e('Loading unit elements...', 'cp');?></div>
+								<div class="preloader_image"><?php _e( 'Loading unit elements...', 'cp' ); ?></div>
 							</div>
 
                             <div class="course-details-unit-controls">
@@ -548,10 +548,18 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 			var current_page_elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
 			//jQuery('#unit-page-' + current_unit_page + ' .elements-holder .no-elements').show();
 
-			if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && current_page_elements_count == 1 ) ) {
-				jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+			if ( coursepress_units.unit_pagination == 0 ) {
+				if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && current_page_elements_count == 1 ) ) {
+					jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+				} else {
+					jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+				}
 			} else {
-				jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+				if ( elements_count == 0 ) {
+					jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+				} else {
+					jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+				}
 			}
 
 			var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
@@ -565,9 +573,11 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 			} else {
 				jQuery( ".delete_unit_page" ).show();
 			}
-			
-			jQuery('#unit-pages').css('display', 'block');
-			jQuery('.unit_pages_preloader').css('display', 'none');
+
+			jQuery( '#unit-pages' ).css( 'display', 'block' );
+			jQuery( '.unit_pages_preloader' ).css( 'display', 'none' );
+			jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
+			//jQuery( '#unit-pages' ).css( 'cursor', 'default' );
 			//jQuery('#unit-pages').tabs({active: <?php echo $unit_page_num; ?>});
 		} );
     </script>

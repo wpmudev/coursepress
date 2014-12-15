@@ -10,8 +10,10 @@ CHANGE LOG
 * Fixed "administrator" role for network sites.
   CoursePress menus and permissions now work properly for new sites.
   For old sites the administrator's role will have to be reset (change to "subscriber" then back to "administrator").
+* Fixed shortcode types on the settings page
 * Course completion actions added for developers: 'coursepress_student_course_completed', 'coursepress_student_course_unit_completed'
 * Added unit elements preloader
+* Added unit pages reorder functionality
 
 
 = 1.2.3.3 =
