@@ -254,7 +254,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');           ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');            ?></label>
 							<?php
 							// $editor_name = "unit_description";
 							// $editor_id = "unit_description";
@@ -322,7 +322,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 													</span>
 												</label>
 												<div class="description"><?php _e( 'The label will be displayed on the Course Overview and Unit page', 'cp' ); ?></div>
-												<input type="text" value="<?php echo esc_attr( $unit->get_unit_page_name( $i ) ); ?>" name="page_title[page_<?php echo $i;?>]" id="page_title_<?php echo $i;?>" class="page_title" />
+												<input type="text" value="<?php echo esc_attr( $unit->get_unit_page_name( $i ) ); ?>" name="page_title[page_<?php echo $i; ?>]" id="page_title_<?php echo $i; ?>" class="page_title" />
 												<label class="show_page_title">
 													<input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset( $show_title[ $i - 1 ] ) && $show_title[ $i - 1 ] == 'yes' ? 'checked' : (!isset( $show_title[ $i - 1 ] ) ) ? 'checked' : '' ) ?> />
 													<input type="hidden" name="show_page_title_field[]" value="<?php echo ( (isset( $show_title[ $i - 1 ] ) && $show_title[ $i - 1 ] == 'yes') || !isset( $show_title[ $i - 1 ] ) ? 'yes' : 'no' ) ?>" />
@@ -436,6 +436,10 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 								}
 								?>
                             </div>
+
+							<div class="unit_pages_preloader">
+								<div class="preloader_image"><?php _e('Loading unit elements...', 'cp');?></div>
+							</div>
 
                             <div class="course-details-unit-controls">
                                 <div class="unit-control-buttons">
@@ -561,6 +565,9 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 			} else {
 				jQuery( ".delete_unit_page" ).show();
 			}
+			
+			jQuery('#unit-pages').css('display', 'block');
+			jQuery('.unit_pages_preloader').css('display', 'none');
 			//jQuery('#unit-pages').tabs({active: <?php echo $unit_page_num; ?>});
 		} );
     </script>

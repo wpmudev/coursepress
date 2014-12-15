@@ -220,6 +220,8 @@ jQuery( document ).ready( function( $ ) {
         tabs.tabs( "refresh" );
 
         jQuery( '#unit-page-' + next_page + ' .page_title' ).val( '' );
+        jQuery( '#unit-page-' + next_page + ' .page_title' ).attr( 'name', 'page_title[page_' + next_page + ']' );
+        jQuery( '#unit-page-' + next_page + ' .page_title' ).attr( 'id', 'page_title[page_' + next_page + ']' );
 
         /*jQuery( '#unit-page-' + next_page + ' .modules_accordion' ).accordion( {
          heightStyle: "content",
@@ -495,17 +497,17 @@ function update_unit_page_order_and_numbers() {
 
 }
 
-function cp_repaint_all_editors(){
-    
+function cp_repaint_all_editors() {
+
     /* REPAINT ALL EDITORS AFTER RESORTING PAGES */
     //update_sortable_module_indexes();
     //ui.draggable.attr( 'id' ) or ui.draggable.get( 0 ).id or ui.draggable[0].id
 
     /* Dynamic WP Editor */
     jQuery( '.unit-page-holder .wp-editor-wrap' ).each( function( i, obj ) {
-        
+
         var nth_child_num = i + 1;
-        var editor_id = $(this).attr( 'id' );
+        var editor_id = $( this ).attr( 'id' );
         var initial_editor_id = editor_id;
 
         editor_id = editor_id.replace( "-wrap", "" );
