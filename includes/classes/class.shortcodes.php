@@ -1157,6 +1157,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			// User is not logged in, so we need to see if course is ready for signup or not.
 			if ( !is_user_logged_in() ) {
+		
 				if ( 'manually' != $course->enroll_type ) {
 					if ( $course_full && !"yes" == $list_page ) {
 						// "COURSE FULL"
@@ -1185,11 +1186,16 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							$button .= '<button data-link="' . esc_url( $button_url ) . '" class="apply-button-enrolled ' . $class . '">' . $details_text . '</button>';
 							// cp_write_log( 'FIVE');
 							// Course hasn't expired and enrollments are open... Lets sign up!
+						} elseif ( 'prerequisite' == $course->enroll_type ) {
+							// PREREQUISITE CODE HERE
+							$button .= '<span class="apply-button apply-button-prerequisite ' . $class . '">' . $prerequisite_text . '</span>';
+							// cp_write_log( 'SIX');
+							// No prerequisites, but requires a passcode
 						} else {
 							// "SIGN UP NOW"
 							$button_url = $signup_url . '?course_id=' . $course_id;
 							$button .= '<button data-link-old="' . esc_url( $button_url ) . '" data-course-id="' . $course_id . '" class="apply-button signup' . $class . '">' . $signup_text . '</button>';
-							// cp_write_log( 'SIX');
+							// cp_write_log( 'SEVEN');
 						}
 					}
 				} else {
@@ -2717,7 +2723,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$args = array(
 				'post_type'		 => 'unit',
 				//'post_id'		 => $unit_id,
-				'post__in' => array($unit_id),
+				'post__in'		 => array( $unit_id ),
 				'post_status'	 => cp_can_see_unit_draft() ? 'any' : 'publish',
 			);
 
