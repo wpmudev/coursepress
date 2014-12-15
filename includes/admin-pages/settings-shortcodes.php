@@ -20,7 +20,7 @@
 								<li><span>label</span> – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?></li>
 								<li><span>label_plural</span> – <?php _e( 'Plural if more than one instructor. Default: Instructors', 'cp' ); ?></li>
 								<li><span>label_delimeter</span> – <?php _e( 'Symbol to put after label. Default is colon (<strong>:</strong>)', 'cp' ); ?></li>
-								<li><span>label_element</span> – <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'cp' ); ?></li>
+								<li><span>label_tag</span> – <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'cp' ); ?></li>
 								<li><span>link_text</span> – <?php _e( 'Text to click to link to full profiles. Default: "View Full Profile".', 'cp' ); ?></li>
 								<li><span>show_label</span> – <?php _e( 'Show the label. Options: <em>yes</em>, <em>no</em>.', 'cp' ); ?></li>
 								<li><span>summary_length</span> – <?php _e( 'Length of instructor bio to show when style is "blocl". Default: 50', 'cp' ); ?></li>
