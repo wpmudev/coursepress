@@ -1031,9 +1031,9 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php } ?>
 												</select>
 
-												<?php if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
-													<span class="course_settings_enrollment_message"><?php _e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?></span>
-												<?php } ?>
+												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
+												<!--	<span class="course_settings_enrollment_message">--><?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?><!--</span>-->
+												<?php //} ?>
 											</div>
 
 											<div class='wide' id='manually_added_holder'>
