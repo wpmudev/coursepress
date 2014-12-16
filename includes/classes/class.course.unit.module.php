@@ -290,9 +290,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		}
 
 		function get_modules( $unit_id, $unit_page = 0 ) {
-
-			$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
-			$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+			
+			$unit_pagination = cp_unit_uses_new_pagination( (int)$unit_id );
 
 			$modules = false;
 
@@ -386,8 +385,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			cp_set_last_visited_unit_page( $unit_id, $paged, get_current_user_ID() );
 			cp_set_visited_unit_page( $unit_id, $paged, get_current_user_ID() );
 
-			$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
-			$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+			$unit_pagination = cp_unit_uses_new_pagination( (int)$unit_id );
 			$modules				 = $this->get_modules( $unit_id, $paged );
 
 			$course_id = do_shortcode( '[get_parent_course_id]' );

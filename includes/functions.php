@@ -13,6 +13,12 @@
   return $url;
   } */
 
+function cp_unit_uses_new_pagination( $unit_id = false ) {
+	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
+	$unit_pagination		 = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
+	return $unit_pagination;
+}
+
 function cp_get_id_by_post_name( $post_name ) {
 	global $wpdb;
 	$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $post_name ) );

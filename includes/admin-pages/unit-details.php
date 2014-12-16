@@ -28,7 +28,7 @@ if ( isset( $_GET[ 'unit_id' ] ) ) {
 	$unit_details								 = $unit->get_unit();
 	$force_current_unit_completion				 = $unit->details->force_current_unit_completion;
 	$force_current_unit_successful_completion	 = $unit->details->force_current_unit_successful_completion;
-	$unit_pagination							 = isset( $unit_details->unit_pagination ) ? $unit_details->unit_pagination : false;
+	$unit_pagination							 = cp_unit_uses_new_pagination( (int) $_GET[ 'unit_id' ] );
 } else {
 	$unit										 = new Unit();
 	$unit_id									 = 0;
@@ -254,7 +254,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                 ?></label>
 							<?php
 							// $editor_name = "unit_description";
 							// $editor_id = "unit_description";

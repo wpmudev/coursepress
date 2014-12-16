@@ -411,7 +411,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$last_inserted_unit_id = $post_id;
 
-			update_post_meta( $post_id, 'unit_pagination', '1' );
+			update_post_meta( $post_id, 'unit_pagination', true );
 			update_post_meta( $post_id, 'course_id', (int) $_POST[ 'course_id' ] );
 
 			update_post_meta( $post_id, 'unit_availability', cp_filter_content( $_POST[ 'unit_availability' ] ) );
@@ -440,11 +440,8 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_page_name( $page_number ) {
-			$unit_pagination_meta	 = get_post_meta( $this->details->ID, 'unit_pagination', true );
-			$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
-			
-			if ( $unit_pagination ) {
-				return !empty( $this->details->page_title[ 'page_' . $page_number ] ) ? $this->details->page_title['page_' . (int) $page_number ] : '';
+			if ( cp_unit_uses_new_pagination($this->details->ID) ) {
+				return !empty( $this->details->page_title[ 'page_' . $page_number ] ) ? $this->details->page_title[ 'page_' . (int) $page_number ] : '';
 			} else {
 				return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ($page_number - 1) ] : '';
 			}

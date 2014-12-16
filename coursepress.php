@@ -4548,9 +4548,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ($page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == $this->screen_base . '_settings') || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 
 				$unit_pagination = false;
-				if ( isset( $_GET[ 'course_id' ] ) ) {
-					$unit_pagination_meta	 = get_post_meta( (int) $_GET[ 'course_id' ], 'unit_pagination', true );
-					$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+				if ( isset( $_GET[ 'unit_id' ] ) ) {
+					$unit_pagination = cp_unit_uses_new_pagination( (int) $_GET[ 'unit_id' ] );
 				}
 
 				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
@@ -4590,11 +4589,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_script( 'courses-units', $this->plugin_url . 'js/coursepress-courses.js', array(), $this->version );
 
 			$unit_pagination = false;
-			if ( isset( $_GET[ 'course_id' ] ) ) {
-				$unit_pagination_meta	 = get_post_meta( (int) $_GET[ 'course_id' ], 'unit_pagination', true );
-				$unit_pagination		 = isset( $unit_pagination_meta ) ? true : false;
+			if ( isset( $_GET[ 'unit_id' ] ) ) {
+				$unit_pagination = cp_unit_uses_new_pagination( (int) $_GET[ 'unit_id' ] );
 			}
-			
+
 			wp_localize_script( 'courses-units', 'coursepress_units', array(
 				'withdraw_class_alert'			 => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
 				'delete_class'					 => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp' ),
