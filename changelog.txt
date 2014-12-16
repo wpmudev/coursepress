@@ -13,9 +13,11 @@ CHANGE LOG
 * Fixed shortcode typos on the settings page
 * Fixed issue with prerequisite courses for non-logged-in users
 * Course completion actions added for developers: 'coursepress_student_course_completed', 'coursepress_student_course_unit_completed'
+* Unit completion actions added for developers: 'coursepress_student_course_unit_pages_viewed', 'coursepress_student_course_unit_mandatory_question_answered', 'coursepress_student_course_unit_gradable_question_passed'
 * Added unit elements preloader
 * Added unit pages reorder functionality
-
+* Fixed issues with enrolment/signup button
+* New options for "Who can enroll" when not allowing anyone to register to your site.
 
 = 1.2.3.3 =
 * Added course category filter on the courses admin page

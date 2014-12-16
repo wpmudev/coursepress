@@ -1021,17 +1021,19 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												</label>
 
 												<select class="wide" name="meta_enroll_type" id="enroll_type">
-													<?php if ( cp_user_can_register() ) { ?>
-														<option value="anyone" <?php echo ( $enroll_type == 'anyone' ? 'selected=""' : '' ) ?>><?php _e( ' Anyone ', 'cp' ); ?></option>
-														<option value="passcode" <?php echo ( $enroll_type == 'passcode' ? 'selected=""' : '' ) ?>><?php _e( 'Anyone with a pass code', 'cp' ); ?></option>
-														<option value="prerequisite" <?php echo ( $enroll_type == 'prerequisite' ? 'selected=""' : '' ) ?>><?php _e( 'Anyone who completed the prerequisite course', 'cp' ); ?></option>
+													<?php
+														$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', array(
+															'manually' => __( 'Manually added only', 'cp' ),
+														) );
+													?>
+													<?php foreach( $enrollment_types as $key => $type_text ) { ?>
+														<option value="<?php echo esc_attr( $key ); ?>" <?php echo ( $enroll_type == $key ? 'selected=""' : '' ) ?>><?php echo esc_html( $type_text ) ?></option>
 													<?php } ?>
-													<option value="manually" <?php echo ( $enroll_type == 'manually' ? 'selected=""' : '' ) ?>><?php _e( 'Manually added only', 'cp' ); ?></option>
 												</select>
 
-												<?php if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
-													<span class="course_settings_enrollment_message"><?php _e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?></span>
-												<?php } ?>
+												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
+												<!--	<span class="course_settings_enrollment_message">--><?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?><!--</span>-->
+												<?php //} ?>
 											</div>
 
 											<div class='wide' id='manually_added_holder'>
