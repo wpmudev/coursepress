@@ -575,6 +575,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			require_once( $this->plugin_dir . 'includes/classes/class.course.php' );
 
 			/**
+			 * The hooks for course settings.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.course.settings.php' );
+
+
+			/**
 			 * Class to determine course completion.
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.completion.php' );
