@@ -1619,6 +1619,10 @@ a.delete_module_link:hover, a.remove_module_link:hover {
     width: 100% !important;
 }
 
+.editor_in_place iframe{
+    height: 382px !important;
+}
+
 .placeholder_holder{
     margin-top: 15px;
 }
