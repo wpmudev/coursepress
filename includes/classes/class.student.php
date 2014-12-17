@@ -99,17 +99,10 @@ if ( !class_exists( 'Student' ) ) {
 				$user_ID = $this->ID;
 			}
 
-			$get_old_values = get_user_option( 'visited_courses', $user_ID );
+			$completion	= new Course_Completion( $course->ID );
+			$completion->init_student_status( $student );
 
-			if ( $get_old_values == false ) {
-				$get_old_values = array();
-			}
-
-			if ( cp_in_array_r( $course_ID, $get_old_values ) ) {
-				return true;
-			} else {
-				return false;
-			}
+			return $completion->is_course_complete();
 		}
 
 		//Enroll student in the course
