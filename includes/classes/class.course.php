@@ -341,7 +341,9 @@ if ( !class_exists( 'Course' ) ) {
 						// Remove product if its not a paid course (clean up MarketPress products)
 					} elseif ( isset( $_POST[ 'meta_paid_course' ] ) && 'off' == $_POST[ 'meta_paid_course' ] ) {
 						if ( $mp_product_id && 0 != $mp_product_id ) {
-							wp_delete_post( $mp_product_id );
+							if ( get_post_type( $mp_product_id ) == 'product' ) {
+								wp_delete_post( $mp_product_id );
+							}
 							delete_post_meta( $this->id, 'mp_product_id' );
 							delete_post_meta( $this->id, 'marketpress_product' );
 						}
@@ -423,7 +425,6 @@ if ( !class_exists( 'Course' ) ) {
 									}
 								}
 							} // meta_course_category
-
 							//Add featured image
 							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) || isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) {
 
@@ -432,7 +433,7 @@ if ( !class_exists( 'Course' ) ) {
 
 								$upload_dir_info = wp_upload_dir();
 
-								$fl				 = trailingslashit( $upload_dir_info[ 'path' ] ) . basename( $_POST[ 'meta_featured_url' ] );
+								$fl = trailingslashit( $upload_dir_info[ 'path' ] ) . basename( $_POST[ 'meta_featured_url' ] );
 
 								$image = wp_get_image_editor( $fl ); // Return an implementation that extends <tt>WP_Image_Editor</tt>
 
@@ -534,8 +535,9 @@ if ( !class_exists( 'Course' ) ) {
 					self::kill( self::TYPE_COURSE, $this->id );
 					self::kill_related( self::TYPE_COURSE, $this->id );
 
-					wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
-
+					if ( get_post_type( $this->id ) == 'course' ) {
+						wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+					}
 					/* Delete all usermeta associated to the course */
 					cp_delete_user_meta_by_key( 'course_' . $this->id );
 					cp_delete_user_meta_by_key( 'enrolled_course_date_' . $this->id );
@@ -881,7 +883,7 @@ if ( !class_exists( 'Course' ) ) {
 					delete_post_meta( $new_course_id, 'auto_sku' );
 					delete_post_meta( $new_course_id, 'paid_course' );
 					delete_post_meta( $new_course_id, 'marketpress_product' );
-					
+
 
 					$units = $this->get_units( $old_course_id );
 
@@ -894,29 +896,28 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				public function additional_hooks() {
-
+					
 				}
 
 				public function enrollment_details() {
 
 					$this->enroll_type			 = get_post_meta( $this->id, 'enroll_type', true );
-					$this->course_start_date		 = get_post_meta( $this->id, 'course_start_date', true );
+					$this->course_start_date	 = get_post_meta( $this->id, 'course_start_date', true );
 					$this->course_end_date		 = get_post_meta( $this->id, 'course_end_date', true );
-					$this->enrollment_start_date	 = get_post_meta( $this->id, 'enrollment_start_date', true );
+					$this->enrollment_start_date = get_post_meta( $this->id, 'enrollment_start_date', true );
 					$this->enrollment_end_date	 = get_post_meta( $this->id, 'enrollment_end_date', true );
-					$this->open_ended_course		 = 'off' == get_post_meta( $this->id, 'open_ended_course', true ) ? false : true;
-					$this->open_ended_enrollment	 = 'off' == get_post_meta( $this->id, 'open_ended_enrollment', true ) ? false : true;
+					$this->open_ended_course	 = 'off' == get_post_meta( $this->id, 'open_ended_course', true ) ? false : true;
+					$this->open_ended_enrollment = 'off' == get_post_meta( $this->id, 'open_ended_enrollment', true ) ? false : true;
 					$this->prerequisite			 = get_post_meta( $this->id, 'prerequisite', true );
 
-					$this->is_paid = get_post_meta( $this->id, 'paid_course', true );
-					$this->is_paid = $this->is_paid && 'on' == $this->is_paid ? true : false;
+					$this->is_paid	 = get_post_meta( $this->id, 'paid_course', true );
+					$this->is_paid	 = $this->is_paid && 'on' == $this->is_paid ? true : false;
 
 					$this->course_started		 = strtotime( $this->course_start_date ) <= current_time( 'timestamp', 0 ) ? true : false;
 					$this->enrollment_started	 = strtotime( $this->enrollment_start_date ) <= current_time( 'timestamp', 0 ) ? true : false;
 					$this->course_expired		 = strtotime( $this->course_end_date ) < current_time( 'timestamp', 0 ) ? true : false;
 					$this->enrollment_expired	 = strtotime( $this->enrollment_end_date ) < current_time( 'timestamp', 0 ) ? true : false;
-					$this->full		             = $this->is_populated();
-
+					$this->full					 = $this->is_populated();
 				}
 
 			}

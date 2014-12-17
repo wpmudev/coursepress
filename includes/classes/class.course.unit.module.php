@@ -128,7 +128,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			self::kill( self::TYPE_MODULE, $id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
 
-			wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
+			if ( get_post_type( $id ) == 'module' ) {
+				wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
+			}
 			//Delete unit module responses
 
 			$args = array(
@@ -141,7 +143,9 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			$units_module_responses = get_posts( $args );
 
 			foreach ( $units_module_responses as $units_module_response ) {
-				wp_delete_post( $units_module_response->ID, true );
+				if ( get_post_type( $units_module_response->ID ) == 'module_response' ) {
+					wp_delete_post( $units_module_response->ID, true );
+				}
 			}
 
 			/**
@@ -290,8 +294,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		}
 
 		function get_modules( $unit_id, $unit_page = 0 ) {
-			
-			$unit_pagination = cp_unit_uses_new_pagination( (int)$unit_id );
+
+			$unit_pagination = cp_unit_uses_new_pagination( (int) $unit_id );
 
 			$modules = false;
 
@@ -385,8 +389,8 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			cp_set_last_visited_unit_page( $unit_id, $paged, get_current_user_ID() );
 			cp_set_visited_unit_page( $unit_id, $paged, get_current_user_ID() );
 
-			$unit_pagination = cp_unit_uses_new_pagination( (int)$unit_id );
-			$modules				 = $this->get_modules( $unit_id, $paged );
+			$unit_pagination = cp_unit_uses_new_pagination( (int) $unit_id );
+			$modules		 = $this->get_modules( $unit_id, $paged );
 
 			$course_id = do_shortcode( '[get_parent_course_id]' );
 
@@ -439,7 +443,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				exit;
 			}
 			?>
-			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                                    ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                                       ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
 				<input type="hidden" id="go_to_page" value="" />
 
 				<?php
@@ -486,11 +490,11 @@ if ( !class_exists( 'Unit_Module' ) ) {
 					}
 				}
 				wp_nonce_field( 'modules_nonce' );
-				
-				if($unit_pagination){
-					$pages_num = coursepress_unit_pages($unit_id, $unit_pagination);
+
+				if ( $unit_pagination ) {
+					$pages_num = coursepress_unit_pages( $unit_id, $unit_pagination );
 				}
-				
+
 				$is_last_page = coursepress_unit_module_pagination( $unit_id, $pages_num, true ); //check if current unit page is last page
 				if ( !$coursepress->is_preview( $unit_id ) ) {
 					if ( $front_save ) {
@@ -938,7 +942,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 									update_sortable_module_indexes();
 								}
 								;"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
-			   <?php
+			<?php
 		}
 
 		function display_title_on_front( $data ) {

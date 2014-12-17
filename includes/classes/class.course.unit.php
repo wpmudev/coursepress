@@ -337,7 +337,9 @@ if ( !class_exists( 'Unit' ) ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
-					wp_delete_post( $draft->ID, true );
+					if ( get_post_type( $draft->ID ) == 'module' || get_post_type( $draft->ID ) == 'unit' ) {
+						wp_delete_post( $draft->ID, true );
+					}
 				}
 			}
 		}
@@ -358,7 +360,9 @@ if ( !class_exists( 'Unit' ) ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
-					wp_delete_post( $draft->ID, true );
+					if ( get_post_type( $draft->ID ) == 'module' || get_post_type( $draft->ID ) == 'unit' ) {
+						wp_delete_post( $draft->ID, true );
+					}
 				}
 			}
 		}
@@ -440,7 +444,7 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_page_name( $page_number ) {
-			if ( cp_unit_uses_new_pagination($this->details->ID) ) {
+			if ( cp_unit_uses_new_pagination( $this->details->ID ) ) {
 				return !empty( $this->details->page_title[ 'page_' . $page_number ] ) ? $this->details->page_title[ 'page_' . (int) $page_number ] : '';
 			} else {
 				return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ($page_number - 1) ] : '';
@@ -474,7 +478,9 @@ if ( !class_exists( 'Unit' ) ) {
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
 
-			wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+			if ( get_post_type( $this->id ) == 'unit' ) {
+				wp_delete_post( $this->id, $force_delete ); //Whether to bypass trash and force deletion
+			}
 			//Delete unit modules
 
 			$args = array(

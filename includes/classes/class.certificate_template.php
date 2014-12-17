@@ -38,9 +38,13 @@ if ( !class_exists( 'CP_Certificate_Template' ) ) {
 
 		function delete_template( $force_delete = false ) {
 			if ( $force_delete ) {
-				wp_delete_post( $this->id );
+				if ( get_post_type( $this->id ) == 'certificates' ) {
+					wp_delete_post( $this->id );
+				}
 			} else {
-				wp_trash_post( $this->id );
+				if ( get_post_type( $this->id ) == 'certificates' ) {
+					wp_trash_post( $this->id );
+				}
 			}
 		}
 
