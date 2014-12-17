@@ -120,13 +120,31 @@ This is where `git submodule update` fits in. It makes sure that you have the la
 
 ### Releasing
 
-## CoursePress Campus
+#### Grunt Task Runner (automating)  
+
+You can use `grunt` to run a few automation tasks:  
+
+* i18n : Creates a cp-default.pot file and compiles it into a .mo file. (Note, it assumes that i18 tools are installed, see 'Other' below)  
+
+To use `grunt` you will need to have NPM (Node.js Package Manager) installed. (See 'Other' below)
+
+Grunt uses node.js modules. To install the modules to node_modules (ignored by .gitignore) run `npm install` in the coursepress/ folder. This pulls the configuration from package.json. You don't need to do this too often.  
+
+    npm install
+
+Now that its all setup and good to go, from now on you can just run `grunt` whenever you want to run the automation tasks. Preferably just before you release.  
+
+    grunt  
+
+For reference: Grunt's configuration is kept in Gruntfile.js.
+
+#### CoursePress Campus
 
 Its identical to CoursePress Pro, but be sure to remove marketpress.php, includes/marketpress/* and includes/extra/dashboard and commit the branch.  
 
 It does not get released, but is used by the CampusPress team for CampusPress integrations.
 
-## CoursePress (wp.org version)
+#### CoursePress (wp.org version)
 
 CoursePress is identical to CoursePress Pro, but the following changes need to be made:  
 
@@ -140,3 +158,26 @@ CoursePress is identical to CoursePress Pro, but the following changes need to b
 * Change plugin name in ./coursepress.php  
 * Remove WPMUDev Dashboard notifications and require statements  
 * Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php
+
+### Other
+
+#### Installing NPM and Grunt
+
+The easiest way to get `npm` is to install Node.js from: <http://nodejs.org/>  
+
+Once Node.js is installed you can check that you have `npm` and update it to the latest version.  
+
+    npm -v  
+	npm install -g npm
+
+Next step is to install grunt-cli via npm:  
+
+    npm install -g grunt-cli  
+
+#### Specifying i18 tools location  
+
+If `makepot` is not available in your system path you can set your i18 tools path in a private config.json file (excluded by .gitignore). Create config.json and add the following to it:  
+
+	{
+	    "i18nToolsPath": "/path/to/i18n-tools/"
+	}
