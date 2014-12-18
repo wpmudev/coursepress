@@ -1,9 +1,48 @@
 <?php
+/**
+ * This file defines the Course class.
+ *
+ * @copyright Incsub (http://incsub.com/)
+ *
+ * @license http://opensource.org/licenses/GPL-2.0 GNU General Public License, version 2 (GPL-2.0)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ * MA 02110-1301 USA
+ *
+ */
+
 if ( !defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
 if ( !class_exists( 'Course' ) ) {
 
+	/**
+	 * This class defines the methods and properties of a Course in CoursePress.
+	 *
+	 * A Course object has all the required methods to manage the Course custom
+	 * post type, and the surrounding meta data used to create courses in CoursePress.
+	 *
+	 * A course is typically also the parent post for a Unit[].
+	 *
+	 * If creating a Course object outside of CoursePress make sure that CoursePress
+	 * has already loaded. Hooking 'plugins_loaded' should do the trick.
+	 *
+	 * @todo Make sure we need !class_exists as it should be require_once() anyway.
+	 *
+	 * @since 1.0.0
+	 * @package CoursePress
+	 */
 	class Course extends CoursePress_Object {
 
 		var $id		 = '';
@@ -12,6 +51,17 @@ if ( !class_exists( 'Course' ) ) {
 		var $details;
 		var $data	 = array();
 
+		/**
+		 * The Course constructor.
+		 *
+		 * The constructor makes sure that it uses the WordPress Object cache to make
+		 * subsequent access less resource heavy.
+		 *
+		 * Note: The actual post gets loaded in Course::$details;
+		 *
+		 * @param string $id
+		 * @param string $output
+		 */
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
@@ -28,12 +78,7 @@ if ( !class_exists( 'Course' ) ) {
 				// Cache the course object
 				self::cache( self::TYPE_COURSE, $this->id, $this->details );
 
-				// cp_write_log( 'Course[' . $this->id . ']: Saved to cache..');
-			} else {
-				// cp_write_log( 'Course[' . $this->id . ']: Loaded from cache...');
 			};
-
-			$this->additional_hooks();
 
 			/**
 			 * Perform action after a course object is created.
@@ -43,10 +88,19 @@ if ( !class_exists( 'Course' ) ) {
 			do_action( 'coursepress_course_init', $this );
 		}
 
+		// PHP legacy constructor
 		function Course( $id = '', $output = 'OBJECT' ) {
 			$this->__construct( $id, $output );
 		}
 
+		/**
+		 * Initialises a Course object.
+		 *
+		 * If there is no post title defined it will create a default. It also assigns additional
+		 * metadata to the Course object.
+		 *
+		 * @param $course
+		 */
 		function init_course( &$course ) {
 			if ( !empty( $course ) ) {
 				if ( !isset( $course->post_title ) || $course->post_title == '' ) {
@@ -61,10 +115,25 @@ if ( !class_exists( 'Course' ) ) {
 			}
 		}
 
+		/**
+		 * Gets the actual WordPress post object for a Course.
+		 *
+		 * @return bool|null|WP_Post
+		 */
 		function get_course() {
 			return !empty( $this->details ) ? $this->details : false;
 		}
 
+		/**
+		 * Renders the course structure.
+		 *
+		 * Used in shortcodes on the front end to render the course hierarchy.
+		 *
+		 * @param string $try_title
+		 * @param bool $show_try
+		 * @param bool $hide_title
+		 * @param bool $echo
+		 */
 		function course_structure_front( $try_title = '', $show_try = true, $hide_title = false, $echo = true ) {
 			$show_unit		 = $this->details->show_unit_boxes;
 			$preview_unit	 = $this->details->preview_unit_boxes;
@@ -184,7 +253,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function is_open_ended() {
-					
+
 				}
 
 				static function get_course_featured_url( $course_id = false ) {
@@ -893,10 +962,6 @@ if ( !class_exists( 'Course' ) ) {
 					}
 
 					do_action( 'coursepress_course_duplicated', $new_course_id );
-				}
-
-				public function additional_hooks() {
-					
 				}
 
 				public function enrollment_details() {
