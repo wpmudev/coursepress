@@ -94,7 +94,7 @@ jQuery( document ).ready( function( $ ) {
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
 
-        if ( coursepress_units.unit_pagination == 0 ) {
+        if ( coursepress.unit_pagination == 0 ) {
             if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
                 jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
             } else {
@@ -111,9 +111,10 @@ jQuery( document ).ready( function( $ ) {
 
     jQuery( '.delete_unit_page .button-delete-unit' ).live( "click", function() {
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
+        var current_page_id = $( '#unit-pages .ui-tabs-nav .ui-state-active a' ).attr( 'href' );
 
         if ( delete_unit_page_and_elements_confirmed() ) {
-            jQuery( '#unit-page-' + current_page + ' .element_id' ).each( function( i, obj ) {
+            jQuery( current_page_id + ' .element_id' ).each( function( i, obj ) {
                 prepare_element_for_execution( jQuery( this ).val() );
                 jQuery( this ).closest( '.module-holder-title' ).remove();
             } );
@@ -125,9 +126,11 @@ jQuery( document ).ready( function( $ ) {
 
             jQuery( '#unit-pages .ui-tabs-nav .ui-state-active' ).remove();
 
-            jQuery( '#unit-page-' + current_page ).remove();
-
+            //reenumarate_unit_pages();
+            jQuery( current_page_id ).remove();
+            cp_repaint_all_editors();
             reenumarate_unit_pages();
+
 
             /*if (current_page == 1) {
              active_num = 1;
@@ -148,10 +151,35 @@ jQuery( document ).ready( function( $ ) {
             jQuery( "#unit-pages" ).tabs( { active: 0 } );
 
             current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
+            current_page_id = $( '#unit-pages .ui-tabs-nav .ui-state-active a' ).attr( 'href' );
+
+            var elements_count = jQuery( current_page_id + ' .modules_accordion .module-holder-title' ).length;
+
+            if ( coursepress.unit_pagination == 0 ) {
+                if ( ( current_page == 1 && elements_count == 0 ) || ( current_page >= 2 && elements_count == 1 ) ) {
+                    jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+                } else {
+                    jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+                }
+            } else {
+                if ( elements_count == 0 ) {
+                    jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).show();
+                } else {
+                    jQuery( '#unit-page-' + current_page + ' .elements-holder .no-elements' ).hide();
+                }
+            }
+
+
 
             if ( typeof current_page === "undefined" ) {
                 jQuery( "#unit-pages" ).tabs( { active: 1 } );
             }
+
+            update_module_page_number();
+            update_unit_page_order_and_numbers();
+            cp_repaint_all_editors();
+
+            jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
         }
 
         function reenumarate_unit_pages() {
@@ -518,7 +546,7 @@ function cp_repaint_current_page_editors() {
 
     var current_page = jQuery( ".unit-page-holder[aria-expanded='true']" );
     var current_page_id = current_page.attr( 'id' );
-    
+
     jQuery( '#' + current_page_id + ' .wp-editor-wrap' ).each( function( i, obj ) {
 
         var nth_child_num = i + 1;
@@ -749,7 +777,7 @@ function coursepress_modules_ready() {
             skin: coursepress_editor.skin,
             menubar: false,
             height: '360px',
-            content_css: coursepress_units.cp_editor_style,
+            content_css: coursepress.cp_editor_style,
         } );
 
         // Init Quicktags
