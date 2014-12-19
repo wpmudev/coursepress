@@ -1,10 +1,46 @@
 <?php
+/**
+ * This file defines the Student class extending WP_User.
+ *
+ * @copyright Incsub (http://incsub.com/)
+ *
+ * @license http://opensource.org/licenses/GPL-2.0 GNU General Public License, version 2 (GPL-2.0)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ * MA 02110-1301 USA
+ *
+ */
+
 
 if ( !defined( 'ABSPATH' ) )
 	exit; // Exit if accessed directly
 
+
+
 if ( !class_exists( 'Student' ) ) {
 
+	/**
+	 * This class defines the methods and properties of a Student in CoursePress.
+	 *
+	 * If creating a Student object outside of CoursePress make sure that CoursePress
+	 * has already loaded. Hooking 'plugins_loaded' should do the trick.
+	 *
+	 * @todo Make sure we need !class_exists as it should be require_once() anyway.
+	 *
+	 * @since 1.0.0
+	 * @package CoursePress
+	 */
 	class Student extends WP_User {
 
 		var $first_name		 = '';
@@ -13,26 +49,36 @@ if ( !class_exists( 'Student' ) ) {
 		var $details			 = array();
 
 		function __construct( $ID, $name = '' ) {
-			global $wpdb;
 
+			/**
+			 * If its an existing user, make sure we initialise it with WP_User[]
+			 */
 			if ( $ID != 0 ) {
 				parent::__construct( $ID, $name );
 			}
 
 			/* Set meta vars */
-
 			$this->first_name		 = get_user_meta( $ID, 'first_name', true );
 			$this->last_name		 = get_user_meta( $ID, 'last_name', true );
+
+			/**
+			 * Get number of enrolled courses.
+			 */
 			$this->courses_number	 = Student::get_courses_number( $this->ID );
 
-			/* Add hooks to handle completion data */
+			/**
+			 * Add hooks to handle completion data.
+			 */
 			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
 			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
 			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
 			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
 			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
 
-			/* Add hooks to handle other tracking */
+			/**
+			 * Add hooks to handle other tracking
+			 * @todo More hooks coming.
+			 */
 
 			/**
 			 * Perform action after a Student object is created.
@@ -42,12 +88,20 @@ if ( !class_exists( 'Student' ) ) {
 			do_action( 'coursepress_student_init', $this );
 		}
 
+		// PHP legacy constructor
 		function Student( $ID, $name = '' ) {
 			$this->__construct( $ID, $name );
 		}
 
-		// Check if the user is already enrolled in the course
-		// 3rd parameter is to deal with legacy
+		/**
+		 * Check if the user is already enrolled in the course.
+		 *
+		 * @param $course_id
+		 * @param bool $user_id
+		 * @param string $action Obsolete parameter. No longer required.
+		 *
+		 * @return bool
+		 */
 		function user_enrolled_in_course( $course_id, $user_id = false, $action = '' ) {
 
 			if ( empty( $user_id ) ) {
@@ -61,6 +115,18 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Check to see if a user has visited a course.
+		 *
+		 * Better to use Course_Completion[] class. But keeping this method for legacy.
+		 *
+		 * @see Course_Completion
+		 *
+		 * @param int $course_ID
+		 * @param string $user_ID
+		 *
+		 * @return bool True if user has accessed the course at least once.
+		 */
 		function is_course_visited( $course_ID = 0, $user_ID = '' ) {
 			if ( $user_ID == '' ) {
 				$user_ID = $this->ID;
@@ -79,6 +145,18 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Check to see if a user has visited a specific unit.
+		 *
+		 * Better to use Course_Completion[] class. But keeping this method for legacy.
+		 *
+		 * @see Course_Completion
+		 *
+		 * @param int $unit_ID
+		 * @param string $user_ID
+		 *
+		 * @return bool True if user has accessed the course at least once.
+		 */
 		function is_unit_visited( $unit_ID = 0, $user_ID = '' ) {
 			if ( $user_ID == '' ) {
 				$user_ID = $this->ID;
@@ -94,37 +172,57 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Check to see if the student has completed a given course.
+		 *
+		 * Better to use Course_Completion[] class. See code in this function.
+		 *
+		 * @see Course_Completion
+		 *
+		 * @param int $course_ID
+		 * @param string $user_ID
+		 *
+		 * @return bool True if course is complete.
+		 */
 		function is_course_complete( $course_ID = 0, $user_ID = '' ) {
 			if ( $user_ID == '' ) {
 				$user_ID = $this->ID;
 			}
 
-			$get_old_values = get_user_option( 'visited_courses', $user_ID );
+			$completion	= new Course_Completion( $course_ID );
+			$completion->init_student_status( $user_ID );
 
-			if ( $get_old_values == false ) {
-				$get_old_values = array();
-			}
-
-			if ( cp_in_array_r( $course_ID, $get_old_values ) ) {
-				return true;
-			} else {
-				return false;
-			}
+			return $completion->is_course_complete();
 		}
 
-		//Enroll student in the course
+		/**
+		 * Enroll student in the given course.
+		 *
+		 * @todo $class and $group for future development
+		 *
+		 * @param $course_id
+		 * @param string $class
+		 * @param string $group
+		 *
+		 * @return bool
+		 */
 		function enroll_in_course( $course_id, $class = '', $group = '' ) {
 			global $cp;
 			$current_time = current_time( 'mysql' );
 
 			$global_option = ! is_multisite();
-			
+
+			/**
+			 * Update metadata with relevant details.
+			 */
 			update_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $current_time, $global_option ); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
 			update_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option );
 			update_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option );
 			update_user_option( $this->ID, 'role', 'student', $global_option ); //alternative to roles used
 
-
+			/**
+			 * Filter can be used to override email details.
+			 */
 			$email_args = apply_filters( 'coursepress_student_enrollment_email_args', array(
 				'email_type' => 'enrollment_confirmation',
 				'course_id' => $course_id,
@@ -134,14 +232,20 @@ if ( !class_exists( 'Student' ) ) {
 				'student_email' => $this->user_email
 			) );
 
+			/**
+			 * If a valid email address is given, use it to email the student with enrollment information.
+			 */
 			if ( is_email( $email_args[ 'student_email' ] ) ) {
 				coursepress_send_email( $email_args );
 			}
-			
+
+			/**
+			 * Setup actions for when a student enrolls.
+			 * Can be used to create notifications or tracking student actions.
+			 */
 			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
 			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
 			do_action('student_enrolled_student_notification', $this->ID, $course_id);
-			
 
 			/**
 			 * Perform action after a Student is enrolled.
@@ -155,6 +259,13 @@ if ( !class_exists( 'Student' ) ) {
 		}
 
 		//Withdraw student from the course
+
+		/**
+		 * Withdraw a student from a course.
+		 *
+		 * @param $course_id
+		 * @param bool $keep_withdrawed_record If true, the withdrawn date will be saved in user meta.
+		 */
 		function withdraw_from_course( $course_id, $keep_withdrawed_record = true ) {
 
 			$current_time = current_time( 'mysql' );
@@ -175,7 +286,9 @@ if ( !class_exists( 'Student' ) ) {
 			}
 
 			/**
-			 * Perform action after a Student is withdrawn.
+			 * Perform actions after a Student is withdrawn.
+			 *
+			 * Can be used for notifications and student tracking.
 			 *
 			 * @since 1.2.2
 			 */
@@ -186,8 +299,11 @@ if ( !class_exists( 'Student' ) ) {
 
 		}
 
-		//Withdraw from all courses
-
+		/**
+		 * Withdraw a student from all courses.
+		 *
+		 * @uses Student::withdraw_from_course
+		 */
 		function withdraw_from_all_courses() {
 			$courses = $this->get_enrolled_courses_ids();
 
@@ -196,6 +312,15 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Filters through student meta to return only the course IDs.
+		 *
+		 * @uses Student::filter_course_meta_array() to filter the meta array
+		 *
+		 * @param $user_id
+		 *
+		 * @return array|mixed
+		 */
 		static function get_course_enrollment_meta( $user_id ) {
 			$meta = get_user_meta( $user_id );
 			if ( $meta ) {
@@ -208,13 +333,31 @@ if ( !class_exists( 'Student' ) ) {
 			return $meta;
 		}
 
+		/**
+		 * Filters through student meta.
+		 *
+		 * @uses Student::course_id_from_meta()
+		 *
+		 * @return mixed
+		 */
 		static function filter_course_meta_array( $var ) {
 			$course_id_from_meta = Student::course_id_from_meta( $var );
 			if ( !empty( $course_id_from_meta ) ) {
 				return $var;
 			}
+			return false;
 		}
 
+		/**
+		 * Extracts the correct Course ID from the meta.
+		 *
+		 * Makes sure that the correct ID gets returned from the correct blog
+		 * regardless of single- or multisite.
+		 *
+		 * @param $meta_value
+		 *
+		 * @return bool|mixed
+		 */
 		static function course_id_from_meta( $meta_value ) {
 			global $wpdb;
 			$prefix		 = $wpdb->prefix;
@@ -261,17 +404,33 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
-		// alias to get_enrolled_course_ids()
+		/**
+		 * Get the IDs of enrolled courses.
+		 *
+		 * @uses Student::get_course_enrollment_meta()
+		 * @return array Contains enrolled course IDs.
+		 */
+		function get_enrolled_courses_ids() {
+			return Student::get_course_enrollment_meta( $this->ID );
+		}
+
+		/**
+		 * Alias to get_enrolled_courses_ids()
+		 *
+		 * @uses Student::get_enrolled_courses_ids()
+		 * @return array
+		 */
 		function get_assigned_courses_ids() {
 			return $this->get_enrolled_courses_ids();
 		}
 
-		function get_enrolled_courses_ids() {
-			// get_course_enrollment_meta returns the course_ids
-			return Student::get_course_enrollment_meta( $this->ID );
-		}
-
-		//Get number of courses student enrolled in
+		/**
+		 * Get number of courses the student is enrolled in.
+		 *
+		 * @param bool $user_id
+		 *
+		 * @return int
+		 */
 		static function get_courses_number( $user_id = false ) {
 			if ( !$user_id ) {
 				return 0;
@@ -280,6 +439,13 @@ if ( !class_exists( 'Student' ) ) {
 			return $courses_count;
 		}
 
+		/**
+		 * Either deletes the WordPress user or simply withdraws the user.
+		 *
+		 * Defaults to withdrawing as deleting a user is quite a drastic action.
+		 *
+		 * @param bool $delete_user Defaults to 'false' only use 'true' if you know what you're doing.
+		 */
 		function delete_student( $delete_user = false ) {
 			if ( $delete_user ) {
 				wp_delete_user( $this->ID ); //without reassign				
@@ -294,22 +460,27 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Alias to user_enrolled_in_course()
+		 *
+		 * @uses Student::user_enrolled_in_course()
+		 *
+		 * @param string $course_id
+		 * @param string $user_id
+		 *
+		 * @return bool
+		 */
 		function has_access_to_course( $course_id = '', $user_id = '' ) {
-            global $wpdb;
-
-//            if ( empty( $user_id ) ) {
-//                $user_id = get_current_user_id();
-//            }
-//
-//            if ( empty( $course_id ) ) {
-//                return false;
-//            }
-//			$courses = $this->get_enrolled_courses_ids();
-//	        return $this->user_enrolled_in_course( $course_id );
-//            return is_array( $courses ) ? in_array( $course_id, $courses ) : false;
 			return $this->user_enrolled_in_course( $course_id, $user_id );
 		}
 
+		/**
+		 * Gets the total amount of module/unit element responses.
+		 *
+		 * @param $course_id
+		 *
+		 * @return int
+		 */
 		function get_number_of_responses( $course_id ) {
 			$args = array(
 				'post_type'		 => array( 'module_response', 'attachment' ),
@@ -329,6 +500,13 @@ if ( !class_exists( 'Student' ) ) {
 			return count( get_posts( $args ) );
 		}
 
+		/**
+		 * Gets the average grade of module/unit element responses.
+		 *
+		 * @param $course_id
+		 *
+		 * @return int
+		 */
 		function get_avarage_response_grade( $course_id ) {
 			$args = array(
 				'post_type'		 => array( 'module_response', 'attachment' ),
@@ -368,6 +546,13 @@ if ( !class_exists( 'Student' ) ) {
 			return $avarage_grade;
 		}
 
+		/**
+		 * Updates a student's data.
+		 *
+		 * @param $student_data
+		 *
+		 * @return bool
+		 */
 		function update_student_data( $student_data ) {
 			$student_data = apply_filters( 'coursepress_student_update_data', $student_data );
 			if ( wp_update_user( $student_data ) ) {
@@ -385,6 +570,16 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Updates Student's group.
+		 *
+		 * @todo Future development.
+		 *
+		 * @param $course_id
+		 * @param $group
+		 *
+		 * @return bool
+		 */
 		function update_student_group( $course_id, $group ) {
 			$global_option = ! is_multisite();
 			
@@ -403,6 +598,16 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Update's a student's class in a course.
+		 *
+		 * @todo Future development.
+		 *
+		 * @param $course_id
+		 * @param $class
+		 *
+		 * @return bool
+		 */
 		function update_student_class( $course_id, $class ) {
 			$global_option = ! is_multisite();
 
@@ -421,12 +626,27 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		/**
+		 * Add's a new user to WordPress with relevant data.
+		 *
+		 * @param $student_data
+		 *
+		 * @return int|WP_Error
+		 */
 		function add_student( $student_data ) {
 			$student_data[ 'role' ]			 = 'subscriber';
 			$student_data[ 'first_name' ]	 = str_replace( '\\', '', $student_data[ 'first_name' ] );
 			return wp_insert_user( $student_data );
 		}
 
+		/**
+		 * Updates student's completion meta-data.
+		 *
+		 * This also triggers relevant actions that are relevant for student tracking.
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 */
 		function add_course_completed_meta( $student_id, $course_id ) {
 
 			$global_option = ! is_multisite();
@@ -444,6 +664,15 @@ if ( !class_exists( 'Student' ) ) {
 
 		}
 
+		/**
+		 * Updates student's unit completion meta-data.
+		 *
+		 * This also triggers relevant actions that are relevant for student tracking.
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 * @param $unit_id
+		 */
 		function add_unit_completed_meta( $student_id, $course_id, $unit_id ) {
 
 			$global_option = ! is_multisite();
@@ -472,6 +701,15 @@ if ( !class_exists( 'Student' ) ) {
 
 		}
 
+		/**
+		 * Updates student's unit pages viewed meta-data.
+		 *
+		 * This also triggers relevant actions that are relevant for student tracking.
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 * @param $unit_id
+		 */
 		public function add_pages_viewed_meta( $student_id, $course_id, $unit_id ) {
 			$global_option = ! is_multisite();
 
@@ -509,6 +747,16 @@ if ( !class_exists( 'Student' ) ) {
 
 		}
 
+		/**
+		 * Updates student's mandatory questions meta-data.
+		 *
+		 * This also triggers relevant actions that are relevant for student tracking.
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 * @param $unit_id
+		 * @param $module_id
+		 */
 		public function add_mandatory_questions_meta( $student_id, $course_id, $unit_id, $module_id ) {
 			$global_option = ! is_multisite();
 
@@ -551,6 +799,16 @@ if ( !class_exists( 'Student' ) ) {
 
 		}
 
+		/**
+		 * Updates student's questions passed meta-data.
+		 *
+		 * This also triggers relevant actions that are relevant for student tracking.
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 * @param $unit_id
+		 * @param $module_id
+		 */
 		public function add_questions_passed_meta( $student_id, $course_id, $unit_id, $module_id ) {
 			$global_option = ! is_multisite();
 
