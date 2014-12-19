@@ -465,7 +465,7 @@ if( is_multisite() ) {
                                                                 }
                                                                 if ( isset($comment) ) {
                                                                     ?>
-                                                                    <a class="response_comment" alt="<?php echo esc_attr($comment); ?>" title="<?php echo esc_attr($comment); ?>">✓</a>
+                                                                    <a class="response_comment" alt="<?php echo esc_attr(strip_tags($comment)); ?>" title="<?php echo esc_attr(strip_tags($comment)); ?>">✓</a>
                                                                     <?php
                                                                 } else {
                                                                     echo '-';

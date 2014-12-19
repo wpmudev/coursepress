@@ -2811,7 +2811,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			//First install
 			$installed = get_option( 'cp_first_install', false );
-			if ( $installed ) {
+			if ( !$installed ) {
 				first_install();
 			}
 
