@@ -20,6 +20,8 @@ CHANGE LOG
 * Fixed shortcode typos on the settings page
 * Fixed issue with prerequisite courses for non-logged-in users
 * Fixed issues with enrollment/signup button
+* Strip html tags from the assessment comment ALT and TITLE
+* Fixed issues with dummy course not being created upon first install 
 * Other code improvements
 
 = 1.2.3.3 =
