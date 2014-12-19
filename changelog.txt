@@ -9,7 +9,6 @@ CHANGE LOG
 = 1.2.3.4 =
 * Added additional instructor capability for managing Course Categories
 * Added unit elements preloader
-* Added unit pages reorder functionality
 * Course completion actions added for developers: 'coursepress_student_course_completed', 'coursepress_student_course_unit_completed'
 * Unit completion actions added for developers: 'coursepress_student_course_unit_pages_viewed', 'coursepress_student_course_unit_mandatory_question_answered', 'coursepress_student_course_unit_gradable_question_passed'
 * New options for "Who can enroll" when not allowing anyone to register to your site.

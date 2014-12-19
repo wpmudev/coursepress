@@ -440,6 +440,10 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 							<div class="unit_pages_preloader">
 								<div class="preloader_image"><?php _e( 'Loading unit elements...', 'cp' ); ?></div>
 							</div>
+							
+							<div class="unit_pages_delete">
+								<div class="unit_pages_delete_message"><?php _e( 'Deleting the unit page...', 'cp' ); ?></div>
+							</div>
 
                             <div class="course-details-unit-controls">
                                 <div class="unit-control-buttons">

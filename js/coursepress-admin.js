@@ -110,10 +110,14 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     jQuery( '.delete_unit_page .button-delete-unit' ).live( "click", function() {
+
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var current_page_id = $( '#unit-pages .ui-tabs-nav .ui-state-active a' ).attr( 'href' );
 
         if ( delete_unit_page_and_elements_confirmed() ) {
+            jQuery( '#unit-pages' ).css( 'display', 'none' );
+            jQuery( '.unit_pages_delete' ).css( 'display', 'block' );
+
             jQuery( current_page_id + ' .element_id' ).each( function( i, obj ) {
                 prepare_element_for_execution( jQuery( this ).val() );
                 jQuery( this ).closest( '.module-holder-title' ).remove();
@@ -128,7 +132,7 @@ jQuery( document ).ready( function( $ ) {
 
             //reenumarate_unit_pages();
             jQuery( current_page_id ).remove();
-            cp_repaint_all_editors();
+            //cp_repaint_all_editors();
             reenumarate_unit_pages();
 
 
@@ -177,9 +181,13 @@ jQuery( document ).ready( function( $ ) {
 
             update_module_page_number();
             update_unit_page_order_and_numbers();
-            cp_repaint_all_editors();
+            //cp_repaint_all_editors();
 
             jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
+
+
+
+            jQuery( '.unit-control-buttons .save-unit-button' ).click();
         }
 
         function reenumarate_unit_pages() {
@@ -1636,24 +1644,25 @@ jQuery( document ).ready( function( $ ) {
     }
 
     update_unit_page_order_and_numbers();
-
-    jQuery( "#unit-pages ul" ).sortable( {
-        placeholder: "unit-page-placeholder",
-        //items: "",
-        items: "li:not( .add_new_unit_page, .unit-pages-title )",
-        activate: function( event, ui ) {
-            //alert( 'received!' );
-            jQuery( '.unit-pages-navigation' ).css( 'opacity', '0.7' );
-        },
-        update: function( event, ui ) {
-            update_unit_page_order_and_numbers();
-            cp_repaint_all_editors();
-            jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
-            //update_sortable_module_indexes_page_sort();
-        },
-        stop: function( event, ui ) {
-            jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
-        }
-    } );
+    /*
+     jQuery( "#unit-pages ul" ).sortable( {
+     placeholder: "unit-page-placeholder",
+     //items: "",
+     items: "li:not( .add_new_unit_page, .unit-pages-title )",
+     activate: function( event, ui ) {
+     //alert( 'received!' );
+     jQuery( '.unit-pages-navigation' ).css( 'opacity', '0.7' );
+     },
+     update: function( event, ui ) {
+     update_unit_page_order_and_numbers();
+     cp_repaint_all_editors();
+     jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
+     //update_sortable_module_indexes_page_sort();
+     },
+     stop: function( event, ui ) {
+     jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
+     }
+     } );
+     */
 
 } );
