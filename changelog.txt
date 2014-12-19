@@ -7,17 +7,20 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.3.4 =
+* Added additional instructor capability for managing Course Categories
+* Added unit elements preloader
+* Added unit pages reorder functionality
+* Course completion actions added for developers: 'coursepress_student_course_completed', 'coursepress_student_course_unit_completed'
+* Unit completion actions added for developers: 'coursepress_student_course_unit_pages_viewed', 'coursepress_student_course_unit_mandatory_question_answered', 'coursepress_student_course_unit_gradable_question_passed'
+* New options for "Who can enroll" when not allowing anyone to register to your site.
+* Fixed WordPress 4.1 issues (hidden course list in the admin)
 * Fixed "administrator" role for network sites.
   CoursePress menus and permissions now work properly for new sites.
   For old sites the administrator's role will have to be reset (change to "subscriber" then back to "administrator").
 * Fixed shortcode typos on the settings page
 * Fixed issue with prerequisite courses for non-logged-in users
-* Course completion actions added for developers: 'coursepress_student_course_completed', 'coursepress_student_course_unit_completed'
-* Unit completion actions added for developers: 'coursepress_student_course_unit_pages_viewed', 'coursepress_student_course_unit_mandatory_question_answered', 'coursepress_student_course_unit_gradable_question_passed'
-* Added unit elements preloader
-* Added unit pages reorder functionality
 * Fixed issues with enrollment/signup button
-* New options for "Who can enroll" when not allowing anyone to register to your site.
+* Other code improvements
 
 = 1.2.3.3 =
 * Added course category filter on the courses admin page

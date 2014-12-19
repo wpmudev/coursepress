@@ -97,7 +97,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 	$course_category = isset($_GET['course_category_filter']) ? (int)$_GET['course_category_filter'] : 0;
 	$show_courses_per_page	 = isset( $_GET[ 'courses_per_page' ] ) ? $_GET[ 'courses_per_page' ] : 10;
 	$wp_course_search		 = new Course_Search( $coursesearch, $page_num, $show_courses_per_page, $course_category );
-
+	
 	if ( isset( $_GET[ 'course_id' ] ) ) {
 		$course = new Course( $_GET[ 'course_id' ] );
 	}

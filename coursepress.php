@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.3.4
+  Version: 1.2.3.4 b3
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.3.4';
+		public $version = '1.2.3.4 b3';
 
 		/**
 		 * Plugin friendly name.
@@ -3249,21 +3249,28 @@ if ( !class_exists( 'CoursePress' ) ) {
 				),
 				'supports'				 => array( 'thumbnail' ),
 				'taxonomies'			 => array( 'course_category' ),
+			//coursepress_course_categories_cap
 			);
 
 			register_post_type( 'course', $args );
 			// Register custom taxonomy
-			register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
-				"hierarchical"	 => true,
-				'label'			 => __( 'Course Categories', 'cp' ),
-				'singular_label' => __( 'Course Category', 'cp' ),
-				'rewrite'		 => array(
-					'slug' => $this->get_course_category_slug()
-				)
-			) )
-			);
+			/* register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
+			  "hierarchical"	 => true,
+			  'label'			 => __( 'Course Categories', 'cp' ),
+			  'singular_label' => __( 'Course Category', 'cp' ),
+			  'rewrite'		 => array(
+			  'slug' => $this->get_course_category_slug()
+			  ),
+			  'capabilities'	 => array(
+			  'manage_terms'	 => 'coursepress_course_categories_manage_terms_cap',
+			  'edit_terms'	 => 'coursepress_course_categories_edit_terms_cap',
+			  'delete_terms'	 => 'coursepress_course_categories_delete_terms_cap',
+			  'assign_terms'	 => 'coursepress_courses_cap'
+			  ),
+			  ) )
+			  ); */
 
-			register_taxonomy( 'course_category', 'course', array(
+			register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
 				'labels'			 => array(
 					'name'			 => __( 'Course Categories', 'cp' ),
 					'singular_name'	 => __( 'Course Category', 'cp' ),
@@ -3278,10 +3285,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'hierarchical'		 => true,
 				'sort'				 => true,
 				'args'				 => array( 'orderby' => 'term_order' ),
-				'rewrite'			 => array( 'slug' => 'course-category' ),
-				'show_admin_column'	 => true
+				'rewrite'			 => array( 'slug' => $this->get_course_category_slug() ),
+				'show_admin_column'	 => true,
+				'capabilities'		 => array(
+					'manage_terms'	 => 'coursepress_course_categories_manage_terms_cap',
+					'edit_terms'	 => 'coursepress_course_categories_edit_terms_cap',
+					'delete_terms'	 => 'coursepress_course_categories_delete_terms_cap',
+					'assign_terms'	 => 'coursepress_courses_cap'
+				),
 			)
-			);
+			) );
 			//add_theme_support( 'post-thumbnails' );
 			//Register Units post type
 			$args = array(

@@ -52,14 +52,15 @@ $default_capabilities	 = array_keys( CoursePress_Capabilities::$capabilities[ 'i
 $instructor_capabilities = get_option( 'coursepress_instructor_capabilities', $default_capabilities );
 
 $capability_boxes = array(
-	'instructor_capabilities_general'		 => __( 'General', 'cp' ),
-	'instructor_capabilities_courses'		 => __( 'Courses', 'cp' ),
-	'instructor_capabilities_units'			 => __( 'Units', 'cp' ),
-	'instructor_capabilities_instructors'	 => __( 'Instructors', 'cp' ),
+	'instructor_capabilities_general'			 => __( 'General', 'cp' ),
+	'instructor_capabilities_courses'			 => __( 'Courses', 'cp' ),
+	'instructor_capabilities_course_categories'	 => __( 'Course Categories', 'cp' ),
+	'instructor_capabilities_units'				 => __( 'Units', 'cp' ),
+	'instructor_capabilities_instructors'		 => __( 'Instructors', 'cp' ),
 	//'instructor_capabilities_classes' => __( 'Classes', 'cp' ),
-	'instructor_capabilities_students'		 => __( 'Students', 'cp' ),
-	'instructor_capabilities_notifications'	 => __( 'Notifications', 'cp' ),
-	'instructor_capabilities_discussions'	 => __( 'Discussions', 'cp' ),
+	'instructor_capabilities_students'			 => __( 'Students', 'cp' ),
+	'instructor_capabilities_notifications'		 => __( 'Notifications', 'cp' ),
+	'instructor_capabilities_discussions'		 => __( 'Discussions', 'cp' ),
  //'instructor_capabilities_groups' => __( 'Settings Pages', 'cp' ),
 );
 
@@ -86,6 +87,12 @@ $instructor_capabilities_courses = array(
 	'coursepress_change_course_status_cap'		 => __( 'Change status of any assigned course', 'cp' ),
 	'coursepress_change_my_course_status_cap'	 => __( 'Change status of courses made by the instructor only', 'cp' ),
  // 'coursepress_change_all_courses_status_cap' => __( 'Change status of ALL course', 'cp' ),
+);
+
+$instructor_capabilities_course_categories = array(
+	'coursepress_course_categories_manage_terms_cap' => __( 'Manage Categories', 'cp' ),
+	'coursepress_course_categories_edit_terms_cap'	 => __( 'Edit Categories', 'cp' ),
+	'coursepress_course_categories_delete_terms_cap' => __( 'Delete Categories', 'cp' ),
 );
 
 $instructor_capabilities_units = array(

@@ -442,7 +442,8 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 		$module_id	 = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
 
 		if ( $module_id > 0 ) {
-			$pages_num = get_post_meta( $module_id, 'module_page', true );
+			$pages_num = count(get_post_meta( $unit_id, 'page_title', true ));
+			//$pages_num = get_post_meta( $module_id, 'module_page', true );
 		} else {
 			$pages_num = 1;
 		}

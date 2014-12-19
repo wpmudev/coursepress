@@ -14,6 +14,7 @@ if ( !class_exists( 'Course_Search' ) ) {
 
 		function __construct( $search_term = '', $page_num = '', $courses_per_page = 10, $category = 0 ) {
 			$this->is_light = CoursePress_Capabilities::is_pro() ? false : true;
+
 			if ( $this->is_light ) {
 				$page_num				 = 1;
 				$this->courses_per_page	 = 2;
@@ -22,6 +23,7 @@ if ( !class_exists( 'Course_Search' ) ) {
 					$this->courses_per_page = $courses_per_page;
 				}
 			}
+
 			$this->search_term	 = $search_term;
 			$this->raw_page		 = ( '' == $page_num ) ? false : (int) $page_num;
 			$this->page_num		 = (int) ( '' == $page_num ) ? 1 : $page_num;
@@ -47,12 +49,16 @@ if ( !class_exists( 'Course_Search' ) ) {
 			}
 
 			if ( $selected_course_order_by == 'course_order' ) {
-				$args[ 'meta_key' ]		 = 'course_order';
+				/* FIX FOR 4.1 */
 				$args[ 'meta_query' ]	 = array(
 					'relation' => 'OR',
 					array(
 						'key'		 => 'course_order',
 						'compare'	 => 'NOT EXISTS'
+					),
+					array(
+						'key'		 => 'course_order',
+						'compare'	 => 'EXISTS'
 					),
 				);
 				$args[ 'orderby' ]		 = 'meta_value';
@@ -75,7 +81,9 @@ if ( !class_exists( 'Course_Search' ) ) {
 
 		function get_results( $count = false ) {
 			global $wpdb;
+
 			$offset = ($this->page_num - 1 ) * $this->courses_per_page;
+
 			if ( $this->search_term !== '' ) {
 				$search_args		 = $this->args;
 				$search_args[ 's' ]	 = $this->search_term;
@@ -123,7 +131,7 @@ if ( !class_exists( 'Course_Search' ) ) {
 			if ( $this->search_term != '' ) {
 				$pagination->target( esc_url( "admin.php?page=courses&s=" . $this->search_term ) );
 			} else {
-				$pagination->target( "admin.php?page=courses&courses_per_page=" . $show_courses_per_page . "&course_category_filter=".$course_category );
+				$pagination->target( "admin.php?page=courses&courses_per_page=" . $show_courses_per_page . "&course_category_filter=" . $course_category );
 			}
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
