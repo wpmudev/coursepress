@@ -1,3 +1,4 @@
+var global_iframe_content = '';
 jQuery( document ).ready( function( $ ) {
 
     $( 'input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url' ).live( 'input propertychange paste change', function() {
@@ -570,6 +571,13 @@ function cp_repaint_current_page_editors() {
             mode: "specific_textareas",
             editor_selector: "mceEditor",
         } );
+
+        /*var iframe_id = $( this ).find( 'iframe' ).attr( 'id' );
+         var iframe_content = document.getElementById( iframe_id ).contentWindow.document.body.innerHTML;
+         //console.log('iframe id: '+iframe_id);
+         //console.log( iframe_content );
+         
+         editor_content = iframe_content;//tinyMCE.get( editor_id ).getContent();*/
 
         editor_content = tinyMCE.get( editor_id ).getContent();
 
@@ -1214,6 +1222,17 @@ jQuery( document ).ready( function() {
     var editor_content = '';
 
 //#unit-page-' + current_unit_page + ' .modules_accordion'
+
+    jQuery( '.module-title' ).live( 'mousedown', function() {
+        var holder = jQuery( this ).parent();
+        var iframe_id = jQuery( holder ).find( 'iframe' ).attr( 'id' );
+        var iframe_content = document.getElementById( iframe_id ).contentWindow.document.body.innerHTML;
+        global_iframe_content = iframe_content;
+        console.log( global_iframe_content );
+        //alert(global_iframe_content);
+        //alert(iframe_content);
+    } );
+
     jQuery( '.modules_accordion' ).accordion( {
         heightStyle: "content",
         header: "> div > h3",
@@ -1223,60 +1242,75 @@ jQuery( document ).ready( function() {
         //items: "div:not(.notmovable)",
         handle: "h3",
         axis: "y",
+        start: function( event, ui ) {
+            //$( "#editor_2380_ifr" ).contents().find( "p" ).css( "background-color", "#BADA55" );
+        },
         stop: function( event, ui ) {
+            //alert('test');
+
 
             current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
             update_sortable_module_indexes();
             //ui.draggable.attr( 'id' ) or ui.draggable.get( 0 ).id or ui.draggable[0].id
-            cp_repaint_current_page_editors();
+            //cp_repaint_current_page_editors();
 
             /* Dynamic WP Editor */
-            /*var nth_child_num = ui.item.index() + 1;
-             var editor_id = jQuery( ".module-holder-title:nth-child( " + nth_child_num + " ) .wp-editor-wrap" ).attr( 'id' );
-             
-             var initial_editor_id = editor_id;
-             
-             editor_id = editor_id.replace( "-wrap", "" );
-             editor_id = editor_id.replace( "wp-", "" );
-             editor_content = get_tinymce_content( editor_id );
-             
-             var textarea_name = ( jQuery( '#' + initial_editor_id + ' textarea' ).attr( 'name' ) );
-             var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
-             var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
-             
-             var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-             switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
-             
-             var text_editor_whole =
-             '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
-             '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
-             '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
-             text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
-             text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
-             text_editor +
-             '</div></div></div>';
-             jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
-             
-             tinyMCE.init( {
-             mode: "exact",
-             elements: rand_id,
-             plugins: coursepress_editor.plugins.join( ',' ),
-             toolbar: coursepress_editor.toolbar.join( ',' ),
-             theme: coursepress_editor.theme,
-             skin: coursepress_editor.skin,
-             menubar: false
-             } );
-             
-             // Init Quicktags
-             if ( coursepress_editor.quicktags ) {
-             new QTags( rand_id );
-             QTags._buttonsInit();
-             // force the editor to start at its defined mode.
-             switchEditors.go( rand_id, tinyMCE.editors[rand_id] );
-             }
-             
-             tinyMCE.execCommand( 'mceRepaint' );
-             */
+            var nth_child_num = ui.item.index() + 1;
+            var editor_id = jQuery( "#unit-page-" + current_unit_page + " .module-holder-title:nth-child( " + nth_child_num + " ) .wp-editor-wrap" ).attr( 'id' );
+
+            var initial_editor_id = editor_id;
+
+            editor_id = editor_id.replace( "-wrap", "" );
+            editor_id = editor_id.replace( "wp-", "" );
+
+            /*var iframe_id = jQuery( '#' + initial_editor_id ).find( 'iframe' ).attr( 'id' );
+             alert( iframe_id );
+             var iframe_content = document.getElementById( iframe_id ).contentWindow.document.body.innerHTML;
+             alert( iframe_content );*/
+            //var iframe_content = jQuery( '#' + editor_id + '_ifr' ).contents().find( '#tinymce' );
+            //alert($('.editor_in_place textarea').val());
+            editor_content = global_iframe_content;//get_tinymce_content( editor_id );
+
+            var textarea_name = ( jQuery( '#' + initial_editor_id + ' textarea' ).attr( 'name' ) );
+            var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
+            var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
+
+            var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+            switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+
+            var text_editor_whole =
+                '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
+                '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
+                '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
+            text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
+            text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
+                text_editor +
+                '</div></div></div>';
+            jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
+
+            tinyMCE.init( {
+                mode: "exact",
+                elements: rand_id,
+                plugins: coursepress_editor.plugins.join( ',' ),
+                toolbar: coursepress_editor.toolbar.join( ',' ),
+                theme: coursepress_editor.theme,
+                skin: coursepress_editor.skin,
+                menubar: false
+            } );
+
+            //tinyMCE.EditorManager.execCommand( 'mceFocus', false, rand_id );
+            //tinyMCE.activeEditor.setContent( global_iframe_content );
+
+            // Init Quicktags
+            if ( coursepress_editor.quicktags ) {
+                new QTags( rand_id );
+                QTags._buttonsInit();
+                // force the editor to start at its defined mode.
+                switchEditors.go( rand_id, tinyMCE.editors[rand_id] );
+            }
+
+            tinyMCE.execCommand( 'mceRepaint' );
+
         }
     }, function() {
         jQuery( 'a' ).click( function( e ) {

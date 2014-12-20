@@ -254,7 +254,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                 ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                   ?></label>
 							<?php
 							// $editor_name = "unit_description";
 							// $editor_id = "unit_description";
@@ -440,7 +440,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 							<div class="unit_pages_preloader">
 								<div class="preloader_image"><?php _e( 'Loading unit elements...', 'cp' ); ?></div>
 							</div>
-							
+
 							<div class="unit_pages_delete">
 								<div class="unit_pages_delete_message"><?php _e( 'Deleting the unit page...', 'cp' ); ?></div>
 							</div>
