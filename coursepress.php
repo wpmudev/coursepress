@@ -728,6 +728,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			//add_action( 'admin_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
 
+			add_action( 'admin_enqueue_scripts', array( &$this, 'cp_jquery_admin' ), 0, 1 );
+
 			/**
 			 * Admin header actions.
 			 *
@@ -1802,11 +1804,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				<h3><?php _e( 'Instructor Capabilities', 'cp' ); ?></h3>
 
 				<?php
-					// If user has no role i.e. can't "read", don't even go near capabilities, it wont work.
-					if ( ! user_can( $user, 'read' ) ) {
-						_e( "Can't assign instructor capabilities. User has no assigned role on this blog. See 'Role' above.", 'cp' );
-						return false;
-					}
+				// If user has no role i.e. can't "read", don't even go near capabilities, it wont work.
+				if ( !user_can( $user, 'read' ) ) {
+					_e( "Can't assign instructor capabilities. User has no assigned role on this blog. See 'Role' above.", 'cp' );
+					return false;
+				}
 				?>
 
 				<?php
@@ -4518,6 +4520,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			  wp_enqueue_script( 'jquery-ui-button' ); */
 		}
 
+		function cp_jquery_admin( $hook_sufix ) {
+			if ( strpos( $hook_sufix, 'course' ) !== false ) {
+				wp_enqueue_script( 'jquery' );
+				wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
+			}
+		}
+
 		function admin_header_actions() {
 			global $pagenow;
 
@@ -4537,9 +4546,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			  wp_enqueue_script( 'jquery-ui-draggable' );
 			  wp_enqueue_script( 'jquery-ui-droppable' ); */
 			//add_action( 'wp_enqueue_scripts', array( &$this, 'add_jquery_ui' ) );
-			wp_enqueue_script( 'jquery' );
+			//wp_enqueue_script( 'jquery' );
 			//wp_enqueue_script( 'jquery-ui-core' );
-			wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
+			//wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
 			wp_enqueue_script( 'jquery-ui-spinner' );
 
 			// CryptoJS.MD5
