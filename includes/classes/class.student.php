@@ -243,7 +243,7 @@ if ( !class_exists( 'Student' ) ) {
 			 * Setup actions for when a student enrolls.
 			 * Can be used to create notifications or tracking student actions.
 			 */
-			$instructors = Course::get_course_instructors_ids( $_GET[ 'course_id' ]);
+			$instructors = Course::get_course_instructors_ids( isset($_GET[ 'course_id' ]) ? $_GET[ 'course_id' ] : $course_id);
 			do_action('student_enrolled_instructor_notification', $this->ID, $course_id, $instructors);
 			do_action('student_enrolled_student_notification', $this->ID, $course_id);
 

@@ -17,7 +17,7 @@ if ( !class_exists( 'CP_Automessage_Integration' ) ) {
 			add_filter( 'automessage_replacements_description', array( &$this, 'new_automessage_replacements_description' ) );
 			add_filter( 'automessage_replacements', array( &$this, 'new_automessage_replacements' ) );
 
-			add_action( 'student_enrolled_instructor_notification', array( &$this, 'student_enrolled_instructor_notification_replacements' ), 11, 3 );
+			//add_action( 'student_enrolled_instructor_notification', array( &$this, 'student_enrolled_instructor_notification_replacements' ), 11, 3 );
 		}
 
 		function add_new_hooks( $hooks ) {
