@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.3.5 =
+* Fixed issue with multisite and granting and revoking instructor capabilities.
+
 = 1.2.3.4 =
 * Added additional instructor capability for managing Course Categories
 * Added unit elements preloader
