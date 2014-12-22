@@ -192,14 +192,14 @@ jQuery( document ).ready( function()
             } else {
                 jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
             }
-        }else{
+        } else {
             if ( accordion_elements_count == 0 ) {
                 jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).show();
             } else {
                 jQuery( '#unit-page-' + current_unit_page + ' .elements-holder .no-elements' ).hide();
             }
         }
-        
+
     } );
 
     jQuery( '.audio_url_button' ).live( 'click', function()
@@ -507,7 +507,7 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
             // Add user as instructor
             if ( step == 'step-1' && response.instructor ) {
                 $.post(
-                    'admin-ajax.php', {
+                    coursepress_units.admin_ajax_url, {
                         action: 'add_course_instructor',
                         instructor_id: response.instructor,
                         instructor_nonce: instructor_nonce,
@@ -1018,7 +1018,7 @@ function courseAutoUpdate( step, nextAction ) {
 
         // AJAX CALL
         $.post(
-            'admin-ajax.php', post_vars
+            coursepress_units.admin_ajax_url, post_vars
             ).done( function( data, status ) {
             // Handle return
             autosave_course_setup_done( data, status, 'step-' + step, theStatus, nextAction );
@@ -1098,7 +1098,7 @@ jQuery( document ).ready( function( $ ) {
             //Does course have an active gateway now?
             $( statusElement ).addClass( 'progress' );
             $.post(
-                'admin-ajax.php', {
+                coursepress_units.admin_ajax_url, {
                     action: 'course_has_gateway',
                 }
             ).done( function( data, status ) {
@@ -1313,7 +1313,7 @@ jQuery( document ).ready( function( $ ) {
         var uid = $( '#instructor-ajax-check' ).data( 'uid' );
 
         $.post(
-            'admin-ajax.php', {
+            coursepress_units.admin_ajax_url, {
                 action: 'send_instructor_invite',
                 first_name: $( '[name=invite_instructor_first_name]' ).val(),
                 last_name: $( '[name=invite_instructor_last_name]' ).val(),
@@ -1443,7 +1443,7 @@ jQuery( document ).ready( function( $ ) {
         var uid = $( '#instructor-ajax-check' ).data( 'uid' );
 
         $.post(
-            'admin-ajax.php', {
+            coursepress_units.admin_ajax_url, {
                 action: 'add_course_instructor',
                 instructor_id: instructor_id,
                 instructor_nonce: instructor_nonce,
@@ -1575,7 +1575,7 @@ jQuery( document ).ready( function( $ ) {
         event.stopPropagation();
 
         $.post(
-            'admin-ajax.php', {
+            coursepress_units.admin_ajax_url, {
                 action: 'cp_activate_mp_lite',
             }
         ).done( function( data, status ) {
@@ -1728,7 +1728,7 @@ jQuery( document ).ready( function( $ ) {
 
                     if ( unit_id !== '' ) {//if it's empty it means that's not saved yet so we won't save it via ajax
                         $.post(
-                            'admin-ajax.php', {
+                            coursepress_units.admin_ajax_url, {
                                 action: 'change_unit_state',
                                 unit_state: unit_state,
                                 unit_id: unit_id,
@@ -1805,7 +1805,7 @@ jQuery( document ).ready( function( $ ) {
                     var uid = $( '#course-ajax-check' ).data( 'uid' );
 
                     $.post(
-                        'admin-ajax.php', {
+                        coursepress_units.admin_ajax_url, {
                             action: 'change_course_state',
                             course_state: course_state,
                             course_id: course_id,

@@ -4,7 +4,6 @@ function update_calendar( date, course_calendar ) {
 	$ = jQuery;
 	
     $.post(
-            // 'http://[siteurl]/wp-admin/admin-ajax.php',  
 			wpajaxurl, // declared by class.coursecalendar
             {
 				action: 'refresh_course_calendar',

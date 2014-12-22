@@ -14,6 +14,12 @@
   } */
 
 /* get_user_option() fix */
+
+function cp_admin_ajax_url() {
+  $scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
+  return admin_url( "admin-ajax.php", $scheme );
+}
+
 function cp_get_user_option( $option, $user_id = false ) {
 	global $wpdb;
 

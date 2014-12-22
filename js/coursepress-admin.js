@@ -43,7 +43,7 @@ jQuery( document ).ready( function( $ ) {
                     }
 
                     $.post(
-                        'admin-ajax.php', {
+                        coursepress.admin_ajax_url, {
                             action: 'change_course_state',
                             course_state: course_state,
                             course_id: course_id,
@@ -360,7 +360,7 @@ jQuery( document ).ready( function( $ ) {
         jQuery( '#unit-pages' ).tabs( { active: unit_pages } ); //set last added page active
 
         jQuery.post(
-            'admin-ajax.php', {
+            coursepress.admin_ajax_url, {
                 action: 'create_unit_element_draft',
                 unit_id: jQuery( '#unit_id' ).val(),
                 temp_unit_id: rand_id,
@@ -826,7 +826,7 @@ function coursepress_modules_ready() {
         }
 
         jQuery.post(
-            'admin-ajax.php', {
+            coursepress.admin_ajax_url, {
                 action: 'create_unit_element_draft',
                 unit_id: jQuery( '#unit_id' ).val(),
                 temp_unit_id: rand_id,
@@ -1024,7 +1024,7 @@ function removeInstructor( instructor_id ) {
         var uid = $( '#instructor-ajax-check' ).data( 'uid' );
 
         $.post(
-            'admin-ajax.php', {
+            coursepress.admin_ajax_url, {
                 action: 'remove_course_instructor',
                 instructor_id: instructor_id,
                 course_id: course_id,
@@ -1063,7 +1063,7 @@ function removePendingInstructor( invite_code, course_id ) {
         var uid = $( '#instructor-ajax-check' ).data( 'uid' );
 
         $.post(
-            'admin-ajax.php', {
+            coursepress.admin_ajax_url, {
                 action: 'remove_instructor_invite',
                 invite_code: invite_code,
                 course_id: course_id,

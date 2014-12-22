@@ -180,7 +180,7 @@ if ( !class_exists('Course_Calendar') ) {
 	        $calendar .= "</tr>";
 	        $calendar .= "</table>";
 			$calendar .= "</div>";
-			$calendar .= '<script type="text/javascript">var wpajaxurl = "' . admin_url('admin-ajax.php') . '";</script>';
+			$calendar .= '<script type="text/javascript">var wpajaxurl = "' . cp_admin_ajax_url() . '";</script>';
 
 	        return $calendar;
 			

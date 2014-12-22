@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.3.5 =
+* Fixed (potential) issue with student signup when FORCE_SSL_ADMIN is turned on
 * Fixed conflicts with Gravity Forms in the admin
 * Fixed issue with multisite and granting and revoking instructor capabilities.
 * Fixed: Comments section no longer showing on course details page.

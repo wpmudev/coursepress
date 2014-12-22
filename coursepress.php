@@ -4408,7 +4408,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_style( 'font_awesome', $this->plugin_url . 'css/font-awesome.css' );
 			wp_enqueue_script( 'enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ), $this->version );
 			wp_localize_script( 'enrollment_process', 'cp_vars', array(
-				'admin_ajax_url'					 => admin_url( 'admin-ajax.php' ),
+				'admin_ajax_url'					 => cp_admin_ajax_url(),
 				'message_all_fields_are_required'	 => __( 'All fields are required.', 'cp' ),
 				'message_username_minimum_length'	 => __( 'Username must be at least 4 characters in length', 'cp' ),
 				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.', 'cp' ),
@@ -4421,7 +4421,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'message_passcode_invalid'			 => __( 'Passcode is not valid.', 'cp' ),
 				'message_tos_invalid'				 => __( 'You must agree to the Terms of Service in order to signup.', 'cp' ),
 			) );
-			//admin_url( 'admin-ajax.php' )
 
 			wp_enqueue_script( 'coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ), $this->version );
 
@@ -4615,7 +4614,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
 					'allowed_image_extensions'				 => cp_wp_get_image_extensions(),
 					'start_of_week'							 => get_option( 'start_of_week', 0 ),
-					'unit_pagination'						 => $unit_pagination ? 1 : 0
+					'unit_pagination'						 => $unit_pagination ? 1 : 0,
+					'admin_ajax_url'						 => cp_admin_ajax_url(),
 				) );
 
 				do_action( 'coursepress_editor_options' );
@@ -4650,7 +4650,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'required_sale_price'			 => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
 				'section_error'					 => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
 				'cp_editor_style'				 => $this->plugin_url . 'css/editor_style_fix.css',
-				'unit_pagination'				 => $unit_pagination ? 1 : 0
+				'unit_pagination'				 => $unit_pagination ? 1 : 0,
+				'admin_ajax_url'				 => cp_admin_ajax_url(),
 			) );
 
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
