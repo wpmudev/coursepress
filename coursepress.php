@@ -5264,8 +5264,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function no_comments_template( $template ) {
 			global $post;
-
-			if ( 'virtual_page' == $post->post_type ) {
+			$post_types = array( 'virtual_page', 'course' );
+			if ( in_array( $post->post_type, $post_types ) ) {
 				$template = $this->plugin_dir . 'includes/templates/no-comments.php';
 			}
 

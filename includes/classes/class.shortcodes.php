@@ -1235,7 +1235,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$student = new Student( get_current_user_id() );
 				$student->enrolled = $student->user_enrolled_in_course( $course_id );
 			}
-
+					$x='';
 			// Determine the button option
 			if( empty( $student ) || ! $student->enrolled ) {
 
@@ -1332,7 +1332,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
 			} else {
 				//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
-				if( empty( $button_option ) || 'manually' == $course->enroll_type ) {
+				if( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
 					return apply_filters( 'coursepress_enroll_button', $button, $course, $student );
 				}
 

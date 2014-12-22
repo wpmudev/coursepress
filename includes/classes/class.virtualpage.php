@@ -12,6 +12,7 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
         var $author = null;
         var $date = null;
         var $type = null;
+        var $comment_status = 'closed';
 		
 		// const TITLE_COURSE_LIST = __( 'Courses', 'cp' );
 
@@ -28,9 +29,9 @@ if ( !class_exists( 'CoursePress_Virtual_Page' ) ) {
             $this->dategmt = isset( $args['date'] ) ? $args['date'] : current_time( 'mysql', 1 );
             $this->type = isset( $args['type'] ) ? $args['type'] : 'page';
             
-            $this->is_page = isset( $args['is_page'] ) ? $args['is_page'] : TRUE;
-            $this->is_singular = isset( $args['is_singular'] ) ? $args['is_singular'] : TRUE;
-            $this->is_archive = isset( $args['is_archive'] ) ? $args['is_archive'] : FALSE;
+            $this->is_page = isset( $args['is_page'] ) ? $args['is_page'] : true;
+            $this->is_singular = isset( $args['is_singular'] ) ? $args['is_singular'] : true;
+            $this->is_archive = isset( $args['is_archive'] ) ? $args['is_archive'] : false;
             $this->comment_status = isset( $args['comment_status'] ) ? $args['comment_status'] : 'closed';
             $this->post_type = 'public';
             

@@ -8,6 +8,8 @@ CHANGE LOG
 
 = 1.2.3.5 =
 * Fixed issue with multisite and granting and revoking instructor capabilities.
+* Fixed: Comments section no longer showing on course details page.
+* Fixed issue with 'Start Learning/Continue Learning' buttons not showing for courses set to manual enrollments.
 
 = 1.2.3.4 =
 * Added additional instructor capability for managing Course Categories
