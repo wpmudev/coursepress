@@ -1787,7 +1787,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 					CoursePress::instance()->assign_instructor_capabilities( $user_id );
 				} else {
-					delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
+					delete_user_option( $user_id, 'role_ins', $global_option );
 					// Legacy
 					delete_user_meta( $user_id, 'role_ins', 'instructor' );
 					CoursePress::instance()->drop_instructor_capabilities( $user_id );
@@ -1796,12 +1796,21 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function instructor_extra_profile_fields( $user ) {
+
 			if ( current_user_can( 'manage_options' ) ) {
 				?>
 				<h3><?php _e( 'Instructor Capabilities', 'cp' ); ?></h3>
 
 				<?php
-				$has_instructor_role = get_user_option( 'role_ins', $user->ID );
+					// If user has no role i.e. can't "read", don't even go near capabilities, it wont work.
+					if ( ! user_can( $user, 'read' ) ) {
+						_e( "Can't assign instructor capabilities. User has no assigned role on this blog. See 'Role' above.", 'cp' );
+						return false;
+					}
+				?>
+
+				<?php
+				$has_instructor_role = 'instructor' == cp_get_user_option( 'role_ins', $user->ID ) ? true : false;
 				?>
 				<table class="form-table">
 					<tr>
@@ -4269,7 +4278,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$role = new Instructor( $user_id );
 
 			$global_option = !is_multisite();
-			delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
+			delete_user_option( $user_id, 'role_ins', $global_option );
 			// Legacy
 			delete_user_meta( $user_id, 'role_ins', 'instructor' );
 

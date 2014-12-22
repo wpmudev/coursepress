@@ -13,6 +13,29 @@
   return $url;
   } */
 
+/* get_user_option() fix */
+function cp_get_user_option( $option, $user_id = false ) {
+	global $wpdb;
+
+	$blog_id = get_current_blog_id();
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if( is_multisite() ) {
+
+		if( defined( 'BLOG_ID_CURRENT_SITE') && BLOG_ID_CURRENT_SITE == $blog_id ) {
+			return get_user_meta( $user_id, $wpdb->base_prefix . $option, true );
+		}
+
+		return get_user_meta( $user_id, $wpdb->prefix . $option, true );
+	} else {
+		return get_user_option( $option, $user_id );
+	}
+}
+
+
 function cp_unit_uses_new_pagination( $unit_id = false ) {
 	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
 	$unit_pagination		 = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
