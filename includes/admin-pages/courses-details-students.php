@@ -127,7 +127,7 @@ if ( isset($_GET['withdraw_all']) ) {
         if ( $wp_user_search->get_results() ) {
             foreach ( $wp_user_search->get_results() as $user ) {
                 $student = new Student($user->ID);
-                $student->withdraw_from_course($course_id, '');
+                $student->withdraw_from_course($course_id);
             }
         }
     }

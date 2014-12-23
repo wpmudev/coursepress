@@ -1235,7 +1235,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$student = new Student( get_current_user_id() );
 				$student->enrolled = $student->user_enrolled_in_course( $course_id );
 			}
-					$x='';
+
 			// Determine the button option
 			if( empty( $student ) || ! $student->enrolled ) {
 

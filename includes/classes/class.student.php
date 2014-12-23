@@ -267,7 +267,7 @@ if ( !class_exists( 'Student' ) ) {
 		 * @param bool $keep_withdrawed_record If true, the withdrawn date will be saved in user meta.
 		 */
 		function withdraw_from_course( $course_id, $keep_withdrawed_record = true ) {
-
+			
 			$current_time = current_time( 'mysql' );
 
 			$global_option = ! is_multisite();

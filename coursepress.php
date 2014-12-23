@@ -4864,11 +4864,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function check_for_get_actions() {
-
-			if ( isset( $_GET[ 'withdraw' ] ) && is_numeric( $_GET[ 'withdraw' ] ) ) {
-				$student = new Student( get_current_user_id() );
-				$student->withdraw_from_course( $_GET[ 'withdraw' ] );
-			}
 		}
 
 		//shows a warning notice to admins if pretty permalinks are disabled
