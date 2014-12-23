@@ -2578,7 +2578,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					if ( $theme_file != '' ) {
 						do_shortcode( '[course_unit_single unit_id="' . $vars[ 'unit_id' ] . '"]' ); //required for getting unit results
 						require_once( $theme_file );
-						exit;
+						//exit;
 					} else {
 						$args = array(
 							'slug'			 => $wp->request,
