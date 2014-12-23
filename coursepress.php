@@ -3528,8 +3528,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					wp_delete_object_term_relationships( $course_id, 'course_category' );
 
-					foreach ( $course_categories as $course_category ) {
-						wp_set_post_terms( $course_id, $course_category, 'course_category', true );
+					if( ! empty( $course_categories ) && is_array( $course_categories ) ) {
+						foreach ( $course_categories as $course_category ) {
+							wp_set_post_terms( $course_id, $course_category, 'course_category', true );
+						}
 					}
 				}
 
