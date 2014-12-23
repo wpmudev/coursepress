@@ -450,6 +450,9 @@ if ( !class_exists( 'Course' ) ) {
 						$post[ 'post_excerpt' ]	 = cp_filter_content( empty( $_POST[ 'course_excerpt' ] ) ? $course->post_excerpt : $_POST[ 'course_excerpt' ]  );
 						$post[ 'post_content' ]	 = cp_filter_content( empty( $_POST[ 'course_description' ] ) ? $course->post_content : $_POST[ 'course_description' ]  );
 						$post[ 'post_title' ]	 = cp_filter_content( (empty( $_POST[ 'course_name' ] ) ? $course->post_title : $_POST[ 'course_name' ] ), true );
+						if( ! empty( $_POST[ 'course_name' ] ) ) {
+							$post[ 'post_name' ] =  wp_unique_post_slug( sanitize_title( $post[ 'post_title' ] ), $course->ID, 'publish', 'course', 0 );
+						}
 					} else {
 						$new_course				 = true;
 						$post[ 'post_excerpt' ]	 = cp_filter_content( $_POST[ 'course_excerpt' ] );
@@ -457,6 +460,7 @@ if ( !class_exists( 'Course' ) ) {
 							$post[ 'post_content' ] = cp_filter_content( $_POST[ 'course_description' ] );
 						}
 						$post[ 'post_title' ] = cp_filter_content( $_POST[ 'course_name' ], true );
+						$post[ 'post_name' ] =  wp_unique_post_slug( sanitize_title( $post[ 'post_title' ] ), 0, 'publish', 'course', 0 );
 					}
 
 					if ( isset( $_POST[ 'course_id' ] ) ) {
@@ -656,7 +660,7 @@ if ( !class_exists( 'Course' ) ) {
 
 					$instructors	 = get_post_meta( $course_id, 'instructors', true );
 					$instructor_id_i = 0;
-					if ( isset( $instructors ) ) {
+					if ( isset( $instructors ) && ! empty( $instructors ) ) {
 						foreach ( $instructors as $instructor_id ) {
 							$instructors[ $instructor_id_i ] = (int) $instructor_id; //make sure all are numeric values (it wasn't always the case, like for '1')
 							if ( $instructor_id == 0 ) {
@@ -667,7 +671,7 @@ if ( !class_exists( 'Course' ) ) {
 						}
 					}
 					//re-index array
-					return array_values( $instructors );
+					return ! empty( $instructors ) ? $instructors : array();
 				}
 
 				static function get_course_students_ids( $course_id = false ) {
