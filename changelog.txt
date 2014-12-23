@@ -12,6 +12,9 @@ CHANGE LOG
 * Fixed issue with multisite and granting and revoking instructor capabilities.
 * Fixed: Comments section no longer showing on course details page.
 * Fixed issue with 'Start Learning/Continue Learning' buttons not showing for courses set to manual enrollments.
+* Fixed: Instructor Capabilities On User Profile Page Not Saving When Granting/Revoking Capabilities
+* Fixed: coursepress_student_withdrawn hook is firing twice for a single withdrawal
+* Fixed issue with unique course and units slugs
 
 = 1.2.3.4 =
 * Added additional instructor capability for managing Course Categories
