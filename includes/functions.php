@@ -48,9 +48,9 @@ function cp_unit_uses_new_pagination( $unit_id = false ) {
 	return $unit_pagination;
 }
 
-function cp_get_id_by_post_name( $post_name ) {
+function cp_get_id_by_post_name( $post_name, $post_parent = 0, $type = 'unit' ) {
 	global $wpdb;
-	$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = '%s'", $post_name ) );
+	$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = '%s' AND post_type='%s' AND post_parent=%d", $post_name, $type, $post_parent ) );
 	return $id;
 }
 

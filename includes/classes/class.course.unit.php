@@ -560,8 +560,11 @@ if ( !class_exists( 'Unit' ) ) {
 			return $unit_permalink;
 		}
 
-		function get_unit_id_by_name( $slug ) {
+		function get_unit_id_by_name( $slug, $course_id = 0 ) {
 
+			if( empty( $course_id ) ) {
+				$course_id = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
+			}
 			if ( !cp_can_see_unit_draft() ) {
 				$post = get_posts(
 				array(
@@ -569,11 +572,12 @@ if ( !class_exists( 'Unit' ) ) {
 					'name'				 => $slug,
 					'post_per_page'		 => 1,
 					'post_status'		 => 'publish',
+					'post_parent'        => $course_id,
 					'suppress_filters'	 => false,
 				)
 				);
 			} else {
-				$post_id = cp_get_id_by_post_name( $slug );
+				$post_id = cp_get_id_by_post_name( $slug, $course_id );
 				$post	 = get_post( $post_id );
 			}
 

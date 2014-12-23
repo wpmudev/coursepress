@@ -2543,7 +2543,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$unit	 = new Unit();
 
 				$vars[ 'course_id' ] = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
-				$vars[ 'unit_id' ]	 = $unit->get_unit_id_by_name( $wp->query_vars[ 'unitname' ] );
+				$vars[ 'unit_id' ]	 = $unit->get_unit_id_by_name( $wp->query_vars[ 'unitname' ], $vars[ 'course_id' ] );
 
 				//$this->set_course_visited( get_current_user_id(), Course::get_course_id_by_name( $wp->query_vars['coursename'] ) );
 
