@@ -3813,6 +3813,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 													$email_args[ 'student_email' ]		 = $student_data[ 'user_email' ];
 													$email_args[ 'student_first_name' ]	 = $student_data[ 'first_name' ];
 													$email_args[ 'student_last_name' ]	 = $student_data[ 'last_name' ];
+													$email_args[ 'student_username' ]	 = $student_data[ 'user_login' ];
+													$email_args[ 'student_password' ]	 = $student_data[ 'user_pass' ];
+													
 													coursepress_send_email( $email_args );
 
 													$creds						 = array();

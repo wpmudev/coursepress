@@ -1656,6 +1656,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$email_args[ 'student_email' ]		 = $student_data[ 'user_email' ];
 					$email_args[ 'student_first_name' ]	 = $student_data[ 'first_name' ];
 					$email_args[ 'student_last_name' ]	 = $student_data[ 'last_name' ];
+					$email_args[ 'student_username' ]		 = $student_data[ 'user_login' ];
+					$email_args[ 'student_password' ]	 = $student_data[ 'user_pass' ];
 
 					coursepress_send_email( $email_args );
 
@@ -3528,7 +3530,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					wp_delete_object_term_relationships( $course_id, 'course_category' );
 
-					if( ! empty( $course_categories ) && is_array( $course_categories ) ) {
+					if ( !empty( $course_categories ) && is_array( $course_categories ) ) {
 						foreach ( $course_categories as $course_category ) {
 							wp_set_post_terms( $course_id, $course_category, 'course_category', true );
 						}
@@ -4866,6 +4868,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function check_for_get_actions() {
+			
 		}
 
 		//shows a warning notice to admins if pretty permalinks are disabled
@@ -5117,7 +5120,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-																				   <?php if ( $menu_item->db_id !== '' ) { ?>
+									<?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
 										<?php
 										foreach ( $sub_sorted_menu_items as $menu_item ) {
@@ -5126,9 +5129,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-										<?php } ?>
+									<?php } ?>
 									</ul>
-								<?php } ?>
+							<?php } ?>
 							</li>
 							<?php
 						}
@@ -5230,7 +5233,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 									</li>
 								<?php } ?>
 							<?php } ?>
-						<?php } ?>
+				<?php } ?>
 					</ul>
 				</div>
 				<?php
