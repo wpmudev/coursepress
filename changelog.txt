@@ -9,7 +9,7 @@ CHANGE LOG
 = 1.2.3.6 =
 * Fixed: Date translations now work properly.
 * Fixed issue with extra content on the unit page singe page
-* Fixed Gravity Forms form submittion and redirection on the unit pages
+* Fixed Gravity Forms form submission and redirection on the unit pages
 
 = 1.2.3.5 =
 * Fixed (potential) issue with student signup when FORCE_SSL_ADMIN is turned on
