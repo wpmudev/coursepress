@@ -323,7 +323,8 @@ jQuery( document ).ready( function( $ ) {
                     toolbar: coursepress_editor.toolbar.join( ',' ),
                     theme: coursepress_editor.theme,
                     skin: coursepress_editor.skin,
-                    menubar: false
+                    menubar: false,
+                    convert_urls: false
                 } );
 
                 // Init Quicktags
@@ -570,6 +571,7 @@ function cp_repaint_current_page_editors() {
 // General options
             mode: "specific_textareas",
             editor_selector: "mceEditor",
+            convert_urls: false
         } );
 
         /*var iframe_id = $( this ).find( 'iframe' ).attr( 'id' );
@@ -605,7 +607,8 @@ function cp_repaint_current_page_editors() {
             toolbar: coursepress_editor.toolbar.join( ',' ),
             theme: coursepress_editor.theme,
             skin: coursepress_editor.skin,
-            menubar: false
+            menubar: false,
+            convert_urls: false
         } );
 
         // Init Quicktags
@@ -641,6 +644,7 @@ function cp_repaint_all_editors() {
 // General options
             mode: "specific_textareas",
             editor_selector: "mceEditor",
+            convert_urls: false
         } );
 
         editor_content = tinyMCE.get( editor_id ).getContent();
@@ -669,7 +673,8 @@ function cp_repaint_all_editors() {
             toolbar: coursepress_editor.toolbar.join( ',' ),
             theme: coursepress_editor.theme,
             skin: coursepress_editor.skin,
-            menubar: false
+            menubar: false,
+            convert_urls: false
         } );
 
         // Init Quicktags
@@ -794,6 +799,7 @@ function coursepress_modules_ready() {
             menubar: false,
             height: '360px',
             content_css: coursepress.cp_editor_style,
+            convert_urls: false
         } );
 
         // Init Quicktags
@@ -1097,6 +1103,7 @@ jQuery( document ).ready( function() {
     if ( typeof tinyMCE != "undefined" ) {
         tinyMCE.init( {
             browser_spellcheck: true,
+            convert_urls: false
         } );
     }
 
@@ -1106,6 +1113,7 @@ jQuery( document ).ready( function() {
 // General options
             mode: "specific_textareas",
             editor_selector: "mceEditor",
+            convert_urls: false
         } );
 
         return tinyMCE.get( id ).getContent();
@@ -1114,6 +1122,7 @@ jQuery( document ).ready( function() {
     function set_tinymce_content( id, content ) {
 
         tinyMCE.init( {
+            convert_urls: false
 // General options
 //mode: "specific_textareas",
 //editor_selector: id
@@ -1126,7 +1135,8 @@ jQuery( document ).ready( function() {
         tinyMCE.init( {
 // General options
             mode: "specific_textareas",
-            editor_selector: "mceEditor"
+            editor_selector: "mceEditor",
+            convert_urls: false
         } );
         //tinyMCE.setActive( id, true );
     }
@@ -1228,9 +1238,7 @@ jQuery( document ).ready( function() {
         var iframe_id = jQuery( holder ).find( 'iframe' ).attr( 'id' );
         var iframe_content = document.getElementById( iframe_id ).contentWindow.document.body.innerHTML;
         global_iframe_content = iframe_content;
-        console.log( global_iframe_content );
-        //alert(global_iframe_content);
-        //alert(iframe_content);
+        //console.log( global_iframe_content );
     } );
 
     jQuery( '.modules_accordion' ).accordion( {
@@ -1295,7 +1303,8 @@ jQuery( document ).ready( function() {
                 toolbar: coursepress_editor.toolbar.join( ',' ),
                 theme: coursepress_editor.theme,
                 skin: coursepress_editor.skin,
-                menubar: false
+                menubar: false,
+                convert_urls: false
             } );
 
             //tinyMCE.EditorManager.execCommand( 'mceFocus', false, rand_id );
