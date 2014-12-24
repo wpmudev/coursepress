@@ -198,6 +198,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				if ( in_array( $page, $detect_pages ) ) {
 
 					$initArray[ 'height' ] = '360px';
+					$initArray[ 'relative_urls' ] = false;
 
 					if ( 3.8 < $this->min_version ) {
 						$initArray[ 'setup' ] = 'function( ed ) {
