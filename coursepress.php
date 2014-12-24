@@ -1656,7 +1656,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$email_args[ 'student_email' ]		 = $student_data[ 'user_email' ];
 					$email_args[ 'student_first_name' ]	 = $student_data[ 'first_name' ];
 					$email_args[ 'student_last_name' ]	 = $student_data[ 'last_name' ];
-					$email_args[ 'student_username' ]		 = $student_data[ 'user_login' ];
+					$email_args[ 'student_username' ]	 = $student_data[ 'user_login' ];
 					$email_args[ 'student_password' ]	 = $student_data[ 'user_pass' ];
 
 					coursepress_send_email( $email_args );
@@ -2578,9 +2578,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 
 					if ( $theme_file != '' ) {
+						global $wp;
 						do_shortcode( '[course_unit_single unit_id="' . $vars[ 'unit_id' ] . '"]' ); //required for getting unit results
 						require_once( $theme_file );
-						//exit;
+						do_action( 'wp' );//fix for gravity
+						exit;
 					} else {
 						$args = array(
 							'slug'			 => $wp->request,
@@ -5120,7 +5122,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-									<?php if ( $menu_item->db_id !== '' ) { ?>
+																				   <?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
 										<?php
 										foreach ( $sub_sorted_menu_items as $menu_item ) {
@@ -5129,9 +5131,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-									<?php } ?>
+										<?php } ?>
 									</ul>
-							<?php } ?>
+								<?php } ?>
 							</li>
 							<?php
 						}
@@ -5233,7 +5235,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 									</li>
 								<?php } ?>
 							<?php } ?>
-				<?php } ?>
+						<?php } ?>
 					</ul>
 				</div>
 				<?php
