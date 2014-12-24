@@ -392,7 +392,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				<?php if ( !empty( $label ) ) : ?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif; ?>
-				<?php echo cp_sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
+				<?php echo cp_sp2nbsp( date_i18n( $date_format, strtotime( $start_date ) ) ); ?>
 			</div>
 			<?php
 			$content = ob_get_clean();
@@ -438,7 +438,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				<?php if ( !empty( $label ) ) : ?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif; ?>
-				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date_i18n( $date_format, strtotime( $end_date ) ) ); ?>
 			</div>
 			<?php
 			$content = ob_get_clean();
@@ -483,13 +483,13 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$start_date			 = get_post_meta( $course_id, 'course_start_date', true );
 			$end_date			 = get_post_meta( $course_id, 'course_end_date', true );
 			$open_ended			 = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
-			$end_output			 = $open_ended ? $no_date_text : cp_sp2nbsp( date( $date_format, strtotime( $end_date ) ) );
+			$end_output			 = $open_ended ? $no_date_text : cp_sp2nbsp( date_i18n( $date_format, strtotime( $end_date ) ) );
 			$show_alt_display	 = 'no' == $show_alt_display || 'false' == $show_alt_display ? false : $show_alt_display;
 			ob_start();
 			?>
 			<div class="course-dates course-dates-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php if ( !empty( $label ) ) : ?><<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>><?php endif; ?>
-				<?php if ( ( 'yes' == strtolower( $show_alt_display ) || $show_alt_display ) && $open_ended ) : ?><?php echo $alt_display_text; ?><?php else: ?><?php echo cp_sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?><?php endif; ?>
+				<?php if ( ( 'yes' == strtolower( $show_alt_display ) || $show_alt_display ) && $open_ended ) : ?><?php echo $alt_display_text; ?><?php else: ?><?php echo cp_sp2nbsp( date_i18n( $date_format, strtotime( $start_date ) ) ) . ' - ' . $end_output; ?><?php endif; ?>
 			</div>
 			<?php
 			$content = ob_get_clean();
@@ -535,7 +535,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				<?php if ( !empty( $label ) ) : ?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif; ?>
-				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date( $date_format, strtotime( $start_date ) ) ); ?>
+				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date_i18n( $date_format, strtotime( $start_date ) ) ); ?>
 			</div>
 			<?php
 			$content = ob_get_clean();
@@ -585,7 +585,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				<?php if ( !empty( $label ) ) : ?>
 					<<?php echo $label_tag; ?> class="label"><?php echo $label ?><?php echo $label_delimeter; ?></<?php echo $label_tag; ?>>
 				<?php endif; ?>
-				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+				<?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date_i18n( $date_format, strtotime( $end_date ) ) ); ?>
 			</div>
 			<?php
 			$content = '';
@@ -650,7 +650,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$enrollment_date = '';
 				if ( $is_enrolled ) {
 					$enrollment_date = get_user_option( 'enrolled_course_date_' . $course_id );
-					$enrollment_date = date( $date_format, strtotime( $enrollment_date ) );
+					$enrollment_date = date_i18n( $date_format, strtotime( $enrollment_date ) );
 					$label			 = $label_enrolled;
 				}
 			}
@@ -663,7 +663,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( !$is_enrolled ) {
 					if ( ( 'yes' == strtolower( $show_alt_display ) || $show_alt_display ) && $open_ended ) :
 						?>
-						<?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date( $date_format, strtotime( $start_date ) ) ) . ' - ' . cp_sp2nbsp( date( $date_format, strtotime( $end_date ) ) ); ?>
+						<?php echo $alt_display_text; ?><?php else: ?><?php echo $open_ended ? $no_date_text : cp_sp2nbsp( date_i18n( $date_format, strtotime( $start_date ) ) ) . ' - ' . cp_sp2nbsp( date_i18n( $date_format, strtotime( $end_date ) ) ); ?>
 					<?php endif; ?>
 					<?php
 				} else {
@@ -2630,7 +2630,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course->$field == '' ) {
 						$course->$field = __( 'N/A', 'cp' );
 					} else {
-						$course->$field = cp_sp2nbsp( date( $date_format, strtotime( $course->$field ) ) );
+						$course->$field = cp_sp2nbsp( date_i18n( $date_format, strtotime( $course->$field ) ) );
 					}
 				}
 			}
@@ -2812,7 +2812,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				}
 			}
 
-			$current_date = date( 'Y-m-d', current_time( 'timestamp', 0 ) );
+			$current_date = date_i18n( 'Y-m-d', current_time( 'timestamp', 0 ) );
 
 			$args = array(
 				'order'			 => 'ASC',
@@ -4058,7 +4058,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 						}
 						if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
-							echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
 						}
 					}
 					?></span>
@@ -4073,7 +4073,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 						}
 						if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
-							echo __( 'Available', 'cp' ) . ' ' . date( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
 						}
 					}
 					?></span>
@@ -4226,7 +4226,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
-										<?php echo ( count( $response ) >= 1 ? date( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'cp' ) ); ?>
+										<?php echo ( count( $response ) >= 1 ? date_i18n( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'cp' ) ); ?>
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
