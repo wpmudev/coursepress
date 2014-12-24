@@ -502,8 +502,8 @@ function coursepress_send_email( $email_args = array() ) {
 		$subject		 = coursepress_get_registration_email_subject();
 		$courses_address = trailingslashit( home_url() ) . trailingslashit( $course_slug );
 
-		$tags			 = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
-		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], get_bloginfo(), wp_login_url(), $courses_address, home_url() );
+		$tags			 = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'STUDENT_USERNAME', 'STUDENT_PASSWORD', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
+		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], $email_args[ 'student_username' ], $email_args[ 'student_password' ], get_bloginfo(), wp_login_url(), $courses_address, home_url() );
 
 		$message = coursepress_get_registration_content_email();
 

@@ -39,7 +39,7 @@
                         <tr>
                             <th><?php _e('E-mail Content', 'cp'); ?></th>
                             <td>
-                                <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', 'cp'); ?></p>
+                                <p class="description"><?php _e('These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_USERNAME, STUDENT_PASSWORD, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', 'cp'); ?></p>
                                 <?php
 								$editor_name = "option_registration_content_email";
 			                    $editor_id = "option_registration_content_email";
