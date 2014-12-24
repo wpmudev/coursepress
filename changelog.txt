@@ -6,8 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.3.6 =
+* Fixed: Date translations now work properly.
+
 = 1.2.3.5 =
-* Added STUDENT_USERNAME and STUDENT_PASSWORD placeholder to the student registration email 
 * Fixed (potential) issue with student signup when FORCE_SSL_ADMIN is turned on
 * Fixed conflicts with Gravity Forms (admin and unit pages)
 * Fixed issue with multisite and granting and revoking instructor capabilities.
