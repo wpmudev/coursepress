@@ -150,6 +150,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			// Register Globals
 			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
+			$GLOBALS[ 'coursepress_url' ]			 = $this->plugin_url;
+			$GLOBALS[ 'coursepress_version' ]		 = $this->version;
 			$GLOBALS[ 'course_slug' ]				 = $this->get_course_slug();
 			$GLOBALS[ 'units_slug' ]				 = $this->get_units_slug();
 			$GLOBALS[ 'notifications_slug' ]		 = $this->get_notifications_slug();

@@ -30,11 +30,14 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 	 */
 	class CoursePress_Compatibility {
 
+		private $version;
+		private $plugin_url;
 		private $min_version = false;
 		private $editor_options = array();
 
 		function __construct() {
-
+			$this->plugin_url = $GLOBALS[ 'coursepress_url' ];
+			$this->version = $GLOBALS[ 'coursepress_version' ];
 
 			$this->editor_options = array(
 				'quicktags' => true,
@@ -67,6 +70,15 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			 * @since 1.2.1
 			 */
 			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_header_actions' ) );
+
+			/**
+			 * Admin footer scripts.
+			 *
+			 * Load specific scripts in the footer.
+			 *
+			 * @since 1.2.1
+			 */
+			add_action( 'admin_enqueue_scripts', array( &$this, 'admin_footer_scripts' ) );
 		}
 
 		/**
@@ -181,6 +193,14 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			
 		}
 
+		public function admin_footer_scripts( $hook ) {
+
+			// Address issue specifically caused by WPEngine and relative URLs
+			if( 'coursepress-pro_page_course_details' == $hook ){
+				wp_enqueue_script( 'coursepress_fix_editor', $this->plugin_url . 'js/footer-editor-fixes.js', array( 'jquery' ), $this->version, true );
+			}
+		}
+
 		/**
 		 * Create a listener for TinyMCE change event
 		 *
@@ -199,6 +219,8 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 
 					$initArray[ 'height' ] = '360px';
 					$initArray[ 'relative_urls' ] = false;
+					$initArray[ 'url_converter' ] = false;
+					$initArray[ 'url_converter_scope' ] = false;
 
 					if ( 3.8 < $this->min_version ) {
 						$initArray[ 'setup' ] = 'function( ed ) {
