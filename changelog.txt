@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.3.7 =
+* Course Calendar widget updated. New default CSS to work better across themes. Added date indicator selector for better presentation on light and dark themes. Including selector to use custom CSS defined by theme or CSS plugin.
+
+
 = 1.2.3.6 =
 * Fixed: Date translations now work properly.
 * Fixed issue with extra content on the unit page singe page
