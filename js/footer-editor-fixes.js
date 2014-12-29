@@ -5,7 +5,6 @@
  */
 jQuery( document ).ready( function( $ ) {
     if ( typeof tinyMCE !== 'undefined' ) {
-        console.log('tinyMCE ok!');
         var edId;
         for (edId in tinyMCE.editors) {
             tinyMCE.editors[edId].settings.url_converter = null;
