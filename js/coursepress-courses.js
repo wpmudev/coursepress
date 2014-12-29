@@ -603,9 +603,10 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
 function step_1_update( attr ) {
     var theStatus = attr['status'];
     var initialVars = attr['initialVars'];
+    var tmce = initialVars['tmce'];
 
     var content = '';
-    if ( tinyMCE.get( 'course_excerpt' ) ) {
+    if ( tmce && tinyMCE.get( 'course_excerpt' ) ) {
         content = tinyMCE.get( 'course_excerpt' ).getContent();
     } else {
         content = $( '[name=course_excerpt]' ).val();
@@ -639,9 +640,10 @@ function step_1_update( attr ) {
 function step_2_update( attr ) {
     var theStatus = attr['status'];
     var initialVars = attr['initialVars'];
+    var tmce = initialVars['tmce'];
 
     var content = '';
-    if ( tinyMCE.get( 'course_description' ) ) {
+    if ( tmce && tinyMCE.get( 'course_description' ) ) {
         content = tinyMCE.get( 'course_description' ).getContent();
     } else {
         content = $( '[name=course_description]' ).val();
@@ -827,8 +829,14 @@ function clearCourseErrorMessages() {
 function validateCourseFields( step, ignore ) {
     var valid = true;
 
-    if ( typeof ( ignore ) === 'undefined' )
+    if ( typeof ( ignore ) === 'undefined' ) {
         ignore = false;
+    }
+
+    var tmce = true;
+    if ( typeof ( tinyMCE ) === 'undefined' ) {
+        tmce = false;
+    }
 
     $ = jQuery;
 
@@ -844,7 +852,7 @@ function validateCourseFields( step, ignore ) {
             }
 
             var content = '';
-            if ( tinyMCE.get( 'course_excerpt' ) ) {
+            if ( tmce && tinyMCE.get( 'course_excerpt' ) ) {
                 content = tinyMCE.get( 'course_excerpt' ).getContent();
             } else {
                 content = $( '[name=course_excerpt]' ).val();
@@ -855,7 +863,7 @@ function validateCourseFields( step, ignore ) {
         case 2:
         case '2':
             var content = '';
-            if ( tinyMCE.get( 'course_description' ) ) {
+            if ( tmce && tinyMCE.get( 'course_description' ) ) {
                 content = tinyMCE.get( 'course_description' ).getContent();
             } else {
                 content = $( '[name=course_description]' ).val();
@@ -961,6 +969,11 @@ function courseAutoUpdate( step, nextAction ) {
         nextAction = false
     $ = jQuery;
 
+    var tmce = true;
+    if ( typeof ( tinyMCE ) === 'undefined' ) {
+        tmce = false;
+    }
+
     clearCourseErrorMessages();
 
     var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' )[0];
@@ -1010,6 +1023,7 @@ function courseAutoUpdate( step, nextAction ) {
             user_id: uid,
             meta_course_setup_progress: meta_course_setup_progress,
             meta_course_setup_marker: 'step-' + step,
+            tmce: tmce
         }
         // console.log( initial_vars );
         var func = 'step_' + step + '_update';
@@ -1860,6 +1874,9 @@ jQuery( document ).ready( function( $ ) {
 } );
 
 function fix_tinymce_in_iframe() {
+    if ( typeof ( tinyMCE ) === 'undefined' ) {
+        return false;
+    }
     var the_box = '.coursepress_page_course_details #TB_iframeContent';
     var delay = 1000;//1 seconds
     setTimeout( function() {
