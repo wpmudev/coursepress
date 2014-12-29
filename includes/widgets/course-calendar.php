@@ -2,9 +2,18 @@
 
 class CP_Course_Calendar extends WP_Widget {
 
+    private $date_indicator = array();
+
     function CP_Course_Calendar() {
         $widget_ops = array( 'classname' => 'cp_course_calendar_widget', 'description' => __('Displays the course calendar.', 'cp') );
         $this->WP_Widget('CP_Course_Calendar', __('Course Calendar', 'cp'), $widget_ops);
+        $this->date_indicator = array(
+            'indicator_light_block' => __('Light theme - Block', 'cp'),
+            'indicator_light_line' => __('Light theme - Line', 'cp'),
+            'indicator_dark_block' => __('Dark theme - Block', 'cp'),
+            'indicator_dark_line' => __('Dark theme - Line', 'cp'),
+            'indicator_none' => __('Theme/Custom CSS', 'cp'),
+        );
     }
 
     function form( $instance ) {
@@ -13,6 +22,7 @@ class CP_Course_Calendar extends WP_Widget {
 		$pre_text = ! empty( $instance['pre_text'] ) ? $instance['pre_text'] : null;
 		$next_text = ! empty( $instance['next_text'] ) ? $instance['next_text'] : null;
         $selected_course =  ! empty( $instance['course'] ) ? $instance['course'] : "false";
+        $selected_indicator  =  ! empty( $instance['indicator'] ) ? $instance['indicator'] : "indicator_light_block";
 
         $args = array(
             'posts_per_page' => -1,
@@ -41,6 +51,19 @@ class CP_Course_Calendar extends WP_Widget {
         <p><label for="<?php echo $this->get_field_id('pre_text'); ?>"><?php _e('Previous Month Text:', 'cp'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('pre_text'); ?>" name="<?php echo $this->get_field_name('pre_text'); ?>" type="text" value="<?php echo (!isset($pre_text) ? __('« Previous', 'cp') : esc_attr($pre_text)); ?>" /></label></p>
 		<p><label for="<?php echo $this->get_field_id('next_text'); ?>"><?php _e('Next Month Text:', 'cp'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('next_text'); ?>" name="<?php echo $this->get_field_name('next_text'); ?>" type="text" value="<?php echo (!isset($next_text) ? __('Next »', 'cp') : esc_attr($next_text)); ?>" /></label></p>
 
+        <p><label for="<?php echo $this->get_field_id('indicator'); ?>"><?php _e('Dates indicators', 'cp'); ?><br />
+                <select name="<?php echo $this->get_field_name('indicator'); ?>" class="widefat" id="<?php echo $this->get_field_id('indicator'); ?>">
+                    <?php
+                    foreach ( $this->date_indicator as $key => $value ) {
+                        ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected($selected_indicator, $key, true); ?>><?php echo $value; ?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+            </label>
+        </p>
+
         <?php
     }
 
@@ -56,7 +79,8 @@ class CP_Course_Calendar extends WP_Widget {
 			$instance['pre_text'] = strip_tags( $new_instance['pre_text'] );
 			$instance['next_text'] = strip_tags( $new_instance['next_text'] );
 		}
-		
+
+        $instance['indicator'] = $new_instance['indicator'];
         $instance['course'] = $new_instance['course'];
         return $instance;
     }
@@ -78,9 +102,9 @@ class CP_Course_Calendar extends WP_Widget {
 	        }
 		
 			if ( $course_id && "false" != $course_id ) {
-				echo do_shortcode('[course_calendar course_id="' . $course_id . '" pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');	
+				echo do_shortcode('[course_calendar course_id="' . $course_id . '" date_indicator="' . $instance['indicator'] . '" pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');
 			} else {
-				echo do_shortcode('[course_calendar pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');					
+				echo do_shortcode('[course_calendar date_indicator="' . $instance['indicator'] . '" pre="' . $instance['pre_text'] . '" next="' . $instance['next_text'] . '"]');
 			}
 		
 	        echo $after_widget;

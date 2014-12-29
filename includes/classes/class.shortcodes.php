@@ -1865,6 +1865,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'year'		 => false,
 				'pre'		 => __( 'Â« Previous', 'cp' ),
 				'next'		 => __( 'Next Â»', 'cp' ),
+				'date_indicator' => 'indicator_light_block',
 			), $atts, 'course_calendar' ) );
 
 			if ( !empty( $course_id ) ) {
@@ -1874,6 +1875,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$year	 = (bool) $year;
 			$pre	 = sanitize_text_field( $pre );
 			$next	 = sanitize_text_field( $next );
+			$date_indicator = sanitize_text_field( $date_indicator );
 
 			if ( empty( $course_id ) ) {
 				if ( $post && 'course' == $post->post_type ) {
@@ -1892,6 +1894,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$args = array( 'course_id' => $course_id );
 			}
 
+			$args['date_indicator'] = $date_indicator;
 
 			$cal = new Course_Calendar( $args );
 			return $cal->create_calendar( $pre, $next );

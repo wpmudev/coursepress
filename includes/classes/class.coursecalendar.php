@@ -26,6 +26,7 @@ if ( !class_exists('Course_Calendar') ) {
 		private $course_no_end = false;
 		private $previous_month = false;
 		private $next_month = false;
+	    private $date_indicator = false;
 				
         function __construct( $args ) {
 			global $wp_locale;
@@ -34,6 +35,7 @@ if ( !class_exists('Course_Calendar') ) {
 				'month' => false,
 				'year' => false,
 				'course_id' => false,
+				'date_indicator' => 'indicator_light_block',
 			), $args ) );
 
 			// If month and/or year not specified, fill in the blanks with current date.
@@ -94,6 +96,7 @@ if ( !class_exists('Course_Calendar') ) {
 			$this->year = $year;
 			$this->month = $month;
 			$this->course_id = $course_id ? $course_id : false;
+	        $this->date_indicator = sanitize_text_field( $date_indicator );
         }
 		
 		function create_calendar( $pre = '«', $next = '»' ) {
@@ -101,7 +104,7 @@ if ( !class_exists('Course_Calendar') ) {
 			$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
 			$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
 			$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
-	        $calendar .= "<table class='course-calendar-body'>";
+	        $calendar .= "<table class='course-calendar-body " . $this->date_indicator. "'>";
 	        $calendar .= "<caption>";
 			$calendar .= "$this->month_name $this->year";
 			$calendar .= "</caption>";
