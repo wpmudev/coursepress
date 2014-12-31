@@ -9,6 +9,8 @@ CHANGE LOG
 = 1.2.3.7 =
 * Course Calendar widget updated. New default CSS to work better across themes. Added date indicator selector for better presentation on light and dark themes. Including selector to use custom CSS defined by theme or CSS plugin.
 * Fixed issue where the unit editor converts absolute URLs to relative URLs on sites hosted with WPEngine.
+* Fixed issue with incorrect unit completion percentages.
+* Fixed PHP warnings when using CoursePress with TwentyFifteen theme.
 
 = 1.2.3.6 =
 * Fixed: Date translations now work properly.
