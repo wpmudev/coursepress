@@ -425,7 +425,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 			//cp_write_log($_POST[ 'page_title' ]);
 			update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
-
+			update_post_meta( $post_id, 'unit_page_count', count( cp_filter_content( $_POST[ 'page_title' ], true ) ) );
 			update_post_meta( $post_id, 'show_page_title', cp_filter_content( $_POST[ 'show_page_title_field' ] ) );
 
 			if ( !get_post_meta( $post_id, 'unit_order', true ) ) {
@@ -714,6 +714,22 @@ if ( !class_exists( 'Unit' ) ) {
 			 * @since 1.2.2
 			 */
 			do_action( 'coursepress_unit_duplicated', $new_unit_id );
+		}
+
+		public static function get_page_count( $unit_id ) {
+			// Try to get the page count from the meta field
+			$page_count = get_post_meta( $unit_id, 'unit_page_count', true );
+
+			// Or check the page title array if the meta field doesn't exist
+			if( !isset( $page_count ) || empty( $page_count ) ) {
+				$pages = get_post_meta( $unit_id, 'page_title', true );
+				if( isset( $pages ) && ! empty( $pages ) ) {
+					$page_count = count( $pages );
+				}
+			}
+
+			// Return the number of pages or 0.
+			return isset( $page_count) && ! empty( $page_count ) ? $page_count : 1;
 		}
 
 	}

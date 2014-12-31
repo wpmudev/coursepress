@@ -4938,6 +4938,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$courses = new stdClass;
 
 					$courses->title				 = __( 'Courses', 'cp' );
+					$courses->description        = '';
 					$courses->menu_item_parent	 = 0;
 					$courses->ID				 = 'cp-courses';
 					$courses->db_id				 = '';
@@ -4953,6 +4954,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$dashboard = new stdClass;
 
 						$dashboard->title			 = __( 'Dashboard', 'cp' );
+						$dashboard->description      = '';
 						$dashboard->menu_item_parent = 0;
 						$dashboard->ID				 = 'cp-dashboard';
 						$dashboard->db_id			 = - 9998;
@@ -4969,6 +4971,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$dashboard_courses = new stdClass;
 
 						$dashboard_courses->title			 = __( 'My Courses', 'cp' );
+						$dashboard_courses->description      = '';
 						$dashboard_courses->menu_item_parent = - 9998;
 						$dashboard_courses->ID				 = 'cp-dashboard-courses';
 						$dashboard_courses->db_id			 = '';
@@ -4983,6 +4986,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$settings_profile = new stdClass;
 
 						$settings_profile->title			 = __( 'My Profile', 'cp' );
+						$settings_profile->description       = '';
 						$settings_profile->menu_item_parent	 = - 9998;
 						$settings_profile->ID				 = 'cp-dashboard-settings';
 						$settings_profile->db_id			 = '';
@@ -5011,10 +5015,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$login = new stdClass;
 					if ( $is_in ) {
 						$login->title = __( 'Log Out', 'cp' );
+
 					} else {
 						$login->title = __( 'Log In', 'cp' );
 					}
-
+					$login->description = '';
 					$login->menu_item_parent = 0;
 					$login->ID				 = 'cp-logout';
 					$login->db_id			 = '';

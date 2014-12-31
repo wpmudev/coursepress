@@ -49,7 +49,7 @@ if ( !class_exists('Course_Completion') ) {
                 $unit->modules = $this->get_unit_modules($unit->ID);
 								// cp_write_log( $unit->modules );
                 // Used to determine page views
-                $unit->page_count = $this->get_unit_pages($unit->modules);
+                $unit->page_count = $this->get_unit_pages($unit);
 
                 // Used to determine mandatory modules
                 $unit->input_module_ids = $this->get_input_modules($unit->modules);	
@@ -72,14 +72,23 @@ if ( !class_exists('Course_Completion') ) {
             return $modules;
         }
 
-        function get_unit_pages( $modules ) {
+        function get_unit_pages( $unit ) {
             $pages_num = 1;
-            foreach ( $modules as $mod ) {
-                $class_name = $mod->module_type;
-                if ( 'page_break_module' == $class_name ) {
-                    $pages_num++;
+
+            if( ! cp_unit_uses_new_pagination( $unit->ID ) ) {
+                // Legacy
+                $modules = $unit->modules;
+                foreach ( $modules as $mod ) {
+                    $class_name = $mod->module_type;
+                    if ( 'page_break_module' == $class_name ) {
+                        $pages_num++;
+                    }
                 }
+            } else {
+                // New unit builder 1.2.3.5+
+                $pages_num = Unit::get_page_count( $unit->ID );
             }
+
             return $pages_num;
         }
 
@@ -266,6 +275,9 @@ if ( !class_exists('Course_Completion') ) {
             foreach ( $this->units as $unit ) {
                 $completion = $unit->completed_steps / $unit->total_steps * 100;
 
+                // Prevent an accidental percentage higher than 100%
+                $completion = $completion <= 100 ? (int) $completion : 100;
+
                 $unit->completion = ( int ) $completion;
             }
         }
@@ -283,7 +295,6 @@ if ( !class_exists('Course_Completion') ) {
             $this->check_gradable_modules_passed($this->student_id);
 			
             $this->get_remaining_mandatory_items();
-
             $this->get_total_steps();
             $this->get_completed_steps();
             $this->get_completion();
