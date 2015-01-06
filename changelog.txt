@@ -7,8 +7,9 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.3.8 =
-* Fixed issues with BBPress topics when CoursePress is active
 * Added integration with Messaging (1.1.6.7 and above) plugin (http://premium.wpmudev.org/project/messaging/)
+* Fixed issues with BBPress topics when CoursePress is active
+* Fixed issues caused by clearfix located in the plugin
 
 = 1.2.3.7 =
 * Course Calendar widget updated. New default CSS to work better across themes. Added date indicator selector for better presentation on light and dark themes. Including selector to use custom CSS defined by theme or CSS plugin.
