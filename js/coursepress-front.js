@@ -36,3 +36,7 @@ jQuery( document ).ready( function( $ ) {
     $( '#tos_agree' ).parent().find( 'br' ).remove();
     $( '[name="tos_agree"]' ).parent().find( 'br' ).remove();
 } );
+
+jQuery( document ).ready( function( $ ) {
+    $( '.cp_messaging_wrap #the-list tr td:first-child a').contents().unwrap();
+} );

@@ -60,6 +60,12 @@ if ( isset( $_POST[ '_wpnonce' ] ) && current_user_can( 'manage_options' ) ) {
 		} else {
 			update_option( 'show_tos', 0 );
 		}
+		
+		if ( isset( $_POST[ 'show_messaging' ] ) ) {
+			update_option( 'show_messaging', 1 );
+		} else {
+			update_option( 'show_messaging', 0 );
+		}
 
 		// Conditional flush_rewrite_rules
 		cp_flush_rewrite_rules();

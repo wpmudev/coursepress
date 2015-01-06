@@ -80,6 +80,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'cp_pages', array( &$this, 'cp_pages' ) );
 
 			$GLOBALS[ 'units_breadcrumbs' ] = '';
+
+			//Messaging shortcodes
+			add_shortcode( 'messaging_submenu', array( &$this, 'messaging_submenu' ) );
 		}
 
 		/**
@@ -922,7 +925,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'prerequisite_text'	 => __( 'Students need to complete "%s" first.', 'cp' ),
 				'passcode_text'		 => __( 'A passcode is required to enroll.', 'cp' ),
 				'anyone_text'		 => __( 'Anyone', 'cp' ),
-				'registered_text'    => __( 'Registered users', 'cp' ),
+				'registered_text'	 => __( 'Registered users', 'cp' ),
 				'class'				 => '',
 			), $atts, 'course_enrollment_type' ) );
 
@@ -1118,135 +1121,134 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'class'						 => '',
 			), $atts, 'course_join_button' ) );
 
-			$course_id                              = (int) $course_id;
-			$list_page                              = (bool) $list_page;
-			$class                                  = sanitize_html_class( $class );
+			$course_id	 = (int) $course_id;
+			$list_page	 = (bool) $list_page;
+			$class		 = sanitize_html_class( $class );
 
 			global $enrollment_process_url, $signup_url;
 
 			// Saves some overhead by not loading the post again if we don't need to.
-			$course = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+			$course	 = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 			$student = false;
 
 			$course->enrollment_details();
 
-			$button		 = '';
-			$button_option = '';
-			$button_url	 = $enrollment_process_url;
-			$is_form	 = false;
+			$button			 = '';
+			$button_option	 = '';
+			$button_url		 = $enrollment_process_url;
+			$is_form		 = false;
 
 			$buttons = apply_filters( 'coursepress_course_enrollment_button_options', array(
-				'full' => array(
-					'label' => sanitize_text_field( $course_full_text ),
-					'attr' => array(
+				'full'					 => array(
+					'label'	 => sanitize_text_field( $course_full_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-full ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'expired' => array(
-					'label' => sanitize_text_field( $course_expired_text ),
-					'attr' => array(
+				'expired'				 => array(
+					'label'	 => sanitize_text_field( $course_expired_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-finished ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'enrollment_finished' => array(
-					'label' => sanitize_text_field( $enrollment_finished_text ),
-					'attr' => array(
+				'enrollment_finished'	 => array(
+					'label'	 => sanitize_text_field( $enrollment_finished_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-enrollment-finished ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'enrollment_closed' => array(
-					'label' => sanitize_text_field( $enrollment_closed_text ),
-					'attr' => array(
+				'enrollment_closed'		 => array(
+					'label'	 => sanitize_text_field( $enrollment_closed_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-enrollment-closed ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'enroll' => array(
-					'label' => sanitize_text_field( $enroll_text ),
-					'attr' => array(
-						'class' => 'apply-button enroll ' . $class,
-						'data-link-old' => esc_url( $signup_url . '?course_id=' . $course_id ),
+				'enroll'				 => array(
+					'label'	 => sanitize_text_field( $enroll_text ),
+					'attr'	 => array(
+						'class'			 => 'apply-button enroll ' . $class,
+						'data-link-old'	 => esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 					),
-					'type' => 'form_button',
+					'type'	 => 'form_button',
 				),
-				'signup' => array(
-					'label' => sanitize_text_field( $signup_text ),
-					'attr' => array(
-						'class' => 'apply-button signup ' . $class,
-						'data-link-old' => esc_url( $signup_url . '?course_id=' . $course_id ),
+				'signup'				 => array(
+					'label'	 => sanitize_text_field( $signup_text ),
+					'attr'	 => array(
+						'class'			 => 'apply-button signup ' . $class,
+						'data-link-old'	 => esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 					),
-					'type' => 'form_button',
+					'type'	 => 'form_button',
 				),
-				'details' => array(
-					'label' => sanitize_text_field( $details_text ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-details ' . $class,
-						'data-link' => esc_url( get_permalink( $course_id ) ),
+				'details'				 => array(
+					'label'	 => sanitize_text_field( $details_text ),
+					'attr'	 => array(
+						'class'		 => 'apply-button apply-button-details ' . $class,
+						'data-link'	 => esc_url( get_permalink( $course_id ) ),
 					),
-					'type' => 'button',
+					'type'	 => 'button',
 				),
-				'prerequisite' => array(
-					'label' => sanitize_text_field( $prerequisite_text ),
-					'attr' => array(
+				'prerequisite'			 => array(
+					'label'	 => sanitize_text_field( $prerequisite_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-prerequisite ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'passcode' => array(
-					'label' => sanitize_text_field( $passcode_text ),
+				'passcode'				 => array(
+					'label'		 => sanitize_text_field( $passcode_text ),
 					'button_pre' => '<div class="passcode-box"><label>' . esc_html( $passcode_text ) . ' <input type="password" name="passcode" /></label></div>',
-					'attr' => array(
+					'attr'		 => array(
 						'class' => 'apply-button apply-button-passcode ' . $class,
 					),
-					'type' => 'form_submit',
+					'type'		 => 'form_submit',
 				),
-				'not_started' => array(
-					'label' => sanitize_text_field( $not_started_text ),
-					'attr' => array(
+				'not_started'			 => array(
+					'label'	 => sanitize_text_field( $not_started_text ),
+					'attr'	 => array(
 						'class' => 'apply-button apply-button-not-started  ' . $class,
 					),
-					'type' => 'label',
+					'type'	 => 'label',
 				),
-				'access' => array(
-					'label' => sanitize_text_field( $access_text ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
-						'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress::instance()->get_units_slug() ) ),
+				'access'				 => array(
+					'label'	 => sanitize_text_field( $access_text ),
+					'attr'	 => array(
+						'class'		 => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
+						'data-link'	 => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress::instance()->get_units_slug() ) ),
 					),
-					'type' => 'button',
+					'type'	 => 'button',
 				),
-				'continue' => array(
-					'label' => sanitize_text_field( $continue_learning_text ),
-					'attr' => array(
-						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress::instance()->get_units_slug() ) ),
+				'continue'				 => array(
+					'label'	 => sanitize_text_field( $continue_learning_text ),
+					'attr'	 => array(
+						'class'		 => 'apply-button apply-button-enrolled ' . $class,
+						'data-link'	 => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress::instance()->get_units_slug() ) ),
 					),
-					'type' => 'button',
+					'type'	 => 'button',
 				),
-
 			) );
 
-			if( is_user_logged_in() ){
-				$student = new Student( get_current_user_id() );
-				$student->enrolled = $student->user_enrolled_in_course( $course_id );
+			if ( is_user_logged_in() ) {
+				$student			 = new Student( get_current_user_id() );
+				$student->enrolled	 = $student->user_enrolled_in_course( $course_id );
 			}
 
 			// Determine the button option
-			if( empty( $student ) || ! $student->enrolled ) {
+			if ( empty( $student ) || !$student->enrolled ) {
 
 				// For vistors and non-enrolled students
-				if( $course->full ) {
+				if ( $course->full ) {
 					// COURSE FULL
 					$button_option = 'full';
 				} elseif ( $course->course_expired && !$course->open_ended_course ) {
 					// COURSE EXPIRED
 					$button_option = 'expired';
-				} elseif ( ! $course->enrollment_started && ! $course->open_ended_enrollment && ! $course->enrollment_expired ) {
+				} elseif ( !$course->enrollment_started && !$course->open_ended_enrollment && !$course->enrollment_expired ) {
 					// ENROLMENTS NOT STARTED (CLOSED)
 					$button_option = 'enrollment_closed';
 				} elseif ( $course->enrollment_expired && !$course->open_ended_enrollment ) {
@@ -1262,31 +1264,31 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 					// If the user is allowed to signup, let them sign up
 					$button_option = 'signup';
-				} elseif( ! empty( $student ) && empty( $button_option ) ) {
+				} elseif ( !empty( $student ) && empty( $button_option ) ) {
 
 					// If the user is not enrolled, then see if they can enroll
-					switch( $course->enroll_type ) {
+					switch ( $course->enroll_type ) {
 						case 'anyone':
-							if( $user_can_register ) {
+							if ( $user_can_register ) {
 								$button_option = 'enroll';
 							}
 							break;
 						case 'registered':
-							if( ! $user_can_register ) {
+							if ( !$user_can_register ) {
 								$button_option = 'enroll';
 							}
 							break;
 						case 'passcode':
-							$button_option = 'passcode';
+							$button_option	 = 'passcode';
 							break;
 						case 'prerequisite':
-							$pre_course = false;
-							if( $student->enroll_in_course( $course->prerequisite ) ) {
+							$pre_course		 = false;
+							if ( $student->enroll_in_course( $course->prerequisite ) ) {
 								$pre_course = new Course_Completion( $course->prerequisite );
 								$pre_course->init_student_status();
 							}
 
-							if ( ! empty( $pre_course ) && $pre_course->is_course_complete() ) {
+							if ( !empty( $pre_course ) && $pre_course->is_course_complete() ) {
 								$button_option = 'enroll';
 							} else {
 								$button_option = 'prerequisite';
@@ -1294,9 +1296,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 							break;
 					}
-
 				}
-
 			} else {
 				// For already enrolled students.
 
@@ -1306,10 +1306,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( $course->course_expired && !$course->open_ended_course ) {
 					// COURSE EXPIRED
 					$button_option = 'expired';
-				} elseif( ! $course->course_started && ! $course->open_ended_course ) {
+				} elseif ( !$course->course_started && !$course->open_ended_course ) {
 					// COURSE HASN'T STARTED
 					$button_option = 'not_started';
-				} elseif( !is_single() && false === strpos( $_SERVER[ 'REQUEST_URI' ], CoursePress::instance()->get_student_dashboard_slug() ) ) {
+				} elseif ( !is_single() && false === strpos( $_SERVER[ 'REQUEST_URI' ], CoursePress::instance()->get_student_dashboard_slug() ) ) {
 					// SHOW DETAILS | Dashboard
 					$button_option = 'details';
 				} else {
@@ -1319,49 +1319,46 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						$button_option = 'access';
 					}
 				}
-
 			}
 
 			// Make the option extendable
 			$button_option = apply_filters( 'coursepress_course_enrollment_button_option', $button_option );
 
 			// Prepare the button
-			if( ! is_single() || 'yes' == $list_page )
-			{
-				$button_url = get_permalink( $course_id );
-				$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
+			if ( !is_single() || 'yes' == $list_page ) {
+				$button_url	 = get_permalink( $course_id );
+				$button		 = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
 			} else {
 				//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
-				if( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
+				if ( empty( $button_option ) || ( 'manually' == $course->enroll_type && !( 'access' == $button_option || 'continue' == $button_option ) ) ) {
 					return apply_filters( 'coursepress_enroll_button', $button, $course, $student );
 				}
 
 				$button_attributes = '';
-				foreach( $buttons[ $button_option ]['attr'] as $key => $value ) {
+				foreach ( $buttons[ $button_option ][ 'attr' ] as $key => $value ) {
 					$button_attributes .= $key . '="' . esc_attr( $value ) . '" ';
 				}
-				$button_pre = isset( $buttons[ $button_option ]['button_pre'] ) ? $buttons[ $button_option ]['button_pre'] : '';
-				$button_post = isset( $buttons[ $button_option ]['button_post'] ) ? $buttons[ $button_option ]['button_post'] : '';
+				$button_pre	 = isset( $buttons[ $button_option ][ 'button_pre' ] ) ? $buttons[ $button_option ][ 'button_pre' ] : '';
+				$button_post = isset( $buttons[ $button_option ][ 'button_post' ] ) ? $buttons[ $button_option ][ 'button_post' ] : '';
 
-				switch( $buttons[ $button_option ]['type'] ) {
+				switch ( $buttons[ $button_option ][ 'type' ] ) {
 					case 'label':
-						$button = '<span ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</span>';
+						$button	 = '<span ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ][ 'label' ] ) . '</span>';
 						break;
 					case 'form_button':
-						$button = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</button>';
+						$button	 = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ][ 'label' ] ) . '</button>';
 						$is_form = true;
 						break;
 					case 'form_submit':
-						$button = '<input type="submit" '. $button_attributes . ' value="' . esc_attr( $buttons[ $button_option ]['label'] ) . '" />';
+						$button	 = '<input type="submit" ' . $button_attributes . ' value="' . esc_attr( $buttons[ $button_option ][ 'label' ] ) . '" />';
 						$is_form = true;
 						break;
 					case 'button':
-						$button = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</button>';
+						$button	 = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ][ 'label' ] ) . '</button>';
 						break;
 				}
 
 				$button = $button_pre . $button . $button_post;
-
 			}
 
 			// Wrap button in form if needed
@@ -1373,7 +1370,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 
 			// Return button for rendering
-			return apply_filters( 'coursepress_enroll_button', $button, $course, $student );;
+			return apply_filters( 'coursepress_enroll_button', $button, $course, $student );
+			;
 		}
 
 		/**
@@ -1860,22 +1858,22 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			global $post;
 
 			extract( shortcode_atts( array(
-				'course_id'	 => in_the_loop() ? get_the_ID() : false,
-				'month'		 => false,
-				'year'		 => false,
-				'pre'		 => __( 'Â« Previous', 'cp' ),
-				'next'		 => __( 'Next Â»', 'cp' ),
+				'course_id'		 => in_the_loop() ? get_the_ID() : false,
+				'month'			 => false,
+				'year'			 => false,
+				'pre'			 => __( 'Â« Previous', 'cp' ),
+				'next'			 => __( 'Next Â»', 'cp' ),
 				'date_indicator' => 'indicator_light_block',
 			), $atts, 'course_calendar' ) );
 
 			if ( !empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			}
-			$month	 = (bool) $month;
-			$year	 = (bool) $year;
-			$pre	 = sanitize_text_field( $pre );
-			$next	 = sanitize_text_field( $next );
-			$date_indicator = sanitize_text_field( $date_indicator );
+			$month			 = (bool) $month;
+			$year			 = (bool) $year;
+			$pre			 = sanitize_text_field( $pre );
+			$next			 = sanitize_text_field( $next );
+			$date_indicator	 = sanitize_text_field( $date_indicator );
 
 			if ( empty( $course_id ) ) {
 				if ( $post && 'course' == $post->post_type ) {
@@ -1894,7 +1892,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$args = array( 'course_id' => $course_id );
 			}
 
-			$args['date_indicator'] = $date_indicator;
+			$args[ 'date_indicator' ] = $date_indicator;
 
 			$cal = new Course_Calendar( $args );
 			return $cal->create_calendar( $pre, $next );
@@ -2445,6 +2443,50 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 		/**
 		 *
+		 * MESSAGING PLUGIN SUBMENU SHORTCODE
+		 * =========================
+		 *
+		 */
+		function messaging_submenu( $atts ) {
+			global $coursepress;
+
+			extract( shortcode_atts( array(), $atts ) );
+
+			if ( isset( $coursepress->inbox_subpage ) ) {
+				$subpage = $coursepress->inbox_subpage;
+			} else {
+				$subpage = '';
+			}
+
+			$unread_count = '';
+
+			if ( get_option( 'show_messaging', 0 ) == 1 ) {
+				$unread_count = cp_messaging_get_unread_messages_count();
+				if ( $unread_count > 0 ) {
+					$unread_count = ' (' . $unread_count . ')';
+				}else{
+					$unread_count = '';
+				}
+			}
+
+			ob_start();
+			?>
+
+			<div class="submenu-main-container submenu-messaging">
+				<ul id="submenu-main" class="submenu nav-submenu">
+					<li class="submenu-item submenu-inbox <?php echo( isset( $subpage ) && $subpage == 'inbox' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_inbox_slug( true ); ?>"><?php _e( 'Inbox', 'cp' ); echo $unread_count; ?></a></li>
+					<li class="submenu-item submenu-sent-messages <?php echo( isset( $subpage ) && $subpage == 'sent_messages' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_sent_messages_slug( true ); ?>"><?php _e( 'Sent', 'cp' ); ?></a></li>
+					<li class="submenu-item submenu-new-message <?php echo( isset( $subpage ) && $subpage == 'new_message' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_new_message_slug( true ); ?>"><?php _e( 'New Message', 'cp' ); ?></a></li>
+				</ul><!--submenu-main-->
+			</div><!--submenu-main-container-->
+			<br clear="all" />
+			<?php
+			$content = ob_get_clean();
+			return $content;
+		}
+
+		/**
+		 *
 		 * UNIT DETAILS SHORTCODES
 		 * =========================
 		 *
@@ -2791,7 +2833,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$args = array(
 				'post_type'		 => 'unit',
 				//'post_id'		 => $unit_id,
-				'post__in' => array($unit_id),
+				'post__in'		 => array( $unit_id ),
 				'post_status'	 => cp_can_see_unit_draft() ? 'any' : 'publish',
 			);
 
@@ -3818,7 +3860,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 													$email_args[ 'student_last_name' ]	 = $student_data[ 'last_name' ];
 													$email_args[ 'student_username' ]	 = $student_data[ 'user_login' ];
 													$email_args[ 'student_password' ]	 = $student_data[ 'user_pass' ];
-													
+
 													coursepress_send_email( $email_args );
 
 													$creds						 = array();

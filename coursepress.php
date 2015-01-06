@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.3.7
+  Version: 1.2.3.8
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.3.6';
+		public $version = '1.2.3.8';
 
 		/**
 		 * Plugin friendly name.
@@ -2386,6 +2386,95 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$this->set_latest_activity( $user_id );
 			}
 
+			$url = trim( parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH ), '/' );
+
+			$inbox_page			 = false;
+			$new_message_page	 = false;
+			$sent_messages_page	 = false;
+
+			if ( preg_match( '/' . $this->get_inbox_slug() . '/', $url ) ) {
+				$inbox_page = true;
+			}
+
+			if ( preg_match( '/' . $this->get_new_message_slug() . '/', $url ) ) {
+				$new_message_page = true;
+			}
+
+			if ( preg_match( '/' . $this->get_sent_messages_slug() . '/', $url ) ) {
+				$sent_messages_page = true;
+			}
+
+			if ( $inbox_page ) {
+
+				$this->inbox_subpage = 'inbox';
+
+				$theme_file = locate_template( array( 'page-inbox.php' ) );
+
+				if ( $theme_file != '' ) {
+					require_once( $theme_file );
+					exit;
+				} else {
+					$args	 = array(
+						'slug'			 => $wp->request,
+						'title'			 => __( 'Inbox', 'cp' ),
+						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-inbox.php', array(), true ),
+						'type'			 => 'page',
+						'is_page'		 => true,
+						'is_singular'	 => true,
+						'is_archive'	 => false
+					);
+					$pg		 = new CoursePress_Virtual_Page( $args );
+				}
+			}
+
+			if ( $sent_messages_page ) {
+
+				$this->inbox_subpage = 'sent_messages';
+
+				$theme_file = locate_template( array( 'page-sent-messages.php' ) );
+
+				if ( $theme_file != '' ) {
+					//do_shortcode( '[course_units_loop]' );
+					require_once( $theme_file );
+					exit;
+				} else {
+					$args	 = array(
+						'slug'			 => $wp->request,
+						'title'			 => __( 'Sent Message', 'cp' ),
+						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-sent-messages.php', array(), true ),
+						'type'			 => 'page',
+						'is_page'		 => true,
+						'is_singular'	 => true,
+						'is_archive'	 => false
+					);
+					$pg		 = new CoursePress_Virtual_Page( $args );
+				}
+			}
+
+			if ( $new_message_page ) {
+
+				$this->inbox_subpage = 'new_message';
+
+				$theme_file = locate_template( array( 'page-new-message.php' ) );
+
+				if ( $theme_file != '' ) {
+					//do_shortcode( '[course_units_loop]' );
+					require_once( $theme_file );
+					exit;
+				} else {
+					$args	 = array(
+						'slug'			 => $wp->request,
+						'title'			 => __( 'New Message', 'cp' ),
+						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-new-message.php', array(), true ),
+						'type'			 => 'page',
+						'is_page'		 => true,
+						'is_singular'	 => true,
+						'is_archive'	 => false
+					);
+					$pg		 = new CoursePress_Virtual_Page( $args );
+				}
+			}
+
 			/* Show Units archive template */
 			if ( array_key_exists( 'coursename', $wp->query_vars ) && !array_key_exists( 'unitname', $wp->query_vars ) ) {
 				$this->remove_pre_next_post();
@@ -2583,7 +2672,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						global $wp;
 						do_shortcode( '[course_unit_single unit_id="' . $vars[ 'unit_id' ] . '"]' ); //required for getting unit results
 						require_once( $theme_file );
-						do_action( 'wp' );//fix for gravity
+						do_action( 'wp' ); //fix for gravity
 						exit;
 					} else {
 						$args = array(
@@ -2637,6 +2726,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$query_vars[]	 = 'grades_archive';
 			$query_vars[]	 = 'workbook';
 			$query_vars[]	 = 'discussion_action';
+			$query_vars[]	 = 'inbox';
+			$query_vars[]	 = 'new_message';
+			$query_vars[]	 = 'sent_messages';
 			$query_vars[]	 = 'paged';
 
 			return $query_vars;
@@ -2668,6 +2760,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			/* if ( !is_multisite() ) {
 			  unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
 			  } */
+
+			$new_rules[ '^' . $this->get_inbox_slug() . '/?' ]			 = 'index.php?page_id=-1&inbox';
+			$new_rules[ '^' . $this->get_new_message_slug() . '/?' ]	 = 'index.php?page_id=-1&new_message';
+			$new_rules[ '^' . $this->get_sent_messages_slug() . '/?' ]	 = 'index.php?page_id=-1&sent_messages';
 
 			/* Resolve possible issue with rule formating and avoid 404s */
 			foreach ( $new_rules as $new_rule => $value ) {
@@ -2766,12 +2862,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 			return __( 'All Courses', 'cp' );
 		}
 
-		function get_template_details( $template, $args = array() ) {
+		function get_template_details( $template, $args = array(), $remove_wpautop = false ) {
 			ob_start();
+			if ( $remove_wpautop ) {
+				remove_filter( 'the_content', 'wpautop' );
+			}
 			extract( $args );
 			include_once( $template );
-
-			return ob_get_clean();
+			$content = ob_get_clean();
+			
+			return $content;
 		}
 
 		function update_units_positions() {
@@ -2930,6 +3030,34 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$default_slug_value = 'workbook';
 
 			return get_option( 'coursepress_workbook_slug', $default_slug_value );
+		}
+
+		function get_inbox_slug( $url = false ) {
+			$default_slug_value = 'student-inbox';
+
+			if ( !$url ) {
+				return get_option( 'coursepress_inbox_slug', $default_slug_value );
+			} else {
+				return trailingslashit( home_url() . '/' . get_option( 'coursepress_inbox_slug', $default_slug_value ) );
+			}
+		}
+
+		function get_new_message_slug( $url = false ) {
+			$default_slug_value = 'student-new-message';
+			if ( !$url ) {
+				return get_option( 'coursepress_new_message_slug', $default_slug_value );
+			} else {
+				return trailingslashit( home_url() . '/' . get_option( 'coursepress_new_message_slug', $default_slug_value ) );
+			}
+		}
+
+		function get_sent_messages_slug( $url = false ) {
+			$default_slug_value = 'student-sent-messages';
+			if ( !$url ) {
+				return get_option( 'coursepress_sent_messages_slug', $default_slug_value );
+			} else {
+				return trailingslashit( home_url() . '/' . get_option( 'coursepress_sent_messages_slug', $default_slug_value ) );
+			}
 		}
 
 		function get_discussion_slug_new() {
@@ -4478,14 +4606,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
 				</div>
 				<?php
 			}
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
+				<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
 				</div>
 				<?php
 			}
@@ -4938,7 +5066,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$courses = new stdClass;
 
 					$courses->title				 = __( 'Courses', 'cp' );
-					$courses->description        = '';
+					$courses->description		 = '';
 					$courses->menu_item_parent	 = 0;
 					$courses->ID				 = 'cp-courses';
 					$courses->db_id				 = '';
@@ -4954,7 +5082,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$dashboard = new stdClass;
 
 						$dashboard->title			 = __( 'Dashboard', 'cp' );
-						$dashboard->description      = '';
+						$dashboard->description		 = '';
 						$dashboard->menu_item_parent = 0;
 						$dashboard->ID				 = 'cp-dashboard';
 						$dashboard->db_id			 = - 9998;
@@ -4971,7 +5099,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$dashboard_courses = new stdClass;
 
 						$dashboard_courses->title			 = __( 'My Courses', 'cp' );
-						$dashboard_courses->description      = '';
+						$dashboard_courses->description		 = '';
 						$dashboard_courses->menu_item_parent = - 9998;
 						$dashboard_courses->ID				 = 'cp-dashboard-courses';
 						$dashboard_courses->db_id			 = '';
@@ -4986,7 +5114,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$settings_profile = new stdClass;
 
 						$settings_profile->title			 = __( 'My Profile', 'cp' );
-						$settings_profile->description       = '';
+						$settings_profile->description		 = '';
 						$settings_profile->menu_item_parent	 = - 9998;
 						$settings_profile->ID				 = 'cp-dashboard-settings';
 						$settings_profile->db_id			 = '';
@@ -4995,6 +5123,28 @@ if ( !class_exists( 'CoursePress' ) ) {
 							$settings_profile->classes[] = 'current_page_item';
 						}
 						$sorted_menu_items[] = $settings_profile;
+
+						/* Inbox */
+						if ( get_option( 'show_messaging', 0 ) == 1 ) {
+							$unread_count = cp_messaging_get_unread_messages_count();
+							if ( $unread_count > 0 ) {
+								$unread_count = ' (' . $unread_count . ')';
+							} else {
+								$unread_count = '';
+							}
+							$settings_inbox = new stdClass;
+
+							$settings_inbox->title				 = __( 'Inbox', 'cp' ) . $unread_count;
+							$settings_inbox->description		 = '';
+							$settings_inbox->menu_item_parent	 = - 9998;
+							$settings_inbox->ID					 = 'cp-dashboard-inbox';
+							$settings_inbox->db_id				 = '';
+							$settings_inbox->url				 = $this->get_inbox_slug( true );
+							if ( cp_curPageURL() == $settings_inbox->url ) {
+								$settings_profile->classes[] = 'current_page_item';
+							}
+							$sorted_menu_items[] = $settings_inbox;
+						}
 					}
 
 					/* Sign up page */
@@ -5015,11 +5165,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$login = new stdClass;
 					if ( $is_in ) {
 						$login->title = __( 'Log Out', 'cp' );
-
 					} else {
 						$login->title = __( 'Log In', 'cp' );
 					}
-					$login->description = '';
+					$login->description		 = '';
 					$login->menu_item_parent = 0;
 					$login->ID				 = 'cp-logout';
 					$login->db_id			 = '';
@@ -5091,6 +5240,28 @@ if ( !class_exists( 'CoursePress' ) ) {
 						$settings_profile->classes[] = 'current_page_item';
 					}
 					$sub_sorted_menu_items[] = $settings_profile;
+
+					/* Inbox */
+					if ( get_option( 'show_messaging', 0 ) == 1 ) {
+						$unread_count = cp_messaging_get_unread_messages_count();
+						if ( $unread_count > 0 ) {
+							$unread_count = ' (' . $unread_count . ')';
+						} else {
+							$unread_count = '';
+						}
+
+						$settings_inbox = new stdClass;
+
+						$settings_inbox->title				 = __( 'Inbox', 'cp' ) . $unread_count;
+						$settings_inbox->menu_item_parent	 = - 9998;
+						$settings_inbox->ID					 = 'cp-dashboard-inbox';
+						$settings_inbox->db_id				 = '';
+						$settings_inbox->url				 = $this->get_inbox_slug( true );
+						if ( cp_curPageURL() == $settings_inbox->url ) {
+							$settings_profile->classes[] = 'current_page_item';
+						}
+						$sub_sorted_menu_items[] = $settings_inbox;
+					}
 				}
 
 				/* Sign up page */
@@ -5129,7 +5300,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-																				   <?php if ( $menu_item->db_id !== '' ) { ?>
+									<?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
 										<?php
 										foreach ( $sub_sorted_menu_items as $menu_item ) {
@@ -5138,9 +5309,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-										<?php } ?>
+									<?php } ?>
 									</ul>
-								<?php } ?>
+							<?php } ?>
 							</li>
 							<?php
 						}
@@ -5242,7 +5413,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 									</li>
 								<?php } ?>
 							<?php } ?>
-						<?php } ?>
+				<?php } ?>
 					</ul>
 				</div>
 				<?php

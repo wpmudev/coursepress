@@ -418,8 +418,41 @@
 								echo esc_html( trailingslashit( home_url() ) );
 								?>&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php echo esc_attr( $this->get_instructor_profile_slug() );
 								?>' />&nbsp;/
+								<hr />
 							</td>
 						</tr>
+
+						<?php if ( function_exists( 'messaging_init' ) ) { ?>
+							<tr valign="top">
+								<th scope="row"><?php _e( 'Inbox Slug', 'cp' ); ?></th>
+								<td>
+									<?php
+									echo esc_html( trailingslashit( home_url() ) );
+									?>&nbsp;<input type='text' name='option_coursepress_inbox_slug' id='coursepress_inbox_slug' value='<?php echo esc_attr( $this->get_inbox_slug() );
+									?>' />&nbsp;/
+								</td>
+							</tr>
+							
+							<tr valign="top">
+								<th scope="row"><?php _e( 'Sent Messages Slug', 'cp' ); ?></th>
+								<td>
+									<?php
+									echo esc_html( trailingslashit( home_url() ) );
+									?>&nbsp;<input type='text' name='option_coursepress_sent_messages_slug' id='coursepress_sent_messages_slug' value='<?php echo esc_attr( $this->get_sent_messages_slug() );
+									?>' />&nbsp;/
+								</td>
+							</tr>
+							
+							<tr valign="top">
+								<th scope="row"><?php _e( 'New Message Slug', 'cp' ); ?></th>
+								<td>
+									<?php
+									echo esc_html( trailingslashit( home_url() ) );
+									?>&nbsp;<input type='text' name='option_coursepress_new_message_slug' id='coursepress_new_message_slug' value='<?php echo esc_attr( $this->get_new_message_slug() );
+									?>' />&nbsp;/
+								</td>
+							</tr>
+						<?php } ?>
 						<!--<tr valign="top">
 							<th scope="row"><?php _e( 'Instructor Profile Page', 'cp' ); ?></th>
 							<td>
@@ -575,12 +608,12 @@
                             <th scope="row"><?php _e( 'Media Type', 'cp' ); ?>
 								<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) ); ?></th>
                             <td>
-								<?php $selected_type		 = get_option( 'details_media_type', 'default' ); ?>
+								<?php $selected_type					 = get_option( 'details_media_type', 'default' ); ?>
                                 <select name="option_details_media_type" class="widefat" id="option_details_media_type">
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);            ?>><?php // _e( 'Thumbnail', 'cp' );            ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);             ?>><?php // _e( 'Thumbnail', 'cp' );             ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -588,7 +621,7 @@
                             <th scope="row"><?php _e( 'Priority', 'cp' ); ?>
 								<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) ); ?></th>
                             <td>
-								<?php $selected_priority	 = get_option( 'details_media_priority', 'video' ); ?>
+								<?php $selected_priority				 = get_option( 'details_media_priority', 'video' ); ?>
                                 <select name="option_details_media_priority" class="widefat" id="option_details_media_priority">
                                     <option value="video" <?php selected( $selected_priority, 'video', true ); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_priority, 'image', true ); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
@@ -612,12 +645,12 @@
                             <th scope="row"><?php _e( 'Media Type', 'cp' ); ?>
 								<?php CP_Helper_Tooltip::tooltip( __( '"Priority" - Use the media type below, with the other type as a fallback.', 'cp' ) ); ?></th>
                             <td>
-								<?php $selected_type		 = get_option( 'listings_media_type', 'default' ); ?>
+								<?php $selected_type					 = get_option( 'listings_media_type', 'default' ); ?>
                                 <select name="option_listings_media_type" class="widefat" id="option_listings_media_type">
                                     <option value="default" <?php selected( $selected_type, 'default', true ); ?>><?php _e( 'Priority Mode (default)', 'cp' ); ?></option>
                                     <option value="video" <?php selected( $selected_type, 'video', true ); ?>><?php _e( 'Featured Video', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_type, 'image', true ); ?>><?php _e( 'List Image', 'cp' ); ?></option>					
-                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);            ?>><?php // _e( 'Thumbnail', 'cp' );            ?></option> -->
+                                    <!-- <option value="thumbnail" <?php // selected($selected_type, 'thumbnail', true);             ?>><?php // _e( 'Thumbnail', 'cp' );             ?></option> -->
                                 </select>
                             </td>
                         </tr>
@@ -625,7 +658,7 @@
                             <th scope="row"><?php _e( 'Priority', 'cp' ); ?>
 								<?php CP_Helper_Tooltip::tooltip( __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', 'cp' ) ); ?></th>
                             <td>
-								<?php $selected_priority	 = get_option( 'listings_media_priority', 'image' ); ?>
+								<?php $selected_priority				 = get_option( 'listings_media_priority', 'image' ); ?>
                                 <select name="option_listings_media_priority" class="widefat" id="option_listings_media_priority">
                                     <option value="video" <?php selected( $selected_priority, 'video', true ); ?>><?php _e( 'Featured Video (image fallback)', 'cp' ); ?></option>
                                     <option value="image" <?php selected( $selected_priority, 'image', true ); ?>><?php _e( 'List Image (video fallback)', 'cp' ); ?></option>					
@@ -706,7 +739,7 @@
                             <th scope="row"><?php _e( 'Font', 'cp' ); ?></th>
                             <td>
 								<?php
-								$reports_font		 = get_option( 'reports_font', 'helvetica' );
+								$reports_font					 = get_option( 'reports_font', 'helvetica' );
 								?>
 								<select name="option_reports_font">
 									<option value='aealarabiya' <?php selected( $reports_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
@@ -772,6 +805,33 @@
 				</div>
 			</div>
 		<?php } ?>
+
+		<?php if ( function_exists( 'messaging_init' ) ) { ?>
+			<div class="postbox">
+				<h3 class="hndle" style='cursor:auto;'><span><?php printf( __( 'Messaging (%sMessaging plugin%s)', 'cp' ), '<a href="http://premium.wpmudev.org/project/messaging/">', '</a>' ); ?></span></h3>
+				<div class="inside">
+					<table class="form-table">
+						<tbody>
+							<tr valign="top">
+								<th scope="row"><?php _e( 'Allow Private Student Messaging on front', 'cp' ); ?></th>
+								<td>
+									<a class="help-icon" href="javascript:;"></a>
+									<div class="tooltip">
+										<div class="tooltip-before"></div>
+										<div class="tooltip-button">&times;</div>
+										<div class="tooltip-content">
+											<?php _e( 'If checked, students will see "Inbox" in their Dashboard and will be able to receive and send private messages.', 'cp' ) ?>
+										</div>
+									</div>
+									<input type='checkbox' name='show_messaging' <?php echo ( ( get_option( 'show_messaging', 0 ) ) ? 'checked' : '' ); ?> />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<?php } ?>
+
 
 		<?php
 		do_action( 'coursepress_general_options_page' );

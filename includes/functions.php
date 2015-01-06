@@ -15,9 +15,15 @@
 
 /* get_user_option() fix */
 
+function cp_messaging_get_unread_messages_count() {
+	global $wpdb, $user_ID;
+	$tmp_unread_message_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . $wpdb->base_prefix . "messages WHERE message_to_user_ID = %d AND message_status = %s", $user_ID, 'unread' ) );
+	return $tmp_unread_message_count;
+}
+
 function cp_admin_ajax_url() {
-  $scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
-  return admin_url( "admin-ajax.php", $scheme );
+	$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
+	return admin_url( "admin-ajax.php", $scheme );
 }
 
 function cp_get_user_option( $option, $user_id = false ) {
@@ -25,13 +31,13 @@ function cp_get_user_option( $option, $user_id = false ) {
 
 	$blog_id = get_current_blog_id();
 
-	if( empty( $user_id ) ) {
+	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( is_multisite() ) {
+	if ( is_multisite() ) {
 
-		if( defined( 'BLOG_ID_CURRENT_SITE') && BLOG_ID_CURRENT_SITE == $blog_id ) {
+		if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == $blog_id ) {
 			return get_user_meta( $user_id, $wpdb->base_prefix . $option, true );
 		}
 
@@ -40,7 +46,6 @@ function cp_get_user_option( $option, $user_id = false ) {
 		return get_user_option( $option, $user_id );
 	}
 }
-
 
 function cp_unit_uses_new_pagination( $unit_id = false ) {
 	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
@@ -471,7 +476,7 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 		$module_id	 = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
 
 		if ( $module_id > 0 ) {
-			$pages_num = count(get_post_meta( $unit_id, 'page_title', true ));
+			$pages_num = count( get_post_meta( $unit_id, 'page_title', true ) );
 			//$pages_num = get_post_meta( $module_id, 'module_page', true );
 		} else {
 			$pages_num = 1;

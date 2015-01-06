@@ -1384,3 +1384,13 @@ h1.title.completed-courses-title {
 	bottom: 2px;
 	right:0;
 }
+
+.submenu-messaging{
+    margin-bottom: 30px;
+}
+
+.page-new-message .wrap > h2,
+.page-inbox .wrap > h2,
+.page-sent-messages .wrap > h2{
+    display: none;
+}
