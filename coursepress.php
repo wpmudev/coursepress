@@ -12,7 +12,7 @@
   WDP ID: 913071
   License: GNU General Public License ( Version 2 - GPLv2 )
 
-  Copyright 2014 Incsub ( http://incsub.com )
+  Copyright 2015 Incsub ( http://incsub.com )
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License ( Version 2 - GPLv2 ) as published by
