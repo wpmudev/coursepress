@@ -808,7 +808,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 								$permalink		 = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
 								$resubmit_url	 = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink;
 								?>
-								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Resubmit', 'cp' ); ?></a>
+								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Submit different answer', 'cp' ); ?></a>
 								<?php
 								if ( $attempts_remaining > 0 ) {
 									if ( $attempts_remaining == 1 ) {
