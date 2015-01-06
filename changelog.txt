@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.3.8 =
+* Fixed issues with BBPress topics when CoursePress is active
 * Added integration with Messaging (1.1.6.7 and above) plugin (http://premium.wpmudev.org/project/messaging/)
 
 = 1.2.3.7 =
