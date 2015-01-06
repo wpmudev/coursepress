@@ -1956,6 +1956,39 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
+    function slim_scroll_load() {
+
+        var scroll_height = 750;
+        
+        //if($(window).height() <= 750){
+            scroll_height = $(window).height() - 120;
+        //}
+
+        $( '#sortable-units' ).slimScroll( {
+            width: '200px',
+            height: scroll_height + 'px',
+            size: '5px',
+            position: 'right',
+            color: '#ec8c35',
+            alwaysVisible: false,
+            distance: '0px',
+            railVisible: true,
+            railColor: '#00B0D6',
+            railOpacity: 0,
+            wheelStep: 20,
+            allowPageScroll: false,
+            disableFadeOut: true
+        } );
+    }
+
+    $( window ).resize( function() {
+        slim_scroll_load();
+    } );
+
+    $( window ).load( function() {
+        slim_scroll_load();
+    } );
 
 
 } );
+

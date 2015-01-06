@@ -2870,7 +2870,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			extract( $args );
 			include_once( $template );
 			$content = ob_get_clean();
-			
+
 			return $content;
 		}
 
@@ -4606,14 +4606,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-				<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
+					<?php _e( 'The data has been saved successfully.', 'cp' ); ?>
 				</div>
 				<?php
 			}
 			if ( ( isset( $_GET[ 'saved' ] ) && $_GET[ 'saved' ] == 'progress_ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-				<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
+					<?php _e( 'Your progress has been saved successfully.', 'cp' ); ?>
 				</div>
 				<?php
 			}
@@ -4760,6 +4760,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function admin_coursepress_page_course_details() {
 			wp_enqueue_script( 'courses-units', $this->plugin_url . 'js/coursepress-courses.js', array(), $this->version );
+			wp_enqueue_script( 'units-slimscroll', $this->plugin_url . 'js/jquery.slimscroll.min.js', array( 'jquery' ), $this->version );
 
 			$unit_pagination = false;
 			if ( isset( $_GET[ 'unit_id' ] ) ) {
@@ -5300,7 +5301,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							?>
 							<li class='menu-item-<?php echo $menu_item->ID; ?>'><a id="<?php echo $menu_item->ID; ?>"
 																				   href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
-									<?php if ( $menu_item->db_id !== '' ) { ?>
+																				   <?php if ( $menu_item->db_id !== '' ) { ?>
 									<ul class="sub-menu dropdown-menu">
 										<?php
 										foreach ( $sub_sorted_menu_items as $menu_item ) {
@@ -5309,9 +5310,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 													id="<?php echo $menu_item->ID; ?>"
 													href="<?php echo $menu_item->url; ?>"><?php echo $menu_item->title; ?></a>
 											</li>
-									<?php } ?>
+										<?php } ?>
 									</ul>
-							<?php } ?>
+								<?php } ?>
 							</li>
 							<?php
 						}
@@ -5413,7 +5414,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 									</li>
 								<?php } ?>
 							<?php } ?>
-				<?php } ?>
+						<?php } ?>
 					</ul>
 				</div>
 				<?php

@@ -1740,6 +1740,10 @@ a .remove-btn:hover{
     padding: 0px 5px 0px 18px;
 }
 
+#sortable-units{
+    width: 200px;// !important;
+}
+
 .mp-wrap .level-holder .mp-help-icon
 {
     float: left;
