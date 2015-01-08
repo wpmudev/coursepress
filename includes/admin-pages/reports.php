@@ -1,5 +1,5 @@
 <?php
-global $coursepress;
+global $coursepress, $wpdb;
 
 $unit_module_main = new Unit_Module();
 $page = $_GET['page'];
@@ -393,8 +393,6 @@ $wp_user_search = new Student_Search($usersearch, $page_num);
     } else {
 	    $class_meta_query_key = 'enrolled_course_class_' . $current_course_id;
     }
-
-
 
     ?>
     <form method="post" id="generate-report">
