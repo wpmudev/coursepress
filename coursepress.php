@@ -207,7 +207,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			// Define custom theme directory for CoursePress theme
-			$this->register_theme_directory();
+			if ( !CoursePress_Capabilities::is_campus() ) {
+				$this->register_theme_directory();
+			}
 
 			// Install Plugin
 			register_activation_hook( __FILE__, array( $this, 'install' ) );
