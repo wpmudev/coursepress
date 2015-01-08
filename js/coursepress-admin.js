@@ -1,5 +1,9 @@
 var global_iframe_content = '';
 jQuery( document ).ready( function( $ ) {
+    
+    /*$('.unit-control-buttons .button.button-preview, .unit-control-buttons .submit-unit').click(function(){
+        $('.wp-switch-editor.switch-tmce').click();
+    });*/
 
     $( 'input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url' ).live( 'input propertychange paste change', function() {
         if ( cp_is_extension_allowed( $( this ).val(), $( this ) ) ) {//extension is allowed
@@ -303,8 +307,9 @@ jQuery( document ).ready( function( $ ) {
                 var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
                 var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-                var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-                switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+                 
+                var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+                switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
 
                 var text_editor_whole =
                     '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
@@ -585,8 +590,9 @@ function cp_repaint_current_page_editors() {
         var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
         var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-        var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+        
 
         var text_editor_whole =
             '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
@@ -649,8 +655,9 @@ function cp_repaint_all_editors() {
         var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
         var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-        var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+        
 
         var text_editor_whole =
             '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
@@ -768,8 +775,9 @@ function coursepress_modules_ready() {
 
         var text_editor = '<textarea name="' + moving + '_content[]" id="' + rand_id + '"></textarea>';
 
-        var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+        switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+        
 
 
         var text_editor_whole =
@@ -1273,9 +1281,9 @@ jQuery( document ).ready( function() {
             var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
             var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-            var switches = '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-            switches += '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
-
+            var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
+            switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
+            
             var text_editor_whole =
                 '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
                 '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +

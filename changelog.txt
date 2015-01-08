@@ -5,6 +5,8 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= 1.2.3.9 =
+* Added HTML editor to the units builder
 
 = 1.2.3.8 =
 * Added scroll (slimscroll) for the long lists of units on the course unit admin page
