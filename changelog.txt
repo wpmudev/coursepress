@@ -7,6 +7,8 @@ CHANGE LOG
 == Changelog ==
 = 1.2.3.9 =
 * Added HTML editor to the units builder
+* Fixed issue with hidden students in the reports list (multisite)
+* Fixed issue with wrong redirection link when submitting data on the last unit page (front)
 
 = 1.2.3.8 =
 * Added scroll (slimscroll) for the long lists of units on the course unit admin page
