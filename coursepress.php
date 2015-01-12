@@ -1966,8 +1966,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$student	 = new Student( get_current_user_id() );
 				$instructor	 = new Instructor( get_current_user_id() );
 				$has_access	 = false;
-
-				if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( get_current_user_id(), $course_id ) ) {
+				
+				if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( $course_id, get_current_user_id() ) ) {
 					$has_access = true;
 				}
 

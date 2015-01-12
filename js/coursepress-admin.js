@@ -543,14 +543,14 @@ function update_unit_page_order_and_numbers() {
         }
     } );
 
-    var $wrapper = $( '#unit-pages' ),
-        $unit_pages = $wrapper.find( '.unit-page-holder' );
-    [ ].sort.call( $unit_pages, function( a, b ) {
-        return +$( a ).attr( 'data-weight' ) - +$( b ).attr( 'data-weight' );
+    var wrapper = jQuery( '#unit-pages' );
+    unit_pages = wrapper.find( '.unit-page-holder' );/*$unit_pages, $wrapper*/
+    [ ].sort.call( unit_pages, function( a, b ) {
+        return +jQuery( a ).attr( 'data-weight' ) - +jQuery( b ).attr( 'data-weight' );
     } );
 
-    $unit_pages.each( function() {
-        $wrapper.append( this );
+    unit_pages.each( function() {
+        wrapper.append( this );
     } );
 
 }
