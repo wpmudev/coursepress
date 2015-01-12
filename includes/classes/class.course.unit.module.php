@@ -193,6 +193,14 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			}
 		}
 
+		function delete_module_response( $response_id, $force_delete = true ) {
+			if ( wp_delete_post( (int)$response_id, $force_delete ) ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		function update_module_response( $data ) {
 			global $user_id, $wpdb, $coursepress;
 
@@ -443,7 +451,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 				exit;
 			}
 			?>
-			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                                        ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
+			<form name="modules_form" id="modules_form" enctype="multipart/form-data" method="post" action="<?php echo trailingslashit( get_permalink( $unit_id ) ); //strtok( $_SERVER["REQUEST_URI"], '?' );                                                         ?>" onSubmit="return check_for_mandatory_answers();"><!--#submit_bottom-->
 				<input type="hidden" id="go_to_page" value="" />
 
 				<?php
@@ -938,10 +946,10 @@ if ( !class_exists( 'Unit_Module' ) ) {
 		function get_module_delete_link() {
 			?>
 			<a class="delete_module_link" onclick="if ( deleteModule( jQuery( this ).parent().find( '.element_id' ).val() ) ) {
-									jQuery( this ).parent().parent().remove();
-									update_sortable_module_indexes();
-								}
-								;"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
+						jQuery( this ).parent().parent().remove();
+						update_sortable_module_indexes();
+					}
+					;"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
 			<?php
 		}
 

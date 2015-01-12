@@ -5,6 +5,10 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+
+= 1.2.4 =
+* Added option for deleting student answers / responses
+
 = 1.2.3.9 =
 * Added HTML editor to the units builder
 * Fixed issue with hidden students in the reports list (multisite)

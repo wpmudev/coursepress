@@ -969,6 +969,18 @@ function removeCourse() {
     }
 }
 
+function delete_student_response_confirmed() {
+    return confirm( coursepress.delete_student_response_alert );
+}
+
+function removeStudentResponse() {
+    if ( delete_student_response_confirmed() ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function delete_notification_confirmed() {
     return confirm( coursepress.delete_notification_alert );
 }

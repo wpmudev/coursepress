@@ -1,3 +1,13 @@
+.assessment-response-wrap .remove-response-btn{
+    float: right;
+    font-size: 20px;
+}
+
+.assessment-response-wrap .module_response_description a {
+    display: block;
+    float: right;
+}
+
 .assessment .ui-widget-content{
     border: 0px;
 }
@@ -171,10 +181,10 @@ h3 .response-student-info{
 .assessment-holder .buttons p{
     padding-top: 0px;
     float: right;
-    width: 10%;
-    min-width: 120px;
+   // width: 10%;
+    //min-width: 120px;
     margin-top: 5px;
-    margin-left: 40px;
+    margin-left: 10px;
 }
 
 .assessment-holder #response_grade{

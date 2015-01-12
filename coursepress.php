@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.3.9
+  Version: 1.2.4
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.3.9';
+		public $version = '1.2.4';
 
 		/**
 		 * Plugin friendly name.
@@ -4733,6 +4733,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					'delete_instructor_alert'				 => __( 'Please confirm that you want to remove the instructor from this course?', 'cp' ),
 					'delete_pending_instructor_alert'		 => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'cp' ),
 					'delete_course_alert'					 => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'cp' ),
+					'delete_student_response_alert'					 => __( 'Please confirm that you want to permanently delete this student answer / reponse?', 'cp' ),
 					'delete_notification_alert'				 => __( 'Please confirm that you want to permanently delete the notification?', 'cp' ),
 					'delete_discussion_alert'				 => __( 'Please confirm that you want to permanently delete the discussion?', 'cp' ),
 					'withdraw_student_alert'				 => __( 'Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'cp' ),
