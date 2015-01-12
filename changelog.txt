@@ -10,6 +10,7 @@ CHANGE LOG
 * Added option for deleting student answers / responses
 * Added option for instructor to access units and other course inner pages without need to enroll into course
 * Fixed JS conflicts caused issues with WP admin menu on hover
+* Fixed responsive issues on the course archive page with the default CoursePress theme
 
 = 1.2.3.9 =
 * Added HTML editor to the units builder
