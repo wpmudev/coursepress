@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.4.1
+  Version: 1.2.4.2
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -47,7 +47,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 	 */
 	class CoursePress {
 
-		public $mp_file = '198613_marketpress-ecommerce-2.9.5.9.zip';
+		public $mp_file = '198613_marketpress-ecommerce-2.9.6.zip';
 
 		/**
 		 * Current running instance of CoursePress.
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.4.1';
+		public $version = '1.2.4.2';
 
 		/**
 		 * Plugin friendly name.

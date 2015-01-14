@@ -541,11 +541,13 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 
     <script type="text/javascript">
-		jQuery( document ).ready( function() {
+		jQuery( document ).ready( function($) {
 
-			jQuery( '.modules_accordion .switch-tmce' ).each( function() {
+			/*jQuery( '.modules_accordion .switch-tmce' ).each( function() {
 				jQuery( this ).trigger( 'click' );
-			} );
+			} );*/
+			
+			$('.wp-switch-editor.switch-tmce').click();
 
 			var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
 			var elements_count = jQuery( '#unit-page-1 .modules_accordion .module-holder-title' ).length;
