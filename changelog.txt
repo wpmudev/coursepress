@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.4.1 =
+* Fixed issue with Jatpack's CSS editor
 * Added additional filters for developers in shortcodes
 * Removed Unit Builder HTML editors for Mac users
 

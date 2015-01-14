@@ -4596,6 +4596,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 					}
 				}
 			}
+
+				// Responsive Video
+				//wp_enqueue_script( 'responsive-video', $this->plugin_url . 'js/responsive-video.js' );
 		}
 
 		function return_empty() {
@@ -4690,11 +4693,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			// CryptoJS.MD5
 			wp_enqueue_script( 'cryptojs-md5', $this->plugin_url . 'js/md5.js' );
-
-			if ( !is_admin() ) {
-				// Responsive Video
-				wp_enqueue_script( 'responsive-video', $this->plugin_url . 'js/responsive-video.js' );
-			}
 
 
 			if ( isset( $_GET[ 'page' ] ) ) {
