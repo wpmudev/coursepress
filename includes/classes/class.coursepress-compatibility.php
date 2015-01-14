@@ -40,7 +40,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 			$this->version		 = $GLOBALS[ 'coursepress_version' ];
 
 			$this->editor_options = array(
-				'quicktags' => true,
+				'quicktags' => is_mac() ? false : true,
 			);
 
 			// Are we dealing with 3.9 and up?
