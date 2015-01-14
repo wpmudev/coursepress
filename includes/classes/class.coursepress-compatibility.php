@@ -110,7 +110,7 @@ if ( !class_exists( 'CoursePress_Compatibility' ) ) {
 				 * so we need to disabled it.  
 				 */
 				if ( $this->is_3_9_up() ) {
-					$this->editor_options[ 'quicktags' ] = true;
+					$this->editor_options[ 'quicktags' ] = is_mac() ? false : true;
 				}
 			}
 		}
