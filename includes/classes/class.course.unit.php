@@ -221,13 +221,19 @@ if ( !class_exists( 'Unit' ) ) {
 
 		function get_unit_page_time_estimation( $unit_id, $page_num ) {
 
-			$unit_pages	 = $this->get_number_of_unit_pages();
-			$module		 = new Unit_Module();
-			$modules	 = $module->get_modules( $unit_id );
+			$unit_pagination = cp_unit_uses_new_pagination( $unit_id );
 
+			if ( $unit_pagination ) {
+				$unit_pages = coursepress_unit_pages( $unit_id, $unit_pagination );
+			} else {
+				$unit_pages = coursepress_unit_pages( $unit_id );
+			}
 
-			for ( $i = 1; $i <= $unit_pages; $i++ ) {
-				$pages_num		 = 1;
+			//$unit_pages	 = $this->get_number_of_unit_pages();
+			$module	 = new Unit_Module();
+			$modules = $module->get_modules( $unit_id, $page_num );
+
+			foreach ( $modules as $mod ) {
 				$total_minutes	 = 0;
 				$total_seconds	 = 0;
 
@@ -238,19 +244,13 @@ if ( !class_exists( 'Unit' ) ) {
 					if ( class_exists( $class_name ) ) {
 						$module = new $class_name();
 
-						if ( $module->name == 'page_break_module' ) {
-							$pages_num++;
-						} else {
-							if ( $pages_num == $page_num ) {
-								if ( isset( $time_estimation ) && $time_estimation !== '' ) {
-									$estimatation = explode( ':', $time_estimation );
-									if ( isset( $estimatation[ 0 ] ) ) {
-										$total_minutes = $total_minutes + intval( $estimatation[ 0 ] );
-									}
-									if ( isset( $estimatation[ 1 ] ) ) {
-										$total_seconds = $total_seconds + intval( $estimatation[ 1 ] );
-									}
-								}
+						if ( isset( $time_estimation ) && $time_estimation !== '' ) {
+							$estimatation = explode( ':', $time_estimation );
+							if ( isset( $estimatation[ 0 ] ) ) {
+								$total_minutes = $total_minutes + intval( $estimatation[ 0 ] );
+							}
+							if ( isset( $estimatation[ 1 ] ) ) {
+								$total_seconds = $total_seconds + intval( $estimatation[ 1 ] );
 							}
 						}
 					}
@@ -562,7 +562,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 		function get_unit_id_by_name( $slug, $course_id = 0 ) {
 
-			if( empty( $course_id ) ) {
+			if ( empty( $course_id ) ) {
 				$course_id = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
 			}
 			if ( !cp_can_see_unit_draft() ) {
@@ -572,7 +572,7 @@ if ( !class_exists( 'Unit' ) ) {
 					'name'				 => $slug,
 					'post_per_page'		 => 1,
 					'post_status'		 => 'publish',
-					'post_parent'        => $course_id,
+					'post_parent'		 => $course_id,
 					'suppress_filters'	 => false,
 				)
 				);
@@ -721,15 +721,15 @@ if ( !class_exists( 'Unit' ) ) {
 			$page_count = get_post_meta( $unit_id, 'unit_page_count', true );
 
 			// Or check the page title array if the meta field doesn't exist
-			if( !isset( $page_count ) || empty( $page_count ) ) {
+			if ( !isset( $page_count ) || empty( $page_count ) ) {
 				$pages = get_post_meta( $unit_id, 'page_title', true );
-				if( isset( $pages ) && ! empty( $pages ) ) {
+				if ( isset( $pages ) && !empty( $pages ) ) {
 					$page_count = count( $pages );
 				}
 			}
 
 			// Return the number of pages or 0.
-			return isset( $page_count) && ! empty( $page_count ) ? $page_count : 1;
+			return isset( $page_count ) && !empty( $page_count ) ? $page_count : 1;
 		}
 
 	}

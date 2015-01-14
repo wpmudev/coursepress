@@ -549,8 +549,15 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																					$section_dirty = false;
 
 																					foreach ( $units as $unit ) {
-																						$unit_class	 = new Unit( $unit->ID );
-																						$unit_pages	 = $unit_class->get_number_of_unit_pages();
+																						$unit_class		 = new Unit( $unit->ID );
+																						$unit_pages		 = $unit_class->get_number_of_unit_pages();
+																						$unit_pagination = cp_unit_uses_new_pagination( $unit->ID );
+
+																						if ( $unit_pagination ) {
+																							$unit_pages = coursepress_unit_pages( $unit->ID, $unit_pagination );
+																						} else {
+																							$unit_pages = coursepress_unit_pages( $unit->ID );
+																						}
 
 																						$modules = $module->get_modules( $unit->ID );
 																						?>
@@ -926,7 +933,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											</div><!--/all-course-dates-->
 
 											<?php do_action( 'course_step_4_fields', $course_id ); ?>
-											
+
 											<div class="course-step-buttons">
 												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
 												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
@@ -1008,7 +1015,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status = $course_setup_progress[ 'step-6' ];
+											$set_status			 = $course_setup_progress[ 'step-6' ];
 											?>
 											<input type='hidden' name='meta_course_setup_progress[step-6]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
 
@@ -1022,17 +1029,17 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												<select class="wide" name="meta_enroll_type" id="enroll_type">
 													<?php
-														$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', array(
-															'manually' => __( 'Manually added only', 'cp' ),
-														) );
+													$enrollment_types	 = apply_filters( 'coursepress_course_enrollment_types', array(
+														'manually' => __( 'Manually added only', 'cp' ),
+													) );
 													?>
-													<?php foreach( $enrollment_types as $key => $type_text ) { ?>
+													<?php foreach ( $enrollment_types as $key => $type_text ) { ?>
 														<option value="<?php echo esc_attr( $key ); ?>" <?php echo ( $enroll_type == $key ? 'selected=""' : '' ) ?>><?php echo esc_html( $type_text ) ?></option>
 													<?php } ?>
 												</select>
 
 												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
-												<!--	<span class="course_settings_enrollment_message">--><?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' ); ?><!--</span>-->
+																<!--	<span class="course_settings_enrollment_message">--><?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' );   ?><!--</span>-->
 												<?php //} ?>
 											</div>
 
