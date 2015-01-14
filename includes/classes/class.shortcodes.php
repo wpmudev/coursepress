@@ -2464,7 +2464,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$unread_count = cp_messaging_get_unread_messages_count();
 				if ( $unread_count > 0 ) {
 					$unread_count = ' (' . $unread_count . ')';
-				}else{
+				} else {
 					$unread_count = '';
 				}
 			}
@@ -2474,7 +2474,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			<div class="submenu-main-container submenu-messaging">
 				<ul id="submenu-main" class="submenu nav-submenu">
-					<li class="submenu-item submenu-inbox <?php echo( isset( $subpage ) && $subpage == 'inbox' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_inbox_slug( true ); ?>"><?php _e( 'Inbox', 'cp' ); echo $unread_count; ?></a></li>
+					<li class="submenu-item submenu-inbox <?php echo( isset( $subpage ) && $subpage == 'inbox' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_inbox_slug( true ); ?>"><?php _e( 'Inbox', 'cp' );
+			echo $unread_count;
+			?></a></li>
 					<li class="submenu-item submenu-sent-messages <?php echo( isset( $subpage ) && $subpage == 'sent_messages' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_sent_messages_slug( true ); ?>"><?php _e( 'Sent', 'cp' ); ?></a></li>
 					<li class="submenu-item submenu-new-message <?php echo( isset( $subpage ) && $subpage == 'new_message' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_new_message_slug( true ); ?>"><?php _e( 'New Message', 'cp' ); ?></a></li>
 				</ul><!--submenu-main-->
@@ -2533,7 +2535,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course->allow_workbook_page == 'on' ) {
 						?>
 						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'cp' ); ?></a></li>
-					<?php } ?>
+			<?php } ?>
 					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
 				</ul><!--submenu-main-->
 			</div><!--submenu-main-container-->
@@ -3059,7 +3061,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function course_unit_details( $atts ) {
 			global $post_id, $wp, $coursepress;
 
-			extract( shortcode_atts( array(
+			extract( shortcode_atts(
+			apply_filters( 'shortcode_atts_course_unit_details', array(
 				'unit_id'							 => 0,
 				'field'								 => 'post_title',
 				'format'							 => true,
@@ -3078,7 +3081,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'last_visited'						 => false,
 				'parent_course_preceding_content'	 => __( 'Course: ', 'cp' ),
 				'student_id'						 => get_current_user_ID(),
-			), $atts ) );
+			) ), $atts ) );
 
 			$unit_id						 = (int) $unit_id;
 			$field							 = sanitize_html_class( $field );
@@ -4088,10 +4091,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $unit->is_unit_available() ) {
-						if ( $mandatory_input_elements > 0 ) {
-							echo do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' );
-							?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
+				if ( $unit->is_unit_available() ) {
+					if ( $mandatory_input_elements > 0 ) {
+						echo do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' );
+						?> <?php //_e('of', 'coursepress'); ?> <?php //echo $mandatory_input_elements; ?> <?php
 							//_e('mandatory elements completed', 'coursepress');
 							// } else {
 							//     echo $all_responses;
@@ -4110,22 +4113,22 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						}
 					}
 					?></span>
-			<?php } else { ?>
+				<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $unit->is_unit_available() ) {
-						// _e('Read-only');
-					} else {
-						if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
-							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
-						} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
-							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
-						}
-						if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
-							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-						}
+				if ( $unit->is_unit_available() ) {
+					// _e('Read-only');
+				} else {
+					if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
+						esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
+					} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
+						esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 					}
+					if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
+						echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+					}
+				}
 					?></span>
-				<?php
+					<?php
 			}
 			$content = ob_get_clean();
 			return $content;
@@ -4261,8 +4264,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							$style = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 							?>
 							<tr id='user-<?php echo $user_object->ID; ?>' class="<?php
-							echo $style;
-							echo 'row-' . $current_row;
+						echo $style;
+						echo 'row-' . $current_row;
 							?>">
 
 								<?php
@@ -4365,7 +4368,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											}
 											?>
 									</td>
-								<?php }//general col visibility                     ?>
+								<?php }//general col visibility                       ?>
 							</tr>
 							<?php
 							$current_row++;

@@ -14,7 +14,6 @@
   } */
 
 /* get_user_option() fix */
-
 function is_mac() {
 	$user_agent = getenv( "HTTP_USER_AGENT" );
 	if ( strpos( $user_agent, "Mac" ) !== FALSE ) {
