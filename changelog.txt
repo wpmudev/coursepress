@@ -9,7 +9,7 @@ CHANGE LOG
 = 1.2.4.1 =
 * Updated course structure (admin and front) to reflect recent changes in the units builder logic
 * Fixed issue with Jatpack's CSS editor
-* Removed Unit Builder HTML editors for Mac users
+* Removed Unit Builder HTML editors for Mac users (until we find better solution)
 * Added additional filters for developers in shortcodes
 
 = 1.2.4 =
