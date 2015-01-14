@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.1 =
+* Removed Unit Builder HTML editors for Mac users
+
 = 1.2.4 =
 * Added option for deleting student answers / responses
 * Added option for instructor to access units and other course inner pages without need to enroll into course
