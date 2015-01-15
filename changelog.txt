@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.3 =
+* Fixed issues with Unit HTML editor
+
 = 1.2.4.2 =
 * Updated MarketPress to 2.9.6
 * Added Unit HTML editor back (for Mac)

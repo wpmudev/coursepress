@@ -1371,7 +1371,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			// Return button for rendering
 			return apply_filters( 'coursepress_enroll_button', $button, $course, $student );
-			;
 		}
 
 		/**
@@ -1544,7 +1543,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 																$title		 = '';
 																if ( $existing_student ) {
 																	$p_title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' );
-																	$title	 = '<a href="' . trailingslashit($unit_class->get_permalink()) . trailingslashit('page') . trailingslashit($i) . '">' . $p_title . '</a>';
+																	$title	 = '<a href="' . trailingslashit( $unit_class->get_permalink() ) . trailingslashit( 'page' ) . trailingslashit( $i ) . '">' . $p_title . '</a>';
 																} else {
 																	$title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' );
 																}
@@ -2545,7 +2544,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course->allow_workbook_page == 'on' ) {
 						?>
 						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'cp' ); ?></a></li>
-			<?php } ?>
+					<?php } ?>
 					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
 				</ul><!--submenu-main-->
 			</div><!--submenu-main-container-->
@@ -3933,48 +3932,48 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 							<form id="student-settings" name="student-settings" method="post" class="student-settings">
 
-							<?php do_action( 'coursepress_before_all_signup_fields' ); ?>
+								<?php do_action( 'coursepress_before_all_signup_fields' ); ?>
 
 								<input type="hidden" name="course_id" value="<?php esc_attr_e( isset( $_GET[ 'course_id' ] ) ? $_GET[ 'course_id' ] : ' '  ); ?>" />
 								<input type="hidden" name="redirect_url" value="<?php echo $redirect_url; ?>" />
 
 								<label>
-							<?php _e( 'First Name', 'cp' ); ?>:
+									<?php _e( 'First Name', 'cp' ); ?>:
 									<input type="text" name="first_name" value="<?php echo ( isset( $_POST[ 'first_name' ] ) ? $_POST[ 'first_name' ] : '' ); ?>" />
 								</label>
 
-							<?php do_action( 'coursepress_after_signup_first_name' ); ?>
+								<?php do_action( 'coursepress_after_signup_first_name' ); ?>
 
 								<label>
-							<?php _e( 'Last Name', 'cp' ); ?>:
+									<?php _e( 'Last Name', 'cp' ); ?>:
 									<input type="text" name="last_name" value="<?php echo ( isset( $_POST[ 'last_name' ] ) ? $_POST[ 'last_name' ] : '' ); ?>" />
 								</label>
 
-							<?php do_action( 'coursepress_after_signup_last_name' ); ?>
+								<?php do_action( 'coursepress_after_signup_last_name' ); ?>
 
 								<label>
-							<?php _e( 'Username', 'cp' ); ?>:
+									<?php _e( 'Username', 'cp' ); ?>:
 									<input type="text" name="username" value="<?php echo ( isset( $_POST[ 'username' ] ) ? $_POST[ 'username' ] : '' ); ?>" />
 								</label>
 
-							<?php do_action( 'coursepress_after_signup_username' ); ?>
+								<?php do_action( 'coursepress_after_signup_username' ); ?>
 
 								<label>
-							<?php _e( 'E-mail', 'cp' ); ?>:
+									<?php _e( 'E-mail', 'cp' ); ?>:
 									<input type="text" name="email" value="<?php echo ( isset( $_POST[ 'email' ] ) ? $_POST[ 'email' ] : '' ); ?>" />
 								</label>
 
-							<?php do_action( 'coursepress_after_signup_email' ); ?>
+								<?php do_action( 'coursepress_after_signup_email' ); ?>
 
 								<label>
-							<?php _e( 'Password', 'cp' ); ?>:
+									<?php _e( 'Password', 'cp' ); ?>:
 									<input type="password" name="password" value="" />
 								</label>
 
-							<?php do_action( 'coursepress_after_signup_password' ); ?>
+								<?php do_action( 'coursepress_after_signup_password' ); ?>
 
 								<label class="right">
-							<?php _e( 'Confirm Password', 'cp' ); ?>:
+									<?php _e( 'Confirm Password', 'cp' ); ?>:
 									<input type="password" name="password_confirmation" value="" />
 								</label>
 								<br clear="both" /><br />
@@ -3989,10 +3988,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 								}
 								?>
 
-							<?php do_action( 'coursepress_after_all_signup_fields' ); ?>
+								<?php do_action( 'coursepress_after_all_signup_fields' ); ?>
 
 								<label class="full">
-							<?php printf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . $login_url . '">', __( 'Login to your account', 'cp' ), '</a>' ); ?>
+									<?php printf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . $login_url . '">', __( 'Login to your account', 'cp' ), '</a>' ); ?>
 								</label>
 
 								<label class="full-right">
@@ -4001,7 +4000,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 								<?php do_action( 'coursepress_after_submit' ); ?>
 
-							<?php wp_nonce_field( 'student_signup' ); ?>
+								<?php wp_nonce_field( 'student_signup' ); ?>
 							</form>
 							<div class="clearfix" style="clear: both;" />
 
@@ -4033,21 +4032,21 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					}
 					?>
 					<p class="form-info-<?php echo apply_filters( 'signup_form_message_class', sanitize_text_field( $form_message_class ) ); ?>"><?php echo apply_filters( 'signup_form_message', sanitize_text_field( $form_message ) ); ?></p>
-						<?php do_action( 'coursepress_before_login_form' ); ?>
+					<?php do_action( 'coursepress_before_login_form' ); ?>
 					<form name="loginform" id="student-settings" class="student-settings" method="post">
-					<?php do_action( 'coursepress_after_start_form_fields' ); ?>
+						<?php do_action( 'coursepress_after_start_form_fields' ); ?>
 
 						<label>
-					<?php _e( 'Username', 'cp' ); ?>:
+							<?php _e( 'Username', 'cp' ); ?>:
 							<input type="text" name="log" value="<?php echo ( isset( $_POST[ 'log' ] ) ? $_POST[ 'log' ] : '' ); ?>" />
 						</label>
 
 						<label>
-					<?php _e( 'Password', 'cp' ); ?>:
+							<?php _e( 'Password', 'cp' ); ?>:
 							<input type="password" name="pwd" value="<?php echo ( isset( $_POST[ 'pwd' ] ) ? $_POST[ 'pwd' ] : '' ); ?>" />
 						</label>
 
-					<?php do_action( 'coursepress_form_fields' ); ?>
+						<?php do_action( 'coursepress_form_fields' ); ?>
 
 						<label class="full">
 							<?php
@@ -4068,7 +4067,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						<input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( true ); ?>" type="hidden">
 						<input name="testcookie" value="1" type="hidden">
 						<input name="course_signup_login" value="1" type="hidden">
-					<?php do_action( 'coursepress_before_end_form_fields' ); ?>
+						<?php do_action( 'coursepress_before_end_form_fields' ); ?>
 					</form>
 
 					<?php do_action( 'coursepress_after_login_form' ); ?>
@@ -4123,7 +4122,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						}
 					}
 					?></span>
-				<?php } else { ?>
+			<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
 					if ( $unit->is_unit_available() ) {
 						// _e('Read-only');
@@ -4283,11 +4282,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 									?>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
-							<?php echo $mod->post_title; ?>
+										<?php echo $mod->post_title; ?>
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
-							<?php echo ( count( $response ) >= 1 ? date_i18n( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'cp' ) ); ?>
+										<?php echo ( count( $response ) >= 1 ? date_i18n( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'cp' ) ); ?>
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -4295,10 +4294,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 										if ( count( $response ) >= 1 ) {
 											?>
 											<div id="response_<?php echo $response->ID; ?>" style="display:none;">
-								<?php if ( isset( $mod->post_content ) && $mod->post_content !== '' ) { ?>
+												<?php if ( isset( $mod->post_content ) && $mod->post_content !== '' ) { ?>
 													<div class="module_response_description">
 														<label><?php echo $module_response_description_label; ?></label>
-													<?php echo $mod->post_content; ?>
+														<?php echo $mod->post_content; ?>
 													</div>
 												<?php } ?>
 												<?php echo $module->get_response_form( get_current_user_ID(), $mod->ID ); ?>
@@ -4378,7 +4377,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											}
 											?>
 									</td>
-							<?php }//general col visibility                        ?>
+								<?php }//general col visibility                        ?>
 							</tr>
 							<?php
 							$current_row++;
@@ -4409,7 +4408,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				?>
 				<?php if ( 0 < $current_row ) : ?>
 					<tfoot><tr><td colspan="6">** <?php _e( 'Non-assessable elements.', 'cp' ); ?></td></tr></tfoot>
-			<?php endif; ?>
+				<?php endif; ?>
 			</table>
 			<?php
 			$content = ob_get_clean();
