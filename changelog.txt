@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.4 =
+* Resolved issue with unit element content saving / removed unit HTML editor
+
 = 1.2.4.3 =
 * Fixed issues with Unit HTML editor
 

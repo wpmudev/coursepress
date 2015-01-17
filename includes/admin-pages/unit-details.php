@@ -547,7 +547,10 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 				jQuery( this ).trigger( 'click' );
 			} );*/
 			
-			$('.wp-switch-editor.switch-tmce').click();
+			jQuery('.switch-html').click();
+			//jQuery('.switch-tmce').click();
+			
+			//$('.wp-switch-editor.switch-tmce').click();
 
 			var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
 			var elements_count = jQuery( '#unit-page-1 .modules_accordion .module-holder-title' ).length;
