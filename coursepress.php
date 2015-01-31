@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.4.4
+  Version: 1.2.4.5
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.4.4';
+		public $version = '1.2.4.5';
 
 		/**
 		 * Plugin friendly name.
@@ -968,7 +968,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ) );
+			add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
 
 			/**
 			 * Course taxonomies (not in this version).
@@ -1127,17 +1127,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			add_filter( 'body_class', array( &$this, 'add_body_classes' ) );
 
 			// Handle MP payment confirmation
-			$gateways = get_option( 'mp_settings', false );
+			/*$gateways = get_option( 'mp_settings', false );
 			if ( !empty( $gateways ) && !empty( $gateways[ 'gateways' ][ 'allowed' ] ) ) {
 				$gateways = $gateways[ 'gateways' ][ 'allowed' ];
 				foreach ( $gateways as $gateway ) {
 					// Don't enroll students automatically with manual payments.
 					if ( 'manual-payments' != $gateway ) {
-						/**
-						 * Hook each payment gateway's payment confirmation to enrol students.
-						 *
-						 * @since 1.0.0
-						 */
+				
 						add_action( 'mp_payment_confirm_' . $gateway, array(
 							&$this,
 							'enroll_on_payment_confirmation'
@@ -1145,7 +1141,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 						//add_action( 'mp_create_order', array( &$this, 'enroll_on_payment_confirmation' ), 10, 1 );
 					}
 				}
-			}
+			}*/
+
+			//add_action( 'mp_order_paid', array( &$this, 'enroll_on_order_status_paid' ), 10, 1 );
 
 			/**
 			 * Change the MarketPress message to be more suitable for Courses.
@@ -1293,7 +1291,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			return $translated_text;
 		}
 
-		function enroll_on_payment_confirmation( $cart, $session ) {
+		/*function enroll_on_payment_confirmation( $cart, $session ) {
 			if ( count( $cart ) > 0 ) {
 				$product_id	 = array_keys( $cart );
 				$product_id	 = end( $product_id );
@@ -1310,9 +1308,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			} else {
 				cp_write_log( 'Error in cart. This should not happen.' );
 			}
-		}
+		}*/
 
-		function enroll_on_payment_confirmation_new( $order_id ) {
+
+		/*function enroll_on_payment_confirmation_new( $order_id ) {
 			global $mp;
 			$order	 = $mp->get_order( $order_id );
 			$cart	 = $order->mp_cart_info;
@@ -1333,7 +1332,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			} else {
 				cp_write_log( 'Error in cart. This should not happen.' );
 			}
-		}
+		}*/
 
 		function course_product_image( $image, $context, $post_id, $size ) {
 			$course_id = get_post_meta( $post_id, 'cp_course_id', true );
@@ -4597,8 +4596,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 			}
 
-				// Responsive Video
-				//wp_enqueue_script( 'responsive-video', $this->plugin_url . 'js/responsive-video.js' );
+			// Responsive Video
+			//wp_enqueue_script( 'responsive-video', $this->plugin_url . 'js/responsive-video.js' );
 		}
 
 		function return_empty() {
@@ -5644,12 +5643,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		/* Listen for MarketPress purchase status changes */
-
+		
 		function listen_for_paid_status_for_courses( $order ) {
 			global $mp;
 
-			$purchase_order	 = $mp->get_order( $order->ID );
-			$product_id		 = key( $purchase_order->mp_cart_info );
+			$product_id		 = key( $order->mp_cart_info );
 
 			$course_details	 = Course::get_course_id_by_marketpress_product_id( $product_id );
 			$course_details	 = (int) $course_details;

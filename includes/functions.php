@@ -13,6 +13,12 @@
   return $url;
   } */
 
+function cp_student_login_address(){
+	global $coursepress;
+	$student_login_address = get_option( 'use_custom_login_form', 1 ) ? trailingslashit(home_url() . '/' . get_option( 'login_slug', 'student-login' )) : wp_login_url();
+	return $student_login_address;
+}
+
 /* get_user_option() fix */
 function is_mac() {
 	$user_agent = getenv( "HTTP_USER_AGENT" );
@@ -255,7 +261,7 @@ function cp_mp_order_notification_body( $content, $order ) {
 		$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order->post_title . '/' );
 
 		$tags			 = array( 'CUSTOMER_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'ORDER_ID', 'ORDER_STATUS_URL' );
-		$tags_replaces	 = array( $order->mp_shipping_info[ 'name' ], get_bloginfo(), wp_login_url(), home_url(), $course->get_permalink(), $course->details->post_title, $order->ID, $tracking_url );
+		$tags_replaces	 = array( $order->mp_shipping_info[ 'name' ], get_bloginfo(), cp_student_login_address(), home_url(), $course->get_permalink(), $course->details->post_title, $order->ID, $tracking_url );
 
 		$message = coursepress_get_mp_order_content_email();
 
@@ -514,7 +520,7 @@ function coursepress_send_email( $email_args = array() ) {
 		$courses_address = trailingslashit( home_url() ) . trailingslashit( $course_slug );
 
 		$tags			 = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'STUDENT_USERNAME', 'STUDENT_PASSWORD', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS' );
-		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], $email_args[ 'student_username' ], $email_args[ 'student_password' ], get_bloginfo(), wp_login_url(), $courses_address, home_url() );
+		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], $email_args[ 'student_username' ], $email_args[ 'student_password' ], get_bloginfo(), cp_student_login_address(), $courses_address, home_url() );
 
 		$message = coursepress_get_registration_content_email();
 
@@ -550,7 +556,7 @@ function coursepress_send_email( $email_args = array() ) {
 		$course				 = new Course( $email_args[ 'course_id' ] );
 
 		$tags			 = array( 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', 'LOGIN_ADDRESS', 'COURSES_ADDRESS', 'WEBSITE_ADDRESS', 'COURSE_ADDRESS', 'COURSE_TITLE', 'STUDENT_DASHBOARD' );
-		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], get_bloginfo(), wp_login_url(), $courses_address, home_url(), $course->get_permalink(), $course->details->post_title, $email_args[ 'dashboard_address' ] );
+		$tags_replaces	 = array( $email_args[ 'student_first_name' ], $email_args[ 'student_last_name' ], get_bloginfo(), cp_student_login_address(), $courses_address, home_url(), $course->get_permalink(), $course->details->post_title, $email_args[ 'dashboard_address' ] );
 
 		$message = coursepress_get_enrollment_content_email();
 
