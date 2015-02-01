@@ -308,7 +308,7 @@ if ( !class_exists( 'Unit_Module' ) ) {
 			$modules = false;
 
 			// Attempt to load from cache or create new cache object
-			if ( !self::load( self::TYPE_UNIT_MODULES, $unit_id, $modules ) ) {
+			if ( !self::load( self::TYPE_UNIT_MODULES, $unit_id . '-' . $unit_page, $modules ) ) {
 
 				// Get the modules
 				if ( $unit_pagination && $unit_page > 0 ) {

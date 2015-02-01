@@ -37,27 +37,63 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 	class CoursePress_Object {
 
 		// Primary CoursePress types
-		const TYPE_COURSE			 = 'coursepress_course';
-		const TYPE_UNIT			 = 'coursepress_unit';
-		const TYPE_MODULE			 = 'coursepress_module';
+		const TYPE_COURSE = 'coursepress_course';
+		const TYPE_UNIT = 'coursepress_unit';
+		const TYPE_MODULE = 'coursepress_module';
 		const TYPE_MODULE_RESPONSE = 'coursepress_module_response';
-		const TYPE_UNIT_MODULES	 = 'coursepress_unit_modules';
-		const TYPE_UNIT_STATIC	 = 'coursepress_unit_static';
+		const TYPE_UNIT_MODULES = 'coursepress_unit_modules';
+		const TYPE_UNIT_STATIC = 'coursepress_unit_static';
 
 		protected static function load( $type, $key, &$object = null ) {
+			// Global letting us know if Object Cache is available.
+			global $_wp_using_ext_object_cache;
+
 			$found	 = false;
-			$object	 = wp_cache_get( $key, $type, false, $found );
+
+			if( $_wp_using_ext_object_cache ) {
+				// USE OBJECT CACHE
+				$object	 = wp_cache_get( $key, $type, false, $found );
+			} else {
+				// OR USE TRANSIENT
+				$temp = get_transient( $type . '_' . $key );
+				if ( ! empty( $temp ) ) {
+					$object = $temp;
+					$found = true;
+				}
+			}
+
 			return $found;
 		}
 
 		protected static function cache( $type, $key, $object ) {
+			// Global letting us know if Object Cache is available.
+			global $_wp_using_ext_object_cache;
+
 			if ( !empty( $key ) ) {
-				wp_cache_set( $key, $object, $type );
+
+				if( $_wp_using_ext_object_cache ) {
+					// USE OBJECT CACHE
+					wp_cache_set( $key, $object, $type );
+				} else {
+					// OR USE TRANSIENT
+					set_transient( $type . '_' . $key, $object );
+				}
+
 			}
 		}
 
 		protected static function kill( $type, $key ) {
-			wp_cache_delete( $key, $type );
+			// Global letting us know if Object Cache is available.
+			global $_wp_using_ext_object_cache;
+
+			if( $_wp_using_ext_object_cache ) {
+				// REMOVE OBJECT CACHE OBJECT
+				wp_cache_delete( $key, $type );
+			} else {
+				// OR REMOVE TRANSIENT OBJECT
+				delete_transient( $type . '_' . $key );
+			}
+
 		}
 
 		protected static function kill_related( $type, $key ) {
