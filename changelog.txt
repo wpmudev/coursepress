@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.6 = (Not released)
+* Performance: When persistent object caching (server setup or 3rd party) is not available CoursePress will fall back to using transients to speed up page loads.
+
 = 1.2.4.5 =
 * Fixes issue with marking an order as paid with MarketPress
 * Fixed text domain issues with the CoursePress theme
