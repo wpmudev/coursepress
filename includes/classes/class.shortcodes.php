@@ -1122,7 +1122,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			), $atts, 'course_join_button' ) );
 
 			$course_id	 = (int) $course_id;
-			$list_page	 = (bool) $list_page;
+			$list_page	 = sanitize_text_field( $list_page );
+			$list_page   = "true" == $list_page || 1 == (int) $list_page ? true : false;
 			$class		 = sanitize_html_class( $class );
 
 			global $enrollment_process_url, $signup_url;
@@ -1325,7 +1326,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$button_option = apply_filters( 'coursepress_course_enrollment_button_option', $button_option );
 
 			// Prepare the button
-			if ( !is_single() || 'yes' == $list_page ) {
+			if ( ( ! is_single() && ! is_page() ) || 'yes' == $list_page ) {
 				$button_url	 = get_permalink( $course_id );
 				$button		 = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
 			} else {
