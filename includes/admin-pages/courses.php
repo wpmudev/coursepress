@@ -423,7 +423,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 						<option value="90" <?php selected( $show_courses_per_page, 90, true ); ?>><?php _e( 'Show 90 rows', 'cp' ); ?></option>
 						<option value="100" <?php selected( $show_courses_per_page, 100, true ); ?>><?php _e( 'Show 100 rows', 'cp' ); ?></option>
 					</select>
-					<input type="submit" name="" class="button action" value="Apply">
+					<input type="submit" name="" class="button action" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>">
 				</div>
 			</form>
 
