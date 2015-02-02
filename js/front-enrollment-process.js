@@ -1,4 +1,16 @@
+function coursepress_apply_data_link_click() {
+    jQuery('button').click(function(event) {
+        if (jQuery(this).data('link')) {
+            event.preventDefault();
+            window.location.href = jQuery(this).data('link');
+        }
+    });
+}
+
+
 jQuery( document ).ready( function( $ ) {
+
+    var debug_mode = 1 == cp_vars.debug ? true : false;
 
     $( '.apply-button.enroll-success' ).on( 'click', function( event ) {
         if ( $( this ).data( 'link' ) ) {
@@ -11,16 +23,19 @@ jQuery( document ).ready( function( $ ) {
         e.preventDefault();
         e.stopPropagation();
         validate_signup_data_and_submit();
+        coursepress_apply_data_link_click();
     }
     function login_click( e ) {
         e.preventDefault();
         e.stopPropagation();
         validate_login_data_and_submit();
+        coursepress_apply_data_link_click();
     }
     function payment_click( e ) {
         e.preventDefault();
         e.stopPropagation();
         prepare_payment_data_and_submit( this );
+        coursepress_apply_data_link_click();
     }
 
     // Functions/handlers to apply to newly loaded content.
@@ -29,9 +44,6 @@ jQuery( document ).ready( function( $ ) {
         // Prevent duplicate handling by unbinding before binding... uses non-anonymous signatures
         $( 'body' ).off( 'click', '.cp_popup_content .apply-button.login', login_click )
         $( 'body' ).on( 'click', '.cp_popup_content .apply-button.login', login_click )
-
-        $( 'body' ).off( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
-        $( 'body' ).on( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
 
         $( 'body' ).off( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
         $( 'body' ).on( 'click', '.cp_popup_content .apply-button.signup-data', signup_click )
@@ -45,7 +57,9 @@ jQuery( document ).ready( function( $ ) {
     $( 'button.apply-button.signup, .cp_signup_step' ).on( 'click', function( e ) {
         e.preventDefault();
         e.stopPropagation();
-        open_popup( 'signup', $( this ).attr( 'data-course-id' ) );
+
+        var course_id = $( this ).attr( 'data-course-id' );
+        open_popup( 'signup', course_id );
     } );
 
     /* Enroll (logged in users) */
@@ -142,7 +156,8 @@ jQuery( document ).ready( function( $ ) {
         var errors = 0;
         var required_errors = 0;
 
-        $( ".required" ).each( function( index ) {
+        // Restrict to input buttons
+        $( "input.required" ).each( function( index ) {
             if ( $( this ).val() == '' ) {
                 required_errors++;
                 errors++;
@@ -153,7 +168,7 @@ jQuery( document ).ready( function( $ ) {
         } );
 
         if ( required_errors > 0 ) {
-            $( ".required" ).each( function( index ) {
+            $( "input.required" ).each( function( index ) {
                 if ( $( this ).val() == '' ) {
                     validate_mark_error_field( $( this ).attr( 'id' ) );
                 } else {
@@ -163,6 +178,7 @@ jQuery( document ).ready( function( $ ) {
             $( '.validation_errors' ).html( cp_vars.message_all_fields_are_required );
         } else {//continue with checking
 
+            // Remove error marks
             validate_mark_no_error_field( 'cp_popup_student_first_name' );
             validate_mark_no_error_field( 'cp_popup_student_last_name' );
 
@@ -174,7 +190,7 @@ jQuery( document ).ready( function( $ ) {
                 $.post(
                     cp_vars.admin_ajax_url, {
                         action: 'cp_popup_user_exists',
-                        username: username,
+                        username: username
                     }
                 ).done( function( data, status ) {
                     if ( status == 'success' ) {
@@ -183,10 +199,14 @@ jQuery( document ).ready( function( $ ) {
                             $( '.validation_errors' ).html( cp_vars.message_username_exists );
                             validate_mark_error_field( 'cp_popup_username' );
                         } else {//check email address
+
+                            // Remove validation error
                             validate_mark_no_error_field( 'cp_popup_username' );
+
                             var email = $( '#cp_popup_email' ).val();
                             var email_confirmation = $( '#cp_popup_email_confirmation' ).val();
 
+                            // Do email fields match?
                             if ( email != email_confirmation ) {
                                 errors++;
                                 $( '.validation_errors' ).html( cp_vars.message_emails_dont_match );
@@ -194,6 +214,7 @@ jQuery( document ).ready( function( $ ) {
                                 validate_mark_error_field( 'cp_popup_email_confirmation' );
                             } else {
 
+                                // Check if email address exists
                                 $.post(
                                     cp_vars.admin_ajax_url, {
                                         action: 'cp_popup_email_exists',
@@ -207,11 +228,15 @@ jQuery( document ).ready( function( $ ) {
                                             validate_mark_error_field( 'cp_popup_email' );
                                             validate_mark_error_field( 'cp_popup_email_confirmation' );
                                         } else {//check passwords
+
+                                            //Email is good!
                                             validate_mark_no_error_field( 'cp_popup_email' );
                                             validate_mark_no_error_field( 'cp_popup_email_confirmation' );
+
                                             var password = $( '#cp_popup_password' ).val();
                                             var password_confirmation = $( '#cp_popup_password_confirmation' ).val();
 
+                                            // Check if passwords match
                                             if ( password != password_confirmation ) {
                                                 errors++;
                                                 $( '.validation_errors' ).html( cp_vars.message_passwords_dont_match );

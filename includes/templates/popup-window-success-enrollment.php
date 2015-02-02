@@ -29,3 +29,6 @@
 	    }
 	} ?>
 </div>
+<script type="text/javascript">
+	coursepress_apply_data_link_click();
+</script>

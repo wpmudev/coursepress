@@ -4557,6 +4557,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),
 				'message_passcode_invalid'			 => __( 'Passcode is not valid.', 'cp' ),
 				'message_tos_invalid'				 => __( 'You must agree to the Terms of Service in order to signup.', 'cp' ),
+				'debug'                              => 0, // Set to 1 for debugging enrollment scripts
 			) );
 
 			wp_enqueue_script( 'coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ), $this->version );
