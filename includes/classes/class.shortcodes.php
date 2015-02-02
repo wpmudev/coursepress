@@ -1391,31 +1391,35 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$wrapper	 = sanitize_html_class( $wrapper );
 			$class		 = sanitize_html_class( $class );
 
-			// Saves some overhead by not loading the post again if we don't need to.
-			$course	 = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
-			$class	 = sanitize_html_class( $class );
-
-			$thumbnail = Course::get_course_thumbnail( $course_id );
-
-			$content = '';
-
-			if ( !empty( $thumbnail ) ) {
-				ob_start();
-
-				if ( !empty( $wrapper ) ) {
-					$content = '<' . $wrapper . ' class="course-thumbnail course-thumbnail-' . $course_id . ' ' . $class . '">';
-				}
-				?>
-				<img src="<?php echo $thumbnail; ?>" class="course-thumbnail-img"></img>
-				<?php
-				$content .= trim( ob_get_clean() );
-
-				if ( !empty( $wrapper ) ) {
-					$content .= '</' . $wrapper . '>';
-				}
-			}
-
-			return $content;
+			return do_shortcode( '[course_media course_id="' . $course_id . '" wrapper="' . $wrapper . '" class="' . $class . '" type="thumbnail"]' );
+			/**
+			 * @todo: Remove below redundant code
+			 */
+//			// Saves some overhead by not loading the post again if we don't need to.
+//			$course	 = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
+//			$class	 = sanitize_html_class( $class );
+//
+//			$thumbnail = Course::get_course_thumbnail( $course_id );
+//
+//			$content = '';
+//
+//			if ( !empty( $thumbnail ) ) {
+//				ob_start();
+//
+//				if ( !empty( $wrapper ) ) {
+//					$content = '<' . $wrapper . ' class="course-thumbnail course-thumbnail-' . $course_id . ' ' . $class . '">';
+//				}
+//				?>
+<!--				<img src="--><?php //echo $thumbnail; ?><!--" class="course-thumbnail-img"></img>-->
+<!--				--><?php
+//				$content .= trim( ob_get_clean() );
+//
+//				if ( !empty( $wrapper ) ) {
+//					$content .= '</' . $wrapper . '>';
+//				}
+//			}
+//
+//			return $content;
 		}
 
 		/**
@@ -1670,7 +1674,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'list_page'	 => 'no',
 				'class'		 => '',
 				'wrapper'	 => '',
-			), $atts, 'course_thumbnail' ) );
+			), $atts, 'course_media' ) );
 
 			$course_id	 = (int) $course_id;
 			$type		 = sanitize_text_field( $type );
@@ -1700,7 +1704,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 // If type is thumbnail, return early
 			if ( 'thumbnail' == $type ) {
-				return do_shortcode( '[course_thumbnail]' );
+				//return do_shortcode( '[course_thumbnail]' );
+				$type = "image";
+				$priority = "image";
 			}
 
 			if ( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty( $course_image ) ) ) && !empty( $course_video ) ) {

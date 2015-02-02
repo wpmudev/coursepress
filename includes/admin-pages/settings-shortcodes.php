@@ -528,29 +528,29 @@
 						</td>
 					</tr>
 
-					<tr>
-						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Thumbnail', 'cp' ); ?></th>
-						<td>
-							<span class="cp-shortcode-code">[course_thumbnail]</span><br />
-							<span class=""><?php _e( 'Shows the course thumbnail image that is generated from list image. (See [course_media])', 'cp' ); ?></span>
-
-							<p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'cp' ); ?></p>
-
-							<ul class="cp-shortcode-options">
-								<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'cp' ); ?></li>
-							</ul>
-
-							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
-
-							<ul class="cp-shortcode-options">
-								<li><span>wrapper</span> – <?php _e( 'The HTML tag to wrap around the thumbnail. Default: figure', 'cp' ); ?></li>
-								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
-							</ul>
-		
-							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
-							<code>[course_thumbnail]<br />[course_thumbnail course_id="22" wrapper="div"]</code>
-						</td>
-					</tr>
+<!--					<tr>-->
+<!--						<th scope="row" class="cp-shortcode-title">--><?php //_e( 'Course Thumbnail', 'cp' ); ?><!--</th>-->
+<!--						<td>-->
+<!--							<span class="cp-shortcode-code">[course_thumbnail]</span><br />-->
+<!--							<span class="">--><?php //_e( 'Shows the course thumbnail image that is generated from list image. (See [course_media])', 'cp' ); ?><!--</span>-->
+<!---->
+<!--							<p class="cp-shortcode-subheading">--><?php //_e( 'Required Attributes:', 'cp' ); ?><!--</p>-->
+<!---->
+<!--							<ul class="cp-shortcode-options">-->
+<!--								<li><span>course_id</span> – --><?php //_e( 'If outside of the WordPress loop.', 'cp' ); ?><!--</li>-->
+<!--							</ul>-->
+<!---->
+<!--							<p class="cp-shortcode-subheading">--><?php //_e( 'Optional Attributes:', 'cp' ); ?><!--</p>-->
+<!---->
+<!--							<ul class="cp-shortcode-options">-->
+<!--								<li><span>wrapper</span> – --><?php //_e( 'The HTML tag to wrap around the thumbnail. Default: figure', 'cp' ); ?><!--</li>-->
+<!--								<li><span>class</span> – --><?php //_e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?><!--</li>-->
+<!--							</ul>-->
+<!--		-->
+<!--							<p class="cp-shortcode-subheading">--><?php //_e( 'Examples:', 'cp' ); ?><!--</p>-->
+<!--							<code>[course_thumbnail]<br />[course_thumbnail course_id="22" wrapper="div"]</code>-->
+<!--						</td>-->
+<!--					</tr>-->
 					
 					<tr class="cp-shortcode-alt">
 						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Media', 'cp' ); ?></th>
@@ -568,7 +568,7 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
-								<li><span>type</span> – <?php _e( 'Use "image" to only display list image if available. Use "video" to only show the video if available. Use "thumbnail" to show the course thumbnail. Use "default" to enable priority mode (see priority attribute). Default: CoursePress Settings', 'cp' ); ?></li>
+								<li><span>type</span> – <?php _e( 'Use "image" to only display list image if available. Use "video" to only show the video if available. Use "thumbnail" to show the course thumbnail (shortcut for type="image" and priority="image"). Use "default" to enable priority mode (see priority attribute). Default: CoursePress Settings', 'cp' ); ?></li>
 								<li><span>priority</span> – <?php _e( 'Use "image" to try to show the list image first. If not available, then try to use the featured video.  Use "video" to try to show the featured video first. If not available, try to use the list image. Default: CoursePress Settings', 'cp' ); ?></li>
 								<li><span>list_page</span> – <?php _e( 'Use "yes" to use the CoursePress Settings for "Course Listings". Use "no" to use the CoursePress Settings for "Course Details Page". Default: no', 'cp' ); ?></li>
 								<li><span>class</span> – <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
