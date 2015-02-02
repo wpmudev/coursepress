@@ -1,32 +1,32 @@
 <?php
 /*
-  Plugin Name: CoursePress Pro
-  Plugin URI: http://premium.wpmudev.org/project/coursepress/
-  Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
-  Author: WPMU DEV
-  Author URI: http://premium.wpmudev.org
-  Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.4.5
-  TextDomain: cp
-  Domain Path: /languages/
-  WDP ID: 913071
-  License: GNU General Public License ( Version 2 - GPLv2 )
+Plugin Name: CoursePress Pro
+Plugin URI: http://premium.wpmudev.org/project/coursepress/
+Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+Author: WPMU DEV
+Author URI: http://premium.wpmudev.org
+Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
+Version: 1.2.4.6
+TextDomain: cp
+Domain Path: /languages/
+WDP ID: 913071
+License: GNU General Public License ( Version 2 - GPLv2 )
 
-  Copyright 2015 Incsub ( http://incsub.com )
+Copyright 2015 Incsub ( http://incsub.com )
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License ( Version 2 - GPLv2 ) as published by
-  the Free Software Foundation.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License ( Version 2 - GPLv2 ) as published by
+the Free Software Foundation.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
 if ( !defined( 'ABSPATH' ) ) {
 	exit;
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.4.5';
+		public $version = '1.2.4.6';
 
 		/**
 		 * Plugin friendly name.

@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License ( Version 2 - GPLv2 ).
 msgid ""
 msgstr ""
-"Project-Id-Version: CoursePress Pro 1.2.4.5\n"
+"Project-Id-Version: CoursePress Pro 1.2.4.6\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
 "POT-Creation-Date: 2015-02-02 02:49:41+00:00\n"
 "MIME-Version: 1.0\n"
