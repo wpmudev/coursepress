@@ -1,11 +1,12 @@
 <?php
 /**
  * The units archive / grades template file
- * 
+ *
  * @package CoursePress
  */
 global $coursepress;
 $course_id = do_shortcode('[get_parent_course_id]');
+$course_id = (int) $course_id;
 $progress = do_shortcode('[course_progress course_id="' . $course_id . '"]');
 //redirect to the parent course page if not enrolled
 $coursepress->check_access($course_id);
@@ -19,7 +20,7 @@ add_thickbox();
 		<h1 class="workbook-title">
 			<?php echo do_shortcode('[course_title course_id="' . $course_id . '" title_tag=""]'); ?>
 			<?php if ( 100 > (int) $progress ) { ?>
-				<span class="workbook-course-progress"><?php echo esc_html( $progress ); ?>% <?php esc_html_e('completed', 'cp'); ?></span>			
+				<span class="workbook-course-progress"><?php echo esc_html( $progress ); ?>% <?php esc_html_e('completed', 'cp'); ?></span>
 			<?php } ?>
 		</h1>
 
@@ -36,7 +37,7 @@ add_thickbox();
 		<?php
 			if( 100 == (int) $progress) {
 				echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
-			}			
+			}
 		?>
 
         <div class="clearfix"></div>
@@ -76,7 +77,7 @@ add_thickbox();
                 ?>
                 <a class="unit-archive-single-title" href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
                 <?php if ( do_shortcode('[course_unit_details field="input_modules_count"]') > 0 ) { ?>
-                                                                                                                                                                                                                                                        <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('mandatory elements completed', 'cp'); ?> | <?php echo do_shortcode('[course_unit_details field="student_unit_modules_graded" unit_id="' . get_the_ID() . '"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements graded', 'cp'); ?></span>                    
+                                                                                                                                                                                                                                                        <span class="unit-archive-single-module-status"><?php echo do_shortcode('[course_unit_details field="student_module_responses"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="mandatory_input_modules_count"]'); ?> <?php _e('mandatory elements completed', 'cp'); ?> | <?php echo do_shortcode('[course_unit_details field="student_unit_modules_graded" unit_id="' . get_the_ID() . '"]'); ?> <?php _e('of', 'cp'); ?> <?php echo do_shortcode('[course_unit_details field="input_modules_count"]'); ?> <?php _e('elements graded', 'cp'); ?></span>
                 <?php } else { ?>
                                                                                                                                                                                                                                                         <span class="unit-archive-single-module-status read-only-module"><?php _e('Read only'); ?></span>
                 <?php } ?>

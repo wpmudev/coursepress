@@ -69,8 +69,7 @@ get_header();
                                 if ( $discussion->details->unit_id == '' ) {
                                     $discussion_unit = $discussion->get_unit_name();
                                 } else {
-                                    $unit = new Unit($discussion->details->unit_id);
-                                    $discussion_unit = '<a href="' . $unit->get_permalink() . '">' . $discussion->get_unit_name() . '</a>';
+                                    $discussion_unit = '<a href="' . Unit::get_permalink( $discussion->details->unit_id ) . '">' . $discussion->get_unit_name() . '</a>';
                                 }
                                 ?>
                                 <span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> | <span><?php echo $discussion_unit; ?></span> | <span><?php echo get_comments_number(); ?> <?php _e('Comments', 'cp'); ?></span>
