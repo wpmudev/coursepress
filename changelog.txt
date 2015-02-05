@@ -6,6 +6,11 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.7 = (not yet released)
+* Recommended performance update.
+* Progress tracking changed from course focused to student focused reducing database queries
+* Shortcode peformance improvements
+
 = 1.2.4.6 =
 * Performance: When persistent object caching (server setup or 3rd party) is not available CoursePress will fall back to using transients to speed up page loads.
 * Fixed: [course_join_button] now works properly on pages (bug caused it only to work on posts).
