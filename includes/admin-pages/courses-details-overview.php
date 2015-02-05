@@ -543,7 +543,6 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																				?>
 																				<ol>
 																					<?php
-																					$module = new Unit_Module();
 
 																					// Cheking for inhertited "show" status and forces a save.
 																					$section_dirty = false;
@@ -559,7 +558,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																							$unit_pages = coursepress_unit_pages( $unit->ID );
 																						}
 
-																						$modules = $module->get_modules( $unit->ID );
+																						$modules = Unit_Module::get_modules( $unit->ID );
 																						?>
 
 																						<li class="<?php echo ($unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit'); ?>">
@@ -731,7 +730,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															  </tr>
 															  <?php
 															  $module = new Unit_Module();
-															  $modules = $module->order_modules($module->get_modules($unit->ID));
+															  $modules = $module->order_modules(Unit_Module::get_modules($unit->ID));
 
 															  foreach ($modules as $module) {
 															  if (!empty($module->post_title)) {

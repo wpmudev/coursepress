@@ -69,11 +69,11 @@ if ( !class_exists( 'Student' ) ) {
 			/**
 			 * Add hooks to handle completion data.
 			 */
-			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
-			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
-			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
-			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
-			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
+//			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
+//			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
+//			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
+//			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
+//			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
 
 			/**
 			 * Add hooks to handle other tracking
@@ -189,10 +189,16 @@ if ( !class_exists( 'Student' ) ) {
 				$user_ID = $this->ID;
 			}
 
-			$completion	= new Course_Completion( $course_ID );
-			$completion->init_student_status( $user_ID );
+//			$completion	= new Course_Completion( $course_ID );
+//			$completion->init_student_status( $user_ID );
+//
+//			return $completion->is_course_complete();
+			if ( 100 == (int) Student_Completion::calculate_course_completion( $user_ID, $course_ID ) ) {
+				return true;
+			} else {
+				return false;
+			}
 
-			return $completion->is_course_complete();
 		}
 
 		/**
@@ -742,7 +748,7 @@ if ( !class_exists( 'Student' ) ) {
 
 			if( $update_option ) {
 				$course_progress['units'] = $units;
-				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
+//				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
 
 		}
@@ -794,7 +800,7 @@ if ( !class_exists( 'Student' ) ) {
 
 			if( $update_option ) {
 				$course_progress['units'] = $units;
-				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
+//				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
 
 		}
@@ -846,7 +852,7 @@ if ( !class_exists( 'Student' ) ) {
 
 			if( $update_option ) {
 				$course_progress['units'] = $units;
-				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
+//				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
 
 		}

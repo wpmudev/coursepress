@@ -75,45 +75,43 @@ if ( !class_exists( 'Unit' ) ) {
 			return !empty( $this->details ) ? $this->details : false;
 		}
 
-		function is_unit_available( $unit_id = '' ) {
+		public static function is_unit_available( $unit_id ) {
 
 			$unit_details = false;
-			if ( $unit_id == '' ) {
-				$unit_details	 = $this->get_unit();
-				$unit_id		 = $this->id;
-			} else {
-				$unit			 = new Unit( (int) $unit_id );
-				$unit_details	 = $unit->get_unit();
-			}
+			$unit			 = new Unit( (int) $unit_id );
+			$unit_details	 = $unit->get_unit();
 
 			/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
 			/* Check if previous has conditions */
-			$previous_unit_id							 = $this->get_previous_unit_from_the_same_course( $unit_id );
+			$previous_unit_id							 = $unit->get_previous_unit_from_the_same_course( $unit_id );
 			$force_current_unit_completion				 = !empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : '';
 			$force_current_unit_successful_completion	 = !empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : '';
 
 			$available = true;
 
-			$completion = new Course_Completion( $this->course_id );
-			$completion->init_student_status();
+//			$completion = new Course_Completion( $unit->course_id );
+//			$completion->init_student_status();
 
-			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
-			$unit_completed	 = 100 == $completion->unit_progress( $previous_unit_id );
+//			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
+//			$unit_completed	 = 100 == $completion->unit_progress( $previous_unit_id );
+			$student_id = get_current_user_id();
+			$mandatory_done = Student_Completion::get_remaining_steps( $student_id, $unit->course_id, $previous_unit_id );
+			$unit_completed	 = 100 == (int) Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $previous_unit_id );
 
-			$this->status[ 'mandatory_required' ][ 'enabled' ]	 = !empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
-			$this->status[ 'mandatory_required' ][ 'result' ]	 = $mandatory_done;
+			$unit->status[ 'mandatory_required' ][ 'enabled' ]	 = !empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
+			$unit->status[ 'mandatory_required' ][ 'result' ]	 = $mandatory_done;
 
-			$this->status[ 'completion_required' ][ 'enabled' ]	 = !empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion;
-			$this->status[ 'completion_required' ][ 'result' ]	 = $unit_completed;
+			$unit->status[ 'completion_required' ][ 'enabled' ]	 = !empty( $force_current_unit_successful_completion ) && 'on' == $force_current_unit_successful_completion;
+			$unit->status[ 'completion_required' ][ 'result' ]	 = $unit_completed;
 
-			$available	 = $this->status[ 'mandatory_required' ][ 'enabled' ] ? $this->status[ 'mandatory_required' ][ 'result' ] : $available;
-			$available	 = $this->status[ 'completion_required' ][ 'enabled' ] ? $this->status[ 'completion_required' ][ 'result' ] : $available;
+			$available	 = $unit->status[ 'mandatory_required' ][ 'enabled' ] ? $unit->status[ 'mandatory_required' ][ 'result' ] : $available;
+			$available	 = $unit->status[ 'completion_required' ][ 'enabled' ] ? $unit->status[ 'completion_required' ][ 'result' ] : $available;
 
-			$this->status[ 'date_restriction' ][ 'result' ] = $current_date >= $unit_details->unit_availability;
+			$unit->status[ 'date_restriction' ][ 'result' ] = $current_date >= $unit_details->unit_availability;
 
-			if ( !$this->status[ 'date_restriction' ][ 'result' ] || !$available ) {
+			if ( !$unit->status[ 'date_restriction' ][ 'result' ] || !$available ) {
 				$available = false;
 			} else {
 				$available = true;
@@ -213,7 +211,11 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( 0 == $position ) {
 				$previous_unit_id = $this->details->ID;
 			} else {
-				$previous_unit_id = (int) $units[ $position - 1 ];
+				if( ! isset( $units[ $position - 1 ] ) ) {
+					$previous_unit_id = $this->details->ID;
+				} else {
+					$previous_unit_id = (int) $units[ $position - 1 ];
+				}
 			}
 
 			return $this->details->ID != $previous_unit_id ? $previous_unit_id : false;
@@ -230,8 +232,7 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 
 			//$unit_pages	 = $this->get_number_of_unit_pages();
-			$module	 = new Unit_Module();
-			$modules = $module->get_modules( $unit_id, $page_num );
+			$modules = Unit_Module::get_modules( $unit_id, $page_num );
 
 			foreach ( $modules as $mod ) {
 				$total_minutes	 = 0;
@@ -270,8 +271,7 @@ if ( !class_exists( 'Unit' ) ) {
 		}
 
 		function get_unit_time_estimation( $unit_id ) {
-			$module			 = new Unit_Module();
-			$modules		 = $module->get_modules( $unit_id );
+			$modules		 = Unit_Module::get_modules( $unit_id );
 			$total_minutes	 = 0;
 			$total_seconds	 = 0;
 
@@ -494,8 +494,7 @@ if ( !class_exists( 'Unit' ) ) {
 			$units_modules = get_posts( $args );
 
 			foreach ( $units_modules as $units_module ) {
-				$module = new Unit_Module( $units_module->ID );
-				$module->delete_module( true );
+				Unit_Module::delete_module( $units_module->ID, true );
 			}
 
 			/**
@@ -544,18 +543,19 @@ if ( !class_exists( 'Unit' ) ) {
 			}
 		}
 
-		function get_permalink( $course_id = '' ) {
+		public static function get_permalink( $unit_id, $course_id = '' ) {
 			global $course_slug;
 			global $units_slug;
 
 			if ( empty( $course_id ) ) {
-				$course_id = get_post_meta( $this->id, 'course_id', true );
+				$course_id = get_post_meta( $unit_id, 'course_id', true );
 			}
 
-			$course	 = new Course( $course_id );
-			$course	 = $course->get_course();
+			$course_post_name = get_post_field( 'post_name', $course_id );
+			$unit_post_name = get_post_field( 'post_name', $unit_id );
 
-			$unit_permalink = trailingslashit( home_url() . '/' ) . trailingslashit( $course_slug . '/' ) . trailingslashit( isset( $course->post_name ) ? $course->post_name : '' . '/'  ) . trailingslashit( $units_slug . '/' ) . trailingslashit( isset( $this->details->post_name ) ? $this->details->post_name : '' . '/'  );
+
+			$unit_permalink = trailingslashit( home_url() . '/' ) . trailingslashit( $course_slug . '/' ) . trailingslashit( isset( $course_post_name ) ? $course_post_name : '' . '/'  ) . trailingslashit( $units_slug . '/' ) . trailingslashit( isset( $unit_post_name ) ? $unit_post_name : '' . '/'  );
 
 			return $unit_permalink;
 		}
@@ -607,8 +607,7 @@ if ( !class_exists( 'Unit' ) ) {
 				$unit_id = $this->id;
 			}
 
-			$module	 = new Unit_Module();
-			$modules = $module->get_modules( $unit_id );
+			$modules = Unit_Module::get_modules( $unit_id );
 
 			$pages_num = 1;
 
@@ -732,7 +731,152 @@ if ( !class_exists( 'Unit' ) ) {
 			return isset( $page_count ) && !empty( $page_count ) ? $page_count : 1;
 		}
 
-	}
+		public static function update_input_module_meta( $unit_id, $module_id, $meta ) {
 
+			$input_module_meta = get_post_meta( $unit_id, 'input_modules', true );
+
+			if( empty( $input_module_meta ) ) {
+				$input_module_meta = array();
+			}
+
+			$input_module_meta = maybe_unserialize( $input_module_meta );
+
+			$input_module_meta[ $module_id ] = $meta;
+
+			update_post_meta( $unit_id, 'input_modules', $input_module_meta  );
+
+		}
+
+		public static function delete_input_module_meta( $unit_id, $module_id ) {
+			$input_module_meta = get_post_meta( $unit_id, 'input_modules', true );
+
+			if( empty( $input_module_meta ) ) {
+				$input_module_meta = array();
+			}
+
+			$input_module_meta = maybe_unserialize( $input_module_meta );
+
+			if( isset( $input_module_meta[ $module_id ] ) ) {
+				unset( $input_module_meta[ $module_id ] );
+				update_post_meta( $unit_id, 'input_modules', $input_module_meta  );
+			}
+
+		}
+
+		public static function get_input_module_meta( $unit_id ) {
+
+			$input_module_meta = get_post_meta( $unit_id, 'input_modules', true );
+
+			// For converting legacy units
+			if( empty( $input_module_meta ) ) {
+				// If the meta doesn't exist, create it, expensive call, but will only be used to convert legacy units (once)
+				self::_create_input_module_meta( $unit_id );
+				// Now get the new data
+				$input_module_meta = get_post_meta( $unit_id, 'input_modules', true );
+			}
+
+			return maybe_unserialize( $input_module_meta );
+
+		}
+
+		private static function _create_input_module_meta( $unit_id ) {
+
+			$modules = Unit_Module::get_modules( $unit_id );
+
+			foreach( $modules as $mod ) {
+				$module_id = $mod->ID;
+
+				$module_type = get_post_meta( $module_id, 'module_type', true );
+				$module_type = ! empty( $module_type ) ? is_array( $module_type ) ? $module_type[0] : $module_type : false;
+
+				if( $module_type ) {
+					$input_module_types = Unit_Module::get_input_module_types();
+					if( in_array( $module_type, $input_module_types ) ) {
+
+						$mandatory_answer = get_post_meta( $module_id, 'mandatory_answer', true );
+						$gradable_answer = get_post_meta( $module_id, 'gradable_answer', true );
+						$minimum_grade_required = get_post_meta( $module_id, 'minimum_grade_required', true );
+						$limit_attempts = get_post_meta( $module_id, 'limit_attempts', true );
+						$limit_attempts_value = get_post_meta( $module_id, 'limit_attempts_value', true );
+
+						$module_meta = array(
+							'mandatory_answer' => ! empty( $mandatory_answer ) ? is_array( $mandatory_answer ) ? $mandatory_answer[0] : $mandatory_answer : array(),
+							'gradable_answer' => ! empty( $gradable_answer ) ? is_array( $gradable_answer ) ? $gradable_answer[0] : $gradable_answer : array(),
+							'minimum_grade_required' => ! empty( $minimum_grade_required ) ? is_array( $minimum_grade_required ) ? $minimum_grade_required[0] : $minimum_grade_required : false,
+							'limit_attempts' => ! empty( $limit_attempts ) ? is_array( $limit_attempts ) ? $limit_attempts[0] : $limit_attempts : false,
+							'limit_attempts_value' => ! empty( $limit_attempts_value ) ? is_array( $limit_attempts_value ) ? $limit_attempts_value[0] : $limit_attempts_value : false,
+						);
+
+						self::update_input_module_meta( $unit_id, $module_id, $module_meta );
+					}
+				}
+			}
+		}
+
+		public static function get_module_completion_data( $unit_id ) {
+
+			if( empty( $unit_id ) ) {
+				return false;
+			}
+
+			$in_session = isset( $_SESSION['coursepress_unit_completion'][ $unit_id ] );
+
+			$criteria = array();
+
+			if( $in_session && ! empty( $_SESSION['coursepress_unit_completion'][ $unit_id ]['all_input_ids'] ) ) {
+				$criteria = $_SESSION['coursepress_unit_completion'][ $unit_id ];
+			} else {
+				$module_data = self::get_input_module_meta( $unit_id );
+				$mandatory_array = array();
+				$mandatory_gradable_array = array();
+				$gradable_array = array();
+				$min_grades = array();
+				$attempts_array = array();
+				$all_input_ids = array();
+
+				if( ! empty( $module_data ) ) {
+					foreach ( $module_data as $module_id => $module ) {
+						$all_input_ids[] = $module_id;
+						$mandatory      = isset( $module['mandatory_answer'] ) ? $module['mandatory_answer'] : false;
+						$gradable       = isset( $module['gradable_answer'] ) ? $module['gradable_answer'] : false;
+						$limit_attempts = isset( $module['limit_attempts'] ) ? $module['limit_attempts'] : false;
+
+						if ( $mandatory ) {
+							$mandatory_array[] = $module_id;
+						}
+						if ( $gradable ) {
+							$gradable_array[]         = $module_id;
+							$min_grade                = isset( $module['minimum_grade_required'] ) ? $module['minimum_grade_required'] : 0;
+							$min_grades[ $module_id ] = $min_grade;
+						}
+						if ( $gradable && $mandatory ) {
+							$mandatory_gradable_array[] = $module_id;
+						}
+						if ( ( $mandatory || $gradable ) && $limit_attempts ) {
+							$allowed                      = isset( $module['limit_attempts_value'] ) ? $module['limit_attempts_value'] : false;
+							$attempts_array[ $module_id ] = $allowed;
+						}
+					}
+				}
+
+				$in_session = false;
+				$criteria = array(
+					'mandatory_modules' => $mandatory_array,
+					'gradable_modules' => $gradable_array,
+					'mandatory_gradable_modules' => $mandatory_gradable_array,
+					'minimum_grades' => $min_grades,
+					'answer_limit' => $attempts_array,
+					'all_input_ids' => $all_input_ids,
+				);
+			}
+
+			if( ! $in_session ) {
+				$_SESSION['coursepress_unit_completion'][ $unit_id ] = $criteria;
+			}
+
+			return $criteria;
+		}
+
+
+	}
 }
-?>

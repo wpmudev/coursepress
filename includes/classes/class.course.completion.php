@@ -5,6 +5,15 @@ if ( !defined('ABSPATH') )
 
 if ( !class_exists('Course_Completion') ) {
 
+    /**
+     * Class Course_Completion
+     *
+     * DEPRECATION NOTICE:
+     *
+     * This class is deprecated in favour of using student completion, rather than course completion.
+     * It is remaining here for backward compatibility, but will disappear in a future version.
+     *
+     */
     class Course_Completion extends Course {
 
         /**
@@ -67,8 +76,7 @@ if ( !class_exists('Course_Completion') ) {
         }
 
         function get_unit_modules( $unit_id ) {
-            $module = new Unit_Module();
-            $modules = $module->get_modules($unit_id);
+            $modules = Unit_Module::get_modules($unit_id);
             return $modules;
         }
 
@@ -202,8 +210,7 @@ if ( !class_exists('Course_Completion') ) {
                     $grade = false;
                     $success = false;
                     if ( !empty($response) ) {
-                        $unit_module = new Unit_Module();
-                        $grade = $unit_module->get_response_grade($response->ID);
+                        $grade = Unit_Module::get_response_grade($response->ID);
                         $success = $grade['grade'] >= $minimum_grade ? true : false;
 	                    if( $success ) {
 		                    do_action( 'coursepress_set_gradable_question_passed', $this->student_id, $this->id, $unit->ID, $mod_id );

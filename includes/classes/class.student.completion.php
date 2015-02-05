@@ -1,0 +1,377 @@
+<?php
+
+if ( !defined('ABSPATH') )
+	exit; // Exit if accessed directly
+
+if ( !class_exists('Student_Completion') ) {
+
+	class Student_Completion {
+
+		/* ----------------------------- GETTING COMPLETION DATA ----------------------------------- */
+
+		public static function get_completion_data( $student_id, $course_id ) {
+
+			$in_session = isset( $_SESSION['coursepress_student'][$student_id]['course_completion'][$course_id] );
+
+			if( $in_session && ! empty( $_SESSION['coursepress_student'][$student_id]['course_completion'][$course_id] ) ) {
+				// Try the session first...
+				$course_progress = $_SESSION['coursepress_student'][$student_id]['course_completion'][$course_id];
+			} else {
+				// Otherwise it should be in user meta
+				$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+				if( empty( $course_progress ) ) {
+					$course_progress = array();
+				}
+				$in_session = false;
+			}
+
+			if( ! $in_session ) {
+				$_SESSION['coursepress_student'][$student_id]['course_completion'][$course_id] = $course_progress;
+			}
+
+			return $course_progress;
+		}
+
+		public static function get_visited_pages( $student_id, $course_id, $unit_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+
+			return isset( $data['unit'][ $unit_id ]['visited_pages'] ) ? $data['unit'][ $unit_id ]['visited_pages'] : array();
+		}
+
+		public static function get_last_visited_page( $student_id, $course_id, $unit_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+
+			return isset( $data['unit'][ $unit_id ]['last_visited_page'] ) ? $data['unit'][ $unit_id ]['last_visited_page'] : false;
+		}
+
+		public static function is_course_visited( $student_id, $course_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+
+			return isset( $data['visited'] ) && ! empty( $data['visited'] ) ? true : false;
+		}
+
+		public static function get_remaining_pages( $student_id, $course_id, $unit_id ) {
+			$visited = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) );
+			$total = Unit::get_page_count( $unit_id );
+			return $total - $visited;
+		}
+
+		public static function get_mandatory_modules_answered( $student_id, $course_id, $unit_id ) {
+			$data = self::get_completion_data( $student_id, $course_id, $unit_id );
+
+			 if( isset( $data['unit'][ $unit_id ]['mandatory_answered'] ) ) {
+				 foreach( $data['unit'][ $unit_id ]['mandatory_answered'] as $module_id => $value ) {
+					 if( $value !== true ) {
+						 unset( $data['unit'][ $unit_id ]['mandatory_answered'][ $module_id ] );
+					 }
+				 }
+				return array_keys( $data['unit'][ $unit_id ]['mandatory_answered'] );
+			 } else {
+				 return array();
+			 }
+		}
+
+		public static function get_gradable_module_answered( $student_id, $course_id, $unit_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+
+			if( isset( $data['unit'][ $unit_id ]['gradable_results'] ) ) {
+				return $data['unit'][ $unit_id ]['gradable_results'];
+			} else {
+				return array();
+			}
+		}
+
+		public static function get_gradable_modules_passed( $student_id, $course_id, $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			$answers = self::get_gradable_module_answered( $student_id, $course_id, $unit_id );
+
+			if( empty( $criteria ) || empty( $answers ) ) {
+				return array();
+			}
+
+			$passed_array = array();
+
+			foreach( $criteria['gradable_modules'] as $module_id ) {
+
+				$required = $criteria['minimum_grades'][ $module_id ];
+				$passed = false;
+
+				if( ! isset( $answers[ $module_id ] ) ) {
+					continue;
+				}
+
+				foreach( $answers[ $module_id ] as $answer ) {
+					if ( $answer >= $required ) {
+						$passed = true;
+					}
+				}
+				if( $passed ) {
+					$passed_array[] = $module_id;
+				}
+			}
+
+			return $passed_array;
+		}
+
+		public static function get_mandatory_gradable_modules_passed( $student_id, $course_id, $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			$mandatory = $criteria['mandatory_modules'];
+			$all_passed = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
+
+			// Forget about the ones that are not mandatory
+			$mandatory_passed = array_intersect( $mandatory, $all_passed );
+
+			return $mandatory_passed;
+		}
+
+		public static function get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			$mandatory_required = $criteria['mandatory_modules'];
+			$mandatory_answered = self::get_mandatory_modules_answered( $student_id, $course_id, $unit_id );
+
+			// Deal with mandatory gradable answers. A mandatory question is not considered done if it is gradable and not passed.
+			$mandatory_gradable = $criteria['mandatory_gradable_modules'];
+			$mandatory_passed = self::get_mandatory_gradable_modules_passed( $student_id, $course_id, $unit_id );
+			$mandatory_remove = array_diff( $mandatory_gradable, $mandatory_passed );
+
+			// Some mandatory gradable answers are not yet passed
+			if( ! empty( $mandatory_remove ) ) {
+				$mandatory_answered = array_diff( $mandatory_answered, $mandatory_remove );
+			}
+
+			return array_diff( $mandatory_required, $mandatory_answered );
+		}
+
+		public static function get_remaining_gradable_answers( $student_id, $course_id, $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			$gradable_required = $criteria['gradable_modules'];
+			$gradable_passed = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
+
+			return array_diff( $gradable_required, $gradable_passed );
+		}
+
+		public static function get_mandatory_steps_completed( $student_id, $course_id, $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			$mandatory = count( $criteria['mandatory_modules'] );
+			$mandatory_remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
+
+			return $mandatory - $mandatory_remaining;
+		}
+
+		/**
+		 * Works out steps left in the unit.
+		 *
+		 * Calculation:
+		 *    $total = number_of_pages_in_unit + number_of_mandatory_questions // (includes graded and non-graded marked as mandatory)
+		 *    $completed = number_of_pages_visited + number_of_mandatory_questions_completed // (subtract any mandatory gradable questions not passed)
+		 *    $answer = $total - $completed
+		 *
+		 * @param $student_id
+		 * @param $course_id
+		 * @param $unit_id
+		 *
+		 * @return array
+		 */
+		public static function get_remaining_steps( $student_id, $course_id, $unit_id ) {
+			$total = self::_total_steps_required( $unit_id );
+
+			$completed = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) ) + self::get_mandatory_steps_completed( $student_id, $course_id, $unit_id );
+
+			return $total - $completed;
+		}
+
+		public static function is_unit_complete( $student_id, $course_id, $unit_id ) {
+			$progress = self::calculate_unit_completion( $student_id, $course_id, $unit_id, false );
+			return ( 100 == (int) $progress ) ? true : false;
+		}
+
+		public static function is_course_complete( $student_id, $course_id ) {
+			$progress = self::calculate_course_completion( $student_id, $course_id, false );
+			return ( 100 == (int) $progress ) ? true : false;
+		}
+
+		public static function get_mandatory_steps_required( $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			return count( $criteria['mandatory_modules'] );
+		}
+
+		/* ----------------------------- CALCULATES AND UPDATES UNIT/COURSE COMPLETION ----------------------------------- */
+
+		public static function calculate_unit_completion( $student_id, $course_id, $unit_id, $update = true, &$data = false ) {
+
+			if( empty( $unit_id) ) {
+				return false;
+			}
+
+			if( empty( $data ) ) {
+				$data = self::get_completion_data( $student_id, $course_id );
+				self::_check_unit( $data, $unit_id );
+			}
+
+			$total = self::_total_steps_required( $unit_id );
+			$completed = $total - self::get_remaining_steps( $student_id, $course_id, $unit_id );
+
+			$progress = $completed / $total * 100.0;
+
+			$data['unit'][ $unit_id ]['unit_progress'] = $progress;
+
+			if( $update ) {
+				self::update_completion_data( $student_id, $course_id, $data );
+			}
+
+			return $progress;
+		}
+
+		public static function calculate_course_completion( $student_id, $course_id, $update = true ) {
+
+			if( empty( $course_id ) ) {
+				return false;
+			}
+
+			$data = self::get_completion_data( $student_id, $course_id );
+			$course = new Course( $course_id );
+			$total_units = $course->get_units( $course_id, 'publish', true );
+
+			// No units or no units published
+			if( empty( $total_units ) ) {
+				return 0;
+			}
+
+			$progress = 0.0;
+
+			if( isset( $data['unit'] ) && is_array( $data['unit'] ) ) {
+				foreach( $data['unit'] as $unit_id => $unit ) {
+					$progress += self::calculate_unit_completion( $student_id, $course_id, $unit_id );
+				}
+
+				$progress = $progress / $total_units;
+				$data['course_progress'] = $progress;
+			}
+
+			if( $update ) {
+				self::update_completion_data( $student_id, $course_id, $data );
+			}
+
+			return $progress;
+		}
+
+		/* ----------------------------- RECORDING AND UPDATING COMPLETION DATA ----------------------------------- */
+
+		public static function update_completion_data( $student_id, $course_id, $data ) {
+
+			$global_setting = ! is_multisite();
+
+			if( empty( $data) ) {
+				$data = self::get_completion_data( $student_id, $course_id );
+			}
+
+			update_user_option( $student_id, '_course_' . $course_id . '_progress', $data, $global_setting );
+			// make sure session data os also up to date
+			$_SESSION['coursepress_student'][$student_id]['course_completion'][$course_id] = $data;
+		}
+
+		public static function record_mandatory_answer( $student_id, $course_id, $unit_id, $module_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+			self::_check_unit( $data, $unit_id );
+
+			if( ! isset( $data['unit'][ $unit_id ]['mandatory_answered'] ) ) {
+				$data['unit'][ $unit_id ]['mandatory_answered'] = array();
+			}
+
+			$data['unit'][ $unit_id ]['mandatory_answered'][ $module_id ] = true;
+			self::update_completion_data( $student_id, $course_id, $data );
+		}
+
+		public static function clear_mandatory_answer( $student_id, $course_id, $unit_id, $module_id ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+			self::_check_unit( $data, $unit_id );
+
+			if( ! isset( $data['unit'][ $unit_id ]['mandatory_answered'] ) ) {
+				$data['unit'][ $unit_id ]['mandatory_answered'] = array();
+			}
+
+			$data['unit'][ $unit_id ]['mandatory_answered'][ $module_id ] = false;
+			self::update_completion_data( $student_id, $course_id, $data );
+		}
+
+		public static function record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $result ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+			self::_check_unit( $data, $unit_id );
+
+			if( ! isset( $data['unit'][ $unit_id ]['gradable_results'] ) ) {
+				$data['unit'][ $unit_id ]['gradable_results'] = array();
+			}
+
+			// Keep all results, so push to the last entry
+			$data['unit'][ $unit_id ]['gradable_results'][ $module_id ][] = $result;
+
+			self::update_completion_data( $student_id, $course_id, $data );
+		}
+
+		public static function record_visited_page( $student_id, $course_id, $unit_id, $page_num ) {
+
+			$data = self::get_completion_data( $student_id, $course_id );
+			self::_check_unit( $data, $unit_id );
+
+			if( ! isset( $data['unit'][ $unit_id ]['visited_pages'] ) ) {
+				$data['unit'][ $unit_id ]['visited_pages'] = array();
+			}
+
+			if( ! in_array( $page_num, $data['unit'][ $unit_id ]['visited_pages'] ) ) {
+				$data['unit'][ $unit_id ]['visited_pages'][] = $page_num;
+			}
+
+			self::_record_last_visited_page( $unit_id, $page_num, $data );
+			self::_record_visited_course( $student_id, $course_id, $data );
+			self::update_completion_data( $student_id, $course_id, $data );
+		}
+
+		/* ----------------------------- PRIVATE METHODS FOR THIS CLASS ----------------------------------- */
+
+		private static function _record_last_visited_page( $unit_id, $page_num, &$data ) {
+			$data['unit'][ $unit_id ]['last_visited_page'] = $page_num;
+		}
+
+		private static function _record_visited_course( $student_id, $course_id, &$data ) {
+			if( ! isset( $data['visited'] ) ) {
+				$data['visited'] = 1;
+			}
+		}
+
+		private static function _check_unit( &$data, $unit_id ) {
+			if( ! isset( $data['unit'] ) ) {
+				$data['unit'] = array();
+			}
+			if( ! isset( $data['unit'][ $unit_id ] ) ) {
+				$data['unit'][ $unit_id ] = array();
+			}
+		}
+
+		private static function _total_steps_required( $unit_id ) {
+			$criteria = Unit::get_module_completion_data( $unit_id );
+			if( empty( $criteria ) ) {
+				return false;
+			}
+			$total_answers = count( $criteria['mandatory_modules'] );
+			$total_pages = Unit::get_page_count( $unit_id );
+			return $total_answers + $total_pages;
+		}
+
+	}
+
+}

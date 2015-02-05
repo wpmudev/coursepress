@@ -41,7 +41,8 @@ if ( 100 == ( int ) $progress ) {
 if ( have_posts() ) {
     while ( have_posts() ) {
         the_post();
-        $input_module_count = do_shortcode('[course_unit_details field="input_modules_count" unit_id="' . get_the_ID() . '"]');
+        $criteria = Unit::get_module_completion_data( get_the_ID() );
+        $input_module_count = count( $criteria['all_input_ids'] );
         $has_assessable = $input_module_count > 0 ? true : false;
         ?>
         <div class="workbook_units cp-wrap">

@@ -50,17 +50,17 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 
 			$found	 = false;
 
-			if( $_wp_using_ext_object_cache ) {
+//			if( $_wp_using_ext_object_cache ) {
 				// USE OBJECT CACHE
 				$object	 = wp_cache_get( $key, $type, false, $found );
-			} else {
-				// OR USE TRANSIENT
-				$temp = get_transient( $type . '_' . $key );
-				if ( ! empty( $temp ) ) {
-					$object = $temp;
-					$found = true;
-				}
-			}
+//			} else {
+//				// OR USE TRANSIENT
+//				$temp = get_transient( $type . '_' . $key );
+//				if ( ! empty( $temp ) ) {
+//					$object = $temp;
+//					$found = true;
+//				}
+//			}
 
 			return $found;
 		}
@@ -71,13 +71,13 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 
 			if ( !empty( $key ) ) {
 
-				if( $_wp_using_ext_object_cache ) {
+//				if( $_wp_using_ext_object_cache ) {
 					// USE OBJECT CACHE
 					wp_cache_set( $key, $object, $type );
-				} else {
-					// OR USE TRANSIENT
-					set_transient( $type . '_' . $key, $object );
-				}
+//				} else {
+//					// OR USE TRANSIENT
+//					set_transient( $type . '_' . $key, $object );
+//				}
 
 			}
 		}
@@ -86,13 +86,13 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 			// Global letting us know if Object Cache is available.
 			global $_wp_using_ext_object_cache;
 
-			if( $_wp_using_ext_object_cache ) {
+//			if( $_wp_using_ext_object_cache ) {
 				// REMOVE OBJECT CACHE OBJECT
 				wp_cache_delete( $key, $type );
-			} else {
-				// OR REMOVE TRANSIENT OBJECT
-				delete_transient( $type . '_' . $key );
-			}
+//			} else {
+//				// OR REMOVE TRANSIENT OBJECT
+//				delete_transient( $type . '_' . $key );
+//			}
 
 		}
 

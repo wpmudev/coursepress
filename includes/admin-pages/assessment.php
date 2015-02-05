@@ -12,8 +12,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 	if ( !isset( $_GET[ 'cp_delete_response_nonce' ] ) || !wp_verify_nonce( $_GET[ 'cp_delete_response_nonce' ], 'delete_response' ) ) {
 		die( __( 'You do not have required persmissions for this action.', 'cp' ) );
 	} else {
-		$unit_module_main = new Unit_Module();
-		$unit_module_main->delete_module_response( (int) $_GET[ 'response_id' ] );
+		Unit_Module::delete_module_response( (int) $_GET[ 'response_id' ] );
 		wp_redirect( admin_url( 'admin.php?page=assessment&course_id=' . (int) $_GET[ 'course_id' ] . '&unit_id=' . (int) $_GET[ 'unit_id' ] . '&assessment_page=' . (int) $_GET[ 'assessment_page' ] ) );
 		exit;
 	}
@@ -35,8 +34,6 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 		$page_num = 1;
 	}
 
-	$unit_module_main = new Unit_Module();
-
 	if ( isset( $_GET[ 'response_id' ] ) ) {
 		$response_id = (int) $_GET[ 'response_id' ];
 		$module_id	 = (int) $_GET[ 'module_id' ];
@@ -46,13 +43,16 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 			<form action="" name="assessment-response" method="post">
 
 				<?php wp_nonce_field( 'course_details_overview' ); ?>
-				<input type="hidden" name="response_id" value="<?php echo $response_id; ?>">
-				<input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
+				<input type="hidden" name="response_id" value="<?php echo esc_attr( $response_id ); ?>">
+				<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>">
+				<input type="hidden" name="unit_id" value="<?php echo esc_attr( $unit_id ); ?>">
+				<input type="hidden" name="module_id" value="<?php echo esc_attr( $module_id ); ?>">
+				<input type="hidden" name="student_id" value="<?php echo esc_attr( $user_id ); ?>">
 
 				<div id="edit-sub" class="assessment-holder-wrap">
 
 					<?php
-					$unit_module = $unit_module_main->get_module( $module_id );
+					$unit_module = Unit_Module::get_module( $module_id );
 					$student	 = get_userdata( $user_id );
 					?>
 
@@ -83,7 +83,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 							$response	 = new $mclass();
 
 							echo $response->get_response_form( $user_id, $module_id );
-							echo $unit_module_main->get_module_response_comment_form( $response_id );
+							echo Unit_Module::get_module_response_comment_form( $response_id );
 							?>
 							<br clear="all">
 						</div>
@@ -93,7 +93,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 
 							<div class="additional_grade_info">
 								<?php
-								$grade_data		 = $unit_module_main->get_response_grade( $response_id );
+								$grade_data		 = Unit_Module::get_response_grade( $response_id );
 								$grade			 = $grade_data[ 'grade' ];
 								$instructor_id	 = $grade_data[ 'instructor' ];
 								$instructor_name = get_userdata( $instructor_id );
@@ -172,7 +172,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 								$first_course_id = $course->ID;
 							}
 
-							$count = $unit_module_main->get_ungraded_response_count( $course->ID );
+							$count = Unit_Module::get_ungraded_response_count( $course->ID );
 
 							$course_obj		 = new Course( $course->ID );
 							$course_object	 = $course_obj->get_course();
@@ -343,8 +343,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 										$style		 = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 										$user_object = new Student( $user->ID );
 
-										$module	 = new Unit_Module();
-										$modules = $module->get_modules( $current_unit->ID );
+										$modules = Unit_Module::get_modules( $current_unit->ID );
 
 										$input_modules_count = 0;
 
@@ -371,7 +370,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 													$visibility_class	 = ( count( $response ) >= 1 ? '' : 'less_visible_row_2' );
 
 													if ( count( $response ) >= 1 ) {
-														$grade_data = $unit_module_main->get_response_grade( $response->ID );
+														$grade_data = Unit_Module::get_response_grade( $response->ID );
 													}
 
 													$assessable = get_post_meta( $mod->ID, 'gradable_answer', true );
@@ -476,7 +475,7 @@ if ( isset( $_GET[ 'delete_response' ] ) && (current_user_can( 'coursepress_dele
 															<td class="column-comment <?php echo $style . ' ' . $visibility_class; ?>">
 																<?php
 																if ( count( $response ) >= 1 ) {
-																	$comment = $unit_module_main->get_response_comment( $response->ID );
+																	$comment = Unit_Module::get_response_comment( $response->ID );
 																}
 																if ( isset( $comment ) ) {
 																	?>

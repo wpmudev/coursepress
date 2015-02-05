@@ -17,6 +17,5 @@ if ( $paged == 1 ) {
 }
 ?>
 <?php
-$module = new Unit_Module();
-$module->get_modules_front( (int)$unit_id );
+Unit_Module::get_modules_front( (int)$unit_id );
 ?>

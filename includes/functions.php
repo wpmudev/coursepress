@@ -117,6 +117,11 @@ function cp_allowed_post_tags() {
 	return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
 }
 
+/**
+ * LEGACY, still needed for now.
+ *
+ * @todo: needs to be replaced and removed soon
+ */
 function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
 	if ( !$unit_id ) {
 		return false;
@@ -128,6 +133,11 @@ function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $st
 	update_user_option( $student_id, 'last_visited_unit_' . $unit_id . '_page', $page_num, $global_option );
 }
 
+/**
+ * LEGACY, still needed for now.
+ *
+ * @todo: needs to be replaced and removed soon
+ */
 function cp_set_visited_course( $unit_id, $student_id = false ) {
 
 	if ( !$student_id ) {
@@ -177,7 +187,12 @@ function cp_is_course_visited( $course_id, $student_id = false ) {
 	}
 }
 
-function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
+/**
+ * LEGACY, still needed for now.
+ *
+ * @todo: needs to be replaced and removed soon
+ */
+function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false, $course_id = false ) {
 
 	if ( !$unit_id ) {
 		return false;
@@ -185,9 +200,14 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
 	if ( !$student_id ) {
 		$student_id = get_current_user_ID();
 	}
+	if( ! $course_id ) {
+		$course_id = do_shortcode( '[get_parent_course_id' );
+	}
 
-//$global_option = ! is_multisite();
-//delete_user_option($student_id, 'visited_unit_pages_' . $unit_id . '_page', $global_option);
+	Student_Completion::record_visited_page( $student_id, $course_id, $unit_id, $page_num );
+
+	// Legacy, needed still
+
 	$visited_pages = get_user_option( 'visited_unit_pages_' . $unit_id . '_page', $student_id );
 
 	if ( $visited_pages === false ) {
@@ -203,6 +223,7 @@ function cp_set_visited_unit_page( $unit_id = false, $page_num = false, $student
 	$global_option = !is_multisite();
 	update_user_option( $student_id, 'visited_unit_pages_' . $unit_id . '_page', $visited_pages, $global_option );
 	cp_set_visited_course( $unit_id, $student_id );
+	cp_set_last_visited_unit_page( $unit_id, $page_num, $student_id );
 }
 
 function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = false ) {
@@ -343,8 +364,6 @@ function cp_is_chat_plugin_active() {
 function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_last_page = false ) {
 	global $wp, $wp_query, $paged, $coursepress_modules, $coursepress;
 
-	$modules_class = new Unit_Module();
-
 	if ( !isset( $unit_id ) ) {// || !is_singular()
 		//<br clear="all">
 		echo '<div class="navigation module-pagination" id="navigation-pagination"></div>';
@@ -392,8 +411,6 @@ function coursepress_unit_module_pagination( $unit_id, $pages_num, $check_is_las
 
 function coursepress_unit_module_pagination_ellipsis( $unit_id, $pages_num ) {
 	global $wp, $wp_query, $paged, $coursepress_modules;
-
-	$modules_class = new Unit_Module();
 
 	if ( !isset( $unit_id ) || !is_singular() ) {
 		return;
@@ -496,11 +513,10 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 	} else {
 		$pages_num = 1;
 
-		$module	 = new Unit_Module;
-		$modules = $module->get_modules( $unit_id );
+		$modules = Unit_Module::get_modules( $unit_id );
 
 		foreach ( $modules as $mod ) {
-			if ( $module->get_module_type( $mod->ID ) == 'page_break_module' ) {
+			if ( Unit_Module::get_module_type( $mod->ID ) == 'page_break_module' ) {
 				$pages_num++;
 			}
 		}
@@ -1948,4 +1964,26 @@ function cp_deep_unserialize( $serialized_object ) {
 	}
 
 	return $new_array;
+}
+
+function cp_fix_module_metas( $module_id, $update = false ) {
+	$post_metas = get_post_meta( $module_id );
+
+	// Clear indication that its broken
+	if( isset( $post_metas['module_type' ] ) && is_array( $post_metas['module_type' ] ) ) {
+
+		// Clean up
+		foreach( $post_metas as $meta_key => $meta_value ) {
+			$post_metas[ $meta_key ] = $meta_value[0];
+		}
+
+		// Update
+		foreach( $post_metas as $meta_key => $meta_value ) {
+			delete_post_meta( $module_id, $meta_key );
+			update_post_meta( $module_id, $meta_key, $meta_value );
+		}
+
+	}
+
+	return $post_metas;
 }

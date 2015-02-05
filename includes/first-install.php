@@ -7,7 +7,7 @@ function first_install() {
      * Insert a course
      *  
      */
-
+    $data = array();
     $course_author = get_current_user_ID();
     $course_title = 'Aenean auctor nec magna sed mattis';
     $course_excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius enim hendrerit tincidunt hendrerit. Duis sem justo, eleifend vel pellentesque ut, tristique eu quam.';

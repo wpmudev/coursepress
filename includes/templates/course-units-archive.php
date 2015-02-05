@@ -1,8 +1,10 @@
 <?php
-$course_id			 = do_shortcode( '[get_parent_course_id]' );
-$course_id			 = (int) $course_id;
+
+//$course_id			 = do_shortcode( '[get_parent_course_id]' );
+//$course_id			 = (int) $course_id;
 $progress			 = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
+
 ?>
 
 <?php
@@ -22,16 +24,21 @@ echo ' ' . $complete_message; ?></h2>
 			while ( have_posts() ) : the_post();
 				$additional_class	 = '';
 				$additional_li_class = '';
+				$unit_id = get_the_ID();
 
-				if ( do_shortcode( '[course_unit_details field="is_unit_available"]' ) == false ) {
+				if ( ! Unit::is_unit_available( $unit_id ) ) {
 					$additional_class	 = 'locked-unit';
 					$additional_li_class = 'li-locked-unit';
 				}
+
+				$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="flat"]' );
+
 				?>
 				<li class="<?php echo esc_attr( $additional_li_class ); ?>">
 					<div class='<?php echo esc_attr( $additional_class ); ?>'></div>
-					<a href="<?php echo esc_url( do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ) ); ?>" rel="bookmark"><?php the_title().' '.(get_post_status() !== 'publish' && cp_can_see_unit_draft() ? _e(' [DRAFT]', 'cp') :  ''); ?></a><?php echo do_shortcode( '[course_unit_details field="percent" format="true" style="flat"]' ); ?>
-				<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
+<!--					<a href="--><?php //echo esc_url( do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ) ); ?><!--" rel="bookmark">--><?php //the_title().' '.(get_post_status() !== 'publish' && cp_can_see_unit_draft() ? _e(' [DRAFT]', 'cp') :  ''); ?><!--</a>--><?php //echo do_shortcode( '[course_unit_details field="percent" format="true" style="flat"]' ); ?>
+					<a href="<?php echo esc_url( do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . $unit_id . '"]' ) ); ?>" rel="bookmark"><?php the_title().' '.(get_post_status() !== 'publish' && cp_can_see_unit_draft() ? _e(' [DRAFT]', 'cp') :  ''); ?></a><?php echo $unit_progress; ?>
+				<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' ); ?>
 				</li>
 				<?php
 			endwhile;

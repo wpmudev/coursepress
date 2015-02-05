@@ -148,6 +148,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// Setup CoursePress properties
 			$this->init_vars();
 
+			// Initiate sessions
+			if( ! session_id() ) {
+				session_start();
+			}
+			$_SESSION['coursepress_student'] = array();
+			$_SESSION['coursepress_unit_completion'] = array();
+
 			// Register Globals
 			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
 			$GLOBALS[ 'coursepress_url' ]			 = $this->plugin_url;
@@ -588,6 +595,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * Class to determine course completion.
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.course.completion.php' );
+
+			/**
+			 * Class to determine course completion.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.student.completion.php' );
 
 			/**
 			 * Class for creating course or sitewide course notifications.
@@ -1385,8 +1397,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$temp_unit_id			 = $_POST[ 'temp_unit_id' ];
 			$data[ 'temp_unit_id' ]	 = $temp_unit_id;
 			//$data['temp_unit_id'] = $temp_unit_id;
-			$unit_module			 = new Unit_Module();
-			$unit_id				 = $unit_module->create_auto_draft( $unit_id );
+			$unit_id				 = Unit_Module::create_auto_draft( $unit_id );
 			echo $unit_id;
 			exit;
 		}
@@ -2649,7 +2660,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$forced_previous_completion_template = locate_template( array( 'single-previous-unit.php' ) );
 
-				if ( !$unit->is_unit_available( $vars[ 'unit_id' ] ) ) {
+				if ( ! Unit::is_unit_available( $vars[ 'unit_id' ] ) ) {
 					if ( $forced_previous_completion_template != '' ) {
 						do_shortcode( '[course_unit_single]' ); //required for getting unit results
 						require_once( $forced_previous_completion_template );
@@ -3314,8 +3325,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			do_action( 'coursepress_add_menu_items_after_instructors' );
 
-			$main_module = new Unit_Module();
-			$count		 = $main_module->get_ungraded_response_count();
+			$count		 = Unit_Module::get_ungraded_response_count();
 
 			if ( $count == 0 ) {
 				$count_output = '';
@@ -5498,9 +5508,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					return $permalink;
 				}
 			} else if ( get_post_type( $post->ID ) == 'unit' ) {
-				$unit = new Unit( $post->ID );
-
-				return $unit->get_permalink();
+				return Unit::get_permalink( $post->ID );
 			} else {
 				return $permalink;
 			}

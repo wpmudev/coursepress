@@ -95,15 +95,14 @@ class checkbox_input_module extends Unit_Module {
 
         if ( count($response) == 0 ) {
             global $coursepress;
-            if ( $coursepress->is_preview(parent::get_module_unit_id($data->ID)) ) {
+            if ( $coursepress->is_preview( Unit_Module::get_module_unit_id($data->ID)) ) {
                 $enabled = 'disabled';
             } else {
                 $enabled = 'enabled';
             }
         } else {
             $enabled = 'disabled';
-            $unit_module = new Unit_Module();
-            $grade = $unit_module->get_response_grade($response->ID);
+            $grade = Unit_Module::get_response_grade($response->ID);
         }
 // $data->gradable_answer
         ?>
@@ -461,6 +460,14 @@ class checkbox_input_module extends Unit_Module {
                             $data->auto_grade = $response_grade;
                         }
 
+                        // Record mandatory question answered
+                        $mandatory_answer = get_post_meta( $response_id, 'mandatory_answer', true );
+                        $unit_id = (int) $_POST['unit_id'];
+                        if( ! empty( $mandatory_answer ) && 'yes' == $mandatory_answer ) {
+                            $course_id = get_post_meta( $unit_id, 'course_id', true );
+                            Student_Completion::record_mandatory_answer( get_current_user_id(), $course_id, $unit_id, $response_id );
+                        }
+                        $data->module_id = $response_id;
                         parent::update_module_response($data);
                     }
                 }

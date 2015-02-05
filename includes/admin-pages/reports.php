@@ -1,7 +1,6 @@
 <?php
 global $coursepress, $wpdb;
 
-$unit_module_main = new Unit_Module();
 $page = $_GET['page'];
 $s = ( isset($_GET['s']) ? $_GET['s'] : '' );
 
@@ -60,8 +59,8 @@ if ( isset($_POST['units']) && isset($_POST['users']) ) {
                 </tr>
             </table>
             <?php
-            $module = new Unit_Module();
-            $modules = $module->get_modules($course_unit->ID);
+
+            $modules = Unit_Module::get_modules($course_unit->ID);
 
             $input_modules_count = 0;
 
@@ -108,7 +107,7 @@ if ( isset($_POST['units']) && isset($_POST['users']) ) {
 
                             $id = isset($response->ID) ? $response->ID : 0;
 
-                            $grade_data = $unit_module_main->get_response_grade($id);
+                            $grade_data = Unit_Module::get_response_grade($id);
                             ?>
                             <table cellspacing="0" cellpadding="5">
                                 <tr>
@@ -153,7 +152,7 @@ if ( isset($_POST['units']) && isset($_POST['users']) ) {
                                     </td>
                                 </tr>
                                 <?php
-                                $comment = $unit_module_main->get_response_comment($id);
+                                $comment = Unit_Module::get_response_comment($id);
                                 if ( !empty($comment) ) {
                                     ?>
                                     <tr>

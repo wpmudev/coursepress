@@ -78,15 +78,14 @@ class file_input_module extends Unit_Module {
 		$grade = false;
 		if ( count( $response ) == 0 ) {
 			global $coursepress;
-			if ( $coursepress->is_preview( parent::get_module_unit_id( $data->ID ) ) ) {
+			if ( $coursepress->is_preview( Unit_Module::get_module_unit_id( $data->ID ) ) ) {
 				$enabled = 'disabled';
 			} else {
 				$enabled = 'enabled';
 			}
 		} else {
 			$enabled	 = 'disabled';
-			$unit_module = new Unit_Module();
-			$grade		 = $unit_module->get_response_grade( $response->ID );
+			$grade		 = Unit_Module::get_response_grade( $response->ID );
 		}
 		?>
 		<div class="<?php echo $this->name; ?> front-single-module<?php echo ( $this->front_save == true ? '-save' : '' ); ?>">
@@ -118,7 +117,7 @@ class file_input_module extends Unit_Module {
 
 		  if ( is_object( $response ) && !empty( $response ) ) {
 
-		  $comment = $unit_module_main->get_response_comment( $response->ID );
+		  $comment = Unit_Module::get_response_comment( $response->ID );
 		  if ( !empty( $comment ) ) {
 		  ?>
 		  <div class="response_comment_front"><?php echo $comment; ?></div>
@@ -278,6 +277,13 @@ class file_input_module extends Unit_Module {
 		if ( isset( $_POST[ 'submit_modules_data_save' ] ) || isset( $_POST[ 'submit_modules_data_done' ] ) || isset( $_POST[ 'save_student_progress_indication' ] ) ) {
 
 			if ( $_FILES ) {
+
+				// Record mandatory question answered
+				$course_id = get_post_meta( $data->unit_id, 'course_id', true );
+				if( isset( $data->metas ) && isset( $data->metas['mandatory_answer'] ) && 'yes' == $data->metas['mandatory_answer'] ) {
+					Student_Completion::record_mandatory_answer( get_current_user_id(), $course_id, $data->unit_id, $data->ID );
+				}
+
 				foreach ( $_FILES as $file => $array ) {
 
 					$response_id = intval( str_replace( $this->name . '_front_', '', $file ) );
