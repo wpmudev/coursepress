@@ -1,0 +1,6 @@
+/node_modules export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+package.json export-ignore
+Gruntfile.js export-ignore
+README.md export-ignore
