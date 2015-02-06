@@ -16,7 +16,6 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		function __construct() {
 			add_filter( 'element_content_filter', array( $this, 'add_oembeds' ) );
 			$this->on_create();
-			$this->check_for_modules_to_delete();
 		}
 
 		function Unit_Module() {
@@ -86,7 +85,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			// Set input module meta
 			if ( isset( $data->metas ) ) {
 				$input_module_types = self::get_input_module_types();
-				$module_type        = $data->metas['module_type'];
+				$module_type        = self::get_module_type( $post_id );
 				if ( in_array( $module_type, $input_module_types ) ) {
 
 					$unit_id     = $data->unit_id;
@@ -184,7 +183,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			do_action( 'coursepress_unit_module_deleted', $the_module, $unit_id );
 		}
 
-		function check_for_modules_to_delete() {
+		public static function check_for_modules_to_delete() {
 
 			if ( is_admin() ) {
 				if ( isset( $_POST['modules_to_execute'] ) ) {
@@ -1040,11 +1039,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		function get_module_delete_link() {
 			?>
-			<a class="delete_module_link" onclick="if ( deleteModule( jQuery( this ).parent().find( '.element_id' ).val() ) ) {
-						jQuery( this ).parent().parent().remove();
-						update_sortable_module_indexes();
-					}
-					;"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
+			<a class="delete_module_link" onclick="if ( deleteModule( jQuery( this ).parent().find( '.element_id' ).val() ) ) {jQuery( this ).parent().parent().remove(); update_sortable_module_indexes(); };"><i class="fa fa-trash-o"></i> <?php _e( 'Delete', 'cp' ); ?></a>
 		<?php
 		}
 

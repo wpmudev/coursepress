@@ -22,13 +22,13 @@ if ( ! class_exists( 'Unit' ) ) {
 			// Attempt to load from cache or create new cache object
 			if ( ! self::load( self::TYPE_UNIT, $this->id, $this->details ) ) {
 
-				// Get the course				
+				// Get the course
 				$this->details = get_post( $this->id, $this->output );
 
-				// Initialize the unit				
+				// Initialize the unit
 				$this->init_unit( $this->details );
 
-				// Cache the unit object				
+				// Cache the unit object
 				self::cache( self::TYPE_UNIT, $this->id, $this->details );
 				// cp_write_log( 'Unit[' . $this->id . ']: Saved to cache..');
 			} else {
@@ -90,12 +90,13 @@ if ( ! class_exists( 'Unit' ) ) {
 			$unit_details = false;
 			$unit         = new Unit( (int) $unit_id );
 			$unit_details = $unit->get_unit();
+			$unit_available_date = get_post_meta( $unit_id, 'unit_availability', true );
 
 			/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 			$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
 			/* Check if previous has conditions */
-			$previous_unit_id                         = $unit->get_previous_unit_from_the_same_course( $unit_id );
+			$previous_unit_id                         = self::get_previous_unit_from_the_same_course( $unit->course_id, $unit_id );
 			$force_current_unit_completion            = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : '';
 			$force_current_unit_successful_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : '';
 
@@ -120,7 +121,7 @@ if ( ! class_exists( 'Unit' ) ) {
 			$available = $unit->status['mandatory_required']['enabled'] ? $unit->status['mandatory_required']['result'] : $available;
 			$available = $unit->status['completion_required']['enabled'] ? $unit->status['completion_required']['result'] : $available;
 
-			$unit->status['date_restriction']['result'] = $current_date >= $unit_details->unit_availability;
+			$unit->status['date_restriction']['result'] = $current_date >= $unit_available_date;
 
 			if ( ! $unit->status['date_restriction']['result'] || ! $available ) {
 				$available = false;
@@ -181,7 +182,7 @@ if ( ! class_exists( 'Unit' ) ) {
 				$units = array();
 
 				if ( $id_only ) {
-					// Get the units	
+					// Get the units
 					$units = get_posts( $args );
 				} else {
 					$posts = get_posts( $args );
@@ -204,35 +205,37 @@ if ( ! class_exists( 'Unit' ) ) {
 			return $units;
 		}
 
-		function get_previous_unit_from_the_same_course() {
-			$units = self::get_units_from_course( $this->course_id );
+		public static function get_previous_unit_from_the_same_course( $course_id, $unit_id ) {
+			$units = self::get_units_from_course( $course_id );
+
+			$unit_order = get_post_meta( $unit_id, 'unit_order', true );
 
 			$position         = 0;
 			$previous_unit_id = 0;
 
-			if ( $this->details->ID == $this->details->current_unit_order ) {
+			if ( $unit_id == $unit_order ) {
 				$haystack = array();
 				foreach ( $units as $unit_item ) {
 					$haystack[] = (int) $unit_item;
 				}
-				$position = array_search( $this->details->ID, $haystack );
+				$position = array_search( $unit_id, $haystack );
 			} else {
 				// Adjust the index to fit in array bounds.
-				$position = $this->details->current_unit_order - 1;
+				$position = $unit_order - 1;
 			}
 
 			// There is no previous unit...
 			if ( 0 == $position ) {
-				$previous_unit_id = $this->details->ID;
+				$previous_unit_id = $unit_id;
 			} else {
 				if ( ! isset( $units[ $position - 1 ] ) ) {
-					$previous_unit_id = $this->details->ID;
+					$previous_unit_id = $unit_id;
 				} else {
 					$previous_unit_id = (int) $units[ $position - 1 ];
 				}
 			}
 
-			return $this->details->ID != $previous_unit_id ? $previous_unit_id : false;
+			return $unit_id != $previous_unit_id ? $previous_unit_id : false;
 		}
 
 		function get_unit_page_time_estimation( $unit_id, $page_num ) {

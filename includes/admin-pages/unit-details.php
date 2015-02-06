@@ -21,6 +21,7 @@ if ( !isset( $_POST[ 'force_current_unit_successful_completion' ] ) ) {
 	$_POST[ 'force_current_unit_successful_completion' ] = 'off';
 }
 
+Unit_Module::check_for_modules_to_delete();
 
 if ( isset( $_GET[ 'unit_id' ] ) ) {
 	$unit_id									 = (int) $_GET[ 'unit_id' ];
