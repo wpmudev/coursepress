@@ -1800,7 +1800,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				return false;
 			}
 
-			if ( current_user_can( 'manage_options ' ) ) {
+			if ( current_user_can( 'manage_options' ) ) {
 
 				check_admin_referer( 'update-user_' . $user_id );
 				$global_option = ! is_multisite();
