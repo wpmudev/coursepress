@@ -223,6 +223,11 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			return count( $criteria['mandatory_modules'] );
 		}
 
+		public static function is_mandatory_complete( $student_id, $course_id, $unit_id ) {
+			$remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
+			return 0 == $remaining ? true : false;
+		}
+
 		/* ----------------------------- CALCULATES AND UPDATES UNIT/COURSE COMPLETION ----------------------------------- */
 
 		public static function calculate_unit_completion( $student_id, $course_id, $unit_id, $update = true, &$data = false ) {

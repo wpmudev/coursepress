@@ -4174,7 +4174,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$criteria = Unit::get_module_completion_data( $unit_id );
 
-			$unit_available                  = Unit::is_unit_available( $unit_id );
+			$unit_status                     = Unit::get_unit_availability_status( $unit_id );
+			$unit_available                  = Unit::is_unit_available( $unit_id, $unit_status );
 			$input_modules_count			 = count( $criteria['all_input_ids'] );
 			$assessable_input_modules_count	 = count( $criteria['gradable_modules'] );
 			$mandatory_input_elements		 = count( $criteria['mandatory_modules'] );
@@ -4188,8 +4189,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //			$mandatory_responses			 = do_shortcode( '[course_unit_details field="student_module_responses" additional="mandatory"]' );
 //			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
 
-
 			$unit = new Unit( $unit_id );
+			$unit->status = $unit_status;
+			
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
@@ -4218,7 +4220,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
 							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 						}
-						if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
+						if ( isset( $unit->status ) && ! empty( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
 							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
 						}
 					}

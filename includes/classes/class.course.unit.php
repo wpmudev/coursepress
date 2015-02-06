@@ -76,7 +76,16 @@ if ( ! class_exists( 'Unit' ) ) {
 			return ! empty( $this->details ) ? $this->details : false;
 		}
 
-		public static function is_unit_available( $unit_id ) {
+		public static function is_unit_available( $unit_id, $status = false ) {
+
+			if( ! $status ) {
+				$status = self::get_unit_availability_status( $unit_id );
+			}
+
+			return $status['available'];
+		}
+
+		public static function get_unit_availability_status( $unit_id ) {
 
 			$unit_details = false;
 			$unit         = new Unit( (int) $unit_id );
@@ -96,10 +105,11 @@ if ( ! class_exists( 'Unit' ) ) {
 //			$completion->init_student_status();
 
 //			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
+//			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
 //			$unit_completed	 = 100 == $completion->unit_progress( $previous_unit_id );
 			$student_id     = get_current_user_id();
-			$mandatory_done = Student_Completion::get_remaining_steps( $student_id, $unit->course_id, $previous_unit_id );
-			$unit_completed = 100 == (int) Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $previous_unit_id );
+			$mandatory_done = Student_Completion::is_mandatory_complete( $student_id, $unit->course_id, $previous_unit_id );
+			$unit_completed = Student_Completion::is_unit_complete( $student_id, $unit->course_id, $previous_unit_id );
 
 			$unit->status['mandatory_required']['enabled'] = ! empty( $force_current_unit_completion ) && 'on' == $force_current_unit_completion;
 			$unit->status['mandatory_required']['result']  = $mandatory_done;
@@ -134,7 +144,10 @@ if ( ! class_exists( 'Unit' ) ) {
 			 * */
 			$available = apply_filters( 'coursepress_filter_unit_availability', $available, $unit_id );
 
-			return $available;
+			$status = $unit->status;
+			$status['available'] = $available;
+
+			return $status;
 		}
 
 		static function get_units_from_course( $course_id, $status = 'publish', $id_only = true ) {
