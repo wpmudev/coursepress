@@ -2654,6 +2654,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		}
 
 		function units_dropdown( $atts ) {
+			global $wp_query;
 			extract( shortcode_atts( array(
 				'course_id'			 => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
 				'include_general'	 => 'false',
@@ -2672,11 +2673,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( $general_title == '' ) {
 					$general_title = __( '-- General --', 'cp' );
 				}
-				$general_title = sanitize_html_class( $general_title );
-				$dropdown .= '<option value="">' . $general_title . '</option>';
+
+				$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 			}
 			foreach ( $units as $unit ) {
-				$dropdown .= '<option value="' . $unit->ID . '">' . $unit->post_title . '</option>';
+				$dropdown .= '<option value="' . esc_attr( $unit->ID ) . '">' . esc_html( $unit->post_title ) . '</option>';
 			}
 			$dropdown .= '</select></div>';
 
@@ -4191,7 +4192,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$unit = new Unit( $unit_id );
 			$unit->status = $unit_status;
-			
+
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
