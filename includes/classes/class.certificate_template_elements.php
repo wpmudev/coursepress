@@ -1,15 +1,16 @@
 <?php
-if ( !defined( 'ABSPATH' ) )
-	exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
+if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 
 	class CP_Certificate_Template_Elements {
 
-		var $id				 = '';
-		var $template_metas	 = '';
-		var $element_title	 = '';
-		var $element_name	 = '';
+		var $id = '';
+		var $template_metas = '';
+		var $element_title = '';
+		var $element_name = '';
 
 		function __construct( $id = '' ) {
 			$this->id = $id;
@@ -22,7 +23,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function on_creation() {
-			
+
 		}
 
 		function admin_content() {
@@ -35,17 +36,17 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function template_content() {
-			
+
 		}
 
 		function save() {
-			
+
 		}
 
 		function get_all_set_elements() {
 			$set_elements = array();
 
-			for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 15 ); $i++ ) {
+			for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 15 ); $i ++ ) {
 				$rows_elements = get_post_meta( $this->id, 'rows_' . $i, true );
 				if ( isset( $rows_elements ) && $rows_elements !== '' ) {
 					$element_class_names = explode( ',', $rows_elements );
@@ -54,11 +55,12 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 					}
 				}
 			}
+
 			return $set_elements;
 		}
 
 		function get_document_sizes() {
-			$document_template_size = isset( $this->template_metas[ 'document_template_size' ][ 0 ] ) ? $this->template_metas[ 'document_template_size' ][ 0 ] : 'A4';
+			$document_template_size = isset( $this->template_metas['document_template_size'][0] ) ? $this->template_metas['document_template_size'][0] : 'A4';
 			?>
 			<label><?php _e( 'Certificate Paper Size', 'cp' ); ?></label>
 			<select name="document_template_size_post_meta">
@@ -69,24 +71,24 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value="A8" <?php selected( $document_template_size, 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', 'cp' ); ?></option>
 				<?php do_action( 'coursepress_additional_template_document_size' ); ?>
 			</select>
-			<?php
+		<?php
 		}
 
 		function get_document_orientation() {
-			$document_template_orientation = isset( $this->template_metas[ 'document_template_orientation' ][ 0 ] ) ? $this->template_metas[ 'document_template_orientation' ][ 0 ] : 'P';
+			$document_template_orientation = isset( $this->template_metas['document_template_orientation'][0] ) ? $this->template_metas['document_template_orientation'][0] : 'P';
 			?>
 			<label><?php _e( 'Orientation', 'cp' ); ?></label>
 			<select name="document_template_orientation_post_meta">
 				<option value="P" <?php selected( $document_template_orientation, 'P', true ); ?>><?php echo esc_attr_e( 'Portrait', 'cp' ); ?></option>
 				<option value="L" <?php selected( $document_template_orientation, 'L', true ); ?>><?php echo esc_attr_e( 'Landscape', 'cp' ); ?></option>
 			</select>
-			<?php
+		<?php
 		}
 
 		function get_document_margins( $top = 10, $right = 10, $left = 10 ) {
-			$top_margin		 = isset( $this->template_metas[ 'document_template_top_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_top_margin' ][ 0 ] : $top;
-			$right_margin	 = isset( $this->template_metas[ 'document_template_right_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_right_margin' ][ 0 ] : $right;
-			$left_margin	 = isset( $this->template_metas[ 'document_template_left_margin' ][ 0 ] ) ? $this->template_metas[ 'document_template_left_margin' ][ 0 ] : $left;
+			$top_margin   = isset( $this->template_metas['document_template_top_margin'][0] ) ? $this->template_metas['document_template_top_margin'][0] : $top;
+			$right_margin = isset( $this->template_metas['document_template_right_margin'][0] ) ? $this->template_metas['document_template_right_margin'][0] : $right;
+			$left_margin  = isset( $this->template_metas['document_template_left_margin'][0] ) ? $this->template_metas['document_template_left_margin'][0] : $left;
 			?>
 			<label><?php _e( 'Document Margins', 'cp' ); ?></label>
 			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( $top_margin ); ?>" />
@@ -97,16 +99,16 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_full_background_image() {
-			$template_background_image = (isset( $this->template_metas[ 'document_template_background_image' ][ 0 ] ) && $this->template_metas[ 'document_template_background_image' ][ 0 ] !== '' ? $this->template_metas[ 'document_template_background_image' ][ 0 ] : '' );
+			$template_background_image = ( isset( $this->template_metas['document_template_background_image'][0] ) && $this->template_metas['document_template_background_image'][0] !== '' ? $this->template_metas['document_template_background_image'][0] : '' );
 			?>
 			<label><?php _e( 'Certificate Background Image', 'cp' ); ?></label>
-			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( $template_background_image ); ?>" />
-			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>" />
-			<?php
+			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( $template_background_image ); ?>"/>
+			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>"/>
+		<?php
 		}
 
 		function get_cell_alignment() {
-			$cell_alignment = isset( $this->template_metas[ $this->element_name . '_cell_alignment' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ][ 0 ] : 'left';
+			$cell_alignment = isset( $this->template_metas[ $this->element_name . '_cell_alignment' ][0] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ][0] : 'left';
 			?>
 			<label><?php _e( 'Cell Alignment', 'cp' ); ?></label>
 			<select name="<?php echo $this->element_name; ?>_cell_alignment_post_meta">
@@ -114,12 +116,12 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value="right" <?php selected( $cell_alignment, 'right', true ); ?>><?php echo esc_attr_e( 'Right', 'cp' ); ?></option>
 				<option value="center" <?php selected( $cell_alignment, 'center', true ); ?>><?php echo esc_attr_e( 'Center', 'cp' ); ?></option>
 			</select>
-			<?php
+		<?php
 		}
 
 		function get_element_margins() {
-			$top_padding	 = isset( $this->template_metas[ $this->element_name . '_top_padding' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][ 0 ] : '0';
-			$bottom_padding	 = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][ 0 ] : '0';
+			$top_padding    = isset( $this->template_metas[ $this->element_name . '_top_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][0] : '0';
+			$bottom_padding = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][0] : '0';
 			?>
 			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>
 			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" /><br />
@@ -134,7 +136,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 
 			<select name="<?php echo $this->element_name; ?>_font_style_post_meta">
 				<?php
-				$font_style = isset( $this->template_metas[ $this->element_name . '_font_style' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_font_style' ][ 0 ] : '';
+				$font_style = isset( $this->template_metas[ $this->element_name . '_font_style' ][0] ) ? $this->template_metas[ $this->element_name . '_font_style' ][0] : '';
 				?>
 				<option value="" <?php selected( $font_style, '', true ); ?>><?php echo _e( 'Regular', 'cp' ); ?></option>
 				<option value="B" <?php selected( $font_style, 'B', true ); ?>><?php echo _e( 'Bold', 'cp' ); ?></option>
@@ -145,22 +147,22 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value="IU" <?php selected( $font_style, 'IU', true ); ?>><?php echo _e( 'Italic + Underline', 'cp' ); ?></option>
 				<option value="U" <?php selected( $font_style, 'U', true ); ?>><?php echo _e( 'Underline', 'cp' ); ?></option>
 			</select>
-			<?php
+		<?php
 		}
 
 		function get_colors( $label = 'Color', $field_name = 'color', $default_color = '#000000' ) {
 			?>
 			<label><?php echo $label; ?></label>
-			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color  ); ?>" />
-			<?php
+			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( isset( $this->template_metas[ $this->element_name . '_' . $field_name ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ] : $default_color ); ?>"/>
+		<?php
 		}
 
 		function get_font_colors( $label = 'Font Color', $field_name = 'font_color', $default_color = '#000000' ) {
-			$font_color = isset( $this->template_metas[ $this->element_name . '_' . $field_name ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ][ 0 ] : $default_color;
+			$font_color = isset( $this->template_metas[ $this->element_name . '_' . $field_name ][0] ) ? $this->template_metas[ $this->element_name . '_' . $field_name ][0] : $default_color;
 			?>
 			<label><?php echo $label; ?></label>
-			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( $font_color ); ?>" />
-			<?php
+			<input type="text" class="cp-color-picker" name="<?php echo $this->element_name; ?>_<?php echo $field_name; ?>_post_meta" value="<?php echo esc_attr( $font_color ); ?>"/>
+		<?php
 		}
 
 		function tcpdf_get_fonts( $prefix = 'document', $default_font = 'helvetica' ) {
@@ -168,7 +170,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			<label><?php _e( 'Font', 'cp' ); ?></label>
 			<select name="<?php echo $prefix; ?>_font_post_meta">
 				<?php
-				$document_font = isset( $this->template_metas[ $prefix . '_font' ][ 0 ] ) ? $this->template_metas[ $prefix . '_font' ][ 0 ] : $default_font;
+				$document_font = isset( $this->template_metas[ $prefix . '_font' ][0] ) ? $this->template_metas[ $prefix . '_font' ][0] : $default_font;
 				?>
 				<option value='aealarabiya' <?php selected( $document_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
 				<option value='aefurat' <?php selected( $document_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp' ); ?></option>
@@ -201,11 +203,11 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				<option value='zapfdingbats' <?php selected( $document_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
 				<?php do_action( 'coursepress_template_font' ); ?>
 			</select>
-			<?php
+		<?php
 		}
 
 		function get_font_sizes( $box_title = false, $default_font_size = false ) {
-			$font_size = isset( $this->template_metas[ $this->element_name . '_font_size' ][ 0 ] ) ? $this->template_metas[ $this->element_name . '_font_size' ][ 0 ] : ($default_font_size ? $default_font_size : 14);
+			$font_size = isset( $this->template_metas[ $this->element_name . '_font_size' ][0] ) ? $this->template_metas[ $this->element_name . '_font_size' ][0] : ( $default_font_size ? $default_font_size : 14 );
 			?>
 			<label><?php
 				if ( $box_title ) {
@@ -216,14 +218,14 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				?></label>
 			<select name="<?php echo $this->element_name; ?>_font_size_post_meta">
 				<?php
-				for ( $i = 8; $i <= 100; $i++ ) {
+				for ( $i = 8; $i <= 100; $i ++ ) {
 					?>
 					<option value='<?php echo $i; ?>' <?php selected( $font_size, $i, true ); ?>><?php echo $i; ?> <?php _e( 'pt', 'cp' ); ?></option>
-					<?php
+				<?php
 				}
 				?>
 			</select>
-			<?php
+		<?php
 		}
 
 	}
@@ -233,7 +235,7 @@ if ( !class_exists( 'CP_Certificate_Template_Elements' ) ) {
 function cp_register_template_element( $class_name, $element_title ) {
 	global $cp_template_elements;
 
-	if ( !is_array( $cp_template_elements ) ) {
+	if ( ! is_array( $cp_template_elements ) ) {
 		$cp_template_elements = array();
 	}
 
@@ -243,4 +245,5 @@ function cp_register_template_element( $class_name, $element_title ) {
 		return false;
 	}
 }
+
 ?>

@@ -1,15 +1,16 @@
 <?php
 
-if ( !defined( 'ABSPATH' ) )
-	exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-if ( !class_exists( 'Instructor' ) ) {
+if ( ! class_exists( 'Instructor' ) ) {
 
 	class Instructor extends WP_User {
 
-		var $first_name		 = '';
-		var $last_name		 = '';
-		var $courses_number	 = 0;
+		var $first_name = '';
+		var $last_name = '';
+		var $courses_number = 0;
 
 		function __construct( $ID, $name = '' ) {
 			if ( $ID != 0 ) {
@@ -18,9 +19,9 @@ if ( !class_exists( 'Instructor' ) ) {
 
 			/* Set meta vars */
 
-			$this->first_name		 = get_user_meta( $ID, 'first_name', true );
-			$this->last_name		 = get_user_meta( $ID, 'last_name', true );
-			$this->courses_number	 = Instructor::get_courses_number( $ID );
+			$this->first_name     = get_user_meta( $ID, 'first_name', true );
+			$this->last_name      = get_user_meta( $ID, 'last_name', true );
+			$this->courses_number = Instructor::get_courses_number( $ID );
 		}
 
 		function Instructor( $ID, $name = '' ) {
@@ -28,15 +29,17 @@ if ( !class_exists( 'Instructor' ) ) {
 		}
 
 		static function get_course_meta_keys( $user_id ) {
-			$meta	 = get_user_meta( $user_id );
-			$meta	 = array_filter( array_keys( $meta ), array( 'Instructor', 'filter_course_meta_array' ) );
+			$meta = get_user_meta( $user_id );
+			$meta = array_filter( array_keys( $meta ), array( 'Instructor', 'filter_course_meta_array' ) );
+
 			return $meta;
 		}
 
 		static function filter_course_meta_array( $var ) {
 			global $wpdb;
 			if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ||
-			( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) ) ) {
+			     ( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
+			) {
 				return $var;
 			}
 		}
@@ -62,7 +65,7 @@ if ( !class_exists( 'Instructor' ) ) {
 
 				$course_id = (int) str_replace( 'course_', '', $course_id );
 
-				if ( !empty( $course_id ) ) {
+				if ( ! empty( $course_id ) ) {
 					if ( $status !== 'all' ) {
 						if ( get_post_status( $course_id ) == $status ) {
 							$assigned_courses[] = $course_id;
@@ -77,7 +80,7 @@ if ( !class_exists( 'Instructor' ) ) {
 		}
 
 		function unassign_from_course( $course_id = 0 ) {
-			$global_option = !is_multisite();
+			$global_option = ! is_multisite();
 			delete_user_option( $this->ID, 'course_' . $course_id, $global_option );
 			delete_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $global_option );
 			delete_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $global_option );
@@ -100,19 +103,20 @@ if ( !class_exists( 'Instructor' ) ) {
 		//Get number of instructor's assigned courses
 		static function get_courses_number( $user_id = false ) {
 
-			if ( !$user_id ) {
+			if ( ! $user_id ) {
 				return 0;
 			}
 
 			$courses_count = count( Instructor::get_course_meta_keys( $user_id ) );
+
 			return $courses_count;
 		}
 
-		function is_assigned_to_course($course_id, $instructor_id) {
+		function is_assigned_to_course( $course_id, $instructor_id ) {
 			$instructor_course_id = get_user_option( 'course_' . $course_id, $instructor_id );
-			if ( !empty( $instructor_course_id ) ) {
+			if ( ! empty( $instructor_course_id ) ) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 		}
@@ -121,7 +125,7 @@ if ( !class_exists( 'Instructor' ) ) {
 			/* if ( $delete_user ) {
 			  wp_delete_user( $this->ID ); //without reassign
 			  }else{//just delete the meta which says that user is an instructor */
-			$global_option = !is_multisite();
+			$global_option = ! is_multisite();
 			delete_user_option( $this->ID, 'role_ins', 'instructor', $global_option );
 			// Legacy
 			delete_user_meta( $this->ID, 'role_ins', 'instructor' );
@@ -132,11 +136,11 @@ if ( !class_exists( 'Instructor' ) ) {
 
 		public static function instructor_by_hash( $hash ) {
 			global $wpdb;
-			$sql	 = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
+			$sql     = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
 			$user_id = $wpdb->get_var( $sql );
 
-			if ( !empty( $user_id ) ) {
-				return( new Instructor( $user_id ) );
+			if ( ! empty( $user_id ) ) {
+				return ( new Instructor( $user_id ) );
 			} else {
 				return false;
 			}
@@ -144,18 +148,18 @@ if ( !class_exists( 'Instructor' ) ) {
 
 		public static function instructor_by_login( $login ) {
 			$user = get_user_by( 'login', $login );
-			if ( !empty( $user ) ) {
+			if ( ! empty( $user ) ) {
 				// relying on core's caching here
-				return( new Instructor( $user->ID ) );
+				return ( new Instructor( $user->ID ) );
 			} else {
 				return false;
 			}
 		}
 
 		public static function create_hash( $user_id ) {
-			$user			 = get_user_by( 'id', $user_id );
-			$hash			 = md5( $user->user_login );
-			$global_option	 = !is_multisite();
+			$user          = get_user_by( 'id', $user_id );
+			$hash          = md5( $user->user_login );
+			$global_option = ! is_multisite();
 			/*
 			 * Just in case someone is actually using this hash for something,
 			 * we'll populate it with current value. Will be an empty array if

@@ -1,21 +1,22 @@
 <?php
 
-if ( !defined( 'ABSPATH' ) )
-	exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-if ( !class_exists( 'Discussion' ) ) {
+if ( ! class_exists( 'Discussion' ) ) {
 
 	class Discussion {
 
-		var $id			 = '';
-		var $output		 = 'OBJECT';
-		var $discussion	 = array();
+		var $id = '';
+		var $output = 'OBJECT';
+		var $discussion = array();
 		var $details;
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
-			$this->id		 = $id;
-			$this->output	 = $output;
-			$this->details	 = get_post( $this->id, $this->output );
+			$this->id      = $id;
+			$this->output  = $output;
+			$this->details = get_post( $this->id, $this->output );
 		}
 
 		function Discussion( $id = '', $output = 'OBJECT' ) {
@@ -26,7 +27,7 @@ if ( !class_exists( 'Discussion' ) ) {
 
 			$discussion = get_post( $this->id, $this->output );
 
-			if ( !empty( $discussion ) ) {
+			if ( ! empty( $discussion ) ) {
 				return $discussion;
 			} else {
 				return new stdClass();
@@ -34,11 +35,12 @@ if ( !class_exists( 'Discussion' ) ) {
 		}
 
 		function get_unit_name() {
-			if ( !isset( $this->details->unit_id ) || $this->details->unit_id == '' ) {
+			if ( ! isset( $this->details->unit_id ) || $this->details->unit_id == '' ) {
 				return __( 'General', 'cp' );
 			} else {
-				$unit_obj	 = new Unit( $this->details->unit_id );
-				$unit		 = $unit_obj->get_unit();
+				$unit_obj = new Unit( $this->details->unit_id );
+				$unit     = $unit_obj->get_unit();
+
 				return $unit->post_title;
 			}
 		}
@@ -46,16 +48,16 @@ if ( !class_exists( 'Discussion' ) ) {
 		function get_discussion_id_by_name( $slug ) {
 
 			$args = array(
-				'name'			 => $slug,
-				'post_type'		 => 'discussion',
-				'post_status'	 => 'any',
+				'name'           => $slug,
+				'post_type'      => 'discussion',
+				'post_status'    => 'any',
 				'posts_per_page' => 1
 			);
 
 			$post = get_posts( $args );
 
 			if ( $post ) {
-				return $post[ 0 ]->ID;
+				return $post[0]->ID;
 			} else {
 				return false;
 			}
@@ -69,15 +71,15 @@ if ( !class_exists( 'Discussion' ) ) {
 			$post_status = 'publish';
 
 			$post = array(
-				'post_author'	 => $user_id,
-				'post_content'	 => cp_filter_content( $discussion_description == '' ? $_POST[ 'discussion_description' ] : $discussion_description  ),
-				'post_status'	 => $post_status,
-				'post_title'	 => cp_filter_content( ($discussion_title == '' ? $_POST[ 'discussion_name' ] : $discussion_title ), true ),
-				'post_type'		 => 'discussions',
+				'post_author'  => $user_id,
+				'post_content' => cp_filter_content( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
+				'post_status'  => $post_status,
+				'post_title'   => cp_filter_content( ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ), true ),
+				'post_type'    => 'discussions',
 			);
 
-			if ( isset( $_POST[ 'discussion_id' ] ) ) {
-				$post[ 'ID' ] = $_POST[ 'discussion_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+			if ( isset( $_POST['discussion_id'] ) ) {
+				$post['ID'] = $_POST['discussion_id']; //If ID is set, wp_insert_post will do the UPDATE instead of insert
 			}
 
 			$post_id = wp_insert_post( $post );
@@ -85,7 +87,7 @@ if ( !class_exists( 'Discussion' ) ) {
 			//Update post meta
 			if ( $post_id != 0 ) {
 
-				if ( !isset( $_POST[ 'discussion_id' ] ) ) {//new discussion added
+				if ( ! isset( $_POST['discussion_id'] ) ) {//new discussion added
 					$instructors = Course::get_course_instructors_ids( $course_id );
 					do_action( 'new_discussion_added_instructor_notification', $user_id, $course_id, $instructors );
 
@@ -94,7 +96,7 @@ if ( !class_exists( 'Discussion' ) ) {
 				}
 
 				if ( $unit_id == '' ) {
-					$unit_id = $_POST[ 'units_dropdown' ];
+					$unit_id = $_POST['units_dropdown'];
 				}
 
 				update_post_meta( $post_id, 'course_id', $course_id );
@@ -114,9 +116,9 @@ if ( !class_exists( 'Discussion' ) ) {
 			$wpdb;
 			if ( $parent_course_id ) {//delete all discussion with parent course id
 				$args = array(
-					'meta_key'	 => 'course_id',
+					'meta_key'   => 'course_id',
 					'meta_value' => $parent_course_id,
-					'post_type'	 => 'discussions',
+					'post_type'  => 'discussions',
 				);
 
 				$discussions_to_delete = get_posts( $args );
@@ -135,8 +137,8 @@ if ( !class_exists( 'Discussion' ) ) {
 
 		function change_status( $post_status ) {
 			$post = array(
-				'ID'			 => $this->id,
-				'post_status'	 => $post_status,
+				'ID'          => $this->id,
+				'post_status' => $post_status,
 			);
 
 			// Update the post status

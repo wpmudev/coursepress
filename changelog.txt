@@ -7,9 +7,11 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.4.7 = (not yet released)
-* Recommended performance update.
-* Progress tracking changed from course focused to student focused reducing database queries
+* Recommended performance update. Significant improvements made (e.g. From 17s down to 0.56s using high volume test sample.)
+* Progress tracking changed from course focused to student focused reducing database queries. Pages might load a fraction slower (up to 1s in testing) the first time old students accesses a course.
 * Shortcode peformance improvements
+* Removing redundant CoursePress metadata from database
+* Fixing unit layout issues resulting in HTML being displayed on the screen.
 
 = 1.2.4.6 =
 * Performance: When persistent object caching (server setup or 3rd party) is not available CoursePress will fall back to using transients to speed up page loads.

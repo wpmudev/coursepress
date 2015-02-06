@@ -1,6 +1,6 @@
 <?php
 
-if( ! class_exists( 'cp_text_element' ) ) {
+if ( ! class_exists( 'cp_text_element' ) ) {
 	class cp_text_element extends CP_Certificate_Template_Elements {
 
 		var $element_name = 'cp_text_element';

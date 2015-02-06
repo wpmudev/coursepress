@@ -4,26 +4,27 @@
  * @copyright Incsub ( http://incsub.com/ )
  *
  * @license http://opensource.org/licenses/GPL-2.0 GNU General Public License, version 2 ( GPL-2.0 )
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License, version 2, as  
- * published by the Free Software Foundation.                           
  *
- * This program is distributed in the hope that it will be useful,      
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
  *
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,               
- * MA 02110-1301 USA                                                    
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ * MA 02110-1301 USA
  *
  */
-if ( !defined( 'ABSPATH' ) )
-	exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-if ( !class_exists( 'CoursePress_Object' ) ) {
+if ( ! class_exists( 'CoursePress_Object' ) ) {
 
 	/**
 	 * CoursePress object class.
@@ -45,55 +46,22 @@ if ( !class_exists( 'CoursePress_Object' ) ) {
 		const TYPE_UNIT_STATIC = 'coursepress_unit_static';
 
 		protected static function load( $type, $key, &$object = null ) {
-			// Global letting us know if Object Cache is available.
-			global $_wp_using_ext_object_cache;
-
-			$found	 = false;
-
-//			if( $_wp_using_ext_object_cache ) {
-				// USE OBJECT CACHE
-				$object	 = wp_cache_get( $key, $type, false, $found );
-//			} else {
-//				// OR USE TRANSIENT
-//				$temp = get_transient( $type . '_' . $key );
-//				if ( ! empty( $temp ) ) {
-//					$object = $temp;
-//					$found = true;
-//				}
-//			}
-
+			$found = false;
+			// USE OBJECT CACHE
+			$object = wp_cache_get( $key, $type, false, $found );
 			return $found;
 		}
 
 		protected static function cache( $type, $key, $object ) {
-			// Global letting us know if Object Cache is available.
-			global $_wp_using_ext_object_cache;
-
-			if ( !empty( $key ) ) {
-
-//				if( $_wp_using_ext_object_cache ) {
-					// USE OBJECT CACHE
-					wp_cache_set( $key, $object, $type );
-//				} else {
-//					// OR USE TRANSIENT
-//					set_transient( $type . '_' . $key, $object );
-//				}
-
+			if ( ! empty( $key ) ) {
+				// USE OBJECT CACHE
+				wp_cache_set( $key, $object, $type );
 			}
 		}
 
 		protected static function kill( $type, $key ) {
-			// Global letting us know if Object Cache is available.
-			global $_wp_using_ext_object_cache;
-
-//			if( $_wp_using_ext_object_cache ) {
-				// REMOVE OBJECT CACHE OBJECT
-				wp_cache_delete( $key, $type );
-//			} else {
-//				// OR REMOVE TRANSIENT OBJECT
-//				delete_transient( $type . '_' . $key );
-//			}
-
+			// REMOVE OBJECT CACHE OBJECT
+			wp_cache_delete( $key, $type );
 		}
 
 		protected static function kill_related( $type, $key ) {

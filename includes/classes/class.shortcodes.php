@@ -1,6 +1,6 @@
 <?php
 if ( !defined( 'ABSPATH' ) )
-	exit; // Exit if accessed directly
+	{exit;} // Exit if accessed directly
 
 	/*
 	  CoursePress Shortcodes
@@ -3255,8 +3255,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$class_name = $mod->module_type;
 
 				if ( class_exists( $class_name ) ) {
-					$module = new $class_name();
-					if ( $module->front_save ) {
+					if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 						$front_save_count++;
 					}
 				}
@@ -3302,15 +3301,15 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						$assessable	 = get_post_meta( $mod->ID, 'gradable_answer', true );
 
 						if ( class_exists( $class_name ) ) {
-							$module = new $class_name();
-							if ( $module->front_save ) {
+
+							if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 
 								if ( $assessable == 'yes' ) {
 									$assessable_answers++;
 								}
 
 								$front_save_count++;
-								$response = $module->get_response( $student_id, $mod->ID );
+								$response = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
 
 								if ( isset( $response->ID ) ) {
 									$grade_data	 = Unit_Module::get_response_grade( $response->ID );
@@ -3389,8 +3388,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$class_name = $mod->module_type;
 
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
-						if ( $module->front_save ) {
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							$front_save_count++;
 						}
 					}
@@ -3412,8 +3410,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$class_name = $mod->module_type;
 
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
-						if ( $module->front_save ) {
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							if ( $mandatory_answer == 'yes' ) {
 								$mandatory_answers++;
 							}
@@ -3437,8 +3434,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$class_name = $mod->module_type;
 
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
-						if ( $module->front_save ) {
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							if ( $assessable == 'yes' ) {
 								$assessable_answers++;
 							}
@@ -3497,10 +3493,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						$class_name = $mod->module_type;
 
 						if ( class_exists( $class_name ) ) {
-							$module = new $class_name();
-							if ( $module->front_save ) {
+
+							if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 								$front_save_count++;
-								$response	 = $module->get_response( $student_id, $mod->ID );
+								$response	 = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
 								$assessable	 = get_post_meta( $mod->ID, 'gradable_answer', true );
 								$mandatory	 = get_post_meta( $mod->ID, 'mandatory_answer', true );
 
@@ -3555,10 +3551,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$class_name = $mod->module_type;
 
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
-						if ( $module->front_save ) {
+
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							$front_save_count++;
-							$response = $module->get_response( $student_id, $mod->ID );
+							$response = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
 
 							if ( isset( $response->ID ) ) {
 								$grade_data	 = Unit_Module::get_response_grade( $response->ID );
@@ -4325,8 +4321,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				foreach ( $modules as $mod ) {
 					$class_name = $mod->module_type;
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
-						if ( $module->front_save ) {
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							$input_modules_count++;
 						}
 					}
@@ -4338,10 +4333,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$class_name = $mod->module_type;
 
 					if ( class_exists( $class_name ) ) {
-						$module = new $class_name();
 
-						if ( $module->front_save ) {
-							$response			 = $module->get_response( $user_object->ID, $mod->ID );
+						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
+							$response			 = call_user_func( $class_name.'::get_response', $user_object->ID, $mod->ID );
 							$visibility_class	 = ( count( $response ) >= 1 ? '' : 'less_visible_row' );
 
 							if ( count( $response ) >= 1 ) {
@@ -4388,7 +4382,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 														<?php echo $mod->post_content; ?>
 													</div>
 												<?php } ?>
-												<?php echo $module->get_response_form( get_current_user_ID(), $mod->ID ); ?>
+												<?php echo call_user_func( $class_name.'::get_response_form', get_current_user_ID(), $mod->ID ); ?>
 
 												<?php
 												if ( is_object( $response ) && !empty( $response ) ) {

@@ -1,6 +1,6 @@
 <?php
 
-if( ! class_exists( 'cp_logo_element' ) ) {
+if ( ! class_exists( 'cp_logo_element' ) ) {
 	class cp_logo_element extends CP_Certificate_Template_Elements {
 
 		var $element_name = 'cp_logo_element';
@@ -15,8 +15,7 @@ if( ! class_exists( 'cp_logo_element' ) ) {
 			echo parent::get_element_margins();
 			?>
 			<label>
-				<input class="file_url" type="text" size="36" name="meta_featured_url" value=""
-				       placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', 'cp' ); ?>"/>
+				<input class="file_url" type="text" size="36" name="meta_featured_url" value="" placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', 'cp' ); ?>"/>
 				<input class="file_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'cp' ); ?>">
 			</label>
 		<?php

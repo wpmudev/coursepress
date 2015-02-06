@@ -777,7 +777,7 @@ label > .tree{
     margin-right: 3px;
 	text-decoration: none;
 }
-.tree .tree-unit-right a:hover;{
+.tree .tree-unit-right a:hover {
 	text-decoration: underline;	
 }
 
@@ -868,7 +868,7 @@ label > .tree{
 
 .course_structure_page_li.single_column .tree-page-right,
 .course_structure_unit_label.single_column .tree-unit-right {
-	width: 25%;
+	width: 23%;
 }
 
 /*.wp-video,

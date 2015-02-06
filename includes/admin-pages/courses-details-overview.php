@@ -5,16 +5,16 @@ add_editor_style( CoursePress::instance()->plugin_url . 'css/editor_style_fix.cs
 
 add_thickbox();
 
-if ( isset( $_GET[ 'course_id' ] ) ) {
-	$course			 = new Course( (int) $_GET[ 'course_id' ] );
-	$course_details	 = $course->get_course();
-	$course_id		 = (int) $_GET[ 'course_id' ];
+if ( isset( $_GET['course_id'] ) ) {
+	$course         = new Course( (int) $_GET['course_id'] );
+	$course_details = $course->get_course();
+	$course_id      = (int) $_GET['course_id'];
 } else {
-	$course		 = new Course();
-	$course_id	 = 0;
+	$course    = new Course();
+	$course_id = 0;
 }
 
-if ( isset( $_POST[ 'action' ] ) && ( $_POST[ 'action' ] == 'add' || $_POST[ 'action' ] == 'update' ) ) {
+if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'add' || $_POST['action'] == 'update' ) ) {
 
 	check_admin_referer( 'course_details_overview' );
 
@@ -24,66 +24,66 @@ if ( isset( $_POST[ 'action' ] ) && ( $_POST[ 'action' ] == 'add' || $_POST[ 'ac
 	  } */
 
 	// Course has a start date, but no end date
-	if ( !isset( $_POST[ 'meta_open_ended_course' ] ) ) {
-		$_POST[ 'meta_open_ended_course' ] = 'off';
+	if ( ! isset( $_POST['meta_open_ended_course'] ) ) {
+		$_POST['meta_open_ended_course'] = 'off';
 	}
 
 	// Users can enroll anytime
-	if ( !isset( $_POST[ 'meta_open_ended_enrollment' ] ) ) {
-		$_POST[ 'meta_open_ended_enrollment' ] = 'off';
+	if ( ! isset( $_POST['meta_open_ended_enrollment'] ) ) {
+		$_POST['meta_open_ended_enrollment'] = 'off';
 	}
 
 	// Limit class size?
-	if ( !isset( $_POST[ 'meta_limit_class_size' ] ) ) {
-		$_POST[ 'meta_limit_class_size' ] = 'off';
+	if ( ! isset( $_POST['meta_limit_class_size'] ) ) {
+		$_POST['meta_limit_class_size'] = 'off';
 	}
 
 	// Enable/disable course structure preview options
-	if ( !isset( $_POST[ 'meta_course_structure_options' ] ) ) {
-		$_POST[ 'meta_course_structure_options' ] = 'off';
+	if ( ! isset( $_POST['meta_course_structure_options'] ) ) {
+		$_POST['meta_course_structure_options'] = 'off';
 	}
 
 	// Enable/disable course time preview
-	if ( !isset( $_POST[ 'meta_course_structure_time_display' ] ) ) {
-		$_POST[ 'meta_course_structure_time_display' ] = 'off';
+	if ( ! isset( $_POST['meta_course_structure_time_display'] ) ) {
+		$_POST['meta_course_structure_time_display'] = 'off';
 	}
 
-	if ( !isset( $_POST[ 'meta_allow_course_discussion' ] ) ) {
-		$_POST[ 'meta_allow_course_discussion' ] = 'off';
+	if ( ! isset( $_POST['meta_allow_course_discussion'] ) ) {
+		$_POST['meta_allow_course_discussion'] = 'off';
 	}
 
-	if ( !isset( $_POST[ 'meta_allow_course_grades_page' ] ) ) {
-		$_POST[ 'meta_allow_course_grades_page' ] = 'off';
+	if ( ! isset( $_POST['meta_allow_course_grades_page'] ) ) {
+		$_POST['meta_allow_course_grades_page'] = 'off';
 	}
 
-	if ( !isset( $_POST[ 'meta_allow_workbook_page' ] ) ) {
-		$_POST[ 'meta_allow_workbook_page' ] = 'off';
+	if ( ! isset( $_POST['meta_allow_workbook_page'] ) ) {
+		$_POST['meta_allow_workbook_page'] = 'off';
 	}
 
-	if ( !isset( $_POST[ 'meta_paid_course' ] ) ) {
-		$_POST[ 'meta_paid_course' ] = 'off';
+	if ( ! isset( $_POST['meta_paid_course'] ) ) {
+		$_POST['meta_paid_course'] = 'off';
 	}
 
-	if ( !isset( $_POST[ 'meta_auto_sku' ] ) ) {
-		$_POST[ 'meta_auto_sku' ] = 'off';
+	if ( ! isset( $_POST['meta_auto_sku'] ) ) {
+		$_POST['meta_auto_sku'] = 'off';
 	}
 
-	if ( isset( $_POST[ 'submit-unit' ] ) ) {
+	if ( isset( $_POST['submit-unit'] ) ) {
 		/* Save / Save Draft */
 		$new_post_id = $course->update_course();
 	}
 
-	if ( isset( $_POST[ 'submit-unit-publish' ] ) ) {
+	if ( isset( $_POST['submit-unit-publish'] ) ) {
 		/* Save & Publish */
 		$new_post_id = $course->update_course();
-		$course		 = new Course( $new_post_id );
+		$course      = new Course( $new_post_id );
 		$course->change_status( 'publish' );
 	}
 
-	if ( isset( $_POST[ 'submit-unit-unpublish' ] ) ) {
+	if ( isset( $_POST['submit-unit-unpublish'] ) ) {
 		/* Save & Unpublish */
 		$new_post_id = $course->update_course();
-		$course		 = new Course( $new_post_id );
+		$course      = new Course( $new_post_id );
 		$course->change_status( 'private' );
 	}
 
@@ -91,8 +91,8 @@ if ( isset( $_POST[ 'action' ] ) && ( $_POST[ 'action' ] == 'add' || $_POST[ 'ac
 	if ( $new_post_id != 0 ) {
 		// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 		ob_start();
-		if ( isset( $_GET[ 'ms' ] ) ) {
-			wp_redirect( admin_url( 'admin.php?page=' . $page . '&course_id=' . (int) $new_post_id . '&ms=' . $_GET[ 'ms' ] ) );
+		if ( isset( $_GET['ms'] ) ) {
+			wp_redirect( admin_url( 'admin.php?page=' . $page . '&course_id=' . (int) $new_post_id . '&ms=' . $_GET['ms'] ) );
 			exit;
 		} else {
 			wp_redirect( admin_url( 'admin.php?page=' . $page . '&course_id=' . (int) $new_post_id ) );
@@ -103,29 +103,29 @@ if ( isset( $_POST[ 'action' ] ) && ( $_POST[ 'action' ] == 'add' || $_POST[ 'ac
 	}
 }
 
-if ( isset( $_GET[ 'course_id' ] ) ) {
-	$class_size						 = $course->details->class_size;
-	$enroll_type					 = $course->details->enroll_type;
-	$passcode						 = $course->details->passcode;
-	$prerequisite					 = $course->details->prerequisite;
-	$course_start_date				 = $course->details->course_start_date;
-	$course_end_date				 = $course->details->course_end_date;
-	$enrollment_start_date			 = $course->details->enrollment_start_date;
-	$enrollment_end_date			 = $course->details->enrollment_end_date;
-	$open_ended_course				 = $course->details->open_ended_course;
-	$open_ended_enrollment			 = $course->details->open_ended_enrollment;
-	$limit_class_size				 = $course->details->limit_class_size;
-	$marketpress_product			 = $course->details->marketpress_product;
-	$allow_course_discussion		 = $course->details->allow_course_discussion;
-	$allow_course_grades_page		 = $course->details->allow_course_grades_page;
-	$allow_workbook_page			 = $course->details->allow_workbook_page;
-	$paid_course					 = $coursepress->marketpress_active ? $course->details->paid_course : false;
-	$auto_sku						 = $course->details->auto_sku;
-	$course_terms					 = wp_get_post_terms( (int) $_GET[ 'course_id' ], 'course_category' );
-	$course_category				 = is_array( $course_terms ) ? (isset( $course_terms[ 0 ] ) ? $course_terms[ 0 ]->term_id : 0) : 0; //$course->details->course_category;
-	$language						 = $course->details->course_language;
-	$course_video_url				 = $course->details->course_video_url;
-	$course_setup_progress			 = empty( $course->details->course_setup_progress ) ? array(
+if ( isset( $_GET['course_id'] ) ) {
+	$class_size                    = $course->details->class_size;
+	$enroll_type                   = $course->details->enroll_type;
+	$passcode                      = $course->details->passcode;
+	$prerequisite                  = $course->details->prerequisite;
+	$course_start_date             = $course->details->course_start_date;
+	$course_end_date               = $course->details->course_end_date;
+	$enrollment_start_date         = $course->details->enrollment_start_date;
+	$enrollment_end_date           = $course->details->enrollment_end_date;
+	$open_ended_course             = $course->details->open_ended_course;
+	$open_ended_enrollment         = $course->details->open_ended_enrollment;
+	$limit_class_size              = $course->details->limit_class_size;
+	$marketpress_product           = $course->details->marketpress_product;
+	$allow_course_discussion       = $course->details->allow_course_discussion;
+	$allow_course_grades_page      = $course->details->allow_course_grades_page;
+	$allow_workbook_page           = $course->details->allow_workbook_page;
+	$paid_course                   = $coursepress->marketpress_active ? $course->details->paid_course : false;
+	$auto_sku                      = $course->details->auto_sku;
+	$course_terms                  = wp_get_post_terms( (int) $_GET['course_id'], 'course_category' );
+	$course_category               = is_array( $course_terms ) ? ( isset( $course_terms[0] ) ? $course_terms[0]->term_id : 0 ) : 0; //$course->details->course_category;
+	$language                      = $course->details->course_language;
+	$course_video_url              = $course->details->course_video_url;
+	$course_setup_progress         = empty( $course->details->course_setup_progress ) ? array(
 		'step-1' => 'incomplete',
 		'step-2' => 'incomplete',
 		'step-3' => 'incomplete',
@@ -133,44 +133,44 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 		'step-5' => 'incomplete',
 		'step-6' => 'incomplete',
 	) : maybe_unserialize( $course->details->course_setup_progress );
-	$course_setup_marker			 = empty( $course->details->course_setup_marker ) ? 'step-1' : $course->details->course_setup_marker;
-	$course_structure_options		 = $course->details->course_structure_options;
-	$course_structure_time_display	 = $course->details->course_structure_time_display;
+	$course_setup_marker           = empty( $course->details->course_setup_marker ) ? 'step-1' : $course->details->course_setup_marker;
+	$course_structure_options      = $course->details->course_structure_options;
+	$course_structure_time_display = $course->details->course_structure_time_display;
 
-	$course_setup_complete = get_post_meta( (int) $_GET[ 'course_id' ], 'course_setup_complete', true );
+	$course_setup_complete = get_post_meta( (int) $_GET['course_id'], 'course_setup_complete', true );
 
-	if ( !empty( $course_setup_complete ) && 'yes' == $course_setup_complete ) {
+	if ( ! empty( $course_setup_complete ) && 'yes' == $course_setup_complete ) {
 		$course_setup_marker = '';
 	}
 
 	//$show_module = $course->details->show_module;
 	//$preview_module = $course->details->preview_module;
 
-	$show_unit		 = $course->details->show_unit_boxes;
-	$preview_unit	 = $course->details->preview_unit_boxes;
+	$show_unit    = $course->details->show_unit_boxes;
+	$preview_unit = $course->details->preview_unit_boxes;
 
-	$show_page		 = $course->details->show_page_boxes;
-	$preview_page	 = $course->details->preview_page_boxes;
+	$show_page    = $course->details->show_page_boxes;
+	$preview_page = $course->details->preview_page_boxes;
 } else {
-	$class_size						 = 0;
-	$enroll_type					 = '';
-	$passcode						 = '';
-	$prerequisite					 = '';
-	$course_start_date				 = date( 'Y-m-d', current_time( 'timestamp', 0 ) );
-	$course_end_date				 = '';
-	$enrollment_start_date			 = '';
-	$enrollment_end_date			 = '';
-	$open_ended_course				 = 'off';
-	$open_ended_enrollment			 = 'off';
-	$limit_class_size				 = 'off';
-	$marketpress_product			 = '';
-	$allow_course_discussion		 = 'off';
-	$allow_course_grades_page		 = 'off';
-	$allow_workbook_page			 = 'off';
-	$course_category				 = 0;
-	$language						 = __( 'English', 'cp' );
-	$course_video_url				 = '';
-	$course_setup_progress			 = array(
+	$class_size                    = 0;
+	$enroll_type                   = '';
+	$passcode                      = '';
+	$prerequisite                  = '';
+	$course_start_date             = date( 'Y-m-d', current_time( 'timestamp', 0 ) );
+	$course_end_date               = '';
+	$enrollment_start_date         = '';
+	$enrollment_end_date           = '';
+	$open_ended_course             = 'off';
+	$open_ended_enrollment         = 'off';
+	$limit_class_size              = 'off';
+	$marketpress_product           = '';
+	$allow_course_discussion       = 'off';
+	$allow_course_grades_page      = 'off';
+	$allow_workbook_page           = 'off';
+	$course_category               = 0;
+	$language                      = __( 'English', 'cp' );
+	$course_video_url              = '';
+	$course_setup_progress         = array(
 		'step-1' => 'incomplete',
 		'step-2' => 'incomplete',
 		'step-3' => 'incomplete',
@@ -178,9 +178,9 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 		'step-5' => 'incomplete',
 		'step-6' => 'incomplete',
 	);
-	$course_setup_marker			 = 'step-1';
-	$course_structure_options		 = 'off';
-	$course_structure_time_display	 = 'off';
+	$course_setup_marker           = 'step-1';
+	$course_structure_options      = 'off';
+	$course_structure_time_display = 'off';
 }
 
 // Fix issue where previous versions caused nested serial objects when duplicating courses.
@@ -190,40 +190,41 @@ $course_setup_progress = cp_deep_unserialize( $course_setup_progress );
 // Detect gateways for MarketPress
 // MarketPress 2.x and MarketPress Lite
 $mp_settings = get_option( 'mp_settings' );
-$gateways	 = !empty( $mp_settings[ 'gateways' ][ 'allowed' ] ) ? true : false;
+$gateways    = ! empty( $mp_settings['gateways']['allowed'] ) ? true : false;
 
 /**
  * Filter to enable or disable payable courses.
- * 
+ *
  * @since 1.2.1
  */
-$offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
+$offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 ?>
 <div class='wrap nocoursesub cp-wrap'>
-    <form action='<?php esc_attr_e( admin_url( 'admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ( $course_id !== 0 ) ? '&ms=cu' : '&ms=ca' ) ) ); ?>' name='course-add' id='course-add' method='post'>
+	<form action='<?php esc_attr_e( admin_url( 'admin.php?page=' . $page . ( ( $course_id !== 0 ) ? '&course_id=' . $course_id : '' ) . ( ( $course_id !== 0 ) ? '&ms=cu' : '&ms=ca' ) ) ); ?>' name='course-add' id='course-add' method='post'>
 
 		<?php
-		$can_update	 = 0 == $course_id || CoursePress_Capabilities::can_update_course( $course_id );
-		$data_nonce	 = wp_create_nonce( 'auto-update-' . $course_id );
+		$can_update = 0 == $course_id || CoursePress_Capabilities::can_update_course( $course_id );
+		$data_nonce = wp_create_nonce( 'auto-update-' . $course_id );
 		?>
 
-        <input type='hidden' name='course-ajax-check' id="course-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo $can_update ? get_current_user_id() : ''; ?>" data-nonce="<?php echo $data_nonce; ?>" value="" />
-        <div class='course-liquid-left'>
+		<input type='hidden' name='course-ajax-check' id="course-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo $can_update ? get_current_user_id() : ''; ?>" data-nonce="<?php echo $data_nonce; ?>" value=""/>
 
-            <div id='course'>
+		<div class='course-liquid-left'>
+
+			<div id='course'>
 				<?php if ( 0 == $course_id && CoursePress_Capabilities::can_create_course() || CoursePress_Capabilities::can_update_course( $course_id ) ) { ?>
 					<?php wp_nonce_field( 'course_details_overview' ); ?>
 
 					<?php if ( isset( $course_id ) ) { ?>
-						<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>" />
+						<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>"/>
 						<?php
 						if ( CoursePress_Capabilities::can_update_course( $course_id ) || 0 == $course_id ) {
 							?>
-							<input type="hidden" name="admin_url" value="<?php echo esc_attr( admin_url( 'admin.php?page=course_details' ) ); ?>" />
+							<input type="hidden" name="admin_url" value="<?php echo esc_attr( admin_url( 'admin.php?page=course_details' ) ); ?>"/>
 						<?php } ?>
-						<input type="hidden" name="action" value="update" />
+						<input type="hidden" name="action" value="update"/>
 					<?php } else { ?>
-						<input type="hidden" name="action" value="add" />
+						<input type="hidden" name="action" value="add"/>
 					<?php } ?>
 
 					<div id='edit-sub' class='course-holder-wrap mp-wrap'>
@@ -262,7 +263,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 								}
 								?>
 							</div>
-							<!-- /COURSE BUTTONS -->						
+							<!-- /COURSE BUTTONS -->
 
 							<!-- COURSE DETAILS -->
 							<div class='course-details'>
@@ -280,28 +281,29 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									}
 								}
 
-								if ( (isset( $_GET[ 'course_id' ] )) || !isset( $_GET[ 'course_id' ] ) && $not_limited ) {
+								if ( ( isset( $_GET['course_id'] ) ) || ! isset( $_GET['course_id'] ) && $not_limited ) {
 									?>
 									<!-- Course Overview -->
 									<div class="course-section step step-1 <?php echo 'step-1' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
-											<div class="status <?php echo empty( $course_setup_progress[ 'step-1' ] ) ? '' : $course_setup_progress[ 'step-1' ]; ?> "></div>									
+											<div class="status <?php echo empty( $course_setup_progress['step-1'] ) ? '' : $course_setup_progress['step-1']; ?> "></div>
 											<h3><?php _e( 'Step 1 - Course Overview', 'cp' ) ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status = $course_setup_progress[ 'step-1' ];
+											$set_status = $course_setup_progress['step-1'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo esc_attr( $set_status ); ?>" />
+											<input type='hidden' name='meta_course_setup_progress[step-1]' class='course_setup_progress' value="<?php echo esc_attr( $set_status ); ?>"/>
+
 											<div class="wide">
 												<label for='course_name' class="required">
 													<?php _e( 'Course Name', 'cp' ); ?>
 												</label>
 												<input class='wide' type='text' name='course_name' id='course_name' value='<?php
-												if ( isset( $_GET[ 'course_id' ] ) ) {
+												if ( isset( $_GET['course_id'] ) ) {
 													echo esc_attr( stripslashes( $course->details->post_title ) );
 												}
-												?>' />
+												?>'/>
 											</div>
 
 											<div class="wide">
@@ -310,21 +312,21 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php //CP_Helper_Tooltip::tooltip( __( 'Provide a few short sentences to describe the course', 'cp' ) );    ?>
 												</label>
 												<?php
-												$editor_name	 = "course_excerpt";
-												$editor_id		 = "course_excerpt";
-												$editor_content	 = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
+												$editor_name    = "course_excerpt";
+												$editor_id      = "course_excerpt";
+												$editor_content = htmlspecialchars_decode( ( isset( $_GET['course_id'] ) ? $course_details->post_excerpt : '' ) );
 
 												$args = array(
-													"textarea_name"	 => $editor_name,
-													"editor_class"	 => 'cp-editor cp-course-overview',
-													"textarea_rows"	 => 3,
-													"media_buttons"	 => false,
-													"quicktags"		 => false,
+													"textarea_name" => $editor_name,
+													"editor_class"  => 'cp-editor cp-course-overview',
+													"textarea_rows" => 3,
+													"media_buttons" => false,
+													"quicktags"     => false,
 												);
 
-												if ( !isset( $course_excerpt->post_excerpt ) ) {
-													$course_excerpt					 = new StdClass;
-													$course_excerpt->post_excerpt	 = '';
+												if ( ! isset( $course_excerpt->post_excerpt ) ) {
+													$course_excerpt               = new StdClass;
+													$course_excerpt->post_excerpt = '';
 												}
 
 												$desc = '';
@@ -339,26 +341,27 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<div class="wide narrow">
 												<label for='featured_url'>
-													<?php _e( 'Listing Image', 'cp' ); ?><br />
+													<?php _e( 'Listing Image', 'cp' ); ?><br/>
 													<span><?php _e( 'The image is used on the "Courses" listing ( archive ) page along with the course excerpt.', 'cp' ) ?></span>
 												</label>
+
 												<div class="featured_url_holder">
 													<input class="featured_url" type="text" size="36" name="meta_featured_url" value="<?php
 													if ( $course_id !== 0 ) {
 														echo esc_attr( $course->details->featured_url );
 													}
-													?>" placeholder="<?php _e( 'Add Image URL or Browse for Image', 'cp' ); ?>" />
-													<input class="featured_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'cp' ); ?>" />
+													?>" placeholder="<?php _e( 'Add Image URL or Browse for Image', 'cp' ); ?>"/>
+													<input class="featured_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'cp' ); ?>"/>
 													<input type="hidden" name="_thumbnail_id" id="thumbnail_id" value="<?php
 													if ( $course_id !== 0 ) {
 														echo esc_attr( get_post_meta( $course_id, '_thumbnail_id', true ) );
 													}
-													?>" />
-														   <?php
-														   //get_the_post_thumbnail( $course_id, 'course_thumb', array( 100, 100 ) );
-														   //echo wp_get_attachment_image( get_post_meta( $course_id, '_thumbnail_id', true ), array( 100, 100 ) );
-														   //echo 'asdads'.get_post_meta( $course_id, '_thumbnail_id', true );
-														   ?>
+													?>"/>
+													<?php
+													//get_the_post_thumbnail( $course_id, 'course_thumb', array( 100, 100 ) );
+													//echo wp_get_attachment_image( get_post_meta( $course_id, '_thumbnail_id', true ), array( 100, 100 ) );
+													//echo 'asdads'.get_post_meta( $course_id, '_thumbnail_id', true );
+													?>
 													<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_image_extensions ); ?></div>
 												</div>
 											</div>
@@ -368,18 +371,18 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label>
 													<?php _e( 'Course Category', 'cp' ); ?>
 													<a class="context-link" href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e( 'Manage Categories', 'cp' ); ?></a>
-												</label> 
+												</label>
 												<?php
 												$taxonomies = array(
 													'course_category',
 												);
 
 												$args = array(
-													'orderby'		 => 'name',
-													'order'			 => 'ASC',
-													'hide_empty'	 => false,
-													'fields'		 => 'all',
-													'hierarchical'	 => true,
+													'orderby'      => 'name',
+													'order'        => 'ASC',
+													'hide_empty'   => false,
+													'fields'       => 'all',
+													'hierarchical' => true,
 												);
 
 												$terms = get_terms( $taxonomies, $args );
@@ -401,23 +404,23 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															echo 'selected';
 														}
 														?>><?php echo $terms->name; ?></option>
-																<?php
-															}
-															?>
+													<?php
+													}
+													?>
 												</select>
 
 											</div>
 
 											<div class="narrow">
 												<label for='meta_course_language'><?php _e( 'Course Language', 'cp' ); ?></label>
-												<input type="text" name="meta_course_language" value="<?php echo esc_attr( stripslashes( $language ) ); ?>" />
+												<input type="text" name="meta_course_language" value="<?php echo esc_attr( stripslashes( $language ) ); ?>"/>
 											</div>
 
 											<?php do_action( 'course_step_1_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />
+												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
 											</div>
 										</div>
 									</div>
@@ -426,14 +429,15 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									<!-- Course Description -->
 									<div class="course-section step step-2 <?php echo 'step-2' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
-											<div class="status <?php echo empty( $course_setup_progress[ 'step-2' ] ) ? '' : $course_setup_progress[ 'step-2' ]; ?> "></div>									
-											<h3><?php _e( 'Step 2 - Course Description', 'cp' ) ?></h3>									
+											<div class="status <?php echo empty( $course_setup_progress['step-2'] ) ? '' : $course_setup_progress['step-2']; ?> "></div>
+											<h3><?php _e( 'Step 2 - Course Description', 'cp' ) ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status = $course_setup_progress[ 'step-2' ];
+											$set_status = $course_setup_progress['step-2'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-2]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+											<input type='hidden' name='meta_course_setup_progress[step-2]' class='course_setup_progress' value="<?php echo $set_status; ?>"/>
+
 											<div class="wide narrow">
 												<?php
 												global $content_width;
@@ -445,8 +449,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												$supported_video_extensions = implode( ", ", wp_get_video_extensions() );
 
-												if ( !empty( $data ) ) {
-													if ( !isset( $data->player_width ) or empty( $data->player_width ) ) {
+												if ( ! empty( $data ) ) {
+													if ( ! isset( $data->player_width ) or empty( $data->player_width ) ) {
 														$data->player_width = empty( $content_width ) ? 640 : $content_width;
 													}
 												}
@@ -454,40 +458,42 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												<div class="video_url_holder mp-wrap">
 													<label for='meta_course_video_url'>
-														<?php _e( 'Featured Video', 'cp' ); ?><br />
+														<?php _e( 'Featured Video', 'cp' ); ?><br/>
 														<span><?php _e( 'This is used on the Course Overview page and will be displayed with the course description.', 'cp' ); ?></span>
 													</label>
 													<input class="course_video_url" type="text" size="36" name="meta_course_video_url" value="<?php echo esc_attr( $course_video_url ); ?>" placeholder="<?php
 													_e( 'Add URL or Browse', 'cp' );
 													echo ' ( ' . $supported_video_extensions . ' )';
-													?>" />
+													?>"/>
 
-													<input type="button" class="course_video_url_button button-secondary" value="<?php _e( 'Browse', 'cp' ); ?>" />
+													<input type="button" class="course_video_url_button button-secondary" value="<?php _e( 'Browse', 'cp' ); ?>"/>
+
 													<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_video_extensions ); ?></div>
 												</div>
-											</div>									
+											</div>
 
 											<div class="wide">
 												<label for='course_description' class="required">
 													<?php _e( 'Course Description', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
 												</label>
+
 												<p><?php _e( 'This is an in-depth description of the course. It should include such things like an overview, outcomes, possible requirements, etc.', 'cp' ); ?></p>
 												<?php
-												$editor_name	 = "course_description";
-												$editor_id		 = "course_description";
-												$editor_content	 = htmlspecialchars_decode( isset( $course_details->post_content ) ? $course_details->post_content : ''  );
+												$editor_name    = "course_description";
+												$editor_id      = "course_description";
+												$editor_content = htmlspecialchars_decode( isset( $course_details->post_content ) ? $course_details->post_content : '' );
 
 
 												$args = array(
-													"textarea_name"	 => $editor_name,
-													"editor_class"	 => 'cp-editor cp-course-overview',
-													"textarea_rows"	 => 10,
+													"textarea_name" => $editor_name,
+													"editor_class"  => 'cp-editor cp-course-overview',
+													"textarea_rows" => 10,
 												);
 
-												if ( !isset( $course_details->post_content ) ) {
-													$course_details					 = new StdClass;
-													$course_details->post_content	 = '';
+												if ( ! isset( $course_details->post_content ) ) {
+													$course_details               = new StdClass;
+													$course_details->post_content = '';
 												}
 
 												$desc = '';
@@ -504,263 +510,268 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label>
 													<?php _e( 'Course Structure', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Provide a detailed description of the course', 'cp' ) );       ?>
-													<br />
+													<br/>
 													<span><?php _e( 'This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'cp' ); ?></span>
 												</label>
+
 												<div class="course-structure">
 													<input type='checkbox' id='meta_course_structure_options' name='meta_course_structure_options' <?php echo ( $course_structure_options == 'on' ) ? 'checked' : ''; ?> />
-													<label for="meta_course_structure_options"><?php _e( 'Show the Course Overview structure and Preview Options', 'cp' ); ?></label><br />
+													<label for="meta_course_structure_options"><?php _e( 'Show the Course Overview structure and Preview Options', 'cp' ); ?></label><br/>
 													<input type='checkbox' id='meta_course_structure_time_display' name='meta_course_structure_time_display' <?php echo ( $course_structure_time_display == 'on' ) ? 'checked' : ''; ?> />
 													<label for="meta_course_structure_time_display"><?php _e( 'Display Time Estimates for Units and Lessons', 'cp' ); ?></label>
 													<table>
 														<thead>
-															<tr>
-																<th class="column-course-structure"><?php _e( 'Course Structure', 'cp' ); ?></th>
-																<th class="column-show"><?php _e( 'Show', 'cp' ); ?></th>
-																<th class="column-free-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
-																<th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
-															</tr>
-															<tr class="break"><td colspan="4"></td></tr>
+														<tr>
+															<th class="column-course-structure"><?php _e( 'Course Structure', 'cp' ); ?></th>
+															<th class="column-show"><?php _e( 'Show', 'cp' ); ?></th>
+															<th class="column-free-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
+															<th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
+														</tr>
+														<tr class="break">
+															<td colspan="4"></td>
+														</tr>
 														</thead>
-														<tbody>	
-															<tr>
-																<td colspan="4">
-																	<ol class="tree">
-																		<li>
-																			<label for="course_<?php echo (!isset( $course ) || !empty( $course->details )) ? $course->details->ID : '0'; ?>"><?php echo (!isset( $course ) || !empty( $course->details ) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __( 'Course', 'cp' )); ?></label> <input type="checkbox" checked disabled id="course_<?php echo isset( $course->details ) ? $course->details->ID : ''; ?>" class="hidden_checkbox" /> 
-																			<?php
-																			$course_id	 = isset( $course ) && isset( $course->details ) && !empty( $course->details->ID ) ? $course->details->ID : 0;
-																			$units		 = Unit::get_units_from_course( $course_id, 'any', false );
-																			$units		 = !empty( $units ) ? $units : array();
-																			if ( 0 == count( $units ) ) {
-																				?>
-																				<ol>
-																					<li>
-																						<label><?php _e( 'There are currently no units to display', 'cp' ); ?></label> 
-																					</li>
-																				</ol>
-																			<?php } else {
-																				?>
-																				<ol>
-																					<?php
+														<tbody>
+														<tr>
+															<td colspan="4">
+																<ol class="tree">
+																	<li>
+																		<label for="course_<?php echo ( ! isset( $course ) || ! empty( $course->details ) ) ? $course->details->ID : '0'; ?>"><?php echo( ! isset( $course ) || ! empty( $course->details ) && $course->details->post_title && $course->details->post_title !== '' ? $course->details->post_title : __( 'Course', 'cp' ) ); ?></label>
+																		<input type="checkbox" checked disabled id="course_<?php echo isset( $course->details ) ? $course->details->ID : ''; ?>" class="hidden_checkbox"/>
+																		<?php
+																		$course_id = isset( $course ) && isset( $course->details ) && ! empty( $course->details->ID ) ? $course->details->ID : 0;
+																		$units     = Unit::get_units_from_course( $course_id, 'any', false );
+																		$units     = ! empty( $units ) ? $units : array();
+																		if ( 0 == count( $units ) ) {
+																			?>
+																			<ol>
+																				<li>
+																					<label><?php _e( 'There are currently no units to display', 'cp' ); ?></label>
+																				</li>
+																			</ol>
+																		<?php } else {
+																			?>
+																			<ol>
+																				<?php
 
-																					// Cheking for inhertited "show" status and forces a save.
-																					$section_dirty = false;
+																				// Cheking for inhertited "show" status and forces a save.
+																				$section_dirty = false;
 
-																					foreach ( $units as $unit ) {
-																						$unit_class		 = new Unit( $unit->ID );
-																						$unit_pages		 = $unit_class->get_number_of_unit_pages();
-																						$unit_pagination = cp_unit_uses_new_pagination( $unit->ID );
+																				foreach ( $units as $unit ) {
+																					$unit_class      = new Unit( $unit->ID );
+																					$unit_pages      = $unit_class->get_number_of_unit_pages();
+																					$unit_pagination = cp_unit_uses_new_pagination( $unit->ID );
 
-																						if ( $unit_pagination ) {
-																							$unit_pages = coursepress_unit_pages( $unit->ID, $unit_pagination );
-																						} else {
-																							$unit_pages = coursepress_unit_pages( $unit->ID );
-																						}
+																					if ( $unit_pagination ) {
+																						$unit_pages = coursepress_unit_pages( $unit->ID, $unit_pagination );
+																					} else {
+																						$unit_pages = coursepress_unit_pages( $unit->ID );
+																					}
 
-																						$modules = Unit_Module::get_modules( $unit->ID );
-																						?>
+																					$modules = Unit_Module::get_modules( $unit->ID );
+																					?>
 
-																						<li class="<?php echo ($unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit'); ?>">
+																					<li class="<?php echo( $unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit' ); ?>">
 
-																							<label for="unit_<?php echo $unit->ID; ?>">
-																								<div class="tree-unit-left"><?php echo ($unit->post_status != 'publish' ? __( '[draft] ', 'cp' ) : ''); ?><?php echo $unit->post_title; ?></div>
-																								<div class="tree-unit-right">
-																									<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
-																									if ( isset( $show_unit[ $unit->ID ] ) ) {
-																										echo ( $show_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																									} else {
-																										echo ( 'on' == $course_structure_options ) ? 'checked' : '';
-																										$section_dirty = true;
-																									}
-																									?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
-
-																									<input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
-																									if ( isset( $preview_unit[ $unit->ID ] ) ) {
-																										echo ( $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																									}
-																									?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
-
-																									<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
-																								</div>
-																							</label> <input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox" /> 
-
-
-																							<ol>
-																								<?php
-																								if ( $unit_pages == 0 ) {
-																									?>
-																									<li>
-																										<label><?php _e( 'There are currently no pages to display', 'cp' ); ?></label>
-																									</li>
-																									<?php
+																						<label for="unit_<?php echo $unit->ID; ?>">
+																							<div class="tree-unit-left"><?php echo( $unit->post_status != 'publish' ? __( '[draft] ', 'cp' ) : '' ); ?><?php echo $unit->post_title; ?></div>
+																							<div class="tree-unit-right">
+																								<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
+																								if ( isset( $show_unit[ $unit->ID ] ) ) {
+																									echo ( $show_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
 																								} else {
-																									?>
-																									<li class="course_structure_page_li">
-																										<?php
-																										for ( $i = 1; $i <= $unit_pages; $i++ ) {
-																											$pages_num	 = 1;
-																											$page_title	 = $unit_class->get_unit_page_name( $i );
+																									echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+																									$section_dirty = true;
+																								}
+																								?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+
+																								<input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
+																								if ( isset( $preview_unit[ $unit->ID ] ) ) {
+																									echo ( $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																								}
+																								?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+
+																								<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
+																							</div>
+																						</label>
+																						<input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox"/>
+
+
+																						<ol>
+																							<?php
+																							if ( $unit_pages == 0 ) {
+																								?>
+																								<li>
+																									<label><?php _e( 'There are currently no pages to display', 'cp' ); ?></label>
+																								</li>
+																							<?php
+																							} else {
+																								?>
+																								<li class="course_structure_page_li">
+																									<?php
+																									for ( $i = 1; $i <= $unit_pages; $i ++ ) {
+																										$pages_num  = 1;
+																										$page_title = $unit_class->get_unit_page_name( $i );
+																										?>
+
+																										<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+																											<div class="tree-page-left">
+																												<?php echo( isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' ) ); ?>
+																											</div>
+																											<div class="tree-page-right">
+																												<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+																												if ( isset( $show_page[ $unit->ID . '_' . $i ] ) ) {
+																													echo ( $show_page[ $unit->ID . '_' . $i ] == 'on' ) ? 'checked' : '';
+																												} else {
+																													echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+																													$section_dirty = true;
+																												}
+																												?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																												<?php
+																												$disabled = '';
+																												if ( isset( $preview_unit[ $unit->ID ] ) ) {
+																													if ( $preview_unit[ $unit->ID ] == 'on' ) {
+																														$disabled = 'disabled';
+																													} else {
+																														$disabled = '';
+																													}
+																												}
+																												?>
+																												<input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
+																												if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) || isset( $preview_unit[ $unit->ID ] ) ) {
+																													echo ( $preview_page[ $unit->ID . '_' . $i ] == 'on' || $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																												}
+																												?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+
+																												<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
+																											</div>
+																										</label>
+
+																										<input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox"/>
+
+																										<ol class="course_structure_elements_ol">
+																											<?php
+																											/*
+																											  foreach ($modules as $mod) {
+																											  $class_name = $mod->module_type;
+
+																											  if (class_exists($class_name)) {
+																											  $module = new $class_name();
+
+																											  if ($module->name == 'page_break_module') {
+																											  $pages_num++;
+																											  } else {
+																											  ?>
+																											  <?php
+																											  if ($pages_num == $i) {
+																											  if ($module->name !== 'section_break_module') {
+																											  ?>
+																											  <li class="element">
+																											  <div class="tree-element-left">
+																											  <?php echo ($mod->post_title && $mod->post_title !== '' ? $mod->post_title : __('Untitled Element', 'cp')); ?>
+																											  </div>
+
+																											  <div class="tree-element-right">
+																											  <input type='checkbox' class="module_show" id='show-<?php echo $mod->ID; ?>' name='meta_show_module[<?php echo $mod->ID; ?>]' <?php
+																											  if (isset($show_module[$mod->ID])) {
+																											  echo ( $show_module[$mod->ID] == 'on' ) ? 'checked' : '';
+																											  }
+																											  ?> />
+
+																											  <input type='checkbox' class="module_preview" id='preview-<?php echo $mod->ID; ?>' name='meta_preview_module[<?php echo $mod->ID; ?>]' <?php
+																											  if (isset($preview_module[$mod->ID])) {
+																											  echo ( $preview_module[$mod->ID] == 'on' ) ? 'checked' : '';
+																											  }
+																											  ?> />
+
+																											  <span><?php echo (isset($mod->time_estimation) && $mod->time_estimation !== '') ? $mod->time_estimation.' '.__('min', 'cp') : __('N/A', 'cp');?></span>
+																											  </div>
+																											  </li>
+																											  <?php
+																											  }
+																											  }
+																											  }
+																											  }
+																											  } */
 																											?>
 
-																											<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
-																												<div class="tree-page-left">
-																													<?php echo (isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' )); ?>
-																												</div>
-																												<div class="tree-page-right">
-																													<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-																													if ( isset( $show_page[ $unit->ID . '_' . $i ] ) ) {
-																														echo ( $show_page[ $unit->ID . '_' . $i ] == 'on' ) ? 'checked' : '';
-																													} else {
-																														echo ( 'on' == $course_structure_options ) ? 'checked' : '';
-																														$section_dirty = true;
-																													}
-																													?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
-																														   <?php
-																														   $disabled = '';
-																														   if ( isset( $preview_unit[ $unit->ID ] ) ) {
-																															   if ( $preview_unit[ $unit->ID ] == 'on' ) {
-																																   $disabled = 'disabled';
-																															   } else {
-																																   $disabled = '';
-																															   }
-																														   }
-																														   ?>
-																													<input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-																													if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) || isset( $preview_unit[ $unit->ID ] ) ) {
-																														echo ( $preview_page[ $unit->ID . '_' . $i ] == 'on' || $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																													}
-																													?> <?php echo ($unit->post_status == 'publish' ? 'enabled' : 'disabled'); ?> />
+																										</ol>
+																									<?php
+																									}
+																									?>
+																								</li>
+																							<?php } ?>
 
-																													<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
-																												</div>
-																											</label>
-
-																											<input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox" /> 
-
-																											<ol class="course_structure_elements_ol">
-																												<?php
-																												/*
-																												  foreach ($modules as $mod) {
-																												  $class_name = $mod->module_type;
-
-																												  if (class_exists($class_name)) {
-																												  $module = new $class_name();
-
-																												  if ($module->name == 'page_break_module') {
-																												  $pages_num++;
-																												  } else {
-																												  ?>
-																												  <?php
-																												  if ($pages_num == $i) {
-																												  if ($module->name !== 'section_break_module') {
-																												  ?>
-																												  <li class="element">
-																												  <div class="tree-element-left">
-																												  <?php echo ($mod->post_title && $mod->post_title !== '' ? $mod->post_title : __('Untitled Element', 'cp')); ?>
-																												  </div>
-
-																												  <div class="tree-element-right">
-																												  <input type='checkbox' class="module_show" id='show-<?php echo $mod->ID; ?>' name='meta_show_module[<?php echo $mod->ID; ?>]' <?php
-																												  if (isset($show_module[$mod->ID])) {
-																												  echo ( $show_module[$mod->ID] == 'on' ) ? 'checked' : '';
-																												  }
-																												  ?> />
-
-																												  <input type='checkbox' class="module_preview" id='preview-<?php echo $mod->ID; ?>' name='meta_preview_module[<?php echo $mod->ID; ?>]' <?php
-																												  if (isset($preview_module[$mod->ID])) {
-																												  echo ( $preview_module[$mod->ID] == 'on' ) ? 'checked' : '';
-																												  }
-																												  ?> />
-
-																												  <span><?php echo (isset($mod->time_estimation) && $mod->time_estimation !== '') ? $mod->time_estimation.' '.__('min', 'cp') : __('N/A', 'cp');?></span>
-																												  </div>
-																												  </li>
-																												  <?php
-																												  }
-																												  }
-																												  }
-																												  }
-																												  } */
-																												?>
-
-																											</ol>
-																											<?php
-																										}
-																										?>
-																									</li>
-																								<?php } ?>
-
-																							</ol>
-																						</li>
+																						</ol>
+																					</li>
 
 
-																						<?php
-																					}
-
-																					if ( $section_dirty ) {
-																						?>
-																						<input type="hidden" name="section_dirty" value="true" />
-																						<?php
-																					}
-																					?>
-																				</ol>
 																				<?php
-																			}
-																			?>
-																		</li>
+																				}
 
-																	</ol>
-																</td>
-															</tr>
-															<?php
-															/* $units = $course->get_units();
+																				if ( $section_dirty ) {
+																					?>
+																					<input type="hidden" name="section_dirty" value="true"/>
+																				<?php
+																				}
+																				?>
+																			</ol>
+																		<?php
+																		}
+																		?>
+																	</li>
 
-															  if (0 == count($units)) {
-															  ?>
-															  <tr>
-															  <th colspan="4"><?php _e('There are currently no Units to Display', 'cp'); ?></th>
-															  </tr>
-															  <?php
-															  } else { */
-															/* foreach ($units as $unit) {
-															  ?>
-															  <tr>
-															  <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
-															  </tr>
-															  <?php
-															  $module = new Unit_Module();
-															  $modules = $module->order_modules(Unit_Module::get_modules($unit->ID));
+																</ol>
+															</td>
+														</tr>
+														<?php
+														/* $units = $course->get_units();
 
-															  foreach ($modules as $module) {
-															  if (!empty($module->post_title)) {
-															  ?>
-															  <tr>
-															  <td>
-															  <?php echo $module->post_title; ?>
-															  <input type="hidden" name="module_element[<?php echo $module->ID; ?>]" value="<?php echo $module->ID; ?>" />
-															  </td>
-															  <td><input type='checkbox' id='show-<?php echo $module->ID; ?>' name='meta_show_module[<?php echo $module->ID; ?>]' <?php
-															  if (isset($show_module[$module->ID])) {
-															  echo ( $show_module[$module->ID] == 'on' ) ? 'checked' : '';
-															  }
-															  ?> /></td>
-															  <td><input type='checkbox' id='preview-<?php echo $module->ID; ?>' name='meta_preview_module[<?php echo $module->ID; ?>]' <?php
-															  if (isset($preview_module[$module->ID])) {
-															  echo ( $preview_module[$module->ID] == 'on' ) ? 'checked' : '';
-															  }
-															  ?> /></td>
+														  if (0 == count($units)) {
+														  ?>
+														  <tr>
+														  <th colspan="4"><?php _e('There are currently no Units to Display', 'cp'); ?></th>
+														  </tr>
+														  <?php
+														  } else { */
+														/* foreach ($units as $unit) {
+														  ?>
+														  <tr>
+														  <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
+														  </tr>
+														  <?php
+														  $module = new Unit_Module();
+														  $modules = $module->order_modules(Unit_Module::get_modules($unit->ID));
 
-															  <td>10 min</td>
-															  </tr>
-															  <?php
-															  } // if not empty post title
-															  } // foreach ( $modules as $modul )
-															  ?>
-															  <?php
-															  } */ // foreach ( $units as $unit )
-//}
-															?>
+														  foreach ($modules as $module) {
+														  if (!empty($module->post_title)) {
+														  ?>
+														  <tr>
+														  <td>
+														  <?php echo $module->post_title; ?>
+														  <input type="hidden" name="module_element[<?php echo $module->ID; ?>]" value="<?php echo $module->ID; ?>" />
+														  </td>
+														  <td><input type='checkbox' id='show-<?php echo $module->ID; ?>' name='meta_show_module[<?php echo $module->ID; ?>]' <?php
+														  if (isset($show_module[$module->ID])) {
+														  echo ( $show_module[$module->ID] == 'on' ) ? 'checked' : '';
+														  }
+														  ?> /></td>
+														  <td><input type='checkbox' id='preview-<?php echo $module->ID; ?>' name='meta_preview_module[<?php echo $module->ID; ?>]' <?php
+														  if (isset($preview_module[$module->ID])) {
+														  echo ( $preview_module[$module->ID] == 'on' ) ? 'checked' : '';
+														  }
+														  ?> /></td>
+
+														  <td>10 min</td>
+														  </tr>
+														  <?php
+														  } // if not empty post title
+														  } // foreach ( $modules as $modul )
+														  ?>
+														  <?php
+														  } */ // foreach ( $units as $unit )
+														//}
+														?>
 
 														</tbody>
 													</table>
@@ -770,30 +781,31 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<?php do_action( 'course_step_2_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
-												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
+												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>"/>
+												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
 											</div>
 										</div>
 									</div>
-									<!-- /Course Description -->							
+									<!-- /Course Description -->
 
 									<!-- Instructors -->
 									<div class="course-section step step-3 <?php echo 'step-3' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
-											<div class="status <?php echo empty( $course_setup_progress[ 'step-3' ] ) ? '' : $course_setup_progress[ 'step-3' ]; ?> "></div>									
-											<h3><?php _e( 'Step 3 - Instructors', 'cp' ) ?></h3>									
+											<div class="status <?php echo empty( $course_setup_progress['step-3'] ) ? '' : $course_setup_progress['step-3']; ?> "></div>
+											<h3><?php _e( 'Step 3 - Instructors', 'cp' ) ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status = $course_setup_progress[ 'step-3' ];
+											$set_status = $course_setup_progress['step-3'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+											<input type='hidden' name='meta_course_setup_progress[step-3]' class='course_setup_progress' value="<?php echo $set_status; ?>"/>
+
 											<div class="wide narrow">
 												<label>
 													<?php _e( 'Course Instructor(s)', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Select one or more instructor to facilitate this course.', 'cp' ) );                 ?>
-													<br />
+													<br/>
 													<span><?php _e( 'Select one or more instructor to facilitate this course', 'cp' ); ?></span>
 												</label>
 
@@ -801,15 +813,16 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php cp_instructors_avatars_array(); ?>
 
 													<div class="clearfix"></div>
-													<?php cp_instructors_drop_down( 'postform chosen-select-course course-instructors' ); ?><input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e( 'Assign', 'cp' ); ?>">
+													<?php cp_instructors_drop_down( 'postform chosen-select-course course-instructors' ); ?>
+													<input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e( 'Assign', 'cp' ); ?>">
 													<!-- <p><?php _e( 'NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp' ); ?></p> -->
 
 													<?php
 													$data_nonce = wp_create_nonce( 'manage-instructors-' . get_current_user_id() );
 													?>
 
-													<input type='hidden' name='instructor-ajax-check' id="instructor-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo get_current_user_id(); ?>" data-nonce="<?php echo $data_nonce; ?>" value="" />
-													<?php
+													<input type='hidden' name='instructor-ajax-check' id="instructor-ajax-check" data-id="<?php echo $course_id; ?>" data-uid="<?php echo get_current_user_id(); ?>" data-nonce="<?php echo $data_nonce; ?>" value=""/>
+												<?php
 												} else {
 													if ( cp_get_number_of_instructors() == 0 || cp_instructors_avatars( $course_id, false, true ) == 0 ) {//just to fill in emtpy space if none of the instructors has been assigned to the course and in the same time instructor can't assign instructors to a course
 														_e( 'You do not have required permissions to assign instructors to a course.', 'cp' );
@@ -818,9 +831,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												?>
 
 												<p><?php _e( 'Assigned Instructors:', 'cp' ); ?></p>
+
 												<div class="instructors-info" id="instructors-info">
-													<?php if ( 0 >= cp_instructors_avatars( $course_id, true, true ) ) : ?> 
-														<div class="instructor-avatar-holder empty"><span class="instructor-name"><?php _e( 'Please Assign Instructor', 'cp' ); ?></span></div>											
+													<?php if ( 0 >= cp_instructors_avatars( $course_id, true, true ) ) : ?>
+														<div class="instructor-avatar-holder empty">
+															<span class="instructor-name"><?php _e( 'Please Assign Instructor', 'cp' ); ?></span>
+														</div>
 													<?php endif ?>
 
 													<?php
@@ -832,23 +848,24 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												</div>
 
 												<div class="clearfix"></div>
-												<?php if ( $can_manage_instructors || 0 == $course_id ) : ?>						
-													<hr />
+												<?php if ( $can_manage_instructors || 0 == $course_id ) : ?>
+													<hr/>
 													<!-- INVITE INSTRUCTOR -->
 
 													<label>
 														<?php _e( 'Invite New Instructor', 'cp' ); ?>
 														<?php // CP_Helper_Tooltip::tooltip( __( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ) );                 ?>
-														<br />
+														<br/>
 														<span><?php _e( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' ); ?></span>
-													</label>										
+													</label>
 													<div class="instructor-invite">
 														<label for="invite_instructor_first_name"><?php _e( 'First Name', 'cp' ); ?></label>
-														<input type="text" name="invite_instructor_first_name" placeholder="<?php _e( 'First Name', 'cp' ); ?>" />
+														<input type="text" name="invite_instructor_first_name" placeholder="<?php _e( 'First Name', 'cp' ); ?>"/>
 														<label for="invite_instructor_last_name"><?php _e( 'Last Name', 'cp' ); ?></label>
-														<input type="text" name="invite_instructor_last_name" placeholder="<?php _e( 'Last Name', 'cp' ); ?>" />
+														<input type="text" name="invite_instructor_last_name" placeholder="<?php _e( 'Last Name', 'cp' ); ?>"/>
 														<label for="invite_instructor_email"><?php _e( 'E-Mail', 'cp' ); ?></label>
-														<input type="text" name="invite_instructor_email" placeholder="<?php _e( 'instructor@email.com', 'cp' ); ?>" />											
+														<input type="text" name="invite_instructor_email" placeholder="<?php _e( 'instructor@email.com', 'cp' ); ?>"/>
+
 														<div class="submit-message">
 															<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e( 'Send Invite', 'cp' ); ?>">
 														</div>
@@ -861,33 +878,35 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<?php do_action( 'course_step_3_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
-												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
+												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>"/>
+												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
 											</div>
 										</div>
 									</div>
 									<!-- /Instructors -->
 
-									<!-- Course Dates -->							
+									<!-- Course Dates -->
 									<div class="course-section step step-4 <?php echo 'step-4' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
-											<div class="status <?php echo empty( $course_setup_progress[ 'step-4' ] ) ? '' : $course_setup_progress[ 'step-4' ]; ?> "></div>																		
-											<h3><?php _e( 'Step 4 - Course Dates', 'cp' ) ?></h3>									
+											<div class="status <?php echo empty( $course_setup_progress['step-4'] ) ? '' : $course_setup_progress['step-4']; ?> "></div>
+											<h3><?php _e( 'Step 4 - Course Dates', 'cp' ) ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status		 = $course_setup_progress[ 'step-4' ];
+											$set_status = $course_setup_progress['step-4'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo esc_attr( $set_status ); ?>" />
-											<div class="wide course-dates"> 
+											<input type='hidden' name='meta_course_setup_progress[step-4]' class='course_setup_progress' value="<?php echo esc_attr( $set_status ); ?>"/>
+
+											<div class="wide course-dates">
 												<label>
 													<?php _e( 'Course Dates', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'This is the duration the course will be open to the students.', 'cp' ) );                 ?>
-												</label>	
+												</label>
 
-												<div class="course-date-override">    
-													<label><input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ( $open_ended_course == 'on' ) ? 'checked' : ''; ?> /><?php _e( 'This course has no end date', 'cp' ); ?></label>
+												<div class="course-date-override">
+													<label><input type="checkbox" name="meta_open_ended_course" id="open_ended_course" <?php echo ( $open_ended_course == 'on' ) ? 'checked' : ''; ?> /><?php _e( 'This course has no end date', 'cp' ); ?>
+													</label>
 												</div>
 
 												<p><?php _e( 'This is the duration the course will be open to the students', 'cp' ); ?></p>
@@ -895,24 +914,31 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<div class="date-range">
 													<div class="start-date">
 														<label for="meta_course_start_date" class="start-date-label required"><?php _e( 'Start Date', 'cp' ); ?></label>
-														<div class="date"><input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr( $course_start_date ); ?>" /><i class="calendar"></i></div>
+
+														<div class="date">
+															<input type="text" class="dateinput" name="meta_course_start_date" value="<?php echo esc_attr( $course_start_date ); ?>"/><i class="calendar"></i>
+														</div>
 													</div>
 													<div class="end-date <?php echo ( $open_ended_course == 'on' ) ? 'disabled' : ''; ?>">
-														<label for="meta_course_end_date" class="end-date-label <?php echo ($open_ended_course == 'on') ? '' : 'required'; ?>"><?php _e( 'End Date', 'cp' ); ?></label>
-														<div class="date"><input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr( $course_end_date ); ?>" <?php echo ( $open_ended_course == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
+														<label for="meta_course_end_date" class="end-date-label <?php echo ( $open_ended_course == 'on' ) ? '' : 'required'; ?>"><?php _e( 'End Date', 'cp' ); ?></label>
+
+														<div class="date">
+															<input type="text" class="dateinput" name="meta_course_end_date" value="<?php echo esc_attr( $course_end_date ); ?>" <?php echo ( $open_ended_course == 'on' ) ? 'disabled="disabled"' : ''; ?> />
+														</div>
 													</div>
 												</div>
 												<div class="clearfix"></div>
 											</div>
 
-											<div class="wide enrollment-dates">                             
+											<div class="wide enrollment-dates">
 												<label>
 													<?php _e( 'Enrollment Dates', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'These are the dates that students can enroll.', 'cp' ) );                 ?>
-												</label>	
+												</label>
 
-												<div class="enrollment-date-override">    
-													<label><input type="checkbox" name="meta_open_ended_enrollment" id="open_ended_enrollment" <?php echo ( $open_ended_enrollment == 'on' ) ? 'checked' : ''; ?> /><?php _e( 'Users can enroll at any time', 'cp' ); ?></label>
+												<div class="enrollment-date-override">
+													<label><input type="checkbox" name="meta_open_ended_enrollment" id="open_ended_enrollment" <?php echo ( $open_ended_enrollment == 'on' ) ? 'checked' : ''; ?> /><?php _e( 'Users can enroll at any time', 'cp' ); ?>
+													</label>
 												</div>
 
 												<p><?php _e( 'These are the dates that students can enroll', 'cp' ); ?></p>
@@ -920,23 +946,30 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<div class="date-range">
 													<div class="start-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
 														<label for="meta_enrollment_start_date" class="start-date-label <?php echo ( $open_ended_enrollment == 'on' ) ? '' : 'required'; ?>"><?php _e( 'Start Date', 'cp' ); ?></label>
-														<div class="date"><input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr( $enrollment_start_date ); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
+
+														<div class="date">
+															<input type="text" class="dateinput" name="meta_enrollment_start_date" value="<?php echo esc_attr( $enrollment_start_date ); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> />
+														</div>
 													</div>
 													<div class="end-date <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled' : ''; ?>">
 														<label for="meta_enrollment_end_date" class="end-date-label <?php echo ( $open_ended_enrollment == 'on' ) ? '' : 'required'; ?>"><?php _e( 'End Date', 'cp' ); ?></label>
-														<div class="date"><input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr( $enrollment_end_date ); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> /></div>
+
+														<div class="date">
+															<input type="text" class="dateinput" name="meta_enrollment_end_date" value="<?php echo esc_attr( $enrollment_end_date ); ?>" <?php echo ( $open_ended_enrollment == 'on' ) ? 'disabled="disabled"' : ''; ?> />
+														</div>
 													</div>
 												</div>
 
-												<div class="clearfix"></div>								
-											</div><!--/all-course-dates-->
+												<div class="clearfix"></div>
+											</div>
+											<!--/all-course-dates-->
 
 											<?php do_action( 'course_step_4_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
-												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
+												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>"/>
+												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
 											</div>
 										</div>
 									</div>
@@ -945,33 +978,34 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									<!-- Classes, Discussions & Workbook -->
 									<div class="course-section step step-5 <?php echo 'step-5' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
-											<div class="status <?php echo empty( $course_setup_progress[ 'step-5' ] ) ? '' : $course_setup_progress[ 'step-5' ]; ?> "></div>																	
-											<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' ) ?></h3>						
+											<div class="status <?php echo empty( $course_setup_progress['step-5'] ) ? '' : $course_setup_progress['step-5']; ?> "></div>
+											<h3><?php _e( 'Step 5 - Classes, Discussion & Workbook', 'cp' ) ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status		 = $course_setup_progress[ 'step-5' ];
+											$set_status = $course_setup_progress['step-5'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-5]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+											<input type='hidden' name='meta_course_setup_progress[step-5]' class='course_setup_progress' value="<?php echo $set_status; ?>"/>
+
 											<div class="wide narrow">
 												<div>
 													<label for='meta_class-size'>
 														<input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
 														<span><?php _e( 'Limit class size', 'cp' ); ?></span>
 														<?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );                  ?>
-														<br />
+														<br/>
 														<span><?php _e( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ); ?></span>
 													</label>
 													<input class='spinners <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled'; ?> class_size' name='meta_class_size' id='class_size' value='<?php echo esc_attr( stripslashes( ( is_numeric( $class_size ) ? $class_size : 0 ) ) ); ?>' <?php echo ( $limit_class_size == 'on' ) ? '' : 'disabled="disabled"'; ?> />
 													<span class="limit-class-size-required <?php echo ( $limit_class_size == 'on' ) ? 'required' : ''; ?>"></span>
 												</div>
-												<hr />
+												<hr/>
 
 												<label for='meta_allow_course_discussion'>
 													<input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Allow Course Discussion', 'cp' ); ?></span>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );                  ?>
-													<br />
+													<br/>
 													<span><?php _e( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ); ?></span>
 												</label>
 
@@ -979,66 +1013,67 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Show student Workbook', 'cp' ); ?></span>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );                  ?>
-													<br />
+													<br/>
 													<span><?php _e( 'If checked, students can see their progress and grades.', 'cp' ); ?></span>
-												</label>										
+												</label>
 
 											</div>
 
 											<?php do_action( 'course_step_5_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
-												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
+												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>"/>
+												<input type="button" class="button button-units next" value="<?php _e( 'Next', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
 											</div>
 										</div>
 									</div>
-									<!-- /Classes, Discussions & Workbook -->							
+									<!-- /Classes, Discussions & Workbook -->
 
 									<!-- Enrollment & Course Cost -->
 									<div class="course-section step step-6 <?php echo 'step-6' == $course_setup_marker ? 'save-marker active' : ''; ?>">
 										<div class='course-section-title'>
 											<?php
-											$step_6_status	 = empty( $course_setup_progress[ 'step-6' ] ) ? '' : $course_setup_progress[ 'step-6' ];
-											$step_6_status	 = !$gateways && ( isset( $paid_course ) && $paid_course == 'on' ) ? 'attention' : $step_6_status;
+											$step_6_status = empty( $course_setup_progress['step-6'] ) ? '' : $course_setup_progress['step-6'];
+											$step_6_status = ! $gateways && ( isset( $paid_course ) && $paid_course == 'on' ) ? 'attention' : $step_6_status;
 											?>
-											<div class="status <?php echo $step_6_status; ?> "></div>									
+											<div class="status <?php echo $step_6_status; ?> "></div>
 											<?php
-											$section_title	 = __( 'Step 6 - Enrollment & Course Cost', 'cp' );
-											if ( !$offer_paid ) {
+											$section_title = __( 'Step 6 - Enrollment & Course Cost', 'cp' );
+											if ( ! $offer_paid ) {
 												$section_title = __( 'Step 6 - Enrollment', 'cp' );
 											}
 											?>
-											<h3><?php echo esc_html( $section_title ); ?></h3>						
+											<h3><?php echo esc_html( $section_title ); ?></h3>
 										</div>
 										<div class='course-form'>
 											<?php
-											$set_status			 = $course_setup_progress[ 'step-6' ];
+											$set_status = $course_setup_progress['step-6'];
 											?>
-											<input type='hidden' name='meta_course_setup_progress[step-6]' class='course_setup_progress' value="<?php echo $set_status; ?>" />
+											<input type='hidden' name='meta_course_setup_progress[step-6]' class='course_setup_progress' value="<?php echo $set_status; ?>"/>
 
 											<div class="narrow">
 												<label for='meta_enroll_type'>
 													<?php _e( 'Who can Enroll in this course', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) );                  ?>
-													<br />
+													<br/>
 													<span><?php _e( 'Select the limitations on accessing and enrolling in this course.', 'cp' ); ?></span>
 												</label>
 
 												<select class="wide" name="meta_enroll_type" id="enroll_type">
 													<?php
-													$enrollment_types	 = apply_filters( 'coursepress_course_enrollment_types', array(
+													$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', array(
 														'manually' => __( 'Manually added only', 'cp' ),
 													) );
 													?>
 													<?php foreach ( $enrollment_types as $key => $type_text ) { ?>
-														<option value="<?php echo esc_attr( $key ); ?>" <?php echo ( $enroll_type == $key ? 'selected=""' : '' ) ?>><?php echo esc_html( $type_text ) ?></option>
+														<option value="<?php echo esc_attr( $key ); ?>" <?php echo( $enroll_type == $key ? 'selected=""' : '' ) ?>><?php echo esc_html( $type_text ) ?></option>
 													<?php } ?>
 												</select>
 
 												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) { ?>
-																<!--	<span class="course_settings_enrollment_message">--><?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' );   ?><!--</span>-->
+												<!--	<span class="course_settings_enrollment_message">-->
+												<?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' );   ?><!--</span>-->
 												<?php //} ?>
 											</div>
 
@@ -1046,44 +1081,46 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<p><?php _e( 'NOTE: If you need to manually add a student, students must be registered on your site first. To do this for a student, you can do this yourself by going to Users in WordPress where you can add the students manually. You can then select them from this list.', 'cp' ); ?></p>
 											</div>
 
-											<div class="wide" id="enroll_type_prerequisite_holder" <?php echo ( $enroll_type <> 'prerequisite' ? 'style="display:none"' : '' ) ?>>
+											<div class="wide" id="enroll_type_prerequisite_holder" <?php echo( $enroll_type <> 'prerequisite' ? 'style="display:none"' : '' ) ?>>
 												<label for='meta_enroll_type'>
 													<?php _e( 'Prerequisite Course', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to fulfil prerequisite in order to enroll.', 'cp' ) );                  ?>
 												</label>
+
 												<p><?php _e( 'Students will need to complete the following prerequisite course in order to enroll.', 'cp' ); ?></p>
 												<select name="meta_prerequisite" class="chosen-select">
 													<?php
 													$args = array(
-														'post_type'		 => 'course',
-														'post_status'	 => 'any',
-														'posts_per_page' => -1,
-														'exclude'		 => $course_id
+														'post_type'      => 'course',
+														'post_status'    => 'any',
+														'posts_per_page' => - 1,
+														'exclude'        => $course_id
 													);
 
 													$pre_courses = get_posts( $args );
 
 													foreach ( $pre_courses as $pre_course ) {
 
-														$pre_course_obj		 = new Course( $pre_course->ID );
-														$pre_course_object	 = $pre_course_obj->get_course();
+														$pre_course_obj    = new Course( $pre_course->ID );
+														$pre_course_object = $pre_course_obj->get_course();
 														?>
 														<option value="<?php echo $pre_course->ID; ?>" <?php selected( $prerequisite, $pre_course->ID, true ); ?>><?php echo $pre_course->post_title; ?></option>
-														<?php
+													<?php
 													}
 													?>
 												</select>
 
 											</div>
 
-											<div class="narrow" id="enroll_type_holder" <?php echo ( $enroll_type <> 'passcode' ? 'style="display:none"' : '' ) ?>>
+											<div class="narrow" id="enroll_type_holder" <?php echo( $enroll_type <> 'passcode' ? 'style="display:none"' : '' ) ?>>
 												<label for='meta_enroll_type'>
 													<?php _e( 'Pass Code', 'cp' ); ?>
 													<?php // CP_Helper_Tooltip::tooltip( __( 'Students will need to enter this pass code in order to enroll.', 'cp' ) );                  ?>
 												</label>
+
 												<p><?php _e( 'Students will need to enter this pass code in order to enroll.', 'cp' ); ?></p>
 
-												<input type="text" name="meta_passcode" value="<?php echo esc_attr( stripslashes( $passcode ) ); ?>" />
+												<input type="text" name="meta_passcode" value="<?php echo esc_attr( stripslashes( $passcode ) ); ?>"/>
 
 											</div>
 
@@ -1091,14 +1128,16 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											// Check to see if we're offering paid courses.
 											if ( $offer_paid ) :
 												?>
-												<hr />
-												<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////                     ?>
+												<hr/>
+												<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+												?>
 												<div class="narrow product">
 													<!-- MarketPress not Active -->
 
-													<?php // marketpress_active set in marketpress_check() hook       ?>
+													<?php // marketpress_active set in marketpress_check() hook
+													?>
 													<?php
-													if ( $coursepress->marketpress_active || (current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' )) ) {
+													if ( $coursepress->marketpress_active || ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) ) {
 														?>
 														<label>
 															<?php _e( 'Cost to participate in this course', 'cp' ); ?>
@@ -1109,7 +1148,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															<span><?php _e( 'This is a Paid Course', 'cp' ); ?></span>
 														</div>
 
-														<?php
+													<?php
 													}
 													if ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) {
 														?>
@@ -1120,96 +1159,99 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																</label>
 
 																<?php
-																if ( !CoursePress_Capabilities::is_pro() ) {
+																if ( ! CoursePress_Capabilities::is_pro() ) {
 																	echo sprintf( __(
-																	'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
-																	'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
+																		'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
+																		'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
 																} else {
 																	echo sprintf( __( 'The full version of MarketPress has been bundled with %s.<br />' .
-																	'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
+																	                  'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
 																}
 																?>
 															</div>
 														</div>  <!-- cp-marketpress-not-active -->
 													<?php } ?>
-													<?php if ( current_user_can( 'manage_options' ) || (!current_user_can( 'manage_options' ) && $gateways) ) { ?>
-														<div class="cp-markertpress-is-active <?php echo!$coursepress->marketpress_active ? 'hidden' : ''; ?>">
-															<?php
-															$mp_product_id = $course->mp_product_id();
+													<?php if (current_user_can( 'manage_options' ) || ( ! current_user_can( 'manage_options' ) && $gateways )) { ?>
+													<div class="cp-markertpress-is-active <?php echo ! $coursepress->marketpress_active ? 'hidden' : ''; ?>">
+														<?php
+														$mp_product_id = $course->mp_product_id();
 
-															$product_exists = 0 != $mp_product_id ? true : false;
+														$product_exists = 0 != $mp_product_id ? true : false;
 
-															$paid_course = !isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
-															$paid_course = !$product_exists ? 'off' : $paid_course;
+														$paid_course = ! isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
+														$paid_course = ! $product_exists ? 'off' : $paid_course;
 
-															//var_dump(get_post_custom($course_id));
-															if ( isset( $course_id ) && $course_id !== 0 ) {
-																$mp_product_details = get_post_custom( $course_id );
-															}
+														//var_dump(get_post_custom($course_id));
+														if ( isset( $course_id ) && $course_id !== 0 ) {
+															$mp_product_details = get_post_custom( $course_id );
+														}
 
-															if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
-																$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
-															} else {
-																$marketpress_product_sku = '';
-															}
+														if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
+															$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
+														} else {
+															$marketpress_product_sku = '';
+														}
 
-															$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
-															?>
+														$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
+														?>
 
-															<input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr( isset( $course->details->mp_product_id ) ? $course->details->mp_product_id : ''  ); ?>" />
+														<input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr( isset( $course->details->mp_product_id ) ? $course->details->mp_product_id : '' ); ?>"/>
 
-															<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
-																<div class="course-sku">
-																	<p><input type="checkbox" name="meta_auto_sku" <?php echo ( isset( $auto_sku ) && $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
-																		<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?></p>
-																	<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
-																	/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
-																	  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
-																	  } */
-																	echo esc_attr( isset( $marketpress_product_sku[ 0 ] ) ? $marketpress_product_sku[ 0 ] : ''  );
-																	?>" <?php echo $input_state; ?> />
-																</div>
-
-																<div class="course-price">
-																	<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
-																	<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $mp_product_details[ 'mp_price' ][ 0 ] ) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
-																</div>
-
-																<div class="clearfix"></div>
-
-																<div class="course-sale-price">
-																	<?php
-																	$mp_is_sale	 = isset( $mp_product_details[ "mp_is_sale" ][ 0 ] ) ? $mp_product_details[ "mp_is_sale" ][ 0 ] : 0;
-																	?>
-																	<p><input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $mp_is_sale ); ?>" <?php checked( $mp_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
-																		<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
-																	<span class="price-label <?php isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) && checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
-																	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo (!empty( $mp_product_details[ 'mp_sale_price' ] ) ? esc_attr( $mp_product_details[ "mp_sale_price" ][ 0 ] ) : 0); ?>" <?php echo $input_state; ?>  />
-																</div>
-
-																<div class="clearfix"></div>
-
-																<?php if ( current_user_can( 'manage_options' ) ) { ?>
-																	<div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
-																		<?php
-																		//Try to dequeue need-help script to avoid need-help popup
-																		wp_dequeue_script( 'mp-need-help' );
-																		?>
-																		<!-- Add both links for JS/CSS toggle -->
-																		<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
-																		<span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
-
-																		<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>												
-																	</div>
-																<?php } ?>
+														<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
+															<div class="course-sku">
+																<p>
+																	<input type="checkbox" name="meta_auto_sku" <?php echo ( isset( $auto_sku ) && $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
+																	<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?>
+																</p>
+																<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
+																/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
+																  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
+																  } */
+																echo esc_attr( isset( $marketpress_product_sku[0] ) ? $marketpress_product_sku[0] : '' );
+																?>" <?php echo $input_state; ?> />
 															</div>
+
+															<div class="course-price">
+																<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
+																<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $mp_product_details['mp_price'][0] ) ? esc_attr( $mp_product_details['mp_price'][0] ) : ''; ?>" <?php echo $input_state; ?>  />
+															</div>
+
+															<div class="clearfix"></div>
+
+															<div class="course-sale-price">
+																<?php
+																$mp_is_sale = isset( $mp_product_details["mp_is_sale"][0] ) ? $mp_product_details["mp_is_sale"][0] : 0;
+																?>
+																<p>
+																	<input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $mp_is_sale ); ?>" <?php checked( $mp_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
+																	<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
+																<span class="price-label <?php isset( $mp_product_details ) && ! empty( $mp_product_details["mp_is_sale"] ) && checked( $mp_product_details["mp_is_sale"][0], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
+																<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo( ! empty( $mp_product_details['mp_sale_price'] ) ? esc_attr( $mp_product_details["mp_sale_price"][0] ) : 0 ); ?>" <?php echo $input_state; ?>  />
+															</div>
+
+															<div class="clearfix"></div>
+
+															<?php if ( current_user_can( 'manage_options' ) ) { ?>
+																<div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
+																	<?php
+																	//Try to dequeue need-help script to avoid need-help popup
+																	wp_dequeue_script( 'mp-need-help' );
+																	?>
+																	<!-- Add both links for JS/CSS toggle -->
+																	<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
+																	<span class="payment-gateway-required <?php echo ! $gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
+
+																	<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>
+																</div>
+															<?php } ?>
 														</div>
+													</div>
 													<?php } ?><!-- cp-markertpress-is-active -->
 													<!--_e('Please ask administrator to enable at least one payment gateway.', 'cp');-->
 												</div>
 
-												<?php
-											// End check for Campus.
+											<?php
+												// End check for Campus.
 											endif;
 											?>
 											<?php // END ///////////////////////////////                     ?>
@@ -1217,12 +1259,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 											<?php do_action( 'course_step_6_fields', $course_id ); ?>
 
 											<div class="course-step-buttons">
-												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>" />
-												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>" />										
-												<input type="button" class="button button-units done" value="<?php _e( 'Done', 'cp' ); ?>" />
+												<input type="button" class="button button-units prev" value="<?php _e( 'Previous', 'cp' ); ?>"/>
+												<input type="button" class="button button-units update" value="<?php _e( 'Update', 'cp' ); ?>"/>
+												<input type="button" class="button button-units done" value="<?php _e( 'Done', 'cp' ); ?>"/>
 											</div>
 										</div>
-									</div>							
+									</div>
 									<!-- /Enrollment & Course Cost -->
 
 									<!-- OLD GRADEBOOK INTEGRATION
@@ -1251,7 +1293,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 										//printf(__('You can create only %s courses with Standard version of %s. Check out the %s.'), $wp_course_search->courses_per_page, $this->name, '<a href="http://premium.wpmudev.org/project/coursepress-pro/">' . __('PRO version') . '</a>');
 										?>
 									</div>
-									<?php
+								<?php
 								}
 								?>
 							</div>
@@ -1264,17 +1306,18 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 						<?php
 						if ( $course_id !== 0 ) {
 							?>
-																																																				<a href="<?php echo admin_url( 'admin.php?page=' . (int) $_GET[ 'page' ] . '&tab=units&course_id=' . (int) $_GET[ 'course_id' ] ); ?>" class="button-secondary"><?php _e( 'Add Units &raquo;', 'cp' ); ?></a> 
+																																																				<a href="<?php echo admin_url( 'admin.php?page=' . (int) $_GET['page'] . '&tab=units&course_id=' . (int) $_GET['course_id'] ); ?>" class="button-secondary"><?php _e( 'Add Units &raquo;', 'cp' ); ?></a>
 						<?php } ?>
 						</div>
 						-->
 
 					</div>
 				<?php } ?>
-            </div>
+			</div>
 
-        </div> <!-- course-liquid-left -->
+		</div>
+		<!-- course-liquid-left -->
 
-    </form>
+	</form>
 
 </div> <!-- wrap -->

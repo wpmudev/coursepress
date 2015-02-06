@@ -20,7 +20,7 @@
  * MA 02110-1301 USA
  *
  */
-if ( !class_exists( 'CoursePress_Integration' ) ) {
+if ( ! class_exists( 'CoursePress_Integration' ) ) {
 
 	/**
 	 * CoursePress class for integrating with other plugins
@@ -52,7 +52,7 @@ if ( !class_exists( 'CoursePress_Integration' ) ) {
 		 * @since 1.2.2
 		 */
 		function wp_head_ufb_integration() {
-			if( 'course' == get_post_type() ) {
+			if ( 'course' == get_post_type() ) {
 				$this->data['current_course'] = new Course( get_the_ID() ); // course already in object cache
 				add_filter( 'wdfb-opengraph_apply_the_content_filter', array( &$this, 'ufb_remove_content_filter' ) );
 				add_filter( 'wdfb-opengraph-image', array( &$this, 'ufb_opengraph_image' ) );
@@ -112,9 +112,9 @@ if ( !class_exists( 'CoursePress_Integration' ) ) {
 		 */
 		function ufb_opengraph_property( $meta, $name, $value ) {
 
-			if( 'og:description' == $name ) {
+			if ( 'og:description' == $name ) {
 				$value = $this->data['current_course']->details->post_excerpt;
-				$meta = '<meta content="' . esc_html( $value ) . '" property="og:description">';
+				$meta  = '<meta content="' . esc_html( $value ) . '" property="og:description">';
 			}
 
 			return $meta;

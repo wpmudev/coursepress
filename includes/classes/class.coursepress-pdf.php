@@ -115,7 +115,7 @@ class CoursePress_PDF extends TCPDF {
 			'zapfdingbats.php',
 		);
 
-		foreach( $fonts as $font ) {
+		foreach ( $fonts as $font ) {
 			array_push( $this->fontlist, strtolower( $this->_getfontpath() . $font ) );
 		}
 

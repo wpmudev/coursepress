@@ -17,8 +17,7 @@ if ( isset( $_POST['course_id'] ) ) {
 }
 ?>
 <div class="wrap nocoursesub student-workbook cp-wrap">
-	<a href="<?php echo admin_url( 'admin.php?page=students' ); ?>"
-	   class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
+	<a href="<?php echo admin_url( 'admin.php?page=students' ); ?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
 
 	<h2><?php _e( 'Student Workbook', 'cp' ); ?></h2>
 
@@ -56,8 +55,7 @@ if ( isset( $_POST['course_id'] ) ) {
 							</div>
 							<div>
 								<span class="info_caption"><?php _e( 'Email', 'cp' ); ?></span>
-								<span class="info"><a
-										href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span>
+								<span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span>
 							</div>
 							<div>
 								<span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
@@ -65,14 +63,11 @@ if ( isset( $_POST['course_id'] ) ) {
 							</div>
 							<div>
 								<span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
-								<span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i
-											class="fa fa-pencil"></i></a></span>
+								<span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
 							</div>
 							<div>
 								<span class="info_caption"><?php _e( 'Profile', 'cp' ); ?></span>
-								<span class="info"><a
-										href="<?php echo admin_url( 'admin.php?page=students&action=view&student_id=' . $student->ID ); ?>"><i
-											class="fa fa-user"></i></a></span>
+								<span class="info"><a href="<?php echo admin_url( 'admin.php?page=students&action=view&student_id=' . $student->ID ); ?>"><i class="fa fa-user"></i></a></span>
 							</div>
 						</div>
 						<div class="full border-divider"></div>
@@ -87,18 +82,15 @@ if ( isset( $_POST['course_id'] ) ) {
 
 							if ( count( $enrolled_courses ) == 0 ) {
 								?>
-								<div
-									class="zero-courses"><?php _e( 'Student did not enroll in any course yet.', 'cp' ); ?></div>
+								<div class="zero-courses"><?php _e( 'Student did not enroll in any course yet.', 'cp' ); ?></div>
 							<?php } else {
 								?>
 								<div class="tablenav">
 									<form method="get" id="course-filter">
 
 										<input type="hidden" name="action" value="workbook"/>
-										<input type="hidden" name="student_id"
-										       value="<?php echo esc_attr( $_GET['student_id'] ); ?>"/>
-										<input type="hidden" name="page"
-										       value="<?php echo esc_attr( $_GET['page'] ); ?>"/>
+										<input type="hidden" name="student_id" value="<?php echo esc_attr( $_GET['student_id'] ); ?>"/>
+										<input type="hidden" name="page" value="<?php echo esc_attr( $_GET['page'] ); ?>"/>
 
 										<div class="alignleft actions">
 											<select name="course_id" id="dynamic_courses" class="chosen-select">
@@ -127,8 +119,7 @@ if ( isset( $_POST['course_id'] ) ) {
 														$courses_with_students ++;
 														if ( isset( $course_object->ID ) ) {
 															?>
-															<option
-																value="<?php echo $course_object->ID; ?>" <?php echo( ( isset( $_GET['course_id'] ) && $_GET['course_id'] == $course_object->ID ) ? 'selected="selected"' : '' ); ?>><?php echo $course_object->post_title; ?></option>
+															<option value="<?php echo $course_object->ID; ?>" <?php echo( ( isset( $_GET['course_id'] ) && $_GET['course_id'] == $course_object->ID ) ? 'selected="selected"' : '' ); ?>><?php echo $course_object->post_title; ?></option>
 														<?php
 														}
 													}
@@ -137,8 +128,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
 												if ( $courses_with_students == 0 ) {
 													?>
-													<option
-														value=""><?php _e( 'Student did not enroll into any course yet.', 'cp' ); ?></option>
+													<option value=""><?php _e( 'Student did not enroll into any course yet.', 'cp' ); ?></option>
 												<?php
 												}
 												?>
@@ -161,8 +151,7 @@ if ( isset( $_POST['course_id'] ) ) {
 												if ( count( $course_units ) >= 1 ) {
 													?>
 
-													<label
-														class="ungraded"><?php _e( 'Ungraded Elements Only', 'cp' ); ?>
+													<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'cp' ); ?>
 														<?php
 														if ( isset( $_GET['ungraded'] ) && $_GET['ungraded'] == 'yes' ) {
 															$ungraded_filter = 'yes';
@@ -170,8 +159,7 @@ if ( isset( $_POST['course_id'] ) ) {
 															$ungraded_filter = 'no';
 														}
 														?>
-														<input type="checkbox" id="ungraded" name="ungraded"
-														       value="yes" <?php checked( $ungraded_filter, 'yes', true ); ?> />
+														<input type="checkbox" id="ungraded" name="ungraded" value="yes" <?php checked( $ungraded_filter, 'yes', true ); ?> />
 													</label>
 
 												<?php
@@ -213,18 +201,14 @@ if ( isset( $_POST['course_id'] ) ) {
 												);
 
 												?>
-												<table cellspacing="0"
-												       class="widefat shadow-table assessment-archive-table">
+												<table cellspacing="0" class="widefat shadow-table assessment-archive-table">
 													<thead>
 													<tr>
 														<?php
 														$n = 0;
 														foreach ( $columns as $key => $col ) {
 															?>
-															<th class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>"
-															    width="<?php echo $col_sizes[ $n ] . '%'; ?>"
-															    id="<?php echo $key; ?>"
-															    scope="col"><?php echo $col; ?></th>
+															<th class="manage-column column-<?php echo str_replace( '_', '-', $key ); ?>" width="<?php echo $col_sizes[ $n ] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
 															<?php
 															$n ++;
 														}
@@ -242,8 +226,7 @@ if ( isset( $_POST['course_id'] ) ) {
 													foreach ( $modules as $mod ) {
 														$class_name = $mod->module_type;
 														if ( class_exists( $class_name ) ) {
-															$module = new $class_name();
-															if ( $module->front_save ) {
+															if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 																$input_modules_count ++;
 															}
 														}
@@ -255,10 +238,9 @@ if ( isset( $_POST['course_id'] ) ) {
 														$class_name = $mod->module_type;
 
 														if ( class_exists( $class_name ) ) {
-															$module = new $class_name();
 
-															if ( $module->front_save ) {
-																$response         = $module->get_response( $user_object->ID, $mod->ID );
+															if ( constant( $class_name . '::FRONT_SAVE' ) ) {
+																$response         = call_user_func( $class_name . '::get_response', $user_object->ID, $mod->ID );
 																$visibility_class = ( count( $response ) >= 1 ? '' : 'less_visible_row' );
 
 																if ( count( $response ) >= 1 ) {
@@ -279,24 +261,22 @@ if ( isset( $_POST['course_id'] ) ) {
 
 																$style = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 																?>
-																<tr id='user-<?php echo $user_object->ID; ?>'
-																    class="<?php
-																    echo $style;
-																    echo 'row-' . $current_row;
-																    ?>">
+																<tr id='user-<?php echo $user_object->ID; ?>' class="<?php
+																echo $style;
+																echo 'row-' . $current_row;
+																?>">
 
 																	<?php
 																	if ( $general_col_visibility ) {
 																		?>
 																		<td class="column-module <?php echo $style . ' ' . $visibility_class; ?>">
-																			<?php echo $module->label;
+																			<?php echo $mod->label;
 																			?>
 																		</td>
 
 																		<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
 																			<?php echo $mod->post_title; ?>
-																			<div
-																				class="extra-information visible-extra-small">
+																			<div class="extra-information visible-extra-small">
 																				<?php _e( 'Submitted:', 'cp' ); ?>
 																				<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'cp' ) ); ?>
 																			</div>
@@ -311,8 +291,7 @@ if ( isset( $_POST['course_id'] ) ) {
 																			if ( count( $response ) >= 1 ) {
 																				?>
 
-																				<a class="assessment-view-response-link button button-units"
-																				   href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'cp' ); ?></a>
+																				<a class="assessment-view-response-link button button-units" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'cp' ); ?></a>
 
 																			<?php
 																			} else {
@@ -333,12 +312,11 @@ if ( isset( $_POST['course_id'] ) ) {
 																				if ( count( $response ) >= 1 ) {
 																					if ( isset( $grade_data ) ) {
 																						?>
-																						<a class="response_grade"
-																						   alt="<?php
-																						   _e( 'Grade by ', 'cp' );
-																						   echo $instructor_name->display_name;
-																						   echo sprintf( __( ' on %s', 'cp' ), $grade_time );
-																						   ?>" title="<?php
+																						<a class="response_grade" alt="<?php
+																						_e( 'Grade by ', 'cp' );
+																						echo $instructor_name->display_name;
+																						echo sprintf( __( ' on %s', 'cp' ), $grade_time );
+																						?>" title="<?php
 																						_e( 'Grade by ', 'cp' );
 																						echo $instructor_name->display_name;
 																						echo sprintf( __( ' on %s', 'cp' ), $grade_time );
@@ -363,9 +341,7 @@ if ( isset( $_POST['course_id'] ) ) {
 																			}
 																			if ( isset( $comment ) && $comment !== '' ) {
 																				?>
-																				<a alt="<?php echo $comment; ?>"
-																				   title="<?php echo $comment; ?>"><i
-																						class="fa fa-comment"></i></a>
+																				<a alt="<?php echo $comment; ?>" title="<?php echo $comment; ?>"><i class="fa fa-comment"></i></a>
 																			<?php
 																			} else {
 																				echo '<i class="fa fa-comment-o"></i>';
