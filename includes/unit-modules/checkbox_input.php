@@ -438,7 +438,7 @@ class checkbox_input_module extends Unit_Module {
 						$chosen_answers = array();
 
 						foreach ( $response_value as $post_response_val ) {
-							$chosen_answers[] = $post_response_val;
+							$chosen_answers[] = stripslashes( $post_response_val );
 						}
 
 
