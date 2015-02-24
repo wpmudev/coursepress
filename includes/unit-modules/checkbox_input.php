@@ -431,19 +431,31 @@ class checkbox_input_module extends Unit_Module {
 						$data->response_id                      = $response_id;
 						$data->title                            = ''; //__( 'Response to '.$response_id.' module ( Unit '.$_POST['unit_id'].' )' );
 						$data->content                          = '';
-						$data->metas['student_checked_answers'] = $response_value;
 
 						/* CHECK AND SET THE GRADE AUTOMATICALLY */
 
 						$chosen_answers = array();
 
 						foreach ( $response_value as $post_response_val ) {
-							$chosen_answers[] = stripslashes( $post_response_val );
+							$value =  stripslashes( $post_response_val );
+							$value = strip_tags( $value );
+							$value = htmlentities( $value );
+							$chosen_answers[] = $value;
 						}
 
+						$data->metas['student_checked_answers'] = $chosen_answers;
 
 						if ( count( $chosen_answers ) !== 0 ) {
 							$right_answers  = get_post_meta( $response_id, 'checked_answers', true );
+							$cleaned_answers = array();
+							foreach ( $right_answers as $answer ) {
+								$value =  stripslashes( $answer );
+								$value = strip_tags( $value );
+								$value = htmlentities( $value );
+								$cleaned_answers[] = $value;
+							}
+							$right_answers = $cleaned_answers;
+
 							$response_grade = 0;
 
 							foreach ( $chosen_answers as $chosen_answer ) {

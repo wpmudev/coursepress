@@ -401,11 +401,18 @@ class radio_input_module extends Unit_Module {
 						$data->post_type        = 'module_response';
 						$data->response_id      = $response_id;
 						$data->title            = ''; //__( 'Response to '.$response_id.' module ( Unit '.$_POST['unit_id'].' )' );
-						$data->content          = stripslashes( $response_value );
+
+						$response_value = stripslashes( $response_value );
+						$response_value = strip_tags( $response_value );
+						$response_value = htmlentities( $response_value );
+						$data->content          = $response_value;
 
 						/* CHECK AND SET THE GRADE AUTOMATICALLY */
 
 						$checked_value = get_post_meta( $response_id, 'checked_answer', true );
+						$checked_value = stripslashes( $checked_value );
+						$checked_value = strip_tags( $checked_value );
+						$checked_value = htmlentities( $checked_value );
 
 						if ( $data->content == $checked_value ) {
 							$response_grade = 100;
