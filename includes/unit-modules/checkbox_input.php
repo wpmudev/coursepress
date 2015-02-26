@@ -436,10 +436,7 @@ class checkbox_input_module extends Unit_Module {
 
 						$chosen_answers = array();
 
-						foreach ( $response_value as $post_response_val ) {
-							$value =  stripslashes( $post_response_val );
-							$value = strip_tags( $value );
-							$value = htmlentities( $value );
+						foreach ( $response_value as $value ) {
 							$chosen_answers[] = $value;
 						}
 
@@ -455,6 +452,15 @@ class checkbox_input_module extends Unit_Module {
 								$cleaned_answers[] = $value;
 							}
 							$right_answers = $cleaned_answers;
+
+							$cleaned_response = array();
+							foreach( $chosen_answers as $answer ) {
+								$value =  stripslashes( $answer );
+								$value = strip_tags( $value );
+								$value = htmlentities( $value );
+								$cleaned_response[] = $value;
+							}
+							$chosen_answers = $cleaned_response;
 
 							$response_grade = 0;
 

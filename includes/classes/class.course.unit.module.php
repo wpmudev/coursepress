@@ -13,6 +13,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		var $parent_unit = '';
 		var $unit_id = 0;
 
+		private static $auto_grade_modules = array( 'checkbox_input_module_X', 'radio_input_module' );
+
 		function __construct() {
 			add_filter( 'element_content_filter', array( $this, 'add_oembeds' ) );
 			$this->on_create();
@@ -277,7 +279,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				//SET AUTO GRADE IF REQUESTED BY A MODULE
 				if ( isset( $data->auto_grade ) && is_numeric( $data->auto_grade ) ) {
-					$this->save_response_grade( $post_id, $data->auto_grade, get_current_user_id(), $course_id, $unit_id[0], $data->module_id );
+					Unit_Module::save_response_grade( $post_id, $data->auto_grade, get_current_user_id(), $course_id, $unit_id[0], $data->module_id );
 					do_action( 'student_response_not_required_grade_instructor_notification', get_current_user_id(), $course_id, $instructors );
 				} else {
 					do_action( 'student_response_required_grade_instructor_notification', get_current_user_id(), $course_id, $instructors );
@@ -620,7 +622,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		function additional_module_actions() {
 			$this->save_response_comment();
-			$this->save_response_grade();
+			Unit_Module::save_response_grade();
 		}
 
 		function save_response_comment() {
@@ -629,7 +631,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			}
 		}
 
-		function save_response_grade( $response_id = '', $response_grade = '', $user_id = false, $course_id = false, $unit_id = false, $module_id = false ) {
+		public static function save_response_grade( $response_id = '', $response_grade = '', $user_id = false, $course_id = false, $unit_id = false, $module_id = false ) {
 			if ( ( isset( $_POST['response_id'] ) || $response_id !== '' ) && ( isset( $_POST['response_grade'] ) || $response_grade !== '' ) ) {
 
 				$grade_data = array(
@@ -663,6 +665,74 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		public static function get_response_grade( $response_id, $data = '' ) {
 			$grade_data = get_post_meta( $response_id, 'response_grade' );
+			$module_id = wp_get_post_parent_id( $response_id );
+
+			$autograde_modules = Unit_Module::auto_grade_modules();
+			$module_type = get_post_meta( $module_id, 'module_type', true );
+
+			// Check if this needs to be auto graded
+			if( in_array( $module_type, $autograde_modules ) && 100 > $grade_data[0]['grade'] ) {
+
+				$grade = $grade_data[0]['grade'];
+				$response = get_post( $response_id );
+				$student_id = $response->post_author;
+				$unit_id   = get_post_ancestors( $module_id );
+				$unit_id   = $unit_id[0];
+				$course_id = get_post_meta( $unit_id, 'course_id', true );
+
+				// Multiple or single correct answer?
+				$correct_answers = get_post_meta( $module_id, 'checked_answer', true );
+				$correct_answers = empty( $correct_answers ) ? get_post_meta( $module_id, 'checked_answers', true ) : $correct_answers;
+
+				if( ! is_array( $correct_answers ) ) {
+					if( trim( $response->post_content ) == trim( $correct_answers ) ) {
+						$grade = 100;
+					}
+				} else {
+					$student_answers = get_post_meta( $response_id, 'student_checked_answers' );
+
+					if ( count( $student_answers ) !== 0 ) {
+						$cleaned_answers = array();
+						foreach ( $correct_answers as $answer ) {
+							$value =  stripslashes( $answer );
+							$value = strip_tags( $value );
+							$value = htmlentities( $value );
+							$cleaned_answers[] = $value;
+						}
+						$right_answers = $cleaned_answers;
+
+						$cleaned_response = array();
+						foreach( $student_answers as $answer ) {
+							$value =  stripslashes( $answer );
+							$value = strip_tags( $value );
+							$value = htmlentities( $value );
+							$cleaned_response[] = $value;
+						}
+						$chosen_answers = $cleaned_response;
+
+						$grade = 0;
+
+						foreach ( $chosen_answers as $chosen_answer ) {
+							if ( in_array( $chosen_answer, $right_answers ) ) {
+								$grade = $grade + 100;
+							} else {
+								//$response_grade = $response_grade + 0;//this line can be empty as well : )
+							}
+						}
+
+						if ( count( $chosen_answers ) >= count( $right_answers ) ) {
+							$grade_cnt = count( $chosen_answers );
+						} else {
+							$grade_cnt = count( $right_answers );
+						}
+
+						$grade   = round( ( $grade / $grade_cnt ), 0 );
+					}
+
+				}
+
+				Unit_Module::save_response_grade( $response_id, $grade, $student_id, $course_id, $unit_id, $module_id );
+			}
 
 			if ( $grade_data ) {
 				if ( $data !== '' ) {
@@ -1137,6 +1207,10 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			);
 
 			return $module_meta;
+		}
+
+		public static function auto_grade_modules() {
+			return self::$auto_grade_modules;
 		}
 
 	}

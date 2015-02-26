@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.4.9 =
+* Fixed: Auto correcting previous student responses for Single- and Multiple Choice questions without needing to re-submit answers.
+* This release improves the changes made in version 1.2.4.8.
+
 = 1.2.4.8 =
 * Fixed potential issue when using quotation marks or special characters in Single- and Multiple Choice questions.
 * Fixes auto-grading of questions and mandatory questions reporting. (Note: Students may need to resubmit some responses)
