@@ -883,7 +883,7 @@ if ( ! class_exists( 'Course' ) ) {
 			$args = array(
 				'author'         => $user_id,
 				'post_type'      => 'mp_order',
-				'post_status'    => 'order_paid',
+				'post_status'    => apply_filters('cp_is_user_purchased_mp_order_status', 'order_paid'),
 				'posts_per_page' => '-1'
 			);
 

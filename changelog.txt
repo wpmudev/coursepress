@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5 =
+* Added additional hooks and filters for developers
+
 = 1.2.4.9 =
 * Fixed: Auto correcting previous student responses for Single- and Multiple Choice questions without needing to re-submit answers.
 * This release improves the changes made in version 1.2.4.8.
