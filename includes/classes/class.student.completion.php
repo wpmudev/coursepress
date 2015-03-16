@@ -61,8 +61,13 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		public static function get_remaining_pages( $student_id, $course_id, $unit_id ) {
 			$visited = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) );
 			$total   = Unit::get_page_count( $unit_id );
+			$remaining = $total - $visited;
 
-			return $total - $visited;
+			if( 0 == $remaining ) {
+				do_action( 'coursepress_set_all_unit_pages_viewed', $student_id, $course_id, $unit_id );
+			}
+
+			return $remaining;
 		}
 
 		public static function get_mandatory_modules_answered( $student_id, $course_id, $unit_id ) {
@@ -113,6 +118,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				foreach ( $answers[ $module_id ] as $answer ) {
 					if ( $answer >= $required ) {
 						$passed = true;
+						do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
 					}
 				}
 				if ( $passed ) {
@@ -225,7 +231,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		public static function is_mandatory_complete( $student_id, $course_id, $unit_id ) {
 			$remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
-			return 0 == $remaining ? true : false;
+			$completed = 0 == $remaining ? true : false;
+
+			return $completed;
 		}
 
 		/* ----------------------------- CALCULATES AND UPDATES UNIT/COURSE COMPLETION ----------------------------------- */
@@ -250,6 +258,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			if ( $update ) {
 				self::update_completion_data( $student_id, $course_id, $data );
+			}
+
+			if( 100 == (int) $progress ) {
+				do_action( 'coursepress_set_unit_completed', $student_id, $course_id, $unit_id );
 			}
 
 			return $progress;
@@ -287,6 +299,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				self::update_completion_data( $student_id, $course_id, $data );
 			}
 
+			if( 100 == (int) $progress ) {
+				do_action( 'coursepress_set_course_completed', $student_id, $course_id );
+			}
+
 			return $progress;
 		}
 
@@ -316,6 +332,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			}
 
 			$data['unit'][ $unit_id ]['mandatory_answered'][ $module_id ] = true;
+
+			do_action( 'coursepress_set_mandatory_question_answered', $student_id, $course_id, $module_id );
+
 			self::update_completion_data( $student_id, $course_id, $data );
 		}
 

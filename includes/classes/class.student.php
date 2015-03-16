@@ -69,11 +69,11 @@ if ( ! class_exists( 'Student' ) ) {
 			/**
 			 * Add hooks to handle completion data.
 			 */
-//			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
-//			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
-//			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
-//			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
-//			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
+			add_action( 'coursepress_set_course_completed', array( &$this, 'add_course_completed_meta' ), 10, 2 );
+			add_action( 'coursepress_set_unit_completed', array( &$this, 'add_unit_completed_meta' ), 10, 3 );
+			add_action( 'coursepress_set_all_unit_pages_viewed', array( &$this, 'add_pages_viewed_meta' ), 10, 3 );
+			add_action( 'coursepress_set_mandatory_question_answered', array( &$this, 'add_mandatory_questions_meta' ), 10, 4 );
+			add_action( 'coursepress_set_gradable_question_passed', array( &$this, 'add_questions_passed_meta' ), 10, 4 );
 
 			/**
 			 * Add hooks to handle other tracking
@@ -456,7 +456,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		function delete_student( $delete_user = false ) {
 			if ( $delete_user ) {
-				wp_delete_user( $this->ID ); //without reassign				
+				wp_delete_user( $this->ID ); //without reassign
 			} else {
 				$this->withdraw_from_all_courses();
 
@@ -863,4 +863,3 @@ if ( ! class_exists( 'Student' ) ) {
 	}
 
 }
-
