@@ -1276,16 +1276,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 					// If the user is not enrolled, then see if they can enroll
 					switch ( $course->enroll_type ) {
-						case 'anyone':
-							if ( $user_can_register ) {
-								$button_option = 'enroll';
-							}
-							break;
-						case 'registered':
-							if ( !$user_can_register ) {
-								$button_option = 'enroll';
-							}
-							break;
+                        case 'anyone':
+                        case 'registered':
+                            $button_option = 'enroll';
+                        break;
 						case 'passcode':
 							$button_option	 = 'passcode';
 							break;
@@ -1804,7 +1798,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = '<div class="apply-links course-action-links course-action-links-' . $course_id . ' ' . $class . '">';
 
 			if ( $withdraw_link_visible === true ) {
-				$content .= '<a href="?withdraw=' . $course_id . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
+                $content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 			}
 			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
 

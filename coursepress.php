@@ -5024,7 +5024,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function check_for_get_actions() {
-			
+
+            /* Withdraw a Student from course in frontend Student Dashboard */
+            //Allows logged in user to withdraw only himself from a course.
+            if ( !empty( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) && is_user_logged_in() ) {
+                if( !empty($_GET['course_nonce']) && wp_verify_nonce( $_GET['course_nonce'], 'withdraw_from_course_' . $_GET['withdraw'] )) {
+                    $student = new Student( get_current_user_id() );
+                    $student->withdraw_from_course( $_GET['withdraw'] );
+                }
+
+            }
 		}
 
 		//shows a warning notice to admins if pretty permalinks are disabled
