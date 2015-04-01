@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.1 =
+* Fixed issue with enrolling a student to a paid course (paid via PayPal chained payments)
+
 = 1.2.5 =
 * Added additional hooks and filters for developers
 

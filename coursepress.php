@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.5
+  Version: 1.2.5.1
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071
@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.5';
+		public $version = '1.2.5.1';
 
 		/**
 		 * Plugin friendly name.
@@ -5674,7 +5674,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function listen_for_paid_status_for_courses( $order ) {
 			global $mp;
 
-			$allowed_mp_statuses = apply_filters( 'cp_allowed_purchase_status_for_enroll', array( 'order_paid' ) );
+			$allowed_mp_statuses = apply_filters( 'cp_allowed_purchase_status_for_enroll', array( 'order_paid', 'order_shipped' ) );
 
 			if ( in_array( $order->post_status, $allowed_mp_statuses ) ) {
 				$product_id = key( $order->mp_cart_info );
