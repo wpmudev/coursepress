@@ -1728,4 +1728,48 @@ jQuery( document ).ready( function( $ ) {
      } );
      */
 
+    /*
+     Certificate Background Image
+     */
+    jQuery( '.certificate_background_button' ).on( 'click', function()
+    {
+        var target_url_field = jQuery( this ).prevAll( ".certificate_background_url:first" );
+        console.log( '1' );
+        wp.media.string.props = function( props, attachment )
+        {
+            console.log( '2' );
+            jQuery( target_url_field ).val( props.url );
+
+            if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
+                $( target_url_field ).removeClass( 'invalid_extension_field' );
+                $( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
+            } else {//extension is not allowed
+                $( target_url_field ).addClass( 'invalid_extension_field' );
+                $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
+            }
+        }
+
+        wp.media.editor.send.attachment = function( props, attachment )
+        {
+            console.log( '3' );
+            console.log( props );
+            console.log( attachment );
+            jQuery( target_url_field ).val( attachment.url );
+            if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
+                console.log( 'A' );
+                $( target_url_field ).removeClass( 'invalid_extension_field' );
+                $( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
+            } else {//extension is not allowed
+                console.log( 'B');
+                $( target_url_field ).addClass( 'invalid_extension_field' );
+                $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
+            }
+        };
+
+        console.log( '4' );
+        wp.media.editor.open( this );
+        return false;
+    } );
+
+
 } );

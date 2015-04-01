@@ -661,14 +661,27 @@ if ( ! class_exists( 'Student' ) ) {
 			$global_option = ! is_multisite();
 
 			$course_completed_details = get_user_option( '_course_' . $course_id . '_completed', $student_id );
+			$do_update = false;
 
 			// If a course has not yet been marked as completed, mark it complete.
 			if ( empty( $course_completed_details ) || ( ! isset( $course_completed_details['completed'] ) ) || ( isset( $course_completed_details['completed'] ) && empty ( $course_completed_details['completed'] ) ) ) {
 				$course_completed_details['completed'] = true;
-				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
-
+				$do_update = true;
 				// Will only fire once when a course is marked as complete, should not trigger again.
 				do_action( 'coursepress_student_course_completed', $student_id, $course_id );
+			}
+
+			// If there is no certificate number yet, generate one
+			if ( ! isset( $course_completed_details['certificate_number'] ) || empty( $course_completed_details['certificate_number'] ) ) {
+				$time = time();
+				list( $year, $month, $day ) = explode( '/', date( 'Y/m/d', $time ) );
+				$course_completed_details['certificate_number'] = sprintf( '%04d%02d%02d%05d%03d', $year , $month, $day, $course_id , $student_id );
+				$course_completed_details['date_completed'] = time();
+				$do_update = true;
+			}
+
+			if( $do_update ) {
+				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
 			}
 
 		}

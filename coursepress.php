@@ -232,6 +232,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-campus.php' );
 
+			/**
+			 * Basic certificates
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
 
 			//Administration area
 			if ( is_admin() ) {
@@ -503,6 +507,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 *
 				 */
 				do_action( 'coursepress_admin_init' );
+
+				/**
+				 * Add certificate admin settings
+				 *
+				 * @since 1.2.6
+				 */
+				CP_Basic_Certificate::init_settings();
 
 				/*
 				 * Plugin activation class
@@ -4740,7 +4751,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
 
-			if ( ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == $this->screen_base . '_settings' ) || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
+			$included_pages = apply_filters( 'cp_settings_localize_pages', array(
+				'course',
+				'course_details',
+				'instructors',
+				'students',
+				'assessment',
+				'reports',
+				$this->screen_base . '_settings',
+			) );
+			if ( in_array( $page, $included_pages ) || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 
 				$unit_pagination = false;
 				if ( isset( $_GET[ 'unit_id' ] ) ) {
