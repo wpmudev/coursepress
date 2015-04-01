@@ -78,8 +78,8 @@ jQuery( document ).ready( function( $ ) {
     }
 
     jQuery( ".unit-control-buttons .save-unit-button" ).click( function() {
-        $('.wp-switch-editor.switch-tmce').click();
-        
+        $( '.wp-switch-editor.switch-tmce' ).click();
+
         var unit_page_num = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         jQuery( "#unit_page_num" ).val( unit_page_num );
 
@@ -1664,7 +1664,7 @@ jQuery( document ).ready( function( $ ) {
 
 
     $( '.unit-control-buttons .button-preview' ).click( function( event ) {
-        $('.wp-switch-editor.switch-tmce').click();
+        $( '.wp-switch-editor.switch-tmce' ).click();
         event.preventDefault();
         $( '#unit-add' ).append( '<input type="hidden" name="preview_redirect_url" id="preview_redirect_url" value="yes" />' );
         $( '#unit-add' ).attr( 'target', '_blank' );
@@ -1962,9 +1962,9 @@ jQuery( document ).ready( function( $ ) {
     function slim_scroll_load() {
 
         var scroll_height = 750;
-        
+
         //if($(window).height() <= 750){
-            scroll_height = $(window).height() - 120;
+        scroll_height = $( window ).height() - 120;
         //}
 
         $( '#sortable-units' ).slimScroll( {

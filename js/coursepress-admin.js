@@ -1,9 +1,20 @@
 var global_iframe_content = '';
 jQuery( document ).ready( function( $ ) {
-    
+
+    $( '#doaction_bulk_courses' ).click( function( e ) {
+        //$( '#bulk_courses_values' ).val();
+
+        var searchIDs = $( "#courses_table .check-column input:checkbox:checked" ).map( function() {
+            return $( this ).val();
+        } ).get();
+
+        $( '#bulk_courses_values' ).val(searchIDs);
+
+    } );
+
     /*$('.unit-control-buttons .button.button-preview, .unit-control-buttons .submit-unit').click(function(){
-        $('.wp-switch-editor.switch-tmce').click();
-    });*/
+     $('.wp-switch-editor.switch-tmce').click();
+     });*/
 
     $( 'input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url' ).live( 'input propertychange paste change', function() {
         if ( cp_is_extension_allowed( $( this ).val(), $( this ) ) ) {//extension is allowed
@@ -307,7 +318,7 @@ jQuery( document ).ready( function( $ ) {
                 var rand_id = 'rand_id' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 ) + '_' + Math.floor( ( Math.random() * 99999 ) + 100 );
                 var text_editor = '<textarea name="' + textarea_name + '" id="' + rand_id + '">' + editor_content + '</textarea>';
 
-                 
+
                 var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
                 switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
 
@@ -592,7 +603,7 @@ function cp_repaint_current_page_editors() {
 
         var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
         switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        
+
 
         var text_editor_whole =
             '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
@@ -657,7 +668,7 @@ function cp_repaint_all_editors() {
 
         var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
         switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        
+
 
         var text_editor_whole =
             '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
@@ -777,7 +788,7 @@ function coursepress_modules_ready() {
 
         var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
         switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-        
+
 
 
         var text_editor_whole =
@@ -1295,7 +1306,7 @@ jQuery( document ).ready( function() {
 
             var switches = '<a id="' + rand_id + '-tmce" class="wp-switch-editor switch-tmce" onclick="switchEditors.switchto(this);">Visual</a>';
             switches += '<a id="' + rand_id + '-html" class="wp-switch-editor switch-html" onclick="switchEditors.switchto(this);">Text</a>';
-            
+
             var text_editor_whole =
                 '<div id="wp-' + rand_id + '-wrap" class="wp-core-ui wp-editor-wrap tmce-active">' +
                 '<div id="wp-' + rand_id + '-editor-tools" class="wp-editor-tools hide-if-no-js">' +
