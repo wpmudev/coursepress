@@ -2234,6 +2234,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( !empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			}
+			
 			$unit_id = (int) $unit_id;
 			$message = sanitize_text_field( $message );
 
@@ -2241,6 +2242,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //			$completion->init_student_status();
 
 			$mandatory_required = Student_Completion::get_mandatory_steps_required( $unit_id );
+			
 			if ( 0 == $mandatory_required ) {
 				return false;
 			}
