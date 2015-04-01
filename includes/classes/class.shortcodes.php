@@ -1,10 +1,11 @@
 <?php
-if ( !defined( 'ABSPATH' ) )
-	{exit;} // Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-	/*
-	  CoursePress Shortcodes
-	 */
+/*
+  CoursePress Shortcodes
+ */
 
 if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
@@ -75,8 +76,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_mandatory_message', array( &$this, 'course_mandatory_message' ) );
 			add_shortcode( 'course_unit_percent', array( &$this, 'course_unit_percent' ) );
 // Other shortcodes
-
-
 //add_shortcode( 'unit_discussion', array( &$this, 'unit_discussion' ) );
 // Page Shortcodes
 			add_shortcode( 'course_signup', array( &$this, 'course_signup' ) );
@@ -1130,7 +1129,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$course_id	 = (int) $course_id;
 			$list_page	 = sanitize_text_field( $list_page );
-			$list_page   = "true" == $list_page || 1 == (int) $list_page ? true : false;
+			$list_page	 = "true" == $list_page || 1 == (int) $list_page ? true : false;
 			$class		 = sanitize_html_class( $class );
 
 			global $enrollment_process_url, $signup_url;
@@ -1264,10 +1263,25 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					$button_option = 'enrollment_finished';
 				} elseif ( 'prerequisite' == $course->enroll_type ) {
 					// PREREQUISITE REQUIRED
-					$button_option = 'prerequisite';
+					if ( !empty( $student ) ) {
+						$pre_course		 = !empty( $course->prerequisite ) ? $course->prerequisite : false;
+						$enrolled_pre	 = false;
+						if ( $student->enroll_in_course( $course->prerequisite ) ) {
+							$enrolled_pre = true;
+						}
+
+						if ( $enrolled_pre && !empty( $pre_course ) && Student_Completion::is_course_complete( get_current_user_id(), (int) $pre_course ) ) {
+							$button_option = 'enroll';
+						} else {
+							$button_option = 'prerequisite';
+						}
+					} else {
+						$button_option = 'prerequisite';
+					}
 				}
 
 				$user_can_register = cp_user_can_register();
+
 				if ( empty( $student ) && $user_can_register && empty( $button_option ) ) {
 
 					// If the user is allowed to signup, let them sign up
@@ -1276,23 +1290,23 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 					// If the user is not enrolled, then see if they can enroll
 					switch ( $course->enroll_type ) {
-                        case 'anyone':
-                        case 'registered':
-                            $button_option = 'enroll';
-                        break;
+						case 'anyone':
+						case 'registered':
+							$button_option	 = 'enroll';
+							break;
 						case 'passcode':
 							$button_option	 = 'passcode';
 							break;
 						case 'prerequisite':
-							$pre_course = ! empty( $course->prerequisite ) ? $course->prerequisite : false;
-							$enrolled_pre = false;
+							$pre_course		 = !empty( $course->prerequisite ) ? $course->prerequisite : false;
+							$enrolled_pre	 = false;
 							if ( $student->enroll_in_course( $course->prerequisite ) ) {
 //								$pre_course = new Course_Completion( $course->prerequisite );
 //								$pre_course->init_student_status();
 								$enrolled_pre = true;
 							}
 
-							if ( $enrolled_pre && ! empty( $pre_course ) && Student_Completion::is_course_complete( get_current_user_id(), (int) $pre_course ) ) {
+							if ( $enrolled_pre && !empty( $pre_course ) && Student_Completion::is_course_complete( get_current_user_id(), (int) $pre_course ) ) {
 //							if ( !empty( $pre_course ) && $pre_course->is_course_complete() ) {
 								$button_option = 'enroll';
 							} else {
@@ -1303,6 +1317,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					}
 				}
 			} else {
+
+
 				// For already enrolled students.
 
 				$progress = Student_Completion::calculate_course_completion( get_current_user_id(), $course_id, false );
@@ -1329,7 +1345,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$button_option = apply_filters( 'coursepress_course_enrollment_button_option', $button_option );
 
 			// Prepare the button
-			if ( ( ! is_single() && ! is_page() ) || 'yes' == $list_page ) {
+			if ( (!is_single() && !is_page() ) || 'yes' == $list_page ) {
 				$button_url	 = get_permalink( $course_id );
 				$button		 = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
 			} else {
@@ -1412,9 +1428,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //				if ( !empty( $wrapper ) ) {
 //					$content = '<' . $wrapper . ' class="course-thumbnail course-thumbnail-' . $course_id . ' ' . $class . '">';
 //				}
-//				?>
-<!--				<img src="--><?php //echo $thumbnail; ?><!--" class="course-thumbnail-img"></img>-->
-<!--				--><?php
+//				
+			?>
+			<!--				<img src="--><?php //echo $thumbnail;    ?><!--" class="course-thumbnail-img"></img>-->
+			<!--				--><?php
 //				$content .= trim( ob_get_clean() );
 //
 //				if ( !empty( $wrapper ) ) {
@@ -1448,7 +1465,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$course_id		 = (int) $course_id;
 			$free_text		 = sanitize_text_field( $free_text );
 			$free_show		 = sanitize_text_field( $free_show );
-			$free_show       = 'true' == $free_show ? true : false;
+			$free_show		 = 'true' == $free_show ? true : false;
 			$show_title		 = sanitize_html_class( $show_title );
 			$show_label		 = sanitize_html_class( $show_label );
 			$label_delimeter = sanitize_html_class( $label_delimeter );
@@ -1492,7 +1509,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						<li>
 							<ul>
 								<?php
-
 								foreach ( $units as $unit ) {
 									$unit_class = new Unit( $unit->ID );
 
@@ -1505,7 +1521,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 									}
 
 									//$unit_pages	 = $unit_class->get_number_of_unit_pages();
-
 //									$modules = Unit_Module::get_modules( $unit->ID );
 									$unit_permalink = Unit::get_permalink( $unit->ID );
 									if ( isset( $show_unit[ $unit->ID ] ) && $show_unit[ $unit->ID ] == 'on' && $unit->post_status == 'publish' ) {
@@ -1708,8 +1723,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 // If type is thumbnail, return early
 			if ( 'thumbnail' == $type ) {
 				//return do_shortcode( '[course_thumbnail]' );
-				$type = "image";
-				$priority = "image";
+				$type		 = "image";
+				$priority	 = "image";
 			}
 
 			if ( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty( $course_image ) ) ) && !empty( $course_video ) ) {
@@ -1798,7 +1813,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = '<div class="apply-links course-action-links course-action-links-' . $course_id . ' ' . $class . '">';
 
 			if ( $withdraw_link_visible === true ) {
-                $content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
+				$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 			}
 			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
 
@@ -1888,9 +1903,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$course_id = (int) $course_id;
 			}
 			$month			 = sanitize_text_field( $month );
-			$month           = 'true' == $month ? true : false;
+			$month			 = 'true' == $month ? true : false;
 			$year			 = sanitize_text_field( $year );
-			$year            = 'true' == $year ? true : false;
+			$year			 = 'true' == $year ? true : false;
 			$pre			 = sanitize_text_field( $pre );
 			$next			 = sanitize_text_field( $next );
 			$date_indicator	 = sanitize_text_field( $date_indicator );
@@ -1986,7 +2001,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$media_type			 = !empty( $media_type ) ? sanitize_text_field( $media_type ) : 'image';
 			$media_priority		 = !empty( $media_priority ) ? sanitize_text_field( $media_priority ) : 'image';
 			$admin_links		 = sanitize_text_field( $admin_links );
-			$admin_links         = 'true' == $admin_links ? true : false;
+			$admin_links		 = 'true' == $admin_links ? true : false;
 			$manage_link_title	 = sanitize_text_field( $manage_link_title );
 			$finished_link_title = sanitize_text_field( $finished_link_title );
 			$limit				 = (int) $limit;
@@ -2080,7 +2095,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( !empty( $student ) && 'all' != strtolower( $course_status ) && !is_array( $student ) ) {
 //					$completion			 = new Course_Completion( $course->ID );
 //					$completion->init_student_status( $student );
-					$course->completed	 = Student_Completion::is_course_complete( $student, $course->ID );
+					$course->completed = Student_Completion::is_course_complete( $student, $course->ID );
 
 					// Skip if we wanted a completed course but got an incomplete
 					if ( 'completed' == strtolower( $course_status ) && !$course->completed ) {
@@ -2175,8 +2190,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_progress( $atts ) {
 			extract( shortcode_atts( array(
-				'course_id' => in_the_loop() ? get_the_ID() : '',
-				'decimal_places'       => '0',
+				'course_id'		 => in_the_loop() ? get_the_ID() : '',
+				'decimal_places' => '0',
 			), $atts, 'course_progress' ) );
 			if ( !empty( $course_id ) ) {
 				$course_id = (int) $course_id;
@@ -2185,7 +2200,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$decimal_places = sanitize_text_field( $decimal_places );
 //			$completion = new Course_Completion( $course_id );
 //			$completion->init_student_status();
-
 //			return $completion->course_progress();
 			return number_format_i18n( Student_Completion::calculate_course_completion( get_current_user_id(), $course_id ), $decimal_places );
 		}
@@ -2197,9 +2211,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		 */
 		function course_unit_progress( $atts ) {
 			extract( shortcode_atts( array(
-				'course_id'	 => in_the_loop() ? get_the_ID() : '',
-				'unit_id'	 => false,
-				'decimal_places'       => '0',
+				'course_id'		 => in_the_loop() ? get_the_ID() : '',
+				'unit_id'		 => false,
+				'decimal_places' => '0',
 			), $atts, 'course_unit_progress' ) );
 
 			if ( !empty( $course_id ) ) {
@@ -2211,7 +2225,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 //			$completion = new Course_Completion( $course_id );
 //			$completion->init_student_status();
-
 //			return $completion->unit_progress( $unit_id );
 			$progress = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
 			return $progress;
@@ -2234,7 +2247,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( !empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			}
-			
+
 			$unit_id = (int) $unit_id;
 			$message = sanitize_text_field( $message );
 
@@ -2242,7 +2255,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //			$completion->init_student_status();
 
 			$mandatory_required = Student_Completion::get_mandatory_steps_required( $unit_id );
-			
+
 			if ( 0 == $mandatory_required ) {
 				return false;
 			}
@@ -2255,35 +2268,35 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function course_unit_percent( $atts ) {
 
 			extract( shortcode_atts( array(
-				'course_id'           => false,
-				'unit_id'             => false,
-				'format'              => false,
-				'style'               => 'flat',
-				'decimal_places'       => '0',
-				'tooltip_alt'         => __( 'Percent of the unit completion', 'cp' ),
-				'knob_fg_color'       => '#24bde6',
-				'knob_bg_color'       => '#e0e6eb',
-				'knob_data_thickness' => '.35',
-				'knob_data_width'     => '70',
-				'knob_data_height'    => '70',
+				'course_id'				 => false,
+				'unit_id'				 => false,
+				'format'				 => false,
+				'style'					 => 'flat',
+				'decimal_places'		 => '0',
+				'tooltip_alt'			 => __( 'Percent of the unit completion', 'cp' ),
+				'knob_fg_color'			 => '#24bde6',
+				'knob_bg_color'			 => '#e0e6eb',
+				'knob_data_thickness'	 => '.35',
+				'knob_data_width'		 => '70',
+				'knob_data_height'		 => '70',
 			), $atts, 'course_unit_percent' ) );
 
 			if ( !empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			}
 
-			$unit_id = (int) $unit_id;
-			$format = sanitize_text_field( $format );
-			$decimal_places = sanitize_text_field( $decimal_places );
-			$style = sanitize_text_field( $style );
-			$tooltip_alt					 = sanitize_text_field( $tooltip_alt );
-			$knob_fg_color					 = sanitize_text_field( $knob_fg_color );
-			$knob_bg_color					 = sanitize_text_field( $knob_bg_color );
-			$knob_data_thickness			 = sanitize_text_field( $knob_data_thickness );
-			$knob_data_width				 = (int) $knob_data_width;
-			$knob_data_height				 = (int) $knob_data_height;
+			$unit_id			 = (int) $unit_id;
+			$format				 = sanitize_text_field( $format );
+			$decimal_places		 = sanitize_text_field( $decimal_places );
+			$style				 = sanitize_text_field( $style );
+			$tooltip_alt		 = sanitize_text_field( $tooltip_alt );
+			$knob_fg_color		 = sanitize_text_field( $knob_fg_color );
+			$knob_bg_color		 = sanitize_text_field( $knob_bg_color );
+			$knob_data_thickness = sanitize_text_field( $knob_data_thickness );
+			$knob_data_width	 = (int) $knob_data_width;
+			$knob_data_height	 = (int) $knob_data_height;
 
-			if( empty( $unit_id ) || empty( $course_id ) ) {
+			if ( empty( $unit_id ) || empty( $course_id ) ) {
 				$percent_value = 0;
 			} else {
 				$percent_value = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
@@ -2300,7 +2313,6 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			return $content;
 		}
-
 
 		/**
 		 *
@@ -2355,7 +2367,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$label_delimeter = sanitize_text_field( $label_delimeter );
 			$label_tag		 = sanitize_html_class( $label_tag );
 			$link			 = sanitize_text_field( $link );
-			$link            = 'true' == $link ? true : false;
+			$link			 = 'true' == $link ? true : false;
 			$link_text		 = sanitize_text_field( $link_text );
 			$show_label		 = sanitize_text_field( $show_label );
 			$summary_length	 = (int) $summary_length;
@@ -2560,9 +2572,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			<div class="submenu-main-container submenu-messaging">
 				<ul id="submenu-main" class="submenu nav-submenu">
 					<li class="submenu-item submenu-inbox <?php echo( isset( $subpage ) && $subpage == 'inbox' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_inbox_slug( true ); ?>"><?php
-							_e( 'Inbox', 'cp' );
-							echo $unread_count;
-							?></a></li>
+			_e( 'Inbox', 'cp' );
+			echo $unread_count;
+			?></a></li>
 					<li class="submenu-item submenu-sent-messages <?php echo( isset( $subpage ) && $subpage == 'sent_messages' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_sent_messages_slug( true ); ?>"><?php _e( 'Sent', 'cp' ); ?></a></li>
 					<li class="submenu-item submenu-new-message <?php echo( isset( $subpage ) && $subpage == 'new_message' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_new_message_slug( true ); ?>"><?php _e( 'New Message', 'cp' ); ?></a></li>
 				</ul><!--submenu-main-->
@@ -2606,10 +2618,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					<li class="submenu-item submenu-units <?php echo( isset( $subpage ) && $subpage == 'units' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_units_slug(); ?>/"><?php _e( 'Units', 'cp' ); ?></a></li>
 					<li class="submenu-item submenu-notifications <?php echo( isset( $subpage ) && $subpage == 'notifications' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_notifications_slug(); ?>/"><?php _e( 'Notifications', 'cp' ); ?></a></li>
 					<?php
-
 					$pages = Course::get_allowed_pages( $course_id );
 
-					if ( $pages['course_discussion'] == 'on' ) {
+					if ( $pages[ 'course_discussion' ] == 'on' ) {
 						?>
 						<li class="submenu-item submenu-discussions <?php echo( isset( $subpage ) && $subpage == 'discussions' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/"><?php _e( 'Discussions', 'cp' ); ?></a></li>
 						<?php
@@ -2619,7 +2630,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					  <li class="submenu-item submenu-grades <?php echo( isset( $subpage ) && $subpage == 'grades' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_grades_slug(); ?>/"><?php _e( 'Grades', 'cp' ); ?></a></li>
 					  <?php
 					  } */
-					if ( $pages['workbook'] == 'on' ) {
+					if ( $pages[ 'workbook' ] == 'on' ) {
 						?>
 						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'cp' ); ?></a></li>
 					<?php } ?>
@@ -3125,7 +3136,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			foreach ( $units as $unit ) {
 //				$unit_details	 = new Unit( $unit->ID );
 				$content .= '<li><a href="' . Unit::get_permalink( $unit->ID, $course_id ) . '">' . $unit->post_title . '</a></li>';
-				$last_unit_url	 = Unit::get_permalink( $unit->ID, $course_id );
+				$last_unit_url = Unit::get_permalink( $unit->ID, $course_id );
 			}
 
 			$content .= '</ol>';
@@ -3175,7 +3186,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$unit_id						 = (int) $unit_id;
 			$field							 = sanitize_html_class( $field );
 			$format							 = sanitize_text_field( $format );
-			$format                          = 'true' == $format ? true : false;
+			$format							 = 'true' == $format ? true : false;
 			$additional						 = sanitize_text_field( $additional );
 			$style							 = sanitize_html_class( $style );
 			$tooltip_alt					 = sanitize_text_field( $tooltip_alt );
@@ -3190,7 +3201,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$parent_course_preceding_content = sanitize_text_field( $parent_course_preceding_content );
 			$student_id						 = (int) $student_id;
 			$last_visited					 = sanitize_text_field( $last_visited );
-			$last_visited                    = 'true' == $last_visited ? true : false;
+			$last_visited					 = 'true' == $last_visited ? true : false;
 			$class							 = sanitize_html_class( $class );
 
 			if ( $unit_id == 0 ) {
@@ -3262,7 +3273,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			/* ------------ */
 //$input_modules_count = do_shortcode( '[course_unit_details field="input_modules_count" unit_id="' . $unit_id . '"]' );
 
-			$responses_count	 = 0;
+			$responses_count = 0;
 
 			$modules = Unit_Module::get_modules( $unit_id );
 			foreach ( $modules as $module ) {
@@ -3306,7 +3317,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 								}
 
 								$front_save_count++;
-								$response = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
+								$response = call_user_func( $class_name . '::get_response', $student_id, $mod->ID );
 
 								if ( isset( $response->ID ) ) {
 									$grade_data	 = Unit_Module::get_response_grade( $response->ID );
@@ -3493,7 +3504,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 							if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 								$front_save_count++;
-								$response	 = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
+								$response	 = call_user_func( $class_name . '::get_response', $student_id, $mod->ID );
 								$assessable	 = get_post_meta( $mod->ID, 'gradable_answer', true );
 								$mandatory	 = get_post_meta( $mod->ID, 'mandatory_answer', true );
 
@@ -3551,7 +3562,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
 							$front_save_count++;
-							$response = call_user_func( $class_name.'::get_response', $student_id, $mod->ID );
+							$response = call_user_func( $class_name . '::get_response', $student_id, $mod->ID );
 
 							if ( isset( $response->ID ) ) {
 								$grade_data	 = Unit_Module::get_response_grade( $response->ID );
@@ -4153,32 +4164,31 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'	 => in_the_loop() ? get_the_ID() : '',
 				'unit_id'	 => false,
 				'message'	 => __( '%d of %d mandatory elements completed.', 'cp' ),
-				'format' => 'true',
+				'format'	 => 'true',
 			), $atts, 'module_status' ) );
 
 			$message = sanitize_text_field( $message );
-			$format = sanitize_text_field( $format );
-			$format = 'true' == $format ? true : false;
+			$format	 = sanitize_text_field( $format );
+			$format	 = 'true' == $format ? true : false;
 
 			if ( $course_id ) {
 				$course_id = (int) $course_id;
 			}
 			$unit_id = (int) $unit_id;
 
-			if( empty( $unit_id ) ){
+			if ( empty( $unit_id ) ) {
 				return '';
 			}
 
 			$criteria = Unit::get_module_completion_data( $unit_id );
 
-			$unit_status                     = Unit::get_unit_availability_status( $unit_id );
-			$unit_available                  = Unit::is_unit_available( $unit_id, $unit_status );
-			$input_modules_count			 = count( $criteria['all_input_ids'] );
-			$assessable_input_modules_count	 = count( $criteria['gradable_modules'] );
-			$mandatory_input_elements		 = count( $criteria['mandatory_modules'] );
+			$unit_status					 = Unit::get_unit_availability_status( $unit_id );
+			$unit_available					 = Unit::is_unit_available( $unit_id, $unit_status );
+			$input_modules_count			 = count( $criteria[ 'all_input_ids' ] );
+			$assessable_input_modules_count	 = count( $criteria[ 'gradable_modules' ] );
+			$mandatory_input_elements		 = count( $criteria[ 'mandatory_modules' ] );
 			$mandatory_responses			 = Student_Completion::get_mandatory_steps_completed( get_current_user_id(), $course_id, $unit_id );
 //			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
-
 			// $is_unit_available				 = do_shortcode( '[course_unit_details field="is_unit_available"]' );
 //			$input_modules_count			 = do_shortcode( '[course_unit_details field="input_modules_count"]' );
 //			$assessable_input_modules_count	 = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
@@ -4186,43 +4196,43 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //			$mandatory_responses			 = do_shortcode( '[course_unit_details field="student_module_responses" additional="mandatory"]' );
 //			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
 
-			$unit = new Unit( $unit_id );
-			$unit->status = $unit_status;
+			$unit			 = new Unit( $unit_id );
+			$unit->status	 = $unit_status;
 
 			if ( $input_modules_count > 0 ) {
 				?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $unit_available ) {
-						if ( $mandatory_input_elements > 0 ) {
-							echo sprintf( $message, $mandatory_responses, $mandatory_input_elements );
-						}
-					} else {
-						if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
-							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
-						} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
-							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
-						}
-						if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
-							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-						}
+				if ( $unit_available ) {
+					if ( $mandatory_input_elements > 0 ) {
+						echo sprintf( $message, $mandatory_responses, $mandatory_input_elements );
 					}
-					?></span>
-			<?php } else { ?>
+				} else {
+					if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
+						esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
+					} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
+						esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
+					}
+					if ( isset( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
+						echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+					}
+				}
+				?></span>
+				<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
-					if ( $unit_available ) {
+				if ( $unit_available ) {
 //						 _e('Read-only');
-					} else {
-						if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
-							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
-						} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
-							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
-						}
-						if ( isset( $unit->status ) && ! empty( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
-							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-						}
+				} else {
+					if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
+						esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
+					} elseif ( isset( $unit->status ) && $unit->status[ 'completion_required' ][ 'enabled' ] && !$unit->status[ 'completion_required' ][ 'result' ] ) {
+						esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 					}
+					if ( isset( $unit->status ) && !empty( $unit->status ) && !$unit->status[ 'date_restriction' ][ 'result' ] ) {
+						echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
+					}
+				}
 					?></span>
-				<?php
+					<?php
 			}
 			$content = ob_get_clean();
 			return $content;
@@ -4284,7 +4294,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			);
 
 
-			$col_sizes = array(
+			$col_sizes	 = array(
 				// '15',
 // 				'30',
 				'45',
@@ -4293,13 +4303,12 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'13',
 				'5'
 			);
-
 			?>
 			<table cellspacing="0" class="<?php echo $table_class; ?>">
 				<thead>
 					<tr>
 						<?php
-						$n					 = 0;
+						$n			 = 0;
 						foreach ( $columns as $key => $col ) {
 							?>
 							<th class="<?php echo $table_labels_th_class; ?> column-<?php echo $key; ?>" width="<?php echo $col_sizes[ $n ] . '%'; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
@@ -4334,7 +4343,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( class_exists( $class_name ) ) {
 
 						if ( constant( $class_name . '::FRONT_SAVE' ) ) {
-							$response			 = call_user_func( $class_name.'::get_response', $user_object->ID, $mod->ID );
+							$response			 = call_user_func( $class_name . '::get_response', $user_object->ID, $mod->ID );
 							$visibility_class	 = ( count( $response ) >= 1 ? '' : 'less_visible_row' );
 
 							if ( count( $response ) >= 1 ) {
@@ -4354,8 +4363,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 							$style = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 							?>
 							<tr id='user-<?php echo $user_object->ID; ?>' class="<?php
-							echo $style;
-							echo 'row-' . $current_row;
+						echo $style;
+						echo 'row-' . $current_row;
 							?>">
 
 								<?php
@@ -4381,7 +4390,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 														<?php echo $mod->post_content; ?>
 													</div>
 												<?php } ?>
-												<?php echo call_user_func( $class_name.'::get_response_form', get_current_user_ID(), $mod->ID ); ?>
+												<?php echo call_user_func( $class_name . '::get_response_form', get_current_user_ID(), $mod->ID ); ?>
 
 												<?php
 												if ( is_object( $response ) && !empty( $response ) ) {
@@ -4458,7 +4467,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 											}
 											?>
 									</td>
-								<?php }//general col visibility                        ?>
+								<?php }//general col visibility                          ?>
 							</tr>
 							<?php
 							$current_row++;

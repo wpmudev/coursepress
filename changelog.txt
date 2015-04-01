@@ -10,6 +10,7 @@ CHANGE LOG
 * Fixed issue with enrolling a student to a paid course (paid via PayPal chained payments)
 * Fixed issue with mandatory, assessable and limit attempts options (if once checked then unchecked)
 * Fixed issue with uncompleted course even if unit elements (answer fields) were completed
+* Fixed issue: Course Pre-Requisite still showing after required course completed
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
