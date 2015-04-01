@@ -13,6 +13,7 @@ CHANGE LOG
 * Fixed issue with uncompleted course even if unit elements (answer fields) were completed
 * Fixed issue: Course Pre-Requisite still showing after required course completed
 * Fixed theme translation issues
+* Fixes issue with instructor profile pages when instructor username contains space
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
