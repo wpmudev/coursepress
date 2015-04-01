@@ -2668,7 +2668,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$forced_previous_completion_template = locate_template( array( 'single-previous-unit.php' ) );
 
-				if ( !Unit::is_unit_available( $vars[ 'unit_id' ] ) ) {
+				if ( !Unit::is_unit_available( $vars[ 'unit_id' ] ) && (!current_user_can( 'manage_options' ) && !CoursePress_Capabilities::can_update_course( $vars[ 'course_id' ] )) ) {
 					if ( $forced_previous_completion_template != '' ) {
 						do_shortcode( '[course_unit_single]' ); //required for getting unit results
 						require_once( $forced_previous_completion_template );

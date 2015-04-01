@@ -17,6 +17,7 @@ CHANGE LOG
 * Fixed issue with Course Structure links when course starts in the future
 * Fixed "unit_page_title_tag_class" shortcode attribute to output valid HTML class
 * Fixed issues with courses bulk actions
+* Fixed issue with previewing a unit (when user needs to pass all mandatory assessments option is checked)
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
