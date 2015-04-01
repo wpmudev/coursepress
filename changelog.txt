@@ -15,6 +15,7 @@ CHANGE LOG
 * Fixed theme translation issues
 * Fixed issue with instructor profile pages when instructor username contains space
 * Fixed issue with Course Structure links when course starts in the future
+* Fixed "unit_page_title_tag_class" shortcode attribute to output valid HTML class
 
 = 1.2.5 =
 * Added additional hooks and filters for developers

@@ -1430,7 +1430,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //				}
 //				
 			?>
-			<!--				<img src="--><?php //echo $thumbnail;       ?><!--" class="course-thumbnail-img"></img>-->
+			<!--				<img src="--><?php //echo $thumbnail;        ?><!--" class="course-thumbnail-img"></img>-->
 			<!--				--><?php
 //				$content .= trim( ob_get_clean() );
 //
@@ -3242,7 +3242,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				}
 
 				if ( !empty( $page_name ) && $show_title ) {
-					$unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' ' . $unit_page_title_tag_class : '') . '>' . $page_title_prepend . $unit->get_unit_page_name( $paged ) . '</' . $unit_page_title_tag . '>';
+					$unit->details->$field = '<' . $unit_page_title_tag . '' . ($unit_page_title_tag_class !== '' ? ' class="' . $unit_page_title_tag_class . '"' : '') . '>' . $page_title_prepend . $unit->get_unit_page_name( $paged ) . '</' . $unit_page_title_tag . '>';
 				} else {
 					$unit->details->$field = '';
 				}
