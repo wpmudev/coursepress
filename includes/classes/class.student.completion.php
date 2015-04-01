@@ -157,9 +157,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			$mandatory_remove   = array_diff( $mandatory_gradable, $mandatory_passed );
 
 			// Some mandatory gradable answers are not yet passed
-			if ( ! empty( $mandatory_remove ) ) {
+			/*if ( ! empty( $mandatory_remove ) ) {
 				$mandatory_answered = array_diff( $mandatory_answered, $mandatory_remove );
-			}
+			}*/
 
 			return array_diff( $mandatory_required, $mandatory_answered );
 		}
