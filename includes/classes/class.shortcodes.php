@@ -1430,7 +1430,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //				}
 //				
 			?>
-			<!--				<img src="--><?php //echo $thumbnail;      ?><!--" class="course-thumbnail-img"></img>-->
+			<!--				<img src="--><?php //echo $thumbnail;       ?><!--" class="course-thumbnail-img"></img>-->
 			<!--				--><?php
 //				$content .= trim( ob_get_clean() );
 //
@@ -2896,7 +2896,8 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 		function get_parent_course_id( $atts ) {
 			global $wp;
 
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
+			//if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
+			if ( is_array( $wp->query_vars ) && array_key_exists( 'coursename', $wp->query_vars ) ) {
 				$course_id = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
 			} else {
 				$course_id = 0;
