@@ -1168,7 +1168,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			//add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
+			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
 
 
 			add_filter( 'get_edit_post_link', array( &$this, 'get_edit_post_link' ), 10, 1 );
@@ -1275,20 +1275,23 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function course_checkout_success_msg( $setting, $default ) {
+			$init_message	 = $setting;
 			// cp_write_log( 'MP Success Setting: ' . $setting );
-			$cookie_id	 = 'cp_checkout_keys_' . COOKIEHASH;
-			$cookie		 = '';
+			$cookie_id		 = 'cp_checkout_keys_' . COOKIEHASH;
+			$cookie			 = '';
 
-			if ( isset( $_COOKIE[ $cookie_id ] ) ) {
-				$cookie = unserialize( $_COOKIE[ $cookie_id ] );
-			}
+			if ( !is_admin() ) {
+				if ( isset( $_COOKIE[ $cookie_id ] ) ) {
+					$cookie = unserialize( $_COOKIE[ $cookie_id ] );
+				}
 
-			if ( 2 == count( $cookie ) ) {
-				// Thank you for signing up for Course Name Here. We hope you enjoy your experience.
-				$setting = sprintf( __( '<p>Thank you for signing up for <a href ="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp' ), get_permalink( $cookie[ 1 ] ), get_the_title( $cookie[ 1 ] ) );
-
-				setcookie( $cookie_id, '' );
-				add_filter( 'gettext', array( &$this, 'alter_tracking_text' ), 20, 3 );
+				if ( 2 == count( $cookie ) ) {
+					// Thank you for signing up for Course Name Here. We hope you enjoy your experience.
+					$setting = sprintf( __( '<p>Thank you for signing up for <a href ="%s">%s</a>. We hope you enjoy your experience.</p>', 'cp' ), get_permalink( $cookie[ 1 ] ), get_the_title( $cookie[ 1 ] ) );
+					$setting = $setting . '<br />' . $init_message;
+					setcookie( $cookie_id, '' );
+					add_filter( 'gettext', array( &$this, 'alter_tracking_text' ), 20, 3 );
+				}
 			}
 
 			return $setting;
@@ -2371,8 +2374,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				if ( false === $user ) {
 					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
-						$username = str_replace('%20', ' ', $wp->query_vars[ 'instructor_username' ]);//support for usernames with spaces
-						$user = Instructor::instructor_by_login( $username );
+						$username	 = str_replace( '%20', ' ', $wp->query_vars[ 'instructor_username' ] ); //support for usernames with spaces
+						$user		 = Instructor::instructor_by_login( $username );
 					} else {
 						$user = Instructor::instructor_by_hash( $wp->query_vars[ 'instructor_username' ] );
 						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $user, 'cp_instructor_hash' );
@@ -5026,15 +5029,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function check_for_get_actions() {
 
-            /* Withdraw a Student from course in frontend Student Dashboard */
-            //Allows logged in user to withdraw only himself from a course.
-            if ( !empty( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) && is_user_logged_in() ) {
-                if( !empty($_GET['course_nonce']) && wp_verify_nonce( $_GET['course_nonce'], 'withdraw_from_course_' . $_GET['withdraw'] )) {
-                    $student = new Student( get_current_user_id() );
-                    $student->withdraw_from_course( $_GET['withdraw'] );
-                }
-
-            }
+			/* Withdraw a Student from course in frontend Student Dashboard */
+			//Allows logged in user to withdraw only himself from a course.
+			if ( !empty( $_GET[ 'withdraw' ] ) && is_numeric( $_GET[ 'withdraw' ] ) && is_user_logged_in() ) {
+				if ( !empty( $_GET[ 'course_nonce' ] ) && wp_verify_nonce( $_GET[ 'course_nonce' ], 'withdraw_from_course_' . $_GET[ 'withdraw' ] ) ) {
+					$student = new Student( get_current_user_id() );
+					$student->withdraw_from_course( $_GET[ 'withdraw' ] );
+				}
+			}
 		}
 
 		//shows a warning notice to admins if pretty permalinks are disabled

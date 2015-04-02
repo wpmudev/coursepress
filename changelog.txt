@@ -19,6 +19,7 @@ CHANGE LOG
 * Fixed issues with courses bulk actions
 * Fixed issue with previewing a unit (when user needs to pass all mandatory assessments option is checked)
 * Fixed issue with Order Complete Page MarketPress message
+* Fixed issue with displaying 1970 date on the course calendar when clicking on the previous link
 
 = 1.2.5 =
 * Added additional hooks and filters for developers

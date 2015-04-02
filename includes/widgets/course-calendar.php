@@ -97,7 +97,7 @@ class CP_Course_Calendar extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $post;
 		extract( $args, EXTR_SKIP );
-
+		
 		$course_id = $instance['course'];
 
 		if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ) {
