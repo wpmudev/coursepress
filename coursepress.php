@@ -1168,7 +1168,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
+			//add_filter( 'mp_setting_msgsuccess', array( &$this, 'course_checkout_success_msg' ), 10, 2 );
 
 
 			add_filter( 'get_edit_post_link', array( &$this, 'get_edit_post_link' ), 10, 1 );
