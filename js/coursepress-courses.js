@@ -923,6 +923,7 @@ function validateCourseFields( step, ignore ) {
         case '6':
 
             var has_gateway = $( $( '.step-6 .course-enable-gateways' )[0] ).hasClass( 'gateway-active' );
+            
             if ( $( '[name=meta_enroll_type]' ).val() == 'passcode' ) {
                 if ( $( '[name=meta_passcode]' ).val() == "" ) {
                     $( '[for=meta_enroll_type]' ).parent().append( '<span class="error">' + coursepress_units.required_course_passcode + '</span>' );

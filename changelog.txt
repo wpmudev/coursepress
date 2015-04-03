@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.5.1 =
+* Added additional capabilities for instructors
 * Added formatting to the instructor single page
 * Fixed issue with enrolling a student to a paid course (paid via PayPal chained payments)
 * Fixed issue with mandatory, assessable and limit attempts options (if once checked then unchecked)
@@ -18,6 +19,9 @@ CHANGE LOG
 * Fixed "unit_page_title_tag_class" shortcode attribute to output valid HTML class
 * Fixed issues with courses bulk actions
 * Fixed issue with previewing a unit (when user needs to pass all mandatory assessments option is checked)
+* Fixed issue with Order Complete Page MarketPress message
+* Fixed issue with displaying 1970 date on the course calendar when clicking on the previous link
+* Fixed issue with course order when Post Order Number is selected as an course order option
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
