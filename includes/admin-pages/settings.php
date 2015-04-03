@@ -28,6 +28,8 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 				}
 			}
 		}
+
+		do_action( 'coursepress_update_settings', $tab, $_POST );
 	}
 
 	if ( $tab == 'general' ) {

@@ -258,6 +258,8 @@ class CoursePress_PDF extends TCPDF {
 
 		$fname = K_PATH_CACHE . "{$uid}.pdf";
 
+		$furl = CoursePress::instance()->plugin_url . 'includes/external/tcpdf/cache/' . $uid . '.pdf';
+
 		if( ! isset( $args['format'] ) || empty( $args['format'] ) ) {
 			$args['format'] = 'F';
 		}
@@ -266,7 +268,11 @@ class CoursePress_PDF extends TCPDF {
 			case 'F':
 				//Close and output PDF document
 				$pdf->Output( $fname, 'F' );
-				$attachments[] = $fname;
+				if( isset( $args['url'] ) && ! empty( $args['url'] ) ) {
+					return $furl;
+				} else {
+					$attachments[] = $fname;
+				}
 
 				return $attachments;
 				break;

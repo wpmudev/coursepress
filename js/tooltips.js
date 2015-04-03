@@ -1,7 +1,8 @@
 jQuery(document).ready(function($) {
 
     $(document).click(function() {
-        $('.tooltip [display!="none"]').parent().fadeOut(100);
+        $('.help-icon').removeClass( 'open' );
+        $('.tooltip .tooltip-before[display!="none"], .tooltip .tooltip-button[display!="none"], .tooltip .tooltip-content[display!="none"]').parent().fadeOut(100);
     });
 
     $('.tooltip').live('click', function(e) {
@@ -34,7 +35,7 @@ jQuery(document).ready(function($) {
 	        }
 
 	        tooltip.css("top", $(this).position().top - 7);
-	        tooltip.fadeIn(300);			
+	        tooltip.fadeIn(300);
 		}
 
     });

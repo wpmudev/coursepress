@@ -4770,7 +4770,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$unit_pagination = cp_unit_uses_new_pagination( (int) $_GET[ 'unit_id' ] );
 				}
 
-				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
+				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array( 'jquery-ui-tabs' ), $this->version );
+				//wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
 				wp_enqueue_script( 'wplink' );
 
 				wp_localize_script( 'courses_bulk', 'coursepress', array(

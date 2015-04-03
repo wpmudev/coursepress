@@ -62,6 +62,9 @@
 		</div>
 		<!--/postbox-->
 
+		<?php
+			do_action( 'coursepress_email_settings_post_registration' );
+		?>
 
 		<div class="postbox">
 			<h3 class="hndle" style='cursor:auto;'>
@@ -116,6 +119,10 @@
 
 		</div>
 		<!--/postbox-->
+
+		<?php
+		do_action( 'coursepress_email_settings_post_enrollment' );
+		?>
 
 
 		<?php if ( $this->is_marketpress_active() ) { ?>
@@ -177,6 +184,10 @@
 			</div><!--/postbox-->
 		<?php } ?>
 
+		<?php
+			do_action( 'coursepress_email_settings_post_marketpress' );
+		?>
+
 
 		<div class="postbox">
 			<h3 class="hndle" style='cursor:auto;'>
@@ -232,6 +243,9 @@
 
 		</div>
 		<!--/postbox-->
+		<?php
+			do_action( 'coursepress_email_settings_post_course_invite' );
+		?>
 
 
 		<div class="postbox">
@@ -289,6 +303,10 @@
 		</div>
 		<!--/postbox-->
 
+		<?php
+			do_action( 'coursepress_email_settings_post_course_invite_passcode' );
+		?>
+
 		<div class="postbox">
 			<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Instructor Invitation E-mail', 'cp' ); ?></span>
 			</h3>
@@ -343,6 +361,13 @@
 		</div>
 		<!--/postbox-->
 
+		<?php
+			do_action( 'coursepress_email_settings_post_instructor_invite' );
+		?>
+
+		<?php
+			do_action( 'coursepress_email_settings' );
+		?>
 
 		<p class="save-shanges">
 			<?php submit_button( __( 'Save Changes', 'cp' ) ); ?>

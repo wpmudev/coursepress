@@ -12,6 +12,8 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		public static function init_settings() {
 			add_filter( 'coursepress_settings_new_menus', array( 'CP_Basic_Certificate', 'add_settings_item' ) );
 			add_action( 'coursepress_settings_menu_basic_certificate', array( 'CP_Basic_Certificate', 'render_settings') );
+			add_action( 'coursepress_email_settings', array( 'CP_Basic_Certificate', 'render_email_settings') );
+			add_action( 'coursepress_update_settings', array( 'CP_Basic_Certificate', 'process_email_settings'), 10, 2 );
 		}
 
 		public static function add_settings_item( $menus ) {
@@ -59,30 +61,14 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 						<table class="form-table">
 							<tbody>
 							<tr valign="top">
-								<th scope="row"><?php _e( 'Link completion message to certificate.', 'cp' ); ?></th>
+								<th scope="row"><?php _e( 'Enable Basic Certificate', 'cp' ); ?></th>
 								<td>
-									<a class="help-icon" href="javascript:;"></a>
-									<div class="tooltip">
-										<div class="tooltip-before"></div>
-										<div class="tooltip-button">&times;</div>
-										<div class="tooltip-content">
-											<?php _e( 'If checked, the student will be able to view their certificate by clicking on the "Course Complete" message on the Course Details page.', 'cp' ) ?>
-										</div>
-									</div>
-									<input type='checkbox' value="1" name='cert_field_link_with_completion' <?php echo( checked( self::option( 'link_with_completion' ) ) ); ?> />
+									<input type='checkbox' value="1" name='cert_field_basic_certificate_enabled' <?php echo( checked( self::option( 'basic_certificate_enabled' ) ) ); ?> />
 								</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><?php _e( 'Email certificate when course is completed.', 'cp' ); ?></th>
 								<td>
-									<a class="help-icon" href="javascript:;"></a>
-									<div class="tooltip">
-										<div class="tooltip-before"></div>
-										<div class="tooltip-button">&times;</div>
-										<div class="tooltip-content">
-											<?php _e( 'If checked, the user will be sent their certificate via email as soon as the course is completed.', 'cp' ) ?>
-										</div>
-									</div>
 									<input type='checkbox' value="1" name='cert_field_auto_email' <?php echo( checked( self::option( 'auto_email' ) ) ); ?> />
 								</td>
 							</tr>
@@ -202,7 +188,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 								$editor_content = self::certificate_styles();
 								?>
 
-								<textarea name="option_coursepress_basic_certificate_styles" style="width: 100%; height: 200px"><?php echo $editor_content; ?></textarea>
+								<textarea name="cert_field_styles" style="width: 100%; height: 200px"><?php echo $editor_content; ?></textarea>
 
 							</td>
 						</tr>
@@ -216,15 +202,74 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		<?php
 		}
 
+		public static function render_email_settings() {
+		?>
+			<div class="postbox">
+				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Basic Certificate E-mail', 'cp' ); ?></span></h3>
 
-		public static function process_submit() {
+				<div class="inside">
+					<p class="description"><?php _e( 'E-mail to send certificate to student upon course completion. (if enabled)', 'cp' ); ?></p>
+					<table class="form-table">
+						<tbody id="items">
+						<tr>
+							<th><?php _e( 'From Name', 'cp' ); ?></th>
+							<td>
+								<input type="text" name="cert_field_from_name" value="<?php echo esc_attr( self::option( 'from_name' ) ); ?>"/>
+							</td>
+						</tr>
 
-			if( 'update_basic_certificate' == $_POST['action'] && isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
+						<tr>
+							<th><?php _e( 'From E-mail', 'cp' ); ?></th>
+							<td>
+								<input type="text" name="cert_field_from_email" value="<?php echo esc_attr( self::option( 'from_email' ) ); ?>"/>
+							</td>
+						</tr>
 
-				if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'update_basic_certificate' ) ) {
+						<tr>
+							<th><?php _e( 'E-mail Subject', 'cp' ); ?></th>
+							<td>
+								<input type="text" name="cert_field_email_subject" value="<?php echo esc_attr( self::option( 'email_subject' ) ); ?>"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th><?php _e( 'E-mail Content', 'cp' ); ?></th>
+							<td>
+								<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', 'cp' ); ?></p>
+								<?php
+								$editor_name    = "cert_field_email_content";
+								$editor_id      = "cert_field_email_content";
+								$editor_content = stripslashes( self::option( 'email_content' ) );
+
+								$args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+								 //Filter $args before showing editor
+								//$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+								wp_editor( $editor_content, $editor_id, $args );
+								?>
+							</td>
+						</tr>
+
+						</tbody>
+					</table>
+				</div>
+				<!--/inside-->
+			</div>
+			<!--/postbox-->
+		<?php
+		}
+
+		public static function process_submit( $verified = false, $vars = array() ) {
+			$x = '';
+			if( ( 'update_basic_certificate' == $_POST['action'] && isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) || $verified ) {
+
+				if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'update_basic_certificate' ) || $verified ) {
+
+					if( ! $verified ) {
+						$vars = $_POST;
+					}
 
 					// Update all fields...
-					foreach( $_POST as $key => $value ) {
+					foreach( $vars as $key => $value ) {
 						if( preg_match( '/^cert_field_/', $key ) ) {
 							$option = str_replace( 'cert_field_', '', $key );
 							self::option( $option, $value );
@@ -233,10 +278,10 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 					// and make sure these checkboxes are updated too...
 					$check_fields = array(
-						'cert_field_link_with_completion',
+						'cert_field_basic_certificate_enabled',
 						'cert_field_auto_email',
 					);
-					$post_array = array_keys( $_POST );
+					$post_array = array_keys( $vars );
 
 					foreach( $check_fields as $field ) {
 						if( ! in_array( $field, $post_array ) ) {
@@ -251,6 +296,12 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 		}
 
+		public static function process_email_settings( $tab, $vars ) {
+			if( 'email' == $tab ) {
+				self::process_submit( true, $vars );
+			}
+		}
+
 		// Will be used if enabling CSS
 		public static function certificate_styles() {
 			$content = esc_textarea( stripslashes( self::option( 'styles' ) ) );
@@ -262,7 +313,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			return self::option( 'certificate_content' );
 		}
 
-		public static function make_pdf( $student, $course ) {
+		public static function make_pdf( $student, $course, $url = false ) {
 
 			// Use CoursePress_PDF which extends TCPDF
 			require_once( CoursePress::instance()->plugin_dir . 'includes/classes/class.coursepress-pdf.php' );
@@ -329,6 +380,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 					'style' => $style,
 					'image' => self::option( 'background_url' ),
 					'orientation' => self::option( 'orientation' ),
+					'url' => $url,
 				)
 			);
 		}
@@ -356,7 +408,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		private static function _default_options() {
 			$options = array(
 				'certificate_content' => self::_default_certificate_content(),
-				'link_with_completion' => 1,
+				'basic_certificate_enabled' => 1,
 				'auto_email' => 0,
 				'background_url' => '',
 				'padding_top' => 0,
@@ -365,6 +417,10 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				'padding_left' => 0,
 				'styles' => '',
 				'orientation' => 'L',
+				'from_name' => get_option( 'blogname' ),
+				'from_email' => get_option( 'admin_email' ),
+				'email_subject' => self::_default_email_subject(),
+				'email_content' => self::_default_email_content(),
 			);
 
 			return $options;
@@ -389,6 +445,24 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				Date: %4$s
 				Certificate no.: %5$s', 'cp' ), $fields[0], $fields[1], $fields[2], $fields[3], $fields[4] );
 			return $default_certification_content;
+		}
+
+		function _default_email_subject() {
+			return sprintf( __( '[%s] Congratulations. You passed your course.', 'cp' ), get_option( 'blogname' ) );
+		}
+
+		function _default_email_content() {
+
+			$default_instructor_invitation_email = sprintf( __(
+				'Hi %1$s,
+
+				Congratulations! You have completed the course: %2$s
+
+				Please find attached your certificate of completion.'
+				, 'cp' ), 'FIRST_NAME', 'COURSE_NAME'
+			);
+
+			return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
 		}
 
 

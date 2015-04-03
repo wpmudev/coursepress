@@ -11,7 +11,7 @@ do_shortcode( '[course_units_loop]' ); //required for getting unit results
 echo do_shortcode( '[course_unit_archive_submenu]' );
 $complete_message = '';
 if ( 100 == (int) $progress ) {
-	$complete_message = '<div class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</div>';
+	$complete_message .= '<div class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</div>';
 }
 
 ?>
