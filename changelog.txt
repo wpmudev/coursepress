@@ -22,6 +22,7 @@ CHANGE LOG
 * Fixed issue with Order Complete Page MarketPress message
 * Fixed issue with displaying 1970 date on the course calendar when clicking on the previous link
 * Fixed issue with course order when Post Order Number is selected as an course order option
+* Fixed issue with login and signup popup links
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
