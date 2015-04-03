@@ -5793,3 +5793,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
+
+add_action( 'plugins_loaded', 'test_cert');
+function test_cert() {
+	//$x = '';
+//	$x = CP_Basic_Certificate::email_certificate( 2, 5614 );
+//	$attachments = CP_Basic_Certificate::make_pdf( 2, 5614 );
+//wp_mail( 'rheinard@thekorfs.com', 'The subject', 'The message', 'Content: text/html', $attachments );
+//	$attachments = array( WP_CONTENT_DIR . '/uploads/file_to_attach.zip' );
+//	$headers = 'From: My Name <myname@example.com>' . "\r\n";
+//	$headers[] = 'From: '.get_option( 'blogname' ).' <'.get_option( 'admin_email' ).'>';
+	//$headers[] = 'Content-Type: text/html;';
+
+	//wp_mail( 'rheinard@thekorfs.com', 'subject', 'message', implode( "\r\n", $headers ), $attachments );
+	//$val = 1234;
+	//$x = CP_Basic_Certificate::option( 'auto_email' );
+	//error_log( sprintf( "%05d", $val ) );
+
+}
+

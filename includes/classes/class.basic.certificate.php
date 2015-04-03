@@ -12,8 +12,8 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		public static function init_settings() {
 			add_filter( 'coursepress_settings_new_menus', array( 'CP_Basic_Certificate', 'add_settings_item' ) );
 			add_action( 'coursepress_settings_menu_basic_certificate', array( 'CP_Basic_Certificate', 'render_settings') );
-			add_action( 'coursepress_email_settings', array( 'CP_Basic_Certificate', 'render_email_settings') );
-			add_action( 'coursepress_update_settings', array( 'CP_Basic_Certificate', 'process_email_settings'), 10, 2 );
+			//add_action( 'coursepress_email_settings', array( 'CP_Basic_Certificate', 'render_email_settings') );
+			//add_action( 'coursepress_update_settings', array( 'CP_Basic_Certificate', 'process_email_settings'), 10, 2 );
 		}
 
 		public static function add_settings_item( $menus ) {
@@ -66,12 +66,12 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 									<input type='checkbox' value="1" name='cert_field_basic_certificate_enabled' <?php echo( checked( self::option( 'basic_certificate_enabled' ) ) ); ?> />
 								</td>
 							</tr>
-							<tr valign="top">
-								<th scope="row"><?php _e( 'Email certificate when course is completed.', 'cp' ); ?></th>
-								<td>
-									<input type='checkbox' value="1" name='cert_field_auto_email' <?php echo( checked( self::option( 'auto_email' ) ) ); ?> />
-								</td>
-							</tr>
+							<!--<tr valign="top">-->
+								<!--<th scope="row">--><?php //_e( 'Email certificate when course is completed.', 'cp' ); ?><!--</th>-->
+								<!--<td>-->
+									<!--<input type='checkbox' value="1" name='cert_field_auto_email' --><?php //echo( checked( self::option( 'auto_email' ) ) ); ?><!-- />-->
+								<!--</td>-->
+							<!--</tr>-->
 
 							</tbody>
 						</table>
@@ -259,7 +259,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		}
 
 		public static function process_submit( $verified = false, $vars = array() ) {
-			$x = '';
+
 			if( ( 'update_basic_certificate' == $_POST['action'] && isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) || $verified ) {
 
 				if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'update_basic_certificate' ) || $verified ) {
@@ -277,10 +277,12 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 					}
 
 					// and make sure these checkboxes are updated too...
-					$check_fields = array(
-						'cert_field_basic_certificate_enabled',
-						'cert_field_auto_email',
-					);
+					if( ! $verified ) {
+						$check_fields = array(
+							'cert_field_basic_certificate_enabled',
+							'cert_field_auto_email',
+						);
+					}
 					$post_array = array_keys( $vars );
 
 					foreach( $check_fields as $field ) {
@@ -296,11 +298,11 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 		}
 
-		public static function process_email_settings( $tab, $vars ) {
-			if( 'email' == $tab ) {
-				self::process_submit( true, $vars );
-			}
-		}
+		//public static function process_email_settings( $tab, $vars ) {
+		//	if( 'email' == $tab ) {
+		//		self::process_submit( true, $vars );
+		//	}
+		//}
 
 		// Will be used if enabling CSS
 		public static function certificate_styles() {
@@ -326,36 +328,6 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				$student = new Student( $student );
 			}
 
-			// Note ID and id is inconsistent
-			$course_completed = Student_Completion::is_course_complete( $student->ID, $course->id );
-			$course_completed_details = get_user_option( '_course_' . $course->id . '_completed', $student->ID );
-
-			if( empty( $course ) || empty( $student ) || ! $course_completed ) {
-				return false;
-			}
-
-			$units = $course->get_units();
-
-			$show_units = false;
-			$unit_list = '<ul class="unit_list">';
-			foreach( $units as $unit ) {
-				$show_units = true;
-				$unit_list .= '<li>' . sanitize_text_field( $unit->post_title ) . '</li>';
-			}
-			$unit_list .= '</ul>';
-			if( ! $show_units ) {
-				$unit_list = '';
-			}
-
-			$fields = array(
-				'first_name' => $student->first_name,
-				'last_name' => $student->last_name,
-				'course_name' => $course->details->post_title,
-				'completion_date' => date_i18n( get_option( 'date_format '), $course_completed_details['date_completed'] ),
-				'certificate_number' => $course_completed_details['certificate_number'],
-				'unit_list' => $unit_list,
-			);
-
 			$certificate_title = sprintf( __('Certificate %s', 'cp' ), $course_completed_details['certificate_number'] );
 
 			// Get the styles and replace fields if they exist
@@ -368,10 +340,8 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			$style = ! empty( $style ) ? '<style>' . $style . '</style>' : $style;
 
 			$html = '<table class="basic_certificate"><tr><td>' . stripslashes( self::certificate_content() ) . '</td></tr></table>';
-			foreach( $fields as $key => $value ) {
-				$str_value = '<span class="' . $key . '">' . $value . '</span>';
-				$html = str_replace( strtoupper( $key ), $str_value, $html );
-			}
+
+			$html = self::_replace_fields( $html, $student, $course );
 
 			// create new PDF document
 			$pdf = new CoursePress_PDF( PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
@@ -447,11 +417,11 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			return $default_certification_content;
 		}
 
-		function _default_email_subject() {
+		private static function _default_email_subject() {
 			return sprintf( __( '[%s] Congratulations. You passed your course.', 'cp' ), get_option( 'blogname' ) );
 		}
 
-		function _default_email_content() {
+		private static function _default_email_content() {
 
 			$default_instructor_invitation_email = sprintf( __(
 				'Hi %1$s,
@@ -463,6 +433,50 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			);
 
 			return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
+		}
+
+		private static function _replace_fields( $content, $student, $course, $html = true ) {
+
+			// Note ID and id is inconsistent
+			$course_completed = Student_Completion::is_course_complete( $student->ID, $course->id );
+			$course_completed_details = get_user_option( '_course_' . $course->id . '_completed', $student->ID );
+
+			if( empty( $course ) || empty( $student ) || ! $course_completed ) {
+				return false;
+			}
+
+			$units = $course->get_units();
+
+			$show_units = false;
+			$unit_list = '<ul class="unit_list">';
+			foreach( $units as $unit ) {
+				$show_units = true;
+				$unit_list .= '<li>' . sanitize_text_field( $unit->post_title ) . '</li>';
+			}
+			$unit_list .= '</ul>';
+			if( ! $show_units ) {
+				$unit_list = '';
+			}
+
+			$fields = array(
+				'first_name' => $student->first_name,
+				'last_name' => $student->last_name,
+				'course_name' => $course->details->post_title,
+				'completion_date' => date_i18n( get_option( 'date_format '), $course_completed_details['date_completed'] ),
+				'certificate_number' => $course_completed_details['certificate_number'],
+				'unit_list' => $unit_list,
+			);
+
+			foreach( $fields as $key => $value ) {
+				if( $html ) {
+					$str_value = '<span class="' . $key . '">' . $value . '</span>';
+				} else {
+					$str_value = $value;
+				}
+				$content = str_replace( strtoupper( $key ), $str_value, $content );
+			}
+
+			return $content;
 		}
 
 
