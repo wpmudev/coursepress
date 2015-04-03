@@ -106,7 +106,7 @@ if ( !class_exists( 'Course' ) ) {
 					$course->post_title = __( 'Untitled', 'cp' );
 				}
 				if ( $course->post_status == 'private' || $course->post_status == 'draft' ) {
-					$course->post_status = __( 'unpublished', 'cp' );
+					$course->post_status = 'unpublished';
 				}
 
 				$course->allow_course_discussion = get_post_meta( $this->id, 'allow_course_discussion', true );

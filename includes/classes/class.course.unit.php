@@ -58,7 +58,7 @@ if ( !class_exists( 'Unit' ) ) {
 				}
 
 				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
-					$unit->post_status = __( 'unpublished', 'cp' );
+					$unit->post_status = 'unpublished';
 				}
 
 				// Set parent ID
