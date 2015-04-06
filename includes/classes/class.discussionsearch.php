@@ -74,9 +74,9 @@ if ( ! class_exists( 'Discussion_Search' ) ) {
 			$pagination->nextT         = __( 'Next', 'cp' );
 			$pagination->prevT         = __( 'Previous', 'cp' );
 			if ( $this->search_term != '' ) {
-				$pagination->target( esc_url( "admin.php?page=discussion&s=" . $this->search_term ) );
+				$pagination->target( esc_url( "admin.php?page=discussions&s=" . $this->search_term ) );
 			} else {
-				$pagination->target( "admin.php?page=discussion" );
+				$pagination->target( "admin.php?page=discussions" );
 			}
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
