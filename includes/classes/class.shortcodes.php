@@ -1824,16 +1824,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 			}
 			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a>';
-			$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
-			$show_link = ! empty( $show_link ) ? true : false;
-			if( is_user_logged_in() && $show_link ) {
-				if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
-					$certificate = CP_Basic_Certificate::make_pdf( get_current_user_id(), $course_id, true );
 
-					$content .= ' | <a target="_blank" href="' . esc_url( $certificate ) . '">' . __( 'Certificate', 'cp' ) . '</a>';
-
-				}
-			}
+			// Add certificate link
+			$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp'), ' | ' );
 
 			$content .= '</div>';
 

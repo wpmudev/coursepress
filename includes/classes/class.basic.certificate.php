@@ -16,6 +16,21 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			//add_action( 'coursepress_update_settings', array( 'CP_Basic_Certificate', 'process_email_settings'), 10, 2 );
 		}
 
+		public static function init_front() {
+			add_action( 'coursepress_pre_parse_action', array( 'CP_Basic_Certificate', 'redirect_to_pdf' ) );
+		}
+
+		public static function redirect_to_pdf() {
+			if( isset( $_GET['action'] ) && 'view_certificate' == $_GET['action'] && isset( $_GET['course_id'] ) ) {
+				$course_id = (int) $_GET['course_id'];
+				if( $course_id > 0 ) {
+					$certificate = CP_Basic_Certificate::make_pdf( get_current_user_id(), $course_id, true );
+					wp_redirect( $certificate );
+					exit;
+				}
+			}
+		}
+
 		public static function add_settings_item( $menus ) {
 
 			$insert_before = 'shortcodes';
@@ -56,12 +71,21 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 				<div class="postbox">
 					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Certificate Options', 'cp' ); ?></span></h3>
-
 					<div class="inside">
 						<table class="form-table">
 							<tbody>
 							<tr valign="top">
-								<th scope="row"><?php _e( 'Enable Basic Certificate', 'cp' ); ?></th>
+								<th scope="row">
+									<?php _e( 'Enable Basic Certificate', 'cp' ); ?>
+									<a class="help-icon" href="javascript:;"></a>
+										<div class="tooltip">
+											<div class="tooltip-before"></div>
+											<div class="tooltip-button">&times;</div>
+											<div class="tooltip-content">
+												<?php _e( 'Adds a "Certificate" link to completed courses on the student dashboard.', 'cp' ); ?>
+											</div>
+										</div>
+								</th>
 								<td>
 									<input type='checkbox' value="1" name='cert_field_basic_certificate_enabled' <?php echo( checked( self::option( 'basic_certificate_enabled' ) ) ); ?> />
 								</td>
@@ -477,6 +501,22 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			}
 
 			return $content;
+		}
+
+		public static function get_certificate_link( $student_id, $course_id, $link_title, $pre = '', $post = '', $show_link = false ) {
+
+			if( ! $show_link ) {
+				$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
+				$show_link = ! empty( $show_link ) ? true : false;
+			}
+
+			if( $show_link ) {
+				if ( Student_Completion::is_course_complete( $student_id, $course_id ) ) {
+					$certificate_permalink = add_query_arg( array( 'action' => 'view_certificate', 'course_id' => $course_id ), get_permalink( $course_id ) );
+					return esc_html( $pre ) . '<a target="_blank" href="' . esc_url( $certificate_permalink ) . '">' . esc_html( $link_title ) . '</a>' . esc_html( $post );
+				}
+			}
+			return '';
 		}
 
 
