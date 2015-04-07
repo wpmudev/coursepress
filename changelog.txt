@@ -24,6 +24,8 @@ CHANGE LOG
 * Fixed issue with course order when Post Order Number is selected as an course order option
 * Fixed issue with login and signup popup links
 * Fixed issue with admin discussions pagination
+* Fixed instructors courses list properly with pagination (10 courses+)
+* Removed ping backs from courses (implementation on the feature request list).
 
 = 1.2.5 =
 * Added additional hooks and filters for developers

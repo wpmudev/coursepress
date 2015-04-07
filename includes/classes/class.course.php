@@ -461,7 +461,10 @@ if ( !class_exists( 'Course' ) ) {
 						$post[ 'ID' ] = $_POST[ 'course_id' ]; //If ID is set, wp_insert_post will do the UPDATE instead of insert
 					}
 
-					$post_id = wp_insert_post( $post );
+					// Avoid ping backs
+					$post[ 'ping_status' ] = 'closed';
+
+					$post_id = wp_insert_post( apply_filters( 'coursepress_pre_insert_post', $post ) );
 
 					$course_order_exists = get_post_meta( $post_id, 'course_order', true );
 					if ( empty( $course_order_exists ) ) {
