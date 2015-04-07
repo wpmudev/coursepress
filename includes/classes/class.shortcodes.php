@@ -1430,7 +1430,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //				}
 //				
 			?>
-			<!--				<img src="--><?php //echo $thumbnail;        ?><!--" class="course-thumbnail-img"></img>-->
+			<!--				<img src="--><?php //echo $thumbnail;         ?><!--" class="course-thumbnail-img"></img>-->
 			<!--				--><?php
 //				$content .= trim( ob_get_clean() );
 //
@@ -4004,9 +4004,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 														wp_redirect( $course->get_permalink() );
 													} else {
 														if ( !empty( $redirect_url ) ) {
-															wp_redirect( urldecode( $redirect_url ) );
+															wp_redirect( apply_filters( 'coursepress_redirect_after_signup_redirect_url', $redirect_url ) );
 														} else {
-															wp_redirect( CoursePress::instance()->get_student_dashboard_slug( true ) );
+															wp_redirect( apply_filters( 'coursepress_redirect_after_signup_url', CoursePress::instance()->get_student_dashboard_slug( true ) ) );
 														}
 													}
 													exit;
