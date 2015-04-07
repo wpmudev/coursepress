@@ -287,12 +287,8 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					   $style			 = '';
 					   $can_list_count	 = 0;
 					   $list_order		 = 1;
+					   $courses =  $wp_course_search->get_results();
 					   foreach ( $wp_course_search->get_results() as $course ) {
-
-						   $instructor			 = new Instructor( get_current_user_id() );
-						   $instructor_courses	 = $instructor->get_assigned_courses_ids();
-
-						   $my_course = in_array( $course->ID, $instructor_courses );
 
 						   $can_list = false;
 
