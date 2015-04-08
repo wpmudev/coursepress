@@ -5027,7 +5027,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			//Student Settings page
 			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
-				error_log('hizz');
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
 					exit;
