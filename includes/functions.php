@@ -1967,6 +1967,9 @@ function cp_do_attachment_caption( $data ) {
 				//'height' => 550
 			);
 			$video      = wp_oembed_get( $data->video_url );
+			if( ! $video ) {
+				$video = apply_filters('the_content', "[embed]" . $data->video_url . "[/embed]");
+			}
 		}
 
 		if ( 'yes' == $data->show_media_caption ) {
