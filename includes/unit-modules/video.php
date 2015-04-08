@@ -115,6 +115,8 @@ class video_module extends Unit_Module {
 
 				<?php echo $this->show_media_caption( $data ); ?>
 
+				<?php echo $this->hide_related_videos( $data ); ?>
+
 				<?php
 				parent::get_module_delete_link();
 				?>
@@ -132,6 +134,17 @@ class video_module extends Unit_Module {
 		$this->label       = __( 'Video', 'cp' );
 		$this->save_module_data();
 		parent::additional_module_actions();
+	}
+
+	function hide_related_videos( $data ) {
+		?>
+		<label class="hide_related_media">
+				<input type="checkbox" name="<?php echo $this->name; ?>_hide_related_media[<?php $data->id ?>]" value="yes" <?php echo( ! empty( $data ) && isset( $data->hide_related_media ) && $data->hide_related_media == 'yes' ? 'checked' : ( empty( $data ) || ! isset( $data->hide_related_media ) ) ? 'checked' : '' ) ?> />
+				<input type="hidden" name="<?php echo $this->name; ?>_hide_related_media_field[]" value="<?php echo( ! empty( $data ) && isset( $data->hide_related_media ) && $data->hide_related_media == 'yes' ? 'yes' : empty( $data ) ? 'yes' : 'no' ) ?>"/>
+				<?php _e( 'Hide Related Videos', 'cp' ); ?><br/>
+				<span class="element_title_description"><?php _e( 'Hide related videos for some video services (e.g. YouTube). Services like Vimeo sets this per video.', 'cp' ); ?></span>
+			</label>
+		<?php
 	}
 
 	function show_media_caption( $data ) {
@@ -243,6 +256,7 @@ class video_module extends Unit_Module {
 							$data->metas['show_media_caption']  = $_POST[ $this->name . '_show_caption_field' ][ $key ];
 							$data->metas['caption_custom_text'] = $_POST[ $this->name . '_caption_custom_text' ][ $key ];
 							$data->metas['caption_field']       = $_POST[ $this->name . '_caption_field' ][ $key ];
+							$data->metas['hide_related_media']  = $_POST[ $this->name . '_hide_related_media_field' ][ $key ];
 
 
 							parent::update_module( $data );
