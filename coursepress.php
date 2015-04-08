@@ -4727,11 +4727,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_script( 'cryptojs-md5', $this->plugin_url . 'js/md5.js' );
 
 
-			if ( isset( $_GET[ 'page' ] ) ) {
-				$page = isset( $_GET[ 'page' ] );
-			} else {
-				$page = '';
-			}
+			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
+
 
 			$this->add_jquery_ui();
 

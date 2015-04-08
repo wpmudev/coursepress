@@ -27,6 +27,8 @@ CHANGE LOG
 * Fixed instructors courses list properly with pagination (10 courses+)
 * Removed ping backs from courses (implementation on the feature request list).
 * Fixed conflicts with BuddyPress Groups.
+* Fixed issue with loading CoursePress styles on other admin pages.
+* Fixed issue with broken file downloads in Units (sites using PHP 5.6+).
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
