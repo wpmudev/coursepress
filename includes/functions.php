@@ -1953,6 +1953,11 @@ function cp_do_attachment_caption( $data ) {
 
 		$video_extension = pathinfo( $data->video_url, PATHINFO_EXTENSION );
 
+		if( isset( $data->hide_related_media ) && 'yes' == $data->hide_related_media ) {
+			add_filter( 'oembed_result', 'cp_remove_related_videos', 10, 3 );
+		}
+
+
 		$video = '';
 		if ( ! empty( $video_extension ) ) {//it's file, most likely on the server
 			$attr  = array(
@@ -1966,7 +1971,11 @@ function cp_do_attachment_caption( $data ) {
 				//'width' => $data->player_width,
 				//'height' => 550
 			);
-			$video      = wp_oembed_get( $data->video_url );
+
+			$video      = wp_oembed_get( $data->video_url, $embed_args );
+			if( ! $video ) {
+				$video = apply_filters('the_content', "[embed]" . $data->video_url . "[/embed]");
+			}
 		}
 
 		if ( 'yes' == $data->show_media_caption ) {
@@ -1992,6 +2001,22 @@ function cp_do_attachment_caption( $data ) {
 			$html .= '</div>';
 		}
 	}
+
+	return $html;
+}
+
+
+function cp_remove_related_videos( $html, $url, $args) {
+
+
+	$newargs = $args;
+	$newargs['rel'] = 0;
+
+	// build the query url
+	$parameters = http_build_query( $newargs );
+
+	// YouTube
+	$html = str_replace( 'feature=oembed', 'feature=oembed&' . $parameters, $html );
 
 	return $html;
 }

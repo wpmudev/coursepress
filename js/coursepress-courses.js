@@ -1914,6 +1914,14 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
+    /* Hide related media */
+    $( '[name*="hide_related_media"]' ).live( "change", function( event ) {
+        if ( $( this ).attr( 'checked' ) ) {
+            $( this ).siblings( '[name*="hide_related_media_field"]' ).val( 'yes' );
+        } else {
+            $( this ).siblings( '[name*="hide_related_media_field"]' ).val( 'no' );
+        }
+    } );
 
     /* Set hidden title field. Resolves issue with $_POST arrays. */
     $( '[name*="show_title_on_front"]' ).live( "change", function( event ) {

@@ -12,6 +12,7 @@ if ( ! class_exists( 'Course_Search' ) ) {
 		var $args = array();
 		var $is_light = true;
 		var $post_type = 'course';
+		var $posts = false;
 
 		function __construct( $search_term = '', $page_num = '', $courses_per_page = 10, $category = 0 ) {
 			$this->is_light = CoursePress_Capabilities::is_pro() ? false : true;
@@ -38,6 +39,13 @@ if ( ! class_exists( 'Course_Search' ) ) {
 				'post_type'      => $this->post_type,
 				'post_status'    => 'any',
 			);
+
+			if( ! current_user_can( 'manage_options' ) ) {
+				$instructor = new Instructor( get_current_user_id() );
+				$instructor_courses = $instructor->get_accessable_courses();
+
+				$args['post__in'] = $instructor_courses;
+			}
 
 			if ( $category !== 0 ) {
 				$args['tax_query'] = array(
@@ -92,10 +100,18 @@ if ( ! class_exists( 'Course_Search' ) ) {
 				if ( $count ) {
 					return count( $results );
 				} else {
-					return $results;
+					$this->posts = $results;
+					return $this->posts;
 				}
 			} else {
-				return get_posts( $this->args );
+				$this->posts = get_posts( $this->args );
+				return $this->posts;
+			}
+		}
+
+		function unset_course( $key ) {
+			if( isset( $this->posts[ $key ] ) ) {
+				unset( $this->posts[ $key ] );
 			}
 		}
 

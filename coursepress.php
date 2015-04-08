@@ -2395,11 +2395,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				if ( false === $user ) {
 					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
-						$username = str_replace( '%20', ' ', $wp->query_vars['instructor_username'] );//support for usernames with spaces
-						$user     = Instructor::instructor_by_login( $username );
+						$username	 = str_replace( '%20', ' ', $wp->query_vars[ 'instructor_username' ] ); //support for usernames with spaces
+						$user		 = Instructor::instructor_by_login( $username );
 					} else {
-						$user = Instructor::instructor_by_hash( $wp->query_vars['instructor_username'] );
-						wp_cache_set( $wp->query_vars['instructor_username'], $user, 'cp_instructor_hash' );
+						$user = Instructor::instructor_by_hash( $wp->query_vars[ 'instructor_username' ] );
+						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $user, 'cp_instructor_hash' );
 					}
 				}
 
@@ -3148,10 +3148,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function get_student_settings_slug( $url = false ) {
 			$default_slug_value = 'settings';
+
+			$custom = get_option( 'coursepress_student_settings_page', 0 );
+			if( ! empty( $custom ) ) {
+				$post = get_post( $custom );
+			}
+
+			$slug = empty( $custom ) ? get_option( 'student_settings_slug', $default_slug_value ) : $post->post_name;
+
 			if ( !$url ) {
-				return get_option( 'student_settings_slug', $default_slug_value );
+				return $slug;
 			} else {
-				return home_url() . '/' . get_option( 'student_settings_slug', $default_slug_value );
+				return home_url() . '/' . $slug;
 			}
 		}
 
@@ -4739,12 +4747,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// CryptoJS.MD5
 			wp_enqueue_script( 'cryptojs-md5', $this->plugin_url . 'js/md5.js' );
 
-
-			if ( isset( $_GET[ 'page' ] ) ) {
-				$page = isset( $_GET[ 'page' ] );
-			} else {
-				$page = '';
-			}
+			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
 
 			$this->add_jquery_ui();
 
@@ -4766,6 +4769,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$included_pages = apply_filters( 'cp_settings_localize_pages', array(
 				'course',
+				'courses',
 				'course_details',
 				'instructors',
 				'students',
@@ -4948,12 +4952,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function create_virtual_pages() {
 
-			// if( defined( 'DOING_AJAX' ) && DOING_AJAX ) { cp_write_log( 'doing ajax' ); }
+			$uri = untrailingslashit( trim( ltrim( $_SERVER[ 'REQUEST_URI'], '/' ) ) );
+			$post_slug = '';
 
-			$url = trim( parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH ), '/' );
+			$args=array(
+				'name' => $uri,
+				'post_type' => 'page',
+				'post_status' => 'publish',
+				'numberposts' => 1
+			);
+
+			$post = get_posts( $args );
+
+			if( ! empty( $post ) ) {
+				$post_slug = $post->post_name;
+				$post = array_pop( $post );
+			}
 
 			//Enrollment process page
-			if ( preg_match( '/' . $this->get_enrollment_process_slug() . '/', $url ) ) {
+			if ( ( preg_match( '/^' . $this->get_enrollment_process_slug() . '/', $uri ) && 0 == get_option( 'coursepress_enrollment_process_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_enrollment_process_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'enrollment-process.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -4975,7 +4992,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 
 			//Custom login page
-			if ( preg_match( '/' . $this->get_login_slug() . '/', $url ) ) {
+			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -4996,7 +5013,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Custom signup page
-			if ( preg_match( '/' . $this->get_signup_slug() . '/', $url ) ) {
+			if ( ( preg_match( '/^' . $this->get_signup_slug() . '/', $uri ) && 0 == get_option( 'coursepress_signup_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_signup_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-signup.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5017,7 +5034,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Dashboard page
-			if ( preg_match( '/' . $this->get_student_dashboard_slug() . '/', $url ) ) {
+			if ( ( preg_match( '/^' . $this->get_student_dashboard_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_dashboard_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_dashboard_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-dashboard.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5037,7 +5054,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Settings page
-			if ( preg_match( '/' . $this->get_student_settings_slug() . '/', $url ) ) {
+			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5062,12 +5079,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			/* Withdraw a Student from course in frontend Student Dashboard */
 			//Allows logged in user to withdraw only himself from a course.
-			if ( ! empty( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) && is_user_logged_in() ) {
-				if ( ! empty( $_GET['course_nonce'] ) && wp_verify_nonce( $_GET['course_nonce'], 'withdraw_from_course_' . $_GET['withdraw'] ) ) {
+			if ( !empty( $_GET[ 'withdraw' ] ) && is_numeric( $_GET[ 'withdraw' ] ) && is_user_logged_in() ) {
+				if ( !empty( $_GET[ 'course_nonce' ] ) && wp_verify_nonce( $_GET[ 'course_nonce' ], 'withdraw_from_course_' . $_GET[ 'withdraw' ] ) ) {
 					$student = new Student( get_current_user_id() );
-					$student->withdraw_from_course( $_GET['withdraw'] );
+					$student->withdraw_from_course( $_GET[ 'withdraw' ] );
 				}
-
 			}
 		}
 

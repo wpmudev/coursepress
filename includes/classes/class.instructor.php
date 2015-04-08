@@ -79,6 +79,31 @@ if ( ! class_exists( 'Instructor' ) ) {
 			return $assigned_courses;
 		}
 
+		function get_accessable_courses() {
+
+			$courses = $this->get_assigned_courses_ids();
+			$new_course_array = array();
+
+			foreach( $courses as $course ) {
+
+				$can_update				 = CoursePress_Capabilities::can_update_course( $course->ID, $this->ID );
+				$can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID, $this->ID );
+				$can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID, $this->ID );
+				$can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID, $this->ID );
+				$my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID, $this->ID );
+				$creator				 = CoursePress_Capabilities::is_course_creator( $course->ID, $this->ID );
+
+				if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
+					continue;
+				} else {
+					$new_course_array[] = $course;
+				}
+			}
+
+			return $new_course_array;
+
+		}
+
 		function unassign_from_course( $course_id = 0 ) {
 			$global_option = ! is_multisite();
 			delete_user_option( $this->ID, 'course_' . $course_id, $global_option );

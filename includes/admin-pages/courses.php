@@ -287,26 +287,22 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					   $style			 = '';
 					   $can_list_count	 = 0;
 					   $list_order		 = 1;
-					   foreach ( $wp_course_search->get_results() as $course ) {
-
-						   $instructor			 = new Instructor( get_current_user_id() );
-						   $instructor_courses	 = $instructor->get_assigned_courses_ids();
-
-						   $my_course = in_array( $course->ID, $instructor_courses );
+					   $courses =  $wp_course_search->get_results();
+					   foreach ( $courses as $course ) {
 
 						   $can_list = false;
 
 						   // $can_create = CoursePress_Capabilities::can_creare_course();
-						   $can_update				 = CoursePress_Capabilities::can_update_course( $course->ID );
-						   $can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID );
-						   $can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID );
-						   $can_create_unit		 = CoursePress_Capabilities::can_create_course_unit( $course->ID );
-						   $can_update_unit		 = CoursePress_Capabilities::can_update_course_unit( $course->ID );
-						   $can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID );
-						   $can_delete_unit		 = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
-						   $can_publish_unit		 = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
-						   $my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID );
-						   $creator				 = CoursePress_Capabilities::is_course_creator( $course->ID );
+						   $can_update              = CoursePress_Capabilities::can_update_course( $course->ID );
+						   $can_delete              = CoursePress_Capabilities::can_delete_course( $course->ID );
+						   $can_publish             = CoursePress_Capabilities::can_change_course_status( $course->ID );
+						   $can_create_unit         = CoursePress_Capabilities::can_create_course_unit( $course->ID );
+						   $can_update_unit         = CoursePress_Capabilities::can_update_course_unit( $course->ID );
+						   $can_view_unit           = CoursePress_Capabilities::can_view_course_units( $course->ID );
+						   $can_delete_unit         = CoursePress_Capabilities::can_delete_course_unit( $course->ID );
+						   $can_publish_unit        = CoursePress_Capabilities::can_change_course_unit_status( $course->ID );
+						   $my_course               = CoursePress_Capabilities::is_course_instructor( $course->ID );
+						   $creator                 = CoursePress_Capabilities::is_course_creator( $course->ID );
 						   $zero_instructor_courses = false;
 
 						   if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
