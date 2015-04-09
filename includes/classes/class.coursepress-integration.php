@@ -37,6 +37,9 @@ if ( ! class_exists( 'CoursePress_Integration' ) ) {
 			// Ultimate Facebook (2.7.8+)
 			add_action( 'wp_head', array( &$this, 'wp_head_ufb_integration' ) );
 
+			// Post Voting Plugin (2.2.2+)
+			add_filter( 'automatically_inject_voting_buttons', array( &$this, 'disable_post_voting_buttons' ) );
+
 			// Initialise TinCan Integration
 			//new CoursePress_TinCan();
 
@@ -121,6 +124,23 @@ if ( ! class_exists( 'CoursePress_Integration' ) ) {
 		}
 
 		/* ----- [END] ULTIMATE FACEBOOK ----- */
+
+		/* ----- POST VOTING PLUGIN ---- */
+
+		function disable_post_voting_buttons( $inject ) {
+
+			global $post;
+
+			$ignore_types = array( 'course', 'unit', 'virtual_page', 'discussions', 'module', 'certificates', 'notifications', 'module_response' );
+
+			if( ! empty( $post ) && isset( $post->post_type ) && in_array( $post->post_type, $ignore_types) ) {
+				return false;
+			}
+
+			return $inject;
+		}
+
+		/* ----- [END POST VOTING PLUGIN ---- */
 
 	}
 
