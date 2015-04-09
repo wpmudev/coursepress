@@ -2654,9 +2654,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					if( is_user_logged_in() && $show_link ) {
 
 						if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
-							$certificate = CP_Basic_Certificate::make_pdf( get_current_user_id(), $course_id, true );
+							$certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ) );
 							?>
-							<li class="submenu-item submenu-certificate <?php echo( isset( $subpage ) && $subpage == 'certificate' ? 'submenu-active' : '' ); ?>"><a target="_blank" href="<?php echo esc_url( $certificate ); ?>"><?php _e( 'Certificate', 'cp' ); ?></a></li>
+							<li class="submenu-item submenu-certificate <?php echo( isset( $subpage ) && $subpage == 'certificate' ? 'submenu-active' : '' ); ?>"><?php echo $certificate; ?></li>
 						<?php
 						}
 					}
