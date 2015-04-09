@@ -1823,7 +1823,12 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( $withdraw_link_visible === true ) {
 				$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 			}
-			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
+			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a>';
+
+			// Add certificate link
+			$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp'), ' | ' );
+
+			$content .= '</div>';
 
 			return $content;
 		}
@@ -2643,6 +2648,19 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'cp' ); ?></a></li>
 					<?php } ?>
 					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
+					<?php
+					$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
+					$show_link = ! empty( $show_link ) ? true : false;
+					if( is_user_logged_in() && $show_link ) {
+
+						if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
+							$certificate = CP_Basic_Certificate::make_pdf( get_current_user_id(), $course_id, true );
+							?>
+							<li class="submenu-item submenu-certificate <?php echo( isset( $subpage ) && $subpage == 'certificate' ? 'submenu-active' : '' ); ?>"><a target="_blank" href="<?php echo esc_url( $certificate ); ?>"><?php _e( 'Certificate', 'cp' ); ?></a></li>
+						<?php
+						}
+					}
+					?>
 				</ul><!--submenu-main-->
 			</div><!--submenu-main-container-->
 			<?php

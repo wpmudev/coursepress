@@ -232,6 +232,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-campus.php' );
 
+			/**
+			 * Basic certificates
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
 
 			//Administration area
 			if ( is_admin() ) {
@@ -504,11 +508,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				do_action( 'coursepress_admin_init' );
 
+				/**
+				 * Add certificate admin settings
+				 *
+				 * @since 1.2.6
+				 */
+				CP_Basic_Certificate::init_settings();
+
 				/*
 				 * Plugin activation class
 				 */
 				require_once( $this->plugin_dir . 'includes/classes/class.plugin-activation.php' );
 			}
+
+			/**
+			 * Add's ?action=view_certificate
+			 *
+			 * @since 1.2.6
+			 */
+			CP_Basic_Certificate::init_front();
 
 			/**
 			 * Setup payment gateway array.
@@ -2280,6 +2298,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function action_parse_request( &$wp ) {
 			global $wp_query;
+
+			do_action( 'coursepress_pre_parse_action' );
+
 			/* Show instructor invite pages */
 			$pg = $this->instructor_invite_confirmation();
 
@@ -4726,9 +4747,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			// CryptoJS.MD5
 			wp_enqueue_script( 'cryptojs-md5', $this->plugin_url . 'js/md5.js' );
 
-
 			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
-
 
 			$this->add_jquery_ui();
 
@@ -4748,14 +4767,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$page = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
 
-			if ( ( $page == 'courses' || $page == 'course_details' || $page == 'instructors' || $page == 'students' || $page == 'assessment' || $page == 'reports' || $page == $this->screen_base . '_settings' ) || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
+			$included_pages = apply_filters( 'cp_settings_localize_pages', array(
+				'course',
+				'courses',
+				'course_details',
+				'instructors',
+				'students',
+				'assessment',
+				'reports',
+				$this->screen_base . '_settings',
+			) );
+			if ( in_array( $page, $included_pages ) || ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ) ) {
 
 				$unit_pagination = false;
 				if ( isset( $_GET[ 'unit_id' ] ) ) {
 					$unit_pagination = cp_unit_uses_new_pagination( (int) $_GET[ 'unit_id' ] );
 				}
 
-				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
+				wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array( 'jquery-ui-tabs' ), $this->version );
+				//wp_enqueue_script( 'courses_bulk', $this->plugin_url . 'js/coursepress-admin.js', array(), $this->version );
 				wp_enqueue_script( 'wplink' );
 
 				wp_localize_script( 'courses_bulk', 'coursepress', array(
@@ -5023,10 +5053,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$this->set_latest_activity( get_current_user_id() );
 			}
 
-
 			//Student Settings page
 			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
+
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
 					exit;

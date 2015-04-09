@@ -139,6 +139,8 @@
 							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
 
 							<ul class="cp-shortcode-options">
+								<li><span>show_title</span>
+									– <?php _e( 'yes | no - Required when showing the "title" field.', 'cp' ); ?></li>
 								<li><span>date_format</span>
 									– <?php _e( 'PHP style date format. Default: WordPress setting.', 'cp' ); ?></li>
 								<li><span>label_tag</span>
