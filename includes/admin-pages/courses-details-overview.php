@@ -393,9 +393,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												foreach ( $course_terms as $course_term ) {
 													$course_terms_array[] = $course_term->term_id;
 												}
+
+												$class_extra = is_rtl() ? 'chosen-rtl' : '';
+
 												?>
 
-												<select name="course_category" id="course_category" class="postform chosen-select-course" multiple="true">
+												<select name="course_category" id="course_category" class="postform chosen-select-course <?php echo $class_extra; ?>" multiple="true">
 													<?php
 													foreach ( $terms as $terms ) {
 														?>
@@ -812,7 +815,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php cp_instructors_avatars_array(); ?>
 
 													<div class="clearfix"></div>
-													<?php cp_instructors_drop_down( 'postform chosen-select-course course-instructors' ); ?>
+													<?php cp_instructors_drop_down( 'postform chosen-select-course course-instructors ' . $class_extra ); ?>
 													<input class="button-primary" id="add-instructor-trigger" type="button" value="<?php _e( 'Assign', 'cp' ); ?>">
 													<!-- <p><?php _e( 'NOTE: If you need to add an instructor that is not on the list, please finish creating your course and save it. To create a new instructor, you must go to Users to create a new user account which you can select in this list. Then come back to this course and you can then select the instructor.', 'cp' ); ?></p> -->
 

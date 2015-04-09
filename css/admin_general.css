@@ -507,3 +507,8 @@ a.button.button-units.button-delete-unit:hover{
 .editor_in_place table.mceLayout {
     width: 100% !important;
 }
+
+/* Fixing chosen UI for RTL */
+body.rtl .chosen-container .chosen-drop {
+    /*left: 9999px;*/
+}
