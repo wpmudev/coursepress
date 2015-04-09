@@ -254,7 +254,7 @@ class CoursePress_PDF extends TCPDF {
 
 		$sitename = sanitize_title( get_site_option( 'blogname' ) );
 
-		$uid = uniqid( "{$sitename}-{$blog_id}-{$user_id}" );
+		$uid = isset( $args['uid'] ) ? "{$sitename}-{$blog_id}-{$user_id}" . $args['uid'] : uniqid( "{$sitename}-{$blog_id}-{$user_id}" );
 
 		$fname = K_PATH_CACHE . "{$uid}.pdf";
 

@@ -352,6 +352,8 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				$student = new Student( $student );
 			}
 
+			$course_completed_details = self::_get_fields( $student, $course );
+
 			$certificate_title = sprintf( __('Certificate %s', 'cp' ), $course_completed_details['certificate_number'] );
 
 			// Get the styles and replace fields if they exist
@@ -365,7 +367,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 			$html = '<table class="basic_certificate"><tr><td>' . stripslashes( self::certificate_content() ) . '</td></tr></table>';
 
-			$html = self::_replace_fields( $html, $student, $course );
+			$html = self::_replace_fields( $html, $student, $course, true, $course_completed_details );
 
 			// create new PDF document
 			$pdf = new CoursePress_PDF( PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
@@ -374,6 +376,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 					'style' => $style,
 					'image' => self::option( 'background_url' ),
 					'orientation' => self::option( 'orientation' ),
+					'uid' => $course_completed_details['certificate_number'],
 					'url' => $url,
 				)
 			);
@@ -459,7 +462,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
 		}
 
-		private static function _replace_fields( $content, $student, $course, $html = true ) {
+		private static function _get_fields( $student, $course ) {
 
 			// Note ID and id is inconsistent
 			$course_completed = Student_Completion::is_course_complete( $student->ID, $course->id );
@@ -490,6 +493,20 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				'certificate_number' => $course_completed_details['certificate_number'],
 				'unit_list' => $unit_list,
 			);
+
+			return $fields;
+
+		}
+
+		private static function _replace_fields( $content, $student, $course, $html = true, $fields = false ) {
+
+			if( ! $fields ) {
+				$fields = self::_get_fields( $student, $course );
+			}
+
+			if( empty( $fields ) ) {
+				return false;
+			}
 
 			foreach( $fields as $key => $value ) {
 				if( $html ) {
