@@ -1876,10 +1876,21 @@ li.submenu-workbook a{
     color: #808080;
 }
 
+li.submenu-certificate a{
+    background: url( 'images/icon-certificate.svg' );
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 25px;
+    color: #808080;
+}
+
 li.submenu-active{
     /*background-color: #f3f6f8;  */ 
 }
 
+.units-archive-list {
+    clear: both;
+}
 .units-archive-list li{
     background-color: #f3f6f8;
     display: block;
