@@ -35,6 +35,7 @@ CHANGE LOG
 * Added basic certificate functionality (templates planned for future release).
 * Fixed 0's showing up on CoursePress pages when Poll Voting Plugin is installed.
 * Fixed new units automatically added to structure where it was not before.
+* Fixed showing featured images in CoursePress theme.
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
