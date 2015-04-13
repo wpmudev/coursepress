@@ -247,7 +247,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function is_open_ended() {
-					
+
 				}
 
 				static function get_course_featured_url( $course_id = false ) {
@@ -1008,7 +1008,32 @@ if ( !class_exists( 'Course' ) ) {
 					return $pages;
 				}
 
+				public static function get_course_time_estimation( $course_id, $status = 'any' ) {
+
+		            $course_time = '';
+		            $course_seconds = 0;
+		            $units = Unit::get_units_from_course( $course_id, $status, false );
+
+		            foreach ( $units as $unit ) {
+		                $unit_details	 = new Unit( $unit->ID );
+		                $unit_time = $unit_details->get_unit_time_estimation($unit->ID);
+
+		                $min_sec = explode( ':', $unit_time );
+		                if ( isset( $min_sec[0] ) ) {
+		                    $course_seconds += intval( $min_sec[0] ) * 60;
+		                }
+		                if ( isset( $min_sec[1] ) ) {
+		                    $course_seconds += intval( substr($min_sec[1], 0, 2) );
+		                }
+		            }
+		            $total_seconds = round($course_seconds);
+		            $formatted_time = sprintf('%02d:%02d:%02d', ($total_seconds/3600),($total_seconds/60%60), $total_seconds%60);
+
+		            $course_time = apply_filters( 'coursepress_course_get_time_estimation', $formatted_time, $total_seconds, $course_id );
+
+		            return $course_time;
+		        }
+
 			}
 
 		}
-

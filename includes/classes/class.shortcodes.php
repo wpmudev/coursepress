@@ -70,6 +70,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_media', array( &$this, 'course_media' ) );
 			add_shortcode( 'course_action_links', array( &$this, 'course_action_links' ) );
 			add_shortcode( 'course_random', array( &$this, 'course_random' ) );
+			add_shortcode( 'course_time_estimation', array($this, 'course_time_estimation') );
 // Course-progress
 			add_shortcode( 'course_progress', array( &$this, 'course_progress' ) );
 			add_shortcode( 'course_unit_progress', array( &$this, 'course_unit_progress' ) );
@@ -912,6 +913,56 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = ob_get_clean();
 
 // Return the html in the buffer.
+			return $content;
+		}
+
+		/**
+		 * Shows the estimated course time.
+		 *
+		 * @since 1.0.0
+		 */
+		function course_time_estimation( $atts ) {
+			$content = '';
+
+			extract( shortcode_atts( array(
+				'course_id'       => in_the_loop() ? get_the_ID() : '',
+				'course'          => false,
+				'label'           => __( 'Estimated Duration:&nbsp;', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ': ',
+				'wrapper'         => 'no',
+				'class'           => '',
+			), $atts, 'course_time_estimation' ) );
+
+			if ( ! empty( $course_id ) ) {
+				$course_id = (int) $course_id;
+			} else {
+				return;
+			}
+
+			$label           = sanitize_text_field( $label );
+			$label_tag       = sanitize_html_class( $label_tag );
+			$label_delimeter = sanitize_html_class( $label_delimeter );
+			$class           = sanitize_html_class( $class );
+			$wrapper         = sanitize_text_field( $wrapper );
+
+			// Convert text 'yes' into true.
+			$wrapper = true === $wrapper || ( ! empty( $wrapper ) && 'yes' == $wrapper ) ? true : false;
+
+			if ( $wrapper ) {
+				$content .= '<div class="course-time-estimate course-time-estimate-' . $course_id . ' ' . $class . '">';
+				if ( ! empty( $label ) ) {
+					$content .= '<' . $label_tag . ' class="label">' . esc_html( $label ) . esc_html( $label_delimeter ) . '</' . $label_tag . '>';
+				}
+			}
+
+			$content .= Course::get_course_time_estimation( $course_id );
+
+			if ( $wrapper ) {
+				$content .= '</div>';
+			}
+
+
 			return $content;
 		}
 

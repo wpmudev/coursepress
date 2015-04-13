@@ -620,6 +620,41 @@
 						</td>
 					</tr>
 
+					<tr>
+						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Time Estimation', 'cp' ); ?></th>
+						<td>
+							<span class="cp-shortcode-code">[course_time_estimation]</span><br/>
+							<span class=""><?php _e( 'Shows the total time estimation based on calculation of unit elements.', 'cp' ); ?></span>
+
+							<p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'cp' ); ?></p>
+
+							<ul class="cp-shortcode-options">
+								<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'cp' ); ?>
+								</li>
+							</ul>
+
+							<p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'cp' ); ?></p>
+
+							<ul class="cp-shortcode-options">
+								<li><span>label</span>
+									– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'cp' ); ?>
+								</li>
+								<li><span>label_tag</span>
+									– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'cp' ); ?>
+								</li>
+								<li><span>label_delimeter</span>
+									– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'cp' ); ?></li>
+								<li><span>wrapper</span>
+									– <?php _e( 'Wrap inside a div tag (yes|no). Default: no', 'cp' ); ?></li>
+								<li><span>class</span>
+									– <?php _e( 'Additional CSS classes for styling. Default: empty', 'cp' ); ?></li>
+							</ul>
+
+							<p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'cp' ); ?></p>
+							<code>[course_time_estimation course_id="42" wrapper="yes"]<br />[course_time_estimation course_id="42"]<br />[course_time_estimation wrapper="yes"]</code>
+						</td>
+					</tr>
+
 					<tr class="cp-shortcode-alt">
 						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Language', 'cp' ); ?></th>
 						<td>
