@@ -36,7 +36,8 @@ CHANGE LOG
 * Fixed 0's showing up on CoursePress pages when Poll Voting Plugin is installed.
 * Fixed new units automatically added to structure where it was not before.
 * Fixed showing featured images in CoursePress theme.
-* Fixed issue with paid courses not always enrolling when using MarketPress.  
+* Fixed issue with paid courses not always enrolling when using MarketPress.
+* Fixed issue with instructor marked mandatory results not calculating course completion correctly. 
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
