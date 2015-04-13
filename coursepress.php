@@ -5031,7 +5031,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$this->set_latest_activity( get_current_user_id() );
 			}
 
-
 			//Custom login page
 			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
