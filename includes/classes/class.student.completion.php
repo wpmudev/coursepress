@@ -108,7 +108,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			foreach ( $criteria['gradable_modules'] as $module_id ) {
 
-				$required = $criteria['minimum_grades'][ $module_id ];
+				$required = (int) $criteria['minimum_grades'][ $module_id ];
 				$passed   = false;
 
 				if ( ! isset( $answers[ $module_id ] ) ) {
@@ -116,9 +116,20 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				}
 
 				foreach ( $answers[ $module_id ] as $answer ) {
-					if ( $answer >= $required ) {
+					if ( (int) $answer >= $required ) {
 						$passed = true;
 						do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+					} else {
+						// Could not find a result in completion, but lets check the module for an answer and record it.
+						$module          = get_post_meta( $module_id, 'module_type', true );
+						$response        = call_user_func( $module . '::get_response', $student_id, $module_id );
+						$response_result = Unit_Module::get_response_grade( $response->ID );
+						$grade           = (int) $response_result['grade'];
+						self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $grade );
+						if ( $grade >= $required ) {
+							$passed = true;
+							do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+						}
 					}
 				}
 				if ( $passed ) {
@@ -157,9 +168,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			$mandatory_remove   = array_diff( $mandatory_gradable, $mandatory_passed );
 
 			// Some mandatory gradable answers are not yet passed
-			/*if ( ! empty( $mandatory_remove ) ) {
+			if ( ! empty( $mandatory_remove ) ) {
 				$mandatory_answered = array_diff( $mandatory_answered, $mandatory_remove );
-			}*/
+			}
 
 			return array_diff( $mandatory_required, $mandatory_answered );
 		}

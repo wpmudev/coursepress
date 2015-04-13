@@ -47,7 +47,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 	 */
 	class CoursePress {
 
-		public $mp_file = '198613_marketpress-ecommerce-2.9.6.zip';
+		public $mp_file = '128762_marketpress-ecommerce-2.9.6.2.zip';
 
 		/**
 		 * Current running instance of CoursePress.
@@ -486,6 +486,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				add_action( 'wp_ajax_cp_activate_mp_lite', array( &$this, 'activate_marketpress_lite' ) );
 
+				/**
+				 * Hook Unit creation to add course meta.
+				 */
+				add_action( 'coursepress_unit_created', array( &$this, 'update_course_meta_on_unit_creation'), 10, 2 );
+				add_action( 'coursepress_unit_updated', array( &$this, 'update_course_meta_on_unit_creation'), 10, 2 );
 
 				/**
 				 * Hook WordPress Editor filters and actions.
@@ -1290,6 +1295,42 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$xmlResponse = new WP_Ajax_Response( $response );
 			$xmlResponse->send();
 			ob_end_flush();
+		}
+
+		function update_course_meta_on_unit_creation( $post_id, $course_id ) {
+
+			if( ! $course_id ) {
+				$post      = get_post( $post_id );
+				$course_id = $post->post_parent;
+			}
+
+			// Update course structure
+			$structure_option = get_post_meta( $course_id, 'course_structure_options', true );
+			$structure_option = ! empty( $structure_option ) && 'on' == $structure_option ? 'on' : 'off';
+
+			$show_unit_boxes = get_post_meta( $course_id, 'show_unit_boxes', true );
+			$keys = array_keys( $show_unit_boxes );
+
+			// We only want to do this once to prevent accidental override.
+			if( ! in_array( $post_id, $keys ) ) {
+				$show_unit_boxes[ $post_id ] = $structure_option;
+			}
+
+			update_post_meta( $course_id, 'show_unit_boxes', $show_unit_boxes );
+
+			$show_page_boxes = get_post_meta( $course_id, 'show_page_boxes', true );
+			$keys = array_keys( $show_page_boxes );
+
+			$page_count = Unit::get_page_count( $post_id );
+			for( $i = 1; $i <= $page_count; $i++ ) {
+				$key = $post_id . '_' . $i;
+				// Avoid accidental overrides.
+				if( ! in_array( $key, $keys ) ) {
+					$show_page_boxes[ $key ] = $structure_option;
+				}
+			}
+			update_post_meta( $course_id, 'show_page_boxes', $show_page_boxes );
+
 		}
 
 		function course_checkout_success_msg( $setting, $default ) {
@@ -4990,7 +5031,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$this->set_latest_activity( get_current_user_id() );
 			}
 
-
 			//Custom login page
 			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
@@ -5721,26 +5761,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		/* Listen for MarketPress purchase status changes */
-
 		function listen_for_paid_status_for_courses( $order ) {
 			global $mp;
 
 			$allowed_mp_statuses = apply_filters( 'cp_allowed_purchase_status_for_enroll', array( 'order_paid', 'order_shipped' ) );
 
 			if ( in_array( $order->post_status, $allowed_mp_statuses ) ) {
-				$product_id = key( $order->mp_cart_info );
 
-				$course_details	 = Course::get_course_id_by_marketpress_product_id( $product_id );
-				$course_details	 = (int) $course_details;
-				if ( $course_details && !empty( $course_details ) ) {
-					$student = new Student( $order->post_author );
-					$student->enroll_in_course( $course_details );
+				$products = array_keys( $order->mp_cart_info );
+				$student = new Student( $order->post_author );
+
+				foreach( $products as $product_id ) {
+					$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
+					if( ! empty( $course_id ) ) {
+						$student->enroll_in_course( $course_id );
+					}
 				}
+
 			}
 		}
 
 		/* Make PDF report */
-
 		function pdf_report( $report = '', $report_name = '', $report_title = 'Student Report', $preview = false ) {
 			//ob_end_clean();
 			ob_start();

@@ -459,9 +459,10 @@ if ( !class_exists( 'Unit' ) ) {
 			// $this->delete_all_unit_auto_drafts( $course_id );
 
 			if ( $new_unit ) {
-				do_action( 'coursepress_unit_created', $post_id );
+				// @todo: Potentially never triggered.
+				do_action( 'coursepress_unit_created', $post_id, $course_id );
 			} else {
-				do_action( 'coursepress_unit_updated', $post_id );
+				do_action( 'coursepress_unit_updated', $post_id, $course_id );
 			}
 
 			return $post_id;

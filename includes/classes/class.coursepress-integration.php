@@ -137,6 +137,18 @@ if ( ! class_exists( 'CoursePress_Integration' ) ) {
 				return false;
 			}
 
+			$coursepress_slugs = array(
+				CoursePress::instance()->get_enrollment_process_slug(),
+				CoursePress::instance()->get_login_slug(),
+				CoursePress::instance()->get_signup_slug(),
+				CoursePress::instance()->get_student_dashboard_slug(),
+				CoursePress::instance()->get_student_settings_slug(),
+			);
+
+			if( in_array( $post->post_name, $coursepress_slugs ) ) {
+				return false;
+			}
+
 			return $inject;
 		}
 
