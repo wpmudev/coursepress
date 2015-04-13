@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file defines the Student class extending WP_User.
  *
@@ -21,14 +22,12 @@
  * MA 02110-1301 USA
  *
  */
-
-
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
 
-if ( ! class_exists( 'Student' ) ) {
+if ( !class_exists( 'Student' ) ) {
 
 	/**
 	 * This class defines the methods and properties of a Student in CoursePress.
@@ -43,10 +42,10 @@ if ( ! class_exists( 'Student' ) ) {
 	 */
 	class Student extends WP_User {
 
-		var $first_name = '';
-		var $last_name = '';
-		var $courses_number = 0;
-		var $details = array();
+		var $first_name		 = '';
+		var $last_name		 = '';
+		var $courses_number	 = 0;
+		var $details			 = array();
 
 		function __construct( $ID, $name = '' ) {
 
@@ -58,8 +57,8 @@ if ( ! class_exists( 'Student' ) ) {
 			}
 
 			/* Set meta vars */
-			$this->first_name = get_user_meta( $ID, 'first_name', true );
-			$this->last_name  = get_user_meta( $ID, 'last_name', true );
+			$this->first_name	 = get_user_meta( $ID, 'first_name', true );
+			$this->last_name	 = get_user_meta( $ID, 'last_name', true );
 
 			/**
 			 * Get number of enrolled courses.
@@ -79,7 +78,6 @@ if ( ! class_exists( 'Student' ) ) {
 			 * Add hooks to handle other tracking
 			 * @todo More hooks coming.
 			 */
-
 			/**
 			 * Perform action after a Student object is created.
 			 *
@@ -162,8 +160,8 @@ if ( ! class_exists( 'Student' ) ) {
 				$user_ID = $this->ID;
 			}
 
-			$get_old_values = get_user_option( 'visited_units', $user_ID );
-			$get_old_values = explode( '|', $get_old_values );
+			$get_old_values	 = get_user_option( 'visited_units', $user_ID );
+			$get_old_values	 = explode( '|', $get_old_values );
 
 			if ( cp_in_array_r( $unit_ID, $get_old_values ) ) {
 				return true;
@@ -198,7 +196,6 @@ if ( ! class_exists( 'Student' ) ) {
 			} else {
 				return false;
 			}
-
 		}
 
 		/**
@@ -216,7 +213,7 @@ if ( ! class_exists( 'Student' ) ) {
 			global $cp;
 			$current_time = current_time( 'mysql' );
 
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			/**
 			 * Update metadata with relevant details.
@@ -230,18 +227,18 @@ if ( ! class_exists( 'Student' ) ) {
 			 * Filter can be used to override email details.
 			 */
 			$email_args = apply_filters( 'coursepress_student_enrollment_email_args', array(
-				'email_type'         => 'enrollment_confirmation',
-				'course_id'          => $course_id,
-				'dashboard_address'  => CoursePress::instance()->get_student_dashboard_slug( true ),
+				'email_type'		 => 'enrollment_confirmation',
+				'course_id'			 => $course_id,
+				'dashboard_address'	 => CoursePress::instance()->get_student_dashboard_slug( true ),
 				'student_first_name' => $this->user_firstname,
-				'student_last_name'  => $this->user_lastname,
-				'student_email'      => $this->user_email
+				'student_last_name'	 => $this->user_lastname,
+				'student_email'		 => $this->user_email
 			) );
 
 			/**
 			 * If a valid email address is given, use it to email the student with enrollment information.
 			 */
-			if ( is_email( $email_args['student_email'] ) ) {
+			if ( is_email( $email_args[ 'student_email' ] ) ) {
 				coursepress_send_email( $email_args );
 			}
 
@@ -249,7 +246,7 @@ if ( ! class_exists( 'Student' ) ) {
 			 * Setup actions for when a student enrolls.
 			 * Can be used to create notifications or tracking student actions.
 			 */
-			$instructors = Course::get_course_instructors_ids( isset( $_GET['course_id'] ) ? $_GET['course_id'] : $course_id );
+			$instructors = Course::get_course_instructors_ids( isset( $_GET[ 'course_id' ] ) ? $_GET[ 'course_id' ] : $course_id  );
 			do_action( 'student_enrolled_instructor_notification', $this->ID, $course_id, $instructors );
 			do_action( 'student_enrolled_student_notification', $this->ID, $course_id );
 
@@ -276,7 +273,7 @@ if ( ! class_exists( 'Student' ) ) {
 
 			$current_time = current_time( 'mysql' );
 
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			delete_user_option( $this->ID, 'enrolled_course_date_' . $course_id, $global_option );
 			delete_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $global_option );
@@ -302,7 +299,6 @@ if ( ! class_exists( 'Student' ) ) {
 			do_action( 'student_withdraw_from_course_instructor_notification', $this->ID, $course_id, $instructors );
 			do_action( 'student_withdraw_from_course_student_notification', $this->ID, $course_id );
 			do_action( 'coursepress_student_withdrawn', $this->ID, $course_id );
-
 		}
 
 		/**
@@ -331,9 +327,9 @@ if ( ! class_exists( 'Student' ) ) {
 			$meta = get_user_meta( $user_id );
 			if ( $meta ) {
 				// Get only the enrolled courses
-				$meta = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );
+				$meta	 = array_filter( array_keys( $meta ), array( 'Student', 'filter_course_meta_array' ) );
 				// Map only the course IDs back to the array
-				$meta = array_map( array( 'Student', 'course_id_from_meta' ), $meta );
+				$meta	 = array_map( array( 'Student', 'course_id_from_meta' ), $meta );
 			}
 
 			return $meta;
@@ -348,7 +344,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		static function filter_course_meta_array( $var ) {
 			$course_id_from_meta = Student::course_id_from_meta( $var );
-			if ( ! empty( $course_id_from_meta ) ) {
+			if ( !empty( $course_id_from_meta ) ) {
 				return $var;
 			}
 
@@ -367,9 +363,9 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		static function course_id_from_meta( $meta_value ) {
 			global $wpdb;
-			$prefix       = $wpdb->prefix;
-			$base_prefix  = $wpdb->base_prefix;
-			$current_blog = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
+			$prefix			 = $wpdb->prefix;
+			$base_prefix	 = $wpdb->base_prefix;
+			$current_blog	 = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
 			if ( is_multisite() && empty( $current_blog ) && defined( 'BLOG_ID_CURRENT_SITE' ) ) {
 				$current_blog = BLOG_ID_CURRENT_SITE;
 			}
@@ -381,12 +377,12 @@ if ( ! class_exists( 'Student' ) ) {
 					// Get the blog ID that this meta key belongs to
 					$blog_id = '';
 					preg_match( '/(?<=' . $base_prefix . ')\d*/', $meta_value, $blog_id );
-					$blog_id = $blog_id[0];
+					$blog_id = $blog_id[ 0 ];
 
 					// First site...
 					if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == $current_blog ) {
-						$blog_id   = $current_blog;
-						$course_id = str_replace( $base_prefix . 'enrolled_course_date_', '', $meta_value );
+						$blog_id	 = $current_blog;
+						$course_id	 = str_replace( $base_prefix . 'enrolled_course_date_', '', $meta_value );
 					} else {
 						$course_id = str_replace( $base_prefix . $blog_id . '_enrolled_course_date_', '', $meta_value );
 					}
@@ -395,13 +391,12 @@ if ( ! class_exists( 'Student' ) ) {
 					if ( $current_blog != $blog_id ) {
 						return false;
 					}
-
 				} else {
 					// old style, but should support it at least in the listings
 					$course_id = str_replace( 'enrolled_course_date_', '', $meta_value );
 				}
 
-				if ( ! empty( $course_id ) ) {
+				if ( !empty( $course_id ) ) {
 					return $course_id;
 				} else {
 					return false;
@@ -439,7 +434,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @return int
 		 */
 		static function get_courses_number( $user_id = false ) {
-			if ( ! $user_id ) {
+			if ( !$user_id ) {
 				return 0;
 			}
 			$courses_count = count( Student::get_course_enrollment_meta( $user_id ) );
@@ -460,7 +455,7 @@ if ( ! class_exists( 'Student' ) ) {
 			} else {
 				$this->withdraw_from_all_courses();
 
-				$global_option = ! is_multisite();
+				$global_option = !is_multisite();
 
 				delete_user_option( $this->ID, 'role', $global_option );
 				// Legacy
@@ -491,16 +486,16 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		function get_number_of_responses( $course_id ) {
 			$args = array(
-				'post_type'   => array( 'module_response', 'attachment' ),
-				'post_status' => array( 'publish', 'inherit' ),
-				'meta_query'  => array(
+				'post_type'		 => array( 'module_response', 'attachment' ),
+				'post_status'	 => array( 'publish', 'inherit' ),
+				'meta_query'	 => array(
 					array(
-						'key'   => 'user_ID',
-						'value' => $this->ID
+						'key'	 => 'user_ID',
+						'value'	 => $this->ID
 					),
 					array(
-						'key'   => 'course_ID',
-						'value' => $course_id
+						'key'	 => 'course_ID',
+						'value'	 => $course_id
 					),
 				)
 			);
@@ -517,29 +512,29 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		function get_avarage_response_grade( $course_id ) {
 			$args = array(
-				'post_type'   => array( 'module_response', 'attachment' ),
-				'post_status' => array( 'publish', 'inherit' ),
-				'meta_query'  => array(
+				'post_type'		 => array( 'module_response', 'attachment' ),
+				'post_status'	 => array( 'publish', 'inherit' ),
+				'meta_query'	 => array(
 					array(
-						'key'   => 'user_ID',
-						'value' => $this->ID
+						'key'	 => 'user_ID',
+						'value'	 => $this->ID
 					),
 					array(
-						'key'   => 'course_ID',
-						'value' => $course_id
+						'key'	 => 'course_ID',
+						'value'	 => $course_id
 					),
 				)
 			);
 
-			$posts            = get_posts( $args );
-			$graded_responses = 0;
-			$total_grade      = 0;
+			$posts				 = get_posts( $args );
+			$graded_responses	 = 0;
+			$total_grade		 = 0;
 
 			foreach ( $posts as $post ) {
-				if ( isset( $post->response_grade['grade'] ) && is_numeric( $post->response_grade['grade'] ) ) {
+				if ( isset( $post->response_grade[ 'grade' ] ) && is_numeric( $post->response_grade[ 'grade' ] ) ) {
 					$assessable = get_post_meta( $post->post_parent, 'gradable_answer', true );
 					if ( $assessable == 'yes' ) {
-						$total_grade = $total_grade + (int) $post->response_grade['grade'];
+						$total_grade = $total_grade + (int) $post->response_grade[ 'grade' ];
 					}
 					$graded_responses ++;
 				}
@@ -589,7 +584,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @return bool
 		 */
 		function update_student_group( $course_id, $group ) {
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			if ( update_user_option( $this->ID, 'enrolled_course_group_' . $course_id, $group, $global_option ) ) {
 
@@ -617,7 +612,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @return bool
 		 */
 		function update_student_class( $course_id, $class ) {
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			if ( update_user_option( $this->ID, 'enrolled_course_class_' . $course_id, $class, $global_option ) ) {
 
@@ -642,8 +637,8 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @return int|WP_Error
 		 */
 		function add_student( $student_data ) {
-			$student_data['role']       = 'subscriber';
-			$student_data['first_name'] = str_replace( '\\', '', $student_data['first_name'] );
+			$student_data[ 'role' ]		 = get_option( 'default_role', 'subscriber' );
+			$student_data[ 'first_name' ]	 = str_replace( '\\', '', $student_data[ 'first_name' ] );
 
 			return wp_insert_user( $student_data );
 		}
@@ -658,32 +653,31 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		function add_course_completed_meta( $student_id, $course_id ) {
 
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
-			$course_completed_details = get_user_option( '_course_' . $course_id . '_completed', $student_id );
-			$do_update = false;
+			$course_completed_details	 = get_user_option( '_course_' . $course_id . '_completed', $student_id );
+			$do_update					 = false;
 
 			// If a course has not yet been marked as completed, mark it complete.
-			if ( empty( $course_completed_details ) || ( ! isset( $course_completed_details['completed'] ) ) || ( isset( $course_completed_details['completed'] ) && empty ( $course_completed_details['completed'] ) ) ) {
-				$course_completed_details['completed'] = true;
-				$do_update = true;
+			if ( empty( $course_completed_details ) || (!isset( $course_completed_details[ 'completed' ] ) ) || ( isset( $course_completed_details[ 'completed' ] ) && empty( $course_completed_details[ 'completed' ] ) ) ) {
+				$course_completed_details[ 'completed' ]	 = true;
+				$do_update								 = true;
 				// Will only fire once when a course is marked as complete, should not trigger again.
 				do_action( 'coursepress_student_course_completed', $student_id, $course_id );
 			}
 
 			// If there is no certificate number yet, generate one
-			if ( ! isset( $course_completed_details['certificate_number'] ) || empty( $course_completed_details['certificate_number'] ) ) {
-				$time = time();
+			if ( !isset( $course_completed_details[ 'certificate_number' ] ) || empty( $course_completed_details[ 'certificate_number' ] ) ) {
+				$time											 = time();
 				list( $year, $month, $day ) = explode( '/', date( 'Y/m/d', $time ) );
-				$course_completed_details['certificate_number'] = sprintf( '%04d%02d%02d%05d%03d', $year , $month, $day, $course_id , $student_id );
-				$course_completed_details['date_completed'] = time();
-				$do_update = true;
+				$course_completed_details[ 'certificate_number' ]	 = sprintf( '%04d%02d%02d%05d%03d', $year, $month, $day, $course_id, $student_id );
+				$course_completed_details[ 'date_completed' ]		 = time();
+				$do_update										 = true;
 			}
 
-			if( $do_update ) {
+			if ( $do_update ) {
 				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
 			}
-
 		}
 
 		/**
@@ -697,30 +691,29 @@ if ( ! class_exists( 'Student' ) ) {
 		 */
 		function add_unit_completed_meta( $student_id, $course_id, $unit_id ) {
 
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			$course_completed_details = get_user_option( '_course_' . $course_id . '_completed', $student_id );
 
 			// If a course completion details don't exist, create it, only then add units to it.
-			if ( empty( $course_completed_details ) || ! isset( $course_completed_details['completed'] ) ) {
+			if ( empty( $course_completed_details ) || !isset( $course_completed_details[ 'completed' ] ) ) {
 				$course_completed_details = array( 'completed' => false );
 			}
 
 			// Get units marked as completed or create the array
-			$units    = isset( $course_completed_details['units'] ) ? $course_completed_details['units'] : array();
-			$unit_ids = array_keys( $units );
+			$units		 = isset( $course_completed_details[ 'units' ] ) ? $course_completed_details[ 'units' ] : array();
+			$unit_ids	 = array_keys( $units );
 
 			// Only update the user option if there is something to add
-			if ( ! in_array( $unit_id, $unit_ids ) ) {
-				$units[ $unit_id ]                 = true;
-				$course_completed_details['units'] = $units;
+			if ( !in_array( $unit_id, $unit_ids ) ) {
+				$units[ $unit_id ]					 = true;
+				$course_completed_details[ 'units' ]	 = $units;
 
 				update_user_option( $student_id, '_course_' . $course_id . '_completed', $course_completed_details, $global_option );
 
 				// Will only fire once when a unit is marked as complete, should not trigger again.
 				do_action( 'coursepress_student_course_unit_completed', $student_id, $course_id, $unit_id );
 			}
-
 		}
 
 		/**
@@ -733,7 +726,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @param $unit_id
 		 */
 		public function add_pages_viewed_meta( $student_id, $course_id, $unit_id ) {
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
 
@@ -745,28 +738,27 @@ if ( ! class_exists( 'Student' ) ) {
 			}
 
 			// Get units to mark pages as viewed
-			$units    = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
-			$unit_ids = array_keys( $units );
+			$units		 = isset( $course_progress[ 'units' ] ) ? $course_progress[ 'units' ] : array();
+			$unit_ids	 = array_keys( $units );
 
-			if ( ! in_array( $unit_id, $unit_ids ) ) {
+			if ( !in_array( $unit_id, $unit_ids ) ) {
 				// Add something new
-				$units[ $unit_id ] = array( 'all_pages_viewed' => true );
+				$units[ $unit_id ]	 = array( 'all_pages_viewed' => true );
 				do_action( 'coursepress_student_course_unit_pages_viewed', $student_id, $course_id, $unit_id );
-				$update_option = true;
+				$update_option		 = true;
 			} else {
 				// Or update if needed
-				if ( ! isset( $units[ $unit_id ]['all_pages_viewed'] ) || empty( $units[ $unit_id ]['all_pages_viewed'] ) ) {
-					$units[ $unit_id ]['all_pages_viewed'] = true;
+				if ( !isset( $units[ $unit_id ][ 'all_pages_viewed' ] ) || empty( $units[ $unit_id ][ 'all_pages_viewed' ] ) ) {
+					$units[ $unit_id ][ 'all_pages_viewed' ]	 = true;
 					do_action( 'coursepress_student_course_unit_pages_viewed', $student_id, $course_id, $unit_id );
-					$update_option = true;
+					$update_option							 = true;
 				}
 			}
 
 			if ( $update_option ) {
-				$course_progress['units'] = $units;
+				$course_progress[ 'units' ] = $units;
 //				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
-
 		}
 
 		/**
@@ -780,7 +772,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @param $module_id
 		 */
 		public function add_mandatory_questions_meta( $student_id, $course_id, $unit_id, $module_id ) {
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
 
@@ -792,33 +784,32 @@ if ( ! class_exists( 'Student' ) ) {
 			}
 
 			// Get units to mark pages as viewed
-			$units    = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
-			$unit_ids = array_keys( $units );
+			$units		 = isset( $course_progress[ 'units' ] ) ? $course_progress[ 'units' ] : array();
+			$unit_ids	 = array_keys( $units );
 
-			if ( ! in_array( $unit_id, $unit_ids ) ) {
+			if ( !in_array( $unit_id, $unit_ids ) ) {
 				// Add something new
-				$units[ $unit_id ] = array( 'mandatory_questions_answered' => array( $module_id => true ) );
+				$units[ $unit_id ]	 = array( 'mandatory_questions_answered' => array( $module_id => true ) );
 				do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
-				$update_option = true;
+				$update_option		 = true;
 			} else {
 				// Or update if needed
-				if ( isset( $units[ $unit_id ]['mandatory_questions_answered'] ) && ( ! isset( $units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] ) || empty( $units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] ) ) ) {
-					$units[ $unit_id ]['mandatory_questions_answered'][ $module_id ] = true;
+				if ( isset( $units[ $unit_id ][ 'mandatory_questions_answered' ] ) && (!isset( $units[ $unit_id ][ 'mandatory_questions_answered' ][ $module_id ] ) || empty( $units[ $unit_id ][ 'mandatory_questions_answered' ][ $module_id ] ) ) ) {
+					$units[ $unit_id ][ 'mandatory_questions_answered' ][ $module_id ] = true;
 					do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
-					$update_option = true;
+					$update_option													 = true;
 				} else {
 					// If the unit already has data, but mandatory_questions_answered is unset
-					$units[ $unit_id ]['mandatory_questions_answered'] = array( $module_id => true );
+					$units[ $unit_id ][ 'mandatory_questions_answered' ]	 = array( $module_id => true );
 					do_action( 'coursepress_student_course_unit_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
-					$update_option = true;
+					$update_option										 = true;
 				}
 			}
 
 			if ( $update_option ) {
-				$course_progress['units'] = $units;
+				$course_progress[ 'units' ] = $units;
 //				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
-
 		}
 
 		/**
@@ -832,7 +823,7 @@ if ( ! class_exists( 'Student' ) ) {
 		 * @param $module_id
 		 */
 		public function add_questions_passed_meta( $student_id, $course_id, $unit_id, $module_id ) {
-			$global_option = ! is_multisite();
+			$global_option = !is_multisite();
 
 			$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
 
@@ -844,33 +835,32 @@ if ( ! class_exists( 'Student' ) ) {
 			}
 
 			// Get units to mark pages as viewed
-			$units    = isset( $course_progress['units'] ) ? $course_progress['units'] : array();
-			$unit_ids = array_keys( $units );
+			$units		 = isset( $course_progress[ 'units' ] ) ? $course_progress[ 'units' ] : array();
+			$unit_ids	 = array_keys( $units );
 
-			if ( ! in_array( $unit_id, $unit_ids ) ) {
+			if ( !in_array( $unit_id, $unit_ids ) ) {
 				// Add something new
-				$units[ $unit_id ] = array( 'gradable_questions_passed' => array( $module_id => true ) );
+				$units[ $unit_id ]	 = array( 'gradable_questions_passed' => array( $module_id => true ) );
 				do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
-				$update_option = true;
+				$update_option		 = true;
 			} else {
 				// Or update if needed
-				if ( isset( $units[ $unit_id ]['gradable_questions_passed'] ) && ( ! isset( $units[ $unit_id ]['gradable_questions_passed'][ $module_id ] ) || empty( $units[ $unit_id ]['gradable_questions_passed'][ $module_id ] ) ) ) {
-					$units[ $unit_id ]['gradable_questions_passed'][ $module_id ] = true;
+				if ( isset( $units[ $unit_id ][ 'gradable_questions_passed' ] ) && (!isset( $units[ $unit_id ][ 'gradable_questions_passed' ][ $module_id ] ) || empty( $units[ $unit_id ][ 'gradable_questions_passed' ][ $module_id ] ) ) ) {
+					$units[ $unit_id ][ 'gradable_questions_passed' ][ $module_id ]	 = true;
 					do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
-					$update_option = true;
+					$update_option													 = true;
 				} else {
 					// If the unit already has data, but gradable_questions_passed is unset
-					$units[ $unit_id ]['gradable_questions_passed'] = array( $module_id => true );
+					$units[ $unit_id ][ 'gradable_questions_passed' ]	 = array( $module_id => true );
 					do_action( 'coursepress_student_course_unit_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
-					$update_option = true;
+					$update_option									 = true;
 				}
 			}
 
 			if ( $update_option ) {
-				$course_progress['units'] = $units;
+				$course_progress[ 'units' ] = $units;
 //				update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_option );
 			}
-
 		}
 
 	}

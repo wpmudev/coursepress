@@ -9,6 +9,7 @@ CHANGE LOG
 = 1.2.5.1 =
 * Added additional capabilities for instructors
 * Added formatting to the instructor single page
+* Changed default 'subscriber' role for students to be actual default WordPress role set
 * Fixed issue with enrolling a student to a paid course (paid via PayPal chained payments)
 * Fixed issue with mandatory, assessable and limit attempts options (if once checked then unchecked)
 * Fixed issue with uncompleted course even if unit elements (answer fields) were completed

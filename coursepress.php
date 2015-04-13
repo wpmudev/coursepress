@@ -1679,7 +1679,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$student		 = new Student( 0 );
 				$student_data	 = array();
 
-				$student_data[ 'role' ]			 = 'subscriber';
+				$student_data[ 'role' ]			 = get_option( 'default_role', 'subscriber' );
 				$student_data[ 'user_login' ]	 = $posted_data[ 'username' ];
 				$student_data[ 'user_pass' ]	 = $posted_data[ 'cp_popup_password' ];
 				$student_data[ 'user_email' ]	 = $posted_data[ 'email' ];
@@ -3150,7 +3150,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$default_slug_value = 'settings';
 
 			$custom = get_option( 'coursepress_student_settings_page', 0 );
-			if( ! empty( $custom ) ) {
+			if ( !empty( $custom ) ) {
 				$post = get_post( $custom );
 			}
 
@@ -4952,25 +4952,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function create_virtual_pages() {
 
-			$uri = untrailingslashit( trim( ltrim( $_SERVER[ 'REQUEST_URI'], '/' ) ) );
-			$post_slug = '';
+			$uri		 = untrailingslashit( trim( ltrim( $_SERVER[ 'REQUEST_URI' ], '/' ) ) );
+			$post_slug	 = '';
 
-			$args=array(
-				'name' => $uri,
-				'post_type' => 'page',
-				'post_status' => 'publish',
-				'numberposts' => 1
+			$args = array(
+				'name'			 => $uri,
+				'post_type'		 => 'page',
+				'post_status'	 => 'publish',
+				'numberposts'	 => 1
 			);
 
 			$post = get_posts( $args );
 
-			if( ! empty( $post ) ) {
-				$post_slug = $post->post_name;
-				$post = array_pop( $post );
+			if ( !empty( $post ) ) {
+				$post_slug	 = $post->post_name;
+				$post		 = array_pop( $post );
 			}
 
 			//Enrollment process page
-			if ( ( preg_match( '/^' . $this->get_enrollment_process_slug() . '/', $uri ) && 0 == get_option( 'coursepress_enrollment_process_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_enrollment_process_page', 0 ) ) ) {
+			if ( ( preg_match( '/^' . $this->get_enrollment_process_slug() . '/', $uri ) && 0 == get_option( 'coursepress_enrollment_process_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_enrollment_process_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'enrollment-process.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -4992,7 +4992,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 
 			//Custom login page
-			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
+			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5013,7 +5013,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Custom signup page
-			if ( ( preg_match( '/^' . $this->get_signup_slug() . '/', $uri ) && 0 == get_option( 'coursepress_signup_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_signup_page', 0 ) ) ) {
+			if ( ( preg_match( '/^' . $this->get_signup_slug() . '/', $uri ) && 0 == get_option( 'coursepress_signup_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_signup_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-signup.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5034,7 +5034,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Dashboard page
-			if ( ( preg_match( '/^' . $this->get_student_dashboard_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_dashboard_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_dashboard_page', 0 ) ) ) {
+			if ( ( preg_match( '/^' . $this->get_student_dashboard_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_dashboard_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_student_dashboard_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-dashboard.php' ) );
 
 				if ( $theme_file != '' ) {
@@ -5054,7 +5054,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Settings page
-			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || ( ! empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
+			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
 
 				if ( $theme_file != '' ) {
