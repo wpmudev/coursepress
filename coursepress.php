@@ -47,7 +47,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 	 */
 	class CoursePress {
 
-		public $mp_file = '198613_marketpress-ecommerce-2.9.6.zip';
+		public $mp_file = '128762_marketpress-ecommerce-2.9.6.2.zip';
 
 		/**
 		 * Current running instance of CoursePress.
