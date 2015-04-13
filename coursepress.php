@@ -5761,26 +5761,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		/* Listen for MarketPress purchase status changes */
-
 		function listen_for_paid_status_for_courses( $order ) {
 			global $mp;
 
 			$allowed_mp_statuses = apply_filters( 'cp_allowed_purchase_status_for_enroll', array( 'order_paid', 'order_shipped' ) );
 
 			if ( in_array( $order->post_status, $allowed_mp_statuses ) ) {
-				$product_id = key( $order->mp_cart_info );
 
-				$course_details	 = Course::get_course_id_by_marketpress_product_id( $product_id );
-				$course_details	 = (int) $course_details;
-				if ( $course_details && !empty( $course_details ) ) {
-					$student = new Student( $order->post_author );
-					$student->enroll_in_course( $course_details );
+				$products = array_keys( $order->mp_cart_info );
+				$student = new Student( $order->post_author );
+
+				foreach( $products as $product_id ) {
+					$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
+					if( ! empty( $course_id ) ) {
+						$student->enroll_in_course( $course_id );
+					}
 				}
+
 			}
 		}
 
 		/* Make PDF report */
-
 		function pdf_report( $report = '', $report_name = '', $report_title = 'Student Report', $preview = false ) {
 			//ob_end_clean();
 			ob_start();
