@@ -12,7 +12,15 @@
 			<?php coursepress_posted_on(); ?>
 		</div><!-- .entry-meta -->
 	</header><!-- .entry-header -->
+	<?php
+	if ( has_post_thumbnail() ) {
+		echo '<div class="featured-image">';
 
+		the_post_thumbnail();
+
+		echo '</div>';
+	}
+	?>
 	<div class="entry-content">
 		<?php the_content(); ?>
 		<?php

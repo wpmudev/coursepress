@@ -7,7 +7,15 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<header class="entry-header">
 		<h1 class="entry-title"><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
+		<?php
+		if ( has_post_thumbnail() ) {
+			echo '<div class="featured-image">';
 
+			the_post_thumbnail();
+
+			echo '</div>';
+		}
+		?>
 		<?php if ( 'post' == get_post_type() ) : ?>
 		<div class="entry-meta">
 			<?php coursepress_posted_on(); ?>
