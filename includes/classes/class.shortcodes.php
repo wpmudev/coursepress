@@ -1877,7 +1877,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a>';
 
 			// Add certificate link
-			$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp'), ' | ' );
+			if( CoursePress_Capabilities::is_pro() ) {
+				$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ), ' | ' );
+			}
 
 			$content .= '</div>';
 
@@ -2700,8 +2702,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					<?php } ?>
 					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
 					<?php
-					$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
-					$show_link = ! empty( $show_link ) ? true : false;
+					$show_link = false;
+					if( CoursePress_Capabilities::is_pro() ) {
+						$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
+						$show_link = ! empty( $show_link ) ? true : false;
+					}
 					if( is_user_logged_in() && $show_link ) {
 
 						if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {

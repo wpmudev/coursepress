@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.2 =
+* Fix missing class error for CoursePress Standard (free).
+
 = 1.2.5.1 =
 * Added basic certificate functionality to CoursePress Pro (templates planned for future release).
 * Added additional capabilities for instructors
