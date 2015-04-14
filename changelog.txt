@@ -6,7 +6,7 @@ CHANGE LOG
 
 == Changelog ==
 
-= 1.2.5.2 =
+= 1.2.5.2 = [NOTE: Don't release this version for CoursePress Pro... skip to 1.2.5.3]
 * Fix missing class error for CoursePress Standard (free).
 
 = 1.2.5.1 =
