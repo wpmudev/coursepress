@@ -46,6 +46,11 @@ if ( ! class_exists( 'CoursePress_Virtual_Page' ) ) {
 		function virtualPage( $posts ) {
 			global $wp, $wp_query, $comment;
 
+			// This will be 0 if its a virtual page.
+			if( 0 < $wp_query->post_count ) {
+				return $posts;
+			}
+
 			//check if slug already exists
 			$old_post_slug_id = get_posts( array( 'post_type'     => array( 'post', 'page', 'unit', 'course' ),
 			                                      'name'          => $wp->request,

@@ -38,7 +38,8 @@ CHANGE LOG
 * Fixed new units automatically added to structure where it was not before.
 * Fixed showing featured images in CoursePress theme.
 * Fixed issue with paid courses not always enrolling when using MarketPress.
-* Fixed issue with instructor marked mandatory results not calculating course completion correctly. 
+* Fixed issue with instructor marked mandatory results not calculating course completion correctly.
+* Fixed broken 'Recent Posts' widget when viewing any CoursePress page. 
 
 = 1.2.5 =
 * Added additional hooks and filters for developers
