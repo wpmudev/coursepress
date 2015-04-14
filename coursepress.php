@@ -234,8 +234,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			/**
 			 * Basic certificates
+			 * This is Pro only, by changing this flag in the free version you will break it!
 			 */
-			require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
+			if( CoursePress_Capabilities::is_pro() ) {
+				require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
+			}
 
 			//Administration area
 			if ( is_admin() ) {
@@ -518,7 +521,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 *
 				 * @since 1.2.6
 				 */
-				CP_Basic_Certificate::init_settings();
+				if( CoursePress_Capabilities::is_pro() ) {
+					CP_Basic_Certificate::init_settings();
+				}
 
 				/*
 				 * Plugin activation class
@@ -531,7 +536,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.2.6
 			 */
-			CP_Basic_Certificate::init_front();
+			if( CoursePress_Capabilities::is_pro() ) {
+				CP_Basic_Certificate::init_front();
+			}
 
 			/**
 			 * Setup payment gateway array.
