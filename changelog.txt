@@ -5,6 +5,8 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= 1.2.5.2 =
+* Fixed clearfix div
 
 = 1.2.5.1 =
 * Added additional capabilities for instructors
