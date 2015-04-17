@@ -4163,7 +4163,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 								<?php wp_nonce_field( 'student_signup' ); ?>
 							</form>
-							<div class="clearfix" style="clear: both;" />
+							<div class="clearfix" style="clear: both;"></div>
 
 							<?php do_action( 'coursepress_after_signup_form' ); ?>
 							<?php
