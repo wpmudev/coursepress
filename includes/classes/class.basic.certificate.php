@@ -58,6 +58,9 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		}
 
 		public static function render_settings() {
+			if( ! CoursePress_Capabilities::is_pro() ) {
+				return;
+			}
 			self::process_submit(); ?>
 
 			<div id="poststuff" class="metabox-holder m-settings email-settings cp-wrap" xmlns="http://www.w3.org/1999/html">
@@ -525,6 +528,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			if( ! $show_link ) {
 				$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
 				$show_link = ! empty( $show_link ) ? true : false;
+				$show_link = CoursePress_Capabilities::is_pro() ? $show_link : false;
 			}
 
 			if( $show_link ) {

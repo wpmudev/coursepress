@@ -8,7 +8,11 @@ CHANGE LOG
 = 1.2.5.2 =
 * Fixed clearfix div
 
+= 1.2.5.2 = [NOTE: Don't release this version for CoursePress Pro... skip to 1.2.5.3]
+* Fix missing class error for CoursePress Standard (free).
+
 = 1.2.5.1 =
+* Added basic certificate functionality to CoursePress Pro (templates planned for future release).
 * Added additional capabilities for instructors
 * Added formatting to the instructor single page
 * Changed default 'subscriber' role for students to be actual default WordPress role set
@@ -35,12 +39,12 @@ CHANGE LOG
 * Fixed issue where non-embeddable videos (e.g. some YouTube videos) shows nothing. Now it will show a clickable link.
 * Added ability to hide related videos for YouTube videos.
 * Fixed RTL issue causing horizontal scroll bug on Course Overview page.
-* Added basic certificate functionality (templates planned for future release).
 * Fixed 0's showing up on CoursePress pages when Poll Voting Plugin is installed.
 * Fixed new units automatically added to structure where it was not before.
 * Fixed showing featured images in CoursePress theme.
 * Fixed issue with paid courses not always enrolling when using MarketPress.
-* Fixed issue with instructor marked mandatory results not calculating course completion correctly. 
+* Fixed issue with instructor marked mandatory results not calculating course completion correctly.
+* Fixed broken 'Recent Posts' widget when viewing any CoursePress page. 
 
 = 1.2.5 =
 * Added additional hooks and filters for developers

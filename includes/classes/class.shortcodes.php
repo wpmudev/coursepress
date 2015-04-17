@@ -70,7 +70,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			add_shortcode( 'course_media', array( &$this, 'course_media' ) );
 			add_shortcode( 'course_action_links', array( &$this, 'course_action_links' ) );
 			add_shortcode( 'course_random', array( &$this, 'course_random' ) );
-			add_shortcode( 'course_time_estimation', array( $this, 'course_time_estimation' ) );
+			add_shortcode( 'course_time_estimation', array($this, 'course_time_estimation') );
 // Course-progress
 			add_shortcode( 'course_progress', array( &$this, 'course_progress' ) );
 			add_shortcode( 'course_unit_progress', array( &$this, 'course_unit_progress' ) );
@@ -925,33 +925,33 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = '';
 
 			extract( shortcode_atts( array(
-				'course_id'			 => in_the_loop() ? get_the_ID() : '',
-				'course'			 => false,
-				'label'				 => __( 'Estimated Duration:&nbsp;', 'cp' ),
-				'label_tag'			 => 'strong',
-				'label_delimeter'	 => ': ',
-				'wrapper'			 => 'no',
-				'class'				 => '',
+				'course_id'       => in_the_loop() ? get_the_ID() : '',
+				'course'          => false,
+				'label'           => __( 'Estimated Duration:&nbsp;', 'cp' ),
+				'label_tag'       => 'strong',
+				'label_delimeter' => ': ',
+				'wrapper'         => 'no',
+				'class'           => '',
 			), $atts, 'course_time_estimation' ) );
 
-			if ( !empty( $course_id ) ) {
+			if ( ! empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			} else {
 				return;
 			}
 
-			$label			 = sanitize_text_field( $label );
-			$label_tag		 = sanitize_html_class( $label_tag );
+			$label           = sanitize_text_field( $label );
+			$label_tag       = sanitize_html_class( $label_tag );
 			$label_delimeter = sanitize_html_class( $label_delimeter );
-			$class			 = sanitize_html_class( $class );
-			$wrapper		 = sanitize_text_field( $wrapper );
+			$class           = sanitize_html_class( $class );
+			$wrapper         = sanitize_text_field( $wrapper );
 
 			// Convert text 'yes' into true.
-			$wrapper = true === $wrapper || (!empty( $wrapper ) && 'yes' == $wrapper ) ? true : false;
+			$wrapper = true === $wrapper || ( ! empty( $wrapper ) && 'yes' == $wrapper ) ? true : false;
 
 			if ( $wrapper ) {
 				$content .= '<div class="course-time-estimate course-time-estimate-' . $course_id . ' ' . $class . '">';
-				if ( !empty( $label ) ) {
+				if ( ! empty( $label ) ) {
 					$content .= '<' . $label_tag . ' class="label">' . esc_html( $label ) . esc_html( $label_delimeter ) . '</' . $label_tag . '>';
 				}
 			}
@@ -1481,7 +1481,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 //				}
 //				
 			?>
-			<!--				<img src="--><?php //echo $thumbnail;          ?><!--" class="course-thumbnail-img"></img>-->
+			<!--				<img src="--><?php //echo $thumbnail;         ?><!--" class="course-thumbnail-img"></img>-->
 			<!--				--><?php
 //				$content .= trim( ob_get_clean() );
 //
@@ -1877,7 +1877,9 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a>';
 
 			// Add certificate link
-			$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ), ' | ' );
+			if( CoursePress_Capabilities::is_pro() ) {
+				$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ), ' | ' );
+			}
 
 			$content .= '</div>';
 
@@ -2700,15 +2702,18 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 					<?php } ?>
 					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
 					<?php
-					$show_link	 = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
-					$show_link	 = !empty( $show_link ) ? true : false;
-					if ( is_user_logged_in() && $show_link ) {
+					$show_link = false;
+					if( CoursePress_Capabilities::is_pro() ) {
+						$show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
+						$show_link = ! empty( $show_link ) ? true : false;
+					}
+					if( is_user_logged_in() && $show_link ) {
 
 						if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
 							$certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ) );
 							?>
 							<li class="submenu-item submenu-certificate <?php echo( isset( $subpage ) && $subpage == 'certificate' ? 'submenu-active' : '' ); ?>"><?php echo $certificate; ?></li>
-							<?php
+						<?php
 						}
 					}
 					?>
@@ -4158,7 +4163,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 								<?php wp_nonce_field( 'student_signup' ); ?>
 							</form>
-							<div class="clearfix" style="clear: both;"></div>
+							<div class="clearfix" style="clear: both;" />
 
 							<?php do_action( 'coursepress_after_signup_form' ); ?>
 							<?php
