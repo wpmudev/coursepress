@@ -64,7 +64,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.2.5.2';
+		public $version = '1.2.5.3';
 
 		/**
 		 * Plugin friendly name.
