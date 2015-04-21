@@ -214,7 +214,7 @@ if ( !class_exists( 'Student' ) ) {
 			$current_time = current_time( 'mysql' );
 
 			$global_option = !is_multisite();
-
+			
 			/**
 			 * Update metadata with relevant details.
 			 */

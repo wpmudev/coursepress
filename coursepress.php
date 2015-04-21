@@ -1,32 +1,32 @@
 <?php
 /*
-Plugin Name: CoursePress Pro
-Plugin URI: http://premium.wpmudev.org/project/coursepress/
-Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
-Author: WPMU DEV
-Author URI: http://premium.wpmudev.org
-Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-Version: 1.2.5.3
-TextDomain: cp
-Domain Path: /languages/
-WDP ID: 913071
-License: GNU General Public License ( Version 2 - GPLv2 )
+  Plugin Name: CoursePress Pro
+  Plugin URI: http://premium.wpmudev.org/project/coursepress/
+  Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+  Author: WPMU DEV
+  Author URI: http://premium.wpmudev.org
+  Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
+  Version: 1.2.5.3
+  TextDomain: cp
+  Domain Path: /languages/
+  WDP ID: 913071
+  License: GNU General Public License ( Version 2 - GPLv2 )
 
-Copyright 2015 Incsub ( http://incsub.com )
+  Copyright 2015 Incsub ( http://incsub.com )
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License ( Version 2 - GPLv2 ) as published by
-the Free Software Foundation.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License ( Version 2 - GPLv2 ) as published by
+  the Free Software Foundation.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 if ( !defined( 'ABSPATH' ) ) {
 	exit;
@@ -236,7 +236,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * Basic certificates
 			 * This is Pro only, by changing this flag in the free version you will break it!
 			 */
-			if( CoursePress_Capabilities::is_pro() ) {
+			if ( CoursePress_Capabilities::is_pro() ) {
 				require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
 			}
 
@@ -492,8 +492,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				/**
 				 * Hook Unit creation to add course meta.
 				 */
-				add_action( 'coursepress_unit_created', array( &$this, 'update_course_meta_on_unit_creation'), 10, 2 );
-				add_action( 'coursepress_unit_updated', array( &$this, 'update_course_meta_on_unit_creation'), 10, 2 );
+				add_action( 'coursepress_unit_created', array( &$this, 'update_course_meta_on_unit_creation' ), 10, 2 );
+				add_action( 'coursepress_unit_updated', array( &$this, 'update_course_meta_on_unit_creation' ), 10, 2 );
 
 				/**
 				 * Hook WordPress Editor filters and actions.
@@ -521,7 +521,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 *
 				 * @since 1.2.6
 				 */
-				if( CoursePress_Capabilities::is_pro() ) {
+				if ( CoursePress_Capabilities::is_pro() ) {
 					CP_Basic_Certificate::init_settings();
 				}
 
@@ -531,7 +531,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				require_once( $this->plugin_dir . 'includes/classes/class.plugin-activation.php' );
 			}
 
-			if( CoursePress_Capabilities::is_pro() ) {
+			if ( CoursePress_Capabilities::is_pro() ) {
 				CP_Basic_Certificate::init_front();
 			}
 			/**
@@ -539,7 +539,6 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.2.6
 			 */
-
 			/**
 			 * Setup payment gateway array.
 			 *
@@ -1013,8 +1012,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			add_action( 'mp_new_order', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
-			add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
+			//if ( cp_use_woo() ) {
+				add_action( 'woocommerce_order_status_completed', array( $this, 'woo_listen_for_paid_status_for_courses' ), 10, 1 );
+			//} else {
+				add_action( 'mp_new_order', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
+				add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
+			//}
 
 			/**
 			 * Course taxonomies (not in this version).
@@ -1207,7 +1210,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * Class to manage integration with automessage plugin (if installed)
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.automessage-integration.php' );
-			
+
 			/**
 			 * Class to manage integration with WooCommerce plugin (if installed)
 			 */
@@ -1311,38 +1314,37 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function update_course_meta_on_unit_creation( $post_id, $course_id ) {
 
-			if( ! $course_id ) {
-				$post      = get_post( $post_id );
-				$course_id = $post->post_parent;
+			if ( !$course_id ) {
+				$post		 = get_post( $post_id );
+				$course_id	 = $post->post_parent;
 			}
 
 			// Update course structure
-			$structure_option = get_post_meta( $course_id, 'course_structure_options', true );
-			$structure_option = ! empty( $structure_option ) && 'on' == $structure_option ? 'on' : 'off';
+			$structure_option	 = get_post_meta( $course_id, 'course_structure_options', true );
+			$structure_option	 = !empty( $structure_option ) && 'on' == $structure_option ? 'on' : 'off';
 
 			$show_unit_boxes = get_post_meta( $course_id, 'show_unit_boxes', true );
-			$keys = array_keys( $show_unit_boxes );
+			$keys			 = array_keys( $show_unit_boxes );
 
 			// We only want to do this once to prevent accidental override.
-			if( ! in_array( $post_id, $keys ) ) {
+			if ( !in_array( $post_id, $keys ) ) {
 				$show_unit_boxes[ $post_id ] = $structure_option;
 			}
 
 			update_post_meta( $course_id, 'show_unit_boxes', $show_unit_boxes );
 
 			$show_page_boxes = get_post_meta( $course_id, 'show_page_boxes', true );
-			$keys = array_keys( $show_page_boxes );
+			$keys			 = array_keys( $show_page_boxes );
 
 			$page_count = Unit::get_page_count( $post_id );
-			for( $i = 1; $i <= $page_count; $i++ ) {
+			for ( $i = 1; $i <= $page_count; $i++ ) {
 				$key = $post_id . '_' . $i;
 				// Avoid accidental overrides.
-				if( ! in_array( $key, $keys ) ) {
+				if ( !in_array( $key, $keys ) ) {
 					$show_page_boxes[ $key ] = $structure_option;
 				}
 			}
 			update_post_meta( $course_id, 'show_page_boxes', $show_page_boxes );
-
 		}
 
 		function course_checkout_success_msg( $setting, $default ) {
@@ -5027,7 +5029,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$theme_file = locate_template( array( 'enrollment-process.php' ) );
 
 				$page = get_option( 'coursepress_enrollment_process_page', '0' );
-				if( ! empty( $page ) ) {
+				if ( !empty( $page ) ) {
 					wp_redirect( esc_url( $this->get_enrollment_process_slug( $uri ) ) );
 					die();
 				}
@@ -5054,7 +5056,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
 
 				$page = get_option( 'coursepress_login_page', '0' );
-				if( ! empty( $page )  ) {
+				if ( !empty( $page ) ) {
 					wp_redirect( esc_url( $this->get_login_slug( $uri ) ) );
 					die();
 				}
@@ -5082,7 +5084,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$theme_file = locate_template( array( 'student-signup.php' ) );
 
 				$page = get_option( 'coursepress_signup_page', '0' );
-				if( ! empty( $page )  ) {
+				if ( !empty( $page ) ) {
 					wp_redirect( esc_url( $this->get_signup_slug( $uri ) ) );
 					die();
 				}
@@ -5109,7 +5111,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$theme_file = locate_template( array( 'student-dashboard.php' ) );
 
 				$page = get_option( 'coursepress_student_dashboard_page', '0' );
-				if( ! empty( $page ) ) {
+				if ( !empty( $page ) ) {
 					wp_redirect( esc_url( $this->get_student_dashboard_slug( $uri ) ) );
 					die();
 				}
@@ -5135,7 +5137,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
 
 				$page = get_option( 'coursepress_student_settings_page', '0' );
-				if( ! empty( $page ) ) {
+				if ( !empty( $page ) ) {
 					wp_redirect( esc_url( $this->get_student_settings_slug( $uri ) ) );
 					die();
 				}
@@ -5803,7 +5805,25 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 		}
 
+		/* Listen for WooCommerce purchase status changes */
+
+		function woo_listen_for_paid_status_for_courses( $order_id ) {
+			$wc_order		 = wc_get_order( $order_id );
+			$items			 = $wc_order->get_items();
+			
+			$post_customer_id	 = get_post_meta( $order_id, '_customer_user', true );
+			
+			$student		 = new Student( $post_customer_id );
+
+			foreach ( $items as $item ) {
+				$course_id = get_post_meta( $item[ 'product_id' ], 'cp_course_id', true );
+				$student->enroll_in_course( $course_id );		
+			}
+			
+		}
+
 		/* Listen for MarketPress purchase status changes */
+
 		function listen_for_paid_status_for_courses( $order ) {
 			global $mp;
 
@@ -5811,20 +5831,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( in_array( $order->post_status, $allowed_mp_statuses ) ) {
 
-				$products = array_keys( $order->mp_cart_info );
-				$student = new Student( $order->post_author );
+				$products	 = array_keys( $order->mp_cart_info );
+				$student	 = new Student( $order->post_author );
 
-				foreach( $products as $product_id ) {
+				foreach ( $products as $product_id ) {
 					$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
-					if( ! empty( $course_id ) ) {
+					if ( !empty( $course_id ) ) {
 						$student->enroll_in_course( $course_id );
 					}
 				}
-
 			}
 		}
 
 		/* Make PDF report */
+
 		function pdf_report( $report = '', $report_name = '', $report_title = 'Student Report', $preview = false ) {
 			//ob_end_clean();
 			ob_start();
