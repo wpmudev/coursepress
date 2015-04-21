@@ -6,7 +6,7 @@ Description: CoursePress Pro turns WordPress into a powerful online learning pla
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-Version: 1.2.5.2
+Version: 1.2.5.3
 TextDomain: cp
 Domain Path: /languages/
 WDP ID: 913071
@@ -5018,8 +5018,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Enrollment process page
-			if ( ( preg_match( '/^' . $this->get_enrollment_process_slug() . '/', $uri ) && 0 == get_option( 'coursepress_enrollment_process_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_enrollment_process_page', 0 ) ) ) {
+			if ( preg_match( '/^' . $this->get_enrollment_process_slug() . '/', $uri ) ) {
 				$theme_file = locate_template( array( 'enrollment-process.php' ) );
+
+				$page = get_option( 'coursepress_enrollment_process_page', '0' );
+				if( ! empty( $page ) ) {
+					wp_redirect( esc_url( $this->get_enrollment_process_slug( $uri ) ) );
+					die();
+				}
 
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
@@ -5039,8 +5045,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Custom login page
-			if ( ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) && 0 == get_option( 'coursepress_login_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_login_page', 0 ) ) ) {
+			if ( preg_match( '/^' . $this->get_login_slug() . '/', $uri ) ) {
 				$theme_file = locate_template( array( 'student-login.php' ) );
+
+				$page = get_option( 'coursepress_login_page', '0' );
+				if( ! empty( $page )  ) {
+					wp_redirect( esc_url( $this->get_login_slug( $uri ) ) );
+					die();
+				}
 
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
@@ -5059,9 +5071,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$this->set_latest_activity( get_current_user_id() );
 			}
 
+
 			//Custom signup page
-			if ( ( preg_match( '/^' . $this->get_signup_slug() . '/', $uri ) && 0 == get_option( 'coursepress_signup_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_signup_page', 0 ) ) ) {
+			if ( preg_match( '/^' . $this->get_signup_slug() . '/', $uri ) ) {
 				$theme_file = locate_template( array( 'student-signup.php' ) );
+
+				$page = get_option( 'coursepress_signup_page', '0' );
+				if( ! empty( $page )  ) {
+					wp_redirect( esc_url( $this->get_signup_slug( $uri ) ) );
+					die();
+				}
 
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
@@ -5081,8 +5100,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Dashboard page
-			if ( ( preg_match( '/^' . $this->get_student_dashboard_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_dashboard_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_student_dashboard_page', 0 ) ) ) {
+			if ( preg_match( '/^' . $this->get_student_dashboard_slug() . '/', $uri ) ) {
 				$theme_file = locate_template( array( 'student-dashboard.php' ) );
+
+				$page = get_option( 'coursepress_student_dashboard_page', '0' );
+				if( ! empty( $page ) ) {
+					wp_redirect( esc_url( $this->get_student_dashboard_slug( $uri ) ) );
+					die();
+				}
 
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
@@ -5101,8 +5126,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//Student Settings page
-			if ( ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) && 0 == get_option( 'coursepress_student_settings_page', 0 ) ) || (!empty( $post ) && $post->ID == get_option( 'coursepress_student_settings_page', 0 ) ) ) {
+			if ( preg_match( '/^' . $this->get_student_settings_slug() . '/', $uri ) ) {
 				$theme_file = locate_template( array( 'student-settings.php' ) );
+
+				$page = get_option( 'coursepress_student_settings_page', '0' );
+				if( ! empty( $page ) ) {
+					wp_redirect( esc_url( $this->get_student_settings_slug( $uri ) ) );
+					die();
+				}
 
 				if ( $theme_file != '' ) {
 					require_once( $theme_file );
