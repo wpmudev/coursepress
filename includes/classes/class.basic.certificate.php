@@ -533,7 +533,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 			if( $show_link ) {
 				if ( Student_Completion::is_course_complete( $student_id, $course_id ) ) {
-					$certificate_permalink = add_query_arg( array( 'action' => 'view_certificate', 'course_id' => $course_id ), get_permalink( $course_id ) );
+					$certificate_permalink = esc_url( add_query_arg( array( 'action' => 'view_certificate', 'course_id' => $course_id ), get_permalink( $course_id ) ) );
 					return esc_html( $pre ) . '<a target="_blank" href="' . esc_url( $certificate_permalink ) . '">' . esc_html( $link_title ) . '</a>' . esc_html( $post );
 				}
 			}

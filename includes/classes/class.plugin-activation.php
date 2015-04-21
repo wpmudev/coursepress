@@ -304,7 +304,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				$actions = array(
 					'install' => sprintf(
 						'<a href="%1$s" title="' . __( 'Install', 'cp' ) . ' %2$s">' . __( 'Install', 'cp' ) . '</a>', wp_nonce_url(
-						add_query_arg(
+						esc_url( add_query_arg(
 							array(
 								'page'              => CP_Plugin_Activation::$instance->menu,
 								'plugin'            => $this->plugin['slug'],
@@ -312,7 +312,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 								'plugin_source'     => $this->plugin['source'],
 								'cp-plugin-install' => 'install-plugin',
 							), admin_url( 'admin.php' )
-						), 'cp-plugin-install'
+						) ), 'cp-plugin-install'
 					), $this->plugin['name']
 					),
 				);
@@ -320,7 +320,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			elseif ( ! $this->is_plugin_active( $this->plugin['base_path'] ) ) {
 				$actions = array(
 					'activate' => sprintf(
-						'<a href="%1$s" title="' . __( 'Activate', 'cp' ) . ' %2$s">' . __( 'Activate', 'cp' ) . '</a>', add_query_arg(
+						'<a href="%1$s" title="' . __( 'Activate', 'cp' ) . ' %2$s">' . __( 'Activate', 'cp' ) . '</a>', esc_url( add_query_arg(
 						array(
 							'page'                     => CP_Plugin_Activation::$instance->menu,
 							'plugin'                   => $this->plugin['slug'],
@@ -329,7 +329,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 							'cp-activate-plugin'       => 'activate-plugin',
 							'cp-activate-plugin-nonce' => wp_create_nonce( 'cp-activate-plugin' ),
 						), admin_url( 'admin.php' )
-					), $this->plugin['name']
+					) ), $this->plugin['name']
 					),
 				);
 			}
@@ -437,7 +437,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				$plugin['source'] = $_GET['plugin_source']; // Plugin source.
 				// Pass all necessary information via URL if WP_Filesystem is needed.
 				$url = wp_nonce_url(
-					add_query_arg(
+					esc_url( add_query_arg(
 						array(
 							'page'              => $this->menu,
 							'plugin'            => $plugin['slug'],
@@ -445,7 +445,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 							'plugin_source'     => $plugin['source'],
 							'cp-plugin-install' => 'install-plugin',
 						), admin_url( 'admin.php' )
-					), 'cp-plugin-install'
+					) ), 'cp-plugin-install'
 				);
 
 				$method = ''; // Leave blank so WP_Filesystem can populate it as necessary.
@@ -472,6 +472,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				if ( isset( $_GET['from'] ) ) {
 					$url .= add_query_arg( 'from', urlencode( stripslashes( $_GET['from'] ) ), $url );
 				}
+				$url = esc_url( $url ); // Avoid XSS
 
 				$nonce = 'install-plugin_' . $plugin['slug'];
 
@@ -495,7 +496,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				$complete = array();
 
 				if ( ! $this->is_plugin_active( $this->plugin['base_path'] ) ) {
-					echo '<p><a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings['return'] ) . '" target="_parent">' . $this->strings['return'] . '</a></p>';
+					echo '<p><a href="' . esc_url( add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) ) . '" title="' . esc_attr( $this->strings['return'] ) . '" target="_parent">' . $this->strings['return'] . '</a></p>';
 					$complete[] = $plugin;
 				} // Nothing to store.
 				else {
@@ -528,7 +529,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 				if ( is_wp_error( $activate ) ) {
 					echo '<div id="message" class="error"><p>' . $activate->get_error_message() . '</p></div>';
-					echo '<p><a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '" title="' . esc_attr( $this->strings['return'] ) . '" target="_parent">' . $this->strings['return'] . '</a></p>';
+					echo '<p><a href="' . esc_url( add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) ) . '" title="' . esc_attr( $this->strings['return'] ) . '" target="_parent">' . $this->strings['return'] . '</a></p>';
 
 					return true; // End it here if there is an error with activation.
 				} else {
@@ -620,17 +621,20 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					// Setup variables to determine if action links are needed.
 					$show_install_link  = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['install_link'] . '</a>' : '';
 					$show_activate_link = $activate_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['activate_link'] . '</a>' : '';
+					$show_install_link = esc_url( $show_install_link );
+					$show_activate_link = esc_url( $show_activate_link );
 
 					// Define all of the action links.
 					$action_links = apply_filters(
 						'cp_notice_action_links', array(
 							'install'  => ( current_user_can( 'install_plugins' ) ) ? $show_install_link : '',
 							'activate' => ( current_user_can( 'activate_plugins' ) ) ? $show_activate_link : '',
-							'dismiss'  => $this->dismissable ? '<a class="dismiss-notice" href="' . add_query_arg( 'cp-dismiss', 'dismiss_admin_notices' ) . '" target="_parent">' . $this->strings['dismiss'] . '</a>' : '',
+							'dismiss'  => $this->dismissable ? '<a class="dismiss-notice" href="' . esc_url( add_query_arg( 'cp-dismiss', 'dismiss_admin_notices' ) ) . '" target="_parent">' . $this->strings['dismiss'] . '</a>' : '',
 						)
 					);
 
 					$action_links = array_filter( $action_links ); // Remove any empty array items.
+
 					if ( $action_links ) {
 						$rendered .= '<p>' . implode( ' | ', $action_links ) . '</p>';
 					}
