@@ -1207,6 +1207,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 * Class to manage integration with automessage plugin (if installed)
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.automessage-integration.php' );
+			
+			/**
+			 * Class to manage integration with WooCommerce plugin (if installed)
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.woocommerce-integration.php' );
 
 			/**
 			 * Hook CoursePress initialization.

@@ -116,10 +116,11 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 	$open_ended_enrollment			 = $course->details->open_ended_enrollment;
 	$limit_class_size				 = $course->details->limit_class_size;
 	$marketpress_product			 = $course->details->marketpress_product;
+	$woo_product					 = $course->details->woo_product;
 	$allow_course_discussion		 = $course->details->allow_course_discussion;
 	$allow_course_grades_page		 = $course->details->allow_course_grades_page;
 	$allow_workbook_page			 = $course->details->allow_workbook_page;
-	$paid_course					 = $coursepress->marketpress_active ? $course->details->paid_course : false;
+	$paid_course					 = ($coursepress->marketpress_active || cp_use_woo()) ? $course->details->paid_course : false;
 	$auto_sku						 = $course->details->auto_sku;
 	$course_terms					 = wp_get_post_terms( (int) $_GET[ 'course_id' ], 'course_category' );
 	$course_category				 = is_array( $course_terms ) ? ( isset( $course_terms[ 0 ] ) ? $course_terms[ 0 ]->term_id : 0 ) : 0; //$course->details->course_category;
@@ -164,6 +165,7 @@ if ( isset( $_GET[ 'course_id' ] ) ) {
 	$open_ended_enrollment			 = 'off';
 	$limit_class_size				 = 'off';
 	$marketpress_product			 = '';
+	$woo_product					 = '';
 	$allow_course_discussion		 = 'off';
 	$allow_course_grades_page		 = 'off';
 	$allow_workbook_page			 = 'off';
@@ -395,7 +397,6 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												}
 
 												$class_extra = is_rtl() ? 'chosen-rtl' : '';
-
 												?>
 
 												<select name="course_category" id="course_category" class="postform chosen-select-course <?php echo $class_extra; ?>" multiple="true">
@@ -579,19 +580,19 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																								<div class="tree-unit-left"><?php echo( $unit->post_status != 'publish' ? __( '[draft] ', 'cp' ) : '' ); ?><?php echo $unit->post_title; ?></div>
 																								<div class="tree-unit-right">
 																									<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
-																		if ( isset( $show_unit[ $unit->ID ] ) ) {
-																			echo ( $show_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																		} else {
-																			echo ( 'on' == $course_structure_options ) ? 'checked' : '';
-																			$section_dirty = true;
-																		}
-																						?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																									if ( isset( $show_unit[ $unit->ID ] ) ) {
+																										echo ( $show_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																									} else {
+																										echo ( 'on' == $course_structure_options ) ? 'checked' : '';
+																										$section_dirty = true;
+																									}
+																									?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
 																									<input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
-																					if ( isset( $preview_unit[ $unit->ID ] ) ) {
-																						echo ( $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																					}
-																						?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																									if ( isset( $preview_unit[ $unit->ID ] ) ) {
+																										echo ( $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																									}
+																									?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
 																									<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
 																								</div>
@@ -640,10 +641,10 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																														   }
 																														   ?>
 																													<input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-																								   if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) || isset( $preview_unit[ $unit->ID ] ) ) {
-																									   echo ( $preview_page[ $unit->ID . '_' . $i ] == 'on' || $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
-																								   }
-																														   ?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																													if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) || isset( $preview_unit[ $unit->ID ] ) ) {
+																														echo ( $preview_page[ $unit->ID . '_' . $i ] == 'on' || $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																													}
+																													?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
 																													<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
 																												</div>
@@ -994,7 +995,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<label for='meta_class-size'>
 														<input type="checkbox" name="meta_limit_class_size" id="limit_class_size" <?php echo ( $limit_class_size == 'on' ) ? 'checked' : ''; ?> />
 														<span><?php _e( 'Limit class size', 'cp' ); ?></span>
-														<?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );                   ?>
+														<?php // CP_Helper_Tooltip::tooltip( __( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ) );                    ?>
 														<br/>
 														<span><?php _e( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size( s ).', 'cp' ); ?></span>
 													</label>
@@ -1006,7 +1007,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label for='meta_allow_course_discussion'>
 													<input type="checkbox" name="meta_allow_course_discussion" id="allow_course_discussion" <?php echo ( $allow_course_discussion == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Allow Course Discussion', 'cp' ); ?></span>
-													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );                   ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) );                    ?>
 													<br/>
 													<span><?php _e( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ); ?></span>
 												</label>
@@ -1014,7 +1015,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												<label for='meta_allow_workbook_page'>
 													<input type="checkbox" name="meta_allow_workbook_page" id="allow_workbook_page" <?php echo ( $allow_workbook_page == 'on' ) ? 'checked' : ''; ?> />
 													<span><?php _e( 'Show student Workbook', 'cp' ); ?></span>
-													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );                   ?>
+													<?php // CP_Helper_Tooltip::tooltip( __( 'If checked, students can see their progress and grades.', 'cp' ) );                    ?>
 													<br/>
 													<span><?php _e( 'If checked, students can see their progress and grades.', 'cp' ); ?></span>
 												</label>
@@ -1073,9 +1074,9 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<?php } ?>
 												</select>
 
-												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) {  ?>
-														<!--	<span class="course_settings_enrollment_message">-->
-												<?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' );    ?><!--</span>-->
+												<?php //if ( !cp_user_can_register() && current_user_can( 'manage_options' ) ) {   ?>
+																																										<!--	<span class="course_settings_enrollment_message">-->
+												<?php //_e( 'In order to allow course enrollment (other than Manually) you have to activate "Anyone can register" from the WordPress settings.', 'cp' );     ?><!--</span>-->
 												<?php //} ?>
 											</div>
 
@@ -1128,19 +1129,12 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 											<?php
 											// Check to see if we're offering paid courses.
-											if ( $offer_paid ) :
-												?>
-												<hr/>
-												<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-												?>
-												<div class="narrow product">
-													<!-- MarketPress not Active -->
-
-													<?php // marketpress_active set in marketpress_check() hook
+											if ( $offer_paid ) {
+												if ( cp_use_woo() ) {
+													//START WOO
 													?>
-													<?php
-													if ( $coursepress->marketpress_active || ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) ) {
-														?>
+													<div class="narrow product">
+
 														<label>
 															<?php _e( 'Cost to participate in this course', 'cp' ); ?>
 														</label>
@@ -1150,54 +1144,29 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 															<span><?php _e( 'This is a Paid Course', 'cp' ); ?></span>
 														</div>
 
-														<?php
-													}
-													if ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) {
-														?>
-														<div class="cp-markertpress-not-active <?php echo $coursepress->marketpress_active ? 'hidden' : ''; ?>">
-															<div id="marketpressprompt-box">
-																<label>
-																	<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
-																</label>
-
-																<?php
-																if ( !CoursePress_Capabilities::is_pro() ) {
-																	echo sprintf( __(
-																	'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
-																	'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
-																} else {
-																	echo sprintf( __( 'The full version of MarketPress has been bundled with %s.<br />' .
-																	'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
-																}
-																?>
-															</div>
-														</div>  <!-- cp-marketpress-not-active -->
-													<?php } ?>
-													<?php if ( current_user_can( 'manage_options' ) || (!current_user_can( 'manage_options' ) && $gateways ) ) { ?>
-														<div class="cp-markertpress-is-active <?php echo!$coursepress->marketpress_active ? 'hidden' : ''; ?>">
+														<div>
 															<?php
-															$mp_product_id = $course->mp_product_id();
+															$woo_product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
 
-															$product_exists = 0 != $mp_product_id ? true : false;
+															$product_exists = 0 != $woo_product_id ? true : false;
 
 															$paid_course = !isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
 															$paid_course = !$product_exists ? 'off' : $paid_course;
 
-															//var_dump(get_post_custom($course_id));
 															if ( isset( $course_id ) && $course_id !== 0 ) {
-																$mp_product_details = get_post_custom( $course_id );
+																$woo_product_details = get_post_custom( $woo_product_id ); //$course_id
 															}
 
-															if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
-																$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
+															if ( isset( $woo_product ) && $woo_product !== '' ) {
+																$woo_product_sku = get_post_meta( $woo_product, '_sku', true );
 															} else {
-																$marketpress_product_sku = '';
+																$woo_product_sku = '';
 															}
 
 															$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
 															?>
 
-															<input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr( isset( $course->details->mp_product_id ) ? $course->details->mp_product_id : ''  ); ?>"/>
+															<input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr( isset( $woo_product_id ) ? $woo_product_id : ''  ); ?>"/>
 
 															<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
 																<div class="course-sku">
@@ -1206,59 +1175,167 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 																		<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?>
 																	</p>
 																	<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
-																		/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
-																		  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
-																		  } */
-																		echo esc_attr( isset( $marketpress_product_sku[ 0 ] ) ? $marketpress_product_sku[ 0 ] : ''  );
-																		?>" <?php echo $input_state; ?> />
+																	echo esc_attr( isset( $woo_product_sku ) ? $woo_product_sku : ''  );
+																	?>" <?php echo $input_state; ?> />
 																</div>
 
 																<div class="course-price">
 																	<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
-																	<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $mp_product_details[ 'mp_price' ][ 0 ] ) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
+																	<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $woo_product_details[ '_regular_price' ][ 0 ] ) ? esc_attr( $woo_product_details[ '_regular_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
 																</div>
 
 																<div class="clearfix"></div>
 
 																<div class="course-sale-price">
 																	<?php
-																	$mp_is_sale	 = isset( $mp_product_details[ "mp_is_sale" ][ 0 ] ) ? $mp_product_details[ "mp_is_sale" ][ 0 ] : 0;
+																	$woo_is_sale = isset( $woo_product_details[ "_sale_price" ][ 0 ] ) ? (is_numeric( $woo_product_details[ "_sale_price" ][ 0 ] ) ? true : false) : false;
 																	?>
 																	<p>
-																		<input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $mp_is_sale ); ?>" <?php checked( $mp_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
+																		<input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $woo_is_sale ); ?>" <?php checked( $woo_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
 																		<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
-																	<span class="price-label <?php isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) && checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
-																	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo(!empty( $mp_product_details[ 'mp_sale_price' ] ) ? esc_attr( $mp_product_details[ "mp_sale_price" ][ 0 ] ) : 0 ); ?>" <?php echo $input_state; ?>  />
+																	<span class="price-label <?php isset( $woo_product_details ) && !empty( $woo_product_details[ "_sale_price" ] ) && checked( $woo_product_details[ "_sale_price" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
+																	<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo(!empty( $woo_product_details[ '_sale_price' ] ) ? esc_attr( $woo_product_details[ "_sale_price" ][ 0 ] ) : 0 ); ?>" <?php echo $input_state; ?>  />
 																</div>
 
 																<div class="clearfix"></div>
 
-																<?php if ( current_user_can( 'manage_options' ) ) { ?>
-																	<div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
-																		<?php
-																		//Try to dequeue need-help script to avoid need-help popup
-																		wp_dequeue_script( 'mp-need-help' );
-																		?>
-																		<!-- Add both links for JS/CSS toggle -->
-																		<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
-																		<span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
+																<div class="course-enable-gateways gateway-active"></div>
 
-																		<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>
-																	</div>
-																<?php } else {
-																	?>
-																	<div class="course-enable-gateways gateway-active"></div>
-																	<?php }
-																?>
 															</div>
 														</div>
-													<?php } ?><!-- cp-markertpress-is-active -->
-													<!--_e('Please ask administrator to enable at least one payment gateway.', 'cp');-->
-												</div>
 
-												<?php
-											// End check for Campus.
-											endif;
+													</div>
+													<?php
+													//END WOO
+												} else {
+													?>
+													<hr/>
+													<?php // START ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+													?>
+													<div class="narrow product">
+														<!-- MarketPress not Active -->
+														<?php
+														if ( $coursepress->marketpress_active || ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) ) {
+															?>
+															<label>
+																<?php _e( 'Cost to participate in this course', 'cp' ); ?>
+															</label>
+
+															<div class="course-paid" id="marketpressprompt">
+																<input type="checkbox" name="meta_paid_course" <?php echo ( isset( $paid_course ) && $paid_course == 'on' ) ? 'checked' : ''; ?> id="paid_course"></input>
+																<span><?php _e( 'This is a Paid Course', 'cp' ); ?></span>
+															</div>
+
+															<?php
+														}
+														if ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) {
+															?>
+															<div class="cp-markertpress-not-active <?php echo $coursepress->marketpress_active ? 'hidden' : ''; ?>">
+																<div id="marketpressprompt-box">
+																	<label>
+																		<?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?>
+																	</label>
+
+																	<?php
+																	if ( !CoursePress_Capabilities::is_pro() ) {
+																		echo sprintf( __(
+																		'To start selling your course, you will need to activate the MarketPress Lite plugin: <br /> %s<br /><br />' .
+																		'If you require other payment gateways, you will need to upgrade to %s.', 'cp' ), '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress Lite', 'cp' ) . '</a>', '<a target="_blank" href="https://premium.wpmudev.org/project/e-commerce/">' . __( 'MarketPress', 'cp' ) . '</a>' );
+																	} else {
+																		echo sprintf( __( 'The full version of MarketPress has been bundled with %s.<br />' .
+																		'To start selling your course, you will need to activate MarketPress: <br /> %s<br /><br />', 'cp' ), 'CoursePress Pro', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $this->screen_base . '_settings' . '&tab=cp-marketpress' ) . '">' . __( 'Begin Activating MarketPress', 'cp' ) . '</a>' );
+																	}
+																	?>
+																</div>
+															</div>  <!-- cp-marketpress-not-active -->
+														<?php } ?>
+														<?php if ( current_user_can( 'manage_options' ) || (!current_user_can( 'manage_options' ) && $gateways ) ) { ?>
+															<div class="cp-markertpress-is-active <?php echo!$coursepress->marketpress_active ? 'hidden' : ''; ?>">
+																<?php
+																$mp_product_id = $course->mp_product_id();
+
+																$product_exists = 0 != $mp_product_id ? true : false;
+
+																$paid_course = !isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
+																$paid_course = !$product_exists ? 'off' : $paid_course;
+
+																//var_dump(get_post_custom($course_id));
+																if ( isset( $course_id ) && $course_id !== 0 ) {
+																	$mp_product_details = get_post_custom( $course_id );
+																}
+
+																if ( isset( $marketpress_product ) && $marketpress_product !== '' ) {
+																	$marketpress_product_sku = get_post_meta( $marketpress_product, 'mp_sku', true );
+																} else {
+																	$marketpress_product_sku = '';
+																}
+
+																$input_state = 'off' == $paid_course ? 'disabled="disabled"' : '';
+																?>
+
+																<input type="hidden" name="meta_mp_product_id" id="mp_product_id" value="<?php echo esc_attr( isset( $course->details->mp_product_id ) ? $course->details->mp_product_id : ''  ); ?>"/>
+
+																<div class="course-paid-course-details <?php echo ( $paid_course != 'on' ) ? 'hidden' : ''; ?>">
+																	<div class="course-sku">
+																		<p>
+																			<input type="checkbox" name="meta_auto_sku" <?php echo ( isset( $auto_sku ) && $auto_sku == 'on' ) ? 'checked' : ''; ?> <?php echo $input_state; ?>  />
+																			<?php _e( 'Automatically generate Stock Keeping Unit (SKU)', 'cp' ); ?>
+																		</p>
+																		<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="<?php
+																		/* if ( isset( $auto_sku ) && $auto_sku == 'on' ) {
+																		  echo esc_attr( $mp_product_details[ "mp_sku" ][ 0 ] );
+																		  } */
+																		echo esc_attr( isset( $marketpress_product_sku[ 0 ] ) ? $marketpress_product_sku[ 0 ] : ''  );
+																		?>" <?php echo $input_state; ?> />
+																	</div>
+
+																	<div class="course-price">
+																		<span class="price-label <?php echo $paid_course == 'on' ? 'required' : ''; ?>"><?php _e( 'Price', 'cp' ); ?></span>
+																		<input type="text" name="mp_price" id="mp_price" value="<?php echo isset( $mp_product_details[ 'mp_price' ][ 0 ] ) ? esc_attr( $mp_product_details[ 'mp_price' ][ 0 ] ) : ''; ?>" <?php echo $input_state; ?>  />
+																	</div>
+
+																	<div class="clearfix"></div>
+
+																	<div class="course-sale-price">
+																		<?php
+																		$mp_is_sale	 = isset( $mp_product_details[ "mp_is_sale" ][ 0 ] ) ? $mp_product_details[ "mp_is_sale" ][ 0 ] : 0;
+																		?>
+																		<p>
+																			<input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="<?php echo esc_attr( $mp_is_sale ); ?>" <?php checked( $mp_is_sale, '1', true ); ?><?php echo $input_state; ?>  />
+																			<?php _e( 'Enabled Sale Price', 'cp' ); ?></p>
+																		<span class="price-label <?php isset( $mp_product_details ) && !empty( $mp_product_details[ "mp_is_sale" ] ) && checked( $mp_product_details[ "mp_is_sale" ][ 0 ], '1' ) ? 'required' : ''; ?>"><?php _e( 'Sale Price', 'cp' ); ?></span>
+																		<input type="text" name="mp_sale_price" id="mp_sale_price" value="<?php echo(!empty( $mp_product_details[ 'mp_sale_price' ] ) ? esc_attr( $mp_product_details[ "mp_sale_price" ][ 0 ] ) : 0 ); ?>" <?php echo $input_state; ?>  />
+																	</div>
+
+																	<div class="clearfix"></div>
+
+																	<?php if ( current_user_can( 'manage_options' ) ) { ?>
+																		<div class="course-enable-gateways <?php echo $gateways ? 'gateway-active' : 'gateway-undefined'; ?>">
+																			<?php
+																			//Try to dequeue need-help script to avoid need-help popup
+																			wp_dequeue_script( 'mp-need-help' );
+																			?>
+																			<!-- Add both links for JS/CSS toggle -->
+																			<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-incomplete-gateways thickbox <?php echo $gateways ? 'hide' : ''; ?>" style="<?php echo $gateways ? 'display:none' : ''; ?>"><?php _e( 'Setup Payment Gateways', 'cp' ); ?></a>
+																			<span class="payment-gateway-required <?php echo!$gateways && $paid_course == 'on' ? 'required' : ''; ?>"></span>
+
+																			<a href="<?php echo admin_url( 'edit.php?post_type=product&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' ) ?>&TB_iframe=true&width=600&height=550" class="button button-edit-gateways thickbox <?php echo $gateways ? '' : 'hide'; ?>" style="<?php echo $gateways ? '' : 'display:none'; ?>"><?php _e( 'Edit Payment Gateways', 'cp' ); ?></a>
+																		</div>
+																	<?php } else {
+																		?>
+																		<div class="course-enable-gateways gateway-active"></div>
+																	<?php }
+																	?>
+																</div>
+															</div>
+														<?php } ?><!-- cp-markertpress-is-active -->
+														<!--_e('Please ask administrator to enable at least one payment gateway.', 'cp');-->
+													</div>
+
+													<?php
+													// End check for Campus.
+												}
+											}
 											?>
 											<?php // END ///////////////////////////////                     ?>
 

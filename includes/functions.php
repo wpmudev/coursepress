@@ -13,6 +13,15 @@
   return $url;
   } */
 
+function cp_use_woo(){
+	$use_woo = get_option( 'use_woo', 0 );
+	if($use_woo == 0){
+		return false;
+	}else{
+		return true;
+	}
+}
+
 function cp_student_login_address() {
 	global $coursepress;
 	$student_login_address = get_option( 'use_custom_login_form', 1 ) ? trailingslashit( home_url() . '/' . get_option( 'login_slug', 'student-login' ) ) : wp_login_url();
