@@ -6,6 +6,10 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.4 =
+* Fixed issue with margin order as paid with Manual Payments
+* Integration with WooCommerce
+
 = 1.2.5.3 =
 * Security Update: Fixed possible WordPress XSS bug
 * Fixed clearfix div

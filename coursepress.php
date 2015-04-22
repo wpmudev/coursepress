@@ -1012,12 +1012,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			//if ( cp_use_woo() ) {
+			if ( cp_use_woo() ) {
 				add_action( 'woocommerce_order_status_completed', array( $this, 'woo_listen_for_paid_status_for_courses' ), 10, 1 );
-			//} else {
+			} else {
 				add_action( 'mp_new_order', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
-				add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_for_courses' ), 10, 1 );
-			//}
+				add_action( 'mp_order_paid', array( &$this, 'listen_for_paid_status_changes_for_courses' ), 10, 1 );
+			}
 
 			/**
 			 * Course taxonomies (not in this version).
@@ -1635,34 +1635,67 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$course		 = new Course( $course_id );
 			$product_id	 = $course->mp_product_id();
 
-			if ( $mp && !empty( $product_id ) ) {
-				$signup_steps = array_merge( $signup_steps, array(
-					'payment_checkout'	 => array(
-						// MP3 integration
-						// 'action' => 'template',
-						// 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-						'data'		 => $this->signup_pre_redirect_to_cart( $args ),
-						'action'	 => 'redirect',
-						'url'		 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' ),
-						'on_success' => 'process_payment',
-					),
-					'process_payment'	 => array(
-						// MP3 integration
-						// 'action' => 'callback',
-						// 'action' => 'render',
-						// 'callback' => array( &$this, 'signup_payment_processing' ),
-						'data'	 => $this->signup_payment_processing( $args ),
-						'action' => 'redirect',
-						'url'	 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
-					// 'on_success' => 'payment_confirmed',
-					),
-					'payment_confirmed'	 => array(
-						'template' => '',
-					),
-					'payment_pending'	 => array(
-						'template' => '',
-					),
-				) );
+			if ( cp_use_woo() ) {
+				global $woocommerce;
+				if ( !empty( $product_id ) ) {
+					$signup_steps = array_merge( $signup_steps, array(
+						'payment_checkout'	 => array(
+							// WooCommerce integration
+							// 'action' => 'template',
+							// 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+							'data'		 => $this->woo_signup_pre_redirect_to_cart( $args ),
+							'action'	 => 'redirect',
+							'url'		 => $woocommerce->cart->get_cart_url(),
+							'on_success' => 'process_payment',
+						),
+						'process_payment'	 => array(
+							// MP3 integration
+							// 'action' => 'callback',
+							// 'action' => 'render',
+							// 'callback' => array( &$this, 'signup_payment_processing' ),
+							'data'	 => $this->signup_payment_processing( $args ),
+							'action' => 'redirect',
+							'url'	 => $woocommerce->cart->get_cart_url(),//home_url(),//home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
+						// 'on_success' => 'payment_confirmed',
+						),
+						'payment_confirmed'	 => array(
+							'template' => '',
+						),
+						'payment_pending'	 => array(
+							'template' => '',
+						),
+					) );
+				}
+			} else {
+				if ( $mp && !empty( $product_id ) ) {
+					$signup_steps = array_merge( $signup_steps, array(
+						'payment_checkout'	 => array(
+							// MP3 integration
+							// 'action' => 'template',
+							// 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
+							'data'		 => $this->signup_pre_redirect_to_cart( $args ),
+							'action'	 => 'redirect',
+							'url'		 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' ),
+							'on_success' => 'process_payment',
+						),
+						'process_payment'	 => array(
+							// MP3 integration
+							// 'action' => 'callback',
+							// 'action' => 'render',
+							// 'callback' => array( &$this, 'signup_payment_processing' ),
+							'data'	 => $this->signup_payment_processing( $args ),
+							'action' => 'redirect',
+							'url'	 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
+						// 'on_success' => 'payment_confirmed',
+						),
+						'payment_confirmed'	 => array(
+							'template' => '',
+						),
+						'payment_pending'	 => array(
+							'template' => '',
+						),
+					) );
+				}
 			}
 
 			$signup_steps = array_merge( $signup_steps, array(
@@ -1777,6 +1810,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$student_id	 = get_current_user_id();
 			$student_id	 = $student_id > 0 ? $student_id : $args[ 'student_id' ];
 			$course_id	 = false;
+
 			if ( !empty( $args ) ) {
 				$course_id = isset( $args[ 'course_id' ] ) ? $args[ 'course_id' ] : false;
 			} else {
@@ -1816,6 +1850,21 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 		}
 
+		// Current Woo integration
+		function woo_signup_pre_redirect_to_cart( $args = array() ) {
+			$course_id = 0;
+			if ( !empty( $args ) ) {
+				$course_id = isset( $args[ 'course_id' ] ) ? $args[ 'course_id' ] : false;
+			} else {
+				$course_id = !empty( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : false;
+			}
+		
+			$course		 = new Course( $course_id );
+			$product_id	 = $course->mp_product_id();
+
+			CP_WooCommerce_Integration::add_product_to_cart($product_id);
+		}
+		
 		// Current MP integration
 		function signup_pre_redirect_to_cart( $args = array() ) {
 			global $mp;
@@ -1963,12 +2012,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 			}
 
-			if ( isset( $post ) && $post->post_type == 'product' && $wp_query->is_page ) {
-				if ( isset( $post->post_parent ) ) {//parent course
-					if ( $post->post_parent !== 0 ) {
-						$course = new Course( $post->post_parent );
-						wp_redirect( $course->get_permalink() );
-						exit;
+			if ( cp_use_woo() && cp_redirect_woo_to_course() ) {
+				if ( isset( $post ) && $post->post_type == 'product' ) {
+					if ( isset( $post->post_parent ) ) {//parent course
+						if ( $post->post_parent !== 0 && get_post_type( $post->post_parent ) == 'course' ) {
+							$course = new Course( $post->post_parent );
+							wp_redirect( $course->get_permalink() );
+							exit;
+						}
+					}
+				}
+			} else {
+				if ( isset( $post ) && $post->post_type == 'product' && $wp_query->is_page ) {
+					if ( isset( $post->post_parent ) ) {//parent course
+						if ( $post->post_parent !== 0 && get_post_type( $post->post_parent ) == 'course' ) {
+							$course = new Course( $post->post_parent );
+							wp_redirect( $course->get_permalink() );
+							exit;
+						}
 					}
 				}
 			}
@@ -3760,6 +3821,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_autoupdate_started', $course_id, $user_id );
 
 				$course = new Course( $course_id );
+				
 				if ( $course->details ) {
 					$course->data[ 'status' ] = $course->details->post_status;
 				} else {
@@ -5808,18 +5870,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Listen for WooCommerce purchase status changes */
 
 		function woo_listen_for_paid_status_for_courses( $order_id ) {
-			$wc_order		 = wc_get_order( $order_id );
-			$items			 = $wc_order->get_items();
-			
-			$post_customer_id	 = get_post_meta( $order_id, '_customer_user', true );
-			
-			$student		 = new Student( $post_customer_id );
+			$wc_order	 = wc_get_order( $order_id );
+			$items		 = $wc_order->get_items();
+
+			$post_customer_id = get_post_meta( $order_id, '_customer_user', true );
+
+			$student = new Student( $post_customer_id );
 
 			foreach ( $items as $item ) {
 				$course_id = get_post_meta( $item[ 'product_id' ], 'cp_course_id', true );
-				$student->enroll_in_course( $course_id );		
+				$student->enroll_in_course( $course_id );
 			}
-			
 		}
 
 		/* Listen for MarketPress purchase status changes */
@@ -5839,6 +5900,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 					if ( !empty( $course_id ) ) {
 						$student->enroll_in_course( $course_id );
 					}
+				}
+			}
+		}
+
+		function listen_for_paid_status_changes_for_courses( $order ) {
+			global $mp;
+
+			$products	 = array_keys( $order->mp_cart_info );
+			$student	 = new Student( $order->post_author );
+
+			foreach ( $products as $product_id ) {
+				$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
+				if ( !empty( $course_id ) ) {
+					$student->enroll_in_course( $course_id );
 				}
 			}
 		}

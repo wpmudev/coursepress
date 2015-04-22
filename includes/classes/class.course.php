@@ -66,16 +66,16 @@ if ( !class_exists( 'Course' ) ) {
 			$this->id		 = $id;
 			$this->output	 = $output;
 
-			// Attempt to load from cache or create new cache object
+// Attempt to load from cache or create new cache object
 			if ( !self::load( self::TYPE_COURSE, $this->id, $this->details ) ) {
 
-				// Get the course
+// Get the course
 				$this->details = get_post( $this->id, $this->output );
 
-				// Initialize the course
+// Initialize the course
 				$this->init_course( $this->details );
 
-				// Cache the course object
+// Cache the course object
 				self::cache( self::TYPE_COURSE, $this->id, $this->details );
 			};
 
@@ -87,7 +87,7 @@ if ( !class_exists( 'Course' ) ) {
 			do_action( 'coursepress_course_init', $this );
 		}
 
-		// PHP legacy constructor
+// PHP legacy constructor
 		function Course( $id = '', $output = 'OBJECT' ) {
 			$this->__construct( $id, $output );
 		}
@@ -357,6 +357,7 @@ if ( !class_exists( 'Course' ) ) {
 				}
 
 				function update_mp_product( $course_id = false ) {
+
 					$course_id				 = $course_id ? $course_id : $this->id;
 					$automatic_sku_number	 = 'CP-' . $course_id;
 
@@ -393,9 +394,7 @@ if ( !class_exists( 'Course' ) ) {
 							$sku[ 0 ] = cp_filter_content( (!empty( $_POST[ 'mp_sku' ] ) ? $_POST[ 'mp_sku' ] : '' ), true );
 						}
 
-
 						if ( cp_use_woo() ) {
-
 							update_post_meta( $this->id, 'woo_product_id', $post_id );
 							update_post_meta( $this->id, 'woo_product', $post_id );
 
@@ -403,10 +402,17 @@ if ( !class_exists( 'Course' ) ) {
 							$sale_price	 = cp_filter_content( (!empty( $_POST[ 'mp_sale_price' ] ) ? $_POST[ 'mp_sale_price' ] : 0 ), true );
 
 							update_post_meta( $post_id, '_virtual', 'yes' );
+							update_post_meta( $post_id, '_sold_individually', 'yes' );
 							update_post_meta( $post_id, '_sku', $sku[ 0 ] );
 							update_post_meta( $post_id, '_regular_price', $price );
-							update_post_meta( $post_id, '_sale_price', $sale_price );
-							update_post_meta( $post_id, '_price', $sale_price );
+
+							if ( !empty( $_POST[ 'mp_is_sale' ] ) ) {
+								update_post_meta( $post_id, '_sale_price', $sale_price );
+								update_post_meta( $post_id, '_price', $sale_price );
+							}else{
+								update_post_meta( $post_id, '_price', $price );
+							}
+
 							update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( (!empty( $_POST[ 'mp_is_sale' ] ) ? $_POST[ 'mp_is_sale' ] : '' ), true ) );
 							update_post_meta( $post_id, 'cp_course_id', $this->id );
 						} else {
@@ -494,6 +500,7 @@ if ( !class_exists( 'Course' ) ) {
 					$post_id = wp_insert_post( apply_filters( 'coursepress_pre_insert_post', $post ) );
 
 					$course_order_exists = get_post_meta( $post_id, 'course_order', true );
+
 					if ( empty( $course_order_exists ) ) {
 						update_post_meta( $post_id, 'course_order', 0 );
 					}
@@ -528,7 +535,7 @@ if ( !class_exists( 'Course' ) ) {
 								}
 							} // meta_course_category
 							//Add featured image
-							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) || isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) {
+							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) || isset( $_POST[ 'meta_featured _url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) {
 
 								$course_image_width	 = get_option( 'course_image_width', 235 );
 								$course_image_height = get_option( 'course_image_height', 225 );
@@ -667,7 +674,7 @@ if ( !class_exists( 'Course' ) ) {
 					/**
 					 * Perform actions after a course is deleted.
 					 *
-					 * @var $course  The course object if the ID or post_title is needed.
+					 * @var $course  The course object if the ID or post_ title is needed.
 					 *
 					 * @since 1.2.1
 					 */
@@ -983,7 +990,7 @@ if ( !class_exists( 'Course' ) ) {
 						}
 					}
 
-					delete_post_meta( $new_course_id, 'meta_mp_product_id' );
+					delete_post_meta( $new_course_id, 'me ta_mp_pr oduct_id' );
 					delete_post_meta( $new_course_id, 'mp_product_id' );
 					delete_post_meta( $new_course_id, 'mp_sale_price' );
 					delete_post_meta( $new_course_id, 'mp_price' );
@@ -1063,4 +1070,38 @@ if ( !class_exists( 'Course' ) ) {
 
 			}
 
-		}
+		} 
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							
+
+							 
