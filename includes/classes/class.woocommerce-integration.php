@@ -17,8 +17,40 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			function __construct() {
 				add_action( 'coursepress_general_options_page', array( &$this, 'add_woocommerce_general_option' ) );
 				add_action( 'coursepress_update_settings', array( &$this, 'save_woocommerce_general_option' ), 10, 2 );
+				add_action( 'woocommerce_order_details_after_order_table', array( &$this, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 				add_filter( 'woocommerce_cart_item_name', array( &$this, 'change_cp_item_name' ), 10, 3 );
 				add_filter( 'woocommerce_order_item_name', array( &$this, 'change_cp_order_item_name' ), 10, 2 );
+			}
+
+			function show_course_message_woocommerce_order_details_after_order_table( $order ) {
+				global $coursepress;
+
+
+				$order_details		 = new WC_Order( $order->id );
+				$order_items		 = $order_details->get_items();
+				$purchased_course	 = false;
+
+				foreach ( $order_items as $order_item ) {
+					$course_id = wp_get_post_parent_id( $order_item[ 'product_id' ] );
+					if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+						$purchased_course = true;
+					}
+				}
+
+				if ( $purchased_course ) {
+					?>
+					<h2 class="cp_woo_header"><?php _e( 'Course', 'cp' ); ?></h2>
+					<p class="cp_woo_thanks"><?php _e( 'Thank you for signing up for the course. We hope you enjoy your experience.' ); ?></p>
+					<?php
+					if ( is_user_logged_in() && $order->post_status == 'wc-completed' ) {
+						?>
+						<p class="cp_woo_dashboard_link">
+							<?php printf( __( 'You can find the course in your <a href="%s">Dashboard</a>', 'cp' ), $coursepress->get_student_dashboard_slug( true ) ) ?>
+						</p>
+						<hr />
+						<?php
+					}
+				}
 			}
 
 			function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
@@ -30,8 +62,8 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			}
 
 			function change_cp_order_item_name( $name, $item ) {
-				$product_id = isset( $item[ 'item_meta' ][ '_product_id' ] ) ? $item[ 'item_meta' ][ '_product_id' ] : '';
-				$product_id = $product_id[0];
+				$product_id	 = isset( $item[ 'item_meta' ][ '_product_id' ] ) ? $item[ 'item_meta' ][ '_product_id' ] : '';
+				$product_id	 = $product_id[ 0 ];
 				if ( is_numeric( $product_id ) ) {
 					$course_id = wp_get_post_parent_id( $product_id );
 					if ( $course_id && get_post_type( $course_id ) == 'course' ) {
@@ -144,7 +176,5 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 		}
 
 		$cp_woo = new CP_WooCommerce_Integration();
-	} else {
-		update_option( 'use_woo', 0 ); //if user deactivate woocommerce plugin
 	}
 }
