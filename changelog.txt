@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.2.5.4 =
 * Fixed issue with margin order as paid with Manual Payments
+* Added additional hooks for developers
 * Integration with WooCommerce
 
 = 1.2.5.3 =

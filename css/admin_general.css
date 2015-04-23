@@ -1,3 +1,7 @@
+#cp_woo_post_parent{
+    display: none;
+}
+
 .add_class_message{
     color: red;
 }

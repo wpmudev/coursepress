@@ -15,11 +15,35 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 		class CP_WooCommerce_Integration {
 
 			function __construct() {
+				add_action( 'add_meta_boxes', array( &$this, 'add_post_parent_metaboxe' ) );
+				add_action( 'woocommerce_process_product_meta_simple', array( &$this, 'woo_save_post' ), 999 );
 				add_action( 'coursepress_general_options_page', array( &$this, 'add_woocommerce_general_option' ) );
 				add_action( 'coursepress_update_settings', array( &$this, 'save_woocommerce_general_option' ), 10, 2 );
 				add_action( 'woocommerce_order_details_after_order_table', array( &$this, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 				add_filter( 'woocommerce_cart_item_name', array( &$this, 'change_cp_item_name' ), 10, 3 );
 				add_filter( 'woocommerce_order_item_name', array( &$this, 'change_cp_order_item_name' ), 10, 2 );
+			}
+
+			function add_post_parent_metaboxe() {
+				add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'cp' ), array( &$this, 'cp_woo_post_parent' ), 'product', 'side', 'default' );
+			}
+
+			function woo_save_post() {
+				global $post;
+				if ( $post->post_type == 'product' ) {
+					if ( isset( $_POST[ 'parent_course' ] ) && !empty( $_POST[ 'parent_course' ] ) ) {
+						wp_update_post( array( 'ID' => $post->ID, 'post_parent' => (int) $_POST[ 'parent_course' ] ) );
+					}
+				}
+			}
+
+			function cp_woo_post_parent() {
+				global $post;
+				if ( isset( $post->ID ) ) {
+					?>
+					<input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
+					<?php
+				}
 			}
 
 			function show_course_message_woocommerce_order_details_after_order_table( $order ) {
