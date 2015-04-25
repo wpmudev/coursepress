@@ -11,6 +11,10 @@ if ( ! class_exists( 'Student_Search' ) ) {
 		var $users_per_page = 25;
 		var $search_errors = false;
 		var $additional_url_args = array();
+        var $search_term = '';
+        var $raw_page = false;
+        var $page_num = '';
+        var $total_users_for_query = 0;
 
 		function __construct(
 			$search_term = '', $page_num = '', $search_args = array(), $meta_args = array(),
