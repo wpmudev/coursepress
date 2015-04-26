@@ -10,6 +10,10 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 
 		var $users_per_page = 10;
 		var $search_errors = false;
+        var $search_term = '';
+        var $raw_page = false;
+        var $page_num = '';
+        var $total_users_for_query = 0;
 
 		function __construct( $search_term = '', $page_num = '' ) {
 			global $wpdb;
