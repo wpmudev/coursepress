@@ -2360,6 +2360,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					set_query_var( 'orderby', $selected_course_order_by );
 					set_query_var( 'order', $selected_course_order_by_type );
 				}
+				//$query->set( 'post_status', 'published' );
 			}
 		}
 

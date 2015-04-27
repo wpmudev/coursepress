@@ -15,6 +15,7 @@ if ( ! class_exists( 'Student_Search' ) ) {
         var $raw_page = false;
         var $page_num = '';
         var $total_users_for_query = 0;
+		var $paging_text = '';
 
 		function __construct(
 			$search_term = '', $page_num = '', $search_args = array(), $meta_args = array(),

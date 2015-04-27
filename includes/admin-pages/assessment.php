@@ -173,20 +173,23 @@ if ( isset( $_GET['response_id'] ) ) {
 					$count                 = 0;
 
 					foreach ( $courses as $course ) {
-						if ( $course_num == 0 ) {
-							$first_course_id = $course->ID;
-						}
+						$show = false;
 
 						$count = Unit_Module::get_ungraded_response_count( $course->ID );
 
 						$course_obj    = new Course( $course->ID );
 						$course_object = $course_obj->get_course();
+						$num_students = $course_obj->get_number_of_students();
 						if ( $course_obj->get_number_of_students() >= 1 ) {
+							if( empty( $first_course_id ) ) {
+								$first_course_id = $course->ID;
+							}
 							$courses_with_students ++;
 							?>
 							<option value="<?php echo $course->ID; ?>" <?php echo( ( isset( $_GET['course_id'] ) && $_GET['course_id'] == $course->ID ) ? 'selected="selected"' : '' ); ?>><?php echo $course->post_title . ' ( ' . $count . ' )'; ?></option>
 						<?php
 						}
+
 						$course_num ++;
 						$count = 0;
 					}
@@ -205,6 +208,7 @@ if ( isset( $_GET['response_id'] ) ) {
 				} else {
 					$current_course_id = $first_course_id;
 				}
+
 				?>
 
 				<?php
@@ -255,6 +259,7 @@ if ( isset( $_GET['response_id'] ) ) {
 	</div><!--tablenav-->
 
 	<?php
+	$x = '';
 	if ( $current_course_id !== 0 ) {//courses exists, at least one is in place
 		if ( count( $course_units ) >= 1 ) {
 			?>

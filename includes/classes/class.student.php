@@ -225,6 +225,8 @@ if ( !class_exists( 'Student' ) ) {
 
 			/**
 			 * Filter can be used to override email details.
+			 *
+			 * @todo [object]->user_firstname, [object]->user_lastname, [object]->user_email are legacy. Keep an eye on these.
 			 */
 			$email_args = apply_filters( 'coursepress_student_enrollment_email_args', array(
 				'email_type'		 => 'enrollment_confirmation',

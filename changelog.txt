@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.5 =
+* Fixed WordPress 4.2 compatibility bugs. (NOT DONE YET)
+
 = 1.2.5.4 =
 * Fixed issue with marking a order as paid with Manual Payments
 * Fixed issue with Virtual pages
