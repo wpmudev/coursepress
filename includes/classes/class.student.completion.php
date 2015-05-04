@@ -344,7 +344,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			$data['unit'][ $unit_id ]['mandatory_answered'][ $module_id ] = true;
 
-			do_action( 'coursepress_set_mandatory_question_answered', $student_id, $course_id, $module_id );
+			do_action( 'coursepress_set_mandatory_question_answered', $student_id, $course_id, $unit_id, $module_id );
 
 			self::update_completion_data( $student_id, $course_id, $data );
 		}

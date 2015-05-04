@@ -512,6 +512,12 @@ if ( !class_exists( 'Course' ) ) {
 					//Update post meta
 					if ( $post_id != 0 ) {
 						foreach ( $_POST as $key => $value ) {
+
+							// Course Category Fix
+							if( 'course_category' == $key ) {
+								$_POST['meta_course_category'] = $_POST['course_category'];
+							}
+
 							if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
 								update_post_meta( $post_id, str_replace( 'meta_', '', $key ), cp_filter_content( $value ) );
 							}
@@ -520,22 +526,29 @@ if ( !class_exists( 'Course' ) ) {
 								update_post_meta( $post_id, $key, cp_filter_content( $value ) );
 							}
 
-							if ( isset( $_POST[ 'meta_course_category' ] ) ) {
-								if ( is_array( $_POST[ 'meta_course_category' ] ) ) {
-									$sanitized_array = array();
-									foreach ( $_POST[ 'meta_course_category' ] as $cat_id ) {
-										$sanitized_array = (int) $cat_id;
+							if( $key == 'course_category' || $key == 'meta_course_category' ) {
+								if ( isset( $_POST['meta_course_category'] ) ) {
+									update_post_meta( $post_id, 'course_category', cp_filter_content( $value ) );
+									if ( is_array( $_POST['meta_course_category'] ) ) {
+										$sanitized_array = array();
+										foreach ( $_POST['meta_course_category'] as $cat_id ) {
+											$sanitized_array[] = (int) $cat_id;
+										}
+										//wp_set_post_categories( $post_id, $sanitized_array );
+										wp_set_object_terms( $post_id, $sanitized_array, 'course_category', false );
+									} else {
+										$cat = array( (int) $_POST['meta_course_category'] );
+										if ( $cat ) {
+											//wp_set_post_categories( $post_id, $cat );
+											wp_set_object_terms( $post_id, $cat, 'course_category', false );
+										}
 									}
-									wp_set_post_categories( $post_id, $sanitized_array );
-								} else {
-									$cat = array( (int) $_POST[ 'meta_course_category' ] );
-									if ( $cat ) {
-										wp_set_post_categories( $post_id, $cat );
-									}
-								}
-							} // meta_course_category
+								} // meta_course_category
+							}
+
+
 							//Add featured image
-							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) || isset( $_POST[ 'meta_featured _url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) {
+							if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( ( isset( $_POST[ '_thumbnail_id' ] ) && is_numeric( $_POST[ '_thumbnail_id' ] ) ) || ( isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] !== '' ) ) ) {
 
 								$course_image_width	 = get_option( 'course_image_width', 235 );
 								$course_image_height = get_option( 'course_image_height', 225 );
@@ -562,9 +575,9 @@ if ( !class_exists( 'Course' ) ) {
 									update_post_meta( $post_id, '_thumbnail_id', cp_filter_content( $_POST[ 'meta_featured_url' ], true ) );
 								}
 							} else {
-								if ( isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] == '' ) {
-									update_post_meta( $post_id, '_thumbnail_id', '' );
-								}
+								//if ( isset( $_POST[ 'meta_featured_url' ] ) && $_POST[ 'meta_featured_url' ] == '' ) {
+								//	update_post_meta( $post_id, '_thumbnail_id', '' );
+								//}
 							}
 
 							//Add instructors

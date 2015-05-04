@@ -375,8 +375,10 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 													<a class="context-link" href="edit-tags.php?taxonomy=course_category&post_type=course"><?php _e( 'Manage Categories', 'cp' ); ?></a>
 												</label>
 												<?php
+												$x = '';
+												//$taxonomies = get_object_taxonomies( 'course' );
 												$taxonomies = array(
-													'course_category',
+													'course_category'
 												);
 
 												$args = array(
@@ -389,7 +391,8 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 
 												$terms = get_terms( $taxonomies, $args );
 
-												$course_terms = wp_get_post_terms( $course_id, 'course_category', array() );
+												//$course_terms = wp_get_post_terms( $course_id, 'course_category', array() );
+												$course_terms = wp_get_object_terms( $course_id, $taxonomies );
 
 												$course_terms_array = array();
 												foreach ( $course_terms as $course_term ) {
@@ -399,7 +402,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												$class_extra = is_rtl() ? 'chosen-rtl' : '';
 												?>
 
-												<select name="course_category" id="course_category" class="postform chosen-select-course <?php echo $class_extra; ?>" multiple="true">
+												<select name="meta_course_category" id="course_category" class="postform chosen-select-course <?php echo $class_extra; ?>" multiple="true">
 													<?php
 													foreach ( $terms as $terms ) {
 														?>

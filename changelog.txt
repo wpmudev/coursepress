@@ -7,7 +7,10 @@ CHANGE LOG
 == Changelog ==
 
 = 1.2.5.5 =
-* Fixed WordPress 4.2 compatibility bugs. (NOT DONE YET)
+* Fixed issues with assessment, students and instructors tables being empty after WordPress 4.2 update.
+* Fixed error message when submitting mandatory quiz items.
+* Fixed error on setting a course category when first created.
+
 
 = 1.2.5.4 =
 * Fixed issue with marking a order as paid with Manual Payments
