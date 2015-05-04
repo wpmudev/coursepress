@@ -87,13 +87,14 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		 * @see CP_Plugin_Activation::init()
 		 */
 		public function __construct() {
+			global $coursepress, $plugin_dir, $screen_base;
 
 			// Bail out if we're on Campus
 			if ( CoursePress_Capabilities::is_campus() ) {
 				return false;
 			}
 
-			global $coursepress, $plugin_dir, $screen_base;
+
 
 			//Menu where plugin could be installed
 			$this->tab  = 'cp-marketpress';
@@ -107,6 +108,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 						'slug'           => 'marketpress',
 						// The plugin slug (typically the folder name).
 						'base_path'      => 'marketpress/marketpress.php',
+						//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
 						'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
 						// The plugin source.
 						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
@@ -304,7 +306,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				$actions = array(
 					'install' => sprintf(
 						'<a href="%1$s" title="' . __( 'Install', 'cp' ) . ' %2$s">' . __( 'Install', 'cp' ) . '</a>', wp_nonce_url(
-						esc_url( add_query_arg(
+						esc_url_raw( add_query_arg(
 							array(
 								'page'              => CP_Plugin_Activation::$instance->menu,
 								'plugin'            => $this->plugin['slug'],

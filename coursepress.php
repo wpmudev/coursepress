@@ -5093,7 +5093,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$page = get_option( 'coursepress_enrollment_process_page', '0' );
 				if ( !empty( $page ) ) {
-					wp_redirect( esc_url( $this->get_enrollment_process_slug( $uri ) ) );
+					wp_redirect( esc_url_raw( $this->get_enrollment_process_slug( $uri ) ) );
 					die();
 				}
 
@@ -5122,7 +5122,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$page = get_option( 'coursepress_login_page', '0' );
 				if ( !empty( $page ) ) {
-					wp_redirect( esc_url( $this->get_login_slug( $uri ) ) );
+					wp_redirect( esc_url_raw( $this->get_login_slug( $uri ) ) );
 					die();
 				}
 
@@ -5150,7 +5150,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$page = get_option( 'coursepress_signup_page', '0' );
 				if ( !empty( $page ) ) {
-					wp_redirect( esc_url( $this->get_signup_slug( $uri ) ) );
+					wp_redirect( esc_url_raw( $this->get_signup_slug( $uri ) ) );
 					die();
 				}
 
@@ -5177,7 +5177,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$page = get_option( 'coursepress_student_dashboard_page', '0' );
 				if ( !empty( $page ) ) {
-					wp_redirect( esc_url( $this->get_student_dashboard_slug( $uri ) ) );
+					wp_redirect( esc_url_raw( $this->get_student_dashboard_slug( $uri ) ) );
 					die();
 				}
 
@@ -5203,7 +5203,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$page = get_option( 'coursepress_student_settings_page', '0' );
 				if ( !empty( $page ) ) {
-					wp_redirect( esc_url( $this->get_student_settings_slug( $uri ) ) );
+					wp_redirect( esc_url_raw( $this->get_student_settings_slug( $uri ) ) );
 					die();
 				}
 
