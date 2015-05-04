@@ -10,6 +10,7 @@ CHANGE LOG
 * Fixed issues with assessment, students and instructors tables being empty after WordPress 4.2 update.
 * Fixed error message when submitting mandatory quiz items.
 * Fixed error on setting a course category when first created.
+* Fixed HTML showing on discussion page.
 
 
 = 1.2.5.4 =

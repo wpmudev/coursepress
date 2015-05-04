@@ -51,13 +51,13 @@ echo do_shortcode( '[course_unit_archive_submenu]' );
 						<div class="discussion-meta">
 							<?php
 							if ( $discussion->details->unit_id == '' ) {
-								$discussion_unit = $discussion->get_unit_name();
+								$discussion_unit = esc_html( $discussion->get_unit_name() );
 							} else {
-								$discussion_unit = '<a href="' . esc_url( Unit::get_permalink( $discussion->details->unit_id ) ) . '">' . esc_html( $discussion->get_unit_name() ) . '</a>';
+								$discussion_unit = sprintf( '<a href="%s">%s</a>', esc_url( Unit::get_permalink( $discussion->details->unit_id ) ), esc_html( $discussion->get_unit_name() ) );
 							}
 							?>
 							<span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> |
-							<span><?php echo esc_html( $discussion_unit ); ?></span> |
+							<span><?php echo $discussion_unit; ?></span>
 							<span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'cp' ); ?></span>
 						</div>
 						<div class="clearfix"></div>
