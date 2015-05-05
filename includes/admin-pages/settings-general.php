@@ -271,7 +271,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( get_option( 'enrollment_process_slug' ) );
+							&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( get_option( 'enrollment_process_slug', 'enrollment-process' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -303,7 +303,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( get_option( 'login_slug' ) );
+							&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( get_option( 'login_slug', 'student-login' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -335,7 +335,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( get_option( 'signup_slug' ) );
+							&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( get_option( 'signup_slug', 'courses-signup' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -367,7 +367,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( get_option( 'student_dashboard_slug' ) );
+							&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( get_option( 'student_dashboard_slug', 'courses-dashboard' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
