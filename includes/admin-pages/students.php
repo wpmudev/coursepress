@@ -152,7 +152,6 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 			$col_sizes[]       = '5';
 		}
 		?>
-
 		<table cellspacing="0" class="widefat fixed shadow-table unit-control-buttons">
 			<thead>
 			<tr>

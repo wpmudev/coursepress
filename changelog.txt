@@ -11,6 +11,8 @@ CHANGE LOG
 * Fixed error message when submitting mandatory quiz items.
 * Fixed error on setting a course category when first created.
 * Fixed HTML showing on discussion page.
+* Fixed Instructor capabilities not always saving.
+* Improved handling of Virtual Pages and Custom Pages for CoursePress settings.
 
 
 = 1.2.5.4 =

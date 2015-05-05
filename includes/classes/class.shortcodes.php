@@ -3878,6 +3878,10 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						require( $plugin_dir . 'includes/templates/student-dashboard.php');
 						break;
 
+					case 'student_settings':
+						require( $plugin_dir . 'includes/templates/student-settings.php');
+						break;
+
 					default:
 						_e( 'Page cannot be found', 'cp' );
 				}

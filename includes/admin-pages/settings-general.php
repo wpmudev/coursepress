@@ -22,10 +22,10 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php echo esc_attr( $this->get_course_slug() );
+							&nbsp;<input type='text' name='option_coursepress_course_slug' id='course_slug' value='<?php echo esc_attr( CoursePress::instance()->get_course_slug() );
 							?>'/>&nbsp;/
 
-							<p class='description'><?php _e( 'Your course URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ); ?><?php _e( '/my-course/', 'cp' ); ?></p>
+							<p class='description'><?php _e( 'Your course URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( CoursePress::instance()->get_course_slug() ); ?><?php _e( '/my-course/', 'cp' ); ?></p>
 							<hr/>
 						</td>
 					</tr>
@@ -36,10 +36,10 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_course_category_slug' id='course_category_slug' value='<?php echo esc_attr( $this->get_course_category_slug() );
+							&nbsp;<input type='text' name='option_coursepress_course_category_slug' id='course_category_slug' value='<?php echo esc_attr( CoursePress::instance()->get_course_category_slug() );
 							?>'/>&nbsp;/
 
-							<p class='description'><?php _e( 'Your course category URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( $this->get_course_slug() ) . '/' . $this->get_course_category_slug(); ?><?php _e( '/your-category-slug/', 'cp' ); ?></p>
+							<p class='description'><?php _e( 'Your course category URL will look like: ', 'cp' ); ?><?php echo esc_html( trailingslashit( home_url() ) ); ?><?php echo esc_attr( CoursePress::instance()->get_course_slug() ) . '/' . CoursePress::instance()->get_course_category_slug(); ?><?php _e( '/your-category-slug/', 'cp' ); ?></p>
 							<hr/>
 						</td>
 					</tr>
@@ -72,7 +72,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php echo esc_attr( $this->get_units_slug() );
+							&nbsp;<input type='text' name='option_coursepress_units_slug' id='units_slug' value='<?php echo esc_attr( CoursePress::instance()->get_units_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -105,7 +105,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='notifications_slug' value='<?php echo esc_attr( $this->get_notifications_slug() );
+							&nbsp;<input type='text' name='option_coursepress_notifications_slug' id='notifications_slug' value='<?php echo esc_attr( CoursePress::instance()->get_notifications_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -138,7 +138,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_discussion_slug' id='discussion_slug' value='<?php echo esc_attr( $this->get_discussion_slug() );
+							&nbsp;<input type='text' name='option_coursepress_discussion_slug' id='discussion_slug' value='<?php echo esc_attr( CoursePress::instance()->get_discussion_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -170,9 +170,9 @@
 						<td>
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
-							echo '' . $this->get_discussion_slug() . '/';
+							echo '' . CoursePress::instance()->get_discussion_slug() . '/';
 							?>
-							&nbsp;<input type='text' name='option_coursepress_discussion_slug_new' id='discussion_slug_new' value='<?php echo esc_attr( $this->get_discussion_slug_new() );
+							&nbsp;<input type='text' name='option_coursepress_discussion_slug_new' id='discussion_slug_new' value='<?php echo esc_attr( CoursePress::instance()->get_discussion_slug_new() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -205,7 +205,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php echo esc_attr( $this->get_grades_slug() );
+							&nbsp;<input type='text' name='option_coursepress_grades_slug' id='grades_slug' value='<?php echo esc_attr( CoursePress::instance()->get_grades_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -238,7 +238,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() . __( '/my-course/', 'cp' ) ) );
 							?>
-							&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php echo esc_attr( $this->get_workbook_slug() );
+							&nbsp;<input type='text' name='option_coursepress_workbook_slug' id='workbook_slug' value='<?php echo esc_attr( CoursePress::instance()->get_workbook_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -271,7 +271,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( $this->get_enrollment_process_slug() );
+							&nbsp;<input type='text' name='option_enrollment_process_slug' id='enrollment_process_slug' value='<?php echo esc_attr( get_option( 'enrollment_process_slug' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -303,7 +303,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( $this->get_login_slug() );
+							&nbsp;<input type='text' name='option_login_slug' id='login_slug' value='<?php echo esc_attr( get_option( 'login_slug' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -335,7 +335,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( $this->get_signup_slug() );
+							&nbsp;<input type='text' name='option_signup_slug' id='signup_slug' value='<?php echo esc_attr( get_option( 'signup_slug' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -367,7 +367,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_dashboard_slug() );
+							&nbsp;<input type='text' name='option_student_dashboard_slug' id='student_dashboard_slug' value='<?php echo esc_attr( get_option( 'student_dashboard_slug' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -399,7 +399,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php echo esc_attr( $this->get_student_settings_slug() );
+							&nbsp;<input type='text' name='option_student_settings_slug' id='student_dashboard_slug' value='<?php echo esc_attr( get_option( 'student_settings_slug', 'settings' ) );
 							?>'/>&nbsp;/
 						</td>
 					</tr>
@@ -431,7 +431,7 @@
 							<?php
 							echo esc_html( trailingslashit( home_url() ) );
 							?>
-							&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php echo esc_attr( $this->get_instructor_profile_slug() );
+							&nbsp;<input type='text' name='option_instructor_profile_slug' id='instructor_profile_slug' value='<?php echo esc_attr( CoursePress::instance()->get_instructor_profile_slug() );
 							?>'/>&nbsp;/
 							<hr/>
 						</td>
@@ -444,7 +444,7 @@
 								<?php
 								echo esc_html( trailingslashit( home_url() ) );
 								?>
-								&nbsp;<input type='text' name='option_coursepress_inbox_slug' id='coursepress_inbox_slug' value='<?php echo esc_attr( $this->get_inbox_slug() );
+								&nbsp;<input type='text' name='option_coursepress_inbox_slug' id='coursepress_inbox_slug' value='<?php echo esc_attr( CoursePress::instance()->get_inbox_slug() );
 								?>'/>&nbsp;/
 							</td>
 						</tr>
@@ -455,7 +455,7 @@
 								<?php
 								echo esc_html( trailingslashit( home_url() ) );
 								?>
-								&nbsp;<input type='text' name='option_coursepress_sent_messages_slug' id='coursepress_sent_messages_slug' value='<?php echo esc_attr( $this->get_sent_messages_slug() );
+								&nbsp;<input type='text' name='option_coursepress_sent_messages_slug' id='coursepress_sent_messages_slug' value='<?php echo esc_attr( CoursePress::instance()->get_sent_messages_slug() );
 								?>'/>&nbsp;/
 							</td>
 						</tr>
@@ -466,7 +466,7 @@
 								<?php
 								echo esc_html( trailingslashit( home_url() ) );
 								?>
-								&nbsp;<input type='text' name='option_coursepress_new_message_slug' id='coursepress_new_message_slug' value='<?php echo esc_attr( $this->get_new_message_slug() );
+								&nbsp;<input type='text' name='option_coursepress_new_message_slug' id='coursepress_new_message_slug' value='<?php echo esc_attr( CoursePress::instance()->get_new_message_slug() );
 								?>'/>&nbsp;/
 							</td>
 						</tr>

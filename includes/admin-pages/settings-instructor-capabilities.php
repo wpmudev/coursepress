@@ -1,10 +1,9 @@
 <?php
 global $wp_roles;
 
-if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) ) {
+if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) && isset( $_POST[ 'instructor_capability' ] ) ) {
 
 	/* Set capabilities for each instructor user */
-
 	$wp_user_search = new Instructor_Search();
 	// $wp_user_search = new Instructor_Search( $usersearch, $page_num );
 
@@ -20,8 +19,8 @@ if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) ) {
 		$role				 = new WP_User( $user->ID );
 		$user_capabilities	 = $role->wp_capabilities;
 
-		if ( isset( $_POST[ 'instructor_capability' ] ) ) {
-			update_option( 'coursepress_instructor_capabilities', $_POST[ 'instructor_capability' ] );
+		// More than the hidden field needs to be present to add roles.
+		if ( isset( $_POST[ 'instructor_capability' ] ) && 1 < count( $_POST[ 'instructor_capability' ] ) ) {
 			foreach ( $user_capabilities as $key => $old_cap ) {
 				// Make sure to only remove CoursePress instructor capabilities
 				if ( !in_array( $key, $_POST[ 'instructor_capability' ] ) &&
@@ -45,6 +44,8 @@ if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) ) {
 				}
 			}
 		}
+		unset( $_POST[ 'instructor_capability' ]['update_options'] );
+		update_option( 'coursepress_instructor_capabilities', $_POST[ 'instructor_capability' ] );
 	}
 }
 
@@ -212,7 +213,8 @@ $instructor_capabilities_posts_and_pages = array(
 			</div><!--/postbox-->
 		<?php } ?>
 
-		<p class="save-shanges">
+		<input type="hidden" name="instructor_capability[update_options]" value="1" />
+		<p class="save-changes">
 			<?php submit_button( __( 'Save Changes', 'cp' ) ); ?>
 		</p>
 

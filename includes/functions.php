@@ -281,6 +281,9 @@ function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
 function cp_get_order_course_id( $order_id ) {
 	global $mp;
 	$cart_info		 = $mp->get_order( $order_id )->mp_cart_info;
+	if( ! is_array( $cart_info ) ) {
+		return false;
+	}
 	$mp_product_id	 = key( $cart_info );
 	$post_parent	 = get_post_ancestors( $mp_product_id );
 	if ( is_array( $post_parent ) ) {
