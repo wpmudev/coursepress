@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.7 =
+* Fixed fatal error with single site setups
+
 = 1.2.5.6 =
 * Fixed redirection issue with multisite installations.
 
