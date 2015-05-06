@@ -5036,12 +5036,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function create_virtual_pages() {
 
 			$uri		 = untrailingslashit( trim( ltrim( $_SERVER[ 'REQUEST_URI' ], '/' ) ) );
-			$blog_details = get_blog_details( get_current_blog_id() );
 
 			$match_uri = $uri; // Use this to test regex pattern
 
 			$multisite = false;
 			if( is_multisite() && ! is_subdomain_install() ) {
+				$blog_details = get_blog_details( get_current_blog_id() );
 				$multisite = true;
 				$site_uri = ltrim( $blog_details->path, '/');
 				$match_uri = str_replace( $site_uri, '', $uri );
