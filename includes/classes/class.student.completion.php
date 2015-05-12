@@ -14,11 +14,15 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		public static function get_completion_data( $student_id, $course_id ) {
 
-			$in_session = isset( $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] );
+			$session_data = CoursePress_Session::session( 'coursepress_student', null, false, '+10 minutes' ); // Keep completion data for only 10 minutes
 
-			if ( $in_session && ! empty( $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] ) ) {
+			$in_session = isset( $session_data ) && isset( $session_data[ $student_id ]['course_completion'][ $course_id ] );
+			//$in_session = isset( $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] );
+
+			if ( $in_session && ! empty( $session_data[ $student_id ]['course_completion'][ $course_id ] ) ) {
 				// Try the session first...
-				$course_progress = $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ];
+				//$course_progress = $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ];
+				$course_progress = $session_data[ $student_id ]['course_completion'][ $course_id ];
 			} else {
 				// Otherwise it should be in user meta
 				$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
@@ -29,7 +33,12 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			}
 
 			if ( ! $in_session ) {
-				$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $course_progress;
+				//$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $course_progress;
+				if( ! is_array( $session_data ) ) {
+					$session_data = array();
+				}
+				$session_data[ $student_id ]['course_completion'][ $course_id ] = $course_progress;
+				CoursePress_Session::session( 'coursepress_student', $session_data );
 			}
 
 			// Check that we're on the right version or upgrade
@@ -115,7 +124,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 					continue;
 				}
 
-				foreach ( $answers[ $module_id ] as $answer ) {
+				foreach ( array_filter( $answers[ $module_id ] ) as $answer ) {
 					if ( (int) $answer >= $required ) {
 						$passed = true;
 						do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
@@ -298,7 +307,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			if ( isset( $data['unit'] ) && is_array( $data['unit'] ) ) {
 				foreach ( $data['unit'] as $unit_id => $unit ) {
 					if ( 'publish' == get_post_status( $unit_id ) ) {
-						$progress += self::calculate_unit_completion( $student_id, $course_id, $unit_id );
+						$progress += self::calculate_unit_completion( $student_id, $course_id, $unit_id, $update, $data );
 					}
 				}
 
@@ -511,7 +520,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 									if ( 'yes' == $module_meta['gradable_answer'] ) {
 										foreach ( $response as $answer ) {
 											$result = Unit_Module::get_response_grade( $answer );
-											self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $result['grade'], $data );
+											if( 0 < $result['grade'] ) {
+												self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $result['grade'], $data );
+											}
 											//cp_write_log( 'Record gradable result: Module: ' . $module_id . ' Result: ' . $result['grade'] );
 										}
 									}

@@ -168,6 +168,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			$GLOBALS[ 'signup_url' ]				 = $this->get_signup_slug( true );
 
 			/**
+			 * CoursePress Sessions
+			 * Better handling of session data using WP_Session_Tokens introduced in 4.0.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.session.php' );
+
+			/**
 			 * CoursePress Object Class.
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-object.php' );
