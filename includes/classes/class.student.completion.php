@@ -134,10 +134,13 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 						$response        = call_user_func( $module . '::get_response', $student_id, $module_id );
 						$response_result = Unit_Module::get_response_grade( $response->ID );
 						$grade           = (int) $response_result['grade'];
-						self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $grade );
-						if ( $grade >= $required ) {
-							$passed = true;
-							do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+
+						if( 0 < $grade ) { // Avoid repeated recording of 0 values
+							self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $grade );
+							if ( $grade >= $required ) {
+								$passed = true;
+								do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
+							}
 						}
 					}
 				}
