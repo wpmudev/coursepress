@@ -12,7 +12,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 	class Student_Completion {
 
-		const CURRENT_VERSION = 1;
+		const CURRENT_VERSION = 2;
 
 		/* ----------------------------- GETTING COMPLETION DATA ----------------------------------- */
 
@@ -473,7 +473,9 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			// Upgrade to version 1
 			if ( 1 > $old_version ) {
 				self::_version_1_upgrade( $student_id, $course_id, $data );
-			} // End version 1 upgrade
+			} else if ( 2 > $old_version ){
+                self::_version_2_upgrade( $student_id, $course_id, $data );
+            }
 
 		}
 
@@ -561,6 +563,35 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			//cp_write_log( 'Upgraded Course: ' . $course_id . ' to version: ' . 1 );
 		}
 
+        // Upgrade to version 2.
+        // This upgrade will repair DB records related to gradable results.
+        public static function _version_2_upgrade( $student_id, $course_id, $data ) {
+
+            if( is_user_logged_in() && (!$course_id || !$student_id)) return;
+
+            //Get fresh course_progress. $data object might contain out-dated information from session.
+            //$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+            $course_progress = $data;
+
+            if(!empty($course_progress['unit'])){
+                foreach($course_progress['unit'] as $unit_key => $unit){
+                    if(!empty($unit['gradable_results'])){
+                        foreach($unit['gradable_results'] as $result_key => $results){
+                            //Remove redundant records. Keep only the amount defined by CP_GRADABLE_RESULTS_HISTORY_LENGTH.
+                            $course_progress['unit'][$unit_key]['gradable_results'][$result_key] = array_slice($results,count($results)-CP_GRADABLE_RESULTS_HISTORY_LENGTH);
+                        }
+                    }
+                }
+            }
+
+            $global_setting = ! is_multisite();
+            update_user_option( $student_id, '_course_' . $course_id . '_progress', $course_progress, $global_setting );
+            $session_data[ $student_id ]['course_completion'][ $course_id ] = $course_progress;
+            CoursePress_Session::session( 'coursepress_student', $session_data );
+
+            // Record the new version
+            self::_update_version( $student_id, $course_id, $course_progress, 2 );
+        }
 
 	}
 
