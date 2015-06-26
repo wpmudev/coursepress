@@ -14,6 +14,44 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		const CURRENT_VERSION = 2;
 
+        function __construct() {
+            add_action( 'coursepress_module_completion_criteria_change', array( $this, 'on_coursepress_module_completion_criteria_change' ), 10, 4);
+            add_action( 'coursepress_unit_updated', array( $this, 'on_coursepress_unit_updated' ), 10, 2);
+        }
+
+        function Student_Completion() {
+            $this->__construct();
+        }
+
+        function on_coursepress_module_completion_criteria_change($unit_id, $module_id, $new_meta, $old_meta){
+
+            if( $new_meta['mandatory_answer'] =='yes' || 'yes' == $new_meta['gradable_answer']){
+
+                $input_modules = Unit_Module::get_input_module_types();
+                $module_type     = Unit_Module::get_module_type( $module_id );
+                $module_is_input = in_array( $module_type, $input_modules );
+
+                // Only for input modules
+                if ( $module_is_input ) {
+                    self::refresh_module_completion($unit_id, $module_id, $module_type, $new_meta);
+                }
+            }
+        }
+
+        function on_coursepress_unit_updated( $post_id, $course_id ){
+
+            if( !empty( $_POST['refresh_unit_completion_progress'] )){
+                //Refresh the mandatory inputs count in session and post_meta.
+                $session_data = CoursePress_Session::session( 'coursepress_unit_completion' );
+                unset($session_data[ $post_id ][ 'all_input_ids' ]);
+                $input_module_meta = array();
+                update_post_meta( $post_id, 'input_modules', $input_module_meta );
+
+                //Refresh the unit completion for each student.
+                self::refresh_unit_completion( $post_id );
+            }
+        }
+
 		/* ----------------------------- GETTING COMPLETION DATA ----------------------------------- */
 
 		public static function get_completion_data( $student_id, $course_id ) {
@@ -603,6 +641,64 @@ if ( ! class_exists( 'Student_Completion' ) ) {
             self::_update_version( $student_id, $course_id, $course_progress, 2 );
         }
 
+        public static function refresh_unit_completion( $unit_id ){
+
+            $modules       = Unit_Module::get_modules( $unit_id, 0, true );
+            $input_modules = Unit_Module::get_input_module_types();
+
+            if ( ! empty( $modules ) ) {
+
+                // Traverse modules
+                foreach ($modules as $module_id) {
+
+                    $module_type     = Unit_Module::get_module_type( $module_id );
+                    $module_is_input = in_array( $module_type, $input_modules );
+
+                    // Only for input modules
+                    if ( $module_is_input ) {
+                        $module_meta = Unit_Module::get_module_meta( $module_id );
+                        self::refresh_module_completion($unit_id, $module_id, $module_type, $module_meta);
 	}
+                }
+            }
+
+        }
+
+        public static function refresh_module_completion( $unit_id, $module_id, $module_type, $meta){
+            $unit_object = new Unit( $unit_id );
+            $unit = $unit_object->get_unit();
+            $course_id = $unit->post_parent;
+
+            $students = Course::get_course_students_ids( $course_id );
+
+            foreach( $students as $idx => $student_id){
+                // Did the student answer it?
+                $response = call_user_func( $module_type . '::get_response', $student_id, $module_id, 'inherit', - 1, true );
+
+                // Yes
+                if ( ! empty( $response ) ) {
+
+                    if ( 'yes' == $meta['mandatory_answer'] ) {
+                        self::record_mandatory_answer( $student_id, $course_id, $unit_id, $module_id );
+                        //cp_write_log( 'Record mandatory answer: Module: ' . $module_id );
+                    }
+
+                    if ( 'yes' == $meta['gradable_answer'] ) {
+                        foreach ( $response as $answer ) {
+                            $result = Unit_Module::get_response_grade( $answer );
+                            if( 0 < $result['grade'] ) {
+                                self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $result['grade'] );
+                            }
+                            //cp_write_log( 'Record gradable result: Module: ' . $module_id . ' Result: ' . $result['grade'] );
+                        }
+                    }
+
+                } // End responses
+            }
+        }
+
+	}
+
+    $cp_student_completion = new Student_Completion();
 
 }
