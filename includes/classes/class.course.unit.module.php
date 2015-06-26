@@ -654,7 +654,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 					if ( ! empty( $mandatory_answer ) && 'yes' == $mandatory_answer ) {
 						Student_Completion::record_mandatory_answer( $user_id, $course_id, $unit_id, $module_id );
 					}
-					Student_Completion::record_gradable_result( $user_id, $course_id, $unit_id, $module_id, floatval( $response_grade ) );
+                    Student_Completion::record_gradable_result( $user_id, $course_id, $unit_id, $module_id, floatval( $grade_data['grade'] ) );
 				}
 
 				return true;
