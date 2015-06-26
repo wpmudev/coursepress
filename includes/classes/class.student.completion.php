@@ -4,6 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+if ( !defined( 'CP_GRADABLE_RESULTS_HISTORY_LENGTH' ) ){
+    define( 'CP_GRADABLE_RESULTS_HISTORY_LENGTH', 10 );//Define the max amount of answer attempts that we keep on records.
+}
+
 if ( ! class_exists( 'Student_Completion' ) ) {
 
 	class Student_Completion {
@@ -383,8 +387,12 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				$data['unit'][ $unit_id ]['gradable_results'] = array();
 			}
 
-			// Keep all results, so push to the last entry
-			$data['unit'][ $unit_id ]['gradable_results'][ $module_id ][] = $result;
+            $gradable_results = $data['unit'][ $unit_id ]['gradable_results'][ $module_id ];
+			// Keep previous results, so push to the last entry
+            $gradable_results[] = $result;
+            // Keep only a few previous records to avoid memory issues.
+            // The amount of records to be stored will be determined by the value of CP_GRADABLE_RESULTS_HISTORY_LENGTH.
+            $data['unit'][ $unit_id ]['gradable_results'][ $module_id ] = array_slice($gradable_results,count($gradable_results)-CP_GRADABLE_RESULTS_HISTORY_LENGTH);
 
 			self::update_completion_data( $student_id, $course_id, $data );
 		}
