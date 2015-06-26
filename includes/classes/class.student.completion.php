@@ -344,7 +344,17 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			}
 
 			update_user_option( $student_id, '_course_' . $course_id . '_progress', $data, $global_setting );
-			// make sure session data os also up to date
+
+            if( $student_id != get_current_user_id()){
+                //If we are here, the current user is the admin or an instructor. i.e. when the student is being graded.
+                //We should ensure that the course progress in student's session is cleared in order to pick up the fresh data.
+                $student_session = WP_Session_Tokens::get_instance( $student_id );
+                $student_session->destroy('coursepress_'.$student_id);
+            }
+
+            // make sure session data is also up to date
+            $session_data[ $student_id ]['course_completion'][ $course_id ] = $data;
+            CoursePress_Session::session( 'coursepress_student', $session_data );
 			$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $data;
 		}
 
