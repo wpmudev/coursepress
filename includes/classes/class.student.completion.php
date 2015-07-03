@@ -58,10 +58,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			$session_data = CoursePress_Session::session( 'coursepress_student', null, false, '+10 minutes' ); // Keep completion data for only 10 minutes
 
-			$in_session = isset( $session_data ) && isset( $session_data[ $student_id ]['course_completion'][ $course_id ] );
+			$in_session = isset( $session_data ) && isset( $session_data[ $student_id ]['course_completion'][ $course_id ]['unit'] );
 			//$in_session = isset( $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] );
 
-			if ( $in_session && ! empty( $session_data[ $student_id ]['course_completion'][ $course_id ] ) ) {
+			if ( $in_session && ! empty( $session_data[ $student_id ]['course_completion'][ $course_id ]['unit'] ) ) {
 				// Try the session first...
 				//$course_progress = $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ];
 				$course_progress = $session_data[ $student_id ]['course_completion'][ $course_id ];
@@ -69,10 +69,25 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				// Otherwise it should be in user meta
 				$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
 				if ( empty( $course_progress ) ) {
+                    if( is_array( $session_data ) && !empty($session_data[ $student_id ]['course_completion'][ $course_id ]) ) {
+                        //If we are here, there are no unit completion data.
+                        //Let's keep basic course information from session.
+                        $course_progress = $session_data[ $student_id ]['course_completion'][ $course_id ];
+                        $in_session = true;
+                    } else {
 					$course_progress = array();
+    				$in_session = false;
+			        }
 				}
-				$in_session = false;
 			}
+
+            /********** CHANGE ****/
+            /*$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+            if ( empty( $course_progress ) ) {
+                $course_progress = array();
+            }
+            $in_session = false;*/
+            /****** END CHANGE *****/
 
 			if ( ! $in_session ) {
 				//$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $course_progress;
@@ -615,7 +630,12 @@ if ( ! class_exists( 'Student_Completion' ) ) {
         // This upgrade will repair DB records related to gradable results.
         public static function _version_2_upgrade( $student_id, $course_id, $data ) {
 
-            if( is_user_logged_in() && (!$course_id || !$student_id)) return;
+            if( !is_user_logged_in()){
+                self::_update_version( $student_id, $course_id, $data, 2 );
+                return;
+            }
+
+            if( !$course_id || !$student_id) return;
 
             //Get fresh course_progress. $data object might contain out-dated information from session.
             //$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
