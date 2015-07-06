@@ -8,3 +8,4 @@ README.md export-ignore
 /bin export-ignore
 phpunit.xml export-ignore
 /tests export-ignore
+/coursepress-files/styles/sass export-ignore

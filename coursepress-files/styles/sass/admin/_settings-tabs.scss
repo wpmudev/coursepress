@@ -1,0 +1,68 @@
+.tab-tabs {
+  float: left;
+  width: 191px;
+}
+
+.tab-tabs ul {
+  list-style: outside none none;
+  margin-top: 0;
+}
+
+.tab-tabs ul li {
+}
+
+.tab-tabs ul li.active {
+  background-color: #fff;
+  border-radius: 4px 0 0 4px;
+  z-index: 0;
+  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e5e5;
+  border-right: none;
+  box-sizing: border-box;
+}
+
+.tab-tabs ul li a, .tab-tabs ul li a:visited {
+  display: block;
+  padding: 8px 15px;
+  font-size: 0.9em;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.tab-tabs ul li.active a {
+  color: #000;
+}
+
+.tab-content {
+  background-color: #fff;
+  padding: 10px 20px 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e5e5;
+  margin: 15px 0 0 190px;
+  min-height: 340px;
+  z-index: 10;
+}
+
+.tab-content .header-save-button {
+  float: right;
+  position: relative;
+  top: -8px;
+}
+
+.tab-content .header h3 {
+  color: #23282d;
+  font-size: 1.3em;
+  margin: 0 5px 0 0;
+}
+
+.tab-content .header .description {
+  color: #888;
+  font-size: 0.9em;
+  margin: 0 5px 0 0;
+}
+
+.tab-content .header {
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
