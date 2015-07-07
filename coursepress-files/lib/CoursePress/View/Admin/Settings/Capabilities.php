@@ -43,7 +43,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			$content .= '
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html( $title ) . '</span></h3>
 				<div class="inside">
-					<table class="form-table">
+					<table class="form-table compressed">
 						<tbody id="items">';
 
 			foreach( $items as $key => $value ) {

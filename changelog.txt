@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 2.0 =
+*
+
 = 1.2.5.8 =
 * Fixed issues with WooCommerce sale price
 * Added check for course category specific templates (i.e. archive-course-categoryslug.php)

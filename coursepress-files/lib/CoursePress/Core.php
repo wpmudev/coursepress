@@ -30,6 +30,9 @@ class CoursePress_Core {
 		// Initialise Capabilities
 		CoursePress_Model_Capabilities::init();
 
+		// Initialise JavaScript Object Helper
+		CoursePress_Helper_JavaScript::init();
+
 		// Initialize Admin Settings
 		CoursePress_Helper_Settings::init();
 

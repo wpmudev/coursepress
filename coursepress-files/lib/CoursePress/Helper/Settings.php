@@ -78,9 +78,10 @@ class CoursePress_Helper_Settings {
 
 		if ( in_array( $page, self::get_valid_pages() ) ) {
 			wp_enqueue_style( 'coursepress_admin_general', $style, array( 'dashicons' ), CoursePress_Core::$version );
-			wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), CoursePress_Core:: $version, true );
-			wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), CoursePress_Core:: $version, true );
+			wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), CoursePress_Core::$version, true );
+			wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), CoursePress_Core::$version, true );
 		}
+
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress_Core::$version );
 
 	}
