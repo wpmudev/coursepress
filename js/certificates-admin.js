@@ -113,7 +113,7 @@ jQuery( document ).ready( function( $ ) {
 
 
     /* Native WP media browser for file module (for instructors) */
-    $( '.file_url_button' ).live( 'click', function()
+    $( document.body ).on('click', '.file_url_button', function()
     {
         var target_url_field = jQuery( this ).prevAll( ".file_url:first" );
         wp.media.editor.send.attachment = function( props, attachment )

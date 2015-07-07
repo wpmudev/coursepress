@@ -52,12 +52,12 @@ jQuery( document ).ready( function( $ ) {
         $( '.next-month' ).hide();
     }
 
-    $( '.course-calendar .pre-month' ).live( 'click', function( event ) {
+    $( document.body ).on( 'click', '.course-calendar .pre-month', function( event ) {
         event.stopPropagation();
         update_calendar( $( this ).data( 'date' ), $( this ).parents( '.course-calendar' )[0] );
     } );
 
-    $( '.course-calendar .next-month' ).live( 'click', function( event ) {
+    $( document.body ).on( 'click', '.course-calendar .next-month', function( event ) {
         event.stopPropagation();
         update_calendar( $( this ).data( 'date' ), $( this ).parents( '.course-calendar' )[0] );
     } );

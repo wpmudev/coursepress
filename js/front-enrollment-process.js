@@ -54,7 +54,7 @@ jQuery( document ).ready( function( $ ) {
     }
 
     /* Signup */
-    $( 'button.apply-button.signup, .cp_signup_step' ).live( 'click', function( e ) {
+    $( document.body ).on( 'click', 'button.apply-button.signup, .cp_signup_step', function( e ) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -71,7 +71,7 @@ jQuery( document ).ready( function( $ ) {
 
     /* Login Step */
 
-    $( '.cp_login_step' ).live( 'click', function( e ) {
+    $( document.body ).on( 'click', '.cp_login_step', function( e ) {
         e.preventDefault();
         e.stopPropagation();
         open_popup( 'login', $( this ).attr( 'data-course-id' ) );

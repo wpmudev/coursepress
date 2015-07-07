@@ -16,7 +16,7 @@ jQuery( document ).ready( function( $ ) {
      $('.wp-switch-editor.switch-tmce').click();
      });*/
 
-    $( 'input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url' ).live( 'input propertychange paste change', function() {
+    $( document.body ).on( 'input propertychange paste change', 'input.audio_url, input.video_url, input.image_url, input.featured_url, input.course_video_url', function() {
         if ( cp_is_extension_allowed( $( this ).val(), $( this ) ) ) {//extension is allowed
             $( this ).removeClass( 'invalid_extension_field' );
             $( this ).parent().find( '.invalid_extension_message' ).hide();
@@ -100,12 +100,12 @@ jQuery( document ).ready( function( $ ) {
 
     jQuery( '#unit-pages' ).tabs();//{active:(coursepress.unit_page_num - 1)}
 
-    jQuery( '#add_new_unit_page' ).live( "click", function( event ) {
+    jQuery( document.body ).on( 'click', '#add_new_unit_page', function( event ) {
         event.preventDefault();
         add_new_unit_page();
     } );
 
-    jQuery( '.ui-tabs-anchor' ).live( "click", function( event ) {
+    jQuery( document.body ).on( 'click', '.ui-tabs-anchor', function( event ) {
 
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var elements_count = jQuery( '#unit-page-' + current_page + ' .modules_accordion .module-holder-title' ).length;
@@ -125,7 +125,7 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
-    jQuery( '.delete_unit_page .button-delete-unit' ).live( "click", function() {
+    jQuery( document.body ).on( 'click', '.delete_unit_page .button-delete-unit', function() {
 
         var current_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var current_page_id = $( '#unit-pages .ui-tabs-nav .ui-state-active a' ).attr( 'href' );
@@ -245,7 +245,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
 
-    jQuery( '.ui-tabs-anchor' ).live( "click", function( event ) {
+    jQuery( document.body ).on( 'click', '.ui-tabs-anchor', function( event ) {
         var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
 
         var form_action = jQuery( "#unit-add" ).attr( "action" );
@@ -426,7 +426,7 @@ jQuery( document ).ready( function() {
 } );
 
 jQuery( document ).ready( function() {
-    jQuery( '.checkbox_answer' ).live( 'input', function() {
+    jQuery( document.body ).on( 'input', '.checkbox_answer', function() {
         jQuery( this ).closest( 'td' ).find( ".checkbox_answer_check" ).val( jQuery( this ).val() );
     } );
 } );
@@ -440,7 +440,7 @@ jQuery( document ).ready( function() {
 
 /* UNIT MODULES */
 jQuery( document ).ready( function() {
-    jQuery( '.action .action-top .action-button' ).live( 'click', function() {
+    jQuery( document.body ).on( 'click', '.action .action-top .action-button', function() {
         if ( jQuery( this ).parent().hasClass( 'open' ) ) {
             jQuery( this ).parent().removeClass( 'open' ).addClass( 'closed' );
             jQuery( this ).parents( '.action' ).find( '.action-body' ).removeClass( 'open' ).addClass( 'closed' );
@@ -715,7 +715,7 @@ function coursepress_modules_ready() {
         }
     } );
 
-    jQuery( '.elements-holder div.output-element, .elements-holder div.input-element' ).live( 'click', function() {//.unit-module-add, 
+    jQuery( document.body ).on( 'click', '.elements-holder div.output-element, .elements-holder div.input-element', function() {//.unit-module-add,
 
         var current_unit_page = 0;//current selected unit page
 
@@ -1199,7 +1199,7 @@ jQuery( document ).ready( function() {
 
     var ct = 2;
 
-    jQuery( 'a.radio_new_link' ).live( 'click', function() {
+    jQuery( document.body ).on( 'click', 'a.radio_new_link', function() {
 
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
 
@@ -1224,7 +1224,7 @@ jQuery( document ).ready( function() {
             jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
         } );
     } );
-    jQuery( 'a.checkbox_new_link' ).live( 'click', function() {
+    jQuery( document.body ).on( 'click', 'a.checkbox_new_link', function() {
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
         var r = '<tr><td><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
         //jQuery( this ).parent().parent().parent().append( r );
@@ -1254,7 +1254,7 @@ jQuery( document ).ready( function() {
 
 //#unit-page-' + current_unit_page + ' .modules_accordion'
 
-    jQuery( '.module-title' ).live( 'mousedown', function() {
+    jQuery( document.body ).on( 'mousedown', '.module-title', function() {
         var holder = jQuery( this ).parent();
         var iframe_id = jQuery( holder ).find( 'iframe' ).attr( 'id' );
         var iframe_content = document.getElementById( iframe_id ).contentWindow.document.body.innerHTML;

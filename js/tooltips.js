@@ -5,15 +5,15 @@ jQuery(document).ready(function($) {
         $('.tooltip .tooltip-before[display!="none"], .tooltip .tooltip-button[display!="none"], .tooltip .tooltip-content[display!="none"]').parent().fadeOut(100);
     });
 
-    $('.tooltip').live('click', function(e) {
+    $( document.body ).on('click', '.tooltip', function(e) {
         e.stopPropagation();
     });
     
-    $('.tooltip-content').live('click', function(e) {
+    $( document.body ).on('click', '.tooltip-content', function(e) {
         e.preventDefault();
     });
 
-    $('.help-icon').live('click', function(event) {
+    $( document.body ).on('click', '.help-icon', function(event) {
 		if ( $( this ).hasClass('open') )
 		{
 			$( this ).removeClass('open');
@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    $('.tooltip-button').live('click', function() {
+    $( document.body ).on('click', '.tooltip-button', function() {
         $(this).parent().fadeOut(100);
     });
 
