@@ -770,16 +770,26 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$array_order_num = 0;
 
 				//Count only ungraded responses from STUDENTS!
-				foreach ( $ungraded_responses as $ungraded_response ) {
+				foreach ( $ungraded_responses as $key => $ungraded_response ) {
 
 					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) == 'no' ) {
-						unset( $ungraded_responses[ $array_order_num ] );
+						unset( $ungraded_responses[ $key ] );
+                        continue;
 					}
 
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
-						unset( $ungraded_responses[ $array_order_num ] );
+						unset( $ungraded_responses[ $key ] );
+                        continue;
 					}
-					$array_order_num ++;
+
+                    // Count only answers for students that are still enrolled in the course.
+                    $module = get_post($ungraded_response->post_parent);
+                    $unit = get_post($module->post_parent);
+                    $course_id = $unit->post_parent;
+                    if ( !get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
+                        unset( $ungraded_responses[ $key ] );
+                        continue;
+                    }
 				}
 
 				/* $admins_responses = 0;
