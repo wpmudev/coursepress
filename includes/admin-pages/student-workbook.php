@@ -351,6 +351,7 @@ if ( isset( $_POST['course_id'] ) ) {
 																	<?php }//general col visibility      ?>
 																</tr>
 																<?php
+                                                                unset($comment);
 																$current_row ++;
 															}
 														}

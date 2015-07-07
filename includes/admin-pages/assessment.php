@@ -505,6 +505,7 @@ if ( isset( $_GET['response_id'] ) ) {
 													<?php }//general col visibility       ?>
 												</tr>
 												<?php
+                                                unset($comment);
 												$current_row ++;
 											}
 										}
