@@ -83,7 +83,6 @@ class CoursePress_Helper_Settings {
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress_Core::$version );
-
 	}
 
 }
