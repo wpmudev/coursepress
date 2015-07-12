@@ -14,7 +14,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 		$tabs['capabilities'] = array(
 			'title'       => __( 'Instructor Capabilities', CoursePress::TD ),
-			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+			'description' => __( 'Setup the capabilities of instructors within CoursePress.', CoursePress::TD ),
 			'order'       => 30
 		);
 
@@ -23,7 +23,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 	public static function return_content( $content, $slug, $tab ) {
 
-		$default_capabilities    = CoursePress_Model_Capabilities::$capabilities['instructor'];
+		$default_capabilities    = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'], 1 );
 		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities', $default_capabilities );
 
 		$content = '

@@ -88,7 +88,6 @@ var CoursePress = CoursePress || {};
     }
 
     // Add utility functions
-    // not getting used at the moment, but keeping the code for later
     CoursePress.utility = CoursePress.utility || {};
     CoursePress.utility.merge_distinct = function( array1, array2 ) {
         var merged = array1;
@@ -101,6 +100,79 @@ var CoursePress = CoursePress || {};
             }
         } );
         return merged;
+    }
+
+    CoursePress.utility.in_array = function( value, array ) {
+        return array.indexOf( value ) > -1;
+    }
+
+    CoursePress.utility.is_valid_url = function( str ) {
+        if ( str.indexOf( "http://" ) > -1 || str.indexOf( "https://" ) > -1 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    CoursePress.utility.valid_media_extension = function( filename, type ) {
+        type = $( type ).attr( 'class' ).split( ' ' )[0];
+        var extension = filename.split( '.' ).pop();
+        var audio_extensions = _coursepress.allowed_audio_extensions;
+        var video_extensions = _coursepress.allowed_video_extensions;
+        var image_extensions = _coursepress.allowed_image_extensions;
+
+        if ( type == 'featured_url' ) {
+            type = 'image_url';
+        }
+
+        if ( type == 'course_video_url' ) {
+            type = 'video_url';
+        }
+
+        if ( type == 'audio_url' ) {
+            if ( CoursePress.utility.in_array( extension, audio_extensions ) ) {
+                return true;
+            } else {
+                if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
+                    return true;
+                } else {
+                    if ( filename.length == 0 ) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        if ( type == 'video_url' ) {
+            if ( CoursePress.utility.in_array( extension, video_extensions ) ) {
+                return true;
+            } else {
+                if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
+                    return true;
+                } else {
+                    if ( filename.length == 0 ) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        if ( type == 'image_url' ) {
+            if ( CoursePress.utility.in_array( extension, image_extensions ) ) {
+                return true;
+            } else {
+                if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
+                    return true;
+                } else {
+                    if ( filename.length == 0 ) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
     }
 
 

@@ -14,7 +14,7 @@ class CoursePress_View_Admin_Settings_General {
 
 		$tabs['general'] = array(
 			'title'       => __( 'General Settings', CoursePress::TD ),
-			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+			'description' => __( 'Configure the general settings for CoursePress.', CoursePress::TD ),
 			'order'       => 0 // first tab
 		);
 

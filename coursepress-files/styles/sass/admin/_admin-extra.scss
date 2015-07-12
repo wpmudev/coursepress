@@ -41,3 +41,15 @@ $fontPath : "../assets/fonts/";
 #adminmenu .toplevel_page_coursepress div.wp-menu-image img {
   display: none;
 }
+
+/**
+ * Invalid file extension
+ */
+.invalid_extension_field{
+  border: 1px red solid !important;
+}
+
+.invalid_extension_message{
+  color: red;
+  display: none;
+}

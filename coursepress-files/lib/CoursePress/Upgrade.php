@@ -86,53 +86,7 @@ class CoursePress_Upgrade {
 
 		// Instructor
 		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/show_username', get_option( 'show_instructor_username', 1 ) );
-		/**
-		 * @todo Use method in capabilities class when implemented.
-		 */
-		$default_capabilities = array_keys( array(
-				'coursepress_dashboard_cap'                              => 1,
-				'coursepress_courses_cap'                                => 1,
-				'coursepress_instructors_cap'                            => 1,
-				'coursepress_students_cap'                               => 1,
-				'coursepress_assessment_cap'                             => 1,
-				'coursepress_reports_cap'                                => 1,
-				'coursepress_notifications_cap'                          => 1,
-				'coursepress_discussions_cap'                            => 1,
-				'coursepress_settings_cap'                               => 1,
-				'coursepress_create_course_cap'                          => 1,
-				'coursepress_update_course_cap'                          => 1,
-				'coursepress_update_my_course_cap'                       => 1,
-				'coursepress_delete_my_course_cap'                       => 1,
-				'coursepress_change_my_course_status_cap'                => 1,
-				'coursepress_create_course_unit_cap'                     => 1,
-				'coursepress_update_course_unit_cap'                     => 1,
-				'coursepress_update_my_course_unit_cap'                  => 1,
-				'coursepress_delete_course_units_cap'                    => 1,
-				'coursepress_delete_my_course_units_cap'                 => 1,
-				'coursepress_change_course_unit_status_cap'              => 1,
-				'coursepress_change_my_course_unit_status_cap'           => 1,
-				'coursepress_assign_and_assign_instructor_my_course_cap' => 1,
-				'coursepress_invite_my_students_cap'                     => 1,
-				'coursepress_withdraw_my_students_cap'                   => 1,
-				'coursepress_add_move_my_students_cap'                   => 1,
-				'coursepress_add_move_my_assigned_students_cap'          => 1,
-				'coursepress_add_new_students_cap'                       => 1,
-				'coursepress_send_bulk_students_email_cap'               => 1,
-				'coursepress_create_notification_cap'                    => 1,
-				'coursepress_create_my_assigned_notification_cap'        => 1,
-				'coursepress_create_my_notification_cap'                 => 1,
-				'coursepress_update_my_notification_cap'                 => 1,
-				'coursepress_delete_my_notification_cap'                 => 1,
-				'coursepress_change_my_notification_status_cap'          => 1,
-				'coursepress_create_discussion_cap'                      => 1,
-				'coursepress_create_my_assigned_discussion_cap'          => 1,
-				'coursepress_create_my_discussion_cap'                   => 1,
-				'coursepress_update_my_discussion_cap'                   => 1,
-				'coursepress_delete_my_discussion_cap'                   => 1,
-				'coursepress_course_categories_manage_terms_cap'         => 1,
-				'coursepress_course_categories_edit_terms_cap'           => 1,
-			)
-		);
+		$default_capabilities = CoursePress_Model_Capabilities::$capabilities['instructor'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/capabilities', get_option( 'coursepress_instructor_capabilities', $default_capabilities ) );
 
 		// Basic Certificate
@@ -142,7 +96,7 @@ class CoursePress_Upgrade {
 		$options = get_option( 'coursepress_basic_certificate' );
 		$value = isset( $options['basic_certificate_enable'] ) ? $options['basic_certificate_enable'] : 1;
 		CoursePress_Helper_Utility::set_array_val( $settings, 'basic_certificate/enabled', $value );
-		$value = isset( $options['certificate_content'] ) ? $options['certificate_content'] : '';
+		$value = isset( $options['certificate_content'] ) ? $options['certificate_content'] : CoursePress_View_Admin_Settings_BasicCertificate::default_certificate_content();
 		CoursePress_Helper_Utility::set_array_val( $settings, 'basic_certificate/content', $value );
 		$value = isset( $options['background_url'] ) ? $options['background_url'] : '';
 		CoursePress_Helper_Utility::set_array_val( $settings, 'basic_certificate/background_image', $value );
@@ -162,13 +116,13 @@ class CoursePress_Upgrade {
 
 		// Email Settings
 		$default_settings = CoursePress_Helper_Settings_Email::get_defaults();
-		$value = isset( $options['auto_email'] ) ? $options['auto_email'] : '';
+		$value = isset( $options['auto_email'] ) ? $options['auto_email'] : 1;
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/auto_email', $value );
 		$value = isset( $options['from_name'] ) ? $options['from_name'] : $default_settings['basic_certificate']['from_name'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/from', $value );
 		$value = isset( $options['from_email'] ) ? $options['from_email'] : $default_settings['basic_certificate']['from_email'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/email', $value );
-		$value = isset( $options['email_subject'] ) ? $options['email_subject'] : $default_settings['basic_certificate']['subject'];;
+		$value = isset( $options['email_subject'] ) ? $options['email_subject'] : $default_settings['basic_certificate']['subject'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/subject', $value );
 		$value = isset( $options['email_content'] ) ? $options['email_content'] : $default_settings['basic_certificate']['content'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/content', $value );

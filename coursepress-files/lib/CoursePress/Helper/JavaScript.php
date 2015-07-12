@@ -14,6 +14,12 @@ class CoursePress_Helper_JavaScript {
 
 	public static function enqueue_scripts() {
 
+		$valid_pages = array( 'coursepress_settings' );
+
+		if( ! in_array( $_GET['page'], $valid_pages ) ) {
+			return;
+		}
+
 		$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress.js';
 
 		wp_enqueue_script( 'coursepress_object', $script, array( 'jquery' ), CoursePress_Core::$version );
@@ -24,7 +30,10 @@ class CoursePress_Helper_JavaScript {
 		$dummy_editor = ob_get_clean();
 
 		wp_localize_script( 'coursepress_object', '_coursepress', array(
-			'_dummy_editor' => $dummy_editor,
+			'_dummy_editor'            => $dummy_editor,
+			'allowed_video_extensions' => wp_get_video_extensions(),
+			'allowed_audio_extensions' => wp_get_audio_extensions(),
+			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 		) );
 
 	}

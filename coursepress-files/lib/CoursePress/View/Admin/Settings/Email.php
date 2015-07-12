@@ -7,6 +7,7 @@ class CoursePress_View_Admin_Settings_Email{
 		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs' ) );
 		add_action( 'coursepress_settings_process_email', array( get_class(), 'process_form' ), 10, 2 );
 		add_filter( 'coursepress_settings_render_tab_email', array( get_class(), 'return_content' ), 10, 3 );
+
 	}
 
 
@@ -14,7 +15,7 @@ class CoursePress_View_Admin_Settings_Email{
 
 		$tabs['email'] = array(
 			'title' => __( 'E-mail Settings', CoursePress::TD ),
-			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+			'description' => __( 'Setup the e-mail templates to be sent to users.', CoursePress::TD ),
 			'order' => 10
 		);
 
@@ -42,7 +43,7 @@ class CoursePress_View_Admin_Settings_Email{
 			}
 			$content .= '
 				<div class="inside">
-					<table class="form-table compressed">
+					<table class="form-table compressed email-fields">
 						<tbody id="items">';
 
 			$content .= '
@@ -73,7 +74,7 @@ class CoursePress_View_Admin_Settings_Email{
 			ob_start();
 			$editor_name    = 'coursepress_settings[email][' . $key . '][content]';
 			$editor_id      = 'coursepress_settings_email_' . $key . '_content';
-			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[$key]['content'] ) );
+			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/content', $default_settings[$key]['content'] ) );
 
 			$args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
 			$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );

@@ -30,24 +30,32 @@ class CoursePress_Core {
 		// Initialise Capabilities
 		CoursePress_Model_Capabilities::init();
 
+		/**
+		 * Initialise CoursePress Post Formats (post types not available until after WordPress 'init' action)
+		 *
+		 * Custom Post Types can be prefixed by setting COURSEPRESS_CPT_PREFIX in wp-config.php.
+		 * Warning: Doing this will make previous courses inaccessible. Do this early if you want
+		 * to use a custom prefix.
+		 */
+		CoursePress_Model_PostFormats::init();
+		add_filter( 'coursepress_post_formats', array( __CLASS__, 'register_formats' ) );
+
 		// Initialise JavaScript Object Helper
 		CoursePress_Helper_JavaScript::init();
 
-		// Initialize Admin Settings
-		CoursePress_Helper_Settings::init();
+		if( is_admin() ) {
+			// Initialize Admin Settings
+			CoursePress_Helper_Settings::init();
 
-		// Initialize Admin Views
-		CoursePress_View_Admin_CoursePress::init();
-		CoursePress_View_Admin_Settings::init();
+			// Initialize Admin Views
+			CoursePress_View_Admin_CoursePress::init();
+			CoursePress_View_Admin_Settings::init();
 
-
-		// Upgrade if required
-		//if ( ( ! defined( 'COURSEPRESS_DISABLE_UPGRADE' ) || ( defined( 'COURSEPRESS_DISABLE_UPGRADE' ) && ! COURSEPRESS_DISABLE_UPGRADE ) ) && $this->get_setting( 'version' ) != $this->version ) {
-		//	self::upgrade();
-		//}
+		}
 
 		// Upgrade CoursePress if needed
 		CoursePress_Upgrade::init();
+
 	}
 
 
@@ -115,7 +123,7 @@ class CoursePress_Core {
 		switch( $context ) {
 			case 'course':
 				$default_slug = 'courses';
-				$option = 'coursepress_course_slug';
+				$option = 'slugs/course';
 				break;
 		}
 
@@ -123,7 +131,7 @@ class CoursePress_Core {
 		if( ! empty( $default_slug ) && ! empty( $option ) ) {
 
 			if ( ! $url ) {
-				return get_option( $option, $default_slug );
+				return self::get_setting( $option, $default_slug );
 			} else {
 				return home_url() . '/' . get_option( $option, $default_slug );
 			}
@@ -131,6 +139,13 @@ class CoursePress_Core {
 		}
 
 
+	}
+
+	public static function register_formats( $formats ) {
+		return array_merge( $formats, array(
+			'Course',
+			'Unit'
+		) );
 	}
 
 	public static function upgrade() {

@@ -9,6 +9,7 @@ class CoursePress_Helper_Settings {
 
 	public static function init() {
 
+		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		add_action( 'admin_menu', array( get_class(), 'admin_menu' ) );
 		add_action( 'admin_init', array( get_class(), 'admin_init' ) );
 
@@ -65,6 +66,10 @@ class CoursePress_Helper_Settings {
 	public static function admin_init() {
 
 		add_action( 'admin_enqueue_scripts', array( get_class(), 'admin_style' ) );
+	}
+
+	public static function admin_plugins_loaded() {
+		do_action( 'coursepress_settings_page_pre_render' );
 	}
 
 	public static function admin_style() {

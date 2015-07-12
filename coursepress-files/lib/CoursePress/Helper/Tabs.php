@@ -2,7 +2,7 @@
 
 class CoursePress_Helper_Tabs {
 
-	public static function render_tabs( $tabs, $tab_content, $page, $active ) {
+	public static function render_tabs( $tabs, $tab_content, $page, $active, $echo = true ) {
 
 		// Render the Tabs
 		$content = '<div class="tab-tabs">
@@ -12,6 +12,7 @@ class CoursePress_Helper_Tabs {
 
 		foreach( $tabs as $key => $tab ) {
 			$class = $key === $active ? 'active' : '';
+			$class .= ' ' . $tab['class'];
 			$content .= '<li class="mp-tab ' . $class . '">
 				<a class="mp-tab-link" href="' . esc_url( admin_url( 'admin.php?page=' . $page . '&amp;tab=' . $key ) ) . '">' . esc_html( $tab['title'] ) . '</a>
 			</li>';
@@ -63,7 +64,11 @@ class CoursePress_Helper_Tabs {
 		// Wrap the content in a container
 		$content = '<div class="tab-container">' . $content . '</div>';
 
-		echo $content;
+		if( $echo ) {
+			echo apply_filters( 'coursepress_settings_tabs_content', $content, $tab_content );
+		} else {
+			return apply_filters( 'coursepress_settings_tabs_content', $content, $tab_content );
+		}
 
 	}
 

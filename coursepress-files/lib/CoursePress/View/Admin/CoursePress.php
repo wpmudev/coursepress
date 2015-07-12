@@ -18,7 +18,21 @@ class CoursePress_View_Admin_CoursePress {
 
 	public static function render_page() {
 
-		echo 'walkakakakkaka';
+		$courseListTable = new CoursePress_Helper_Table_CourseList();
+		$courseListTable->prepare_items();
+		?>
+
+		<div class="wrap">
+
+                <div id="icon-users" class="icon32"></div>
+                <h2>Example List Table Page</h2>
+			<?php $courseListTable->display(); ?>
+			<!--<form method="post">-->
+		    <!--<input type="hidden" name="page" value="example_list_table" />-->
+				<?php //$courseListTable->search_box('search', 'search_id'); ?>
+		<!--</form>-->
+            </div>
+		<?php
 
 	}
 

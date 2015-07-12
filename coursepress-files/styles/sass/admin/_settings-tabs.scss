@@ -33,6 +33,19 @@
   color: #000;
 }
 
+.tab-tabs li.setup_tab:before {
+  width: 97%;
+  margin: 0 auto;
+  display: block;
+//  min-height:1px;
+  content: "";
+  border: 1px solid #DDDDDD;
+  border-left: none;
+  border-right: none;
+  border-bottom-color: #FAFAFA;
+
+}
+
 .tab-content {
   background-color: #fff;
   padding: 10px 20px 20px;

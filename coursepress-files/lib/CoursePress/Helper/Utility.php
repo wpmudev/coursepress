@@ -73,6 +73,19 @@ class CoursePress_Helper_Utility {
 		return $a;
 	}
 
+	public static function object_to_array($d) {
+		if (is_object($d)) {
+			$d = get_object_vars($d);
+		}
+
+		if (is_array($d)) {
+			return array_map( array( __CLASS__, 'object_to_array' ), $d);
+		}
+		else {
+			return $d;
+		}
+	}
+
 	// Does a recursive array merge without creating 'mini' arrays as array_merge_recursive() does
 	public static function merge_distinct( array &$array1, array &$array2 ) {
 		$merged = $array1;
@@ -94,6 +107,11 @@ class CoursePress_Helper_Utility {
 		} else {
 			return $user->ID;
 		}
+	}
+
+	// Allowed image extensions
+	public static function get_image_extensions() {
+		return apply_filters( 'coursepress_allowed_image_extensions', array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico' ) );
 	}
 
 }

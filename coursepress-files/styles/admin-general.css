@@ -61,6 +61,17 @@ A. Responsive
   color: #000;
 }
 
+.tab-tabs li.setup_tab:before {
+  width: 97%;
+  margin: 0 auto;
+  display: block;
+  content: "";
+  border: 1px solid #DDDDDD;
+  border-left: none;
+  border-right: none;
+  border-bottom-color: #FAFAFA;
+}
+
 .tab-content {
   background-color: #fff;
   padding: 10px 20px 20px;
@@ -145,11 +156,39 @@ A. Responsive
   color: red;
 }
 
+.tab-content .form-table.compressed.email-fields th {
+  padding: 0;
+}
+
+.tab-content .form-table.compressed.email-fields {
+  margin-top: 20px;
+}
+
+.coursepress_settings_wrapper table.widefat {
+  clear: none;
+}
+
+.coursepress_settings_wrapper + h3 + .wrap h2 {
+  display: none;
+}
+
+/*--------------------------------------------------------------
+# 4. List Tables
+--------------------------------------------------------------*/
+/* Course List Table */
+.wp-list-table.courses th.manage-column.column-post_title {
+  width: 60%;
+}
+
+.wp-list-table.courses th.manage-column.column-ID {
+  width: 35px;
+}
+
 /*--------------------------------------------------------------
 # A. Settings Responsive
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------
-# B. Font/Icons and things
+# B. Warnings, notices and extra things
 --------------------------------------------------------------*/
 /**
 * CoursePress Icon (admin side)
@@ -184,5 +223,17 @@ A. Responsive
 }
 
 #adminmenu .toplevel_page_coursepress div.wp-menu-image img {
+  display: none;
+}
+
+/**
+ * Invalid file extension
+ */
+.invalid_extension_field {
+  border: 1px red solid !important;
+}
+
+.invalid_extension_message {
+  color: red;
   display: none;
 }

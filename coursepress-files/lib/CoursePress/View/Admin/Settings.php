@@ -104,21 +104,14 @@ class CoursePress_View_Admin_Settings {
 		$content = apply_filters( self::$slug . '_' . $method, $content, self::$slug, $tab );
 
 
-		echo '<div class="coursepress_settings_wrapper">' .
+		$content = '<div class="coursepress_settings_wrapper">' .
 		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-		            <hr />';
+		            <hr />' .
+		            CoursePress_Helper_Tabs::render_tabs( $tabs, $content, self::$slug, $tab, false ) .
+		           '</div>';
 
-		CoursePress_Helper_Tabs::render_tabs( $tabs, $content, self::$slug, $tab );
+		echo apply_filters( 'coursepress_settings_page_main', $content );
 
-		echo '</div>';
-	}
-
-	public static function render_tab() {
-		echo 'blank';
-	}
-
-	public static function render_tab_other_settings() {
-		echo "Other settings :)";
 	}
 
 }

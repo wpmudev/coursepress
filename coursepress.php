@@ -74,6 +74,7 @@ class CoursePress {
 		CoursePress_Core::init();
 
 		$screen_base = str_replace( ' ', '-', strtolower( CoursePress_Core::$name ) );
+
 		global $wpmudev_notices;
 
 		$wpmudev_notices[] = array(
@@ -98,6 +99,8 @@ class CoursePress {
 		 * Include WPMUDev Dashboard.
 		 */
 		include_once( CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php' );
+
+
 
 	}
 

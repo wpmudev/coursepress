@@ -49,3 +49,19 @@
 .settings-error {
   color: red;
 }
+
+.tab-content .form-table.compressed.email-fields th {
+  padding: 0;
+}
+
+.tab-content .form-table.compressed.email-fields {
+  margin-top: 20px;
+}
+
+.coursepress_settings_wrapper table.widefat {
+  clear: none;
+}
+
+.coursepress_settings_wrapper + h3 + .wrap h2 {
+  display: none;
+}
