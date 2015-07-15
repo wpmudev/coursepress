@@ -5,14 +5,14 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 	public static function init() {
 
 		if ( ! CoursePress_Model_Capabilities::is_pro() ) {
-			add_filter( 'coursepress_default_email_settings', array( get_class(), 'remove_basic_certificate_email' ) );
-			add_filter( 'coursepress_default_email_settings_sections', array( get_class(), 'remove_basic_certificate_email' ) );
+			add_filter( 'coursepress_default_email_settings', array( __CLASS__, 'remove_basic_certificate_email' ) );
+			add_filter( 'coursepress_default_email_settings_sections', array( __CLASS__, 'remove_basic_certificate_email' ) );
 			return;
 		}
 
-		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs' ) );
-		add_action( 'coursepress_settings_process_basic_certificate', array( get_class(), 'process_form' ), 10, 2 );
-		add_filter( 'coursepress_settings_render_tab_basic_certificate', array( get_class(), 'return_content' ), 10, 3 );
+		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
+		add_action( 'coursepress_settings_process_basic_certificate', array( __CLASS__, 'process_form' ), 10, 2 );
+		add_filter( 'coursepress_settings_render_tab_basic_certificate', array( __CLASS__, 'return_content' ), 10, 3 );
 	}
 
 

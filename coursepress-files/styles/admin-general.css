@@ -29,6 +29,11 @@ A. Responsive
 /*--------------------------------------------------------------
 # 2. Settings Tabs
 --------------------------------------------------------------*/
+.tab-container {
+  position: relative;
+  overflow: hidden;
+}
+
 .tab-tabs {
   float: left;
   width: 191px;
@@ -77,7 +82,7 @@ A. Responsive
   padding: 10px 20px 20px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   border: 1px solid #e5e5e5;
-  margin: 15px 0 0 190px;
+  margin: 0 0 0 190px;
   min-height: 340px;
   z-index: 10;
 }
@@ -104,6 +109,65 @@ A. Responsive
   border-bottom: 1px solid #cccccc;
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+
+.tab-tabs-horizontal ul {
+  list-style: outside none none;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  min-height: 2em;
+}
+
+.tab-tabs-horizontal ul li {
+  float: left;
+  border-color: #CCCCCC;
+  background: none repeat scroll 0 0 #e4e4e4;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  color: #555;
+  margin: 0 4px -1px 10px;
+  position: relative;
+  top: -1px;
+}
+
+.tab-tabs-horizontal ul li.active {
+  background: #F1F1F1;
+  border-bottom-color: #F1F1F1;
+}
+
+.tab-tabs-horizontal ul li a {
+  color: #333;
+  text-decoration: none;
+  font-size: 1em;
+  line-height: 1em;
+  padding: 0.5em;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.tab-tabs-horizontal ul li:last-child {
+  float: right;
+  border: none;
+  background: none;
+}
+
+.tab-container .tab-extra {
+  max-width: 20%;
+  float: right;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.tab-content.tab-content-horizontal {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
 }
 
 /*--------------------------------------------------------------
@@ -182,6 +246,176 @@ A. Responsive
 
 .wp-list-table.courses th.manage-column.column-ID {
   width: 35px;
+}
+
+/*--------------------------------------------------------------
+# 5. Course Setup
+--------------------------------------------------------------*/
+#course-setup-steps .step-content {
+  padding: 1em 2.2em;
+  position: relative;
+}
+
+#course-setup-steps .chosen-container-multi .chosen-choices li.search-choice {
+  position: relative;
+  margin: 3px 5px 3px 0;
+  padding: 3px 20px 3px 5px;
+  border: 1px solid #aaa;
+  max-width: 100%;
+  border-radius: 0;
+  background: none;
+  box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+  color: #333;
+  line-height: 13px;
+  cursor: default;
+}
+
+#course-setup-steps .chosen-container-multi .chosen-choices {
+  background: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
+  color: #32373c;
+  outline: medium none;
+  transition: border-color 0.05s ease-in-out 0s;
+}
+
+#course-setup-steps input.step {
+  margin-top: 25px;
+}
+
+#course-setup-steps .step-content label {
+  font-weight: bold;
+  display: block;
+  margin-top: 2em;
+  font-size: 1.1em;
+}
+
+#course-setup-steps .step-content label a.context-link {
+  float: right;
+}
+
+#course-setup-steps .step-content.step-1 label.first {
+  margin-top: 0;
+}
+
+#course-setup-steps .step-content label.required:after {
+  content: '*';
+  color: #E43037;
+}
+
+#course-setup-steps .step-content input.wide {
+  width: 100%;
+}
+
+#course-setup-steps .step-content .medium {
+  width: 40%;
+}
+
+#course-setup-steps .step-content label.drop-line {
+  position: relative;
+  top: 2.2em;
+  margin: 0;
+}
+
+#course-setup-steps .step-title {
+  font-size: 1.3em;
+  line-height: 1.8em;
+  padding: 0.5em 1.5em;
+  position: relative;
+  outline: none;
+  outline: hidden;
+  overflow: hidden;
+  margin: 0 0 10px 0;
+  background: #f1f1f1;
+  color: #333333;
+}
+
+#course-setup-steps .step-title.ui-state-active {
+  background: #0091CD;
+  color: #ffffff;
+}
+
+.step-container {
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+}
+
+#course-setup-steps .step-title .status {
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  box-sizing: border-box;
+  float: right;
+  height: 20px;
+  width: 20px;
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  position: absolute;
+  top: 0.8em;
+  right: 1em;
+  text-align: center;
+}
+
+#course-setup-steps .step-title .status.saved {
+  background: #6FC26E;
+  color: #ffffff;
+  border-color: #54a553;
+}
+
+#course-setup-steps .step-title .status.saved:after {
+  font-family: dashicons;
+  content: "\f147";
+  position: relative;
+  top: -0.3em;
+  width: 20px;
+}
+
+#course-setup-steps .step-title .status.save-error {
+  background: #E43037;
+  color: #ffffff;
+  border-color: #972727;
+}
+
+#course-setup-steps .step-title .status.save-error:after {
+  font-family: dashicons;
+  font-size: 0.9em;
+  content: "\f335";
+  position: relative;
+  top: -0.4em;
+  width: 20px;
+}
+
+#course-setup-steps .step-title .status.save-attention {
+  background: #EC8C35;
+  color: #ffffff;
+  border-color: #b1622e;
+}
+
+#course-setup-steps .step-title .status.save-attention:after {
+  font-family: dashicons;
+  font-size: 0.7em;
+  content: "\f227";
+  position: relative;
+  top: -0.6em;
+  width: 20px;
+}
+
+#course-setup-steps .step-title .status.save-process {
+  background: url("../assets/ajax-loader.gif");
+  color: #ffffff;
+  border: none;
+  background-repeat: no-repeat;
+  background-size: 20px;
+}
+
+#course-setup-steps .step-title.ui-state-active .status.save-process {
+  background: url("../assets/ajax-loader-blue.gif");
+  color: #ffffff;
+  border: none;
+  background-repeat: no-repeat;
+  background-size: 20px;
 }
 
 /*--------------------------------------------------------------

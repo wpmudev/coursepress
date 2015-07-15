@@ -4,9 +4,9 @@ class CoursePress_View_Admin_Settings_General {
 
 	public static function init() {
 
-		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs' ) );
-		add_action( 'coursepress_settings_process_general', array( get_class(), 'process_form' ), 10, 2 );
-		add_filter( 'coursepress_settings_render_tab_general', array( get_class(), 'return_content' ), 10, 3 );
+		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
+		add_action( 'coursepress_settings_process_general', array( __CLASS__, 'process_form' ), 10, 2 );
+		add_filter( 'coursepress_settings_render_tab_general', array( __CLASS__, 'return_content' ), 10, 3 );
 	}
 
 

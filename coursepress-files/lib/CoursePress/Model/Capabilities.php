@@ -108,8 +108,8 @@ class CoursePress_Model_Capabilities {
 	);
 
 	public static function init() {
-		add_action( 'set_user_role', array( get_class(), 'assign_role_capabilities' ), 10, 3 );
-		add_action( 'wp_login', array( get_class(), 'restore_capabilities_on_login' ), 10, 2 );
+		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
+		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities_on_login' ), 10, 2 );
 	}
 
 	/**

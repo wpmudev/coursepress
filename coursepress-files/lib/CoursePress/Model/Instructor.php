@@ -25,7 +25,7 @@ class CoursePress_Model_Instructor {
 
 	public static function get_course_meta_keys( $user ) {
 		$meta = get_user_meta( self::_get_id( $user ) );
-		$meta = array_filter( array_keys( $meta ), array( get_class(), 'filter_course_meta_array' ) );
+		$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
 
 		return $meta;
 	}

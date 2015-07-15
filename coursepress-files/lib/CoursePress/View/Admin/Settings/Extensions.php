@@ -4,9 +4,9 @@ class CoursePress_View_Admin_Settings_Extensions{
 
 	public static function init() {
 
-		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs' ) );
-		add_action( 'coursepress_settings_process_extensions', array( get_class(), 'process_form' ), 10, 2 );
-		add_filter( 'coursepress_settings_render_tab_extensions', array( get_class(), 'return_content' ), 10, 3 );
+		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
+		add_action( 'coursepress_settings_process_extensions', array( __CLASS__, 'process_form' ), 10, 2 );
+		add_filter( 'coursepress_settings_render_tab_extensions', array( __CLASS__, 'return_content' ), 10, 3 );
 		add_action( 'coursepress_settings_page_pre_render', array( __CLASS__, 'remove_dashboard_notification' ) );
 	}
 
@@ -56,7 +56,7 @@ class CoursePress_View_Admin_Settings_Extensions{
 			echo '</div>';
 			echo '<h3>' . esc_html( $_POST['plugin_name'] ) . '</h3>';
 
-			//add_filter( 'coursepress_settings_page_main', array( get_class(), 'return_content_plugin_install' ) );
+			//add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
 
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Need for plugins_api.
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php'; // Need for upgrade classes.

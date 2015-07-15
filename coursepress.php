@@ -74,6 +74,7 @@ class CoursePress {
 		CoursePress_Core::init();
 
 		$screen_base = str_replace( ' ', '-', strtolower( CoursePress_Core::$name ) );
+		$page_base = $screen_base . '_page_';
 
 		global $wpmudev_notices;
 
@@ -84,21 +85,23 @@ class CoursePress {
 				'coursepress_settings',
 				'toplevel_page_courses',
 				'toplevel_page_coursepress',
-				$screen_base . '_page_coursepress_settings',
-				$screen_base . '_page_course_details',
-				$screen_base . '_page_instructors',
-				$screen_base . '_page_students',
-				$screen_base . '_page_assessment',
-				$screen_base . '_page_reports',
-				$screen_base . '_page_notifications',
-				$screen_base . '_page_settings'
+				$page_base . 'coursepress_settings',
+				$page_base . 'coursepress_course',
+				//$screen_base . '_page_coursepress_settings',
+				//$screen_base . '_page_course_details',
+				//$screen_base . '_page_instructors',
+				//$screen_base . '_page_students',
+				//$screen_base . '_page_assessment',
+				//$screen_base . '_page_reports',
+				//$screen_base . '_page_notifications',
+				//$screen_base . '_page_settings'
 			)
 		);
 
 		/**
 		 * Include WPMUDev Dashboard.
 		 */
-		include_once( CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php' );
+		//include_once( CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 
 
 

@@ -3,6 +3,7 @@
 class CoursePress_Model_PostFormats {
 
 	private static $registered_formats = array();
+	private static $registered_taxonomies = array();
 	private static $prefix = '';
 
 	public static function init() {
@@ -28,7 +29,13 @@ class CoursePress_Model_PostFormats {
 				self::$registered_formats[] = self::prefix() . $format['post_type'];
 				register_post_type( self::prefix() . $format['post_type'], $format['post_args'] );
 			}
+			if( method_exists( 'CoursePress_Model_' . $format_class, 'get_taxonomy' ) ) {
+				$format = call_user_func( 'CoursePress_Model_' . $format_class . '::get_taxonomy' );
+				self::$registered_taxonomies[] = self::prefix() . $format['taxonomy_type'];
+				register_taxonomy( self::prefix() . $format['taxonomy_type'], $format['post_type'], $format['taxonomy_args'] );
+			}
 		}
+
 	}
 
 	private static function _get_formats() {

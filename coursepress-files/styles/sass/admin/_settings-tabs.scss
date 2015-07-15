@@ -1,3 +1,8 @@
+.tab-container {
+  position: relative;
+  overflow: hidden;
+}
+
 .tab-tabs {
   float: left;
   width: 191px;
@@ -51,7 +56,7 @@
   padding: 10px 20px 20px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   border: 1px solid #e5e5e5;
-  margin: 15px 0 0 190px;
+  margin: 0 0 0 190px;
   min-height: 340px;
   z-index: 10;
 }
@@ -78,4 +83,67 @@
   border-bottom: 1px solid #cccccc;
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+
+
+
+// Horizontal Tabs
+.tab-tabs-horizontal ul {
+  list-style: outside none none;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  min-height: 2em;  // as long as tabs are padded with 0.5em
+}
+
+.tab-tabs-horizontal ul li {
+  float: left;
+  border-color: #CCCCCC;
+  background: none repeat scroll 0 0 #e4e4e4;
+  border-image: none;
+  border-style: solid;
+  border-width: 1px;
+  color: #555;
+  margin: 0 4px -1px 10px;
+  position: relative;
+  top: -1px;
+}
+
+.tab-tabs-horizontal ul li.active {
+  background: #F1F1F1;
+  border-bottom-color: #F1F1F1;;
+}
+
+.tab-tabs-horizontal ul li a {
+  color: #333;
+  text-decoration: none;
+  font-size: 1em;
+  line-height: 1em;
+  padding: 0.5em;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.tab-tabs-horizontal ul li:last-child {
+  float: right;
+  border: none;
+  background: none;
+}
+
+// Special floating tab for horizontal tabs
+.tab-container .tab-extra {
+  max-width: 20%;
+  float: right;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top:0;
+  right: 0;
+}
+
+.tab-content.tab-content-horizontal {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
 }

@@ -22,10 +22,10 @@ class CoursePress_Core {
 		//load_plugin_textdomain( SNAPSHOT_I18N_DOMAIN, false, self::$plugin_path . self::$plugin_lib . '/languages/' );
 
 		//self::$_settings['options_key'] = "wpmudev_snapshot";
-		// add_action('plugins_loaded', array( get_class(), 'plugin_activation' ) );
+		// add_action('plugins_loaded', array( __CLASS__, 'plugin_activation' ) );
 
-		//add_action( 'init', array( get_class(), 'init_process' ) );
-		//add_action( 'admin_init', array( get_class(), 'admin_init_process' ) );
+		//add_action( 'init', array( __CLASS__, 'init_process' ) );
+		//add_action( 'admin_init', array( __CLASS__, 'admin_init_process' ) );
 
 		// Initialise Capabilities
 		CoursePress_Model_Capabilities::init();

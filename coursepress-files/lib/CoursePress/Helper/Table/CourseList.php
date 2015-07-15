@@ -8,6 +8,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	private $count = array();
 	private $post_type;
+	private $_categories;
 
 	/** Class constructor */
 	public function __construct() {
@@ -67,16 +68,26 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$title = '<strong>' . $item->post_title . '</strong>';
 
+		$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
 		$actions = [
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item->id ), $duplicate_nonce, __( 'Edit', CoursePress::TD ) ),
-			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'units', absint( $item->id ), $duplicate_nonce, __( 'Units', CoursePress::TD ) ),
-			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'students', absint( $item->id ), $duplicate_nonce, __( 'Students', CoursePress::TD ) ),
-			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->id ), $duplicate_nonce, __( 'View Course', CoursePress::TD ) ),
-			'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->id ), $duplicate_nonce, __( 'View Units', CoursePress::TD ) ),
-			'duplicate' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'duplicate_course', absint( $item->id ), $duplicate_nonce, __( 'Duplicate Course', CoursePress::TD ) ),
+			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), $duplicate_nonce, __( 'Edit', CoursePress::TD ) ),
+			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'units', absint( $item->ID ), $duplicate_nonce, __( 'Units', CoursePress::TD ) ),
+			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'students', absint( $item->ID ), $duplicate_nonce, __( 'Students', CoursePress::TD ) ),
+			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->ID ), $duplicate_nonce, __( 'View Course', CoursePress::TD ) ),
+			'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), $duplicate_nonce, __( 'View Units', CoursePress::TD ) ),
+			'duplicate' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'duplicate_course', absint( $item->ID ), $duplicate_nonce, __( 'Duplicate Course', CoursePress::TD ) ),
 		];
 
 		return $title . $this->row_actions( $actions );
+	}
+
+	function get_bulk_actions() {
+		$actions = array(
+			'publish'    => __('Publish', CoursePress::TD ),
+			'unpublish'    => __('Unpublish', CoursePress::TD ),
+			'delete'    => __('Delete', CoursePress::TD ),
+		);
+		return $actions;
 	}
 
 	public function column_units( $item ) {
@@ -132,6 +143,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$accepted_tabs = array( 'publish', 'private', 'all' );
 		$tab           = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
+		$valid_categories = CoursePress_Model_Course::get_course_categories();
+		$valid_categories = array_keys( $valid_categories );
+		$category      = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
 		$post_status = 'all' == $tab ? array( 'publish', 'private' ) : $tab;
 
@@ -159,14 +173,23 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		);
 
+		// @todo: Add permissions
+
+
+		// Add category filter
+		if ( $category ) {
+			$post_args['tax_query'] = array(
+				array(
+					'taxonomy' => 'course_category',
+					'field'    => 'term_id',
+					'terms'    => array( $category ),
+				)
+			);
+		}
+
+
 		$query = new WP_Query( $post_args );
 
-		//foreach( $query->posts as $post ) {
-		//	$post->post_parent = 4;
-		//	wp_update_post( $post );
-		//}
-
-		error_log( print_r( $query, true ) );
 		$this->items = $query->posts;
 
 		$totalItems = $query->found_posts;
@@ -175,6 +198,80 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'per_page'    => $perPage
 		) );
 
+	}
+
+
+	protected function course_filter( $which = '' ) {
+
+
+
+		if ( 'top' !== $which ) {
+			return;
+		}
+
+		if ( is_null( $this->_categories ) ) {
+			$this->_categories = CoursePress_Model_Course::get_course_categories();
+
+			$two = '';
+		} else {
+			$two = '2';
+		}
+
+		if ( empty( $this->_categories ) )
+			return;
+
+		$page = get_query_var( 'page', 'coursepress' );
+		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
+		$s  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$selected = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
+
+		echo '<form method="GET">';
+		echo '<input type="hidden" name="page" value="' . $page . '" />';
+		echo '<input type="hidden" name="tab" value="' . $tab . '" />';
+		echo '<input type="hidden" name="s" value="' . $s . '" />';
+		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', CoursePress::TD ) . "</label>";
+		echo "<select name='category$two' id='course-category-selector-" . esc_attr( $which ) . "'>\n";
+		echo "<option value='-1' " . selected( $selected, -1, false ) . ">" . __( 'All Course Categories' ) . "</option>\n";
+
+		foreach ( $this->_categories as $name => $title ) {
+			$class = 'edit' == $name ? ' class="hide-if-no-js"' : '';
+
+			echo "\t<option value='$name'$class " . selected( $selected, $name, false ) . ">$title</option>\n";
+		}
+
+		echo "</select>\n";
+
+		submit_button( __( 'Filter', CoursePress::TD ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
+		echo "</form>";
+		echo "\n";
+	}
+
+	public function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+			return;
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) )
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) )
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		if ( ! empty( $_REQUEST['post_mime_type'] ) )
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		if ( ! empty( $_REQUEST['detached'] ) )
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+
+		$category = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
+		echo '<input type="hidden" name="category" value="' . $category . '" />';
+
+		?>
+
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php submit_button( $text, 'button', '', false, array('id' => 'search-submit') ); ?>
+		</p>
+	<?php
 	}
 
 
@@ -187,6 +284,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		<div class="alignleft actions bulkactions">
 			<?php $this->bulk_actions( $which ); ?>
+		</div>
+		<div class="alignleft actions category-filter">
+			<?php $this->course_filter( $which ); ?>
 		</div>
 			<?php
 			$this->extra_tablenav( $which );

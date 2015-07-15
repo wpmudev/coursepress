@@ -21,16 +21,16 @@ class CoursePress_View_Admin_Settings {
 		self::$title      = __( 'Settings/CoursePress', CoursePress::TD );
 		self::$menu_title = __( 'Settings', CoursePress::TD );
 
-		add_filter( 'coursepress_admin_valid_pages', array( get_class(), 'add_valid' ) );
-		add_filter( 'coursepress_admin_pages', array( get_class(), 'add_page' ) );
-		add_action( 'coursepress_admin_' . self::$slug, array( get_class(), 'process_form' ), 1 );
-		add_action( 'coursepress_admin_' . self::$slug, array( get_class(), 'render_page' ) );
+		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
+		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
+		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'process_form' ), 1 );
+		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 
 		// Init all the settings classes
-		foreach( self::$settings_classes as $page ) {
+		foreach ( self::$settings_classes as $page ) {
 			$class = 'CoursePress_View_Admin_Settings_' . $page;
 
-			if( method_exists( $class, 'init' ) ) {
+			if ( method_exists( $class, 'init' ) ) {
 				call_user_func( $class . '::init' );
 			}
 		}
@@ -58,11 +58,11 @@ class CoursePress_View_Admin_Settings {
 		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
 		// Make sure that we have all the fields we need
-		foreach( self::$tabs as $key => $tab ) {
+		foreach ( self::$tabs as $key => $tab ) {
 			self::$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
-			self::$tabs[ $key ]['class'] = isset( $tab['class'] ) ? $tab['class'] : '';
+			self::$tabs[ $key ]['class']   = isset( $tab['class'] ) ? $tab['class'] : '';
 			self::$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
-			self::$tabs[ $key ]['order'] = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
+			self::$tabs[ $key ]['order']   = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
 		}
 
 		// Order the tabs
@@ -73,8 +73,8 @@ class CoursePress_View_Admin_Settings {
 
 	public static function process_form() {
 
-		$tabs = self::get_tabs();
-		$tab_keys = array_keys( $tabs );
+		$tabs      = self::get_tabs();
+		$tab_keys  = array_keys( $tabs );
 		$first_tab = ! empty( $tab_keys ) ? $tab_keys[0] : '';
 
 		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
@@ -86,17 +86,17 @@ class CoursePress_View_Admin_Settings {
 
 	public static function render_page() {
 
-		$tabs = self::get_tabs();
-		$tab_keys = array_keys( $tabs );
+		$tabs      = self::get_tabs();
+		$tab_keys  = array_keys( $tabs );
 		$first_tab = ! empty( $tab_keys ) ? $tab_keys[0] : '';
 
-		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
+		$tab     = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
 		$content = '';
 
 		$method = preg_replace( '/\_$/', '', 'render_tab_' . $tab );
-		if ( method_exists( get_class(), $method ) ) {
+		if ( method_exists( __CLASS__, $method ) ) {
 			ob_start();
-			call_user_func( get_class() . '::' . $method );
+			call_user_func( __CLASS__ . '::' . $method );
 			$content = ob_get_clean();
 		}
 
@@ -107,7 +107,7 @@ class CoursePress_View_Admin_Settings {
 		$content = '<div class="coursepress_settings_wrapper">' .
 		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />' .
-		            CoursePress_Helper_Tabs::render_tabs( $tabs, $content, self::$slug, $tab, false ) .
+		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, array(), self::$slug, $tab, false ) .
 		           '</div>';
 
 		echo apply_filters( 'coursepress_settings_page_main', $content );

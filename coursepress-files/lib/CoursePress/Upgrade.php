@@ -15,7 +15,7 @@ class CoursePress_Upgrade {
 
 		foreach ( self::$map as $v => $f ) {
 			if ( version_compare( $last_version, $v ) < 0 ) {
-				call_user_func( get_class() . '::' . $f );
+				call_user_func( __CLASS__ . '::' . $f );
 			}
 		}
 

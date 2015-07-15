@@ -10,9 +10,9 @@ class CoursePress_Helper_Utility {
 		self::$sort_key = $sort_key;
 
 		if ( $sort_asc === false ) {
-			uasort( $array, array( get_class(), 'sort_desc' ) );
+			uasort( $array, array( __CLASS__, 'sort_desc' ) );
 		} else {
-			uasort( $array, array( get_class(), 'sort_asc' ) );
+			uasort( $array, array( __CLASS__, 'sort_asc' ) );
 		}
 
 		return $array;
@@ -109,9 +109,49 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
+	// Get appropriate AJAX URL
+	public static function get_ajax_url() {
+		$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
+
+		return admin_url( "admin-ajax.php", $scheme );
+	}
+
 	// Allowed image extensions
 	public static function get_image_extensions() {
 		return apply_filters( 'coursepress_allowed_image_extensions', array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico' ) );
+	}
+
+	// Filter HTML
+	public static function filter_content( $content, $none_allowed = false ) {
+		if ( $none_allowed ) {
+			if ( is_array( $content ) ) {
+				foreach ( $content as $content_key => $content_value ) {
+					$content[ $content_key ] = wp_filter_nohtml_kses( $content_value );
+				}
+			} else {
+				$content = wp_filter_nohtml_kses( $content );
+			}
+		} else {
+			if ( current_user_can( 'unfiltered_html' ) ) {
+				$content = $content;
+			} else {
+				if ( is_array( $content ) ) {
+					foreach ( $content as $content_key => $content_value ) {
+						$content[ $content_key ] = wp_kses( $content_value, self::filter_content_rules() );
+					}
+				} else {
+					$content = wp_kses( $content, self::filter_content_rules() );
+				}
+			}
+		}
+
+		return $content;
+	}
+
+	// Allowed tags
+	public static function filter_content_rules() {
+		$allowed_tags = wp_kses_allowed_html( 'post' );
+		return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
 	}
 
 }

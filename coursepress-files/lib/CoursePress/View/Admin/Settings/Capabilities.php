@@ -4,9 +4,9 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 	public static function init() {
 
-		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs' ) );
-		add_action( 'coursepress_settings_process_capabilities', array( get_class(), 'process_form' ), 10, 2 );
-		add_filter( 'coursepress_settings_render_tab_capabilities', array( get_class(), 'return_content' ), 10, 3 );
+		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
+		add_action( 'coursepress_settings_process_capabilities', array( __CLASS__, 'process_form' ), 10, 2 );
+		add_filter( 'coursepress_settings_render_tab_capabilities', array( __CLASS__, 'return_content' ), 10, 3 );
 	}
 
 
@@ -34,11 +34,11 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 		$boxes = self::_capability_boxes();
 		foreach( $boxes as $method => $title ) {
-			if( ! method_exists( get_class(), '_' . $method ) ) {
+			if( ! method_exists( __CLASS__, '_' . $method ) ) {
 				continue;
 			}
 
-			$items = call_user_func( get_class() . '::_' . $method );
+			$items = call_user_func( __CLASS__ . '::_' . $method );
 
 			$content .= '
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html( $title ) . '</span></h3>
