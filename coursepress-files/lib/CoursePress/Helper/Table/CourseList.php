@@ -95,7 +95,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$post_args = array(
 			'post_type'   => 'unit',
 			'post_parent' => $item->ID,
-			'post_status' => array( 'publish', 'private' )
+			'post_status' => array( 'publish', 'private', 'draft' )
 		);
 
 		$query     = new WP_Query( $post_args );

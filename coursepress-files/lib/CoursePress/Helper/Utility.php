@@ -73,18 +73,41 @@ class CoursePress_Helper_Utility {
 		return $a;
 	}
 
-	public static function object_to_array($d) {
-		if (is_object($d)) {
-			$d = get_object_vars($d);
+	public static function unset_array_val( &$a, $path ) {
+		if ( ! is_array( $path ) ) {
+			$path = explode( '/', $path );
 		}
 
-		if (is_array($d)) {
-			return array_map( array( __CLASS__, 'object_to_array' ), $d);
+		$key = array_pop( $path );
+		foreach ( $path as $k ) {
+			if ( ! isset( $a[ $k ] ) ) {
+				$a[ $k ] = array();
+			}
+			$a = &$a[ $k ];
 		}
-		else {
-			return $d;
+		unset( $a[ $key ? $key : count( $a ) ] );
+	}
+
+	public static function object_to_array( $object ) {
+		if ( is_object( $object ) ) {
+			$object = get_object_vars( $object );
+		}
+
+		if ( is_array( $object ) ) {
+			return array_map( array( __CLASS__, 'object_to_array' ), $object );
+		} else {
+			return $object;
 		}
 	}
+
+	public static function array_to_object( $array ) {
+		if ( is_array( $array ) ) {
+			return (object) array_map( array( __CLASS__, 'array_to_object' ), $array );
+		} else {
+			return $array;
+		}
+	}
+
 
 	// Does a recursive array merge without creating 'mini' arrays as array_merge_recursive() does
 	public static function merge_distinct( array &$array1, array &$array2 ) {
@@ -101,11 +124,43 @@ class CoursePress_Helper_Utility {
 		return $merged;
 	}
 
+	function delete_user_meta_by_key( $meta_key ) {
+		global $wpdb;
+
+		$legacy = delete_metadata( 'user', 0, $meta_key, '', true );
+
+		$meta_key = $wpdb->prefix . $meta_key;
+
+		if ( $legacy || delete_metadata( 'user', 0, $meta_key, '', true ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static function get_id( $user ) {
 		if ( ! is_object( $user ) ) {
 			return $user;
 		} else {
 			return $user->ID;
+		}
+	}
+
+
+	// Deals with legacy 'on' / 'off' values for checkboxes
+	public static function checked( $value, $compare = true, $echo = false ) {
+		$checked = false;
+		if( $compare === true ) {
+			$checked = 'on' === $value || ! empty( $value ) ? 'checked="checked"' : '';
+		} else {
+			$checked = $compare === $value ? 'checked="checked"' : '';
+
+		}
+
+		if( $echo ) {
+			echo $checked;
+		} else {
+			return $checked;
 		}
 	}
 
@@ -118,7 +173,17 @@ class CoursePress_Helper_Utility {
 
 	// Allowed image extensions
 	public static function get_image_extensions() {
-		return apply_filters( 'coursepress_allowed_image_extensions', array( 'jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp', 'tif', 'tiff', 'ico' ) );
+		return apply_filters( 'coursepress_allowed_image_extensions', array(
+			'jpg',
+			'jpeg',
+			'jpe',
+			'gif',
+			'png',
+			'bmp',
+			'tif',
+			'tiff',
+			'ico'
+		) );
 	}
 
 	// Filter HTML
@@ -151,6 +216,7 @@ class CoursePress_Helper_Utility {
 	// Allowed tags
 	public static function filter_content_rules() {
 		$allowed_tags = wp_kses_allowed_html( 'post' );
+
 		return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
 	}
 

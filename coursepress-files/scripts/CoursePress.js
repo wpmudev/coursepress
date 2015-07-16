@@ -102,6 +102,27 @@ var CoursePress = CoursePress || {};
         return merged;
     }
 
+    CoursePress.utility.update_object_by_path = function ( object, path, value ) {
+        var stack = path.split( '/' );
+
+        if( path === 'meta_course_category' ) {
+            //console.log('MOO MOO MOO');
+            //console.log( value );
+        }
+
+        while ( stack.length > 1 ) {
+            var key = stack.shift();
+            //console.log( key );
+            if( object[ key ] ) {
+                object = object[ key ];
+            } else {
+                object[key] = {};
+                object = object[ key ];
+            }
+        }
+        object[ stack.shift() ] = value;
+    }
+
     CoursePress.utility.in_array = function ( value, array ) {
         return array.indexOf( value ) > -1;
     }

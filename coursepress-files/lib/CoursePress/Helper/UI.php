@@ -18,6 +18,7 @@ class CoursePress_Helper_UI {
 		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', CoursePress::TD );
 		$args['type'] = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
 		$args['invalid_message'] = isset( $args['invalid_message'] ) ? sanitize_text_field( $args['invalid_message'] ) : '';
+		$args['description'] = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
 
 		if( 'image' === $args['type'] ) {
 			$supported_extensions = implode( ', ', CoursePress_Helper_Utility::get_image_extensions() );
@@ -29,12 +30,16 @@ class CoursePress_Helper_UI {
 			$supported_extensions = implode( ', ', wp_get_audio_extensions() );
 		}
 
-
-
 		$content = '
 		<div class="' . $args['container_class'] . '">
 			<label for="' . $name . '">' .
-	            esc_html( $args['title'] ) . '
+	            esc_html( $args['title'] );
+
+		if( ! empty( $args['description'] ) ) {
+		    $content .= '<p class="description">' . esc_html( $args['description'] ) . '</p>';
+	    }
+
+		$content .= '
 			</label>
 			<input class="' . $args['textbox_class'] . ' ' . $args['type'] . '_url" type="text" name="' . $name . '" id="' . $name . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" value="' . esc_attr( $args['value'] ) . '"/>
 			<input class="button browse-media-field" type="button" name="' . $name . '-button" value="' . esc_attr( $args['button_text'] ) . '"/>

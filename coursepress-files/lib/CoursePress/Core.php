@@ -144,7 +144,8 @@ class CoursePress_Core {
 	public static function register_formats( $formats ) {
 		return array_merge( $formats, array(
 			'Course',
-			'Unit'
+			'Unit',
+			'Module',
 		) );
 	}
 

@@ -50,6 +50,13 @@ class CoursePress_Helper_JavaScript {
 				'jquery-ui-accordion',
 				'backbone',
 			), CoursePress_Core::$version );
+
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/jquery.treegrid.min.js';
+
+			wp_enqueue_script( 'jquery-treegrid', $script, array(
+				'jquery'
+			), CoursePress_Core::$version );
+
 		}
 
 

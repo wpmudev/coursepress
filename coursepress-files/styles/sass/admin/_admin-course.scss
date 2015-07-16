@@ -55,6 +55,18 @@
   color: #E43037;
 }
 
+#course-setup-steps .step-content label p.description {
+  font-weight: normal;
+}
+
+#course-setup-steps .step-content label.checkbox {
+  font-weight: normal;
+  display: block;
+  margin: 0;
+  font-size: 1em;
+}
+
+
 #course-setup-steps .step-content input.wide {
   width: 100%;
 }
@@ -175,6 +187,70 @@
   background-size: 20px;
 }
 
+/* Course Structure */
+.course-structure table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.course-structure table th {
+  text-align: left;
+}
+
+.course-structure table th {
+  margin: 3px 20px 3px 0;
+}
+
+.course-structure .column-course-structure {
+  min-width: 320px;
+}
+
+.course-structure .column-show,
+.course-structure .column-free-preview,
+.course-structure .column-time {
+  width: 100px;
+  text-align: center;
+}
+
+.course-structure table thead tr.break th {
+  border-bottom: 1px solid #DFDFDF;
+}
+
+.course-structure table tfoot tr.break th {
+  border-top: 1px solid #DFDFDF;
+}
+
+.course-structure table td {
+  text-align: center;
+}
+
+.course-structure table tr.module td:first-child,
+.course-structure table tr.unit td:first-child {
+  text-align: left;
+}
+
+.course-structure table tr.module td:first-child {
+  text-indent: 2em;
+}
+
+.course-structure table tr.module.draft,
+.course-structure table tr.unit.draft {
+  color: #7f7f7f;
+  font-style: oblique;
+}
+
+/* TreeGrid Styles */
+.treegrid-indent {width:16px; height: 16px; display: inline-block; position: relative;}
+
+.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
+
+.treegrid-expander-expanded{background-image: url( '#{$imagePath}collapse.png' ); }
+.treegrid-expander-collapsed{background-image: url( '#{$imagePath}expand.png' );}
+
+/* Editor specific */
+#courseDescription_ifr {
+  min-height: 300px;
+}
 
 //#course-setup-steps .step-title .status.save-process:after {
 //  font-family: dashicons;
