@@ -563,10 +563,20 @@ class CoursePress_Model_Course {
 				if( ! isset( $combine[ $post->post_parent ] ) ) {
 					$combine[ $post->post_parent ] = array();
 				}
-				if( ! isset( $combine[ $post->post_parent ]['modules'] ) ) {
-					$combine[ $post->post_parent ]['modules'] = array();
+				if( ! isset( $combine[ $post->post_parent ]['pages'] ) ) {
+					$combine[ $post->post_parent ]['pages'] = array();
 				}
-				$combine[ $post->post_parent ]['modules'][ $post->ID ] = $post;
+				$pages = get_post_meta( $post->post_parent, 'page_title', true );
+				$page = get_post_meta( $post->ID, 'module_page', true );
+				$page = ! empty( $page ) ? $page : 1;
+				$page_title = ! empty( $pages ) && isset( $pages[ 'page_'.$page ] ) ? esc_html( $pages[ 'page_'.$page ] ) : '';
+				$combine[ $post->post_parent ]['pages'][$page] = array( 'title' => $page_title );
+				if( ! isset( $combine[ $post->post_parent ]['pages'][$page]['modules'] ) ) {
+					$combine[ $post->post_parent ]['pages'][$page]['modules'] = array();
+				}
+
+				$combine[ $post->post_parent ]['pages'][$page]['modules'][ $post->ID ] = $post;
+
 			} elseif( 'unit' == $post->post_type ) {
 				if( ! isset( $combine[ $post->ID ] ) ) {
 					$combine[ $post->ID ] = array();
@@ -575,7 +585,12 @@ class CoursePress_Model_Course {
 			}
 		}
 
+
 		remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
+
+		error_log( print_r( $combine, true ) );
+
+		return array();
 
 		return $combine;
 

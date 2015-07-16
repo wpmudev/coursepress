@@ -322,11 +322,14 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$units = CoursePress_Model_Course::get_units_with_modules( $course_id, array( 'publish', 'draft' ) );
 
-		error_log( print_r( get_post_meta( $units[5]['unit']->ID ), true ) );
+		//error_log( print_r( get_post_meta( $units[5]['unit']->ID ), true ) );
 		//$units = CoursePress_Model_Course::get_units( $course_id, array( 'publish', 'private', 'draft' ) );
 		//
 		$count = 0;
 		foreach ( $units as $unit ) {
+
+			//error_log( print_r( get_post_meta( $unit['unit']->ID, 'page_title', true ), true ) );
+
 
 			$count += 1;
 			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', CoursePress::TD );
@@ -343,7 +346,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 			$parent = $count;
 			foreach( $unit['modules'] as $module ) {
-
+				error_log( print_r( get_post_meta( $module->ID ), true ) );
 				$count += 1;
 				$content .= '
 								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' ' . $draft_class . ' treegrid-parent-'. $parent . '">
