@@ -151,7 +151,7 @@ class CoursePress_Helper_Utility {
 	public static function checked( $value, $compare = true, $echo = false ) {
 		$checked = false;
 		if( $compare === true ) {
-			$checked = 'on' === $value || ! empty( $value ) ? 'checked="checked"' : '';
+			$checked =  ! empty( $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
 		} else {
 			$checked = $compare === $value ? 'checked="checked"' : '';
 

@@ -445,6 +445,7 @@ A. Responsive
 
 .course-structure .column-course-structure {
   min-width: 320px;
+  position: relative;
 }
 
 .course-structure .column-show,
@@ -458,27 +459,77 @@ A. Responsive
   border-bottom: 1px solid #DFDFDF;
 }
 
-.course-structure table tfoot tr.break th {
-  border-top: 1px solid #DFDFDF;
-}
-
 .course-structure table td {
   text-align: center;
+  vertical-align: middle;
 }
 
+.course-structure table tr td {
+  border-bottom: 1px solid #DFDFDF;
+}
+
+.course-structure table tr.page td:first-child,
 .course-structure table tr.module td:first-child,
 .course-structure table tr.unit td:first-child {
   text-align: left;
+  padding: 2px 0 4px 0;
+}
+
+.course-structure table tr.unit td:first-child {
+  font-weight: bold;
+}
+
+.course-structure table tr.page td:last-child,
+.course-structure table tr.module td:last-child,
+.course-structure table tr.unit td:last-child {
+  padding: 2px 0 4px 0;
+}
+
+.course-structure table tr.unit td:last-child {
+  font-weight: bolder;
+}
+
+.course-structure table tr.page td:last-child {
+  font-weight: bold;
+}
+
+.course-structure table tr.module td:last-child {
+  font-weight: lighter;
+}
+
+.course-structure table tr.page td:first-child {
+  text-indent: 1em;
 }
 
 .course-structure table tr.module td:first-child {
   text-indent: 2em;
 }
 
+.course-structure table tr.unit {
+  background: #eee;
+}
+
+.course-structure table tr.page {
+  background: #fafafa;
+}
+
+.course-structure table tr.page.draft,
 .course-structure table tr.module.draft,
 .course-structure table tr.unit.draft {
   color: #7f7f7f;
   font-style: oblique;
+}
+
+.course-structure .column-course-structure small {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  color: #7f7f7f;
+  text-align: right;
+  display: inline-block;
+  position: absolute;
+  right: 0;
 }
 
 /* TreeGrid Styles */

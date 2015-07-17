@@ -178,7 +178,7 @@ class CoursePress_Model_Course {
 
 				// Set fields based on meta_ name prefix
 				if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
-					error_log( 'meh: ' . $key );
+					//error_log( 'meh: ' . $key );
 					self::set_setting( $settings, str_replace( 'meta_', '', $key ), CoursePress_Helper_Utility::filter_content( $value ) );
 				}
 
@@ -313,7 +313,7 @@ class CoursePress_Model_Course {
 		$setting = is_null( $setting ) ? $default : $setting;
 		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
 
-		return $setting;
+		return maybe_unserialize( $setting );
 	}
 
 	public static function update_setting( $course_id, $key = true, $value ) {
@@ -560,37 +560,23 @@ class CoursePress_Model_Course {
 
 		foreach( $query->posts as $post ) {
 			if( 'module' == $post->post_type ) {
-				if( ! isset( $combine[ $post->post_parent ] ) ) {
-					$combine[ $post->post_parent ] = array();
-				}
-				if( ! isset( $combine[ $post->post_parent ]['pages'] ) ) {
-					$combine[ $post->post_parent ]['pages'] = array();
-				}
 				$pages = get_post_meta( $post->post_parent, 'page_title', true );
 				$page = get_post_meta( $post->ID, 'module_page', true );
 				$page = ! empty( $page ) ? $page : 1;
 				$page_title = ! empty( $pages ) && isset( $pages[ 'page_'.$page ] ) ? esc_html( $pages[ 'page_'.$page ] ) : '';
-				$combine[ $post->post_parent ]['pages'][$page] = array( 'title' => $page_title );
-				if( ! isset( $combine[ $post->post_parent ]['pages'][$page]['modules'] ) ) {
-					$combine[ $post->post_parent ]['pages'][$page]['modules'] = array();
-				}
 
-				$combine[ $post->post_parent ]['pages'][$page]['modules'][ $post->ID ] = $post;
+				$path = $post->post_parent . '/pages/' . $page . '/title';
+				CoursePress_Helper_Utility::set_array_val( $combine, $path, $page_title );
 
+				$path = $post->post_parent . '/pages/' . $page . '/modules/' . $post->ID;
+				CoursePress_Helper_Utility::set_array_val( $combine, $path, $post );
 			} elseif( 'unit' == $post->post_type ) {
-				if( ! isset( $combine[ $post->ID ] ) ) {
-					$combine[ $post->ID ] = array();
-				}
-				$combine[ $post->ID ]['unit'] = $post;
+
+				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );
 			}
 		}
 
-
 		remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
-
-		error_log( print_r( $combine, true ) );
-
-		return array();
 
 		return $combine;
 

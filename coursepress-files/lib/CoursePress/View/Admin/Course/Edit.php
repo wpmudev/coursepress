@@ -302,12 +302,12 @@ class CoursePress_View_Admin_Course_Edit {
 						<table class="course-structure-tree">
 							<thead>
 								<tr>
-									<th class="column-course-structure">' . esc_html__( 'Course Structure', CoursePress::TD ) . '</th>
+									<th class="column-course-structure">' . esc_html__( 'Course Structure', CoursePress::TD ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', CoursePress::TD ) . '</small></th>
 									<th class="column-show">' . esc_html__( 'Show', CoursePress::TD ) . '</th>
 									<th class="column-free-preview">' . esc_html__( 'Free Preview', CoursePress::TD ) . '</th>
 									<th class="column-time">' . esc_html__( 'Time', CoursePress::TD ) . '</th>
 								</tr>
-								<tr class="break"><th colspan="4"></th></tr>
+					            <tr class="break"><th colspan="4"></th></tr>
 							</thead>
 							<tfoot>
 								<tr class="break"><th colspan="4"></th></tr>
@@ -322,40 +322,71 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$units = CoursePress_Model_Course::get_units_with_modules( $course_id, array( 'publish', 'draft' ) );
 
-		//error_log( print_r( get_post_meta( $units[5]['unit']->ID ), true ) );
-		//$units = CoursePress_Model_Course::get_units( $course_id, array( 'publish', 'private', 'draft' ) );
-		//
 		$count = 0;
+		$visible_units = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() );
+		$preview_units = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_units', array() );
+		$visible_pages = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_pages', array() );
+		$preview_pages = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() );
+		$visible_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_modules', array() );
+		$preview_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_modules', array() );
 		foreach ( $units as $unit ) {
-
-			//error_log( print_r( get_post_meta( $unit['unit']->ID, 'page_title', true ), true ) );
-
 
 			$count += 1;
 			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', CoursePress::TD );
 			$draft_class = 'publish' === $unit['unit']->post_status ? '' : 'draft';
 
+			$alt = $count % 2 ? 'even' : 'odd';
+
+			$unit_view_checked =  CoursePress_Helper_Utility::checked( $visible_units[ $unit['unit']->ID ] );
+			$unit_preview_checked = CoursePress_Helper_Utility::checked( $preview_units[ $unit['unit']->ID ] );
 			$content .= '
-								<tr class="unit unit-' . $unit['unit']->ID . ' treegrid-' . $count . ' ' . $draft_class . '">
+								<tr class="unit unit-' . $unit['unit']->ID . ' treegrid-' . $count . ' ' . $draft_class . ' ' . $alt . '">
 			                        <td>' . $status . $unit['unit']->post_title . '</td>
-			                        <td>a</td>
-			                        <td>b</td>
-			                        <td>c</td>
+			                        <td><input type="checkbox" name="meta_structure_visible_units[' . $unit['unit']->ID . ']" value="1" ' .$unit_view_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_preview_units[' . $unit['unit']->ID . ']" value="1" ' . $unit_preview_checked . '/></td>
+			                        <td>[1:00:00]</td>
 			                    </tr>
 			';
 
-			$parent = $count;
-			foreach( $unit['modules'] as $module ) {
-				error_log( print_r( get_post_meta( $module->ID ), true ) );
+			$unit_parent = $count;
+			foreach( $unit['pages'] as $key => $page ) {
 				$count += 1;
+				$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', CoursePress::TD ), $key );
+
+				$page_key = (int)$unit['unit']->ID . '_' . (int)$key;
+
+				$page_view_checked = isset( $visible_pages[ $page_key ] ) ? CoursePress_Helper_Utility::checked( $visible_pages[ $page_key ] ) : '';
+				$page_preview_checked = isset( $preview_pages[ $page_key ] ) ? CoursePress_Helper_Utility::checked( $preview_pages[ $page_key ] ) : '';
+				$alt = $count % 2 ? 'even' : 'odd';
 				$content .= '
-								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' ' . $draft_class . ' treegrid-parent-'. $parent . '">
-			                        <td>' . $status . $module->post_title . '</td>
-			                        <td>a</td>
-			                        <td>b</td>
-			                        <td>c</td>
+								<tr class="page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-'. $unit_parent  . ' ' . $draft_class . ' ' . $alt . '">
+			                        <td>'  . $page_title . '</td>
+			                        <td><input type="checkbox" name="meta_structure_visible_pages[' . $page_key . ']" value="1" ' . $page_view_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_preview_pages[' . $page_key . ']" value="1" ' . $page_preview_checked . '/></td>
+			                        <td>1:00:00</td>
 			                    </tr>
-			';
+				';
+
+				$page_parent = $count;
+				foreach( $page['modules'] as $module ) {
+					$count += 1;
+					$alt = $count % 2 ? 'even' : 'odd';
+					$module_title = ! empty( $module->post_title ) ? $module->post_title : __( 'Untitled Module', CoursePress::TD );
+
+					$mod_view_checked = isset( $visible_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $module->ID ] ) : '';
+					$mod_preview_checked = isset( $preview_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $preview_modules[ $module->ID ] ) : '';
+
+					$content .= '
+								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' treegrid-parent-'. $page_parent . ' ' . $draft_class . ' ' . $alt . '">
+			                        <td>'  . $module_title . '</td>
+			                        <td><input type="checkbox" name="meta_structure_visible_modules[' . $module->ID . ']" value="1" ' . $mod_view_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_preview_modules[' . $module->ID . ']" value="1" ' . $mod_preview_checked . '/></td>
+			                        <td>1:00:00</td>
+			                    </tr>
+					';
+
+				}
+
 			}
 
 		}

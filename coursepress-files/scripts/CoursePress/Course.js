@@ -106,7 +106,7 @@ var CoursePress = CoursePress || {};
             data.course_description = tinyMCE && tinyMCE.get( 'courseDescription' ) ? tinyMCE.get( 'courseDescription' ).getContent() : $( '[name="course_description"]' ).val();
 
             var meta_items = $( '.step-content.step-2 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step );
+            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
@@ -130,10 +130,74 @@ var CoursePress = CoursePress || {};
             data.step_6_val = "I have data from step 6";
         }
 
-
         CoursePress.Course.set( 'data', data );
 
     }
+
+    course_structure_update = function() {
+
+        $.each( $( '.step-content .course-structure tr.unit' ), function ( uidx, unit ) {
+
+            // Make sure its a tree node
+            var match;
+            if ( match = $( unit ).attr( 'class' ).match(/treegrid-\d*\s/g)[0] ) {
+
+                var unit_id = match.trim().split( '-' ).pop();
+
+                var pages_selector = '.step-content .course-structure tr.page.treegrid-parent-' + unit_id;
+                var pages = $( pages_selector );
+
+                // Do pages first
+                $.each( pages, function( pidx, page ) {
+
+                    var page_id = $( page ).attr( 'class' ).match(/treegrid-\d*\s/g)[0].trim().split( '-' ).pop();
+                    var modules_selector = '.step-content .course-structure tr.module.treegrid-parent-' + page_id;
+
+                    var modules_visible_boxes = modules_selector + ' [name*="meta_structure_visible_modules"]';
+                    var modules_visible_count = $( modules_visible_boxes ).length;
+                    var modules_visible_checked = $( modules_visible_boxes + ':checked' ).length;
+
+                    $( '.step-content .course-structure .treegrid-' + page_id + ' [name*=meta_structure_visible_pages]' ).prop(
+                        'checked',
+                        modules_visible_count == modules_visible_checked && modules_visible_checked > 0
+                    )
+
+                    var modules_preview_boxes = modules_selector + ' [name*="meta_structure_preview_modules"]';
+                    var modules_preview_count = $( modules_preview_boxes ).length;
+                    var modules_preview_checked = $( modules_preview_boxes + ':checked' ).length;
+
+                    $( '.step-content .course-structure .treegrid-' + page_id + ' [name*=meta_structure_preview_pages]' ).prop(
+                        'checked',
+                        modules_preview_count == modules_preview_checked && modules_preview_checked > 0
+                    )
+
+                } );
+
+                // Then do units
+                var pages_visible_boxes = pages_selector + ' [name*="meta_structure_visible_pages"]';
+                var pages_visible_count = $( pages_visible_boxes ).length;
+                var pages_visible_checked = $( pages_visible_boxes + ':checked' ).length;
+
+                $( '.step-content .course-structure .treegrid-' + unit_id + ' [name*=meta_structure_visible_units]' ).prop(
+                    'checked',
+                    pages_visible_count == pages_visible_checked && pages_visible_checked > 0
+                )
+
+                var pages_preview_boxes = pages_selector + ' [name*="meta_structure_preview_pages"]';
+                var pages_preview_count = $( pages_preview_boxes ).length;
+                var pages_preview_checked = $( pages_preview_boxes + ':checked' ).length;
+
+                $( '.step-content .course-structure .treegrid-' + unit_id + ' [name*=meta_structure_preview_units]' ).prop(
+                    'checked',
+                    pages_preview_count == pages_preview_checked && pages_preview_checked > 0
+                )
+
+            }
+
+        } );
+
+    }
+
 
     function setup_UI() {
         // Setup Accordion
@@ -159,7 +223,7 @@ var CoursePress = CoursePress || {};
         $( ".chosen-select" ).chosen( { disable_search_threshold: 10 } );
 
         // Tree for course structure
-        $( "table.course-structure-tree" ).treegrid( { initialState: 'collapsed' } );
+        $( "table.course-structure-tree" ).treegrid( { initialState: 'expanded' } );
 
     }
 
@@ -201,6 +265,59 @@ var CoursePress = CoursePress || {};
         } );
 
         $( '.button.browse-media-field' ).browse_media_field();
+
+        // Handle Course Structure Checkboxes
+        $( '.step-content .course-structure input[type="checkbox"]' ).on( 'click', function ( e ) {
+
+            var checkbox = e.currentTarget;
+            var handled = false;
+
+            var name = $( checkbox ).attr( 'name' );
+
+            // Units
+            if ( name.match( /meta_structure_.*_units.*/g ) ) {
+                var type = name.match( /meta_structure_visible_units.*/g ) ? 'visible' : 'preview';
+                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                var parent_id = parent_class.split( '-' ).pop();
+                var parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
+                var page_selector = parent_selector + ' [name*="meta_structure_' + type + '_pages"]';
+                var checked = $( checkbox )[ 0 ].checked;
+
+                var pages = $( page_selector );
+
+                $.each( pages, function ( index, page ) {
+
+                    $( page ).prop( 'checked', checked );
+
+                    parent_class = $( $( page ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                    parent_id = parent_class.split( '-' ).pop();
+                    parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
+                    var module_selector = parent_selector + ' [name*="meta_structure_' + type + '_modules"]';
+
+                    $( module_selector ).prop( 'checked', checked );
+
+                } );
+
+                handled = true;
+            }
+
+            // Pages
+            if ( ! handled && name.match( /meta_structure_.*_pages.*/g ) ) {
+                var type = name.match( /meta_structure_visible_pages.*/g ) ? 'visible' : 'preview';
+                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                var parent_id = parent_class.split( '-' ).pop();
+                var parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
+
+                var checked = $( checkbox )[ 0 ].checked;
+                var module_selector = parent_selector + ' [name*="meta_structure_' + type + '_modules"]';
+
+                $( module_selector ).prop( 'checked', checked );
+            }
+
+            // Update the toggles
+            course_structure_update();
+
+        } );
 
     }
 
