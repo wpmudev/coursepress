@@ -130,17 +130,19 @@ var CoursePress = CoursePress || {};
             data.step_6_val = "I have data from step 6";
         }
 
+        data.meta_setup_marker = step;
+
         CoursePress.Course.set( 'data', data );
 
     }
 
-    course_structure_update = function() {
+    course_structure_update = function () {
 
         $.each( $( '.step-content .course-structure tr.unit' ), function ( uidx, unit ) {
 
             // Make sure its a tree node
             var match;
-            if ( match = $( unit ).attr( 'class' ).match(/treegrid-\d*\s/g)[0] ) {
+            if ( match = $( unit ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ] ) {
 
                 var unit_id = match.trim().split( '-' ).pop();
 
@@ -148,9 +150,9 @@ var CoursePress = CoursePress || {};
                 var pages = $( pages_selector );
 
                 // Do pages first
-                $.each( pages, function( pidx, page ) {
+                $.each( pages, function ( pidx, page ) {
 
-                    var page_id = $( page ).attr( 'class' ).match(/treegrid-\d*\s/g)[0].trim().split( '-' ).pop();
+                    var page_id = $( page ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop();
                     var modules_selector = '.step-content .course-structure tr.module.treegrid-parent-' + page_id;
 
                     var modules_visible_boxes = modules_selector + ' [name*="meta_structure_visible_modules"]';
@@ -200,27 +202,49 @@ var CoursePress = CoursePress || {};
 
 
     function setup_UI() {
+
         // Setup Accordion
         $( "#course-setup-steps" ).accordion( {
+            disabled: true,
             autoHeight: false,
             collapsible: true,
             heightStyle: "content",
             active: 0,
-            animate: 300 // collapse will take 300ms
+            animate: 200 // collapse will take 300ms
         } );
 
-
         // Slide Accordion into Position
-        $( '#course-setup-steps h3' ).bind( 'click', function () {
+        $( '#course-setup-steps .step-title' ).bind( 'click', function ( e ) {
+
             var self = this;
+            console.log( self );
+
+            var step = parseInt( $( self ).attr( 'class' ).match( /step-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop() );
+
+            pre_step = 1 < ( step - 1 ) ? step - 1 : 1;
+            next_step = ( step + 1 ) > 6 ? 6 : step + 1;
+
+            console.log( 'next: ' + next_step );
+            console.log( 'prev: ' + pre_step );
+
+            if ( !$( self ).find( '.status' ).hasClass( 'saved' ) && !$( '.step-title.step-' + pre_step ).find( '.status' ).hasClass( 'saved' ) ) {
+                $( self ).effect( 'highlight', { color: '#ffabab', duration: 300 } );
+                return;
+            }
+
+            // Manually handle the accordion so we don't progress too soon
+            $( "#course-setup-steps" ).accordion( "enable" ).accordion( { active: (step - 1) } ).accordion( "disable" );
+
             setTimeout( function () {
                 theOffset = $( self ).offset();
-                $( 'body,html' ).animate( { scrollTop: theOffset.top - 100 } );
-            }, 310 ); // ensure the collapse animation is done
+                $( 'body,html' ).animate( { scrollTop: theOffset.top - 110, duration: 200 } );
+            }, 200 ); // ensure the collapse animation is done
+
         } );
 
         // Setup Chosen
-        $( ".chosen-select" ).chosen( { disable_search_threshold: 10 } );
+        //$( ".chosen-select" ).chosen( { disable_search_threshold: 10 } );
+        $( ".chosen-select.medium" ).chosen( { disable_search_threshold: 5, width: "40%" } );
 
         // Tree for course structure
         $( "table.course-structure-tree" ).treegrid( { initialState: 'expanded' } );
@@ -243,14 +267,6 @@ var CoursePress = CoursePress || {};
             step = $( target ).hasClass( 'step-4' ) ? 4 : step;
             step = $( target ).hasClass( 'step-5' ) ? 5 : step;
             step = $( target ).hasClass( 'step-6' ) ? 6 : step;
-
-            next_step = 6 < step ? step + 1 : 6;
-
-            if ( !$( '.step-title.step-' + step ).find( '.status' ).hasClass( 'saved' ) && !$( '.step-title.step-' + next_step ).find( '.status' ).hasClass( 'saved' ) ) {
-                e.stopPropagation();
-                e.preventDefault();
-                return;
-            }
 
             if ( null !== step ) {
                 $( '.step-title.step-' + step ).find( '.status' ).removeClass( 'saved' );
@@ -277,7 +293,7 @@ var CoursePress = CoursePress || {};
             // Units
             if ( name.match( /meta_structure_.*_units.*/g ) ) {
                 var type = name.match( /meta_structure_visible_units.*/g ) ? 'visible' : 'preview';
-                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
                 var parent_id = parent_class.split( '-' ).pop();
                 var parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
                 var page_selector = parent_selector + ' [name*="meta_structure_' + type + '_pages"]';
@@ -289,7 +305,7 @@ var CoursePress = CoursePress || {};
 
                     $( page ).prop( 'checked', checked );
 
-                    parent_class = $( $( page ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                    parent_class = $( $( page ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
                     parent_id = parent_class.split( '-' ).pop();
                     parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
                     var module_selector = parent_selector + ' [name*="meta_structure_' + type + '_modules"]';
@@ -302,9 +318,9 @@ var CoursePress = CoursePress || {};
             }
 
             // Pages
-            if ( ! handled && name.match( /meta_structure_.*_pages.*/g ) ) {
+            if ( !handled && name.match( /meta_structure_.*_pages.*/g ) ) {
                 var type = name.match( /meta_structure_visible_pages.*/g ) ? 'visible' : 'preview';
-                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d*\s/g )[ 0 ].trim();
+                var parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
                 var parent_id = parent_class.split( '-' ).pop();
                 var parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
 
@@ -355,6 +371,14 @@ var CoursePress = CoursePress || {};
         setup_UI();
         bind_buttons();
         bind_coursepress_events();
+
+        // Get setup marker and advance accordion
+        var setup_marker = $( '#course-setup-steps .step-title .status.setup_marker' );
+        if ( $( setup_marker ).length > 0 ) {
+            setup_marker = parseInt( $( $( setup_marker ).parents( '.step-title' )[ 0 ] ).attr( 'class' ).match( /step-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop() )
+            setup_marker = ( setup_marker + 1 ) > 6 ? 6 : setup_marker + 1;
+            $( '#course-setup-steps .step-title.step-' + setup_marker ).click();
+        }
 
     } );
 

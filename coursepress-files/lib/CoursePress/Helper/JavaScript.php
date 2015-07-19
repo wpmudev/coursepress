@@ -34,13 +34,14 @@ class CoursePress_Helper_JavaScript {
 		wp_editor( 'CONTENT', 'EDITORID', array( 'wpautop' => false ) );
 		$dummy_editor = ob_get_clean();
 
-		wp_localize_script( 'coursepress_object', '_coursepress', array(
+		$localize_array = array(
 			'_ajax_url'                => CoursePress_Helper_Utility::get_ajax_url(),
 			'_dummy_editor'            => $dummy_editor,
 			'allowed_video_extensions' => wp_get_video_extensions(),
 			'allowed_audio_extensions' => wp_get_audio_extensions(),
 			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
-		) );
+		);
+
 
 		// Models
 		if ( 'coursepress_course' === $_GET['page'] ) {
@@ -48,6 +49,8 @@ class CoursePress_Helper_JavaScript {
 
 			wp_enqueue_script( 'coursepress_course', $script, array(
 				'jquery-ui-accordion',
+				'jquery-effects-highlight',
+				'jquery-effects-core',
 				'backbone',
 			), CoursePress_Core::$version );
 
@@ -57,7 +60,16 @@ class CoursePress_Helper_JavaScript {
 				'jquery'
 			), CoursePress_Core::$version );
 
+			$localize_array['instructor_avatars'] = CoursePress_Helper_UI::get_user_avatar_array();
 		}
+
+
+
+
+
+		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
+
+
 
 
 	}
