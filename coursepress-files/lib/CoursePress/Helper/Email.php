@@ -13,25 +13,25 @@ class CoursePress_Helper_Email {
 	public static function from_name( $context ) {
 		$fields = CoursePress_Helper_Settings_Email::get_defaults( $context );
 
-		return $fields['from_name'];
+		return CoursePress_Core::get_setting( 'email/' . $context . '/from_name', $fields['from_name'] );
 	}
 
 	public static function from_email( $context ) {
 		$fields = CoursePress_Helper_Settings_Email::get_defaults( $context );
 
-		return $fields['from_email'];
+		return CoursePress_Core::get_setting( 'email/' . $context . '/from_email', $fields['from_email'] );
 	}
 
 	public static function subject( $context ) {
 		$fields = CoursePress_Helper_Settings_Email::get_defaults( $context );
 
-		return $fields['subject'];
+		return CoursePress_Core::get_setting( 'email/' . $context . '/subject', $fields['subject'] );
 	}
 
 	public static function content( $context ) {
 		$fields = CoursePress_Helper_Settings_Email::get_defaults( $context );
 
-		return $fields['content'];
+		return CoursePress_Core::get_setting( 'email/' . $context . '/content', $fields['content'] );
 	}
 
 	public static function get_email_fields( $context ) {

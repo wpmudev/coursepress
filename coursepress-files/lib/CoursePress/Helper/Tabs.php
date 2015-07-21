@@ -24,7 +24,7 @@ class CoursePress_Helper_Tabs {
 			$class = $key === $active ? 'active' : '';
 			$class .= ' ' . $tab['class'];
 
-			$query_string = '';
+			$query_string = 'page=' . $page;
 			$first = true;
 			foreach( $hidden_args as $arg_key => $arg_value ) {
 				$query_string .= $first ? '' : '&amp;';

@@ -610,6 +610,8 @@ class CoursePress_View_Admin_Settings_General {
 			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : false;
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 
+			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
+
 			// Don't replace settings if there is nothing to replace
 			if ( ! empty( $post_settings ) ) {
 				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings

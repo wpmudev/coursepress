@@ -117,7 +117,7 @@ class CoursePress_View_Admin_Course_Edit {
 		//CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 );
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_1', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 0 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
@@ -237,10 +237,10 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function render_setup_step_2() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_2', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Description', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
@@ -330,46 +330,46 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$units = CoursePress_Model_Course::get_units_with_modules( $course_id, array( 'publish', 'draft' ) );
 
-		$count = 0;
-		$visible_units = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() );
-		$preview_units = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_units', array() );
-		$visible_pages = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_pages', array() );
-		$preview_pages = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() );
+		$count           = 0;
+		$visible_units   = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() );
+		$preview_units   = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_units', array() );
+		$visible_pages   = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_pages', array() );
+		$preview_pages   = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() );
 		$visible_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_modules', array() );
 		$preview_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_modules', array() );
 		foreach ( $units as $unit ) {
 
 			$estimations = CoursePress_Model_Unit::get_time_estimation( $unit['unit']->ID, $units );
 			$count += 1;
-			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', CoursePress::TD );
+			$status      = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', CoursePress::TD );
 			$draft_class = 'publish' === $unit['unit']->post_status ? '' : 'draft';
 
 			$alt = $count % 2 ? 'even' : 'odd';
 
-			$unit_view_checked =  CoursePress_Helper_Utility::checked( $visible_units[ $unit['unit']->ID ] );
+			$unit_view_checked    = CoursePress_Helper_Utility::checked( $visible_units[ $unit['unit']->ID ] );
 			$unit_preview_checked = CoursePress_Helper_Utility::checked( $preview_units[ $unit['unit']->ID ] );
 			$content .= '
 								<tr class="unit unit-' . $unit['unit']->ID . ' treegrid-' . $count . ' ' . $draft_class . ' ' . $alt . '">
 			                        <td>' . $status . $unit['unit']->post_title . '</td>
-			                        <td><input type="checkbox" name="meta_structure_visible_units[' . $unit['unit']->ID . ']" value="1" ' .$unit_view_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_visible_units[' . $unit['unit']->ID . ']" value="1" ' . $unit_view_checked . '/></td>
 			                        <td><input type="checkbox" name="meta_structure_preview_units[' . $unit['unit']->ID . ']" value="1" ' . $unit_preview_checked . '/></td>
 			                        <td>' . $estimations['unit']['estimation'] . '</td>
 			                    </tr>
 			';
 
 			$unit_parent = $count;
-			foreach( $unit['pages'] as $key => $page ) {
+			foreach ( $unit['pages'] as $key => $page ) {
 				$count += 1;
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', CoursePress::TD ), $key );
 
-				$page_key = (int)$unit['unit']->ID . '_' . (int)$key;
+				$page_key = (int) $unit['unit']->ID . '_' . (int) $key;
 
-				$page_view_checked = isset( $visible_pages[ $page_key ] ) ? CoursePress_Helper_Utility::checked( $visible_pages[ $page_key ] ) : '';
+				$page_view_checked    = isset( $visible_pages[ $page_key ] ) ? CoursePress_Helper_Utility::checked( $visible_pages[ $page_key ] ) : '';
 				$page_preview_checked = isset( $preview_pages[ $page_key ] ) ? CoursePress_Helper_Utility::checked( $preview_pages[ $page_key ] ) : '';
-				$alt = $count % 2 ? 'even' : 'odd';
+				$alt                  = $count % 2 ? 'even' : 'odd';
 				$content .= '
-								<tr class="page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-'. $unit_parent  . ' ' . $draft_class . ' ' . $alt . '">
-			                        <td>'  . $page_title . '</td>
+								<tr class="page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt . '">
+			                        <td>' . $page_title . '</td>
 			                        <td><input type="checkbox" name="meta_structure_visible_pages[' . $page_key . ']" value="1" ' . $page_view_checked . '/></td>
 			                        <td><input type="checkbox" name="meta_structure_preview_pages[' . $page_key . ']" value="1" ' . $page_preview_checked . '/></td>
 			                        <td>' . $estimations['pages'][ $key ]['estimation'] . '</td>
@@ -377,17 +377,17 @@ class CoursePress_View_Admin_Course_Edit {
 				';
 
 				$page_parent = $count;
-				foreach( $page['modules'] as $module ) {
+				foreach ( $page['modules'] as $module ) {
 					$count += 1;
-					$alt = $count % 2 ? 'even' : 'odd';
+					$alt          = $count % 2 ? 'even' : 'odd';
 					$module_title = ! empty( $module->post_title ) ? $module->post_title : __( 'Untitled Module', CoursePress::TD );
 
-					$mod_view_checked = isset( $visible_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $module->ID ] ) : '';
+					$mod_view_checked    = isset( $visible_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $module->ID ] ) : '';
 					$mod_preview_checked = isset( $preview_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $preview_modules[ $module->ID ] ) : '';
 
 					$content .= '
-								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' treegrid-parent-'. $page_parent . ' ' . $draft_class . ' ' . $alt . '">
-			                        <td>'  . $module_title . '</td>
+								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' treegrid-parent-' . $page_parent . ' ' . $draft_class . ' ' . $alt . '">
+			                        <td>' . $module_title . '</td>
 			                        <td><input type="checkbox" name="meta_structure_visible_modules[' . $module->ID . ']" value="1" ' . $mod_view_checked . '/></td>
 			                        <td><input type="checkbox" name="meta_structure_preview_modules[' . $module->ID . ']" value="1" ' . $mod_preview_checked . '/></td>
 			                        <td>' . CoursePress_Model_Module::get_time_estimation( $module->ID, '1:00', true ) . '</td>
@@ -431,10 +431,10 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function render_setup_step_3() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_3', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
@@ -450,29 +450,57 @@ class CoursePress_View_Admin_Course_Edit {
 		                <p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', CoursePress::TD ) . '</p>
 						</label>
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
-							'placeholder' => __( 'Choose a Course Instructor...', CoursePress::TD ),
-							'class' => 'chosen-select medium'
-						) ) . '
+				'placeholder' => __( 'Choose a Course Instructor...', CoursePress::TD ),
+				'class'       => 'chosen-select medium'
+			) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', CoursePress::TD ) . '" />
 				</div>
 				<div class="instructors-info medium" id="instructors-info">
 					<p>' . esc_html__( 'Assigned Instructors:', CoursePress::TD ) . '</p>
 				';
 
-		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array( 'remove_buttons' => true, 'count' => true ) ) ) {
+		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
+				'remove_buttons' => true,
+				'count'          => true
+			) )
+		) {
 			$content .= '
 					<div class="instructor-avatar-holder empty">
 						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', CoursePress::TD ) . '</span>
 					</div>
 			';
 		} else {
-			$content .= CoursePress_Helper_UI::course_instructors_avatars( $course_id );
+			$content .= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true );
 		}
 
 		$content .= '
 				</div>';
 
+		// Instructor Invite
+		$content .= '
+				<div class="wide">
+					<hr />
 
+					<label>' .
+		            esc_html__( 'Invite New Instructor', CoursePress::TD ) . '
+		                <p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', CoursePress::TD ) . '</p>
+					</label>
+					<div class="instructor-invite">
+						<label for="invite_instructor_first_name">' . esc_html__( 'First Name', CoursePress::TD ) . '</label>
+						<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', CoursePress::TD ) . '"/>
+						<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', CoursePress::TD ) . '</label>
+						<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', CoursePress::TD ). '"/>
+						<label for="invite_instructor_email">' . esc_html__( 'E-Mail', CoursePress::TD ) . '</label>
+						<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', CoursePress::TD ) . '"/>
+
+						<div class="submit-message">
+							<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', CoursePress::TD ) . '">
+						</div>
+					</div>
+
+
+				</div>
+				';
 
 
 		/**
@@ -497,17 +525,16 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function render_setup_step_4() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_4', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-4">' . esc_html__( 'Step 4 – Course Dates', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-4">
 				<input type="hidden" name="meta_setup_step_4" value="saved" />
 			';
-
 
 
 		/**
@@ -532,17 +559,16 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function render_setup_step_5() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_5', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-5">' . esc_html__( 'Step 5 – Classes, Discussion & Workbook', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-5">
 				<input type="hidden" name="meta_setup_step_5" value="saved" />
 			';
-
 
 
 		/**
@@ -567,10 +593,10 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function render_setup_step_6() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_6', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 6 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
+		$content     = '
 			<div class="step-title step-6">' . esc_html__( 'Step 6 – Enrollment & Course Cost', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
@@ -680,26 +706,76 @@ class CoursePress_View_Admin_Course_Edit {
 	public static function update_course() {
 
 		$data      = json_decode( file_get_contents( 'php://input' ) );
-		$data      = $data->data;
+		$step_data = $data->data;
 		$json_data = array();
-		$success   = true;
+		$success   = false;
 
-		if ( isset( $data->step ) ) {
-
-			$step = (int) $data->step;
-
-			$res = CoursePress_Model_Course::update( $data->course_id, $data );
-
-			$next_step = $step + 1;
-			$next_step = 6 < $next_step ? 6 : $next_step;
-
-			$json_data['last_step'] = $step;
-			$json_data['next_step'] = $next_step;
-
-		} else {
-			$success = false;
+		if ( empty( $data->action ) ) {
+			$json_data['message'] = __( 'Course Update: No action.', CoursePress::TD );
+			wp_send_json_error( $json_data );
 		}
 
+		$action = sanitize_text_field( $data->action );
+		$json_data['action'] = $action;
+
+		switch ( $action ) {
+
+			// Update Course
+			case 'update_course':
+
+				if ( isset( $step_data->step ) ) {
+
+					$step = (int) $step_data->step;
+
+					$res = CoursePress_Model_Course::update( $step_data->course_id, $step_data );
+
+					$next_step = $step + 1;
+					$next_step = 6 < $next_step ? 6 : $next_step;
+
+					$json_data['last_step'] = $step;
+					$json_data['next_step'] = $next_step;
+
+					$success = true;
+				}
+
+				break;
+
+			// Delete Instructor
+			case 'delete_instructor':
+				CoursePress_Model_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
+				$json_data['instructor_id'] = $data->data->instructor_id;
+				$json_data['course_id'] = $data->data->course_id;
+				$success = true;
+				break;
+
+			// Add Instructor
+			case 'add_instructor':
+				CoursePress_Model_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
+				$json_data['instructor_id'] = $data->data->instructor_id;
+				$json_data['instructor_name'] = $data->data->instructor_name;
+				$json_data['course_id'] = $data->data->course_id;
+				$success = true;
+				break;
+
+			// Invite Instructor
+			case 'invite_instructor':
+				$email_data = CoursePress_Helper_Utility::object_to_array( $data->data );
+				$response = CoursePress_Model_Instructor::send_invitation( $email_data );
+				$json_data['message'] = $response['message'];
+				$json_data['data'] = $data->data;
+				$json_data['invite_code'] = $response['invite_code'];
+				$success = $response['success'];
+				break;
+
+			// Delete Invite
+			case 'delete_instructor_invite':
+				CoursePress_Model_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
+				$json_data['course_id'] = $data->data->course_id;
+				$json_data['invite_code'] = $data->data->invite_code;
+				$success = true;
+				break;
+
+		}
 
 		if ( $success ) {
 			wp_send_json_success( $json_data );

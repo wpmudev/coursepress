@@ -61,6 +61,15 @@ class CoursePress_Helper_JavaScript {
 			), CoursePress_Core::$version );
 
 			$localize_array['instructor_avatars'] = CoursePress_Helper_UI::get_user_avatar_array();
+			$localize_array['instructor_delete_confirm'] = __( 'Please confirm that you want to remove the instructor from this course.', CoursePress::TD );
+			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', CoursePress::TD );
+			$localize_array['instructor_empty_message'] = __( 'Please Assign Instructor', CoursePress::TD );
+			$localize_array['instructor_pednding_status'] = __( 'Pending', CoursePress::TD );
+			$localize_array['email_validation_pattern'] = __( '.+@.+', CoursePress::TD );
+
+			if( ! empty( $_REQUEST['id'] ) ) {
+				$localize_array['course_id'] = (int) $_REQUEST['id'];
+			}
 		}
 
 

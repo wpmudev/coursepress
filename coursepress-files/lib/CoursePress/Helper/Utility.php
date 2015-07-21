@@ -124,7 +124,7 @@ class CoursePress_Helper_Utility {
 		return $merged;
 	}
 
-	function delete_user_meta_by_key( $meta_key ) {
+	public static function delete_user_meta_by_key( $meta_key ) {
 		global $wpdb;
 
 		$legacy = delete_metadata( 'user', 0, $meta_key, '', true );
@@ -146,6 +146,25 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
+	public static function sanitize_recursive( $array ) {
+
+		if( ! is_array( $array ) ) {
+			if( is_string( $array ) ) {
+				return self::filter_content( $array );
+			} else {
+				// Lets not mess with booleans
+				return $array;
+			}
+		} else {
+
+			foreach( $array as $key => $value ) {
+				$array[ $key ] = self::sanitize_recursive( $value );
+			}
+
+			return $array;
+		}
+
+	}
 
 	// Deals with legacy 'on' / 'off' values for checkboxes
 	public static function checked( $value, $compare = true, $echo = false ) {
@@ -218,6 +237,45 @@ class CoursePress_Helper_Utility {
 		$allowed_tags = wp_kses_allowed_html( 'post' );
 
 		return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
+	}
+
+	public static function send_email( $args ) {
+
+		if( ! isset( $args['email_type'] ) ) {
+			return;
+		}
+
+		// Filtered fields
+		$email = apply_filters( 'coursepress_email_fields', array(
+
+			'email' => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ) , $args ),
+			'subject' => apply_filters( 'coursepress_email_subject', 'FILTER EMAIL SUBJECT', $args ),
+			'message' => apply_filters( 'coursepress_email_message', 'FILTER EMAIL MESSAGE', $args ),
+
+		), $args );
+
+		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
+		do_action( 'coursepress_email_pre_send', $args );
+
+		if( apply_filters( 'coursepress_email_strip_slashed', true, $args ) ) {
+			$email['subject'] = stripslashes( $email['subject'] );
+			$email['message'] = stripslashes( nl2br( $email['message'] ) );
+		}
+
+		$headers = apply_filters( 'coursepress_email_headers', array(
+			'Content-type' => 'text/html',
+		), $args );
+
+		$header_string = '';
+		foreach( $headers as $key => $value ) {
+			$header_string .= $key . ': ' . $value . "\r\n";
+		}
+
+		$result = wp_mail( $email['email'], $email['subject'], $email['message'], $header_string );
+
+		do_action( 'coursepress_email_post_send', $args, $result );
+
+		return apply_filters( 'coursepress_email_send_result', $result, $args );
 	}
 
 }

@@ -11,12 +11,13 @@ var CoursePress = CoursePress || {};
             // Trigger course update events
             if ( true === response.success ) {
                 this.set( 'response_data', response.data );
-                this.trigger( 'coursepress:course_updated', response.data );
+                this.trigger( 'coursepress:' + response.data.action + '_success', response.data );
             } else {
                 this.set( 'response_data', {} );
-                this.trigger( 'coursepress:course_update_error', response.data );
+                this.trigger( 'coursepress:' + response.data.action + '_error', response.data );
             }
 
+            CoursePress.Course.set( 'action', '' );
         },
         defaults: {}
     } );
@@ -133,6 +134,7 @@ var CoursePress = CoursePress || {};
         data.meta_setup_marker = step;
 
         CoursePress.Course.set( 'data', data );
+        CoursePress.Course.set( 'action', 'update_course' );
 
     }
 
@@ -253,6 +255,7 @@ var CoursePress = CoursePress || {};
 
     function bind_buttons() {
 
+        // NEXT BUTTON
         $( '.step-content .button.step.next' ).on( 'click', function ( e ) {
 
             var target = e.currentTarget;
@@ -280,6 +283,7 @@ var CoursePress = CoursePress || {};
 
         } );
 
+        // BROWSE MEDIA BUTTONS
         $( '.button.browse-media-field' ).browse_media_field();
 
         // Handle Course Structure Checkboxes
@@ -335,11 +339,128 @@ var CoursePress = CoursePress || {};
 
         } );
 
+        // ADD INSTRUCTOR
+        $( '.button.instructor-assign' ).on( 'click', function ( e ) {
+
+            var instructor_id = parseInt( $( $( 'select[name="instructors"]' )[ 0 ] ).val() );
+            var instructor_name = $( $( 'select[name="instructors"]' )[ 0 ] )[ 0 ].textContent;
+
+            CoursePress.Course.set( 'action', 'add_instructor' );
+            var data = {
+                instructor_id: instructor_id,
+                course_id: _coursepress.course_id,
+                instructor_name: instructor_name
+            };
+            CoursePress.Course.set( 'data', data );
+            CoursePress.Course.save();
+
+        } );
+
+
+        // REMOVE INSTRUCTOR
+        bind_remove_button( '.instructor-avatar-holder .instructor-remove a' );
+        bind_remove_button( '.instructor-avatar-holder .invite-remove a', true );
+
+        // INSTRUCTOR INVITATIONS
+        // Submit Invite on 'Return/Enter'
+        $( '.instructor-invite input' ).keypress( function ( event ) {
+            if ( event.which == 13 ) {
+                switch ( $( this ).attr( 'name' ) ) {
+
+                    case "invite_instructor_first_name":
+                        $( '[name=invite_instructor_last_name]' ).trigger( 'focus' );
+                        break;
+                    case "invite_instructor_last_name":
+                        $( '[name=invite_instructor_email]' ).trigger( 'focus' );
+                        break;
+                    case "invite_instructor_email":
+                    case "invite_instructor_trigger":
+                        $( '#invite-instructor-trigger' ).trigger( 'click' );
+                        $( '[name=invite_instructor_first_name]' ).trigger( 'focus' );
+                        break;
+                }
+                event.preventDefault();
+            }
+        } );
+
+        $( '#invite-instructor-trigger' ).on( 'click', function ( e ) {
+
+            // Really basic validation
+            var email = $( '[name=invite_instructor_email]' ).val();
+            var first_name = $( '[name=invite_instructor_first_name]' ).val();
+            var last_name = $( '[name=invite_instructor_last_name]' ).val();
+            var parent = $( e.currentTarget ).parent();
+
+            var email_valid = email.match( _coursepress.email_validation_pattern ) !== null
+
+            if ( email_valid ) {
+
+                CoursePress.Course.set( 'action', 'invite_instructor' );
+                var data = {
+                    first_name: first_name,
+                    last_name: last_name,
+                    email: email,
+                    course_id: _coursepress.course_id
+                };
+                CoursePress.Course.set( 'data', data );
+                CoursePress.Course.save();
+
+            } else {
+                console.log( 'DO SOMETHING TO THE UI!' );
+            }
+
+        } );
+
+
+    }
+
+    /**
+     * Used to bind instructor boxes. Separated to be invoked on individual buttons.
+     * @param selector
+     */
+    function bind_remove_button( selector, remove_pending ) {
+
+        if ( undefined === remove_pending ) {
+            remove_pending = false;
+        }
+
+        $( selector ).on( 'click', function ( e ) {
+
+            var target = e.currentTarget;
+
+            if ( !remove_pending ) {
+                var instructor_id = parseInt( $( $( target ).parents( '.instructor-avatar-holder' )[ 0 ] ).attr( 'id' ).match( /instructor_holder_\d{1,10}/g )[ 0 ].trim().split( '_' ).pop() );
+
+                // Confirm before deleting
+                if ( confirm( _coursepress.instructor_delete_confirm ) ) {
+                    CoursePress.Course.set( 'action', 'delete_instructor' );
+                    var data = { instructor_id: instructor_id, course_id: _coursepress.course_id };
+                    CoursePress.Course.set( 'data', data );
+                    CoursePress.Course.save();
+                }
+            } else {
+                var invite_code = $( $( target ).parents( '.instructor-avatar-holder' )[ 0 ] ).attr( 'id' ).replace( 'instructor_holder_', '' );
+
+                // Confirm before deleting
+                if ( confirm( _coursepress.instructor_delete_invite_confirm ) ) {
+                    CoursePress.Course.set( 'action', 'delete_instructor_invite' );
+                    var data = { invite_code: invite_code, course_id: _coursepress.course_id };
+                    CoursePress.Course.set( 'data', data );
+                    CoursePress.Course.save();
+                }
+            }
+
+
+        } );
     }
 
     function bind_coursepress_events() {
 
-        CoursePress.Course.on( 'coursepress:course_updated', function ( data ) {
+
+        /**
+         * COURSE UPDATE
+         */
+        CoursePress.Course.on( 'coursepress:update_course_success', function ( data ) {
 
             $( '.step-title.step-' + data.last_step ).find( '.status' ).addClass( 'saved' );
             $( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-error' );
@@ -351,7 +472,7 @@ var CoursePress = CoursePress || {};
 
         } );
 
-        CoursePress.Course.on( 'coursepress:course_update_error', function ( data ) {
+        CoursePress.Course.on( 'coursepress:update_course_error', function ( data ) {
 
             $( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'saved' );
             $( '.step-title.step-' + data.last_step ).find( '.status' ).addClass( 'save-error' );
@@ -359,8 +480,93 @@ var CoursePress = CoursePress || {};
             $( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-process' );
 
             console.log( data );
+        } );
+
+        /**
+         * INSTRUCTOR ACTIONS
+         */
+        CoursePress.Course.on( 'coursepress:add_instructor_success', function ( data ) {
+
+            var remove_buttons = true; // permission required
+            var content = '';
+            if ( remove_buttons ) {
+                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + _coursepress.instructor_avatars[ data.instructor_id ] + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
+            } else {
+                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div>' + _coursepress.instructor_avatars[ data.instructor_id ] + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
+            }
+
+            if ( $( '.instructor-avatar-holder.empty' ).length > 0 ) {
+                $( '.instructor-avatar-holder.empty' ).detach();
+            }
+
+            if ( $( '#instructor_holder_' + data.instructor_id ).length === 0 ) {
+                $( '#instructors-info' ).append( content );
+                bind_remove_button( '#instructor_holder_' + data.instructor_id + ' .instructor-remove a' );
+            }
 
         } );
+
+        CoursePress.Course.on( 'coursepress:delete_instructor_success', function ( data ) {
+
+            var empty_holder = '<div class="instructor-avatar-holder empty"><span class="instructor-name">' + _coursepress.instructor_empty_message + '</span></div>';
+
+            // Remove Instructor Avatar
+            $( '#instructor_holder_' + data.instructor_id ).detach();
+
+            if ( $( '.instructor-avatar-holder' ).length === 0 ) {
+                $( '#instructors-info' ).append( empty_holder );
+            }
+
+
+        } );
+
+        CoursePress.Course.on( 'coursepress:invite_instructor_success', function ( data ) {
+            var email = data.data.email;
+            var invite_code = data.invite_code;
+            var img = CoursePress.utility.get_gravatar_image( email, 80 );
+
+            var remove_buttons = true; // permission required
+            var content = '';
+            var message = '';
+
+            if ( remove_buttons ) {
+                content += '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' + invite_code + '"><div class="instructor-status">' + _coursepress.instructor_pednding_status + '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + img + '<span class="instructor-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
+            } else {
+                content += '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' + invite_code + '"><div class="instructor-status">' + _coursepress.instructor_pednding_status + '</div>' + img + '<span class="instructor-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
+            }
+
+            if ( $( '.instructor-avatar-holder.empty' ).length > 0 ) {
+                $( '.instructor-avatar-holder.empty' ).detach();
+            }
+
+            if ( $( '#instructor_holder_' + invite_code ).length === 0 ) {
+                $( '#instructors-info' ).append( content );
+                bind_remove_button( '#instructor_holder_' + invite_code + ' .invite-remove a', true );
+
+                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['sent'] + '</span>';
+
+            } else {
+                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['exists'] + '</span>';
+            }
+
+            $( '.instructor-invite .submit-message' ).append( message );
+            $( '.instructor-invite .submit-message .message' ).fadeOut( 3000 );
+
+
+        } );
+
+        CoursePress.Course.on( 'coursepress:invite_instructor_error', function ( data ) {
+
+            message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['send_error'] + '</span>';
+            $( '.instructor-invite .submit-message' ).append( message );
+            $( '.instructor-invite .submit-message .message' ).fadeOut( 3000 );
+
+        } );
+
+        CoursePress.Course.on( 'coursepress:delete_instructor_invite_success', function ( data ) {
+            $( '#instructor_holder_' + data.invite_code ).detach();
+        } );
+
 
     }
 

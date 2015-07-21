@@ -98,8 +98,21 @@ class CoursePress_View_Admin_Settings_Email{
 
 	}
 
-	public static function process_form() {
+	public static function process_form( $page, $tab ) {
 
+		if ( isset( $_POST['action'] ) && 'updateoptions' === $_POST['action'] && 'email' === $tab && wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) {
+
+			$settings      = CoursePress_Core::get_setting( false ); // false returns all settings
+			$post_settings = (array) $_POST['coursepress_settings'];
+
+			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
+
+			// Don't replace settings if there is nothing to replace
+			if ( ! empty( $post_settings ) ) {
+				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
+			}
+
+		}
 
 
 	}

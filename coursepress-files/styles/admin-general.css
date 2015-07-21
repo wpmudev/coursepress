@@ -575,6 +575,7 @@ input.button.button-primary.instructor-assign {
   border: 1px dashed #e1e1e1;
 }
 
+#course-setup-steps .step-content .invite-remove a,
 #course-setup-steps .step-content .instructor-remove a {
   display: block;
   width: 80px;
@@ -589,10 +590,12 @@ input.button.button-primary.instructor-assign {
   z-index: 9999;
 }
 
+#course-setup-steps .step-content .invite-remove a:hover,
 #course-setup-steps .step-content .instructor-remove a:hover {
   text-indent: 0;
 }
 
+#course-setup-steps .step-content .invite-remove a span.dashicons-dismiss::before,
 #course-setup-steps .step-content .instructor-remove a span.dashicons-dismiss::before {
   font-size: 28px;
   left: 28px;
@@ -622,6 +625,51 @@ input.button.button-primary.instructor-assign {
   position: absolute;
   top: 0;
   width: 80px;
+}
+
+/* Intructor invites */
+#course-setup-steps .step-content .instructor-invite {
+  overflow: hidden;
+  margin-top: 2em;
+}
+
+#course-setup-steps .step-content .instructor-invite label {
+  clear: both;
+  display: block;
+  float: left;
+  font-weight: normal;
+  width: 100px;
+  margin: 0;
+}
+
+#course-setup-steps .step-content .instructor-invite input[type="text"],
+#course-setup-steps .step-content .instructor-invite input[type="email"] {
+  clear: right;
+  display: block;
+  float: left;
+  margin-bottom: 10px;
+  max-width: 280px;
+}
+
+#course-setup-steps .step-content .instructor-invite .submit-message {
+  clear: both;
+  padding-left: 100px;
+}
+
+#course-setup-steps .step-content .instructor-invite .submit-message #invite_instructor_trigger {
+  clear: both;
+  display: inline;
+  margin-left: 100px;
+}
+
+#course-setup-steps .step-content .instructor-invite .submit-message .message .dashicons.dashicons-yes {
+  color: #6FC26E;
+  padding: 4px 0 0 4px;
+}
+
+#course-setup-steps .step-content .instructor-invite .submit-message .message .dashicons.dashicons-no-alt {
+  color: #E43037;
+  padding: 5px 0 0 4px;
 }
 
 /* TreeGrid Styles */
