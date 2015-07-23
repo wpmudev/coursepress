@@ -100,6 +100,7 @@ class CoursePress_Helper_Settings {
 		$script       = CoursePress_Core::$plugin_lib_url . 'scripts/admin-general.js';
 		$sticky       = CoursePress_Core::$plugin_lib_url . 'scripts/sticky.min.js';
 		$editor_style = CoursePress_Core::$plugin_lib_url . 'styles/editor.css';
+		$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/font-awesome.min.css';
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
@@ -115,6 +116,9 @@ class CoursePress_Helper_Settings {
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/chosen.jquery.min.js';
 			wp_enqueue_style( 'chosen_css', $style, array( 'dashicons' ), CoursePress_Core::$version );
 			wp_enqueue_script( 'chosen_js', $script, array( 'jquery' ), CoursePress_Core::$version, true );
+
+			// Font Awesome
+			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress_Core::$version );
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress_Core::$version );

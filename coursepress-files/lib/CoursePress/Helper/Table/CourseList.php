@@ -70,7 +70,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
 		$actions = [
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), $duplicate_nonce, __( 'Edit', CoursePress::TD ) ),
+			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
 			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'units', absint( $item->ID ), $duplicate_nonce, __( 'Units', CoursePress::TD ) ),
 			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'students', absint( $item->ID ), $duplicate_nonce, __( 'Students', CoursePress::TD ) ),
 			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->ID ), $duplicate_nonce, __( 'View Course', CoursePress::TD ) ),

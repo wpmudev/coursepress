@@ -83,7 +83,11 @@ var CoursePress = CoursePress || {};
         return items;
     }
 
-    CoursePress.Course.get_step = function ( step ) {
+    CoursePress.Course.get_step = function ( step, action_type ) {
+
+        if ( typeof action_type == 'undefined' ) {
+            action_type = 'next';
+        }
 
         var data = {};
 
@@ -113,28 +117,53 @@ var CoursePress = CoursePress || {};
 
         // Step 3 Data
         if ( 3 <= step ) {
-            data.step_3_val = "I have data from step 3";
+            var meta_items = $( '.step-content.step-3 [name^="meta_"]' ).serializeArray();
+            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 4 Data
         if ( 4 <= step ) {
-            data.step_4_val = "I have data from step 4";
+            var meta_items = $( '.step-content.step-4 [name^="meta_"]' ).serializeArray();
+            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 1 Data
         if ( 5 <= step ) {
-            data.step_5_val = "I have data from step 5";
+            var meta_items = $( '.step-content.step-5 [name^="meta_"]' ).serializeArray();
+            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 1 Data
         if ( 6 <= step ) {
-            data.step_6_val = "I have data from step 6";
+            var meta_items = $( '.step-content.step-6 [name^="meta_"]' ).serializeArray();
+            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
-        data.meta_setup_marker = step;
+        var next_step = step;
+
+        if ( 'next' === action_type ) {
+            data.meta_setup_marker = step;
+            next_step = next_step !== 6 ? next_step + 1 : next_step;
+        }
+        if ( 'update' === action_type ) {
+            //data.meta_setup_marker = step;
+        }
+        if ( 'prev' === action_type ) {
+            data.meta_setup_marker = step - 1;
+            next_step = next_step !== 1 ? next_step - 1 : next_step;
+        }
+        if ( 'finish' === action_type ) {
+            data.meta_setup_marker = step;
+        }
+
 
         CoursePress.Course.set( 'data', data );
         CoursePress.Course.set( 'action', 'update_course' );
+        CoursePress.Course.set( 'next_step', next_step );
 
     }
 
@@ -219,15 +248,10 @@ var CoursePress = CoursePress || {};
         $( '#course-setup-steps .step-title' ).bind( 'click', function ( e ) {
 
             var self = this;
-            console.log( self );
-
             var step = parseInt( $( self ).attr( 'class' ).match( /step-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop() );
 
             pre_step = 1 < ( step - 1 ) ? step - 1 : 1;
             next_step = ( step + 1 ) > 6 ? 6 : step + 1;
-
-            console.log( 'next: ' + next_step );
-            console.log( 'prev: ' + pre_step );
 
             if ( !$( self ).find( '.status' ).hasClass( 'saved' ) && !$( '.step-title.step-' + pre_step ).find( '.status' ).hasClass( 'saved' ) ) {
                 $( self ).effect( 'highlight', { color: '#ffabab', duration: 300 } );
@@ -251,16 +275,74 @@ var CoursePress = CoursePress || {};
         // Tree for course structure
         $( "table.course-structure-tree" ).treegrid( { initialState: 'expanded' } );
 
+        // ===== DATE PICKERS =====
+        $( '.dateinput' ).datepicker( {
+            dateFormat: 'yy-mm-dd'
+            //firstDay: coursepress.start_of_week
+        } );
+        $( '.date' ).click( function ( event ) {
+            if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {
+                $( this ).find( '.dateinput' ).datepicker( "show" );
+            }
+        } );
+
+        $( '[name="meta_enrollment_open_ended"]' ).change( function () {
+            if ( this.checked ) {
+                $( this ).parents( '.enrollment-dates' ).find( '.start-date' ).addClass( 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.start-date input' ).attr( 'disabled', 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.end-date' ).addClass( 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.end-date input' ).attr( 'disabled', 'disabled' );
+            } else {
+                $( this ).parents( '.enrollment-dates' ).find( '.start-date' ).removeClass( 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.start-date input' ).removeAttr( 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.end-date' ).removeClass( 'disabled' );
+                $( this ).parents( '.enrollment-dates' ).find( '.end-date input' ).removeAttr( 'disabled' );
+            }
+        } );
+
+        $( '[name="meta_course_open_ended"]' ).change( function () {
+            if ( this.checked ) {
+                $( this ).parents( '.course-dates' ).find( '.end-date' ).addClass( 'disabled' );
+                $( this ).parents( '.course-dates' ).find( '.end-date input' ).attr( 'disabled', 'disabled' );
+            } else {
+                $( this ).parents( '.course-dates' ).find( '.end-date' ).removeClass( 'disabled' );
+                $( this ).parents( '.course-dates' ).find( '.end-date input' ).removeAttr( 'disabled' );
+            }
+        } );
+        // ===== END DATE PICKERS =====
+
+        // Spinners
+        $( ".spinners" ).spinner();
+
+
+        $( '[name="meta_class_limited"]' ).change( function () {
+            console.log( 'yup' );
+            console.log( $( this ).parents( '.class-size' ).find( '.num-students' ) );
+            if ( this.checked ) {
+                console.log( 'checked' );
+                $( this ).parents( '.class-size' ).find( '.num-students' ).removeClass( 'disabled' );
+                $( this ).parents( '.class-size' ).find( '.num-students input' ).removeAttr( 'disabled' );
+            } else {
+                console.log( 'unchecked' );
+                $( this ).parents( '.class-size' ).find( '.num-students' ).addClass( 'disabled' );
+                $( this ).parents( '.class-size' ).find( '.num-students input' ).attr( 'disabled', 'disabled' );
+            }
+        } );
+
+        // ====== COURSEPRESS UI TOGGLES =====
+        $( '.coursepress-ui-toggle-switch' ).coursepress_ui_toggle();
+
     }
 
     function bind_buttons() {
 
         // NEXT BUTTON
-        $( '.step-content .button.step.next' ).on( 'click', function ( e ) {
+        $( '.step-content .button.step.prev, .step-content .button.step.next, .step-content .button.step.update, .step-content .button.step.finish' ).on( 'click', function ( e ) {
 
             var target = e.currentTarget;
 
             var step;
+            var action_type;
             var next_step;
 
             // Get the right step
@@ -271,12 +353,18 @@ var CoursePress = CoursePress || {};
             step = $( target ).hasClass( 'step-5' ) ? 5 : step;
             step = $( target ).hasClass( 'step-6' ) ? 6 : step;
 
+            // Get the type
+            action_type = $( target ).hasClass( 'prev' ) ? 'prev' : null;
+            action_type = $( target ).hasClass( 'next' ) ? 'next' : action_type;
+            action_type = $( target ).hasClass( 'update' ) ? 'update' : action_type;
+            action_type = $( target ).hasClass( 'finish' ) ? 'finish' : action_type;
+
             if ( null !== step ) {
                 $( '.step-title.step-' + step ).find( '.status' ).removeClass( 'saved' );
                 $( '.step-title.step-' + step ).find( '.status' ).removeClass( 'save-error' );
                 $( '.step-title.step-' + step ).find( '.status' ).removeClass( 'save-attention' );
                 $( '.step-title.step-' + step ).find( '.status' ).addClass( 'save-process' );
-                CoursePress.Course.get_step( step );
+                CoursePress.Course.get_step( step, action_type );
                 CoursePress.Course.save();
             }
 
@@ -285,6 +373,7 @@ var CoursePress = CoursePress || {};
 
         // BROWSE MEDIA BUTTONS
         $( '.button.browse-media-field' ).browse_media_field();
+
 
         // Handle Course Structure Checkboxes
         $( '.step-content .course-structure input[type="checkbox"]' ).on( 'click', function ( e ) {
@@ -411,6 +500,41 @@ var CoursePress = CoursePress || {};
 
         } );
 
+        $( '[name="meta_enrollment_type"]' ).on( 'change', function () {
+
+            var options = $( this ).val();
+            $( '.step-content.step-6 .enrollment-type-options' ).addClass( 'hidden' );
+            $( '.step-content.step-6 .enrollment-type-options.' + options ).removeClass( 'hidden' );
+
+        } );
+
+
+        // "This is a paid course" checkbox
+        $( '[name="meta_payment_paid_course"]' ).on( 'change', function () {
+            if ( this.checked ) {
+                $( this ).parents( '.step-content.step-6' ).find( '.payment-message' ).removeClass( 'hidden' );
+                $( this ).parents( '.step-content.step-6' ).find( '.is_paid_toggle' ).removeClass( 'hidden' );
+            } else {
+                $( this ).parents( '.step-content.step-6' ).find( '.payment-message' ).addClass( 'hidden' );
+                $( this ).parents( '.step-content.step-6' ).find( '.is_paid_toggle' ).addClass( 'hidden' );
+            }
+        } );
+
+        $( '[name="publish-course-toggle"]' ).on( 'change', function ( e, state ) {
+
+            var nonce = $( this ).attr( 'data-nonce' );
+            var status = 'off' === state ? 'draft' : 'publish';
+            CoursePress.Course.set( 'action', 'toggle_course_status' );
+            var data = {
+                nonce: nonce,
+                status: status,
+                state: state,
+                course_id: _coursepress.course_id
+            };
+            CoursePress.Course.set( 'data', data );
+            CoursePress.Course.save();
+
+        } );
 
     }
 
@@ -543,10 +667,10 @@ var CoursePress = CoursePress || {};
                 $( '#instructors-info' ).append( content );
                 bind_remove_button( '#instructor_holder_' + invite_code + ' .invite-remove a', true );
 
-                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['sent'] + '</span>';
+                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message[ 'sent' ] + '</span>';
 
             } else {
-                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['exists'] + '</span>';
+                message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message[ 'exists' ] + '</span>';
             }
 
             $( '.instructor-invite .submit-message' ).append( message );
@@ -557,7 +681,7 @@ var CoursePress = CoursePress || {};
 
         CoursePress.Course.on( 'coursepress:invite_instructor_error', function ( data ) {
 
-            message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message['send_error'] + '</span>';
+            message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message[ 'send_error' ] + '</span>';
             $( '.instructor-invite .submit-message' ).append( message );
             $( '.instructor-invite .submit-message .message' ).fadeOut( 3000 );
 
@@ -565,6 +689,23 @@ var CoursePress = CoursePress || {};
 
         CoursePress.Course.on( 'coursepress:delete_instructor_invite_success', function ( data ) {
             $( '#instructor_holder_' + data.invite_code ).detach();
+        } );
+
+        CoursePress.Course.on( 'coursepress:toggle_course_status_success', function ( data ) {
+            $( '[name="publish-course-toggle"]' ).attr( 'data-nonce', data.nonce );
+        } );
+
+        CoursePress.Course.on( 'coursepress:toggle_course_status_error', function ( data ) {
+
+            // Toggle back
+            var toggle = $( '[name="publish-course-toggle"]' );
+            if ( $( toggle ).hasClass( 'on' ) ) {
+                $( toggle ).removeClass( 'on' ).addClass( 'off' );
+            } else if ( $( toggle ).hasClass( 'off' ) ) {
+                $( toggle ).removeClass( 'off' ).addClass( 'on' );
+            }
+
+
         } );
 
 
@@ -579,12 +720,14 @@ var CoursePress = CoursePress || {};
         bind_coursepress_events();
 
         // Get setup marker and advance accordion
-        var setup_marker = $( '#course-setup-steps .step-title .status.setup_marker' );
-        if ( $( setup_marker ).length > 0 ) {
-            setup_marker = parseInt( $( $( setup_marker ).parents( '.step-title' )[ 0 ] ).attr( 'class' ).match( /step-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop() )
-            setup_marker = ( setup_marker + 1 ) > 6 ? 6 : setup_marker + 1;
-            $( '#course-setup-steps .step-title.step-' + setup_marker ).click();
-        }
+        var setup_marker = $( '#course-setup-steps .step-title .status.setup_marker' ).click();
+        //if ( $( setup_marker ).length > 0 ) {
+        //    var step;
+        //
+        //    setup_marker = parseInt( $( $( setup_marker ).parents( '.step-title' )[ 0 ] ).attr( 'class' ).match( /step-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop() )
+        //    setup_marker = ( setup_marker + 1 ) > 6 ? 6 : setup_marker + 1;
+        //    $( '#course-setup-steps .step-title.step-' + setup_marker ).click();
+        //}
 
     } );
 

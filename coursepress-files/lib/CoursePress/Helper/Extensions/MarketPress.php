@@ -4,6 +4,13 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 	const PLUGIN_FILE = '128762_marketpress-ecommerce-2.9.6.2.zip';
 
+	private static $installed = false;
+	private static $activated = false;
+
+	private static $base_path = array(
+		'pro' => 'marketpress/marketpress.php',
+		'free' => 'wordpress-ecommerce/marketpress.php'
+	);
 
 	public static function init() {
 
@@ -12,6 +19,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 		}
 
 		add_filter( 'coursepress_extensions_plugins', array( __CLASS__, 'add_to_extensions_list' ) );
+
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
@@ -21,7 +29,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 			$plugins[] = array(
 				'name'           => 'MarketPress',
 				'slug'           => 'marketpress',
-				'base_path'      => 'marketpress/marketpress.php',
+				'base_path'      => self::$base_path['pro'],
 				'source'         => CoursePress_Core::$plugin_lib_path . 'files/plugins/' . self::PLUGIN_FILE,
 				'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
 				'external_url'   => '',
@@ -35,7 +43,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 			$plugins[] = array(
 				'name'           => 'MarketPress - WordPress eCommerce',
 				'slug'           => 'wordpress-ecommerce',
-				'base_path'      => 'wordpress-ecommerce/marketpress.php',
+				'base_path'      => self::$base_path['free'],
 				'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 				'source_message' => __( 'WordPress.org Repository', 'cp' ),
 				'external_url'   => '',
@@ -49,5 +57,34 @@ class CoursePress_Helper_Extensions_MarketPress {
 		return $plugins;
 	}
 
+
+	public static function installed_scope() {
+
+		$scope = '';
+		foreach( self::$base_path as $key => $path ) {
+			$plugin_dir = WP_PLUGIN_DIR . '/' . $path;
+			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $path;
+			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;
+			$scope = ! empty( $location ) ? $key : $scope;
+		}
+
+		return $scope;
+	}
+
+	public static function installed() {
+
+		$scope = self::installed_scope();
+		return ! empty( $scope );
+
+	}
+
+	public static function activated() {
+
+		$scope = self::installed_scope();
+
+		require_once ABSPATH . 'wp-admin/includes/plugin.php'; // Need for plugins_api.
+
+		return ! empty( $scope ) ? is_plugin_active( self::$base_path[ $scope ] ) : false;
+	}
 
 }

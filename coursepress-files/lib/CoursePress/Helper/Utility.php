@@ -170,7 +170,7 @@ class CoursePress_Helper_Utility {
 	public static function checked( $value, $compare = true, $echo = false ) {
 		$checked = false;
 		if( $compare === true ) {
-			$checked =  ! empty( $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
+			$checked =  ( ! empty( $value ) && 'off' !== $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
 		} else {
 			$checked = $compare === $value ? 'checked="checked"' : '';
 
@@ -276,6 +276,19 @@ class CoursePress_Helper_Utility {
 		do_action( 'coursepress_email_post_send', $args, $result );
 
 		return apply_filters( 'coursepress_email_send_result', $result, $args );
+	}
+
+	public static function users_can_register() {
+		if ( is_multisite() ) {
+			return users_can_register_signup_filter();
+		} else {
+			return get_option( 'users_can_register' );
+		}
+	}
+
+	public static function is_payment_supported() {
+		// Hook for payment plugins to turn to 'true'.  Attempt to give Course ID to allow per course filtering.
+		return apply_filters( 'coursepress_payment_supported', false, CoursePress_Model_Course::last_course_id() );
 	}
 
 }

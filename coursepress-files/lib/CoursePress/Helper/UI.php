@@ -201,4 +201,59 @@ class CoursePress_Helper_UI {
 		}
 	}
 
+	public static function toggle_switch( $id, $name, $options = array() ) {
+
+		$content = '';
+
+		$control_class = isset( $options['class'] ) ? $options['class'] : '';
+		$label = isset( $options['label'] ) ? $options['label'] : '';
+		$label_class = isset( $options['label_class'] ) ? $options['label_class'] : '';
+		$left = isset( $options['left'] ) ? $options['left'] : '';
+		$left_class = isset( $options['left_class'] ) ? $options['left_class'] : '';
+		$right = isset( $options['right'] ) ? $options['right'] : '';
+		$right_class = isset( $options['right_class'] ) ? $options['right_class'] : '';
+		$state = isset( $options['state'] ) ? $options['state'] : 'off';
+
+		$data = '';
+		if( isset( $options['data'] ) && is_array( $options['data'] ) ) {
+			foreach( $options['data'] as $key => $value ) {
+				$data .= is_string( $value ) ? 'data-' . $key . '="' . $value . '" ' : '';
+			}
+		}
+
+		$content = '
+			<div id="' . esc_attr( $id ) . '" class="toggle-switch coursepress-ui-toggle-switch ' . esc_attr( $control_class ) . ' ' . $state . '" name="' . esc_attr( $name ) . '" ' . $data . '>';
+
+		if( ! empty( $label ) ) {
+			$content .= '
+				<span class="label ' . esc_attr( $label_class ) . '">' . $label . '</span>
+			';
+		}
+
+		if( ! empty( $left ) ) {
+			$content .= '
+				<span class="left ' . esc_attr( $left_class ) . '">' . $left . '</span>
+			';
+		}
+
+		$content .= '
+				<div class="control">
+					<div class="toggle"></div>
+				</div>';
+
+
+		if( ! empty( $right ) ) {
+			$content .= '
+				<span class="right ' . esc_attr( $right_class ) . '">' . $right . '</span>
+			';
+		}
+
+		$content .= '
+			</div>
+		';
+
+		return $content;
+
+	}
+
 }

@@ -99,7 +99,7 @@ class CoursePress_Helper_Tabs {
 		}
 
 		// Wrap the content in a container
-		$content = '<div class="tab-container">' . $content . '</div>';
+		$content = '<div class="tab-container ' . $mode . '">' . $content . '</div>';
 
 		// Render Heading first for Horizontal display
 		//if( 'horizontal' === $mode ) {

@@ -78,13 +78,30 @@ class CoursePress_View_Admin_Course_Edit {
 			$content = call_user_func( __CLASS__ . '::' . $method );
 		}
 
-		unset( $_GET['_wpnonce'] );
 		$hidden_args = $_GET;
+		unset( $hidden_args['_wpnonce'] );
+
+		// Publish Course Toggle
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$status = get_post_status( $course_id );
+		$ui = array(
+			'label' => 'Publish Course',
+			'left' => '<i class="fa fa-ban"></i>',
+			'left_class' => 'red',
+			'right' => '<i class="fa fa-check"></i>',
+			'right_class' => 'green',
+			'state' => 'publish' === $status ? 'on' : 'off',
+			'data' => array(
+				'nonce' => wp_create_nonce( 'publish-course' ),
+			)
+		);
+		$ui['class'] = 'course-' . $course_id;
+		$publish_toggle = !empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 
 		$content = '<div class="coursepress_settings_wrapper">' .
 		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />' .
-		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $_GET, self::$slug, $tab, false, 'horizontal', '<div style="width:100%; display:block; background:blue; color: white; padding:20px;">TODO: Add publish toggle here.</div>' ) .
+		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle ) .
 		           '</div>';
 
 		//echo CoursePress_Helper_Tabs::render_tabs( $tabs, 'MOO ' . $tab, $_GET, self::$slug, $tab, false, 'horizontal', '<div style="width:100%; display:block; background:blue; color: white; padding:20px;">Testing</div>' );
@@ -114,9 +131,8 @@ class CoursePress_View_Admin_Course_Edit {
 	private static function render_setup_step_1() {
 
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-		//CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 );
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_1', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 0 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = ( (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 6 ) || ( (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 0 ) ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
 			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -226,6 +242,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '
 				<div class="wide">
 					<input type="button" class="button step next step-1" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-1" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -239,7 +256,7 @@ class CoursePress_View_Admin_Course_Edit {
 	private static function render_setup_step_2() {
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_2', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 1 ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
 			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Description', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -346,8 +363,8 @@ class CoursePress_View_Admin_Course_Edit {
 
 			$alt = $count % 2 ? 'even' : 'odd';
 
-			$unit_view_checked    = CoursePress_Helper_Utility::checked( $visible_units[ $unit['unit']->ID ] );
-			$unit_preview_checked = CoursePress_Helper_Utility::checked( $preview_units[ $unit['unit']->ID ] );
+			$unit_view_checked    = isset( $visible_units[ $unit['unit']->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_units[ $unit['unit']->ID ] ) : false;
+			$unit_preview_checked = isset( $preview_units[ $unit['unit']->ID ] ) ? CoursePress_Helper_Utility::checked( $preview_units[ $unit['unit']->ID ] ) : false;
 			$content .= '
 								<tr class="unit unit-' . $unit['unit']->ID . ' treegrid-' . $count . ' ' . $draft_class . ' ' . $alt . '">
 			                        <td>' . $status . $unit['unit']->post_title . '</td>
@@ -419,7 +436,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Buttons
 		$content .= '
 				<div class="wide">
+					<input type="button" class="button step prev step-2" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-2" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-2" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -433,7 +452,7 @@ class CoursePress_View_Admin_Course_Edit {
 	private static function render_setup_step_3() {
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_3', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
 			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -489,7 +508,7 @@ class CoursePress_View_Admin_Course_Edit {
 						<label for="invite_instructor_first_name">' . esc_html__( 'First Name', CoursePress::TD ) . '</label>
 						<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', CoursePress::TD ) . '"/>
 						<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', CoursePress::TD ) . '</label>
-						<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', CoursePress::TD ). '"/>
+						<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', CoursePress::TD ) . '"/>
 						<label for="invite_instructor_email">' . esc_html__( 'E-Mail', CoursePress::TD ) . '</label>
 						<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', CoursePress::TD ) . '"/>
 
@@ -513,7 +532,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Buttons
 		$content .= '
 				<div class="wide">
+					<input type="button" class="button step prev step-3" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-3" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-3" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -527,7 +548,7 @@ class CoursePress_View_Admin_Course_Edit {
 	private static function render_setup_step_4() {
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_4', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
 			<div class="step-title step-4">' . esc_html__( 'Step 4 – Course Dates', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -535,6 +556,65 @@ class CoursePress_View_Admin_Course_Edit {
 			<div class="step-content step-4">
 				<input type="hidden" name="meta_setup_step_4" value="saved" />
 			';
+
+
+		$open_ended_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_open_ended', true ) );
+		$open_ended_course  = ! empty( $open_ended_checked );
+		$content .= '
+				<div class="wide course-dates">
+					<label>' .
+		            esc_html__( 'Course Availability', CoursePress::TD ) . '
+					</label>
+	                <p class="description">' . esc_html__( 'These are the dates that the course will be available to students', CoursePress::TD ) . '</p>
+					<label class="checkbox medium">
+						<input type="checkbox" name="meta_course_open_ended" ' . $open_ended_checked . ' />
+						<span>' . esc_html__( 'This course has no end date', CoursePress::TD ) . '</span>
+		            </label>
+		            <div class="date-range">
+						<div class="start-date">
+							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', CoursePress::TD ) . '</label>
+
+							<div class="date">
+								<input type="text" class="dateinput" name="meta_course_start_date" value="' . CoursePress_Model_Course::get_setting( $course_id, 'course_start_date', '' ) . '"/><i class="calendar"></i>
+							</div>
+						</div>
+						<div class="end-date ' . ( $open_ended_course ? 'disabled' : '' ) . '">
+							<label for="meta_course_end_date" class="end-date-label required">' . esc_html__( 'End Date', CoursePress::TD ) . '</label>
+							<div class="date">
+								<input type="text" class="dateinput" name="meta_course_end_date" value="' . CoursePress_Model_Course::get_setting( $course_id, 'course_end_date', '' ) . '" ' . ( $open_ended_course ? 'disabled="disabled"' : '' ) . ' />
+							</div>
+						</div>
+					</div>
+				</div>';
+
+		$open_ended_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'enrollment_open_ended', true ) );
+		$open_ended         = ! empty( $open_ended_checked );
+		$content .= '
+				<div class="wide enrollment-dates">
+					<label>' .
+		            esc_html__( 'Course Enrollment Dates', CoursePress::TD ) . '
+					</label>
+	                <p class="description">' . esc_html__( 'These are the dates that students will be able to enroll in a course.', CoursePress::TD ) . '</p>
+					<label class="checkbox medium">
+						<input type="checkbox" name="meta_enrollment_open_ended" ' . $open_ended_checked . ' />
+						<span>' . esc_html__( 'Students can enroll at any time', CoursePress::TD ) . '</span>
+		            </label>
+		            <div class="date-range enrollment">
+						<div class="start-date ' . ( $open_ended ? 'disabled' : '' ) . '">
+							<label for="meta_enrollment_start_date" class="start-date-label required">' . esc_html__( 'Start Date', CoursePress::TD ) . '</label>
+
+							<div class="date">
+								<input type="text" class="dateinput" name="meta_enrollment_start_date" value="' . CoursePress_Model_Course::get_setting( $course_id, 'enrollment_start_date', '' ) . '"/><i class="calendar"></i>
+							</div>
+						</div>
+						<div class="end-date ' . ( $open_ended ? 'disabled' : '' ) . '">
+							<label for="meta_enrollment_end_date" class="end-date-label required">' . esc_html__( 'End Date', CoursePress::TD ) . '</label>
+							<div class="date">
+								<input type="text" class="dateinput" name="meta_enrollment_end_date" value="' . CoursePress_Model_Course::get_setting( $course_id, 'enrollment_end_date', '' ) . '" ' . ( $open_ended ? 'disabled="disabled"' : '' ) . ' />
+							</div>
+						</div>
+					</div>
+				</div>';
 
 
 		/**
@@ -547,7 +627,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Buttons
 		$content .= '
 				<div class="wide">
+					<input type="button" class="button step prev step-4" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-4" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-4" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -561,7 +643,7 @@ class CoursePress_View_Admin_Course_Edit {
 	private static function render_setup_step_5() {
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_5', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
 			<div class="step-title step-5">' . esc_html__( 'Step 5 – Classes, Discussion & Workbook', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -570,6 +652,49 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_5" value="saved" />
 			';
 
+
+		$limit_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'class_limited', false ) );
+		$limited       = ! empty( $limit_checked );
+		$content .= '
+				<div class="wide class-size">
+					<label>' .
+		            esc_html__( 'Class Size', CoursePress::TD ) . '
+					</label>
+					<p class="description">' . esc_html__( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', CoursePress::TD ) . '</p>
+					<label class="narrow col">
+						<input type="checkbox" name="meta_class_limited" ' . $limit_checked . ' />
+						<span>' . esc_html__( 'Limit class size', CoursePress::TD ) . '</span>
+		            </label>
+
+		            <label class="num-students narrow col ' . ( $limited ? '' : 'disabled' ) . '">
+		                ' . esc_html__( 'Number of students', CoursePress::TD ) . '
+						<input type="text" class="spinners" name="meta_class_size" value="' . CoursePress_Model_Course::get_setting( $course_id, 'class_size', '' ) . '" ' . ( $limited ? '' : 'disabled="disabled"' ) . '/>
+					</label>
+				</div>';
+
+		$content .= '
+				<div class="wide">
+					<label>' .
+		            esc_html__( 'Course Discussion', CoursePress::TD ) . '
+					</label>
+					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', CoursePress::TD ) . '</p>
+					<label class="checkbox narrow">
+						<input type="checkbox" name="meta_allow_discussion" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'allow_discussion', false ) ) . ' />
+						<span>' . esc_html__( 'Allow course discussion', CoursePress::TD ) . '</span>
+		            </label>
+				</div>';
+
+		$content .= '
+				<div class="wide">
+					<label>' .
+		            esc_html__( 'Student Workbook', CoursePress::TD ) . '
+					</label>
+					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', CoursePress::TD ) . '</p>
+					<label class="checkbox narrow">
+						<input type="checkbox" name="meta_allow_workbook" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'allow_workbook', false ) ) . ' />
+						<span>' . esc_html__( 'Show student workbook', CoursePress::TD ) . '</span>
+		            </label>
+				</div>';
 
 		/**
 		 * Add additional fields.
@@ -581,7 +706,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Buttons
 		$content .= '
 				<div class="wide">
+					<input type="button" class="button step prev step-5" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-5" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-5" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -594,10 +721,18 @@ class CoursePress_View_Admin_Course_Edit {
 
 	private static function render_setup_step_6() {
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+
+		// Payment can be disabled using the COURSEPRESS_DISABLE_PAYMENT constant or hooking the filter
+		$disable_payment = defined( 'COURSEPRESS_DISABLE_PAYMENT' ) && true == COURSEPRESS_DISABLE_PAYMENT;
+		$disable_payment = apply_filters( 'coursepress_disable_course_payments', $disable_payment, $course_id );
+
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_6', '' );
-		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 1 ) === 6 ? $setup_class . ' setup_marker' : $setup_class;
+		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
+
+		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', CoursePress::TD ) : '';
+
 		$content     = '
-			<div class="step-title step-6">' . esc_html__( 'Step 6 – Enrollment & Course Cost', CoursePress::TD ) . '
+			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 – Enrollment%s', CoursePress::TD ), $payment_tagline ) ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-6">
@@ -605,17 +740,179 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_6" value="saved" />
 			';
 
+		// Enrollment Options
+		$enrollment_types = array(
+			'manually' => __( 'Manually added only', CoursePress::TD ),
+		);
+		if( CoursePress_Helper_Utility::users_can_register() ) {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'anyone' => __( 'Anyone', CoursePress::TD ),
+				'passcode' => __( 'Anyone with a pass code', CoursePress::TD ),
+				'prerequisite' => __( 'Anyone who completed the prerequisite course(s)', CoursePress::TD ),
+			) );
+		} else {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'registered' => __( 'Registered users', CoursePress::TD ),
+				'passcode' => __( 'Registered users with a pass code', CoursePress::TD ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', CoursePress::TD ),
+			) );
+		}
+		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
+
+		$content .= '
+				<div class="wide">
+					<label>' .
+		            esc_html__( 'Enrollment Restrictions', CoursePress::TD ) . '
+					</label>
+					<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', CoursePress::TD ) . '</p>
+					<select name="meta_enrollment_type" class="chosen-select medium">';
+
+		$selected = CoursePress_Model_Course::get_setting( $course_id, 'enrollment_type', 'manually' );
+		foreach ( $enrollment_types as $key => $type ) {
+			$content .= '<option value="' . $key . '" ' . selected( $selected, $key, false ) . '>' . esc_html( $type ) . '</option>';
+		}
+		$content .= '
+					</select>
+				</div>';
+
+
+		$class = 'prerequisite' === $selected ? '' : 'hidden';
+		$content .= '
+				<div class="wide enrollment-type-options prerequisite ' . $class . '">';
+
+		$class_extra = is_rtl() ? 'chosen-rtl' : '';
+		$content .= '
+					<label>' .
+			            esc_html__( 'Prerequisite Courses', CoursePress::TD ) .
+			            '</label>
+		            <p class="description">' . esc_html__( 'Select the courses a student needs to complete before enrolling in this course', CoursePress::TD ) . '</p>
+		            <select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true" data-placeholder=" ">
+			';
+
+		$courses = CoursePress_Model_Instructor::get_accessable_courses( wp_get_current_user(), true );
+
+		$saved_settings = CoursePress_Model_Course::get_setting( $course_id, 'enrollment_prerequisite', array() );
+		if( ! is_array( $saved_settings ) ) {
+			$saved_settings = array( $saved_settings );
+		}
+
+		foreach ( $courses as $course ) {
+			$post_id = $course->ID;
+			if( $post_id !== $course_id ) {
+				$selected_item = in_array( $post_id, $saved_settings ) ? 'selected="selected"' : '';
+				$content .= '<option value="' . $post_id . '" ' . $selected_item . '>' . $course->post_title . '</option>';
+			}
+		}
+
+		$content .= '
+					</select>
+				</div>
+			';
+
+
+		$class = 'passcode' === $selected ? '' : 'hidden';
+		$content .= '
+				<div class="wide enrollment-type-options passcode ' . $class . '">';
+
+		$content .= '
+				<label>' .
+		        esc_html__( 'Course Passcode', CoursePress::TD ) .
+	            '</label>
+	            <p class="description">' . esc_html__( 'Enter the passcode required to access this course', CoursePress::TD ) . '</p>
+	            <input type="text" name="meta_enrollment_passcode" value="' . CoursePress_Model_Course::get_setting( $course_id, 'enrollment_passcode', '' ) . '" />
+			';
+
+		$content .= '
+				</div>
+			';
+
+		$paid_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'payment_paid_course', false ) );
+		$is_paid = ! empty( $paid_checked );
+
+		if( ! $disable_payment ) {
+			$content .= '
+				<hr class="separator" />
+				<div class="wide">
+					<label>' .
+			            esc_html__( 'Course Payment', CoursePress::TD ) . '
+					</label>
+					<p class="description">' . esc_html__( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', CoursePress::TD ) . '</p>
+					<label class="checkbox narrow">
+						<input type="checkbox" name="meta_payment_paid_course" ' . $paid_checked . ' />
+						<span>' . esc_html__( 'This is a paid course', CoursePress::TD ) . '</span>
+		            </label>
+				</div>';
+		}
+
+		/**
+		 * Hook this filter to add payment plugin support
+		 */
+		$payment_supported = CoursePress_Helper_Utility::is_payment_supported();
+
+		if( ! $payment_supported && ! $disable_payment ) {
+
+			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
+				$install_message = sprintf( __( '<p>To start selling your course, please install and activate MarketPress here:</p>
+								<a href="%s">Activate MarketPress</a>', CoursePress::TD ), esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ) );
+			} else {
+				$install_message = __( '<p>Please contact your administrator to enable MarketPress for your site.</p>', CoursePress::TD );
+			}
+
+			if ( CoursePress_Model_Capabilities::is_pro() ) {
+				$version_message = __( '<p>The full version of MarketPress has been bundled with CoursePress Pro.</p>', CoursePress::TD );
+			} else {
+				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', CoursePress::TD );
+			}
+
+
+			$class = $is_paid ? '' : 'hidden';
+
+			/**
+			 * Hook this filter to get rid of the payment message
+			 */
+			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( __( '
+				<div class="payment-message %s">
+					<h3>Sell your courses online with MarketPress.</h3>
+					%s
+					%s
+					<p>Other supported plugins:  WooCommerce</p>
+				</div>
+			', CoursePress::TD ), $class, $version_message, $install_message ), $course_id );
+
+			// It's already been filtered, but because we're dealing with HTML, lets be sure
+			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
+
+		}
+
+		if( $payment_supported ) {
+
+			$class = $is_paid ? '' : 'hidden';
+			$content .= '<div class="is_paid_toggle ' . $class . '">';
+			/**
+			 * Add additional fields if 'This is a paid course' is selected.
+			 *
+			 * Field names must begin with meta_ to allow it to be automatically added to the course settings
+			 *
+			 * * This is the ideal filter to use for integrating payment plugins
+			 */
+			$content .= apply_filters( 'coursepress_course_setup_step_6_paid', '', $course_id );
+
+			$content .= '</div>';
+		}
+
 		/**
 		 * Add additional fields.
 		 *
-		 * Names must begin with meta_ to allow it to be automatically added to the course settings
+		 * Field names must begin with meta_ to allow it to be automatically added to the course settings
 		 */
 		$content .= apply_filters( 'coursepress_course_setup_step_6', '', $course_id );
 
 		// Buttons
 		$content .= '
 				<div class="wide">
-					<input type="button" class="button step next step-6" value="' . esc_attr__( 'Finish', CoursePress::TD ) . '" />
+					<input type="button" class="button step prev step-6" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
+					<input type="button" class="button step finish step-6" value="' . esc_attr__( 'Finish', CoursePress::TD ) . '" />
+					<input type="button" class="button step update step-6" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -715,7 +1012,7 @@ class CoursePress_View_Admin_Course_Edit {
 			wp_send_json_error( $json_data );
 		}
 
-		$action = sanitize_text_field( $data->action );
+		$action              = sanitize_text_field( $data->action );
 		$json_data['action'] = $action;
 
 		switch ( $action ) {
@@ -729,9 +1026,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 					$res = CoursePress_Model_Course::update( $step_data->course_id, $step_data );
 
-					$next_step = $step + 1;
-					$next_step = 6 < $next_step ? 6 : $next_step;
-
+					$next_step = (int) $data->next_step;
 					$json_data['last_step'] = $step;
 					$json_data['next_step'] = $next_step;
 
@@ -740,39 +1035,61 @@ class CoursePress_View_Admin_Course_Edit {
 
 				break;
 
+			case 'toggle_course_status':
+
+				$course_id = $data->data->course_id;
+
+				if ( wp_verify_nonce( $data->data->nonce, 'publish-course' ) ) {
+
+					wp_update_post( array(
+						'ID' => $course_id,
+						'post_status' => $data->data->status,
+					) );
+
+					$json_data['nonce'] = wp_create_nonce( 'publish-course' );
+					$success            = true;
+				} else {
+					$success = false;
+				}
+
+				$json_data['course_id'] = $course_id;
+				$json_data['state']     = $data->data->state;
+
+				break;
+
 			// Delete Instructor
 			case 'delete_instructor':
 				CoursePress_Model_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
 				$json_data['instructor_id'] = $data->data->instructor_id;
-				$json_data['course_id'] = $data->data->course_id;
-				$success = true;
+				$json_data['course_id']     = $data->data->course_id;
+				$success                    = true;
 				break;
 
 			// Add Instructor
 			case 'add_instructor':
 				CoursePress_Model_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
-				$json_data['instructor_id'] = $data->data->instructor_id;
+				$json_data['instructor_id']   = $data->data->instructor_id;
 				$json_data['instructor_name'] = $data->data->instructor_name;
-				$json_data['course_id'] = $data->data->course_id;
-				$success = true;
+				$json_data['course_id']       = $data->data->course_id;
+				$success                      = true;
 				break;
 
 			// Invite Instructor
 			case 'invite_instructor':
-				$email_data = CoursePress_Helper_Utility::object_to_array( $data->data );
-				$response = CoursePress_Model_Instructor::send_invitation( $email_data );
-				$json_data['message'] = $response['message'];
-				$json_data['data'] = $data->data;
+				$email_data               = CoursePress_Helper_Utility::object_to_array( $data->data );
+				$response                 = CoursePress_Model_Instructor::send_invitation( $email_data );
+				$json_data['message']     = $response['message'];
+				$json_data['data']        = $data->data;
 				$json_data['invite_code'] = $response['invite_code'];
-				$success = $response['success'];
+				$success                  = $response['success'];
 				break;
 
 			// Delete Invite
 			case 'delete_instructor_invite':
 				CoursePress_Model_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
-				$json_data['course_id'] = $data->data->course_id;
+				$json_data['course_id']   = $data->data->course_id;
 				$json_data['invite_code'] = $data->data->invite_code;
-				$success = true;
+				$success                  = true;
 				break;
 
 		}

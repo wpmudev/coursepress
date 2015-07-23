@@ -75,29 +75,38 @@ class CoursePress_Model_Instructor {
 		return $assigned_courses;
 	}
 
-	public static function get_accessable_courses( $user ) {
+	public static function get_accessable_courses( $user, $include_posts = false ) {
 
 		$user_id          = self::_get_id( $user );
 		$courses          = self::get_assigned_courses_ids( $user_id );
-		$new_course_array = array();
+		$course_array = array();
 
 		foreach ( $courses as $course ) {
 
-			$can_update    = CoursePress_Capabilities::can_update_course( $course, $user_id );
-			$can_delete    = CoursePress_Capabilities::can_delete_course( $course, $user_id );
-			$can_publish   = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
-			$can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
-			$my_course     = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
-			$creator       = CoursePress_Capabilities::is_course_creator( $course, $user_id );
+			// @todo ADD CAPABILITIES CLASS
+			//$can_update    = CoursePress_Capabilities::can_update_course( $course, $user_id );
+			//$can_delete    = CoursePress_Capabilities::can_delete_course( $course, $user_id );
+			//$can_publish   = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
+			//$can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
+			//$my_course     = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
+			//$creator       = CoursePress_Capabilities::is_course_creator( $course, $user_id );
+			$my_course = true;
 
 			if ( ! $my_course && ! $creator && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
 				continue;
 			} else {
-				$new_course_array[] = $course;
+				$course_array[] = $course;
 			}
 		}
 
-		return $new_course_array;
+		if( ! $include_posts ) {
+			return $course_array;
+		} else {
+			$post_type = CoursePress_Model_Course::get_post_type_name( true );
+			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
+			return $query->posts;
+		}
+
 	}
 
 	public static function unassign_from_course( $user, $course_id = 0 ) {

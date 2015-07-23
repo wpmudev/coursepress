@@ -153,12 +153,9 @@ A. Responsive
 }
 
 .tab-container .tab-extra {
-  max-width: 20%;
-  float: right;
   margin: 0;
   padding: 0;
   position: absolute;
-  top: 0;
   right: 0;
 }
 
@@ -168,6 +165,7 @@ A. Responsive
   border: none;
   background: none;
   box-shadow: none;
+  clear: both;
 }
 
 /*--------------------------------------------------------------
@@ -289,6 +287,7 @@ A. Responsive
   display: block;
   margin-top: 2em;
   font-size: 1.1em;
+  cursor: default;
 }
 
 #course-setup-steps .step-content label a.context-link {
@@ -304,6 +303,15 @@ A. Responsive
   color: #E43037;
 }
 
+#course-setup-steps .step-content .disabled label.required:after {
+  content: '*';
+  color: #dddddd;
+}
+
+#course-setup-steps .step-content .disabled label {
+  color: #dddddd;
+}
+
 #course-setup-steps .step-content label p.description {
   font-weight: normal;
 }
@@ -311,8 +319,9 @@ A. Responsive
 #course-setup-steps .step-content label.checkbox {
   font-weight: normal;
   display: block;
-  margin: 0;
+  margin: 10px 0 0 0;
   font-size: 1em;
+  cursor: pointer;
 }
 
 #course-setup-steps .step-content input.wide {
@@ -536,6 +545,46 @@ A. Responsive
   cursor: pointer;
 }
 
+#course-setup-steps .date-range .start-date,
+#course-setup-steps .date-range .end-date {
+  position: relative;
+  display: inline-block;
+  min-width: 250px;
+  margin-top: 10px;
+}
+
+#course-setup-steps .date-range div.date {
+  width: 80px;
+  cursor: text;
+  display: inline;
+  margin-right: 10px;
+}
+
+#course-setup-steps .date-range div.date::after {
+  color: #c9c9c9;
+  content: "\f508";
+  font: 17px/17px dashicons;
+  right: 15px;
+  position: absolute;
+  bottom: 6px;
+  z-index: 1;
+}
+
+#course-setup-steps .date-range label {
+  display: inline;
+  font-weight: normal;
+  cursor: default;
+}
+
+#course-setup-steps .class-size .col {
+  position: relative;
+  display: inline-block;
+  min-width: 150px;
+  margin-top: 10px;
+  font-weight: normal;
+  font-size: 1em;
+}
+
 /* Instructors */
 input.button.button-primary.instructor-assign {
   position: relative;
@@ -672,6 +721,92 @@ input.button.button-primary.instructor-assign {
   padding: 5px 0 0 4px;
 }
 
+#course-setup-steps .step-content .spinners {
+  width: 55px;
+}
+
+#course-setup-steps .step-content .ui-spinner {
+  border-color: #ddd;
+  border-radius: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
+  position: relative;
+}
+
+#course-setup-steps .step-content .ui-spinner a.ui-spinner-button {
+  color: #555;
+  -webkit-transform: scale(1.5, 0.94);
+  -moz-transform: scale(1.5, 0.94);
+  -ms-transform: scale(1.5, 0.94);
+  -o-transform: scale(1.5, 0.94);
+  transform: scale(1.5, 0.94);
+  background: none repeat scroll 0 0 #f1f1f1;
+}
+
+#course-setup-steps .step-content .ui-spinner a:hover.ui-spinner-button {
+  color: #333;
+}
+
+#course-setup-steps .step-content .ui-spinner-button {
+  cursor: default;
+  display: block;
+  font-size: 0.5em;
+  height: 15px;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  right: -19px;
+  text-align: center;
+  width: 16px;
+}
+
+.ui-spinner-button.ui-spinner-up {
+  top: -0.8em;
+  z-index: 1;
+  border-bottom: 1px solid #dddddd;
+}
+
+.ui-spinner-button.ui-spinner-down {
+  bottom: -0.8em;
+}
+
+#course-setup-steps .step-content .disabled .ui-spinner a.ui-spinner-button {
+  display: none;
+}
+
+#course-setup-steps .step-content hr.separator {
+  margin-top: 40px;
+}
+
+#course-setup-steps .step-content .payment-message {
+  background: #f1f1f1;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 50%;
+}
+
+#course-setup-steps .step-content .payment-message h3 {
+  background: #0091CD;
+  color: #ffffff;
+}
+
+#course-setup-steps .step-content label.description {
+  font-weight: normal;
+  font-style: oblique;
+}
+
+[name="publish-course-toggle"] {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  transform: scale(1.1);
+  position: relative;
+  left: -1em;
+}
+
 /* TreeGrid Styles */
 .treegrid-indent {
   width: 16px;
@@ -701,48 +836,20 @@ input.button.button-primary.instructor-assign {
   min-height: 300px;
 }
 
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  width: 100%;
+}
+
+body[class*="_page_coursepress_course"] .tab-container.horizontal {
+  overflow: visible;
+}
+
 /*--------------------------------------------------------------
 # A. Settings Responsive
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------
 # B. Warnings, notices and extra things
 --------------------------------------------------------------*/
-/**
-* CoursePress Icon (admin side)
-*/
-@font-face {
-  font-family: 'ico-cp';
-  src: url("../assets/fonts/cp_icon.eot");
-  src: url("../assets/fonts/cp_icon.eot?#iefix") format("embedded-opentype"), url("../assets/fonts/cp_icon.ttf") format("truetype"), url("../assets/fonts/cp_icon.woff") format("woff"), url("../assets/fonts/cp_icon.svg#icomoon") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
-[class^="icon-"], [class*=" icon-"] {
-  font-family: 'ico-cp';
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-wand:before {
-  content: "\e600";
-}
-
-#adminmenu #toplevel_page_coursepress div.wp-menu-image:before {
-  font-family: 'ico-cp' !important;
-  content: "\e600";
-}
-
-#adminmenu .toplevel_page_coursepress div.wp-menu-image img {
-  display: none;
-}
-
 /**
  * Invalid file extension
  */
@@ -753,4 +860,97 @@ input.button.button-primary.instructor-assign {
 .invalid_extension_message {
   color: red;
   display: none;
+}
+
+/**
+ * jQuery Date Picker
+ */
+body[class*="_page_coursepress_course"] .ui-datepicker {
+  background: #F1F1F1;
+  color: #333333;
+  border-radius: 4px;
+  box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #ddd;
+  padding: 4px;
+  font-family: Verdana,Arial,sans-serif;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-header {
+  position: relative;
+  background: #0091CD;
+  padding: 10px;
+  text-align: center;
+  border-radius: 4px 4px 0 0;
+  font-weight: bold;
+  color: #fff;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-prev,
+body[class*="_page_coursepress_course"] .ui-datepicker-next {
+  position: absolute;
+  top: -0.5em;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-prev {
+  left: 0;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-next {
+  right: 0;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-prev:after {
+  color: #fff;
+  content: "\f141";
+  font-family: dashicons;
+  font-size: 2.5em;
+  height: 16px;
+  width: 16px;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-next:after {
+  color: #fff;
+  content: "\f139";
+  font-family: dashicons;
+  font-size: 2.5em;
+  height: 16px;
+  width: 16px;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-prev span,
+body[class*="_page_coursepress_course"] .ui-datepicker-next span {
+  text-indent: -9999px;
+  display: block;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-datepicker-calendar td {
+  padding: 0;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th {
+  padding: 5px 0;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th span {
+  font-size: 0.8em;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default {
+  width: 2em;
+  display: inline-block;
+  text-align: right;
+  text-decoration: none;
+  background: #C7EBF6;
+  color: #333;
+  padding: 2px;
+  margin: 0;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-active {
+  background: #0091CD;
+  color: #fff;
+}
+
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-highlight {
+  border: 1px solid rgba(0, 145, 205, 0.3);
 }

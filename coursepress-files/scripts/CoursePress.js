@@ -262,6 +262,26 @@ var CoursePress = CoursePress || {};
                     } );
 
                 } );
+            },
+
+            coursepress_ui_toggle: function( options ) {
+                return this.each( function ( options ) {
+                        $( this ).on( 'click', function () {
+                            var state =  '';
+                            if( $( this ).hasClass('on') ) {
+                                $( this ).removeClass('on');
+                                $( this ).addClass('off');
+                                state = 'off';
+                            } else {
+                                $( this ).removeClass('off');
+                                $( this ).addClass('on');
+                                state = 'on';
+                            }
+                            $( this ).trigger( 'change', state );
+
+                            return;
+                        } );
+                } );
             }
         }
     );

@@ -115,9 +115,11 @@ class CoursePress_Model_Course {
 	public static function update( $course_id, $data ) {
 		global $user_id;
 
-		$new_course = 0 === $data->course_id ? true : false;
+		do_action( 'coursepress_course_pre_update', $course_id, $data );
 
-		$course = $new_course ? false : get_post( $data->course_id );
+		$new_course = empty( $course_id ) ? true : false;
+
+		$course = $new_course ? false : get_post( $course_id );
 
 		// Publishing toggle
 		//$post_status = empty( $this->data[ 'status' ] ) ? 'publish' : $this->data[ 'status' ];
@@ -146,18 +148,18 @@ class CoursePress_Model_Course {
 		}
 
 		// Set the ID to trigger update and not insert
-		if ( ! empty ( $data->course_id ) ) {
-			$post['ID'] = $data->course_id;
+		if ( ! empty ( $course_id ) ) {
+			$post['ID'] = $course_id;
 		}
 
 		// Turn off ping backs
 		$post['ping_status'] = 'closed';
 
 		// Insert / Update the post
-		$post_id = wp_insert_post( apply_filters( 'coursepress_pre_insert_post', $post ) );
+		$course_id = wp_insert_post( apply_filters( 'coursepress_pre_insert_post', $post ) );
 
 		// Course Settings
-		$settings = self::get_setting( $data->course_id, true );
+		$settings = self::get_setting( $course_id, true );
 
 
 		// @todo: remove this, its just here to help set initial meta that got missed during dev
@@ -166,10 +168,10 @@ class CoursePress_Model_Course {
 
 		// Upgrade old settings
 		if ( empty( $settings ) && ! $new_course ) {
-			self::upgrade_settings( $data->course_id );
+			self::upgrade_settings( $course_id );
 		}
 
-		if ( ! empty( $post_id ) ) {
+		if ( ! empty( $course_id ) ) {
 
 			foreach ( $data as $key => $value ) {
 
@@ -182,9 +184,9 @@ class CoursePress_Model_Course {
 					self::set_setting( $settings, str_replace( 'meta_', '', $key ), CoursePress_Helper_Utility::filter_content( $value ) );
 				}
 
-				// MP Stuff.. is this needed?
+				// MP Stuff.. this is no longer dealt with here!
 				//if ( preg_match( "/mp_/i", $key ) ) {
-				//	update_post_meta( $post_id, $key, cp_filter_content( $value ) );
+				//	update_post_meta( $course_id, $key, cp_filter_content( $value ) );
 				//}
 
 				// Add taxonomy terms
@@ -198,11 +200,11 @@ class CoursePress_Model_Course {
 								$sanitized_array[] = (int) $cat_id;
 							}
 
-							wp_set_object_terms( $post_id, $sanitized_array, self::get_post_category_name( true ), false );
+							wp_set_object_terms( $course_id, $sanitized_array, self::get_post_category_name( true ), false );
 						} else {
 							$cat = array( (int) $data->meta_course_category );
 							if ( $cat ) {
-								wp_set_object_terms( $post_id, $cat, self::get_post_category_name( true ), false );
+								wp_set_object_terms( $course_id, $cat, self::get_post_category_name( true ), false );
 							}
 						}
 					} // meta_course_category
@@ -226,17 +228,17 @@ class CoursePress_Model_Course {
 
 						if ( ( $image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height ) || ( $image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height ) ) {
 							// legacy
-							update_post_meta( $post_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value ) );
+							update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value ) );
 						} else {
 							$ext           = pathinfo( $fl, PATHINFO_EXTENSION );
 							$new_file_name = str_replace( '.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename( $value ) );
 							$new_file_path = str_replace( basename( $value ), $new_file_name, $value );
 							// legacy
-							update_post_meta( $post_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $new_file_path ) );
+							update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $new_file_path ) );
 						}
 					} else {
 						// legacy
-						update_post_meta( $post_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value, true ) );
+						update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value, true ) );
 					}
 				}
 
@@ -247,31 +249,27 @@ class CoursePress_Model_Course {
 					$old_post_meta = self::get_setting( $course_id, 'instructors', false );
 
 					if ( serialize( array( $value ) ) !== serialize( $old_post_meta ) || 0 == $value ) {//If instructors IDs don't match
-						delete_post_meta( $post_id, 'instructors' );
+						delete_post_meta( $course_id, 'instructors' );
 						self::delete_setting( $course_id, 'instructors' );
-						CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $post_id );
+						CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $course_id );
 					}
 
 					if ( 0 != $value ) {
 
-						update_post_meta( $post_id, 'instructors', CoursePress_Helper_Utility::filter_content( $value ) ); //Save instructors for the Course
+						update_post_meta( $course_id, 'instructors', CoursePress_Helper_Utility::filter_content( $value ) ); //Save instructors for the Course
 
 
 						foreach ( $value as $instructor_id ) {
 							$global_option = ! is_multisite();
-							update_user_option( $instructor_id, 'course_' . $post_id, $post_id, $global_option ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
+							update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option ); //Link courses and instructors ( in order to avoid custom tables ) for easy MySql queries ( get instructor stats, his courses, etc. )
 						}
 					} // only add meta if array is sent
 				}
 
 			}
 
-			// @todo
-			if ( isset( $data->payment_paid_course ) ) {
-				//$this->update_mp_product( $post_id );
-			}
-
 			// Update Meta
+			$settings = apply_filters( 'coursepress_course_update_meta', $settings, $course_id );
 			self::update_setting( $course_id, true, $settings );
 
 			if ( $new_course ) {
@@ -281,7 +279,7 @@ class CoursePress_Model_Course {
 				 *
 				 * @since 1.2.1
 				 */
-				do_action( 'coursepress_course_created', $post_id );
+				do_action( 'coursepress_course_created', $course_id, $settings );
 			} else {
 
 				/**
@@ -289,10 +287,10 @@ class CoursePress_Model_Course {
 				 *
 				 * @since 1.2.1
 				 */
-				do_action( 'coursepress_course_updated', $post_id );
+				do_action( 'coursepress_course_updated', $course_id, $settings );
 			}
 
-			return $post_id;
+			return $course_id;
 
 		}
 
@@ -401,7 +399,7 @@ class CoursePress_Model_Course {
 			'course_end_date'         => array( 'key' => 'course_end_date', 'default' => '' ),
 			'course_order'            => array( 'key' => 'course_order', 'default' => 0 ),
 			'enrollment_open_ended'   => array( 'key' => 'open_ended_enrollment', 'default' => true ),
-			'enrollment_start_data'   => array( 'key' => 'enrollment_start_date', 'default' => '' ),
+			'enrollment_start_date'   => array( 'key' => 'enrollment_start_date', 'default' => '' ),
 			'enrollment_end_date'     => array( 'key' => 'enrollment_end_date', 'default' => '' ),
 			'enrollment_type'         => array( 'key' => 'enroll_type', 'default' => 'manually' ),
 			'enrollment_prerequisite' => array( 'key' => 'prerequisite', 'default' => '' ),
@@ -624,6 +622,11 @@ class CoursePress_Model_Course {
 
 	public static function last_course_id() {
 		return self::$last_course_id;
+	}
+
+	public static function is_paid_course( $course_id ) {
+		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
+		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
 	}
 
 }

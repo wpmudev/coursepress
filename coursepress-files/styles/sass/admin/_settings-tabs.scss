@@ -131,12 +131,9 @@
 
 // Special floating tab for horizontal tabs
 .tab-container .tab-extra {
-  max-width: 20%;
-  float: right;
   margin: 0;
   padding: 0;
   position: absolute;
-  top:0;
   right: 0;
 }
 
@@ -146,4 +143,5 @@
   border: none;
   background: none;
   box-shadow: none;
+  clear: both;
 }

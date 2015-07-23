@@ -27,7 +27,7 @@ class CoursePress_Core {
 		//add_action( 'init', array( __CLASS__, 'init_process' ) );
 		//add_action( 'admin_init', array( __CLASS__, 'admin_init_process' ) );
 
-		// Initialise Capabilities
+		// Initialize Capabilities
 		CoursePress_Model_Capabilities::init();
 
 		/**
@@ -40,8 +40,11 @@ class CoursePress_Core {
 		CoursePress_Model_PostFormats::init();
 		add_filter( 'coursepress_post_formats', array( __CLASS__, 'register_formats' ) );
 
-		// Initialise JavaScript Object Helper
+		// Initialize JavaScript Object Helper
 		CoursePress_Helper_JavaScript::init();
+
+		// Initialize Plugin Integrations
+		CoursePress_Helper_Integration::init();
 
 		if( is_admin() ) {
 			// Initialize Admin Settings
