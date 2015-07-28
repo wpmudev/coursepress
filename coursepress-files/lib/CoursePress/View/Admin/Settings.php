@@ -103,11 +103,13 @@ class CoursePress_View_Admin_Settings {
 		// Get the content using a filter if its not in this class
 		$content = apply_filters( self::$slug . '_' . $method, $content, self::$slug, $tab );
 
+		$hidden_args = $_GET;
+		unset( $hidden_args['_wpnonce'] );
 
 		$content = '<div class="coursepress_settings_wrapper">' .
 		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />' .
-		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, array(), self::$slug, $tab, false ) .
+		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false ) .
 		           '</div>';
 
 		echo apply_filters( 'coursepress_settings_page_main', $content );

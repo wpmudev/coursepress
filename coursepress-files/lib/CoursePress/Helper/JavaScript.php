@@ -35,7 +35,7 @@ class CoursePress_Helper_JavaScript {
 
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
-		wp_editor( 'CONTENT', 'EDITORID', array( 'wpautop' => false ) );
+		wp_editor( 'CONTENT', 'EDITORID', array( 'wpautop' => false, "textarea_name" => 'EDITORNAME', ) );
 		$dummy_editor = ob_get_clean();
 
 		$localize_array = array(
@@ -49,7 +49,9 @@ class CoursePress_Helper_JavaScript {
 
 
 		// Models
-		if ( 'coursepress_course' === $_GET['page'] ) {
+
+		/** COURSEPRESS_COURSE */
+		if ( 'coursepress_course' === $_GET['page']  ) {
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/Course.js';
 
 			wp_enqueue_script( 'coursepress_course', $script, array(
@@ -79,6 +81,19 @@ class CoursePress_Helper_JavaScript {
 			}
 		}
 
+		/** COURSEPRESS_COURSE|UNIT BUILDER */
+		if ( 'coursepress_course' === $_GET['page'] && isset( $_GET['tab'] ) && "units" === $_GET['tab']  ) {
+
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/UnitsBuilder.js';
+
+			wp_enqueue_script( 'coursepress_unit_builder', $script, array(
+				'coursepress_course',
+			), CoursePress_Core::$version );
+
+			$localize_array['unit_builder_templates'] = CoursePress_Helper_UI_Module::get_template( true );
+
+
+		}
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 

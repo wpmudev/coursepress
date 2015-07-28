@@ -50,7 +50,7 @@ var CoursePress = CoursePress || {};
             }
 
             if ( name.match( /\/$/g ) || CoursePress.Course.multiple_elements( items, element.name ) ) {
-                console.log( item_count + ': ' + element.name );
+                //console.log( item_count + ': ' + element.name );
                 if ( name.match( /\/$/g ) ) {
                     CoursePress.utility.update_object_by_path( data, name + item_count, element.value );
                 } else {
@@ -66,21 +66,8 @@ var CoursePress = CoursePress || {};
         } );
     }
 
-    CoursePress.Course.fix_checkboxes = function ( items, step, false_value ) {
-        var meta_items = $( '.step-content.step-' + step + ' [name^="meta_"]' );
-
-        if ( undefined === false_value ) {
-            false_value = false;
-        }
-
-        $.each( meta_items, function ( index, element ) {
-            var name = $( element ).attr( 'name' );
-            if ( 'checkbox' === element.type && undefined === _.findWhere( items, { name: name } ) ) {
-                items.push( { name: name, value: false_value } );
-            }
-        } );
-
-        return items;
+    CoursePress.Course.fix_step_checkboxes = function ( items, step, false_value ) {
+        return CoursePress.utility.fix_checkboxes( items, '.step-content.step-' + step , false_value );
     }
 
     CoursePress.Course.get_step = function ( step, action_type ) {
@@ -101,7 +88,7 @@ var CoursePress = CoursePress || {};
             data.course_excerpt = tinyMCE && tinyMCE.get( 'courseExcerpt' ) ? tinyMCE.get( 'courseExcerpt' ).getContent() : $( '[name="course_excerpt"]' ).val();
 
             var meta_items = $( '.step-content.step-1 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
@@ -111,35 +98,35 @@ var CoursePress = CoursePress || {};
             data.course_description = tinyMCE && tinyMCE.get( 'courseDescription' ) ? tinyMCE.get( 'courseDescription' ).getContent() : $( '[name="course_description"]' ).val();
 
             var meta_items = $( '.step-content.step-2 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 3 Data
         if ( 3 <= step ) {
             var meta_items = $( '.step-content.step-3 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 4 Data
         if ( 4 <= step ) {
             var meta_items = $( '.step-content.step-4 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 1 Data
         if ( 5 <= step ) {
             var meta_items = $( '.step-content.step-5 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
         // Step 1 Data
         if ( 6 <= step ) {
             var meta_items = $( '.step-content.step-6 [name^="meta_"]' ).serializeArray();
-            meta_items = CoursePress.Course.fix_checkboxes( meta_items, step, "0" );
+            meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, "0" );
             CoursePress.Course.add_array_to_data( data, meta_items );
         }
 
@@ -160,7 +147,7 @@ var CoursePress = CoursePress || {};
             data.meta_setup_marker = step;
         }
 
-
+        data.nonce = get_setup_nonce();
         CoursePress.Course.set( 'data', data );
         CoursePress.Course.set( 'action', 'update_course' );
         CoursePress.Course.set( 'next_step', next_step );
@@ -438,7 +425,8 @@ var CoursePress = CoursePress || {};
             var data = {
                 instructor_id: instructor_id,
                 course_id: _coursepress.course_id,
-                instructor_name: instructor_name
+                instructor_name: instructor_name,
+                nonce: get_setup_nonce()
             };
             CoursePress.Course.set( 'data', data );
             CoursePress.Course.save();
@@ -489,7 +477,8 @@ var CoursePress = CoursePress || {};
                     first_name: first_name,
                     last_name: last_name,
                     email: email,
-                    course_id: _coursepress.course_id
+                    course_id: _coursepress.course_id,
+                    nonce: get_setup_nonce()
                 };
                 CoursePress.Course.set( 'data', data );
                 CoursePress.Course.save();
@@ -558,7 +547,7 @@ var CoursePress = CoursePress || {};
                 // Confirm before deleting
                 if ( confirm( _coursepress.instructor_delete_confirm ) ) {
                     CoursePress.Course.set( 'action', 'delete_instructor' );
-                    var data = { instructor_id: instructor_id, course_id: _coursepress.course_id };
+                    var data = { instructor_id: instructor_id, course_id: _coursepress.course_id, nonce: get_setup_nonce() };
                     CoursePress.Course.set( 'data', data );
                     CoursePress.Course.save();
                 }
@@ -568,7 +557,7 @@ var CoursePress = CoursePress || {};
                 // Confirm before deleting
                 if ( confirm( _coursepress.instructor_delete_invite_confirm ) ) {
                     CoursePress.Course.set( 'action', 'delete_instructor_invite' );
-                    var data = { invite_code: invite_code, course_id: _coursepress.course_id };
+                    var data = { invite_code: invite_code, course_id: _coursepress.course_id, nonce: get_setup_nonce() };
                     CoursePress.Course.set( 'data', data );
                     CoursePress.Course.save();
                 }
@@ -576,6 +565,18 @@ var CoursePress = CoursePress || {};
 
 
         } );
+    }
+
+    function update_nonce( data ) {
+
+        if( data.nonce ) {
+            $('#course-setup-steps' ).attr('data-nonce', data.nonce );
+        }
+
+    }
+
+    function get_setup_nonce() {
+        return $('#course-setup-steps' ).attr('data-nonce');
     }
 
     function bind_coursepress_events() {
@@ -594,6 +595,7 @@ var CoursePress = CoursePress || {};
                 $( '.step-title.step-' + data.next_step ).click();
             }
 
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:update_course_error', function ( data ) {
@@ -628,6 +630,7 @@ var CoursePress = CoursePress || {};
                 bind_remove_button( '#instructor_holder_' + data.instructor_id + ' .instructor-remove a' );
             }
 
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:delete_instructor_success', function ( data ) {
@@ -641,7 +644,7 @@ var CoursePress = CoursePress || {};
                 $( '#instructors-info' ).append( empty_holder );
             }
 
-
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:invite_instructor_success', function ( data ) {
@@ -676,7 +679,7 @@ var CoursePress = CoursePress || {};
             $( '.instructor-invite .submit-message' ).append( message );
             $( '.instructor-invite .submit-message .message' ).fadeOut( 3000 );
 
-
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:invite_instructor_error', function ( data ) {
@@ -685,10 +688,12 @@ var CoursePress = CoursePress || {};
             $( '.instructor-invite .submit-message' ).append( message );
             $( '.instructor-invite .submit-message .message' ).fadeOut( 3000 );
 
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:delete_instructor_invite_success', function ( data ) {
             $( '#instructor_holder_' + data.invite_code ).detach();
+            update_nonce( data );
         } );
 
         CoursePress.Course.on( 'coursepress:toggle_course_status_success', function ( data ) {
@@ -728,6 +733,14 @@ var CoursePress = CoursePress || {};
         //    setup_marker = ( setup_marker + 1 ) > 6 ? 6 : setup_marker + 1;
         //    $( '#course-setup-steps .step-title.step-' + setup_marker ).click();
         //}
+
+        // Debug
+        //var component = '{"id": "0","title": "Untitled","duration": "1:00","type": "input-text","show_title": "1","mandatory": "0","assessable": "0","minimum_grade": "100","allow_retries": "1","retry_attempts": "0","content": "","order": "0","components":[{"label": "Placeholder Text","description": "Placeholder text to put inside the textbox (additional information)","items": [{"type": "text-input","class": "component-placeholder-text","name": "meta_component[placeholder_text]"}]}]}';
+        //var object = JSON.parse( component );
+        //var path = CoursePress.utility.get_object_path( object, 'name', 'meta_component[placeholder_text]' );
+        //CoursePress.utility.update_object_by_path( object, path, 'moo' )
+        //console.log( object );
+
 
     } );
 

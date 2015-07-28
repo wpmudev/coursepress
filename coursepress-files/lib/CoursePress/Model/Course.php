@@ -607,6 +607,34 @@ class CoursePress_Model_Course {
 
 	}
 
+
+	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false ) {
+
+		$post_args = array(
+			'post_type'     => 'module',
+			'post_parent'   => $unit_id,
+			'post_status'   => $status,
+			'posts_per_page'=> -1,
+			'order'         => 'ASC',
+			'orderby'       => 'meta_value_num',
+			'meta_key'      => 'module_order'
+		);
+
+		if ( $ids_only ) {
+			$post_args['fields'] = 'ids';
+		}
+
+		$query = new WP_Query( $post_args );
+
+		if ( $include_count ) {
+			// Handy if using pagination
+			return array( 'units' => $query->posts, 'found' => $query->found_posts );
+		} else {
+			return $query->posts;
+		}
+
+	}
+
 	public static function filter_unit_module_where( $sql ) {
 		global $wpdb;
 

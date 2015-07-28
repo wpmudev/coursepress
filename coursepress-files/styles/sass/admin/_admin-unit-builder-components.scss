@@ -1,0 +1,40 @@
+.module-zipped a,
+.module-audio a,
+.module-video a,
+.module-section a,
+.module-download a,
+.module-image a,
+.module-text a,
+.module-input-checkbox a,
+.module-input-upload a,
+.module-input-radio a,
+.module-input-textarea a,
+.module-input-text a,
+.module-input-select a {
+
+  background: url( '#{$imagePath}components.svg' ) no-repeat;
+
+}
+
+.module-text a { background-position: 0 0; }
+.module-image a { background-position: -40px 0; }
+.module-video a { background-position: -80px 0; }
+.module-audio a { background-position: -120px 0; }
+.module-download a { background-position: -160px 0; }
+.module-zipped a { background-position: -200px 0; }
+.module-section a { background-position: -240px 0; }
+.module-input-checkbox a { background-position: 0px -40px; }
+.module-input-radio a { background-position: -40px -40px; }
+.module-input-select a { background-position: -80px -40px; }
+.module-input-text a { background-position: -120px -40px; }
+.module-input-textarea a { background-position: -160px -40px; }
+.module-input-upload a { background-position: -200px -40px; }
+
+
+
+
+
+
+
+
+

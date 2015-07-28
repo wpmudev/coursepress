@@ -9,7 +9,7 @@ var CoursePress = CoursePress || {};
 
     CoursePress.editor.init_mode = getUserSetting( 'editor' );
 
-    CoursePress.editor.create = function ( target, id, content, append ) {
+    CoursePress.editor.create = function ( target, id, name, content, append ) {
 
         if ( undefined === tinyMCEPreInit ) {
             return false;
@@ -26,6 +26,7 @@ var CoursePress = CoursePress || {};
         var editor = _coursepress._dummy_editor;
         editor = editor.replace( /EDITORID/g, id );
         editor = editor.replace( /CONTENT/g, content );
+        editor = editor.replace( /EDITORNAME/g, name );
 
         if ( append ) {
             $( target ).append( editor );
@@ -105,11 +106,6 @@ var CoursePress = CoursePress || {};
     CoursePress.utility.update_object_by_path = function ( object, path, value ) {
         var stack = path.split( '/' );
 
-        if( path === 'meta_course_category' ) {
-            //console.log('MOO MOO MOO');
-            //console.log( value );
-        }
-
         while ( stack.length > 1 ) {
             var key = stack.shift();
             //console.log( key );
@@ -121,7 +117,40 @@ var CoursePress = CoursePress || {};
             }
         }
         object[ stack.shift() ] = value;
+
     }
+
+
+    CoursePress.utility.get_object_path = function ( object, search_key, search_value, base ) {
+
+        if( undefined === base ) {
+            base = '';
+        }
+
+        keys = Object.keys( object );
+
+        while ( keys.length > 0 ) {
+
+            var key = keys.shift();
+
+            if( _.isObject( object[key] ) ) {
+                if( base.length !== 0 ) {
+                    base = base + '/' + key;
+                } else {
+                    base = key;
+                }
+                return CoursePress.utility.get_object_path( object[key], search_key, search_value, base );
+            } else {
+
+                if( key === search_key && object[key] === search_value ) {
+                    return base + '/' + key;
+                }
+            }
+
+        }
+
+    }
+
 
     CoursePress.utility.in_array = function ( value, array ) {
         return array.indexOf( value ) > -1;
@@ -219,6 +248,23 @@ var CoursePress = CoursePress || {};
         alt = typeof alt !== 'undefined' ? alt : '';
 
         return '<img class="avatar avatar-' + size + ' photo" width="' + size + '" height="' + size + '" srcset="' + url + ' 2x" src="' + url + '" alt="' + alt + '">';
+    }
+
+    CoursePress.utility.fix_checkboxes = function ( items, selector, false_value ) {
+        var meta_items = $( selector + ' [name^="meta_"]' );
+
+        if ( undefined === false_value ) {
+            false_value = false;
+        }
+
+        $.each( meta_items, function ( index, element ) {
+            var name = $( element ).attr( 'name' );
+            if ( 'checkbox' === element.type && undefined === _.findWhere( items, { name: name } ) ) {
+                items.push( { name: name, value: false_value } );
+            }
+        } );
+
+        return items;
     }
 
     CoursePress.UI = CoursePress.UI || {};

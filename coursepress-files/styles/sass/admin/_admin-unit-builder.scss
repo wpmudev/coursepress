@@ -1,0 +1,186 @@
+
+// Loading message...
+#unit-builder .loading {
+  background: url( '#{$imagePath}ajax-loader.gif' ) no-repeat left;
+  padding-left: 22px;
+  margin: 50px;
+}
+
+#unit-builder .section.unit-builder-body .loading {
+  margin: 0;
+}
+
+.coursepress-ub-tab {
+  position: relative;
+  cursor: pointer;
+}
+
+.coursepress-ub-tab:after {
+
+  position: absolute;
+  content: '';
+  display: block;
+  height: 8px;
+  width: 8px;
+  top: 38%;
+  right: 0.5em;
+  border-radius: 50%;
+  background: none repeat scroll 0 0 #e0e0e0;
+  border: 1px solid #cfcfcf;
+
+}
+
+.coursepress-ub-tab.unit-live:after {
+  background: none repeat scroll 0 0 #6bbb1a;
+  border: 1px solid #61a31e;
+}
+
+.tab-tabs ul li.coursepress-ub-tab a, .tab-tabs ul li.coursepress-ub-tab a:visited {
+  padding: 8px 24px 8px 8px;
+  font-weight: bold;
+}
+
+.tab-content.unit-builder-content {
+  padding: 0;
+}
+
+.tab-content.unit-builder-content .section {
+  padding: 10px 20px 20px;
+}
+
+.tab-content.unit-builder-content .section.unit-builder-components {
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.tab-content.unit-builder-content .section.unit-builder-modules {
+  padding: 0 5px;
+  min-height: 150px;
+}
+
+.tab-content.unit-builder-content .unit-builder-header {
+
+  background: #0074A2;
+  color: #ffffff;
+
+}
+
+.tab-content.unit-builder-content .unit-builder-header h3 {
+  background: none;
+  color: #ffffff;
+  border: none;
+}
+
+.tab-content.unit-builder-content .unit-builder-header label {
+  display: block;
+  margin-top: 5px;
+  cursor: default;
+}
+
+.tab-content input.wide {
+  width: 100%;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager {
+  background: #F1F1F1;
+  padding: 3px 20px 8px 20px;
+}
+
+.tab-content label {
+  display: inline-block;
+  font-weight: bold;
+  cursor: default;
+
+}
+.tab-content label.bigger {
+  font-size:1.1em;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul li,
+.tab-content.unit-builder-content .unit-builder-pager ul {
+  display: inline-block;
+  margin:1px;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul {
+  margin-left: 10px;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul li {
+  height: 2.4em;
+  padding-top: 0.5em;
+  position: relative;
+  text-align: center;
+  top: 2px;
+  width: 2.4em;
+  font-weight: bold;
+  border: 1px solid #A6B1BB;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul li.active:after,
+.tab-content.unit-builder-content .unit-builder-pager ul li.active:before {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul li.active:after {
+  border-color: rgba(0, 116, 162, 0);
+  border-top-color: #0074A2;
+  border-width: 5px;
+  margin-left: -5px;
+}
+.tab-content.unit-builder-content .unit-builder-pager ul li.active:before {
+  border-color: rgba(166, 177, 187, 0);
+  border-top-color: #A6B1BB;
+  border-width: 6px;
+  margin-left: -6px;
+}
+
+.tab-content.unit-builder-content .unit-builder-pager ul li:hover,
+.tab-content.unit-builder-content .unit-builder-pager ul li.active {
+  background: #0074A2;
+  color: #ffffff;
+}
+
+// Module Elements
+.tab-content.unit-builder-content .input-element,
+.tab-content.unit-builder-content .output-element{
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.8em;
+  font-weight: bold;
+  height: 49px;
+  margin: 0 5px 12px 0;
+  min-width: 50px;
+  opacity: 0.7;
+  position: relative;
+  text-align: center;
+  width: 78px;
+}
+.tab-content.unit-builder-content .input-element:hover,
+.tab-content.unit-builder-content .output-element:hover {
+  opacity: 1;
+}
+
+.tab-content.unit-builder-content .input-element {
+  color: #008dc8;
+}
+
+.tab-content.unit-builder-content .output-element{
+  color: #565656;
+}
+
+.tab-content.unit-builder-content .input-element a,
+.tab-content.unit-builder-content .output-element a{
+  display: block;
+  height: 40px;
+  margin: 0 auto;
+  width: 40px;
+}

@@ -69,12 +69,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$title = '<strong>' . $item->post_title . '</strong>';
 
 		$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
+
 		$actions = [
 			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
-			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'units', absint( $item->ID ), $duplicate_nonce, __( 'Units', CoursePress::TD ) ),
-			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'students', absint( $item->ID ), $duplicate_nonce, __( 'Students', CoursePress::TD ) ),
-			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->ID ), $duplicate_nonce, __( 'View Course', CoursePress::TD ) ),
-			'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), $duplicate_nonce, __( 'View Units', CoursePress::TD ) ),
+			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', CoursePress::TD ) ),
+			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', CoursePress::TD ) ),
+			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->ID ), __( 'View Course', CoursePress::TD ) ),
+			'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', CoursePress::TD ) ),
 			'duplicate' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'duplicate_course', absint( $item->ID ), $duplicate_nonce, __( 'Duplicate Course', CoursePress::TD ) ),
 		];
 

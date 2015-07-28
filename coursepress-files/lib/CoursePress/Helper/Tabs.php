@@ -14,29 +14,39 @@ class CoursePress_Helper_Tabs {
 		$content .= '<div class="tab-tabs' . $mode_class . '">';
 
 		if( $sticky_tabs ) {
-			$content .= '<div class="sticky-slider visible-small visible-extra-small"><i class="fa fa-chevron-circle-right"></i></div>';
+			$content .= '<div class="sticky-slider visible-small visible-extra-small"></div>';
 		}
 
-		$content .= '<ul class="mp-tabs ' . $sticky_class . '" style="">';
+		$content .= '<ul class="' . $sticky_class . '" style="">';
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		foreach( $tabs as $key => $tab ) {
 			$class = $key === $active ? 'active' : '';
 			$class .= ' ' . $tab['class'];
 
-			$query_string = 'page=' . $page;
+			//$query_string = 'page=' . $page;
+			$query_string = '';
 			$first = true;
 			foreach( $hidden_args as $arg_key => $arg_value ) {
+				if( $arg_key === $tab_arg ) {
+					continue;
+				}
 				$query_string .= $first ? '' : '&amp;';
 				$query_string .= $arg_key . '=' . $arg_value;
 				$first = false;
 			}
 			$query_string .= '&amp;' . $tab_arg . '=' . $key;
 
-			$tab_url = admin_url( 'admin.php?' . $query_string );
+			if( ! isset( $tab['url'] ) ) {
+				$tab_url = admin_url( 'admin.php?' . $query_string );
+			} else {
+				$tab_url = $tab['url'];
+			}
 
-			$content .= '<li class="mp-tab ' . $class . '">
-				<a class="mp-tab-link" href="' . esc_url( $tab_url ) . '">' . esc_html( $tab['title'] ) . '</a>
+
+
+			$content .= '<li class="' . $class . '" data-tab="' . $key . '">
+				<a href="' . esc_url( $tab_url ) . '">' . esc_html( $tab['title'] ) . '</a>
 			</li>';
 		}
 

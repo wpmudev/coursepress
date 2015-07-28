@@ -36,7 +36,12 @@ class CoursePress_View_Admin_Course_Edit {
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'process_form' ) );
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 
+		// Update Course
 		add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
+
+		// Update UnitBuilder
+		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
+
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -112,9 +117,12 @@ class CoursePress_View_Admin_Course_Edit {
 
 	private static function render_tab_setup() {
 
+		// Setup Nonce
+		$setup_nonce = wp_create_nonce( 'setup-course' );
+
 		$content = '
         <div class="step-container">
-			<div id="course-setup-steps">
+			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">
 				' . self::render_setup_step_1() . '
 				' . self::render_setup_step_2() . '
 				' . self::render_setup_step_3() . '
@@ -928,25 +936,25 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$content = '';
 
-		$units = CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] );
-		//error_log( print_r( CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] ), true ) );
+		//$units = CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] );
+		////error_log( print_r( CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] ), true ) );
+		//
+		//$first_unit = ! empty( $units ) && is_array( $units ) ? $units[0] : false;
+		//
+		//$unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : $first_unit;
+		//
+		//$titles = array();
+		//foreach ( $units as $unit ) {
+		//	$titles[ $unit ] = get_the_title( $unit );
+		//}
+		//
+		//$unit = get_post( $unit_id );
+		//
+		//$content = var_dump( $titles );
+		//
+		//$content .= $unit->post_content;
 
-		$first_unit = ! empty( $units ) && is_array( $units ) ? $units[0] : false;
-
-		$unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : $first_unit;
-
-		$titles = array();
-		foreach ( $units as $unit ) {
-			$titles[ $unit ] = get_the_title( $unit );
-		}
-
-		$unit = get_post( $unit_id );
-
-		$content = var_dump( $titles );
-
-		$content .= $unit->post_content;
-
-		return $content;
+		return CoursePress_View_Admin_Course_UnitBuilder::render();
 	}
 
 	private static function render_tab_students() {
@@ -1020,7 +1028,7 @@ class CoursePress_View_Admin_Course_Edit {
 			// Update Course
 			case 'update_course':
 
-				if ( isset( $step_data->step ) ) {
+				if ( isset( $step_data->step ) && wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
 
 					$step = (int) $step_data->step;
 
@@ -1030,6 +1038,7 @@ class CoursePress_View_Admin_Course_Edit {
 					$json_data['last_step'] = $step;
 					$json_data['next_step'] = $next_step;
 
+					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
 					$success = true;
 				}
 
@@ -1048,8 +1057,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 					$json_data['nonce'] = wp_create_nonce( 'publish-course' );
 					$success            = true;
-				} else {
-					$success = false;
+
 				}
 
 				$json_data['course_id'] = $course_id;
@@ -1059,37 +1067,58 @@ class CoursePress_View_Admin_Course_Edit {
 
 			// Delete Instructor
 			case 'delete_instructor':
-				CoursePress_Model_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
-				$json_data['instructor_id'] = $data->data->instructor_id;
-				$json_data['course_id']     = $data->data->course_id;
-				$success                    = true;
+
+				if( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+					CoursePress_Model_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
+					$json_data['instructor_id'] = $data->data->instructor_id;
+					$json_data['course_id']     = $data->data->course_id;
+
+					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
+					$success            = true;
+				}
+
 				break;
 
 			// Add Instructor
 			case 'add_instructor':
-				CoursePress_Model_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
-				$json_data['instructor_id']   = $data->data->instructor_id;
-				$json_data['instructor_name'] = $data->data->instructor_name;
-				$json_data['course_id']       = $data->data->course_id;
-				$success                      = true;
+
+				if( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+					CoursePress_Model_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
+					$json_data['instructor_id']   = $data->data->instructor_id;
+					$json_data['instructor_name'] = $data->data->instructor_name;
+					$json_data['course_id']       = $data->data->course_id;
+
+					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
+					$success            = true;
+				}
+
 				break;
 
 			// Invite Instructor
 			case 'invite_instructor':
-				$email_data               = CoursePress_Helper_Utility::object_to_array( $data->data );
-				$response                 = CoursePress_Model_Instructor::send_invitation( $email_data );
-				$json_data['message']     = $response['message'];
-				$json_data['data']        = $data->data;
-				$json_data['invite_code'] = $response['invite_code'];
-				$success                  = $response['success'];
+
+				if( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+					$email_data               = CoursePress_Helper_Utility::object_to_array( $data->data );
+					$response                 = CoursePress_Model_Instructor::send_invitation( $email_data );
+					$json_data['message']     = $response['message'];
+					$json_data['data']        = $data->data;
+					$json_data['invite_code'] = $response['invite_code'];
+
+					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
+					$success            = $response['success'];
+				}
 				break;
 
 			// Delete Invite
 			case 'delete_instructor_invite':
-				CoursePress_Model_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
-				$json_data['course_id']   = $data->data->course_id;
-				$json_data['invite_code'] = $data->data->invite_code;
-				$success                  = true;
+				if( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+					CoursePress_Model_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
+					$json_data['course_id']   = $data->data->course_id;
+					$json_data['invite_code'] = $data->data->invite_code;
+
+					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
+					$success            = true;
+				}
 				break;
 
 		}

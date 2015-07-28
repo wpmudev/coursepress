@@ -291,4 +291,13 @@ class CoursePress_Helper_Utility {
 		return apply_filters( 'coursepress_payment_supported', false, CoursePress_Model_Course::last_course_id() );
 	}
 
+	public static function send_bb_json( $response ) {
+		@header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+		echo json_encode( $response );
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+			wp_die();
+		else
+			die;
+	}
+
 }
