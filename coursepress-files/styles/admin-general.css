@@ -885,70 +885,62 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   font-weight: bold;
 }
 
-.tab-content.unit-builder-content {
-  padding: 0;
-}
-
-.tab-content.unit-builder-content .section {
-  padding: 10px 20px 20px;
-}
-
-.tab-content.unit-builder-content .section.unit-builder-components {
-  border-bottom: 1px solid #e1e1e1;
-}
-
-.tab-content.unit-builder-content .section.unit-builder-modules {
-  padding: 0 5px;
-  min-height: 150px;
-}
-
-.tab-content.unit-builder-content .unit-builder-header {
-  background: #0074A2;
-  color: #ffffff;
-}
-
-.tab-content.unit-builder-content .unit-builder-header h3 {
-  background: none;
-  color: #ffffff;
-  border: none;
-}
-
-.tab-content.unit-builder-content .unit-builder-header label {
-  display: block;
-  margin-top: 5px;
-  cursor: default;
-}
-
-.tab-content input.wide {
+.tab-content .wide {
   width: 100%;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager {
-  background: #F1F1F1;
-  padding: 3px 20px 8px 20px;
+.tab-content .medium {
+  width: 40%;
 }
-
+.tab-content .narrow {
+  width: 20%;
+}
 .tab-content label {
   display: inline-block;
   font-weight: bold;
   cursor: default;
 }
-
 .tab-content label.bigger {
   font-size: 1.1em;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li,
-.tab-content.unit-builder-content .unit-builder-pager ul {
+.tab-content .unit-builder-content {
+  padding: 0;
+}
+.tab-content .unit-builder-content .section {
+  padding: 10px 20px 20px;
+}
+.tab-content .unit-builder-content .section .unit-builder-components {
+  border-bottom: 1px solid #e1e1e1;
+}
+.tab-content .unit-builder-content .section .unit-builder-modules {
+  padding: 0 5px;
+  min-height: 150px;
+}
+.tab-content .unit-builder-content .unit-builder-header {
+  background: #0074A2;
+  color: #ffffff;
+}
+.tab-content .unit-builder-content .unit-builder-header h3 {
+  background: none;
+  color: #ffffff;
+  border: none;
+}
+.tab-content .unit-builder-content .unit-builder-header label {
+  display: block;
+  margin-top: 5px;
+  cursor: default;
+}
+.tab-content .unit-builder-content .unit-builder-pager {
+  background: #F1F1F1;
+  padding: 3px 20px 8px 20px;
+}
+.tab-content .unit-builder-content .unit-builder-pager ul li, .tab-content .unit-builder-content .unit-builder-pager ul {
   display: inline-block;
   margin: 1px;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul {
+.tab-content .unit-builder-content .unit-builder-pager ul {
   margin-left: 10px;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li {
+.tab-content .unit-builder-content .unit-builder-pager ul li {
   height: 2.4em;
   padding-top: 0.5em;
   position: relative;
@@ -960,9 +952,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   box-sizing: border-box;
   cursor: pointer;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li.active:after,
-.tab-content.unit-builder-content .unit-builder-pager ul li.active:before {
+.tab-content .unit-builder-content .unit-builder-pager ul li.active:after, .tab-content .unit-builder-content .unit-builder-pager ul li.active:before {
   top: 100%;
   left: 50%;
   border: solid transparent;
@@ -972,29 +962,23 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   position: absolute;
   pointer-events: none;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li.active:after {
+.tab-content .unit-builder-content .unit-builder-pager ul li.active:after {
   border-color: rgba(0, 116, 162, 0);
   border-top-color: #0074A2;
   border-width: 5px;
   margin-left: -5px;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li.active:before {
+.tab-content .unit-builder-content .unit-builder-pager ul li.active:before {
   border-color: rgba(166, 177, 187, 0);
   border-top-color: #A6B1BB;
   border-width: 6px;
   margin-left: -6px;
 }
-
-.tab-content.unit-builder-content .unit-builder-pager ul li:hover,
-.tab-content.unit-builder-content .unit-builder-pager ul li.active {
+.tab-content .unit-builder-content .unit-builder-pager ul li:hover, .tab-content .unit-builder-content .unit-builder-pager ul li.active {
   background: #0074A2;
   color: #ffffff;
 }
-
-.tab-content.unit-builder-content .input-element,
-.tab-content.unit-builder-content .output-element {
+.tab-content .unit-builder-content .input-element, .tab-content .unit-builder-content .output-element {
   cursor: pointer;
   display: inline-block;
   font-size: 0.8em;
@@ -1007,26 +991,143 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   text-align: center;
   width: 78px;
 }
-
-.tab-content.unit-builder-content .input-element:hover,
-.tab-content.unit-builder-content .output-element:hover {
+.tab-content .unit-builder-content .input-element:hover, .tab-content .unit-builder-content .output-element:hover {
   opacity: 1;
 }
-
-.tab-content.unit-builder-content .input-element {
+.tab-content .unit-builder-content .input-element {
   color: #008dc8;
 }
-
-.tab-content.unit-builder-content .output-element {
+.tab-content .unit-builder-content .output-element {
   color: #565656;
 }
-
-.tab-content.unit-builder-content .input-element a,
-.tab-content.unit-builder-content .output-element a {
+.tab-content .unit-builder-content .input-element a, .tab-content .unit-builder-content .output-element a {
   display: block;
   height: 40px;
   margin: 0 auto;
   width: 40px;
+}
+.tab-content .unit-builder-content h3.module-holder-title {
+  background: #0092CB;
+  color: #ffffff;
+  margin: 10px 0 0 0;
+  padding: 5px 20px;
+  overflow: hidden;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  border: none;
+}
+.tab-content .unit-builder-content h3.module-holder-title .module-type {
+  display: inline-block;
+  float: right;
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+.tab-content .unit-builder-content h3.module-holder-title .module-type:after {
+  font-family: fontawesome;
+  font-weight: normal;
+  display: inline-block;
+  float: right;
+  content: '\f00a';
+  margin-left: 10px;
+}
+.tab-content .unit-builder-content .module-holder {
+  background: #E7F4FA;
+}
+.tab-content .unit-builder-content .module-holder .wp-editor-area, .tab-content .unit-builder-content .module-holder input, .tab-content .unit-builder-content .module-holder textarea, .tab-content .unit-builder-content .module-holder select {
+  font-weight: normal;
+  font-size: 1em;
+}
+.tab-content .unit-builder-content .module-holder .module-header {
+  padding: 10px 20px 0 20px;
+  position: relative;
+}
+.tab-content .unit-builder-content .module-holder .module-components {
+  padding: 0 20px 5px 20px;
+}
+.tab-content .unit-builder-content .module-holder label {
+  font-size: 1.1em;
+  margin-bottom: 3px;
+}
+.tab-content .unit-builder-content .module-holder label .description {
+  font-size: 0.9em;
+  font-weight: normal;
+}
+.tab-content .unit-builder-content .module-holder label.module-title {
+  width: 100%;
+}
+.tab-content .unit-builder-content .module-holder label.module-title .label, .tab-content .unit-builder-content .module-holder label.module-title .description {
+  display: block;
+}
+.tab-content .unit-builder-content .module-holder label.module-title input {
+  width: 100%;
+}
+.tab-content .unit-builder-content .module-holder label.module-duration {
+  position: absolute;
+  right: 18px;
+  top: 4px;
+}
+.tab-content .unit-builder-content .module-holder label.module-show-title,
+.tab-content .unit-builder-content .module-holder label.module-mandatory,
+.tab-content .unit-builder-content .module-holder label.module-assessable,
+.tab-content .unit-builder-content .module-holder label.module-allow-retries,
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade {
+  width: 32%;
+  margin-top: 10px;
+}
+.tab-content .unit-builder-content .module-holder label.module-show-title .description,
+.tab-content .unit-builder-content .module-holder label.module-mandatory .description,
+.tab-content .unit-builder-content .module-holder label.module-assessable .description,
+.tab-content .unit-builder-content .module-holder label.module-allow-retries .description,
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade .description {
+  margin-left: 20px;
+  display: block;
+}
+.tab-content .unit-builder-content .module-holder label.module-show-title input[type="text"],
+.tab-content .unit-builder-content .module-holder label.module-mandatory input[type="text"],
+.tab-content .unit-builder-content .module-holder label.module-assessable input[type="text"],
+.tab-content .unit-builder-content .module-holder label.module-allow-retries input[type="text"],
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade input[type="text"] {
+  width: 55px;
+  margin-left: 10px;
+}
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade .description {
+  margin-left: 0;
+}
+.tab-content .unit-builder-content .module-holder textarea.editor {
+  width: 100%;
+  min-height: 200px;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt {
+  width: 100%;
+  margin: 10px 0 5px 0;
+  position: relative;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt .description {
+  display: block;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-editor-wrap {
+  position: relative;
+  top: -20px;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-editor-wrap iframe {
+  height: 400px;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-media-buttons {
+  float: none;
+  position: absolute;
+  right: 112px;
+  top: 6px;
+}
+.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-media-buttons .insert-media {
+  height: 27px;
+  padding: 0 8px 0 5px;
+}
+.tab-content .unit-builder-content .module-holder .module-components span.description {
+  display: block;
+}
+.tab-content .unit-builder-content .module-holder .module-components input[type="text"] {
+  width: 100%;
 }
 
 .module-zipped a,
@@ -1074,11 +1175,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 
 .module-input-checkbox a {
-  background-position: 0px -40px;
+  background-position: -160px -40px;
 }
 
 .module-input-radio a {
-  background-position: -40px -40px;
+  background-position: -120px -40px;
 }
 
 .module-input-select a {
@@ -1086,11 +1187,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 
 .module-input-text a {
-  background-position: -120px -40px;
+  background-position: 0px -40px;
 }
 
 .module-input-textarea a {
-  background-position: -160px -40px;
+  background-position: -40px -40px;
 }
 
 .module-input-upload a {

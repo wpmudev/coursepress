@@ -267,7 +267,7 @@ class CoursePress_Helper_UI_Module {
 	public static function get_types() {
 
 		$input_types  = self::get_input_types();
-		$output_types = self::get_output_type();
+		$output_types = self::get_output_types();
 
 		return apply_filters( 'coursepress_module_types', CoursePress_Helper_Utility::merge_distinct( $input_types, $output_types ) );
 
@@ -381,11 +381,13 @@ class CoursePress_Helper_UI_Module {
 			'module_assessable_desc'    => __( 'This is a gradable item', CoursePress::TD ),
 			'module_minimum_grade'      => __( 'Minimum', CoursePress::TD ),
 			'module_minimum_grade_desc' => __( 'Minimum grade (%) required to pass', CoursePress::TD ),
-			'module_minimum_grade'      => __( 'Minimum', CoursePress::TD ),
+			'module_minimum_grade'      => __( 'Minimum Grade', CoursePress::TD ),
 			'module_allow_retries'      => __( 'Allow Retries', CoursePress::TD ),
 			'module_allow_retries_desc' => __( 'Allow and set amount of retries (0 unlimited)', CoursePress::TD ),
 			'module_question'           => __( 'Question/Task', CoursePress::TD ),
+			'module_question_desc'      => __( 'The question or instructions to complete this task.', CoursePress::TD ),
 			'module_content'            => __( 'Content', CoursePress::TD ),
+			'module_content_desc'       => __( 'Content that will display on the unit page.', CoursePress::TD ),
 			'module_answer'             => __( 'Answer', CoursePress::TD ),
 			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
 			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
@@ -441,15 +443,17 @@ class CoursePress_Helper_UI_Module {
 					"allow_retries": "1",
 					"retry_attempts": "0",
 					"content": "",
+					"editor_height": "200",
 					"order": "0",
 					"components": [
 						{
 							"label": "' . __('Placeholder Text', CoursePress::TD ) . '",
 							"description": "' . __('Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
+							"class": "wide",
 							"items": [
 								{
 									"type": "text-input",
-									"class": "component-placeholder-text",
+									"class": "component-placeholder-text wide",
 									"name": "meta_component[placeholder_text]"
 								}
 							]
@@ -472,6 +476,7 @@ class CoursePress_Helper_UI_Module {
 		} else {
 			return $components;
 		}
+
 
 	}
 

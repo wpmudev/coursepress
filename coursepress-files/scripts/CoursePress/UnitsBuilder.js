@@ -12,11 +12,11 @@ var CoursePress = CoursePress || {};
     CoursePress.Helpers.Module = CoursePress.Helpers.Module || {};
 
     // Loop through a Module collection
-    CoursePress.Helpers.Module.get_modules_html = function( modules ) {
+    CoursePress.Helpers.Module.get_modules_html = function ( modules ) {
 
         var content = '';
 
-        $.each( modules, function( index, module ) {
+        $.each( modules, function ( index, module ) {
 
             content += CoursePress.Helpers.Module.render_module( module );
 
@@ -27,18 +27,18 @@ var CoursePress = CoursePress || {};
     }
 
     // Get the Module Type
-    CoursePress.Helpers.Module.module_type = function( module ) {
-        var meta = module.get('meta')
-        var mod_type = meta['module_type'] ? meta['module_type'][0] : 'legacy';
+    CoursePress.Helpers.Module.module_type = function ( module ) {
+        var meta = module.get( 'meta' )
+        var mod_type = meta[ 'module_type' ] ? meta[ 'module_type' ][ 0 ] : 'legacy';
         return CoursePress.Helpers.Module.map_legacy( mod_type );
     }
 
     // Map legacy types
-    CoursePress.Helpers.Module.map_legacy = function( mod_type ) {
+    CoursePress.Helpers.Module.map_legacy = function ( mod_type ) {
 
         var legacy = {
-            'audio_module' : 'audio',
-            'chat_module'  : 'chat',
+            'audio_module': 'audio',
+            'chat_module': 'chat',
             'checkbox_input_module': 'input-checkbox',
             'file_module': 'download',
             'file_input_module': 'input-upload',
@@ -51,7 +51,7 @@ var CoursePress = CoursePress || {};
             'video_module': 'video'
         }
 
-        if( mod_type in legacy ) {
+        if ( mod_type in legacy ) {
             mod_type = legacy[ mod_type ];
         }
 
@@ -59,33 +59,190 @@ var CoursePress = CoursePress || {};
 
     };
 
+
     // Start Rendering the Module
     CoursePress.Helpers.Module.render_module = function ( module ) {
 
-        var meta = module.get('meta')
+        var meta = module.get( 'meta' )
         var module_type = CoursePress.Helpers.Module.module_type( module );
 
-        var content = '';
-        content += '*** ' + module_type + ' ***';
+        var content;
+        var data;
 
-        if( false ) {
+        if ( false ) {
             // Does the component data exist in the meta?
         } else if ( _coursepress.unit_builder_templates[ module_type ] ) {
             // Or render from template if the template exists
-            content += _coursepress.unit_builder_templates[ module_type ];
+            if ( _coursepress.unit_builder_templates[ module_type ].trim().length > 0 ) {
+                data = JSON.parse( _coursepress.unit_builder_templates[ module_type ] );
+            }
 
         } else {
             // Or render legacy object
 
         }
 
+        if ( undefined === data || undefined === _coursepress.unit_builder_module_types[ data[ 'type' ] ] ) {
+            return '';
+        }
+
+        var types = _coursepress.unit_builder_module_types;
+        var labels = _coursepress.unit_builder_module_labels;
+        var module_mode = types[ data[ 'type' ] ][ 'mode' ];
+
+        content = '<h3 class="module-holder-title"><span class="label">' + data[ 'title' ] + '</span><span class="module-type">' + types[ data[ 'type' ] ][ 'title' ] + '</span></h3>' +
+                  '<div class="module-holder ' + data[ 'type' ] + ' mode-' + module_mode + '" data-id="' + data[ 'id' ] + '" data-type="' + data[ 'type' ] + '">';
+
+
+        //
+        //// Display the body of the module?
+        if ( ( types[ data[ 'type' ] ][ 'body' ] && 'hidden' !== types[ data[ 'type' ] ][ 'body' ] ) || !types[ data[ 'type' ] ][ 'body' ] ) {
+
+            content += '<div class="module-header">' +
+            '<label class="module-title"><span class="label">' + labels[ 'module_title' ] + '</span>' +
+            '<span class="description">' + labels[ 'module_title_desc' ] + '</span>' +
+            '<input type="text" name="title" value="' + data[ 'title' ] + '" /></label>';
+
+            content += '<input type="hidden" name="meta_module_type" value="' + data[ 'type' ] + '" />';
+
+            content +=
+            '<label class="module-duration"><span class="label">' + labels[ 'module_duration' ] + '</span>' +
+            '<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></label>';
+
+            // Show Title
+            content += '<label class="module-show-title">' +
+            '<input type="checkbox" name="meta_show_title" value="1" ' + CoursePress.utility.checked( data[ 'show_title' ], 1 ) + ' />' +
+            '<span class="label">' + labels[ 'module_show_title' ] + '</span>' +
+            '<span class="description">' + labels[ 'module_show_title_desc' ] + '</span>' +
+            '</label>';
+
+
+                // Only for user inputs
+                if ( 'input' === module_mode ) {
+
+                    // Mandatory
+                    content += '<label class="module-mandatory">' +
+                    '<input type="checkbox" name="meta_mandatory" value="1" ' + CoursePress.utility.checked( data['mandatory'], 1 ) + ' />' +
+                    '<span class="label">' + labels['module_mandatory'] + '</span>' +
+                    '<span class="description">' + labels['module_mandatory_desc'] + '</span>' +
+                    '</label>';
+
+                    // Assessable
+                    content += '<label class="module-assessable">' +
+                    '<input type="checkbox" name="meta_assessable" value="1" ' + CoursePress.utility.checked( data['assessable'], 1 ) + ' />' +
+                    '<span class="label">' + labels['module_assessable'] + '</span>' +
+                    '<span class="description">' + labels['module_assessable_desc'] + '</span>' +
+                    '</label>';
+
+                    // Minimum Grade
+                    content += '<label class="module-minimum-grade">' +
+                    '<span class="label">' + labels['module_minimum_grade'] + '</span>' +
+                    '<input type="text" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" />' +
+                    '<span class="description">' + labels['module_minimum_grade_desc'] + '</span>' +
+                    '</label>';
+
+                    // Allow Retries
+                    content += '<label class="module-allow-retries">' +
+                    '<input type="checkbox" name="meta_allow_retries" value="1" ' + CoursePress.utility.checked( data['allow_retries'], 1 ) + ' />' +
+                    '<span class="label">' + labels['module_allow_retries'] + '</span>' +
+                    '<input type="text" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" />' +
+                    '<span class="description">' + labels['module_allow_retries_desc'] + '</span>' +
+                    '</label>';
+                }
+            //
+            //    // Excerpt
+                if ( ( types[ data[ 'type'] ]['excerpt'] && 'hidden' !== types[ data['type'] ]['excerpt'] ) || ! types[ data['type'] ]['excerpt'] ) {
+
+                    var textarea_name = 'module_excerpt_' + data[ 'id' ];
+                    var textareaID = textarea_name;
+
+                    var content_label = 'input' === module_mode ? labels['module_question'] : labels['module_content'];
+                    var content_descrtiption = 'input' === module_mode ? labels['module_question_desc'] : labels['module_content_desc'];
+                    var editor_height = data['editor_height'] ? 'data-height="' + data['editor_height'] + '"' : '';
+
+                    content += '<label class="module-excerpt">' +
+                    '<span class="label">' + content_label + '</span>' +
+                    '<span class="description">' + content_descrtiption + '</span>' +
+                    '<textarea class="editor" name="' + textarea_name + '" id="' + textareaID + '" ' + editor_height + '>' + data['content'] + '</textarea>' +
+                    '</label>';
+                }
+
+                // Now it gets tricky...
+                content += '</div>';
+
+                // RENDER COMPONENTS
+                content += '<div class="module-components">' +
+                CoursePress.Helpers.Module.render_components( module, data ) +
+                '</div>';
+
+        }
+        content += '</div>';
+
+
         return content;
 
     }
 
+    CoursePress.Helpers.Module.render_components = function ( module, data ) {
+        var types = _coursepress.unit_builder_module_types;
+        var labels = _coursepress.unit_builder_module_labels;
+        var module_mode = types[ data[ 'type' ] ][ 'mode' ];
+
+        var content = '';
+
+        var components = _.isArray( data['components'] ) ? data['components'] : [];
+
+        console.log( components );
+
+        // Deal with each components...
+        $.each( components, function( key, component ) {
+
+            var label = component['label'] ? component['label'] : '';
+            var description = component['description'] ? component['description'] : '';
+            var label_class = component['class'] ? 'class="' + component['class'] + '"' : '';
+
+            content += '<div class="module-component module-component-' + key + '">' +
+            '<label data-key="label" ' + label_class + '>' +
+            '<span class="label">' + label + '</span>' +
+            '<span class="description">' + description + '</span>';
+
+            var items =  _.isArray( component['items'] ) ? component['items'] : [];
+
+            // Deal with each item of the components
+            $.each( items, function( idx, item ) {
+
+                var item_type = item['type'] ? item['type'] : '';
+
+                switch ( item_type ) {
+
+                    case 'text-input':
+                        var attr = item['name'] ? ' name="' + item['name'] + '"' : '';
+                        attr += item['class'] ? ' class="' + item['class'] + '"' : '';
+                        content += '<input type="text"' + attr + ' />';
+                        break;
+
+                    case 'text':
+                        var attr = item['name'] ? ' name="' + item['name']  + '"' : '';
+                        attr += item['class'] ? ' class="' + item['class'] + '"' : '';
+                        var text = item['text'] ? item['text']  : '';
+                        content += '<span' + attr + '>' + text + '</span>';
+                        break;
+                }
+
+            } );
+
+
+            content += '</label></div>';
+
+        } );
+
+
+        return content;
+
+    }
 
     /** Add the CoursePress Unit Builder Views **/
-    // Parent View / Models / Collections
+        // Parent View / Models / Collections
     CoursePress.Views.UnitBuilder = Backbone.View.extend( {
         initialize: function () {
 
@@ -113,7 +270,10 @@ var CoursePress = CoursePress || {};
             this.headerView.parentView = this;
 
             // Displays the content
-            this.contentView = new CoursePress.Views.UnitBuilderBody( { model: this.module_collection, className: 'unit-builder-body' } );
+            this.contentView = new CoursePress.Views.UnitBuilderBody( {
+                model: this.module_collection,
+                className: 'unit-builder-body'
+            } );
             this.contentView.parentView = this;
 
             // Render the container
@@ -136,6 +296,7 @@ var CoursePress = CoursePress || {};
 
             // UI
             $( ".sticky-tabs" ).sticky( { topSpacing: 45 } );
+
 
             return this;
         },
@@ -226,7 +387,10 @@ var CoursePress = CoursePress || {};
             this.model.each( function ( unit ) {
                 if ( parseInt( model_id ) === parseInt( unit.get( 'ID' ) ) ) {
                     CoursePress.Helpers.changeUnit( unit, self );
-                    $( 'body,html' ).animate( { scrollTop: $('.section.unit-builder-header').offset().top - 20, duration: 200 } );
+                    $( 'body,html' ).animate( {
+                        scrollTop: $( '.section.unit-builder-header' ).offset().top - 20,
+                        duration: 200
+                    } );
                 }
             } );
 
@@ -318,7 +482,7 @@ var CoursePress = CoursePress || {};
 
 
                 var template = _.template( $( "#unit-builder-content-template" ).html(), {} );
-                this.$el.html(template);
+                this.$el.html( template );
                 //console.log( this );
 
                 //this.$( '.unit-builder-tabs .sticky-wrapper' )
@@ -329,9 +493,9 @@ var CoursePress = CoursePress || {};
 
                 // Set variables first
                 var unit = this.parentView.unit_collection._byId[ this.parentView.activeUnitRef ];
-                var page_count = unit.get('meta');
+                var page_count = unit.get( 'meta' );
                 // Always give at least 1 page
-                this.pagerView.template_variables.unit_page_count = page_count['unit_page_count'] ? page_count['unit_page_count'][0] : 1;
+                this.pagerView.template_variables.unit_page_count = page_count[ 'unit_page_count' ] ? page_count[ 'unit_page_count' ][ 0 ] : 1;
 
                 this.$( '.unit-builder-pager' )
                     .replaceWith( this.pagerView.render( this.pagerView.template_variables ).el );
@@ -344,15 +508,26 @@ var CoursePress = CoursePress || {};
                 this.$( '.unit-builder-pager-info' )
                     .replaceWith( this.pagerViewInfo.render( this.pagerViewInfo.template_variables ).el );
 
-                this.componentsView.template_variables = {
-
-                };
+                this.componentsView.template_variables = {};
 
                 this.$( '.unit-builder-components' )
                     .replaceWith( this.componentsView.render( this.componentsView.template_variables ).el );
 
                 this.$( '.unit-builder-modules' )
                     .replaceWith( this.modulesView.render( this.parentView.module_collection.models ).el );
+
+
+                $.each( $( '.unit-builder-modules .editor' ), function( index, editor ) {
+
+                    var id = $(editor).attr('id');
+                    var name = $(editor).attr('name');
+                    var height = $(editor).attr('data-height') ? $(editor).attr('data-height') : 400;
+
+                    var content = $(editor ).val();
+                    CoursePress.editor.create( editor, id, name, content, false, height );
+
+
+                } );
 
             }
 
@@ -363,7 +538,7 @@ var CoursePress = CoursePress || {};
 
     // Unit Body Pager View
     CoursePress.Views.UnitBuilderPager = Backbone.View.extend( {
-        render: function( options ) {
+        render: function ( options ) {
             var template = _.template( $( "#unit-builder-pager-template" ).html(), options );
             this.$el.html( template );
 
@@ -373,7 +548,7 @@ var CoursePress = CoursePress || {};
 
     // Unit Body Pager Content View
     CoursePress.Views.UnitBuilderPagerInfo = Backbone.View.extend( {
-        render: function( options ) {
+        render: function ( options ) {
 
             var template = _.template( $( "#unit-builder-pager-info-template" ).html(), options );
             this.$el.html( template );
@@ -385,7 +560,7 @@ var CoursePress = CoursePress || {};
 
     // Unit Body Components View
     CoursePress.Views.UnitBuilderComponents = Backbone.View.extend( {
-        render: function( options ) {
+        render: function ( options ) {
             var template = _.template( $( "#unit-builder-components-template" ).html(), options );
             this.$el.html( template );
 
@@ -395,7 +570,7 @@ var CoursePress = CoursePress || {};
 
     // Unit Body Modules... most complex view.
     CoursePress.Views.UnitBuilderModules = Backbone.View.extend( {
-        render: function( modules ) {
+        render: function ( modules ) {
             //var template = _.template( $( "#unit-builder-modules-template" ).html(), options );
 
             var html = CoursePress.Helpers.Module.get_modules_html( modules );
@@ -416,6 +591,17 @@ var CoursePress = CoursePress || {};
     $( document ).ready( function ( $ ) {
 
         init_course_builder();
+
+        // Time to attach the dynamic editors
+        //$.each( $( '.unit-builder-modules .editor' ), function( index, editor ) {
+        //
+        //    var id = $(editor).attr('id');
+        //    var name = $(editor).attr('name');
+        //    var content = $(editor ).val();
+        //
+        //    CoursePress.editor.create( editor, id, name, content, false );
+        //
+        //} );
 
     } );
 

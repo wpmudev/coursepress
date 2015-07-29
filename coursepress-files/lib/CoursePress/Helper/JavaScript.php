@@ -10,7 +10,12 @@ class CoursePress_Helper_JavaScript {
 
 		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
 		//add_action( 'wp_footer', array( __CLASS__, 'enqueue_scripts' ) );
+
+		//add_filter( 'script_loader_src', array( __CLASS__, 'disable_autosave' ), 10, 2 );
+
+		//add_action( 'wp_print_scripts', array( __CLASS__, 'disable' ) );
 	}
+
 
 	public static function enqueue_admin_scripts() {
 		// Enqueue needed scripts for UI
@@ -35,7 +40,7 @@ class CoursePress_Helper_JavaScript {
 
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
-		wp_editor( 'CONTENT', 'EDITORID', array( 'wpautop' => false, "textarea_name" => 'EDITORNAME', ) );
+		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array( 'wpautop' => false, "textarea_name" => 'dummy_editor_name', ) );
 		$dummy_editor = ob_get_clean();
 
 		$localize_array = array(
@@ -45,6 +50,8 @@ class CoursePress_Helper_JavaScript {
 			'allowed_audio_extensions' => wp_get_audio_extensions(),
 			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 			'date_format'              => get_option( 'date_format' ),
+			'editor_visual'            => __('Visual', CoursePress::TD ),
+			'editor_text'              => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
 		);
 
 
@@ -91,12 +98,184 @@ class CoursePress_Helper_JavaScript {
 			), CoursePress_Core::$version );
 
 			$localize_array['unit_builder_templates'] = CoursePress_Helper_UI_Module::get_template( true );
-
-
+			$localize_array['unit_builder_module_types'] = CoursePress_Helper_UI_Module::get_types();
+			$localize_array['unit_builder_module_labels'] = CoursePress_Helper_UI_Module::get_labels();
 		}
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
+	}
+
+	public static function disable_autosave( $src, $handle ) {
+
+		global $wp_scripts;
+		///** COURSEPRESS_COURSE|UNIT BUILDER */
+		//if ( isset( $_GET['page'] ) && 'coursepress_course' === $_GET['page'] && isset( $_GET['tab'] ) && "units" === $_GET['tab']  ) {
+		//	// We're taking care of saving, so 'autosave' gets in the way.
+		//	wp_dequeue_script('autosave');
+		//	wp_deregister_script( 'autosave' );
+		//	error_log('this happened');
+		//
+		//}
+		$no_script = array(
+			'autosave',
+			'revisions',
+									//'wpemoji',
+									//'twemoji',
+			//'jquery-core',
+			//'jquery-migrate',
+			//						'utils',
+			//						'plupload',
+			//'json2',
+			//						'hoverIntent',
+			//'common',
+			//'admin-bar',
+			//						'svg-painter',
+			//						'heartbeat',
+			//						'wp-auth-check',
+									//'underscore',
+									//'shortcode',
+									//'backbone',
+									//'wp-util',
+									//'wp-backbone',
+									//'media-models',
+									//'wp-plupload',
+									//'jquery-ui-core',
+									//'jquery-ui-widget',
+									//'jquery-ui-mouse',
+									//'jquery-ui-sortable',
+			//						'mediaelement',
+			//						'wp-mediaelement',
+			//						'media-views',
+			//						'media-editor',
+			//						'media-audiovideo',
+			//						'wp-playlist',
+			//						'mce-view',
+									//'imgareaselect',
+									//'image-edit',
+									//'query-monitor',
+			//'coursepress_admin_general_js',
+			//'sticky_js',
+			//'chosen_js',
+			//'coursepress_object',
+			//'jquery-ui-accordion',
+			//'jquery-effects-core',
+			//'jquery-effects-highlight',
+			//'jquery-ui-datepicker',
+			//'jquery-ui-button',
+			//'jquery-ui-spinner',
+			//'coursepress_course',
+			//'jquery-treegrid',
+			//'coursepress_unit_builder',
+			'word-count',
+			//'editor',
+			//'quicktags',
+			//'wplink',
+			//'thickbox',
+			//'media-upload',
+		);
+
+		//
+		error_log( $handle );
+		//$registered = array_keys( $wp_scripts->registered );
+		if( ! in_array( $handle, $no_script ) ) {
+			return $src;
+		};
+
 
 	}
+
+	public static function disable() {
+
+		global $wp_scripts;
+
+		$no_script = array(
+												//'word-count',
+												//'editor-expand',
+												//'set-post-thumbnail',
+												//'swfupload-handlers',
+			//									'comment-reply',
+			//'json2',
+			//'underscore',
+			//'backbone',
+			//									'wp-util',
+			//									'wp-backbone',
+			//									'revisions',
+			//									'imgareaselect',
+			//									'mediaelement',
+			//									'wp-mediaelement',
+			//									'froogaloop',
+			//									'wp-playlist',
+			//									'zxcvbn-async',
+			//									'password-strength-meter',
+			//									'user-profile',
+			//									'language-chooser',
+			//									'user-suggest',
+			//									'admin-bar',
+			//									'wplink',
+			//									'wpdialogs',
+			//									'media-upload',
+			//									'hoverIntent',
+			//									'customize-base',
+			//									'customize-loader',
+			//									'customize-preview',
+			//									'customize-models',
+			//									'customize-views',
+			//									'customize-controls',
+			//									'customize-widgets',
+			//									'customize-preview-widgets',
+			//									'accordion',
+			//									'shortcode',
+			//									'media-models',
+			//									'media-views',
+			//									'media-editor',
+			//									'media-audiovideo',
+			//									'mce-view',
+			//										'admin-tags',
+			//										'admin-comments',
+			//									'xfn',
+			//									'postbox',
+			//									'tags-box',
+			//									'post',
+			//									'press-this',
+			//									'link',
+			//									'comment',
+			//									'admin-gallery',
+			//									'admin-widgets',
+			//									'theme',
+			//									'inline-edit-post',
+			//									'inline-edit-tax',
+			//									'plugin-install',
+			//									'updates',
+			//									'farbtastic',
+			//									'iris',
+			//									'wp-color-picker',
+			//									'dashboard',
+			//									'list-revisions',
+			//									'media-grid',
+			//									'media',
+			//									'image-edit',
+			//									'nav-menu',
+			//									'custom-header',
+			//									'custom-background',
+			//									'media-gallery',
+			//									'svg-painter',
+			//									'debug-bar',
+			//									'query-monitor',
+			//'coursepress_admin_general_js',
+			//'sticky_js',
+			//'chosen_js',
+		);
+
+		foreach( $no_script as $handle ) {
+			//error_log( $key );
+			unset( $wp_scripts->registered[ $handle ] );
+		}
+
+		//unset( $wp_scripts->registered['autosave'] );
+
+		//error_log( isset( $wp_scripts->registered['autosave'] ) ? 'still there' : 'all gone!' );
+
+	}
+
 }

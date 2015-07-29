@@ -9,7 +9,11 @@ var CoursePress = CoursePress || {};
 
     CoursePress.editor.init_mode = getUserSetting( 'editor' );
 
-    CoursePress.editor.create = function ( target, id, name, content, append ) {
+    CoursePress.editor.create = function ( target, id, name, content, append, height ) {
+
+        if( undefined === height ) {
+            height = 400;
+        }
 
         if ( undefined === tinyMCEPreInit ) {
             return false;
@@ -24,9 +28,10 @@ var CoursePress = CoursePress || {};
         id = id.replace( /\#/g, '' );
 
         var editor = _coursepress._dummy_editor;
-        editor = editor.replace( /EDITORID/g, id );
-        editor = editor.replace( /CONTENT/g, content );
-        editor = editor.replace( /EDITORNAME/g, name );
+        editor = editor.replace( /dummy_editor_id/g, id );
+        editor = editor.replace( /dummy_editor_content/g, content );
+        editor = editor.replace( /dummy_editor_name/g, name );
+        editor = editor.replace( /rows="\d*"/g, 'style="height: ' + height + 'px"' ); // remove rows attribute
 
         if ( append ) {
             $( target ).append( editor );
@@ -34,19 +39,20 @@ var CoursePress = CoursePress || {};
             $( target ).replaceWith( editor );
         }
 
-        var options = JSON.parse( JSON.stringify( tinyMCEPreInit.mceInit[ 'EDITORID' ] ) );
+        var options = JSON.parse( JSON.stringify( tinyMCEPreInit.mceInit[ 'dummy_editor_id' ] ) );
         if ( undefined !== options ) {
-            options.body_class = options.body_class.replace( /EDITORID/g, id );
-            options.selector = options.selector.replace( /EDITORID/g, id );
+            options.body_class = options.body_class.replace( /dummy_editor_id/g, id );
+            options.selector = options.selector.replace( /dummy_editor_id/g, id );
             options.init_instance_callback = 'CoursePress.editor.on_init'; // code to execute after editor is created
+            options.cache_suffix = '';
             tinyMCE.init( options );
             tinyMCEPreInit.mceInit[ id ] = options;
         }
 
-        var options = JSON.parse( JSON.stringify( tinyMCEPreInit.qtInit[ 'EDITORID' ] ) );
+        var options = JSON.parse( JSON.stringify( tinyMCEPreInit.qtInit[ 'dummy_editor_id' ] ) );
         if ( undefined !== options ) {
             options.id = id;
-            quicktags( options );
+            options = quicktags( options );
             tinyMCEPreInit.qtInit[ id ] = options;
         }
         QTags._buttonsInit();
@@ -75,17 +81,49 @@ var CoursePress = CoursePress || {};
 
     }
 
+    CoursePress.editor.set_height = function ( id, height ) {
+        $( '#wp-' + id + '-editor-container' ).removeAttr( 'rows' );
+        $( '#wp-' + id + '-wrap iframe' ).css( 'height', height + 'px' )
+    }
+
     CoursePress.editor.on_init = function ( instance ) {
 
-        // Fix up QT focus by "clicking" the button to fire switchEditors magic
-        // Caveat, it all depends what the initial editor mode and will render all dynamic editors using current mode
-        // initially.
         var mode = CoursePress.editor.init_mode;
         var qt_button_id = "#" + instance.id + '-html';
+        var mce_button_id = "#" + instance.id + '-tmce';
+        var button_wrapper = "#wp-" + instance.id + '-editor-tools .wp-editor-tabs';
+
+        // Old buttons has too much script behaviour associated with it, lets drop them
+        $( qt_button_id ).detach();
+        $( mce_button_id ).detach();
+
+        var mce_button = '<button id="' + instance.id + '-visual' + '" class="wp-switch-editor switch-tmce" type="button">' + _coursepress.editor_visual + '</button>';
+        var qt_button = '<button id="' + instance.id + '-text' + '" class="wp-switch-editor switch-html" type="button">' + _coursepress.editor_text + '</button>';
+
+        // Add dummy button to deal with weird auto-clicking
+        $( button_wrapper ).append( '<button class="hidden"></button>' );
+        $( button_wrapper + ' [class="hidden"]' ).on( "click", function ( e ) {
+            e.preventDefault();
+            e.stopPropagation();
+        } );
+
+        $( button_wrapper ).append( mce_button );
+        $( button_wrapper + ' #' + instance.id + '-visual' ).on( "click", function ( e ) {
+            e.preventDefault();
+            e.stopPropagation();
+            switchEditors.go( instance.id, 'tmce' );
+        } );
+        $( button_wrapper ).append( qt_button );
+        $( button_wrapper + ' #' + instance.id + '-text' ).on( "click", function ( e ) {
+            e.preventDefault();
+            e.stopPropagation();
+            switchEditors.go( instance.id, 'html' );
+        } );
 
         if ( 'html' === mode ) {
-            $( qt_button_id ).click();
+            $( button_wrapper + ' #' + instance.id + '-text' ).click();
         }
+
     }
 
     // Add utility functions
@@ -109,10 +147,10 @@ var CoursePress = CoursePress || {};
         while ( stack.length > 1 ) {
             var key = stack.shift();
             //console.log( key );
-            if( object[ key ] ) {
+            if ( object[ key ] ) {
                 object = object[ key ];
             } else {
-                object[key] = {};
+                object[ key ] = {};
                 object = object[ key ];
             }
         }
@@ -123,7 +161,7 @@ var CoursePress = CoursePress || {};
 
     CoursePress.utility.get_object_path = function ( object, search_key, search_value, base ) {
 
-        if( undefined === base ) {
+        if ( undefined === base ) {
             base = '';
         }
 
@@ -133,16 +171,16 @@ var CoursePress = CoursePress || {};
 
             var key = keys.shift();
 
-            if( _.isObject( object[key] ) ) {
-                if( base.length !== 0 ) {
+            if ( _.isObject( object[ key ] ) ) {
+                if ( base.length !== 0 ) {
                     base = base + '/' + key;
                 } else {
                     base = key;
                 }
-                return CoursePress.utility.get_object_path( object[key], search_key, search_value, base );
+                return CoursePress.utility.get_object_path( object[ key ], search_key, search_value, base );
             } else {
 
-                if( key === search_key && object[key] === search_value ) {
+                if ( key === search_key && object[ key ] === search_value ) {
                     return base + '/' + key;
                 }
             }
@@ -229,20 +267,223 @@ var CoursePress = CoursePress || {};
     }
 
     // Webkit MD5 method
-    CoursePress.utility.md5=function(s){function L(k,d){return(k<<d)|(k>>>(32-d))}function K(G,k){var I,d,F,H,x;F=(G&2147483648);H=(k&2147483648);I=(G&1073741824);d=(k&1073741824);x=(G&1073741823)+(k&1073741823);if(I&d){return(x^2147483648^F^H)}if(I|d){if(x&1073741824){return(x^3221225472^F^H)}else{return(x^1073741824^F^H)}}else{return(x^F^H)}}function r(d,F,k){return(d&F)|((~d)&k)}function q(d,F,k){return(d&k)|(F&(~k))}function p(d,F,k){return(d^F^k)}function n(d,F,k){return(F^(d|(~k)))}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F)}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F)}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F)}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F)}function e(G){var Z;var F=G.length;var x=F+8;var k=(x-(x%64))/64;var I=(k+1)*16;var aa=Array(I-1);var d=0;var H=0;while(H<F){Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=(aa[Z]|(G.charCodeAt(H)<<d));H++}Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=aa[Z]|(128<<d);aa[I-2]=F<<3;aa[I-1]=F>>>29;return aa}function B(x){var k="",F="",G,d;for(d=0;d<=3;d++){G=(x>>>(d*8))&255;F="0"+G.toString(16);k=k+F.substr(F.length-2,2)}return k}function J(k){k=k.replace(/rn/g,"n");var d="";for(var F=0;F<k.length;F++){var x=k.charCodeAt(F);if(x<128){d+=String.fromCharCode(x)}else{if((x>127)&&(x<2048)){d+=String.fromCharCode((x>>6)|192);d+=String.fromCharCode((x&63)|128)}else{d+=String.fromCharCode((x>>12)|224);d+=String.fromCharCode(((x>>6)&63)|128);d+=String.fromCharCode((x&63)|128)}}}return d}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g)}var i=B(Y)+B(X)+B(W)+B(V);return i.toLowerCase()};
+    CoursePress.utility.md5 = function ( s ) {
+        function L( k, d ) {
+            return (k << d) | (k >>> (32 - d))
+        }
 
-    CoursePress.utility.get_gravatar = function (email, size, default_image, allowed_rating, force_default)
-    {
+        function K( G, k ) {
+            var I, d, F, H, x;
+            F = (G & 2147483648);
+            H = (k & 2147483648);
+            I = (G & 1073741824);
+            d = (k & 1073741824);
+            x = (G & 1073741823) + (k & 1073741823);
+            if ( I & d ) {
+                return (x ^ 2147483648 ^ F ^ H)
+            }
+            if ( I | d ) {
+                if ( x & 1073741824 ) {
+                    return (x ^ 3221225472 ^ F ^ H)
+                } else {
+                    return (x ^ 1073741824 ^ F ^ H)
+                }
+            } else {
+                return (x ^ F ^ H)
+            }
+        }
+
+        function r( d, F, k ) {
+            return (d & F) | ((~d) & k)
+        }
+
+        function q( d, F, k ) {
+            return (d & k) | (F & (~k))
+        }
+
+        function p( d, F, k ) {
+            return (d ^ F ^ k)
+        }
+
+        function n( d, F, k ) {
+            return (F ^ (d | (~k)))
+        }
+
+        function u( G, F, aa, Z, k, H, I ) {
+            G = K( G, K( K( r( F, aa, Z ), k ), I ) );
+            return K( L( G, H ), F )
+        }
+
+        function f( G, F, aa, Z, k, H, I ) {
+            G = K( G, K( K( q( F, aa, Z ), k ), I ) );
+            return K( L( G, H ), F )
+        }
+
+        function D( G, F, aa, Z, k, H, I ) {
+            G = K( G, K( K( p( F, aa, Z ), k ), I ) );
+            return K( L( G, H ), F )
+        }
+
+        function t( G, F, aa, Z, k, H, I ) {
+            G = K( G, K( K( n( F, aa, Z ), k ), I ) );
+            return K( L( G, H ), F )
+        }
+
+        function e( G ) {
+            var Z;
+            var F = G.length;
+            var x = F + 8;
+            var k = (x - (x % 64)) / 64;
+            var I = (k + 1) * 16;
+            var aa = Array( I - 1 );
+            var d = 0;
+            var H = 0;
+            while ( H < F ) {
+                Z = (H - (H % 4)) / 4;
+                d = (H % 4) * 8;
+                aa[ Z ] = (aa[ Z ] | (G.charCodeAt( H ) << d));
+                H++
+            }
+            Z = (H - (H % 4)) / 4;
+            d = (H % 4) * 8;
+            aa[ Z ] = aa[ Z ] | (128 << d);
+            aa[ I - 2 ] = F << 3;
+            aa[ I - 1 ] = F >>> 29;
+            return aa
+        }
+
+        function B( x ) {
+            var k = "", F = "", G, d;
+            for ( d = 0; d <= 3; d++ ) {
+                G = (x >>> (d * 8)) & 255;
+                F = "0" + G.toString( 16 );
+                k = k + F.substr( F.length - 2, 2 )
+            }
+            return k
+        }
+
+        function J( k ) {
+            k = k.replace( /rn/g, "n" );
+            var d = "";
+            for ( var F = 0; F < k.length; F++ ) {
+                var x = k.charCodeAt( F );
+                if ( x < 128 ) {
+                    d += String.fromCharCode( x )
+                } else {
+                    if ( (x > 127) && (x < 2048) ) {
+                        d += String.fromCharCode( (x >> 6) | 192 );
+                        d += String.fromCharCode( (x & 63) | 128 )
+                    } else {
+                        d += String.fromCharCode( (x >> 12) | 224 );
+                        d += String.fromCharCode( ((x >> 6) & 63) | 128 );
+                        d += String.fromCharCode( (x & 63) | 128 )
+                    }
+                }
+            }
+            return d
+        }
+
+        var C = Array();
+        var P, h, E, v, g, Y, X, W, V;
+        var S = 7, Q = 12, N = 17, M = 22;
+        var A = 5, z = 9, y = 14, w = 20;
+        var o = 4, m = 11, l = 16, j = 23;
+        var U = 6, T = 10, R = 15, O = 21;
+        s = J( s );
+        C = e( s );
+        Y = 1732584193;
+        X = 4023233417;
+        W = 2562383102;
+        V = 271733878;
+        for ( P = 0; P < C.length; P += 16 ) {
+            h = Y;
+            E = X;
+            v = W;
+            g = V;
+            Y = u( Y, X, W, V, C[ P + 0 ], S, 3614090360 );
+            V = u( V, Y, X, W, C[ P + 1 ], Q, 3905402710 );
+            W = u( W, V, Y, X, C[ P + 2 ], N, 606105819 );
+            X = u( X, W, V, Y, C[ P + 3 ], M, 3250441966 );
+            Y = u( Y, X, W, V, C[ P + 4 ], S, 4118548399 );
+            V = u( V, Y, X, W, C[ P + 5 ], Q, 1200080426 );
+            W = u( W, V, Y, X, C[ P + 6 ], N, 2821735955 );
+            X = u( X, W, V, Y, C[ P + 7 ], M, 4249261313 );
+            Y = u( Y, X, W, V, C[ P + 8 ], S, 1770035416 );
+            V = u( V, Y, X, W, C[ P + 9 ], Q, 2336552879 );
+            W = u( W, V, Y, X, C[ P + 10 ], N, 4294925233 );
+            X = u( X, W, V, Y, C[ P + 11 ], M, 2304563134 );
+            Y = u( Y, X, W, V, C[ P + 12 ], S, 1804603682 );
+            V = u( V, Y, X, W, C[ P + 13 ], Q, 4254626195 );
+            W = u( W, V, Y, X, C[ P + 14 ], N, 2792965006 );
+            X = u( X, W, V, Y, C[ P + 15 ], M, 1236535329 );
+            Y = f( Y, X, W, V, C[ P + 1 ], A, 4129170786 );
+            V = f( V, Y, X, W, C[ P + 6 ], z, 3225465664 );
+            W = f( W, V, Y, X, C[ P + 11 ], y, 643717713 );
+            X = f( X, W, V, Y, C[ P + 0 ], w, 3921069994 );
+            Y = f( Y, X, W, V, C[ P + 5 ], A, 3593408605 );
+            V = f( V, Y, X, W, C[ P + 10 ], z, 38016083 );
+            W = f( W, V, Y, X, C[ P + 15 ], y, 3634488961 );
+            X = f( X, W, V, Y, C[ P + 4 ], w, 3889429448 );
+            Y = f( Y, X, W, V, C[ P + 9 ], A, 568446438 );
+            V = f( V, Y, X, W, C[ P + 14 ], z, 3275163606 );
+            W = f( W, V, Y, X, C[ P + 3 ], y, 4107603335 );
+            X = f( X, W, V, Y, C[ P + 8 ], w, 1163531501 );
+            Y = f( Y, X, W, V, C[ P + 13 ], A, 2850285829 );
+            V = f( V, Y, X, W, C[ P + 2 ], z, 4243563512 );
+            W = f( W, V, Y, X, C[ P + 7 ], y, 1735328473 );
+            X = f( X, W, V, Y, C[ P + 12 ], w, 2368359562 );
+            Y = D( Y, X, W, V, C[ P + 5 ], o, 4294588738 );
+            V = D( V, Y, X, W, C[ P + 8 ], m, 2272392833 );
+            W = D( W, V, Y, X, C[ P + 11 ], l, 1839030562 );
+            X = D( X, W, V, Y, C[ P + 14 ], j, 4259657740 );
+            Y = D( Y, X, W, V, C[ P + 1 ], o, 2763975236 );
+            V = D( V, Y, X, W, C[ P + 4 ], m, 1272893353 );
+            W = D( W, V, Y, X, C[ P + 7 ], l, 4139469664 );
+            X = D( X, W, V, Y, C[ P + 10 ], j, 3200236656 );
+            Y = D( Y, X, W, V, C[ P + 13 ], o, 681279174 );
+            V = D( V, Y, X, W, C[ P + 0 ], m, 3936430074 );
+            W = D( W, V, Y, X, C[ P + 3 ], l, 3572445317 );
+            X = D( X, W, V, Y, C[ P + 6 ], j, 76029189 );
+            Y = D( Y, X, W, V, C[ P + 9 ], o, 3654602809 );
+            V = D( V, Y, X, W, C[ P + 12 ], m, 3873151461 );
+            W = D( W, V, Y, X, C[ P + 15 ], l, 530742520 );
+            X = D( X, W, V, Y, C[ P + 2 ], j, 3299628645 );
+            Y = t( Y, X, W, V, C[ P + 0 ], U, 4096336452 );
+            V = t( V, Y, X, W, C[ P + 7 ], T, 1126891415 );
+            W = t( W, V, Y, X, C[ P + 14 ], R, 2878612391 );
+            X = t( X, W, V, Y, C[ P + 5 ], O, 4237533241 );
+            Y = t( Y, X, W, V, C[ P + 12 ], U, 1700485571 );
+            V = t( V, Y, X, W, C[ P + 3 ], T, 2399980690 );
+            W = t( W, V, Y, X, C[ P + 10 ], R, 4293915773 );
+            X = t( X, W, V, Y, C[ P + 1 ], O, 2240044497 );
+            Y = t( Y, X, W, V, C[ P + 8 ], U, 1873313359 );
+            V = t( V, Y, X, W, C[ P + 15 ], T, 4264355552 );
+            W = t( W, V, Y, X, C[ P + 6 ], R, 2734768916 );
+            X = t( X, W, V, Y, C[ P + 13 ], O, 1309151649 );
+            Y = t( Y, X, W, V, C[ P + 4 ], U, 4149444226 );
+            V = t( V, Y, X, W, C[ P + 11 ], T, 3174756917 );
+            W = t( W, V, Y, X, C[ P + 2 ], R, 718787259 );
+            X = t( X, W, V, Y, C[ P + 9 ], O, 3951481745 );
+            Y = K( Y, h );
+            X = K( X, E );
+            W = K( W, v );
+            V = K( V, g )
+        }
+        var i = B( Y ) + B( X ) + B( W ) + B( V );
+        return i.toLowerCase()
+    };
+
+    CoursePress.utility.get_gravatar = function ( email, size, default_image, allowed_rating, force_default ) {
         email = typeof email !== 'undefined' ? email : 'john.doe@example.com';
         size = (size >= 1 && size <= 2048) ? size : 80;
         default_image = typeof default_image !== 'undefined' ? default_image : 'mm';
         allowed_rating = typeof allowed_rating !== 'undefined' ? allowed_rating : 'x';
         force_default = force_default === true ? 'y' : 'n';
 
-        return ("https://secure.gravatar.com/avatar/" + CoursePress.utility.md5(email.toLowerCase().trim()) + "?size=" + size + "&default=" + encodeURIComponent(default_image) + "&rating=" + allowed_rating + (force_default === 'y' ? "&forcedefault=" + force_default : ''));
+        return ("https://secure.gravatar.com/avatar/" + CoursePress.utility.md5( email.toLowerCase().trim() ) + "?size=" + size + "&default=" + encodeURIComponent( default_image ) + "&rating=" + allowed_rating + (force_default === 'y' ? "&forcedefault=" + force_default : ''));
     }
 
-    CoursePress.utility.get_gravatar_image = function( email, size, alt, default_image, allowed_rating, force_default ) {
+    CoursePress.utility.get_gravatar_image = function ( email, size, alt, default_image, allowed_rating, force_default ) {
         var url = CoursePress.utility.get_gravatar( email, size, default_image, allowed_rating, force_default );
 
         alt = typeof alt !== 'undefined' ? alt : '';
@@ -266,6 +507,41 @@ var CoursePress = CoursePress || {};
 
         return items;
     }
+
+    CoursePress.utility.is_equal = function ( current_val, expected_val, strict ) {
+        if ( undefined === strict ) {
+            return current_val == expected_val;
+        } else {
+            return current_val === expected_val;
+        }
+
+    }
+
+    CoursePress.utility.checked = function ( current_val, expected_val ) {
+        return CoursePress.utility.is_equal( current_val, expected_val ) ? 'checked="checked"' : '';
+    }
+
+    CoursePress.utility.event_supported = function () {
+        var TAGNAMES = {
+            'select': 'input', 'change': 'input',
+            'submit': 'form', 'reset': 'form',
+            'error': 'img', 'load': 'img', 'abort': 'img', 'click': 'textarea'
+        }
+
+        function isEventSupported( eventName ) {
+            var el = document.createElement( TAGNAMES[ eventName ] || 'div' );
+            eventName = 'on' + eventName;
+            var isSupported = (eventName in el);
+            if ( !isSupported ) {
+                el.setAttribute( eventName, 'return;' );
+                isSupported = typeof el[ eventName ] == 'function';
+            }
+            el = null;
+            return isSupported;
+        }
+
+        return isEventSupported;
+    };
 
     CoursePress.UI = CoursePress.UI || {};
 
@@ -310,23 +586,23 @@ var CoursePress = CoursePress || {};
                 } );
             },
 
-            coursepress_ui_toggle: function( options ) {
+            coursepress_ui_toggle: function ( options ) {
                 return this.each( function ( options ) {
-                        $( this ).on( 'click', function () {
-                            var state =  '';
-                            if( $( this ).hasClass('on') ) {
-                                $( this ).removeClass('on');
-                                $( this ).addClass('off');
-                                state = 'off';
-                            } else {
-                                $( this ).removeClass('off');
-                                $( this ).addClass('on');
-                                state = 'on';
-                            }
-                            $( this ).trigger( 'change', state );
+                    $( this ).on( 'click', function () {
+                        var state = '';
+                        if ( $( this ).hasClass( 'on' ) ) {
+                            $( this ).removeClass( 'on' );
+                            $( this ).addClass( 'off' );
+                            state = 'off';
+                        } else {
+                            $( this ).removeClass( 'off' );
+                            $( this ).addClass( 'on' );
+                            state = 'on';
+                        }
+                        $( this ).trigger( 'change', state );
 
-                            return;
-                        } );
+                        return;
+                    } );
                 } );
             }
         }
