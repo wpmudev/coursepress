@@ -908,11 +908,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .section {
   padding: 10px 20px 20px;
 }
-.tab-content .unit-builder-content .section .unit-builder-components {
+.tab-content .unit-builder-content .section.unit-builder-components {
   border-bottom: 1px solid #e1e1e1;
 }
-.tab-content .unit-builder-content .section .unit-builder-modules {
-  padding: 0 5px;
+.tab-content .unit-builder-content .section.unit-builder-modules {
+  padding: 0 5px 5px;
   min-height: 150px;
 }
 .tab-content .unit-builder-content .unit-builder-header {
@@ -1016,6 +1016,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   -webkit-border-radius: 0;
   border-radius: 0;
   border: none;
+  position: relative;
 }
 .tab-content .unit-builder-content h3.module-holder-title .module-type {
   display: inline-block;
@@ -1030,6 +1031,22 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   float: right;
   content: '\f00a';
   margin-left: 10px;
+}
+.tab-content .unit-builder-content h3.module-holder-title .module-type:hover:after {
+  cursor: move;
+}
+.tab-content .unit-builder-content h3.module-holder-title.module-holder-title:before {
+  font-family: fontawesome;
+  content: '\f0da';
+  position: absolute;
+  left: 5px;
+}
+.tab-content .unit-builder-content h3.module-holder-title.module-holder-title.ui-accordion-header-active:before {
+  font-family: fontawesome;
+  content: '\f0d7';
+}
+.tab-content .unit-builder-content h3.module-holder-title:hover {
+  cursor: pointer;
 }
 .tab-content .unit-builder-content .module-holder {
   background: #E7F4FA;

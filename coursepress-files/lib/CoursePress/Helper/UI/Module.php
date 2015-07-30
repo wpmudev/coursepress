@@ -434,7 +434,7 @@ class CoursePress_Helper_UI_Module {
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
-					"duration": "1:00",
+					"duration": "0:00",
 					"type": "' . self::INPUT_SHORT_TEXT . '",
 					"show_title": "1",
 					"mandatory": "0",
@@ -454,7 +454,7 @@ class CoursePress_Helper_UI_Module {
 								{
 									"type": "text-input",
 									"class": "component-placeholder-text wide",
-									"name": "meta_component[placeholder_text]"
+									"name": "meta_placeholder_text"
 								}
 							]
 						}
