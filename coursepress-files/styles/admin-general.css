@@ -1146,6 +1146,10 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder .module-components input[type="text"] {
   width: 100%;
 }
+.tab-content .unit-builder-content .module-holder .module-components .component-radio-answer, .tab-content .unit-builder-content .module-holder .module-components .component-radio-answer.wide {
+  margin: 0 0 5px 10px;
+  width: 90%;
+}
 
 .module-zipped a,
 .module-audio a,

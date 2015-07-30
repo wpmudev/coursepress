@@ -425,7 +425,40 @@ class CoursePress_Helper_UI_Module {
 
 			',
 			self::INPUT_SINGLE_CHOICE   => '
-
+			{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_SINGLE_CHOICE . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __('Answer', CoursePress::TD ) . '",
+							"description": "' . __('Select the correct answer', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "radio-select",
+									"class": "component-radio-answer wide",
+									"name": "meta_answers",
+									"answers": [
+										"' . __( 'Answer A', CoursePress::TD ) . '",
+										"' . __( 'Answer B', CoursePress::TD ) . '"
+									],
+									"selected": "0"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::INPUT_SELECT_CHOICE   => '
 
@@ -462,7 +495,35 @@ class CoursePress_Helper_UI_Module {
 				}
 			',
 			self::INPUT_LONG_TEXT => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_LONG_TEXT . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __('Placeholder Text', CoursePress::TD ) . '",
+							"description": "' . __('Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "text-input",
+									"class": "component-placeholder-text wide",
+									"name": "meta_placeholder_text"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::INPUT_UPLOAD => '
 			',
