@@ -767,12 +767,10 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				$ungraded_responses = get_posts( $args );
 
-				$array_order_num = 0;
-
 				//Count only ungraded responses from STUDENTS!
 				foreach ( $ungraded_responses as $key => $ungraded_response ) {
 
-					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) == 'no' ) {
+					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
 						unset( $ungraded_responses[ $key ] );
                         continue;
 					}
@@ -782,23 +780,28 @@ if ( ! class_exists( 'Unit_Module' ) ) {
                         continue;
 					}
 
-                    // Count only answers for students that are still enrolled in the course.
                     $module = get_post($ungraded_response->post_parent);
+                    if($module){
+                        $class_name = $module->module_type;
+                        $response = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
+                        if ( count( $response ) >= 1 ) {
+                            $grade_data = Unit_Module::get_response_grade( $response->ID );
+                            if($grade_data){ // If there are more than one response submitted and it is already graded.
+                                unset( $ungraded_responses[ $key ] );
+                                continue;
+                            }
+                        }
+
                     $unit = get_post($module->post_parent);
                     $course_id = $unit->post_parent;
+                        // Count only answers from students that are still enrolled in the course.
                     if ( !get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
                         unset( $ungraded_responses[ $key ] );
                         continue;
                     }
 				}
 
-				/* $admins_responses = 0;
-
-				  foreach ( $ungraded_responses as $ungraded_responses ) {
-				  if( user_can( $ungraded_responses->post_author, 'administrator' ) ) {
-				  $admins_responses++;
 				  }
-				  } */
 
 				return count( $ungraded_responses ); // - $admins_responses;
 			} else {
@@ -823,21 +826,41 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				$ungraded_responses = get_posts( $args );
 
-
-				$array_order_num = 0;
-
 				//Count only ungraded responses from STUDENTS!
-				foreach ( $ungraded_responses as $ungraded_response ) {
+                foreach ( $ungraded_responses as $key => $ungraded_response ) {
 
-					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) == 'no' ) {
-						unset( $ungraded_responses[ $array_order_num ] );
+                    if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
+                        unset( $ungraded_responses[ $key ] );
+                        continue;
 					}
 
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
-						unset( $ungraded_responses[ $array_order_num ] );
+                        unset( $ungraded_responses[ $key ] );
+                        continue;
 					}
 
-					$array_order_num ++;
+
+                    $module = get_post($ungraded_response->post_parent);
+                    if($module){
+                        $class_name = $module->module_type;
+                        $response = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
+                        if ( count( $response ) >= 1 ) {
+                            $grade_data = Unit_Module::get_response_grade( $response->ID );
+                            if($grade_data){ // If there are more than one response submitted and it is already graded.
+                                unset( $ungraded_responses[ $key ] );
+                                continue;
+                            }
+                        }
+
+                        $unit = get_post($module->post_parent);
+                        $course_id = $unit->post_parent;
+                        // Count only answers from students that are still enrolled in the course.
+                        if ( !get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
+                            unset( $ungraded_responses[ $key ] );
+                            continue;
+                        }
+                    }
+
 				}
 
 				return count( $ungraded_responses );
