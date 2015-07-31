@@ -5,6 +5,14 @@ class CoursePress_Helper_Utility {
 	// Used by the array uasort() callbacks
 	private static $sort_key;
 
+	private static $image_url; // used to get attachment ID
+
+	public static function init() {
+
+		add_action( 'wp_ajax_attachment_model', array( __CLASS__, 'attachment_model_ajax' ) );
+
+	}
+
 	// Sort multi-dimension arrays on 'order' value.
 	public static function sort_on_key( $array, $sort_key, $sort_asc = true ) {
 		self::$sort_key = $sort_key;
@@ -298,6 +306,54 @@ class CoursePress_Helper_Utility {
 			wp_die();
 		else
 			die;
+	}
+
+	public static function attachment_model_ajax() {
+		$json_data = array();
+
+		switch ( $_REQUEST['task'] ) {
+
+			case 'get':
+				$json_data[] = self::attachment_from_url( sanitize_text_field( $_REQUEST['url'] ) );
+
+				break;
+
+		}
+
+		if ( ! empty( $json_data ) ) {
+			CoursePress_Helper_Utility::send_bb_json( $json_data );
+		}
+	}
+
+	public static function attachment_from_url( $url ) {
+		$attachment = false;
+
+		add_filter( 'posts_where', array( __CLASS__, 'where_attachment_guid' ) );
+
+		self::$image_url = preg_replace( '/http:\/\/(\w|\.)*\//', '', $url );
+
+		$args = array(
+			'post_status' => 'any',
+			'post_type'   => 'attachment'
+		);
+		$query = new WP_Query( $args );
+
+		if( ! empty( $query )) {
+			$attachment = $query->posts;
+			$attachment = ! empty( $attachment ) ? $attachment[0] : false;
+		}
+
+		remove_filter( 'posts_where', array( __CLASS__, 'where_attachment_guid' ) );
+
+		return $attachment;
+	}
+
+	public static function where_attachment_guid( $sql ) {
+		global $wpdb;
+
+		$sql = ' AND guid LIKE "%' . self::$image_url . '"';
+
+		return $sql;
 	}
 
 }

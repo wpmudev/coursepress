@@ -46,12 +46,20 @@
     width: 100%;
   }
 
+  .widemedium {
+    width: 80%;
+  }
+
   .medium {
     width: 40%;
   }
 
   .narrow {
     width: 20%;
+  }
+
+  .normal {
+    font-weight: normal;
   }
 
   label {
@@ -384,14 +392,38 @@
           display: block;
         }
 
-        input[type="text"] {
+        input.module-title-text {
           width: 100%;
         }
 
+        .component-checkbox-answer, .component-checkbox-answer.wide,
+        .component-select-answer, .component-select-answer.wide,
         .component-radio-answer, .component-radio-answer.wide {
           margin: 0 0 5px 10px;
           width: 90%;
         }
+
+        .component-media-caption {
+
+          label {
+            font-weight: normal;
+          }
+
+          .caption-source {
+            margin: 5px 0 0 20px;
+
+            .existing, input[type="text"] {
+              margin-left: 20px;
+            }
+
+            input[type="text"] {
+              width: 80%;
+            }
+
+          }
+
+        }
+
 
 
       }

@@ -203,10 +203,10 @@ var CoursePress = CoursePress || {};
     }
 
     CoursePress.utility.valid_media_extension = function ( filename, type ) {
-        type = $( type ).hasClass( 'image_url' ) ? 'image_url' : '';
+        type = $( type ).hasClass( 'image_url' ) ? 'image_url' : type;
         type = $( type ).hasClass( 'audio_url' ) ? 'audio_url' : type;
         type = $( type ).hasClass( 'video_url' ) ? 'video_url' : type;
-        console.log( type );
+
         var extension = filename.split( '.' ).pop();
         var audio_extensions = _coursepress.allowed_audio_extensions;
         var video_extensions = _coursepress.allowed_video_extensions;
@@ -703,17 +703,91 @@ var CoursePress = CoursePress || {};
         return isEventSupported;
     };
 
+    CoursePress.utility.attachment_by_url = function( url, target, fallback, field ) {
+        var model = new CoursePress.Models.utility.Attachment();
+        model.get_attachment( url, target, fallback, field );
+    }
+
     CoursePress.UI = CoursePress.UI || {};
+
+    CoursePress.UI.browse_media_field = function ( id, name, args ) {
+
+        if( undefined === name ) {
+            name = id;
+        }
+
+        if( undefined === args ) {
+            args = {};
+        }
+
+        args.title = args.title ? args.title : '';
+        args.container_class = args.container_class ? args.container_class : 'wide';
+        args.textbox_class = args.textbox_class ? args.textbox_class : 'medium';
+        args.value = args.value ? args.value : '';
+        args.placeholder = args.placeholder ? args.placeholder : '';
+        args.button_text = args.button_text ? args.button_text : '';
+        args.type = args.type ? args.type : 'image';
+        args.invalid_message = args.invalid_message ? args.invalid_message : _coursepress.invalid_extension_message;
+        args.description = args.description ? args.description : '';
+
+        var supported_extensions;
+        if( 'image' === args.type ) {
+            supported_extensions = _coursepress.allowed_image_extensions.join(', ');
+        }
+        if( 'audio' === args.type ) {
+            supported_extensions = _coursepress.allowed_audio_extensions.join(', ');
+        }
+        if( 'video' === args.type ) {
+            supported_extensions = _coursepress.allowed_video_extensions.join(', ');
+        }
+
+        var content = '<div class="' + args.container_class + '">';
+
+        if( args.title ) {
+            content += '<label for="' + name + '">' + args.title;
+        }
+
+        if( args.description ) {
+            content += '<p class="description">' + args.description + '</p>';
+        }
+
+        if( args.title ) {
+            content += '</label>';
+        }
+
+        var input_id = id ? 'id="' + id + '"' : '';
+
+        content += '<input class="' + args.textbox_class + ' ' + args.type + '_url" type="text" name="' + name + '" ' + input_id + ' placeholder="' + args.placeholder + '" value="' + args.value + '"/>' +
+        '<input class="button browse-media-field" type="button" name="' + name + '-button" value="' + args.button_text + '"/>' +
+        '<div class="invalid_extension_message">' + args.invalid_message + ' ' + supported_extensions + '</div>' +
+        '</div>';
+
+        return content;
+
+    }
 
     // Add UI extensions
     $.fn.extend( {
             browse_media_field: function ( options ) {
                 return this.each( function ( options ) {
 
+                    var text_selector = $( this ).attr( 'name' ).replace( '-button', '' );
+                    var parent = $( $( this ).parents( 'div' ).find( '#' + text_selector ) );
+
+                    $( parent ).on( 'keyup', function() {
+
+                        if ( CoursePress.utility.valid_media_extension( $( parent ).val(), parent ) ) {//extension is allowed
+                            $( parent ).removeClass( 'invalid_extension_field' );
+                            $( parent ).parent().find( '.invalid_extension_message' ).hide();
+                        } else {//extension is not allowed
+                            $( parent ).addClass( 'invalid_extension_field' );
+                            $( parent ).parent().find( '.invalid_extension_message' ).show();
+                        }
+                    } );
+
                     $( this ).on( 'click', function () {
 
-                        var text_selector = $( this ).attr( 'name' ).replace( '-button', '' );
-                        var target_url_field = $( this ).parents( 'div' ).find( '#' + text_selector );
+                        var target_url_field = parent;
 
                         wp.media.string.props = function ( props, attachment ) {
                             $( target_url_field ).val( props.url );
@@ -796,6 +870,35 @@ var CoursePress = CoursePress || {};
         wp.media.editor.open( this );
         return false;
     } );
+
+
+    // Models
+    CoursePress.Models = CoursePress.Models || {};
+    CoursePress.Models.utility = CoursePress.Models.utility || {};
+
+    CoursePress.Models.utility.Attachment = Backbone.Model.extend({
+        initialize: function() {
+            this.on('sync', this.process, this);
+        },
+        get_attachment: function( attachment_url, target, fallback, field ) {
+            this.attachment_url = attachment_url;
+            this.target = target;
+            this.field = field ? field : 'post_excerpt';
+            this.fallback = fallback ? fallback : '';
+            this.url = _coursepress._ajax_url + '?action=attachment_model&task=get&url=' + attachment_url;
+            this.fetch();
+        },
+        process: function () {
+
+            if( this.get( 0 ) ) {
+                var value = this.get( 0 )[ this.field ];
+                value = value.length > 0 ? value : this.fallback;
+
+                $( $( this.target )[0] ).html( value );
+            }
+
+        }
+    });
 
 
 })( jQuery );

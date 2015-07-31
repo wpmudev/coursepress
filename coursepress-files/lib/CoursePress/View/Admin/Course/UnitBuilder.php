@@ -14,6 +14,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			$content .= $template;
 		}
 
+		error_log( print_r( CoursePress_Helper_Utility::attachment_from_url( 'http://network1.dev/wp-content/uploads/2015/07/4wettenhall.jpg' ), true ) );
+
 		$content .= '<div id="unit-builder"><div class="loading">' . esc_html__( 'Unit Builder is loading...', CoursePress::TD ) . '</div></div>';
 
 		return $content;

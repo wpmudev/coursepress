@@ -21,7 +21,6 @@ class CoursePress_Helper_UI_Module {
 		$content = '';
 
 
-
 		return $content;
 	}
 
@@ -30,7 +29,6 @@ class CoursePress_Helper_UI_Module {
 
 		$types  = self::get_types();
 		$labels = self::get_labels();
-
 
 
 		$data = array(
@@ -230,21 +228,21 @@ class CoursePress_Helper_UI_Module {
 						<span class="label">' . $component['label'] . '</span>
 						<span class="description">' . $component['description'] . '</span>
 				';
-			foreach( (array) $component['items'] as $idx => $item ) {
+			foreach ( (array) $component['items'] as $idx => $item ) {
 
-				switch( $item['type'] ) {
+				switch ( $item['type'] ) {
 
 					case 'text-input':
-						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] .'"' : '';
-						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] .'"' : '';
+						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
+						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
 						$content .= '<input type="text"' . $attr . ' />';
 						break;
 
 					case 'text':
-						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] .'"' : '';
-						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] .'"' : '';
-						$text = isset( $item['text'] ) ? $item['text']  : '';
-						$content .= '<span' . $attr . '>' . $text  . '</span>';
+						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
+						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
+						$text = isset( $item['text'] ) ? $item['text'] : '';
+						$content .= '<span' . $attr . '>' . $text . '</span>';
 						break;
 
 				}
@@ -285,38 +283,38 @@ class CoursePress_Helper_UI_Module {
 				'title'   => __( 'Image', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 			self::OUTPUT_VIDEO         => array(
 				'title'   => __( 'Video', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 			self::OUTPUT_AUDIO         => array(
 				'title'   => __( 'Audio', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 			self::OUTPUT_DOWNLOAD      => array(
 				'title'   => __( 'File Download', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 			self::OUTPUT_ZIPPED_OBJECT => array(
 				'title'   => __( 'Zipped Object', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 			self::OUTPUT_SECTION       => array(
 				'title'   => __( 'Section Break', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
 				'body'    => 'hidden',
-				'icon'  => 'default',
+				'icon'    => 'default',
 			),
 		);
 
@@ -392,7 +390,6 @@ class CoursePress_Helper_UI_Module {
 			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
 			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
 			'module_delete'             => __( 'Delete', CoursePress::TD ),
-
 		) );
 
 	}
@@ -401,31 +398,342 @@ class CoursePress_Helper_UI_Module {
 
 		$components = array(
 			self::OUTPUT_TEXT           => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_TEXT . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "500",
+					"order": "0",
+					"components": []
+				}
 			',
 			self::OUTPUT_IMAGE          => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_IMAGE . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Image Source', CoursePress::TD ) . '",
+							"description": "' . __( 'Enter a URL or Browse for an image', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-browser",
+									"name": "meta_image_url",
+									"media_type": "image",
+									"container_class": "wide",
+									"class": "widemedium",
+									"button_text": "' . __( 'Browse', CoursePress::TD ) . '",
+									"placeholder": "' . __( 'Add Media URL or Browse for Media', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Image Caption', CoursePress::TD ) . '",
+							"description": "' . __( 'Hide, show and customise the image caption.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-caption-settings",
+									"class": "component-media-caption wide",
+									"label": "' . __('Show Caption', CoursePress::TD ) . '",
+									"enable_name": "meta_show_media_caption",
+									"option_name": "meta_caption_field",
+									"input_name": "meta_caption_custom_text",
+									"option_class": "caption-source",
+									"no_caption": "' . __( 'Media has no caption', CoursePress::TD ) . '",
+									"media_type": "image",
+									"option_labels": {
+										"media": "' . __( 'Media Caption', CoursePress::TD ) . '",
+										"custom": "' . __( 'Custom Caption', CoursePress::TD ) . '"
+									},
+									"selected": "0",
+									"placeholder": "' . __( 'Please enter a custom caption here.', CoursePress::TD ) . '"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::OUTPUT_VIDEO          => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_VIDEO . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Video Source', CoursePress::TD ) . '",
+							"description": "' . __( 'You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (mp4, m4v, webm, ogv, wmv, flv)', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-browser",
+									"name": "meta_video_url",
+									"media_type": "video",
+									"container_class": "wide",
+									"class": "widemedium",
+									"button_text": "' . __( 'Browse', CoursePress::TD ) . '",
+									"placeholder": "' . __( 'Add Media URL or Browse for Media', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Video Caption', CoursePress::TD ) . '",
+							"description": "' . __( 'Hide, show and customise the video caption.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-caption-settings",
+									"class": "component-media-caption wide",
+									"label": "' . __('Show Caption', CoursePress::TD ) . '",
+									"enable_name": "meta_show_media_caption",
+									"option_name": "meta_caption_field",
+									"input_name": "meta_caption_custom_text",
+									"option_class": "caption-source",
+									"no_caption": "' . __( 'Media has no caption', CoursePress::TD ) . '",
+									"media_type": "video",
+									"option_labels": {
+										"media": "' . __( 'Media Caption', CoursePress::TD ) . '",
+										"custom": "' . __( 'Custom Caption', CoursePress::TD ) . '"
+									},
+									"selected": "0",
+									"placeholder": "' . __( 'Please enter a custom caption here.', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Related Videos', CoursePress::TD ) . '",
+							"description": "' . __( 'Hide related videos for some video services (e.g. YouTube). Services like Vimeo sets this per video.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "checkbox",
+									"label": "' . __( 'Hide related videos', CoursePress::TD ) . '",
+									"name": "meta_hide_related_media"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::OUTPUT_AUDIO          => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_AUDIO . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Audio Source', CoursePress::TD ) . '",
+							"description": "' . __( 'Enter a URL or Browse for an audio file. Supported audio extensions (mp3, ogg, wma, m4a, wav)', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-browser",
+									"name": "meta_audio_url",
+									"media_type": "audio",
+									"container_class": "wide",
+									"class": "widemedium",
+									"button_text": "' . __( 'Browse', CoursePress::TD ) . '",
+									"placeholder": "' . __( 'Add Media URL or Browse for Media', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Audio Playback', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "checkbox",
+									"label": "' . __( 'Loop audio', CoursePress::TD ) . '",
+									"name": "meta_loop"
+								},
+								{
+									"type": "checkbox",
+									"label": "' . __( 'Autoplay audio', CoursePress::TD ) . '",
+									"name": "meta_autoplay"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::OUTPUT_DOWNLOAD       => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_DOWNLOAD . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Download Source', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-browser",
+									"name": "meta_file_url",
+									"media_type": "file",
+									"container_class": "wide",
+									"class": "widemedium",
+									"button_text": "' . __( 'Browse', CoursePress::TD ) . '",
+									"placeholder": "' . __( 'Add File URL or Browse for File to download', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Link Text', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "text-input",
+									"name": "meta_link_text",
+									"class": "medium"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::OUTPUT_ZIPPED_OBJECT  => '
-
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_ZIPPED_OBJECT . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Object Source', CoursePress::TD ) . '",
+							"description": "' . __( 'Browse for the zip file that contains your resources.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "media-browser",
+									"name": "meta_zip_url",
+									"media_type": "file",
+									"container_class": "wide",
+									"class": "widemedium",
+									"button_text": "' . __( 'Browse', CoursePress::TD ) . '",
+									"placeholder": "' . __( 'Browse for zipped file', CoursePress::TD ) . '"
+								}
+							]
+						},
+						{
+							"label": "' . __( 'Primary File', CoursePress::TD ) . '",
+							"description": "' . __( 'This is the file of the object that will be loaded first.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "text-input",
+									"name": "meta_primary_file",
+									"class": "medium",
+									"placeholder": "' . __( 'e.g. index.html', CoursePress::TD ) . '"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::OUTPUT_SECTION        => '
 
 			',
 			self::INPUT_MULTIPLE_CHOICE => '
-
+			{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_MULTIPLE_CHOICE . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Answer', CoursePress::TD ) . '",
+							"description": "' . __( 'Add checkboxes next to the correct answers', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "checkbox-select",
+									"class": "component-checkbox-answer wide",
+									"name": "meta_answers",
+									"answers": [
+										"' . __( 'Answer A', CoursePress::TD ) . '",
+										"' . __( 'Answer B', CoursePress::TD ) . '",
+										"' . __( 'Answer C', CoursePress::TD ) . '"
+									],
+									"selected": [
+										"0",
+										"2"
+									]
+								}
+							]
+						}
+					]
+				}
 			',
 			self::INPUT_SINGLE_CHOICE   => '
-			{
+				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
 					"duration": "0:00",
@@ -441,8 +749,8 @@ class CoursePress_Helper_UI_Module {
 					"order": "0",
 					"components": [
 						{
-							"label": "' . __('Answer', CoursePress::TD ) . '",
-							"description": "' . __('Select the correct answer', CoursePress::TD ) . '",
+							"label": "' . __( 'Answer', CoursePress::TD ) . '",
+							"description": "' . __( 'Select the correct answer', CoursePress::TD ) . '",
 							"class": "wide",
 							"items": [
 								{
@@ -461,7 +769,40 @@ class CoursePress_Helper_UI_Module {
 				}
 			',
 			self::INPUT_SELECT_CHOICE   => '
-
+						{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_SELECT_CHOICE . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": [
+						{
+							"label": "' . __( 'Answer', CoursePress::TD ) . '",
+							"description": "' . __( 'Select the correct answer', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "select-select",
+									"class": "component-select-answer wide",
+									"name": "meta_answers",
+									"answers": [
+										"' . __( 'Answer A', CoursePress::TD ) . '",
+										"' . __( 'Answer B', CoursePress::TD ) . '"
+									],
+									"selected": "0"
+								}
+							]
+						}
+					]
+				}
 			',
 			self::INPUT_SHORT_TEXT      => '
 				{
@@ -480,8 +821,8 @@ class CoursePress_Helper_UI_Module {
 					"order": "0",
 					"components": [
 						{
-							"label": "' . __('Placeholder Text', CoursePress::TD ) . '",
-							"description": "' . __('Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
+							"label": "' . __( 'Placeholder Text', CoursePress::TD ) . '",
+							"description": "' . __( 'Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
 							"class": "wide",
 							"items": [
 								{
@@ -494,7 +835,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_LONG_TEXT => '
+			self::INPUT_LONG_TEXT       => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -511,8 +852,8 @@ class CoursePress_Helper_UI_Module {
 					"order": "0",
 					"components": [
 						{
-							"label": "' . __('Placeholder Text', CoursePress::TD ) . '",
-							"description": "' . __('Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
+							"label": "' . __( 'Placeholder Text', CoursePress::TD ) . '",
+							"description": "' . __( 'Placeholder text to put inside the textbox (additional information)', CoursePress::TD ) . '",
 							"class": "wide",
 							"items": [
 								{
@@ -525,14 +866,30 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_UPLOAD => '
+			self::INPUT_UPLOAD          => '
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_UPLOAD . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": []
+				}
 			',
-			self::INPUT_ADVANCED => '
+			self::INPUT_ADVANCED        => '
 
 			',
 		);
 
-		if( $component && true !== $component ) {
+		if ( $component && true !== $component ) {
 			return $components[ $component ];
 		} else {
 			return $components;

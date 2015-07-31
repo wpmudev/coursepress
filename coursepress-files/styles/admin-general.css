@@ -888,11 +888,17 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .wide {
   width: 100%;
 }
+.tab-content .widemedium {
+  width: 80%;
+}
 .tab-content .medium {
   width: 40%;
 }
 .tab-content .narrow {
   width: 20%;
+}
+.tab-content .normal {
+  font-weight: normal;
 }
 .tab-content label {
   display: inline-block;
@@ -1143,12 +1149,26 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder .module-components span.description {
   display: block;
 }
-.tab-content .unit-builder-content .module-holder .module-components input[type="text"] {
+.tab-content .unit-builder-content .module-holder .module-components input.module-title-text {
   width: 100%;
 }
+.tab-content .unit-builder-content .module-holder .module-components .component-checkbox-answer, .tab-content .unit-builder-content .module-holder .module-components .component-checkbox-answer.wide,
+.tab-content .unit-builder-content .module-holder .module-components .component-select-answer, .tab-content .unit-builder-content .module-holder .module-components .component-select-answer.wide,
 .tab-content .unit-builder-content .module-holder .module-components .component-radio-answer, .tab-content .unit-builder-content .module-holder .module-components .component-radio-answer.wide {
   margin: 0 0 5px 10px;
   width: 90%;
+}
+.tab-content .unit-builder-content .module-holder .module-components .component-media-caption label {
+  font-weight: normal;
+}
+.tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source {
+  margin: 5px 0 0 20px;
+}
+.tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source .existing, .tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source input[type="text"] {
+  margin-left: 20px;
+}
+.tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source input[type="text"] {
+  width: 80%;
 }
 
 .module-zipped a,

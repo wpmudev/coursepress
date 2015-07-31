@@ -56,6 +56,9 @@ class CoursePress_Core {
 
 		}
 
+		// Initialize Utility actions
+		CoursePress_Helper_Utility::init();
+
 		// Upgrade CoursePress if needed
 		CoursePress_Upgrade::init();
 
