@@ -608,7 +608,7 @@ class CoursePress_Model_Course {
 	}
 
 
-	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false ) {
+	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() ) {
 
 		$post_args = array(
 			'post_type'     => 'module',
@@ -622,6 +622,17 @@ class CoursePress_Model_Course {
 
 		if ( $ids_only ) {
 			$post_args['fields'] = 'ids';
+		}
+
+		// Get modules for specific page
+		if( isset( $args['page'] ) && (int) $args['page'] ) {
+			$post_args['meta_query'] = array(
+				array(
+					'key'     => 'module_page',
+					'value'   => (int) $args['page'],
+					'compare' => '=',
+				),
+			);
 		}
 
 		$query = new WP_Query( $post_args );

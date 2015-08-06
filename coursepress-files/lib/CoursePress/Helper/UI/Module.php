@@ -690,7 +690,22 @@ class CoursePress_Helper_UI_Module {
 				}
 			',
 			self::OUTPUT_SECTION        => '
-
+			{
+				"id": "0",
+				"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+				"duration": "0:00",
+				"type": "' . self::OUTPUT_SECTION . '",
+				"show_title": "1",
+				"mandatory": "0",
+				"assessable": "0",
+				"minimum_grade": "100",
+				"allow_retries": "1",
+				"retry_attempts": "0",
+				"content": "",
+				"editor_height": "200",
+				"order": "0",
+				"components": []
+			}
 			',
 			self::INPUT_MULTIPLE_CHOICE => '
 			{
@@ -719,12 +734,10 @@ class CoursePress_Helper_UI_Module {
 									"name": "meta_answers",
 									"answers": [
 										"' . __( 'Answer A', CoursePress::TD ) . '",
-										"' . __( 'Answer B', CoursePress::TD ) . '",
-										"' . __( 'Answer C', CoursePress::TD ) . '"
+										"' . __( 'Answer B', CoursePress::TD ) . '"
 									],
 									"selected": [
-										"0",
-										"2"
+										"0"
 									]
 								}
 							]

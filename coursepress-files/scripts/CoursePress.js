@@ -3,7 +3,7 @@ var CoursePress = CoursePress || {};
 (function ( $ ) {
 
 
-    CoursePress.event_queue = CoursePress.event_queue || []; //array
+    CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
     CoursePress.editor = CoursePress.editor || {};
 
@@ -11,7 +11,7 @@ var CoursePress = CoursePress || {};
 
     CoursePress.editor.create = function ( target, id, name, content, append, height ) {
 
-        if( undefined === height ) {
+        if ( undefined === height ) {
             height = 400;
         }
 
@@ -45,6 +45,11 @@ var CoursePress = CoursePress || {};
             options.selector = options.selector.replace( /dummy_editor_id/g, id );
             options.init_instance_callback = 'CoursePress.editor.on_init'; // code to execute after editor is created
             options.cache_suffix = '';
+            options.setup = function ( ed ) {
+                ed.on( 'keyup', function ( arr ) {
+                    CoursePress.Events.trigger('editor:keyup',ed);
+                } );
+            };
             tinyMCE.init( options );
             tinyMCEPreInit.mceInit[ id ] = options;
         }
@@ -268,162 +273,161 @@ var CoursePress = CoursePress || {};
 
 
     // Unserialize method from phpjs.org
-    CoursePress.utility.unserialize = function (data) {
+    CoursePress.utility.unserialize = function ( data ) {
         //  discuss at: http://phpjs.org/functions/unserialize/
         //   example 1: unserialize('a:3:{i:0;s:5:"Kevin";i:1;s:3:"van";i:2;s:9:"Zonneveld";}');
         //   returns 1: ['Kevin', 'van', 'Zonneveld']
         //   example 2: unserialize('a:3:{s:9:"firstName";s:5:"Kevin";s:7:"midName";s:3:"van";s:7:"surName";s:9:"Zonneveld";}');
         //   returns 2: {firstName: 'Kevin', midName: 'van', surName: 'Zonneveld'}
         var that = this,
-            utf8Overhead = function(chr) {
+            utf8Overhead = function ( chr ) {
                 // http://phpjs.org/functions/unserialize:571#comment_95906
-                var code = chr.charCodeAt(0);
-                if (code < 0x0080) {
+                var code = chr.charCodeAt( 0 );
+                if ( code < 0x0080 ) {
                     return 0;
                 }
-                if (code < 0x0800) {
+                if ( code < 0x0800 ) {
                     return 1;
                 }
                 return 2;
             };
-        error = function(type, msg, filename, line) {
-            throw new that.window[type](msg, filename, line);
+        error = function ( type, msg, filename, line ) {
+            throw new that.window[ type ]( msg, filename, line );
         };
-        read_until = function(data, offset, stopchr) {
+        read_until = function ( data, offset, stopchr ) {
             var i = 2,
                 buf = [],
-                chr = data.slice(offset, offset + 1);
+                chr = data.slice( offset, offset + 1 );
 
-            while (chr != stopchr) {
-                if ((i + offset) > data.length) {
-                    error('Error', 'Invalid');
+            while ( chr != stopchr ) {
+                if ( (i + offset) > data.length ) {
+                    error( 'Error', 'Invalid' );
                 }
-                buf.push(chr);
-                chr = data.slice(offset + (i - 1), offset + i);
+                buf.push( chr );
+                chr = data.slice( offset + (i - 1), offset + i );
                 i += 1;
             }
-            return [buf.length, buf.join('')];
+            return [ buf.length, buf.join( '' ) ];
         };
-        read_chrs = function(data, offset, length) {
+        read_chrs = function ( data, offset, length ) {
             var i, chr, buf;
 
             buf = [];
-            for (i = 0; i < length; i++) {
-                chr = data.slice(offset + (i - 1), offset + i);
-                buf.push(chr);
-                length -= utf8Overhead(chr);
+            for ( i = 0; i < length; i++ ) {
+                chr = data.slice( offset + (i - 1), offset + i );
+                buf.push( chr );
+                length -= utf8Overhead( chr );
             }
-            return [buf.length, buf.join('')];
+            return [ buf.length, buf.join( '' ) ];
         };
-        _unserialize = function(data, offset) {
+        _unserialize = function ( data, offset ) {
             var dtype, dataoffset, keyandchrs, keys, contig,
                 length, array, readdata, readData, ccount,
                 stringlength, i, key, kprops, kchrs, vprops,
                 vchrs, value, chrs = 0,
-                typeconvert = function(x) {
+                typeconvert = function ( x ) {
                     return x;
                 };
 
-            if (!offset) {
+            if ( !offset ) {
                 offset = 0;
             }
-            dtype = (data.slice(offset, offset + 1))
+            dtype = (data.slice( offset, offset + 1 ))
                 .toLowerCase();
 
             dataoffset = offset + 2;
 
-            switch (dtype) {
+            switch ( dtype ) {
                 case 'i':
-                    typeconvert = function(x) {
-                        return parseInt(x, 10);
+                    typeconvert = function ( x ) {
+                        return parseInt( x, 10 );
                     };
-                    readData = read_until(data, dataoffset, ';');
-                    chrs = readData[0];
-                    readdata = readData[1];
+                    readData = read_until( data, dataoffset, ';' );
+                    chrs = readData[ 0 ];
+                    readdata = readData[ 1 ];
                     dataoffset += chrs + 1;
                     break;
                 case 'b':
-                    typeconvert = function(x) {
-                        return parseInt(x, 10) !== 0;
+                    typeconvert = function ( x ) {
+                        return parseInt( x, 10 ) !== 0;
                     };
-                    readData = read_until(data, dataoffset, ';');
-                    chrs = readData[0];
-                    readdata = readData[1];
+                    readData = read_until( data, dataoffset, ';' );
+                    chrs = readData[ 0 ];
+                    readdata = readData[ 1 ];
                     dataoffset += chrs + 1;
                     break;
                 case 'd':
-                    typeconvert = function(x) {
-                        return parseFloat(x);
+                    typeconvert = function ( x ) {
+                        return parseFloat( x );
                     };
-                    readData = read_until(data, dataoffset, ';');
-                    chrs = readData[0];
-                    readdata = readData[1];
+                    readData = read_until( data, dataoffset, ';' );
+                    chrs = readData[ 0 ];
+                    readdata = readData[ 1 ];
                     dataoffset += chrs + 1;
                     break;
                 case 'n':
                     readdata = null;
                     break;
                 case 's':
-                    ccount = read_until(data, dataoffset, ':');
-                    chrs = ccount[0];
-                    stringlength = ccount[1];
+                    ccount = read_until( data, dataoffset, ':' );
+                    chrs = ccount[ 0 ];
+                    stringlength = ccount[ 1 ];
                     dataoffset += chrs + 2;
 
-                    readData = read_chrs(data, dataoffset + 1, parseInt(stringlength, 10));
-                    chrs = readData[0];
-                    readdata = readData[1];
+                    readData = read_chrs( data, dataoffset + 1, parseInt( stringlength, 10 ) );
+                    chrs = readData[ 0 ];
+                    readdata = readData[ 1 ];
                     dataoffset += chrs + 2;
-                    if (chrs != parseInt(stringlength, 10) && chrs != readdata.length) {
-                        error('SyntaxError', 'String length mismatch');
+                    if ( chrs != parseInt( stringlength, 10 ) && chrs != readdata.length ) {
+                        error( 'SyntaxError', 'String length mismatch' );
                     }
                     break;
                 case 'a':
                     readdata = {};
 
-                    keyandchrs = read_until(data, dataoffset, ':');
-                    chrs = keyandchrs[0];
-                    keys = keyandchrs[1];
+                    keyandchrs = read_until( data, dataoffset, ':' );
+                    chrs = keyandchrs[ 0 ];
+                    keys = keyandchrs[ 1 ];
                     dataoffset += chrs + 2;
 
-                    length = parseInt(keys, 10);
+                    length = parseInt( keys, 10 );
                     contig = true;
 
-                    for (i = 0; i < length; i++) {
-                        kprops = _unserialize(data, dataoffset);
-                        kchrs = kprops[1];
-                        key = kprops[2];
+                    for ( i = 0; i < length; i++ ) {
+                        kprops = _unserialize( data, dataoffset );
+                        kchrs = kprops[ 1 ];
+                        key = kprops[ 2 ];
                         dataoffset += kchrs;
 
-                        vprops = _unserialize(data, dataoffset);
-                        vchrs = vprops[1];
-                        value = vprops[2];
+                        vprops = _unserialize( data, dataoffset );
+                        vchrs = vprops[ 1 ];
+                        value = vprops[ 2 ];
                         dataoffset += vchrs;
 
-                        if (key !== i)
+                        if ( key !== i )
                             contig = false;
 
-                        readdata[key] = value;
+                        readdata[ key ] = value;
                     }
 
-                    if (contig) {
-                        array = new Array(length);
-                        for (i = 0; i < length; i++)
-                            array[i] = readdata[i];
+                    if ( contig ) {
+                        array = new Array( length );
+                        for ( i = 0; i < length; i++ )
+                            array[ i ] = readdata[ i ];
                         readdata = array;
                     }
 
                     dataoffset += 1;
                     break;
                 default:
-                    error('SyntaxError', 'Unknown / Unhandled data type(s): ' + dtype);
+                    error( 'SyntaxError', 'Unknown / Unhandled data type(s): ' + dtype );
                     break;
             }
-            return [dtype, dataoffset - offset, typeconvert(readdata)];
+            return [ dtype, dataoffset - offset, typeconvert( readdata ) ];
         };
 
-        return _unserialize((data + ''), 0)[2];
+        return _unserialize( (data + ''), 0 )[ 2 ];
     }
-
 
 
     // Webkit MD5 method
@@ -703,7 +707,7 @@ var CoursePress = CoursePress || {};
         return isEventSupported;
     };
 
-    CoursePress.utility.attachment_by_url = function( url, target, fallback, field ) {
+    CoursePress.utility.attachment_by_url = function ( url, target, fallback, field ) {
         var model = new CoursePress.Models.utility.Attachment();
         model.get_attachment( url, target, fallback, field );
     }
@@ -712,11 +716,11 @@ var CoursePress = CoursePress || {};
 
     CoursePress.UI.browse_media_field = function ( id, name, args ) {
 
-        if( undefined === name ) {
+        if ( undefined === name ) {
             name = id;
         }
 
-        if( undefined === args ) {
+        if ( undefined === args ) {
             args = {};
         }
 
@@ -731,27 +735,27 @@ var CoursePress = CoursePress || {};
         args.description = args.description ? args.description : '';
 
         var supported_extensions;
-        if( 'image' === args.type ) {
-            supported_extensions = _coursepress.allowed_image_extensions.join(', ');
+        if ( 'image' === args.type ) {
+            supported_extensions = _coursepress.allowed_image_extensions.join( ', ' );
         }
-        if( 'audio' === args.type ) {
-            supported_extensions = _coursepress.allowed_audio_extensions.join(', ');
+        if ( 'audio' === args.type ) {
+            supported_extensions = _coursepress.allowed_audio_extensions.join( ', ' );
         }
-        if( 'video' === args.type ) {
-            supported_extensions = _coursepress.allowed_video_extensions.join(', ');
+        if ( 'video' === args.type ) {
+            supported_extensions = _coursepress.allowed_video_extensions.join( ', ' );
         }
 
         var content = '<div class="' + args.container_class + '">';
 
-        if( args.title ) {
+        if ( args.title ) {
             content += '<label for="' + name + '">' + args.title;
         }
 
-        if( args.description ) {
+        if ( args.description ) {
             content += '<p class="description">' + args.description + '</p>';
         }
 
-        if( args.title ) {
+        if ( args.title ) {
             content += '</label>';
         }
 
@@ -774,7 +778,7 @@ var CoursePress = CoursePress || {};
                     var text_selector = $( this ).attr( 'name' ).replace( '-button', '' );
                     var parent = $( $( this ).parents( 'div' ).find( '#' + text_selector ) );
 
-                    $( parent ).on( 'keyup', function() {
+                    $( parent ).on( 'keyup', function () {
 
                         if ( CoursePress.utility.valid_media_extension( $( parent ).val(), parent ) ) {//extension is allowed
                             $( parent ).removeClass( 'invalid_extension_field' );
@@ -876,11 +880,11 @@ var CoursePress = CoursePress || {};
     CoursePress.Models = CoursePress.Models || {};
     CoursePress.Models.utility = CoursePress.Models.utility || {};
 
-    CoursePress.Models.utility.Attachment = Backbone.Model.extend({
-        initialize: function() {
-            this.on('sync', this.process, this);
+    CoursePress.Models.utility.Attachment = Backbone.Model.extend( {
+        initialize: function () {
+            this.on( 'sync', this.process, this );
         },
-        get_attachment: function( attachment_url, target, fallback, field ) {
+        get_attachment: function ( attachment_url, target, fallback, field ) {
             this.attachment_url = attachment_url;
             this.target = target;
             this.field = field ? field : 'post_excerpt';
@@ -890,15 +894,15 @@ var CoursePress = CoursePress || {};
         },
         process: function () {
 
-            if( this.get( 0 ) ) {
+            if ( this.get( 0 ) ) {
                 var value = this.get( 0 )[ this.field ];
                 value = value.length > 0 ? value : this.fallback;
 
-                $( $( this.target )[0] ).html( value );
+                $( $( this.target )[ 0 ] ).html( value );
             }
 
         }
-    });
+    } );
 
 
 })( jQuery );

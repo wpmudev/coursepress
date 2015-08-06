@@ -14,8 +14,6 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			$content .= $template;
 		}
 
-		error_log( print_r( CoursePress_Helper_Utility::attachment_from_url( 'http://network1.dev/wp-content/uploads/2015/07/4wettenhall.jpg' ), true ) );
-
 		$content .= '<div id="unit-builder"><div class="loading">' . esc_html__( 'Unit Builder is loading...', CoursePress::TD ) . '</div></div>';
 
 		return $content;
@@ -123,16 +121,16 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_header'              => '
 				<script type="text/template" id="unit-builder-header-template">
-				<div class="unit-detail">
+				<div class="unit-detail" data-cid="<%- unit_cid %>">
 					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', CoursePress::TD ) . '<div class="unit-state"></h3>
 					<label for="unit_name">Unit Title</label>
-					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="unit_name" spellcheck="true">
+					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<label for="unit_availability">Unit Availability</label>
-					<input id="dp1437965877649" class="dateinput hasDatepicker" type="text" value="<%= unit_availability %>" name="unit_availability" spellcheck="true">
-					<label><input id="force_current_unit_completion" type="checkbox" value="on" name="force_current_unit_completion" <%= unit_force_completion_checked %>><span>User needs to <strong><em>answer</em></strong>all mandatory assessments and view all pages in order to access the next unit</span></label>
-					<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>User also needs to <strong><em>pass</em></strong>all mandatory assessments</span></label>
+					<input id="dp1437965877649" class="dateinput hasDatepicker" type="text" value="<%= unit_availability %>" name="meta_unit_availability" spellcheck="true">
+					<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %>><span>User needs to <strong><em>answer</em></strong>all mandatory assessments and view all pages in order to access the next unit</span></label>
+					<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="meta_force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>User also needs to <strong><em>pass</em></strong>all mandatory assessments</span></label>
 				</div>
-				<div class="unit-buttons">[SAVE] [PREVIEW] [DELETE] [TOGGLE]</div>
+				<div class="unit-buttons"><div class="unit-save-button">' . __( 'Save', CoursePress::TD ) . '</div> [PREVIEW] [DELETE] [TOGGLE]</div>
 				</script>
 			',
 			'unit_builder_content_placeholder' => '
@@ -154,9 +152,9 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				<script type="text/template" id="unit-builder-pager-template">
 					<label>' . esc_html__( 'Unit Page(s)', CoursePress::TD ) . '</label>
 					<ul>
-			            <% for ( var i = 0; i < unit_page_count; i++ ) { %>
+			            <% for ( var i = 1; i <= unit_page_count; i++ ) { %>
 			                <li data-page="<%- i %>">
-			                    <%- (i+1) %>
+			                    <%- i %>
 			                </li>
 			            <% }; %>
 			            <li>+</li>
@@ -165,10 +163,12 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_content_pager_info'  => '
 				<script type="text/template" id="unit-builder-pager-info-template">
+					<div class="page-info-holder">
 					<label class="bigger">' . esc_html__( 'Page Label', CoursePress::TD ) . '</label>
 					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', CoursePress::TD ) . '</p>
-					<input type="text" value="<%= page_label_text %>" name="" class="wide" />
-					<label><input type="checkbox" value="on" name="" <%= page_label_checked %> /><span>' . esc_html__( 'Show page label on unit', CoursePress::TD ) . '</span></label>
+					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
+					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show page label on unit', CoursePress::TD ) . '</span></label>
+					</div>
 				</script>
 			',
 			'unit_builder_modules'                 => '
@@ -225,18 +225,153 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				$units = CoursePress_Model_Course::get_units( $_REQUEST['course_id'], 'any' );
 
 				foreach ( $units as $unit ) {
-					$unit->meta  = get_post_meta( $unit->ID );
+					$meta  = get_post_meta( $unit->ID );
+					foreach( $meta as $key => $value ) {
+						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
+					}
+
+					$unit->meta = $meta;
 					$json_data[] = $unit;
 				}
 
 				break;
 
 			case 'modules':
-				$modules = CoursePress_Model_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any' );
+				$modules = CoursePress_Model_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
 
 				foreach ( $modules as $module ) {
-					$module->meta = get_post_meta( $module->ID );
+					$meta = get_post_meta( $module->ID );
+					foreach( $meta as $key => $value ) {
+						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
+					}
+
+					$module->meta = $meta;
 					$json_data[]  = $module;
+				}
+
+				break;
+
+			case 'units_update':
+
+				$data      = json_decode( file_get_contents( 'php://input' ) );
+				$data      = CoursePress_Helper_Utility::object_to_array( $data );
+
+				foreach( $data as $unit ) {
+
+					unset( $unit['post_modified'] );
+					unset( $unit['post_modified_gmt'] );
+
+					if( 0 === (int) $unit['ID'] ) {
+						unset( $unit['ID'] );
+					}
+
+					$update = isset( $unit['flag'] ) && 'dirty' === $unit['flag'];
+					unset( $unit['flag'] );
+
+					if( $update ) {
+
+						$meta = ! empty( $unit['meta'] ) ? $unit['meta'] : array();
+						unset( $unit['meta'] );
+
+						$id = wp_insert_post( $unit );
+
+						foreach( $meta as $key => $value ) {
+							update_post_meta( $id, $key, $value );
+						}
+
+					}
+
+				}
+
+
+				break;
+
+			case 'modules_update':
+
+				$data      = json_decode( file_get_contents( 'php://input' ) );
+				$data      = CoursePress_Helper_Utility::object_to_array( $data );
+
+				$unit_id = (int) $_REQUEST['unit_id'];
+
+				$modules = array();
+
+				foreach( $data as $module ) {
+					if( empty( $module ) ) {
+						continue;
+					}
+					unset( $module['post_modified'] );
+					unset( $module['post_modified_gmt'] );
+
+					$module_id = $module['ID'];
+					if( 0 === (int) $module['ID'] ) {
+						unset( $module['ID'] );
+					}
+
+					$update = isset( $module['flag'] ) && 'dirty' === $module['flag'];
+					unset( $module['flag'] );
+
+					$module['post_type'] = 'module';
+					$module['post_parent'] = $unit_id;
+					if( $update ) {
+
+						$meta = ! empty( $module['meta'] ) ? $module['meta'] : array();
+						unset( $module['meta'] );
+
+						$id = wp_insert_post( $module );
+						$modules[] = $id;
+						foreach( $meta as $key => $value ) {
+							update_post_meta( $id, $key, $value );
+						}
+
+					} else {
+						if( ! empty( $module_id ) ) {
+							$modules[] = $module_id;
+						}
+					}
+
+				}
+
+				// Check for removed units and delete if needed
+				$saved_modules = CoursePress_Model_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', true, false, array( 'page' => (int) $_REQUEST['page'] ) );
+				foreach( $saved_modules as $mod_id ) {
+					if( ! in_array( $mod_id, $modules ) ) {
+						wp_delete_post( $mod_id );
+					}
+				}
+
+				break;
+
+			case 'unit_update':
+
+				$data      = json_decode( file_get_contents( 'php://input' ) );
+				$data = CoursePress_Helper_Utility::object_to_array( $data );
+
+
+				break;
+
+			case 'module_add':
+				$data      = json_decode( file_get_contents( 'php://input' ) );
+				$data = CoursePress_Helper_Utility::object_to_array( $data );
+
+				$new_module = false;
+				$meta = ! empty( $data['meta'] ) ? $data['meta'] : array();
+				unset( $data['meta'] );
+
+				if( (int) $data['ID'] === 0 ) {
+					$new_module = true;
+					unset( $data['ID'] );
+				}
+
+				$data['ping_status'] = 'closed';
+				$data['comment_status'] = 'closed';
+				$data['post_parent'] = (int) $_REQUEST['unit_id'];
+				$data['post_type'] = 'module';
+				$data['post_status'] = 'publish';
+
+				$id = wp_insert_post( $data );
+
+				foreach( $meta as $key => $value ) {
+					update_post_meta( $id, $key, $value );
 				}
 
 				break;

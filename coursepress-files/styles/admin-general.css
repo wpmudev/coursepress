@@ -880,6 +880,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   border: 1px solid #61a31e;
 }
 
+.coursepress-ub-tab.unit-changed:after {
+  background: none repeat scroll 0 0 #dd9116;
+  border: 1px solid #bb7615;
+}
+
 .tab-tabs ul li.coursepress-ub-tab a, .tab-tabs ul li.coursepress-ub-tab a:visited {
   padding: 8px 24px 8px 8px;
   font-weight: bold;
@@ -1050,6 +1055,10 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content h3.module-holder-title.module-holder-title.ui-accordion-header-active:before {
   font-family: fontawesome;
   content: '\f0d7';
+}
+.tab-content .unit-builder-content h3.module-holder-title.section {
+  background: #f1f1f1;
+  color: #949494;
 }
 .tab-content .unit-builder-content h3.module-holder-title:hover {
   cursor: pointer;
