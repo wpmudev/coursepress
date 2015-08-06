@@ -100,6 +100,8 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_templates']     = CoursePress_Helper_UI_Module::get_template( true );
 			$localize_array['unit_builder_module_types']  = CoursePress_Helper_UI_Module::get_types();
 			$localize_array['unit_builder_module_labels'] = CoursePress_Helper_UI_Module::get_labels();
+			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', CoursePress::TD );
+			$localize_array['unit_builder_delete_unit_confirm'] = __( 'Please confirm that you want to remove this unit and all its modules and student responses.', CoursePress::TD );
 		}
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );

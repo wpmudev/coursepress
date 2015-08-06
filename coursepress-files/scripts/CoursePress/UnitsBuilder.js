@@ -106,6 +106,37 @@ var CoursePress = CoursePress || {};
         $( '.unit-builder-pager ul li' ).removeClass( 'active' );
         $( '.unit-builder-pager ul li[data-page="' + CoursePress.UnitBuilder.activePage + '"]' ).addClass( 'active' );
 
+        // Unit state
+        if( 'publish' === CoursePress.UnitBuilder.activeUnitStatus ) {
+            $( '#unit-live-toggle' ).removeClass('off');
+            $( '#unit-live-toggle' ).addClass('on');
+            $( '#unit-live-toggle-2' ).removeClass('off');
+            $( '#unit-live-toggle-2' ).addClass('on');
+        } else {
+            $( '#unit-live-toggle' ).removeClass('on');
+            $( '#unit-live-toggle' ).addClass('off');
+            $( '#unit-live-toggle-2' ).removeClass('on');
+            $( '#unit-live-toggle-2' ).addClass('off');
+        }
+
+    }
+
+    CoursePress.Helpers.Module.save_unit = function( e ) {
+        $( e.currentTarget ).prepend('<i class="fa fa-spinner fa-spin save-progress"></i> ');
+
+        CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units_update&course_id=' + _coursepress.course_id;
+        Backbone.sync( 'update', CoursePress.UnitBuilder.unit_collection, {
+            success: function() { $( '.save-progress' ).detach(); },
+            error: function() {
+                $( '.save-progress' ).detach();
+                $( e.currentTarget ).prepend('<i class="fa fa-info-circle save-progress"></i> ');
+            }
+        } );
+        CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage;
+        Backbone.sync( 'update', CoursePress.UnitBuilder.module_collection );
+
+        // Reset URL
+        CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
     }
 
     // Loop through a Module collection
@@ -485,6 +516,7 @@ var CoursePress = CoursePress || {};
 
             this.activePage = 1;
             this.totalPages = 1;
+            this.activeUnitStatus = 'draft';
 
             this.activeModuleRef = '';
 
@@ -796,6 +828,7 @@ var CoursePress = CoursePress || {};
             "click li": "changeActive"
         },
         render: function () {
+
             self = this;
 
             self.$el.empty();
@@ -850,6 +883,7 @@ var CoursePress = CoursePress || {};
 
         self.parentView.activePage = page;
 
+        self.parentView.headerView.template_variables.unit_id = unit.get('ID');
         self.parentView.headerView.template_variables.unit_cid = unit.cid;
         self.parentView.headerView.template_variables.unit_title = unit.get( 'post_title' );
         var meta = unit.get( 'meta' );
@@ -871,6 +905,7 @@ var CoursePress = CoursePress || {};
         // Trigger Module collection
         self.parentView.activeUnitID = unit.get( 'ID' );
         self.parentView.activeUnitRef = unit.cid;
+        self.parentView.activeUnitStatus = unit.get( 'post_status' );
         self.parentView.fetchModules( self.parentView.activeUnitID, self.parentView.activePage );
 
     }
@@ -879,6 +914,7 @@ var CoursePress = CoursePress || {};
     CoursePress.Views.UnitBuilderHeader = Backbone.View.extend( {
         initialize: function () {
             this.template_variables = {
+                unit_id: '',
                 unit_cid: '',
                 unit_title: '',
                 unit_availability: '',
@@ -926,17 +962,29 @@ var CoursePress = CoursePress || {};
             $('[data-tab="' + this.parentView.activeUnitID + '"] a' ).html( $( e.currentTarget ).val() );
         },
         saveUnit: function ( e ) {
-            this.parentView.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units_update&course_id=' + _coursepress.course_id;
-            Backbone.sync( 'update', this.parentView.unit_collection );
-            this.parentView.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + self.parentView.activeUnitID + '&page=' + self.parentView.activePage;
-            Backbone.sync( 'update', this.parentView.module_collection );
-            //this.parentView.module_collection.sync('update');
-
-            this.parentView.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
+            CoursePress.Helpers.Module.save_unit( e );
         }
 
     } );
 
+
+    CoursePress.Views.UnitBuilderFooter = Backbone.View.extend( {
+        events: {
+            'click .unit-save-button': 'saveUnit'
+        },
+        render: function () {
+            var template = _.template( $( "#unit-builder-footer-template" ).html(), {} );
+
+            this.$el.empty();
+
+            this.$el.html( template );
+
+            return this;
+        },
+        saveUnit: function ( e ) {
+            CoursePress.Helpers.Module.save_unit( e );
+        }
+    } );
 
     // Unit Body View
     CoursePress.Views.UnitBuilderBody = Backbone.View.extend( {
@@ -958,6 +1006,9 @@ var CoursePress = CoursePress || {};
             this.modulesView = new CoursePress.Views.UnitBuilderModules( { className: 'section unit-builder-modules' } );
             this.modulesView.parentView = this;
             this.modulesView.template_variables = {};
+
+            this.footerView = new CoursePress.Views.UnitBuilderFooter( { className: 'unit-buttons' } );
+            this.footerView.parentView = this;
 
             this.model.on( 'sync', this.render, this );
 
@@ -1007,6 +1058,8 @@ var CoursePress = CoursePress || {};
                 this.$( '.unit-builder-modules' )
                     .replaceWith( this.modulesView.render( this.parentView.module_collection.models ).el );
 
+                this.$( '.unit-builder-footer' )
+                    .append( this.footerView.render().el );
 
                 CoursePress.Helpers.Module.refresh_ui();
 

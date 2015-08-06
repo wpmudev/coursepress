@@ -926,6 +926,40 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   padding: 0 5px 5px;
   min-height: 150px;
 }
+.tab-content .unit-builder-content .toggle-switch.coursepress-ui-toggle-switch.on .left {
+  opacity: 0.7;
+}
+.tab-content .unit-builder-content .toggle-switch.coursepress-ui-toggle-switch.off .right {
+  opacity: 0.7;
+}
+.tab-content .unit-builder-content .coursepress-ui-toggle-switch .control {
+  opacity: 1;
+}
+.tab-content .unit-builder-content .unit-buttons .button {
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  text-align: center;
+  width: 120px;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-save-button {
+  background: #00b0d6;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-save-button:hover {
+  background: #00d3f9;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-button {
+  background: none;
+  float: right;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-button:hover {
+  background: #be4251;
+}
 .tab-content .unit-builder-content .unit-builder-header {
   background: #0074A2;
   color: #ffffff;
@@ -939,6 +973,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   display: block;
   margin-top: 5px;
   cursor: default;
+}
+.tab-content .unit-builder-content .unit-builder-header .unit-state {
+  float: right;
 }
 .tab-content .unit-builder-content .unit-builder-pager {
   background: #F1F1F1;
@@ -1178,6 +1215,16 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source input[type="text"] {
   width: 80%;
+}
+.tab-content .unit-builder-content .section.unit-builder-footer {
+  padding: 2px 6px 8px 6px;
+  margin: 0;
+  background: #0074a2;
+  color: #ffffff;
+}
+.tab-content .unit-builder-content .section.unit-builder-footer #unit-live-toggle-2 {
+  float: right;
+  padding: 8px 10px;
 }
 
 .module-zipped a,

@@ -714,6 +714,55 @@ var CoursePress = CoursePress || {};
 
     CoursePress.UI = CoursePress.UI || {};
 
+
+    CoursePress.UI.toggle_switch = function( id, name, options ) {
+
+        if( undefined === options ) {
+            options = [];
+        }
+
+        var content = '';
+
+        var control_class = options['class'] || '';
+        var label = options['label'] || '';
+        var label_class = options['label_class'] || '';
+        var left = options['left'] || '';
+        var left_class = options['left_class'] || '';
+        var right = options['right'] || '';
+        var right_class = options['right_class'] || '';
+        var state = options['state'] || 'off';
+
+        var data = '';
+        if( options['data'] && _.isArray( options['data'] ) ) {
+            $.each( options['data'], function( key, value ) {
+                data += _.isString( value ) ? ' data-' + key + '="' + value + '"' : '';
+            } );
+        }
+
+        content +='<div id="' + id + '" class="toggle-switch coursepress-ui-toggle-switch ' + control_class + ' ' + state + '" name="' + name + '" ' + data + '>';
+
+
+        if( label.length > 0 ) {
+            content += '<span class="label ' + label_class + '">' + label + '</span>';
+        }
+
+        if( left.length > 0 ) {
+            content += '<span class="left ' + left_class + '">' + left + '</span>';
+        }
+
+        content += '<div class="control"><div class="toggle"></div></div>';
+
+
+        if( right.length > 0 ) {
+            content += '<span class="right ' + right_class + '">' + right + '</span>';
+        }
+
+        content += '</div>';
+
+        return content;
+
+    }
+
     CoursePress.UI.browse_media_field = function ( id, name, args ) {
 
         if ( undefined === name ) {

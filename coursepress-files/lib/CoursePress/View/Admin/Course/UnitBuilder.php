@@ -122,7 +122,11 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_header'              => '
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
-					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', CoursePress::TD ) . '<div class="unit-state"></h3>
+					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', CoursePress::TD ) . '<div class="unit-state">' .
+                      CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle', 'unit-live-toggle', array(
+						'left' => __( 'Draft', CoursePress::TD ),
+                        'right' => __( 'Live', CoursePress::TD )
+                      )) . '</h3>
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<label for="unit_availability">Unit Availability</label>
@@ -130,7 +134,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %>><span>User needs to <strong><em>answer</em></strong>all mandatory assessments and view all pages in order to access the next unit</span></label>
 					<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="meta_force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>User also needs to <strong><em>pass</em></strong>all mandatory assessments</span></label>
 				</div>
-				<div class="unit-buttons"><div class="unit-save-button">' . __( 'Save', CoursePress::TD ) . '</div> [PREVIEW] [DELETE] [TOGGLE]</div>
+				<div class="unit-buttons"><div class="button unit-save-button">' . __( 'Save', CoursePress::TD ) . '</div><div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', CoursePress::TD ) . '</div></div>
 				</script>
 			',
 			'unit_builder_content_placeholder' => '
@@ -146,6 +150,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<div class="section unit-builder-pager-info"></div>
 					<div class="section unit-builder-components"></div>
 					<div class="section unit-builder-modules"></div>
+					<div class="section unit-builder-footer"></div>
 				</script>
 			',
 			'unit_builder_content_pager'       => '
@@ -176,7 +181,14 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				  Modules! This template wont be used... its just here for testing.
 				</script>
 			',
-
+			'unit_builder_footer'              => '
+				<script type="text/template" id="unit-builder-footer-template">
+				<div class="button unit-save-button">' . __( 'Save', CoursePress::TD ) . '</div>' .
+                  CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle-2', 'unit-live-toggle-2', array(
+                      'left' => __( 'Draft', CoursePress::TD ),
+                      'right' => __( 'Live', CoursePress::TD )
+                  ))
+                  . '</script>',
 		);
 
 		$templates['unit_builder_content_components']  = '
