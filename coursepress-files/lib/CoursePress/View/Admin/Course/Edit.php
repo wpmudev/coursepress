@@ -986,8 +986,11 @@ class CoursePress_View_Admin_Course_Edit {
 
 		if ( 'edit' == self::_current_action() ) {
 
+			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+			$units = CoursePress_Model_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
+
 			self::$tabs['units'] = array(
-				'title'       => __( 'Units', CoursePress::TD ),
+				'title'       => sprintf( __( 'Units (%s)', CoursePress::TD ), count( $units ) ),
 				'description' => __( 'Edit your course specific settings below.', CoursePress::TD ),
 				'order'       => 20,
 				'buttons'     => 'none'
