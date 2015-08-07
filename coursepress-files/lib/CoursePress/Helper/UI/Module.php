@@ -389,7 +389,7 @@ class CoursePress_Helper_UI_Module {
 			'module_answer'             => __( 'Answer', CoursePress::TD ),
 			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
 			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
-			'module_delete'             => __( 'Delete', CoursePress::TD ),
+			'module_delete'             => __( 'Delete Module', CoursePress::TD ),
 		) );
 
 	}

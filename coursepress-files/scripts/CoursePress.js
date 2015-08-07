@@ -875,8 +875,11 @@ var CoursePress = CoursePress || {};
 
             coursepress_ui_toggle: function ( options ) {
                 return this.each( function ( options ) {
+                    $( this ).off( 'click' );
                     $( this ).on( 'click', function () {
                         var state = '';
+
+                        $( this ).addClass( 'toggle-ui-widget' );
                         if ( $( this ).hasClass( 'on' ) ) {
                             $( this ).removeClass( 'on' );
                             $( this ).addClass( 'off' );

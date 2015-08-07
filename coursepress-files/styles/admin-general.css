@@ -919,6 +919,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .section {
   padding: 10px 20px 20px;
 }
+.tab-content .unit-builder-content .section.mode-output {
+  padding: 0;
+}
 .tab-content .unit-builder-content .section.unit-builder-components {
   border-bottom: 1px solid #e1e1e1;
 }
@@ -959,6 +962,27 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .tab-content .unit-builder-content .unit-buttons .button.unit-delete-button:hover {
   background: #be4251;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-module-button {
+  margin: 10px;
+  background: none;
+  color: #be4251;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-module-button:hover {
+  background: #be4251;
+  color: #ffffff;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-page-button {
+  float: right;
+  background: none;
+  color: #be4251;
+}
+.tab-content .unit-builder-content .unit-buttons .button.unit-delete-page-button:hover {
+  background: #be4251;
+  color: #ffffff;
+}
+.tab-content .unit-builder-content .unit-buttons .hidden {
+  display: none;
 }
 .tab-content .unit-builder-content .unit-builder-header {
   background: #0074A2;
@@ -1025,6 +1049,25 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .unit-builder-pager ul li:hover, .tab-content .unit-builder-content .unit-builder-pager ul li.active {
   background: #0074A2;
   color: #ffffff;
+}
+.tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable {
+  background: #555;
+  border-width: 2px;
+  border-style: dashed;
+  width: 50px;
+  height: 50px;
+  color: #ffffff;
+  opacity: 0.7;
+}
+.tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable.active {
+  background: #0074A2;
+}
+.tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable:before,
+.tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable:after {
+  display: none;
+}
+.tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable-hover {
+  opacity: 1;
 }
 .tab-content .unit-builder-content .input-element, .tab-content .unit-builder-content .output-element {
   cursor: pointer;

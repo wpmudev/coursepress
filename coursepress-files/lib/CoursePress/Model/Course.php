@@ -649,6 +649,7 @@ class CoursePress_Model_Course {
 	public static function filter_unit_module_where( $sql ) {
 		global $wpdb;
 
+		/* @todo build in post type prefixing */
 		$sql = 'AND ( %1$s.post_type = \'module\' AND %1$s.post_parent IN (SELECT ID FROM %1$s AS wpp WHERE wpp.post_type = \'unit\' AND wpp.post_parent = %2$d) OR (%1$s.post_type = \'unit\' AND %1$s.post_parent = %2$d ) ) ' . self::$where_post_status;
 		$sql = $wpdb->prepare( $sql, $wpdb->posts, self::$last_course_id );
 

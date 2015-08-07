@@ -67,6 +67,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery-effects-core',
 				'jquery-ui-datepicker',
 				'jquery-ui-spinner',
+				'jquery-ui-droppable',
 				'backbone',
 			), CoursePress_Core::$version );
 
@@ -101,6 +102,7 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_module_types']  = CoursePress_Helper_UI_Module::get_types();
 			$localize_array['unit_builder_module_labels'] = CoursePress_Helper_UI_Module::get_labels();
 			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', CoursePress::TD );
+			$localize_array['unit_builder_delete_page_confirm'] = __( 'Please confirm that you want to remove this page. All modules will be moved to the first available page (or you can drop them on other pages first before deleting this page).', CoursePress::TD );
 			$localize_array['unit_builder_delete_unit_confirm'] = __( 'Please confirm that you want to remove this unit and all its modules and student responses.', CoursePress::TD );
 		}
 
