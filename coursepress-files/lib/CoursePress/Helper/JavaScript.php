@@ -104,6 +104,8 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', CoursePress::TD );
 			$localize_array['unit_builder_delete_page_confirm'] = __( 'Please confirm that you want to remove this page. All modules will be moved to the first available page (or you can drop them on other pages first before deleting this page).', CoursePress::TD );
 			$localize_array['unit_builder_delete_unit_confirm'] = __( 'Please confirm that you want to remove this unit and all its modules and student responses.', CoursePress::TD );
+			$localize_array['unit_builder_new_unit_title'] = __( 'Untitled Unit', CoursePress::TD );
+
 		}
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );

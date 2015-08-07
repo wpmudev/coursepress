@@ -29,7 +29,9 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				<script type="text/template" id="unit-builder-template">
 				  <div class="tab-container vertical unit-builder-container">
 				  	<div class="tab-tabs unit-builder-tabs">
-						<div id="sticky-wrapper" class="sticky-wrapper">
+						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
+							<div class="tabs"></div>
+							<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', CoursePress::TD ) . '</div></div>
 						</div>
 					</div>
 					<div class="tab-content tab-content-vertical unit-builder-content">
@@ -41,7 +43,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_tab'                 => '
 				<script type="text/template" id="unit-builder-tab-template">
-				  <li class="coursepress-ub-tab <%= unit_live_class %> <%= unit_active_class %>" data-tab="<%= unit_id %>"><a><%= unit_title %></a></li>
+				  <li class="coursepress-ub-tab <%= unit_live_class %> <%= unit_active_class %>" data-tab="<%= unit_id %>" data-order="<%= unit_order %>" data-cid="<%= unit_cid %>"><span><%= unit_title %></span></li>
 				</script>
 			',
 			'unit_builder_header'              => '
@@ -217,15 +219,24 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						unset( $unit['post_modified'] );
 						unset( $unit['post_modified_gmt'] );
 
+						$new_unit = false;
 						$unit_id = isset( $unit['ID'] ) ? (int) $unit['ID'] : 0;
 						if ( 0 === $unit_id ) {
 							unset( $unit['ID'] );
+							$new_unit = true;
 						}
 
 						$update = isset( $unit['flag'] ) && 'dirty' === $unit['flag'];
 						unset( $unit['flag'] );
 
 						if ( $update ) {
+
+							$course_id = (int) $_REQUEST['course_id'];
+							$unit['post_type'] = 'unit';
+							$unit['post_parent'] = $course_id;
+							if( $new_unit ) {
+								$unit['post_status'] = 'draft';
+							}
 
 							$meta = ! empty( $unit['meta'] ) ? $unit['meta'] : array();
 							unset( $unit['meta'] );
@@ -286,8 +297,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						unset( $module['post_modified'] );
 						unset( $module['post_modified_gmt'] );
 
+						$new_module = false;
 						$module_id = isset( $module['ID'] ) ? (int) $module['ID'] : 0;
 						if ( 0 === $module_id ) {
+							$new_module = true;
 							unset( $module['ID'] );
 						}
 

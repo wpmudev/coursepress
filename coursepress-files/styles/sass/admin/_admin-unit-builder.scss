@@ -40,9 +40,21 @@
   border: 1px solid #bb7615;
 }
 
-.tab-tabs ul li.coursepress-ub-tab a, .tab-tabs ul li.coursepress-ub-tab a:visited {
+.tab-tabs ul li.coursepress-ub-tab span {
   padding: 8px 24px 8px 8px;
   font-weight: bold;
+  display:block;
+}
+
+.tab-tabs {
+
+  .button.button-add-new-unit {
+    display: block;
+    margin: 30px auto 0 auto;
+    text-align: center;
+    width: 170px;
+  }
+
 }
 
 .tab-content {
