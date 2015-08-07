@@ -184,6 +184,18 @@ var CoursePress = CoursePress || {};
             }
         } );
 
+        // ===== DATE PICKERS =====
+        $( '.dateinput' ).datepicker( {
+            dateFormat: 'yy-mm-dd'
+            //firstDay: coursepress.start_of_week
+        } );
+        $( '.date' ).off( 'click' );
+        $( '.date' ).on( 'click', function ( event ) {
+            //if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {
+                $( this ).find( '.dateinput' ).datepicker( "show" );
+            //}
+        } );
+
     }
 
     CoursePress.Helpers.Module.save_unit = function ( e ) {

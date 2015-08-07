@@ -585,6 +585,7 @@ class CoursePress_Model_Course {
 
 		foreach( $query->posts as $post ) {
 			if( 'module' == $post->post_type ) {
+				$post->module_order = get_post_meta( $post->ID, 'module_order', true );
 				$pages = get_post_meta( $post->post_parent, 'page_title', true );
 				$page = get_post_meta( $post->ID, 'module_page', true );
 				$page = ! empty( $page ) ? $page : 1;
@@ -596,7 +597,7 @@ class CoursePress_Model_Course {
 				$path = $post->post_parent . '/pages/' . $page . '/modules/' . $post->ID;
 				CoursePress_Helper_Utility::set_array_val( $combine, $path, $post );
 			} elseif( 'unit' == $post->post_type ) {
-
+				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );
 			}
 		}

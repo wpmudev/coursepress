@@ -57,7 +57,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<label for="unit_availability">Unit Availability</label>
-					<input id="dp1437965877649" class="dateinput hasDatepicker" type="text" value="<%= unit_availability %>" name="meta_unit_availability" spellcheck="true">
+					<div class="date"><input id="dpunitavailability" class="dateinput" type="text" value="<%= unit_availability %>" name="meta_unit_availability" spellcheck="true"></div>
 					<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %>><span>User needs to <strong><em>answer</em></strong>all mandatory assessments and view all pages in order to access the next unit</span></label>
 					<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="meta_force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>User also needs to <strong><em>pass</em></strong>all mandatory assessments</span></label>
 				</div>

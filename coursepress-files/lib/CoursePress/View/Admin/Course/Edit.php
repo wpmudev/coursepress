@@ -354,6 +354,7 @@ class CoursePress_View_Admin_Course_Edit {
 							<tbody>';
 
 		$units = CoursePress_Model_Course::get_units_with_modules( $course_id, array( 'publish', 'draft' ) );
+		$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
 
 		$count           = 0;
 		$visible_units   = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() );
@@ -362,6 +363,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$preview_pages   = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() );
 		$visible_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_modules', array() );
 		$preview_modules = CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_modules', array() );
+
 		foreach ( $units as $unit ) {
 
 			$estimations = CoursePress_Model_Unit::get_time_estimation( $unit['unit']->ID, $units );
@@ -383,6 +385,9 @@ class CoursePress_View_Admin_Course_Edit {
 			';
 
 			$unit_parent = $count;
+			if( ! isset( $unit['pages'] ) ) {
+				$unit['pages'] = array();
+			}
 			foreach ( $unit['pages'] as $key => $page ) {
 				$count += 1;
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', CoursePress::TD ), $key );
@@ -402,6 +407,9 @@ class CoursePress_View_Admin_Course_Edit {
 				';
 
 				$page_parent = $count;
+
+				$page['modules'] = CoursePress_Helper_Utility::sort_on_object_key( $page['modules'], 'module_order' );
+
 				foreach ( $page['modules'] as $module ) {
 					$count += 1;
 					$alt          = $count % 2 ? 'even' : 'odd';

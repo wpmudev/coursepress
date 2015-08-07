@@ -197,6 +197,19 @@
         float: right;
       }
 
+      .date {
+        position: relative;
+      }
+      .date:after {
+        bottom: 6px;
+        color: #c9c9c9;
+        content: "\f508";
+        font: 17px/17px dashicons;
+        position: absolute;
+        left: 165px;
+        z-index: 1;
+      }
+
     }
 
     .unit-builder-pager {

@@ -48,6 +48,42 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
+	// Sort multi-dimension arrays on 'order' value.
+	public static function sort_on_object_key( $array, $sort_key, $sort_asc = true ) {
+		self::$sort_key = $sort_key;
+
+		if ( $sort_asc === false ) {
+			uasort( $array, array( __CLASS__, 'sort_obj_desc' ) );
+		} else {
+			uasort( $array, array( __CLASS__, 'sort_obj_asc' ) );
+		}
+
+		return $array;
+	}
+
+	// uasort callback to sort ascending
+	public static function sort_obj_asc( $x, $y ) {
+		if ( $x->{self::$sort_key} == $y->{self::$sort_key} ) {
+			return 0;
+		} else if ( $x->{self::$sort_key} < $y->{self::$sort_key} ) {
+			return - 1;
+		} else {
+			return 1;
+		}
+	}
+
+	// uasort callback to sort descending
+	public static function sort_obj_desc( $x, $y ) {
+		if ( $x->{self::$sort_key} == $y->{self::$sort_key} ) {
+			return 0;
+		} else if ( $x->{self::$sort_key} > $y->{self::$sort_key} ) {
+			return - 1;
+		} else {
+			return 1;
+		}
+	}
+
+
 	// set array value based on path
 	public static function set_array_val( &$a, $path, $value ) {
 		if ( ! is_array( $path ) ) {
@@ -156,8 +192,8 @@ class CoursePress_Helper_Utility {
 
 	public static function sanitize_recursive( $array ) {
 
-		if( ! is_array( $array ) ) {
-			if( is_string( $array ) ) {
+		if ( ! is_array( $array ) ) {
+			if ( is_string( $array ) ) {
 				return self::filter_content( $array );
 			} else {
 				// Lets not mess with booleans
@@ -165,7 +201,7 @@ class CoursePress_Helper_Utility {
 			}
 		} else {
 
-			foreach( $array as $key => $value ) {
+			foreach ( $array as $key => $value ) {
 				$array[ $key ] = self::sanitize_recursive( $value );
 			}
 
@@ -177,14 +213,14 @@ class CoursePress_Helper_Utility {
 	// Deals with legacy 'on' / 'off' values for checkboxes
 	public static function checked( $value, $compare = true, $echo = false ) {
 		$checked = false;
-		if( $compare === true ) {
-			$checked =  ( ! empty( $value ) && 'off' !== $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
+		if ( $compare === true ) {
+			$checked = ( ! empty( $value ) && 'off' !== $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
 		} else {
 			$checked = $compare === $value ? 'checked="checked"' : '';
 
 		}
 
-		if( $echo ) {
+		if ( $echo ) {
 			echo $checked;
 		} else {
 			return $checked;
@@ -249,14 +285,14 @@ class CoursePress_Helper_Utility {
 
 	public static function send_email( $args ) {
 
-		if( ! isset( $args['email_type'] ) ) {
+		if ( ! isset( $args['email_type'] ) ) {
 			return;
 		}
 
 		// Filtered fields
 		$email = apply_filters( 'coursepress_email_fields', array(
 
-			'email' => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ) , $args ),
+			'email'   => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ), $args ),
 			'subject' => apply_filters( 'coursepress_email_subject', 'FILTER EMAIL SUBJECT', $args ),
 			'message' => apply_filters( 'coursepress_email_message', 'FILTER EMAIL MESSAGE', $args ),
 
@@ -265,7 +301,7 @@ class CoursePress_Helper_Utility {
 		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
 		do_action( 'coursepress_email_pre_send', $args );
 
-		if( apply_filters( 'coursepress_email_strip_slashed', true, $args ) ) {
+		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args ) ) {
 			$email['subject'] = stripslashes( $email['subject'] );
 			$email['message'] = stripslashes( nl2br( $email['message'] ) );
 		}
@@ -275,7 +311,7 @@ class CoursePress_Helper_Utility {
 		), $args );
 
 		$header_string = '';
-		foreach( $headers as $key => $value ) {
+		foreach ( $headers as $key => $value ) {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
@@ -302,10 +338,11 @@ class CoursePress_Helper_Utility {
 	public static function send_bb_json( $response ) {
 		@header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 		echo json_encode( $response );
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_die();
-		else
+		} else {
 			die;
+		}
 	}
 
 	public static function attachment_model_ajax() {
@@ -332,13 +369,13 @@ class CoursePress_Helper_Utility {
 
 		self::$image_url = preg_replace( '/http:\/\/(\w|\.)*\//', '', $url );
 
-		$args = array(
+		$args  = array(
 			'post_status' => 'any',
 			'post_type'   => 'attachment'
 		);
 		$query = new WP_Query( $args );
 
-		if( ! empty( $query )) {
+		if ( ! empty( $query ) ) {
 			$attachment = $query->posts;
 			$attachment = ! empty( $attachment ) ? $attachment[0] : false;
 		}

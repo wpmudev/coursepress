@@ -53,6 +53,9 @@ class CoursePress_Model_Unit {
 		$unit_minutes = 0;
 		$unit_seconds = 0;
 
+		if( ! isset( $data[ $unit_id ]['pages'] ) ) {
+			$data[ $unit_id ]['pages'] = array();
+		}
 		foreach( $data[ $unit_id ]['pages'] as $page_id => $page ) {
 
 			$page_hours = 0;

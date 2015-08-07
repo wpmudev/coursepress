@@ -1009,6 +1009,18 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .unit-builder-header .unit-state {
   float: right;
 }
+.tab-content .unit-builder-content .unit-builder-header .date {
+  position: relative;
+}
+.tab-content .unit-builder-content .unit-builder-header .date:after {
+  bottom: 6px;
+  color: #c9c9c9;
+  content: "\f508";
+  font: 17px/17px dashicons;
+  position: absolute;
+  left: 165px;
+  z-index: 1;
+}
 .tab-content .unit-builder-content .unit-builder-pager {
   background: #F1F1F1;
   padding: 3px 20px 8px 20px;
