@@ -941,32 +941,11 @@ class CoursePress_View_Admin_Course_Edit {
 
 
 	private static function render_tab_units() {
-
-		$content = '';
-
-		//$units = CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] );
-		////error_log( print_r( CoursePress_Model_Course::get_unit_ids( (int) $_GET['id'] ), true ) );
-		//
-		//$first_unit = ! empty( $units ) && is_array( $units ) ? $units[0] : false;
-		//
-		//$unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : $first_unit;
-		//
-		//$titles = array();
-		//foreach ( $units as $unit ) {
-		//	$titles[ $unit ] = get_the_title( $unit );
-		//}
-		//
-		//$unit = get_post( $unit_id );
-		//
-		//$content = var_dump( $titles );
-		//
-		//$content .= $unit->post_content;
-
 		return CoursePress_View_Admin_Course_UnitBuilder::render();
 	}
 
 	private static function render_tab_students() {
-		return "Students";
+		return CoursePress_View_Admin_Course_Students::render();
 	}
 
 

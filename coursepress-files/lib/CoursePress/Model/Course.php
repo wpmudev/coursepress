@@ -548,7 +548,7 @@ class CoursePress_Model_Course {
 	public static function get_listing_image( $course_id ) {
 		$url = CoursePress_Model_Course::get_setting( $course_id, 'listing_image' );
 		$url = empty( $url ) ? get_post_meta( $course_id, '_thumbnail_id', true ) : $url;
-
+		error_log( print_r( $url, true ) );
 		return apply_filters( 'coursepress_course_listing_image', $url, $course_id );
 	}
 
