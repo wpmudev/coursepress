@@ -310,6 +310,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				add_action( 'wp_ajax_remove_course_instructor', array( &$this, 'remove_course_instructor' ) );
 
+				add_action( 'wp_ajax_update_unit', array( &$this, 'update_unit' ) );
+
 				/**
 				 * Add instructor MD5 as meta.
 				 *
@@ -4076,6 +4078,31 @@ if ( !class_exists( 'CoursePress' ) ) {
 			ob_end_flush();
 		}
 
+		function update_unit() {
+			global $user_id;
+
+			if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_unit' ) {
+
+				if ( wp_verify_nonce( $_REQUEST[ '_wpnonce' ], 'unit_details_overview_' . $user_id ) ) {
+
+					$unit = new Unit( $_POST[ 'unit_id' ] );
+
+					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_unit_cap' ) || current_user_can( 'coursepress_update_course_unit_cap' ) || current_user_can( 'coursepress_update_my_course_unit_cap' ) || current_user_can( 'coursepress_update_all_courses_unit_cap' ) ) {
+						$new_post_id = $unit->update_unit( isset( $_POST[ 'unit_id' ] ) ? $_POST[ 'unit_id' ] : 0  );
+					}
+
+					if ( isset( $_POST[ 'unit_state' ] ) ) {
+						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_course_unit_status_cap' ) || current_user_can( 'coursepress_change_my_course_unit_status_cap' ) || current_user_can( 'coursepress_change_all_courses_unit_status_cap' ) ) {
+							$unit = new Unit( $new_post_id );
+							$unit->change_status( $_POST[ 'unit_state' ] );
+						}
+					}
+				}
+
+				echo 'RESPONSE!';
+			}
+		}
+
 		function remove_course_instructor() {
 
 			$instructor_id	 = (int) $_POST[ 'instructor_id' ];
@@ -4928,6 +4955,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			wp_localize_script( 'courses-units', 'coursepress_units', array(
+				'admin_ajax_url'				 => admin_url( 'admin-ajax.php' ),
 				'withdraw_class_alert'			 => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
 				'delete_class'					 => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp' ),
 				'setup_gateway'					 => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp' ),

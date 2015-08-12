@@ -1,5 +1,41 @@
 jQuery( document ).ready( function( $ ) {
 
+    /*if ( $( '#cp-unit-details-holder' ).length ) {
+
+        setInterval( function() {
+            cp_submit_unit_data();
+        }, 10000 );
+
+        $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).live( 'change',
+            function() {
+                var par = $( this ).parent().closest( '.module-content' );
+                var par_id = $( par ).attr( 'id' );
+                $( '#' + par_id + ' input, #' + par_id + ' select, #' + par_id + ' textarea' ).each( function() {
+                    var $t = $( this );
+                    $t.attr( {
+                        name: $t.attr( 'noname' ),
+                    } )
+                        .removeAttr( 'noname' );
+                } );
+            }
+        );
+
+    }*/
+
+    /*function cp_submit_unit_data() {
+        var data = $( '#unit-add' ).serialize();
+        $.post( coursepress_units.admin_ajax_url, data );
+
+        $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).each( function() {
+            var $t = $( this );
+            $t.attr( {
+                noname: $t.attr( 'name' ),
+            } )
+                .removeAttr( 'name' );
+        } );
+
+    }*/
+
     $( ".grade_spinner" ).spinner( {
         min: 1,
         max: 100,
