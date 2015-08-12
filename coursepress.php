@@ -5885,7 +5885,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			foreach ( $items as $item ) {
 				$course_id = get_post_meta( $item[ 'product_id' ], 'cp_course_id', true );
-				$student->enroll_in_course( $course_id );
+				if ( !empty( $course_id ) )
+					$student->enroll_in_course( $course_id );
 			}
 		}
 
