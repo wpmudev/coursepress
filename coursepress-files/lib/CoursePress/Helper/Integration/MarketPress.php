@@ -28,6 +28,8 @@ class CoursePress_Helper_Integration_MarketPress {
 		// If for whatever reason the course gets updated in MarketPress, reflect those changes in the course
 		add_action( 'post_updated', array( __CLASS__, 'update_course_from_product' ), 10, 3 );
 
+		add_filter( 'coursepress_shortcode_course_cost', array( __CLASS__, 'shortcode_cost' ), 10, 2 );
+
 	}
 
 
@@ -253,6 +255,13 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	}
 
+	public static function shortcode_cost( $content, $course_id ) {
+
+		$product_id = CoursePress_Model_Course::get_setting( $course_id, 'mp_product_id', false );
+
+		return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
+
+	}
 
 
 }

@@ -67,7 +67,7 @@ var CoursePress = CoursePress || {};
     }
 
     CoursePress.Course.fix_step_checkboxes = function ( items, step, false_value ) {
-        return CoursePress.utility.fix_checkboxes( items, '.step-content.step-' + step , false_value );
+        return CoursePress.utility.fix_checkboxes( items, '.step-content.step-' + step, false_value );
     }
 
     CoursePress.Course.get_step = function ( step, action_type ) {
@@ -79,6 +79,7 @@ var CoursePress = CoursePress || {};
         var data = {};
 
         data.step = step;
+        data.is_finished = false;
 
         // Step 1 Data
         if ( 1 <= step ) {
@@ -145,6 +146,7 @@ var CoursePress = CoursePress || {};
         }
         if ( 'finish' === action_type ) {
             data.meta_setup_marker = step;
+            data.is_finished = true;
         }
 
         data.nonce = get_setup_nonce();
@@ -258,6 +260,7 @@ var CoursePress = CoursePress || {};
         // Setup Chosen
         //$( ".chosen-select" ).chosen( { disable_search_threshold: 10 } );
         $( ".chosen-select.medium" ).chosen( { disable_search_threshold: 5, width: "40%" } );
+        $( ".chosen-select.narrow" ).chosen( { disable_search_threshold: 5, width: "20%" } );
 
         // Tree for course structure
         $( "table.course-structure-tree" ).treegrid( { initialState: 'expanded' } );
@@ -525,6 +528,111 @@ var CoursePress = CoursePress || {};
 
         } );
 
+
+        // Enroll New Student "Add Student" button
+        $( '.add-new-student-button' ).on( 'click', function ( e ) {
+
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            var nonce = $( this ).attr( 'data-nonce' );
+
+            CoursePress.Course.set( 'action', 'enroll_student' );
+            var data = {
+                nonce: nonce,
+                course_id: _coursepress.course_id,
+                student_id: $( '#student-add' ).val()
+            };
+
+            CoursePress.Course.set( 'data', data );
+            CoursePress.Course.save();
+
+        } );
+
+
+        // Delete/Withdraw Student
+        $( 'a.withdraw-student' ).on( 'click', function ( e ) {
+            if ( confirm( _coursepress.student_delete_confirm ) ) {
+                CoursePress.Course.set( 'action', 'withdraw_student' );
+                var data = {
+                    student_id: $( this ).attr( 'data-id' ),
+                    course_id: _coursepress.course_id,
+                    nonce: $( this ).attr( 'data-nonce' )
+                };
+                CoursePress.Course.set( 'data', data );
+                CoursePress.Course.save();
+            }
+        } );
+
+        // Delete/Withdraw ALL Students
+        $( 'a.withdraw-all-students' ).on( 'click', function ( e ) {
+            if ( confirm( _coursepress.student_delete_all_confirm ) ) {
+                CoursePress.Course.set( 'action', 'withdraw_all_students' );
+                var data = {
+                    course_id: _coursepress.course_id,
+                    nonce: $( this ).attr( 'data-nonce' )
+                };
+                CoursePress.Course.set( 'data', data );
+                CoursePress.Course.save();
+            }
+        } );
+
+
+        // INSTRUCTOR INVITATIONS
+        // Submit Invite on 'Return/Enter'
+        $( '.coursepress_course_invite_student_wrapper input' ).keypress( function ( event ) {
+            if ( event.which == 13 ) {
+                switch ( $( this ).attr( 'name' ) ) {
+
+                    case "invite-firstname":
+                        $( '[name=invite-lastname]' ).trigger( 'focus' );
+                        break;
+                    case "invite-lastname":
+                        $( '[name=invite-email]' ).trigger( 'focus' );
+                        break;
+                    case "invite-email":
+                    case ".coursepress_course_invite_student_wrapper .invite-submit":
+                        $( '.coursepress_course_invite_student_wrapper .invite-submit' ).trigger( 'click' );
+                        $( '[name=invite-firstname]' ).trigger( 'focus' );
+                        break;
+                }
+                event.preventDefault();
+            }
+        } );
+
+        $( '.coursepress_course_invite_student_wrapper .invite-submit' ).on( 'click', function ( e ) {
+
+            // Really basic validation
+            var email = $( '[name=invite-email]' ).val();
+            var first_name = $( '[name=invite-firstname]' ).val();
+            var last_name = $( '[name=invite-lastname]' ).val();
+
+            var email_valid = email.match( _coursepress.email_validation_pattern ) !== null
+
+            if ( email_valid ) {
+
+                $( '.coursepress_course_invite_student_wrapper .invite-submit' ).prepend( '<i class="fa fa-spinner fa-spin invite-progress"></i> ' );
+
+                CoursePress.Course.set( 'action', 'invite_student' );
+                var data = {
+                    first_name: first_name,
+                    last_name: last_name,
+                    email: email,
+                    course_id: _coursepress.course_id,
+                    nonce: $( this ).attr( 'data-nonce' )
+                };
+                CoursePress.Course.set( 'data', data );
+                CoursePress.Course.save();
+
+            } else {
+            }
+
+            $( '[name=invite-email]' ).val( '' );
+            $( '[name=invite-firstname]' ).val( '' );
+            $( '[name=invite-lastname]' ).val( '' );
+
+        } );
+
     }
 
     /**
@@ -547,7 +655,11 @@ var CoursePress = CoursePress || {};
                 // Confirm before deleting
                 if ( confirm( _coursepress.instructor_delete_confirm ) ) {
                     CoursePress.Course.set( 'action', 'delete_instructor' );
-                    var data = { instructor_id: instructor_id, course_id: _coursepress.course_id, nonce: get_setup_nonce() };
+                    var data = {
+                        instructor_id: instructor_id,
+                        course_id: _coursepress.course_id,
+                        nonce: get_setup_nonce()
+                    };
                     CoursePress.Course.set( 'data', data );
                     CoursePress.Course.save();
                 }
@@ -557,7 +669,11 @@ var CoursePress = CoursePress || {};
                 // Confirm before deleting
                 if ( confirm( _coursepress.instructor_delete_invite_confirm ) ) {
                     CoursePress.Course.set( 'action', 'delete_instructor_invite' );
-                    var data = { invite_code: invite_code, course_id: _coursepress.course_id, nonce: get_setup_nonce() };
+                    var data = {
+                        invite_code: invite_code,
+                        course_id: _coursepress.course_id,
+                        nonce: get_setup_nonce()
+                    };
                     CoursePress.Course.set( 'data', data );
                     CoursePress.Course.save();
                 }
@@ -569,14 +685,14 @@ var CoursePress = CoursePress || {};
 
     function update_nonce( data ) {
 
-        if( data.nonce ) {
-            $('#course-setup-steps' ).attr('data-nonce', data.nonce );
+        if ( data.nonce ) {
+            $( '#course-setup-steps' ).attr( 'data-nonce', data.nonce );
         }
 
     }
 
     function get_setup_nonce() {
-        return $('#course-setup-steps' ).attr('data-nonce');
+        return $( '#course-setup-steps' ).attr( 'data-nonce' );
     }
 
     function bind_coursepress_events() {
@@ -587,6 +703,7 @@ var CoursePress = CoursePress || {};
          */
         CoursePress.Course.on( 'coursepress:update_course_success', function ( data ) {
 
+
             $( '.step-title.step-' + data.last_step ).find( '.status' ).addClass( 'saved' );
             $( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-error' );
             $( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-attention' );
@@ -595,7 +712,25 @@ var CoursePress = CoursePress || {};
                 $( '.step-title.step-' + data.next_step ).click();
             }
 
+            $( '[name="course_id"]' ).val( data.course_id );
+            _coursepress.course_id = data.course_id;
+
             update_nonce( data );
+
+            console.log( data );
+            if( data.redirect ) {
+                var dest = location.href.replace('&tab=setup','')
+
+                if( ! /\&id/.test( dest ) ) {
+                    dest += '&id=' + data.course_id;
+                }
+                if( ! /\&action=edit/.test( dest ) ) {
+                    dest += '&action=edit';
+                }
+
+                location.href = dest + '&tab=units';
+            }
+
         } );
 
         CoursePress.Course.on( 'coursepress:update_course_error', function ( data ) {
@@ -615,6 +750,7 @@ var CoursePress = CoursePress || {};
 
             var remove_buttons = true; // permission required
             var content = '';
+            console.log( data );
             if ( remove_buttons ) {
                 content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + _coursepress.instructor_avatars[ data.instructor_id ] + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
             } else {
@@ -711,6 +847,25 @@ var CoursePress = CoursePress || {};
             }
 
 
+        } );
+
+        CoursePress.Course.on( 'coursepress:enroll_student_success', function ( data ) {
+            location.reload();
+        } );
+        CoursePress.Course.on( 'coursepress:withdraw_student_success', function ( data ) {
+            location.reload();
+        } );
+        CoursePress.Course.on( 'coursepress:withdraw_all_students_success', function ( data ) {
+            location.reload();
+        } );
+
+
+        CoursePress.Course.on( 'coursepress:invite_student_success', function ( data ) {
+            $( '.invite-progress' ).detach();
+            $( '.coursepress_course_invite_student_wrapper .invite-submit' ).attr( 'data-nonce', data.nonce );
+        } );
+        CoursePress.Course.on( 'coursepress:invite_student_error', function ( data ) {
+            $( '.invite-progress' ).detach();
         } );
 
 

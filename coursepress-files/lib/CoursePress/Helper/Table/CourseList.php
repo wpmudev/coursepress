@@ -74,9 +74,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
 			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', CoursePress::TD ) ),
 			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', CoursePress::TD ) ),
-			'view_course' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_course', absint( $item->ID ), __( 'View Course', CoursePress::TD ) ),
-			'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', CoursePress::TD ) ),
-			'duplicate' => sprintf( '<a href="?page=%s&action=%s&id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'duplicate_course', absint( $item->ID ), $duplicate_nonce, __( 'Duplicate Course', CoursePress::TD ) ),
+			'view_course' => sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', CoursePress::TD ) ),
+			//'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', CoursePress::TD ) ),
+			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', CoursePress::TD ) ),
 		];
 
 		return $title . $this->row_actions( $actions );
@@ -117,15 +117,36 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	}
 
 	public function column_students( $item ) {
-		return 2;
+		return CoursePress_Model_Course::count_students( $item->ID );
 	}
 
 	public function column_status( $item ) {
-		return '<strong>Meh</strong>';
+
+		// Publish Course Toggle
+		$course_id = $item->ID;
+		$status = get_post_status( $course_id );
+		$ui = array(
+			'label' => '',
+			'left' => '<i class="fa fa-ban"></i>',
+			'left_class' => 'red',
+			'right' => '<i class="fa fa-check"></i>',
+			'right_class' => 'green',
+			'state' => 'publish' === $status ? 'on' : 'off',
+			'data' => array(
+				'nonce' => wp_create_nonce( 'publish-course' ),
+			)
+		);
+		$ui['class'] = 'course-' . $course_id;
+		$publish_toggle = !empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle-' . $course_id, 'publish-course-toggle-' . $course_id, $ui ) : '';
+
+		return $publish_toggle;
 	}
 
 	public function column_actions( $item ) {
-		return '<em>Yawn</em>';
+		$delete_nonce = wp_create_nonce( 'delete_course' );
+		return sprintf(
+			'<a data-id="%s" data-nonce="%s" class="delete-course-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce
+		);
 	}
 
 	public function column_default( $item, $column_name ) {
@@ -173,6 +194,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'offset'         => $offset,
 			's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		);
+
+
 
 		// @todo: Add permissions
 
@@ -312,5 +335,6 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	</div>
 	<?php
 	}
+
 
 }

@@ -27,7 +27,7 @@ class CoursePress_Upgrade {
 		//$settings = get_option( 'coursepress_settings', array() );
 		//error_log( print_r( CoursePress_Core::get_network_setting('general/version'), true ) );
 
-		return false;
+		//return false;
 
 		/**
 		 * Upgrade blog options
@@ -61,7 +61,6 @@ class CoursePress_Upgrade {
 		CoursePress_Helper_Utility::set_array_val( $settings, 'slugs/inbox', get_option( 'coursepress_inbox_slug', 'student-inbox' ) );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'slugs/sent_messages', get_option( 'coursepress_sent_messages_slug', 'student-sent-messages' ) );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'slugs/new_messages', get_option( 'coursepress_new_message_slug', 'student-new-message' ) );
-		CoursePress_Helper_Utility::set_array_val( $settings, 'slugs/enrollment', get_option( 'enrollment_process_slug', 'enrollment-process' ) );
 
 		// Pages
 		CoursePress_Helper_Utility::set_array_val( $settings, 'pages/enrollment', get_option( 'coursepress_enrollment_process_page', 0 ) );

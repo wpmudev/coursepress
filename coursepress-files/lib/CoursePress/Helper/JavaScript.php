@@ -9,19 +9,20 @@ class CoursePress_Helper_JavaScript {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
 
 		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
-		//add_action( 'wp_footer', array( __CLASS__, 'enqueue_scripts' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'enqueue_front_scripts' ) );
 
 	}
 
 
 	public static function enqueue_admin_scripts() {
 		// Enqueue needed scripts for UI
+
 		wp_enqueue_media();
 	}
 
 	public static function enqueue_scripts() {
 
-		$valid_pages = array( 'coursepress_settings', 'coursepress_course' );
+		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress' );
 
 		if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
 			return;
@@ -60,7 +61,6 @@ class CoursePress_Helper_JavaScript {
 		/** COURSEPRESS_COURSE */
 		if ( 'coursepress_course' === $_GET['page'] ) {
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/Course.js';
-
 			wp_enqueue_script( 'coursepress_course', $script, array(
 				'jquery-ui-accordion',
 				'jquery-effects-highlight',
@@ -83,6 +83,8 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['instructor_empty_message']         = __( 'Please Assign Instructor', CoursePress::TD );
 			$localize_array['instructor_pednding_status']       = __( 'Pending', CoursePress::TD );
 			$localize_array['email_validation_pattern']         = __( '.+@.+', CoursePress::TD );
+			$localize_array['student_delete_confirm']        = __( 'Please confirm that you want to remove the student from this course.', CoursePress::TD );
+			$localize_array['student_delete_all_confirm']        = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', CoursePress::TD );
 
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
@@ -108,7 +110,44 @@ class CoursePress_Helper_JavaScript {
 
 		}
 
+		/** COURSE LIST */
+		if ( 'coursepress' === $_GET['page'] ) {
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/CourseList.js';
+			wp_enqueue_script( 'coursepress_course_list', $script, array(
+				'jquery-ui-accordion',
+				'jquery-effects-highlight',
+				'jquery-effects-core',
+				'jquery-ui-datepicker',
+				'jquery-ui-spinner',
+				'jquery-ui-droppable',
+				'backbone',
+			), CoursePress_Core::$version );
+
+			$localize_array['courselist_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected courses. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
+			$localize_array['courselist_delete_course'] = __( 'Please confirm that you want to delete this courses. Warning: This cannot be undone.', CoursePress::TD );
+			$localize_array['courselist_duplicate_course'] = __( 'Are you sure you want to create a duplicate copy of this course?', CoursePress::TD );
+		}
+
+
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
+
+	}
+
+	public static function enqueue_front_scripts() {
+		global $wp_query;
+
+		$post_type = get_post_type();
+		if ( ! empty( $post_type ) && $post_type === 'course' ) {
+
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressFront.js';
+
+			wp_enqueue_script( 'coursepress_object', $script, array(
+				'jquery'
+			), CoursePress_Core::$version );
+
+		}
+
+
 
 	}
 

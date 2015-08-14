@@ -7,6 +7,9 @@ class CoursePress_Model_Course {
 	public static $messages;
 	private static $last_course_id = 0;
 	private static $where_post_status;
+	private static $email_type;
+	public static $last_course_category = '';
+	public static $last_course_subpage = '';
 
 	public static function get_format() {
 
@@ -180,7 +183,6 @@ class CoursePress_Model_Course {
 
 				// Set fields based on meta_ name prefix
 				if ( preg_match( "/meta_/i", $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
-					//error_log( 'meh: ' . $key );
 					self::set_setting( $settings, str_replace( 'meta_', '', $key ), CoursePress_Helper_Utility::filter_content( $value ) );
 				}
 
@@ -213,33 +215,39 @@ class CoursePress_Model_Course {
 				//Add featured image
 				if ( 'meta_listing_image' == $key ) {
 
-					$course_image_width  = CoursePress_Core::get_setting( 'course/image_width', 235 );
-					$course_image_height = CoursePress_Core::get_setting( 'course/image_height', 225 );
+					// Legacy, breaks theme support
 
-					$upload_dir_info = wp_upload_dir();
+					//$course_image_width  = CoursePress_Core::get_setting( 'course/image_width', 235 );
+					//$course_image_height = CoursePress_Core::get_setting( 'course/image_height', 225 );
+					//
+					//$upload_dir_info = wp_upload_dir();
+					//
+					//$fl = trailingslashit( $upload_dir_info['path'] ) . basename( $value );
+					//
+					//$image = wp_get_image_editor( $fl ); // Return an implementation that extends <tt>WP_Image_Editor</tt>
+					//
+					//if ( ! is_wp_error( $image ) ) {
+					//
+					//	$image_size = $image->get_size();
+					//
+					//	if ( ( $image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height ) || ( $image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height ) ) {
+					//		// legacy
+					//		update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value ) );
+					//	} else {
+					//		$ext           = pathinfo( $fl, PATHINFO_EXTENSION );
+					//		$new_file_name = str_replace( '.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename( $value ) );
+					//		$new_file_path = str_replace( basename( $value ), $new_file_name, $value );
+					//		// legacy
+					//		update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $new_file_path ) );
+					//	}
+					//} else {
+					//	// legacy
+					//	update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value, true ) );
+					//}
 
-					$fl = trailingslashit( $upload_dir_info['path'] ) . basename( $value );
+					// Remove Thumbnail
+					delete_post_meta( $course_id, '_thumbnail_id' );
 
-					$image = wp_get_image_editor( $fl ); // Return an implementation that extends <tt>WP_Image_Editor</tt>
-
-					if ( ! is_wp_error( $image ) ) {
-
-						$image_size = $image->get_size();
-
-						if ( ( $image_size['width'] < $course_image_width || $image_size['height'] < $course_image_height ) || ( $image_size['width'] == $course_image_width && $image_size['height'] == $course_image_height ) ) {
-							// legacy
-							update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value ) );
-						} else {
-							$ext           = pathinfo( $fl, PATHINFO_EXTENSION );
-							$new_file_name = str_replace( '.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename( $value ) );
-							$new_file_path = str_replace( basename( $value ), $new_file_name, $value );
-							// legacy
-							update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $new_file_path ) );
-						}
-					} else {
-						// legacy
-						update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value, true ) );
-					}
 				}
 
 				//Add instructors
@@ -300,6 +308,7 @@ class CoursePress_Model_Course {
 	public static function add_instructor( $course_id, $instructor_id ) {
 
 		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
+		$instructors = empty( $instructors ) ? array() : $instructors;
 
 		if( ! in_array( $instructor_id, $instructors ) ) {
 			CoursePress_Model_Instructor::added_to_course( $instructor_id, $course_id );
@@ -311,7 +320,6 @@ class CoursePress_Model_Course {
 	}
 
 	public static function remove_instructor( $course_id, $instructor_id ) {
-
 		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
 
 		foreach( $instructors as $idx => $instructor ) {
@@ -381,6 +389,17 @@ class CoursePress_Model_Course {
 	 */
 	public static function set_setting( &$settings, $key, $value ) {
 		CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
+	}
+
+	public static function allow_pages( $course_id ) {
+
+		$pages = array(
+			'course_discussion'	 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_discussion', true ) ),
+			'workbook'			 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_workbook', true ) ),
+			'grades'			 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_grades', true ) ),
+		);
+
+		return $pages;
 	}
 
 	public static function upgrade_settings( $course_id ) {
@@ -503,11 +522,21 @@ class CoursePress_Model_Course {
 
 	}
 
-	public static function get_course_categories() {
+	public static function get_course_categories( $course_id = false ) {
 		$terms      = self::get_terms();
 		$categories = array();
-		foreach ( $terms as $term ) {
-			$categories[ $term->term_id ] = $term->name;
+
+		if( ! $course_id ) {
+			foreach ( $terms as $term ) {
+				$categories[ $term->term_id ] = $term->name;
+			}
+		} else {
+			$course_terms_array = self::get_course_terms( (int) $course_id, true );
+			foreach ( $terms as $term ) {
+				if( in_array( (int) $term->term_id, $course_terms_array ) ) {
+					$categories[ $term->term_id ] = $term->name;
+				}
+			}
 		}
 
 		return $categories;
@@ -548,7 +577,6 @@ class CoursePress_Model_Course {
 	public static function get_listing_image( $course_id ) {
 		$url = CoursePress_Model_Course::get_setting( $course_id, 'listing_image' );
 		$url = empty( $url ) ? get_post_meta( $course_id, '_thumbnail_id', true ) : $url;
-		error_log( print_r( $url, true ) );
 		return apply_filters( 'coursepress_course_listing_image', $url, $course_id );
 	}
 
@@ -668,6 +696,425 @@ class CoursePress_Model_Course {
 	public static function is_paid_course( $course_id ) {
 		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
 		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
+	}
+
+
+	public static function get_users( $args ) {
+		return new WP_User_Query( $args );
+	}
+
+	public static function get_students( $course_id, $per_page = 0, $offset = 0 ) {
+		global $wpdb;
+
+		$args = array(
+			'meta_key' => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+			'meta_compare' => 'EXISTS'
+		);
+
+		if( $per_page > 0 ) {
+			$args['number'] = $per_page;
+			$args['offset'] = $offset;
+		}
+
+		$students = self::get_users( $args );
+
+		return $students->get_results();
+	}
+
+	public static function get_student_ids( $course_id, $count = false ) {
+		global $wpdb;
+		$students = self::get_users( array(
+			'meta_key' => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+			'meta_compare' => 'EXISTS',
+			'fields' => 'ID'
+		));
+
+		if( ! $count ) {
+			return $students->get_results();
+		} else {
+			return $students->get_total();
+		}
+
+	}
+
+	public static function count_students( $course_id ) {
+		$count = self::get_student_ids( $course_id, true );
+		return empty( $count ) ? 0 : $count;
+	}
+
+	public static function student_enrolled( $student_id, $course_id ) {
+		$enrolled = get_user_option( $student_id, 'enrolled_course_date_' . $course_id );
+		return ! empty( $enrolled ) ? $enrolled : '';
+	}
+
+	public static function student_completed( $student_id, $course_id ) {
+		// COMPLETION LOGIC
+		return false;
+	}
+
+	public static function enroll_student( $student_id, $course_id, $class = '', $group = '' ) {
+
+		$current_time = current_time( 'mysql' );
+
+		$global_option = !is_multisite();
+
+		// If student doesn't exist, exit.
+		$student = get_userdata( $student_id );
+		if( empty( $student ) ) {
+			return false;
+		}
+
+		// If student is already enrolled, exit.
+		$enrolled = self::student_enrolled( $student_id, $course_id );
+		if( ! empty( $enrolled ) ) {
+			return $course_id;
+		}
+
+
+		/**
+		 * Update metadata with relevant details.
+		 */
+		update_user_option( $student_id, 'enrolled_course_date_' . $course_id, $current_time, $global_option ); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
+		update_user_option( $student_id, 'enrolled_course_class_' . $course_id, $class, $global_option );
+		update_user_option( $student_id, 'enrolled_course_group_' . $course_id, $group, $global_option );
+		update_user_option( $student_id, 'role', 'student', $global_option ); //alternative to roles used
+
+
+		self::_add_enrollment_email_hooks();
+
+		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
+
+		$email_args = array();
+		$email_args['email_type'] = self::$email_type;
+		$email_args['course_id'] = $course_id;
+		$email_args['email'] = sanitize_email( $student->user_email );
+		$email_args['first_name'] = $student->user_firstname;
+		$email_args['last_name'] = $student->user_lastname;
+
+		$email_args = apply_filters( 'coursepress_student_enrollment_email_args', $email_args );
+
+		if( is_email( $email_args['email'] ) ) {
+			if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+				// Could add something on successful email
+			} else {
+				// Could add something if email fails
+			}
+		}
+
+		/**
+		 * Setup actions for when a student enrolls.
+		 * Can be used to create notifications or tracking student actions.
+		 */
+		$instructors = self::get_setting( $course_id, 'instructors', false );
+
+		do_action( 'student_enrolled_instructor_notification', $student_id, $course_id, $instructors );
+		do_action( 'student_enrolled_student_notification', $student_id, $course_id );
+
+		/**
+		 * Perform action after a Student is enrolled.
+		 *
+		 * @since 1.2.2
+		 */
+		do_action( 'coursepress_student_enrolled', $student_id, $course_id );
+
+		return true;
+	}
+
+	private static function _add_enrollment_email_hooks() {
+		add_filter( 'coursepress_email_fields', array( __CLASS__, 'enrollment_email_fields' ), 10, 2 );
+		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
+	}
+
+	public static function enrollment_email_fields( $fields, $args ) {
+
+		$email_settings = CoursePress_Helper_Email::get_email_fields( CoursePress_Helper_Email::ENROLLMENT_CONFIRM );
+
+		$course_id = (int) $args['course_id'];
+
+		// To Email Address
+		$fields['email'] = sanitize_email( $args['email'] );
+
+		// Email Subject
+		$fields['subject'] = $email_settings['subject'];
+
+		$post = get_post( $course_id );
+
+		$course_name = $post->post_title;
+
+		$permalink = '';
+		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
+			$permalink = CoursePress_Core::get_slug( 'course', true ) . '/' . $post->post_name . '/';
+		} else {
+			$permalink = get_permalink( $course_id );
+		}
+		$course_address = esc_url( $permalink );
+
+		// Email Content
+		$tags = array(
+			'STUDENT_FIRST_NAME',
+			'STUDENT_LAST_NAME',
+			'COURSE_TITLE',
+			'COURSE_ADDRESS',
+			'STUDENT_DASHBOARD',
+			'COURSES_ADDRESS',
+			'BLOG_NAME'
+		);
+
+		$tags_replaces = array(
+			sanitize_text_field( $args[ 'first_name' ] ),
+			sanitize_text_field( $args[ 'last_name' ] ),
+			$course_name,
+			$course_address,
+			//$student_login_address = get_option( 'use_custom_login_form', 1 ) ? trailingslashit( home_url() . '/' . get_option( 'login_slug', 'student-login' ) ) : wp_login_url(),
+			wp_login_url(),
+			trailingslashit( home_url() ) . trailingslashit( CoursePress_Core::get_slug( 'course' ) ),
+			get_bloginfo()
+		);
+
+		$fields['message'] = str_replace( $tags, $tags_replaces, $email_settings['content'] );
+
+		return $fields;
+	}
+
+	public static function email_from( $from ) {
+
+		$email_settings = CoursePress_Helper_Email::get_email_fields( self::$email_type );
+
+		$from = $email_settings['email'];
+
+		return $from;
+	}
+
+	public static function email_from_name( $from_name ) {
+
+		$email_settings = CoursePress_Helper_Email::get_email_fields( self::$email_type );
+
+		$from = $email_settings['name'];
+
+		return $from;
+	}
+
+	public static function withdraw_student( $student_id, $course_id ) {
+
+		$global_option = !is_multisite();
+		$current_time = current_time( 'mysql' );
+
+		delete_user_option( $student_id, 'enrolled_course_date_' . $course_id, $global_option );
+		delete_user_option( $student_id, 'enrolled_course_class_' . $course_id, $global_option );
+		delete_user_option( $student_id, 'enrolled_course_group_' . $course_id, $global_option );
+		delete_user_option( $student_id, 'role', $global_option );
+
+		update_user_option( $student_id, 'withdrawn_course_date_' . $course_id, $current_time, $global_option );
+
+		$instructors = self::get_setting( $course_id, 'instructors', false );
+		do_action( 'student_withdraw_from_course_instructor_notification', $student_id, $course_id, $instructors );
+		do_action( 'student_withdraw_from_course_student_notification', $student_id, $course_id );
+		do_action( 'coursepress_student_withdrawn', $student_id, $course_id );
+
+	}
+
+	public static function withdraw_all_students( $course_id ) {
+
+		$students = self::get_student_ids( $course_id );
+
+		foreach( $students as $student ) {
+			self::withdraw_student( $student, $course_id );
+		}
+	}
+
+	public static function send_invitation( $email_data ) {
+
+		// So that we can use it later
+		CoursePress_Model_Course::set_last_course_id( (int) $email_data['course_id'] );
+		$course_id = (int) $email_data['course_id'];
+
+
+		// We need to hook the email fields for the Utility method.
+		self::_add_invitation_email_hooks();
+
+		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
+
+		if( 'passcode' === $type ) {
+			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
+			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
+		} else {
+			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION;
+			$type = CoursePress_Helper_Email::COURSE_INVITATION;
+		}
+
+		self::$email_type = $type;
+
+		$email_args['course_id'] = $email_data['course_id'];
+		$email_args['email'] = sanitize_email( $email_data['email'] );
+
+		$user = get_user_by( 'email', $email_args['email'] );
+		if( $user ) {
+			$email_data['user'] = $user;
+			$email_args['first_name'] = sanitize_text_field( $email_data['first_name'] );
+			$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
+		}
+
+		if( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+			// successful
+			return true;
+		} else {
+			// failed
+			return false;
+		}
+
+	}
+
+	private static function _add_invitation_email_hooks() {
+
+		add_filter( 'coursepress_email_fields', array( __CLASS__, 'invite_email_fields' ), 10, 2 );
+		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
+
+	}
+
+	public static function invite_email_fields( $fields, $args ) {
+
+		$email_settings = CoursePress_Helper_Email::get_email_fields( self::$email_type );
+
+		$course_id = (int) $args['course_id'];
+
+		// To Email Address
+		$fields['email'] = sanitize_email( $args['email'] );
+
+		// Email Subject
+		$fields['subject'] = $email_settings['subject'];
+
+		$post = get_post( $course_id );
+
+		$course_name = $post->post_title;
+
+		$permalink = '';
+		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
+			$permalink = CoursePress_Core::get_slug( 'course', true ) . '/' . $post->post_name . '/';
+		} else {
+			$permalink = get_permalink( $course_id );
+		}
+		$course_address = esc_url( $permalink );
+
+		// Email Content
+		$tags = array(
+			'STUDENT_FIRST_NAME',
+			'STUDENT_LAST_NAME',
+			'COURSE_NAME',
+			'COURSE_EXCERPT',
+			'COURSE_ADDRESS',
+			'WEBSITE_ADDRESS',
+			'PASSCODE'
+		);
+
+		$tags_replaces = array(
+			sanitize_text_field( $args[ 'first_name' ] ),
+			sanitize_text_field( $args[ 'last_name' ] ),
+			$course_name,
+			$post->post_excerpt,
+			$course_address,
+			trailingslashit( home_url() ),
+			self::get_setting( $course_id, 'enrollment_passcode', '' )
+		);
+
+		$fields['message'] = str_replace( $tags, $tags_replaces, $email_settings['content'] );
+
+		return $fields;
+	}
+
+	public static function is_full( $course_id ) {
+
+		$limited = CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'class_size' ) );
+		if( $limited ) {
+
+			$limit = self::get_setting( $course_id, 'class_size' );
+			$students = self::count_students( $course_id );
+
+			return $limit <= $students;
+
+		} else {
+			return false;
+		}
+
+	}
+
+	public static function get_time_estimation( $course_id ) {
+
+		$units = self::get_units_with_modules( $course_id );
+
+		$seconds = 0;
+		$minutes = 0;
+		$hours = 0;
+
+		foreach( $units as $unit ) {
+
+			$estimations = CoursePress_Model_Unit::get_time_estimation( $unit['unit']->ID, $units );
+			$components = explode( ':', $estimations['unit']['estimation'] );
+
+			$part = array_pop( $components );
+			$seconds += ! empty( $part ) ? (int) $part : 0;
+			$part = count( $components > 0 ) ? array_pop( $components ) : 0;
+			$minutes += ! empty( $part ) ? (int) $part : 0;
+			$part = count( $components > 0 ) ? array_pop( $components ) : 0;
+			$hours += ! empty( $part ) ? (int) $part : 0;
+
+		}
+
+		$total_seconds = $seconds + ( $minutes * 60 ) + ( $hours * 3600 );
+
+		$hours = floor( $total_seconds / 3600 );
+		$total_seconds = $total_seconds % 3600;
+		$minutes = floor( $total_seconds / 60 );
+		$seconds = $total_seconds % 60;
+
+		$estimation = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds );
+
+		return $estimation;
+	}
+
+	public static function get_instructors( $course_id, $objects = false ) {
+
+		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
+
+		$instructor_objects = array();
+		if( ! $objects ) {
+			return $instructors;
+		} else {
+			foreach( $instructors as $instructor ) {
+				$instructor_id = (int) $instructor;
+				if( ! empty( $instructor_id ) ) {
+					$instructor_objects[] = get_userdata( $instructor_id );
+				}
+			}
+			return $instructor_objects;
+		}
+
+	}
+
+	static function by_name( $slug, $id_only ) {
+
+		$args = array(
+			'name'			 => $slug,
+			'post_type'		 => self::get_post_type_name( true ),
+			'post_status'	 => 'any',
+			'posts_per_page' => 1,
+		);
+
+		if( $id_only ) {
+			$args['fields']	= 'ids';
+		}
+
+		$post = get_posts( $args );
+
+		if ( $post ) {
+			if( $id_only ) {
+				return (int) $post[ 0 ];
+			}
+			return $post[ 0 ];
+		} else {
+			return false;
+		}
 	}
 
 }

@@ -169,7 +169,7 @@ var CoursePress = CoursePress || {};
                 var mod_el = ui.draggable;
 
                 if ( current_page !== page ) {
-                    console.log( 'Now on page ' + page );
+
                     var mod_ref = $( $( mod_el ).find( '.module-holder' )[ 0 ] ).attr( 'data-cid' );
                     var meta = CoursePress.UnitBuilder.module_collection._byId[ mod_ref ].get( 'meta' );
                     meta[ 'module_page' ] = page;
@@ -178,7 +178,7 @@ var CoursePress = CoursePress || {};
                     CoursePress.UnitBuilder.module_collection._byId[ mod_ref ].trigger( 'change' );
                     $( mod_el ).detach();
                 } else {
-                    console.log( 'Same page bru!' );
+
                 }
 
             }
@@ -1149,6 +1149,7 @@ var CoursePress = CoursePress || {};
             self.$el.empty();
 
             var first = true;
+
             this.model.each( function ( unit ) {
                 var unitView = new CoursePress.Views.UnitTabView( { model: unit, tagName: 'li' } );
                 unitView.first = first;
@@ -1563,6 +1564,7 @@ var CoursePress = CoursePress || {};
                     className: 'group'
                 } );
                 var order = module.get_meta( 'module_order' );
+
                 self.$el.append( moduleView.render( module, order ).$el );
             } );
 
@@ -1578,9 +1580,9 @@ var CoursePress = CoursePress || {};
             var self = this;
             self.$el.empty();
 
-            // Not using a template here
+            //// Not using a template here
             self.$el.append( CoursePress.Helpers.Module.render_module( module, order ) );
-
+            //
             CoursePress.Helpers.Module.refresh_ui();
 
             return this;

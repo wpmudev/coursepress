@@ -158,6 +158,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	public static function unit_builder_ajax() {
 
 		$json_data = array();
+		$skip_empty = false;
 
 		switch ( $_REQUEST['task'] ) {
 
@@ -181,6 +182,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$json_data[] = $unit;
 				}
 
+				$skip_empty = empty( $units ) ? true : false;
+
 				break;
 
 			case 'modules':
@@ -203,6 +206,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$json_data[]  = $module;
 				}
 
+				$skip_empty = empty( $modules ) ? true : false;
+
 				break;
 
 			case 'units_update':
@@ -218,6 +223,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 						unset( $unit['post_modified'] );
 						unset( $unit['post_modified_gmt'] );
+						unset( $unit['post_name'] );
+						unset( $unit['guid'] );
 
 						$new_unit = false;
 						$unit_id = isset( $unit['ID'] ) ? (int) $unit['ID'] : 0;
@@ -296,6 +303,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						}
 						unset( $module['post_modified'] );
 						unset( $module['post_modified_gmt'] );
+						unset( $module['post_name'] );
+						unset( $module['guid'] );
 
 						$new_module = false;
 						$module_id = isset( $module['ID'] ) ? (int) $module['ID'] : 0;
@@ -412,7 +421,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 		}
 
-		if ( ! empty( $json_data ) ) {
+		if ( ! empty( $json_data ) || $skip_empty ) {
 			CoursePress_Helper_Utility::send_bb_json( $json_data );
 		} else {
 			$json_data['success'] = false;

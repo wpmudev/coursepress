@@ -30,6 +30,11 @@ class CoursePress_View_Admin_CoursePress {
 			}
 		}
 
+		// Respond to bulk actions in courses list
+		//add_action( 'admin_action_coursepress_course_publish', array( __CLASS__, 'publish_course_action' ) );
+		//add_action( 'admin_action_coursepress_course_unpublish', array( __CLASS__, 'unpublish_course_action' ) );
+		//add_action( 'admin_action_coursepress_course_delete', array( __CLASS__, 'delete_course_action' ) );
+
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -67,6 +72,9 @@ class CoursePress_View_Admin_CoursePress {
 		$content = '<div class="coursepress_settings_wrapper">' .
 		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />';
+
+		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
+		$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 		ob_start();
 		$courseListTable->display();
 		$content .= ob_get_clean();

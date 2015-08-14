@@ -6,6 +6,10 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 
+	private $course_id = 0;
+	private $add_new = false;
+	private $students = array();
+
 	/** Class constructor */
 	public function __construct() {
 
@@ -22,16 +26,23 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 
 	}
 
+	public function set_course( $id ) {
+		$this->course_id = (int) $id;
+	}
+
+	public function set_add_new( $bool ) {
+		$this->add_new = $bool;
+	}
 
 	public function get_columns() {
 		$columns = array(
-			'cb'         => '<input type="checkbox" />',
-			'ID'         => __( 'ID', CoursePress::TD ),
-			'post_title' => __( 'Username', CoursePress::TD ),
-			'units'      => __( 'First Name', CoursePress::TD ),
-			'students'   => __( 'Last Name', CoursePress::TD ),
-			'status'     => __( 'Profile', CoursePress::TD ),
-			'actions'    => __( 'Actions', CoursePress::TD ),
+			'cb'           => '<input type="checkbox" />',
+			'ID'           => __( 'ID', CoursePress::TD ),
+			'display_name' => __( 'Username', CoursePress::TD ),
+			'first_name'   => __( 'First Name', CoursePress::TD ),
+			'last_name'    => __( 'Last Name', CoursePress::TD ),
+			'profile'      => __( 'Profile', CoursePress::TD ),
+			'actions'      => __( 'Withdraw', CoursePress::TD ),
 		);
 
 		return $columns;
@@ -51,31 +62,51 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 		);
 	}
 
-	public function prepare_items() {
+	public function column_ID( $item ) {
+		$this->students[] = $item->ID;
+		return sprintf(
+			'%d', $item->ID
+		);
+	}
 
-		//$accepted_tabs = array( 'publish', 'private', 'all' );
-		//$tab           = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
-		//$valid_categories = CoursePress_Model_Course::get_course_categories();
-		//$valid_categories = array_keys( $valid_categories );
-		//$category      = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
-		//
-		//$post_status = 'all' == $tab ? array( 'publish', 'private' ) : $tab;
-		//
-		//// Debug
-		//$post_status = 'all';
-		//
+	public function column_display_name( $item ) {
+		return sprintf(
+			'%s', $item->display_name
+		);
+	}
+
+	public function column_first_name( $item ) {
+		return sprintf(
+			'%s', get_user_option( 'first_name', $item->ID )
+		);
+	}
+
+	public function column_last_name( $item ) {
+		return sprintf(
+			'%s', get_user_option( 'last_name', $item->ID )
+		);
+	}
+
+	public function column_actions( $item ) {
+		$nonce = wp_create_nonce( 'withdraw-single-student' );
+		return sprintf(
+			'<a href="" class="withdraw-student" data-id="%s" data-nonce="%s"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $nonce
+
+		);
+	}
+
+	public function prepare_items() {
+		global $wpdb;
+
 		$columns  = $this->get_columns();
 		$hidden   = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
-		//
-		//$perPage     = 10;
-		//$currentPage = $this->get_pagenum();
-		//
-		//// Debug
-		//$perPage = 10;
-		//
-		//$offset = ( $currentPage - 1 ) * $perPage;
-		//
+
+		$perPage     = 20;
+		$currentPage = $this->get_pagenum();
+
+		$offset = ( $currentPage - 1 ) * $perPage;
+
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		//$post_args             = array(
@@ -85,54 +116,56 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 		//	'offset'         => $offset,
 		//	's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		//);
-		//
-		//// @todo: Add permissions
-		//
-		//
-		//// Add category filter
-		//if ( $category ) {
-		//	$post_args['tax_query'] = array(
-		//		array(
-		//			'taxonomy' => 'course_category',
-		//			'field'    => 'term_id',
-		//			'terms'    => array( $category ),
-		//		)
-		//	);
-		//}
-		//
-		//
-		//$query = new WP_Query( $post_args );
 
-		//
+		$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
 
-		add_action( 'pre_user_query', array( &$this, 'add_first_and_last' ) );
-
-		$users = new CoursePress_Helper_Query_Student('','', array( 'override' => 'everything' ) );
-
-		error_log( print_r( $users, true ) );
-		$this->items = get_users( array(
-			//'blog_id'      => $GLOBALS['blog_id'],
-			'fields' => 'all_with_meta'
+		// Could use the Course Model methods here, but lets try stick to one query
+		$users = new WP_User_Query( array(
+			'meta_key'     => $course_meta_key,
+			'meta_compare' => 'EXISTS',
+			'number'       => $perPage,
+			'offset'       => $offset
 		) );
-		//
 
-		//error_log( print_r( $this->items, true ) );
-		//$totalItems = $query->found_posts;
-		//$this->set_pagination_args( array(
-		//	'total_items' => $totalItems,
-		//	'per_page'    => $perPage
-		//) );
+		$this->items = $users->get_results();
+
+		$totalItems = $users->get_total();
+		$this->set_pagination_args( array(
+			'total_items' => $totalItems,
+			'per_page'    => $perPage
+		) );
 
 	}
 
-	public static function add_first_and_last( $user_search ) {
-		global $wpdb;
+	public function extra_tablenav( $which ) {
 
-		$user_search->query_from .= " INNER JOIN {$wpdb->usermeta} m1 ON " .
-		                            "{$wpdb->users}.ID=m1.user_id AND (m1.meta_key='first_name')";
-		$user_search->query_from .= " INNER JOIN {$wpdb->usermeta} m2 ON " .
-		                            "{$wpdb->users}.ID=m2.user_id AND (m2.meta_key='last_name')";
+		if ( 'bottom' === $which && $this->add_new ) {
 
+			?>
+			<div class="coursepress_course_add_student_wrapper">
+			<?php
+
+			echo CoursePress_Helper_UI::get_user_dropdown( 'student-add', 'student-add', array(
+				'placeholder' => __( 'Choose student...', CoursePress::TD ),
+				'class'       => 'chosen-select narrow',
+				'exclude'     => $this->students
+			) );
+
+			$nonce = wp_create_nonce( 'add_student' );
+			$withdraw_nonce = wp_create_nonce( 'withdraw_all_students' );
+			?>
+
+			<input type="button" class="add-new-student-button button" data-nonce="<?php echo $nonce; ?>" value="<?php esc_attr_e( 'Add Student', CoursePress::TD ); ?>" />
+			<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e('Withdraw all students', CoursePress::TD ); ?></a>
+			</div>
+		<?php
+
+		}
+
+	}
+
+	public function no_items() {
+		_e( 'There are no students enrolled in this course. Add them below.', CoursePress::TD );
 	}
 
 

@@ -6,3 +6,59 @@
 .wp-list-table.courses th.manage-column.column-ID {
   width: 35px;
 }
+
+.wp-list-table .manage-column.column-status {
+  width: 85px;
+}
+
+.coursepress_course_add_student_wrapper {
+  background: #ffffff;
+  margin: 0 0 5px 0;
+  padding: 5px;
+}
+
+.coursepress_course_add_student_wrapper {
+  .withdraw-all-students {
+    float: right;
+    display: block;
+    padding: 5px;
+  }
+}
+
+.coursepress_course_invite_student_wrapper {
+  clear: both;
+  display: block;
+  width: 100%;
+
+  input{
+    font-weight: normal;
+  }
+}
+
+.tab-content .body .coursepress_course_invite_student_wrapper h3 {
+  background: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.tab-content .body .coursepress_course_invite_student_wrapper label {
+  display: block;
+}
+
+.tab-content .body .coursepress_course_invite_student_wrapper label span {
+  display: inline-block;
+  width: 150px;
+}
+
+.actions.column-actions .fa {
+  font-size: 1.7em;
+}
+
+.actions.column-actions .fa.remove-btn {
+  color: #be4251;
+  cursor: pointer;
+}
+
+.duplicate-course-link {
+  cursor: pointer;
+}

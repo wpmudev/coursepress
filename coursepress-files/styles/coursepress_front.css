@@ -1,0 +1,5 @@
+
+/* Remove Pre- Nex- Navigation in WP 4.0+ */
+.navigation.post-navigation {
+    display: none;
+}

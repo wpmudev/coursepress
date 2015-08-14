@@ -105,7 +105,7 @@ class CoursePress_Helper_UI {
 			'meta_compare' => '',
 			'meta_query'   => array(),
 			'include'      => array(),
-			'exclude'      => array(),
+			'exclude'      => isset( $options['exclude'] ) ? $options['exclude'] : array(),
 			'orderby'      => 'display_name',
 			'order'        => 'ASC',
 			'offset'       => '',
@@ -147,8 +147,8 @@ class CoursePress_Helper_UI {
 
 		$args = array(
 			'meta_key'     => 'course_' . $course_id,
-			'meta_value'   => $course_id,
-			'meta_compare' => '',
+			//'meta_value'   => $course_id,
+			'meta_compare' => 'EXISTS',
 			'meta_query'   => array(),
 			'include'      => array(),
 			'exclude'      => array(),

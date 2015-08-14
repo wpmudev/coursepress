@@ -72,25 +72,25 @@ class CoursePress_Helper_Settings_Email {
 			'registration' => array(
 				'title' => __( 'User Registration E-mail', CoursePress::TD ),
 				'description' => __( 'Settings for an e-mail student get upon account registration.', CoursePress::TD ),
-				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_USERNAME, STUDENT_PASSWORD, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', CoursePress::TD ),
+				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_LAST_NAME, STUDENT_USERNAME, STUDENT_PASSWORD, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS', CoursePress::TD ),
 				'order' => 1,
 			),
 			'enrollment_confirm' => array(
 				'title' => __( 'Course Enrollment Confirmation E-mail', CoursePress::TD ),
 				'description' => __( 'Settings for an e-mail student get upon enrollment.', CoursePress::TD ),
-				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS', CoursePress::TD ),
+				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_LAST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS', CoursePress::TD ),
 				'order' => 2,
 			),
 			'course_invitation' => array(
 				'title' => __( 'Student Invitation to a Course E-mail', CoursePress::TD ),
 				'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', CoursePress::TD ),
-				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS', CoursePress::TD ),
+				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_LAST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS', CoursePress::TD ),
 				'order' => 3,
 			),
 			'course_invitation_password' => array(
 				'title' => __( 'Student Invitation to a Course E-mail (with passcode)', CoursePress::TD ),
 				'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', CoursePress::TD ),
-				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, PASSCODE', CoursePress::TD ),
+				'content_help_text' => __( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_LAST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, PASSCODE', CoursePress::TD ),
 				'order' => 4,
 			),
 			'instructor_invitation' => array(
@@ -113,85 +113,85 @@ class CoursePress_Helper_Settings_Email {
 
 	private static function _registration_email() {
 		return CoursePress_Core::get_setting('email/registration/content',
-			sprintf( __( 'Hi %1$s,
+			sprintf( __( 'Hi %1$s %2$s,
 
-Congratulations! You have registered account with %2$s successfully! You may log into your account here: %3$s.
+Congratulations! You have registered account with %3$s successfully! You may log into your account here: %4$s.
 
-Get started by exploring our courses here: %4$s
+Get started by exploring our courses here: %5$s
 
 Yours sincerely,
-%5$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' )
+%6$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' )
 		);
 	}
 
 	private static function _enrollment_confirmation_email() {
 		return CoursePress_Core::get_setting('email/enrollment_confirm/content',
-			sprintf( __( 'Hi %1$s,
+			sprintf( __( 'Hi %1$s %2$s,
 
-Congratulations! You have enrolled in course "%2$s" successfully!
+Congratulations! You have enrolled in course "%3$s" successfully!
 
-You may check all courses you are enrolled in here: %3$s.
+You may check all courses you are enrolled in here: %4$s.
 
-Or you can explore other courses in your %4$s
+Or you can explore other courses in your %5$s
 
 Yours sincerely,
-%5$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', CoursePress::TD ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' )
+%6$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', CoursePress::TD ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' )
 		);
 	}
 
 	private static function _course_invitation_email() {
 		return CoursePress_Core::get_setting('email/course_invitation/content',
-			sprintf( __( 'Hi %1$s,
+			sprintf( __( 'Hi %1$s %2$s,
 
-we would like to invite you to participate in the course: "%2$s"
+we would like to invite you to participate in the course: "%3$s"
 
-What is all about:
-%3$s
+What its all about:
+%4$s
 
-Check this page for more info on the course: %4$s
+Check this page for more info on the course: %5$s
 
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' )
+%6$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' )
 		);
 	}
 
 	private static function _course_invitation_passcode_email() {
 		return CoursePress_Core::get_setting('email/course_invitation_password/content',
-			sprintf( __( 'Hi %1$s,
+			sprintf( __( 'Hi %1$s %2$s,
 
-we would like to invite you to participate in the course: "%2$s"
+we would like to invite you to participate in the course: "%3$s"
 
-Since the course is only for selected ones, it is passcode protected. Here is the passcode for you: %6$s
+Since the course is only for selected ones, it is passcode protected. Here is the passcode for you: %7$s
 
-What is all about:
-%3$s
+What its all about:
+%4$s
 
-Check this page for more info on the course: %4$s
+Check this page for more info on the course: %5$s
 
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' )
+%6$s Team', CoursePress::TD ), 'STUDENT_FIRST_NAME', 'STUDENT_LAST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' )
 		);
 	}
 
 	private static function _instructor_invitation_email() {
 		return CoursePress_Core::get_setting('email/instructor_invitation/content',
 			sprintf( __(
-				'Hi %1$s,
+				'Hi %1$s %2$s,
 
-Congratulations! You have been invited to become an instructor for the course: %2$s
+Congratulations! You have been invited to become an instructor for the course: %3$s
 
 Click on the link below to confirm:
 
-%3$s
+%4$s
 
 If you haven\'t yet got a username you will need to create one.
 
-%4$s
-	', CoursePress::TD ), 'INSTRUCTOR_FIRST_NAME', 'COURSE_NAME', '<a href="CONFIRMATION_LINK">CONFIRMATION_LINK</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>')
+%5$s
+	', CoursePress::TD ), 'INSTRUCTOR_FIRST_NAME', 'INSTRUCTOR_LAST_NAME', 'COURSE_NAME', '<a href="CONFIRMATION_LINK">CONFIRMATION_LINK</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>')
 		);
 	}
 

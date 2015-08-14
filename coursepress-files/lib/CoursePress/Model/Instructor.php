@@ -217,7 +217,7 @@ class CoursePress_Model_Instructor {
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
 		$global_option = ! is_multisite();
-		CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $course_id );
+		//CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $course_id );
 		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
 
 		// Other associated actions
