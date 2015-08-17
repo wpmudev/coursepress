@@ -28,7 +28,6 @@ class CoursePress_Template_Module {
 		$grade = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, $response_key, $student_progress );
 		$feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_key, $student_progress );
 
-
 		$content .= '<div class="module-result">';
 		if( $grade > -1 ) {
 			$content .= '<div class="grade"><strong>' . esc_html__( 'Grade:', CoursePress::TD ) . '</strong> ' . $grade . '%</div>';
@@ -214,7 +213,8 @@ class CoursePress_Template_Module {
 			if( ! empty( $responses ) ) {
 
 				$last_response = (array) $responses[ $response_count - 1 ];
-				$response_key = array_pop( array_keys( $responses ) );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
@@ -229,7 +229,7 @@ class CoursePress_Template_Module {
 					} elseif( $student_answer && ! $the_answer ) {
 						$class = 'chosen-answer incorrect';
 					} elseif( ! $student_answer && $the_answer ) {
-						$class = 'incorrect';
+						//$class = 'incorrect';
 					}
 
 					$content .= '<li class="' . $class . '">' . $answer . '</li>';
@@ -316,7 +316,8 @@ class CoursePress_Template_Module {
 			if( ! empty( $responses ) ) {
 
 				$last_response = $responses[ $response_count - 1 ];
-				$response_key = array_pop( array_keys( $responses ) );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
@@ -331,7 +332,7 @@ class CoursePress_Template_Module {
 					} elseif( $student_answer && ! $the_answer ) {
 						$class = 'chosen-answer incorrect';
 					} elseif( ! $student_answer && $the_answer ) {
-						$class = 'incorrect';
+						//$class = 'incorrect';
 					}
 
 					$content .= '<li class="' . $class . '">' . $answer . '</li>';
@@ -411,7 +412,8 @@ class CoursePress_Template_Module {
 			if( ! empty( $responses ) ) {
 
 				$last_response = $responses[ $response_count - 1 ];
-				$response_key = array_pop( array_keys( $responses ) );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
@@ -426,10 +428,12 @@ class CoursePress_Template_Module {
 					} elseif( $student_answer && ! $the_answer ) {
 						$class = 'chosen-answer incorrect';
 					} elseif( ! $student_answer && $the_answer ) {
-						$class = 'incorrect';
+						//$class = 'incorrect';
 					}
 
-					$content .= '<li class="' . $class . '">' . $answer . '</li>';
+					if( $student_answer ) {
+						$content .= '<li class="' . $class . '">' . $answer . '</li>';
+					}
 
 				}
 				$content .= '</ul>';
@@ -495,7 +499,8 @@ class CoursePress_Template_Module {
 		if( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key = array_pop( array_keys( $responses ) );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
 				<p><span class="label">' . esc_html__( 'Response: ', CoursePress::TD ) . '</span>
@@ -556,7 +561,8 @@ class CoursePress_Template_Module {
 		if( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key = array_pop( array_keys( $responses ) );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
 				<p><span class="label">' . esc_html__( 'Response: ', CoursePress::TD ) . '</span>
@@ -620,7 +626,8 @@ class CoursePress_Template_Module {
 		if( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key = array_pop( array_keys( $responses ) );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			if ( isset( $last_response['url'] ) ) {
 

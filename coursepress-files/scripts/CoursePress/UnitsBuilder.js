@@ -101,7 +101,7 @@ var CoursePress = CoursePress || {};
         } );
 
         // Sortable Tabs
-        $('.unit-builder-tabs ul').sortable( {
+        $( '.unit-builder-tabs ul' ).sortable( {
 
             stop: function ( event, ui ) {
 
@@ -115,10 +115,10 @@ var CoursePress = CoursePress || {};
                     $( unit ).attr( 'data-order', new_order );
 
                     if ( current_order !== new_order ) {
-                        var meta = CoursePress.UnitBuilder.unit_collection._byId[ cid ].get('meta');
-                        meta['unit_order'] = new_order;
-                        CoursePress.UnitBuilder.unit_collection._byId[ cid ].set('meta', meta);
-                        CoursePress.UnitBuilder.unit_collection._byId[ cid ].set('flag', 'dirty');
+                        var meta = CoursePress.UnitBuilder.unit_collection._byId[ cid ].get( 'meta' );
+                        meta[ 'unit_order' ] = new_order;
+                        CoursePress.UnitBuilder.unit_collection._byId[ cid ].set( 'meta', meta );
+                        CoursePress.UnitBuilder.unit_collection._byId[ cid ].set( 'flag', 'dirty' );
                         $( unit ).addClass( 'dirty' );
                     }
 
@@ -192,18 +192,18 @@ var CoursePress = CoursePress || {};
         $( '.date' ).off( 'click' );
         $( '.date' ).on( 'click', function ( event ) {
             //if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {
-                $( this ).find( '.dateinput' ).datepicker( "show" );
+            $( this ).find( '.dateinput' ).datepicker( "show" );
             //}
         } );
 
         // Fix heights if needed
-        var button_position = $('.button-add-new-unit').position().top + $('.button-add-new-unit').innerHeight() + 20;
+        var button_position = $( '.button-add-new-unit' ).position().top + $( '.button-add-new-unit' ).innerHeight() + 20;
         var current_min = parseFloat( $( '#unit-builder .tab-content' ).css( 'min-height' ).replace( 'px', '' ) );
-        if( current_min < 818 ) {
+        if ( current_min < 818 ) {
             current_min = 818;
             $( '#unit-builder .tab-content' ).css( 'min-height', current_min + 'px' );
         }
-        if( current_min < button_position ) {
+        if ( current_min < button_position ) {
             $( '#unit-builder .tab-content' ).css( 'min-height', button_position + 'px' );
         }
 
@@ -509,6 +509,7 @@ var CoursePress = CoursePress || {};
                         answers = answers.length > 0 ? answers : item[ 'answers' ];
 
                         var selected = module.get_meta( 'answers_selected', parseInt( item[ 'selected' ] ) );
+                        content += '<div class="answer-group">';
                         $.each( answers, function ( index, answer ) {
 
                             // Legacy answers
@@ -517,9 +518,11 @@ var CoursePress = CoursePress || {};
                             }
 
                             option_name = name + '_selected[' + module.cid + ']';
-                            content += '<input type="radio" name="' + option_name + '" value="' + index + '" ' + CoursePress.utility.checked( parseInt( selected ), index ) + ' />';
-                            content += '<input type="text" ' + attr + ' value="' + answer + '" name="' + name + '[]" /><br />'
+                            content += '<div class="answer"><input type="radio" name="' + option_name + '" value="' + index + '" ' + CoursePress.utility.checked( parseInt( selected ), index ) + ' />';
+                            content += '<input type="text" ' + attr + ' value="' + answer + '" name="' + name + '[]" /> <span class="remove-item"></span><i class="fa fa-trash-o"></i></span></div>';
                         } );
+                        content += '</div>';
+                        content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
                         break;
 
                     case 'checkbox-select':
@@ -541,12 +544,15 @@ var CoursePress = CoursePress || {};
                             } );
                         }
 
+                        content += '<div class="answer-group">';
                         $.each( answers, function ( index, answer ) {
                             var checked = _.indexOf( selected, index ) > -1 ? 'checked="checked"' : '';
                             option_name = name + '_selected[' + module.cid + '][]';
-                            content += '<input type="checkbox" name="' + option_name + '" value="' + index + '" ' + checked + ' />';
-                            content += '<input type="text" ' + attr + ' value="' + answer + '" name="' + name + '[]" /><br />'
+                            content += '<div class="answer"><input type="checkbox" name="' + option_name + '" value="' + index + '" ' + checked + ' />';
+                            content += '<input type="text" ' + attr + ' value="' + answer + '" name="' + name + '[]" /> <span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
                         } );
+                        content += '</div>';
+                        content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
                         break;
 
                     case 'media-caption-settings':
@@ -794,14 +800,14 @@ var CoursePress = CoursePress || {};
 
                 //UI Update
                 $( 'ul li[data-tab="' + this.activeUnitID + '"]' ).detach();
-                $( $('.unit-builder-body')[0] ).empty();
-                $( '.unit-detail input[type="text"]' ).val('');
-                $( '.unit-detail input[type="checkbox"]' ).removeAttr('checked');
-                $( '#unit-live-toggle' ).removeClass('on' ).addClass('off');
-                $( '#unit-live-toggle-2' ).removeClass('on' ).addClass('off');
+                $( $( '.unit-builder-body' )[ 0 ] ).empty();
+                $( '.unit-detail input[type="text"]' ).val( '' );
+                $( '.unit-detail input[type="checkbox"]' ).removeAttr( 'checked' );
+                $( '#unit-live-toggle' ).removeClass( 'on' ).addClass( 'off' );
+                $( '#unit-live-toggle-2' ).removeClass( 'on' ).addClass( 'off' );
 
                 // Update Unit Count
-                $( $('li[data-tab="units"] a')[0] ).html( $( $('li[data-tab="units"] a')[0] ).html().replace(/\d+/, $( '.unit-builder-tabs ul li' ).length ) );
+                $( $( 'li[data-tab="units"] a' )[ 0 ] ).html( $( $( 'li[data-tab="units"] a' )[ 0 ] ).html().replace( /\d+/, $( '.unit-builder-tabs ul li' ).length ) );
 
                 CoursePress.Helpers.Module.save_unit( e );
             }
@@ -816,7 +822,7 @@ var CoursePress = CoursePress || {};
             unit.set_meta( 'unit_order', (count + 1) );
             unit.set_meta( 'page_title', { page_1: '' } );
             unit.set_meta( 'show_page_title', [ true ] );
-            unit.set('post_title', _coursepress.unit_builder_new_unit_title );
+            unit.set( 'post_title', _coursepress.unit_builder_new_unit_title );
 
             self.unit_collection.add( unit );
             CoursePress.Helpers.Module.save_unit( e, 'new_success' );
@@ -824,9 +830,9 @@ var CoursePress = CoursePress || {};
             var unitView = new CoursePress.Views.UnitTabView( { model: unit, tagName: 'li' } );
             var new_html = unitView.render().$el;
 
-            $( '.button-add-new-unit .fa' ).removeClass('fa-plus-square' ).addClass('fa-spinner' ).addClass('fa-spin');
+            $( '.button-add-new-unit .fa' ).removeClass( 'fa-plus-square' ).addClass( 'fa-spinner' ).addClass( 'fa-spin' );
 
-            self.unit_collection.on( 'new_success', function() {
+            self.unit_collection.on( 'new_success', function () {
                 self.unit_collection.fetch( {
                     success: function ( collection, response, options ) {
                         $( '.button-add-new-unit .fa' ).removeClass( 'fa-spin' ).removeClass( 'fa-spinner' ).addClass( 'fa-plus-square' );
@@ -974,7 +980,7 @@ var CoursePress = CoursePress || {};
                     break;
                 case 'allow_retries':
                     var meta = this.get( 'meta' );
-                    if( meta[ 'limit_attempts' ] ) {
+                    if ( meta[ 'limit_attempts' ] ) {
                         var value = meta[ 'limit_attempts' ][ 0 ];
                         // Invert answer
                         return !this.fix_boolean( value );
@@ -1002,7 +1008,7 @@ var CoursePress = CoursePress || {};
             return value;
         },
 
-        fix_legacy_module: function( new_mod_type ) {
+        fix_legacy_module: function ( new_mod_type ) {
             var self = this;
             var meta = self.get( 'meta' );
             self.set( 'flag', 'dirty' );
@@ -1010,32 +1016,32 @@ var CoursePress = CoursePress || {};
             // Fix meta that needs fixing
             meta.module_type = new_mod_type;
 
-            if( meta['checked_answer'] )
-                meta.answers_selected = meta['checked_answer'];
-            if( meta['checked_answers'] )
-                meta.answers_selected = meta['checked_answers'];
+            if ( meta[ 'checked_answer' ] )
+                meta.answers_selected = meta[ 'checked_answer' ];
+            if ( meta[ 'checked_answers' ] )
+                meta.answers_selected = meta[ 'checked_answers' ];
 
-            if( meta['time_estimation'] )
-                meta.duration = meta['time_estimation'];
+            if ( meta[ 'time_estimation' ] )
+                meta.duration = meta[ 'time_estimation' ];
 
-            if( meta['show_title_on_front'] )
-                meta.show_title = self.fix_boolean( meta['show_title_on_front'] );
+            if ( meta[ 'show_title_on_front' ] )
+                meta.show_title = self.fix_boolean( meta[ 'show_title_on_front' ] );
 
-            if( meta['mandatory_answer'] )
-                meta.mandatory = self.fix_boolean( meta['mandatory_answer'] );
+            if ( meta[ 'mandatory_answer' ] )
+                meta.mandatory = self.fix_boolean( meta[ 'mandatory_answer' ] );
 
-            if( meta['gradable_answer'] )
-                meta.assessable = self.fix_boolean( meta['gradable_answer'] );
+            if ( meta[ 'gradable_answer' ] )
+                meta.assessable = self.fix_boolean( meta[ 'gradable_answer' ] );
 
-            if( meta['minimum_grade_required'] )
-                meta.minimum_grade = meta['minimum_grade_required'];
+            if ( meta[ 'minimum_grade_required' ] )
+                meta.minimum_grade = meta[ 'minimum_grade_required' ];
 
-            if( meta['limit_attempts'] ) {
-                var limited = self.fix_boolean(  meta['limit_attempts'] );
-                meta.allow_retries = ! limited;
+            if ( meta[ 'limit_attempts' ] ) {
+                var limited = self.fix_boolean( meta[ 'limit_attempts' ] );
+                meta.allow_retries = !limited;
             }
-            if( meta['limit_attempts_value'] )
-                meta.retry_attempts = meta['limit_attempts_value'];
+            if ( meta[ 'limit_attempts_value' ] )
+                meta.retry_attempts = meta[ 'limit_attempts_value' ];
 
             self.set( 'meta', meta );
 
@@ -1166,14 +1172,14 @@ var CoursePress = CoursePress || {};
 
             var post_status = this.model.get( 'post_status' );
 
-            var meta = this.model.get('meta');
+            var meta = this.model.get( 'meta' );
 
             var variables = {
                 unit_id: this.model.get( 'ID' ),
                 unit_title: this.model.get( 'post_title' ),
                 unit_live_class: 'publish' === post_status ? 'unit-live' : 'unit-draft',
                 unit_active_class: this.first ? 'active' : '',
-                unit_order: meta['unit_order'],
+                unit_order: meta[ 'unit_order' ],
                 unit_cid: this.model.cid
             };
 
@@ -1217,7 +1223,7 @@ var CoursePress = CoursePress || {};
                 first = false;
             } );
 
-            this.model.trigger('rendered');
+            this.model.trigger( 'rendered' );
 
             return this;
         },
@@ -1440,7 +1446,9 @@ var CoursePress = CoursePress || {};
             'change select': 'selectionChanged',
             'change .page-info-holder input': 'unitPageInfoChanged',
             'keyup .module-title-text': 'updateUIHeading',
-            'click .unit-builder-pager ul li': 'changePage'
+            'click .unit-builder-pager ul li': 'changePage',
+            'click .module-component .add-item': 'addAnswer',
+            'click .module-component .remove-item': 'removeAnswer'
         },
         add_element: function ( e ) {
             var el = e.currentTarget;
@@ -1471,13 +1479,13 @@ var CoursePress = CoursePress || {};
             var type = $( el ).attr( 'type' );
 
             if ( 'checkbox' === type ) {
-                var boxes = $( '[name="' + el_name + '"]');
-                el_name = el_name.replace(/\[.*\]/, '' );
+                var boxes = $( '[name="' + el_name + '"]' );
+                el_name = el_name.replace( /\[.*\]/, '' );
 
-                if( boxes.length > 1 ) {
+                if ( boxes.length > 1 ) {
                     el_val = [];
-                    $.each( boxes, function( i, item ) {
-                        if( $( item ).is( ':checked' ) ) {
+                    $.each( boxes, function ( i, item ) {
+                        if ( $( item ).is( ':checked' ) ) {
                             el_val.push( i );
                         }
                     } );
@@ -1486,14 +1494,42 @@ var CoursePress = CoursePress || {};
                 }
 
             }
-            if( 'radio' === type ) {
-                el_name = el_name.replace(/\[.*\]/, '' );
+            if ( 'radio' === type ) {
+                el_name = el_name.replace( /\[.*\]/, '' );
+            }
+
+            // Dynamic textboxes
+            if ( 'text' === type || 'textbox' === type ) {
+                if ( /\[\]/.test( el_name ) ) {
+
+
+                    // Should only be for answers, else keep going as per usual
+                    var component = $( el ).parents( '.module-component' );
+
+                    if( component.length > 0 ) {
+
+                        var boxes = $( component ).find( '[name="' + el_name + '"]' );
+                        el_name = el_name.replace( /\[.*\]/, '' );
+
+                        el_val = [];
+                        $.each( boxes, function ( i, item ) {
+                            el_val.push( $( item ).val() );
+                        } );
+
+                        // Change meta now
+                        module.set_meta( el_name, el_val );
+
+                        return;
+                    }
+
+                }
+
             }
 
             // Deal with Browse buttons
-            if( 'button' === type && $( el ).hasClass( 'browse-media-field' ) ) {
-                var textbox = $( $( el )[0] ).siblings( '[type=text]' )[0];
-                el_name = $( textbox ).attr('name');
+            if ( 'button' === type && $( el ).hasClass( 'browse-media-field' ) ) {
+                var textbox = $( $( el )[ 0 ] ).siblings( '[type=text]' )[ 0 ];
+                el_name = $( textbox ).attr( 'name' );
                 el_val = $( textbox ).val();
             }
 
@@ -1585,6 +1621,58 @@ var CoursePress = CoursePress || {};
             //$('.unit-builder-tabs ul li[data-tab="' + this.parentView.parentView.activeUnitID + '"' ).removeClass('unit-live');
             //$('.unit-builder-tabs ul li[data-tab="' + this.parentView.parentView.activeUnitID + '"' ).removeClass('unit-draft');
             //$('.unit-builder-tabs ul li[data-tab="' + this.parentView.parentView.activeUnitID + '"' ).addClass('unit-changed');
+
+        },
+        addAnswer: function ( e ) {
+            var self = this;
+            var el = e.currentTarget;
+            var group = $( el ).siblings( '.answer-group' );
+            var container = $( el ).parents( '.module-holder' );
+            var cid = $( container ).attr( 'data-cid' );
+
+            var boxes = $( container ).find( '.answer' );
+            var value = boxes.length;
+
+            $( group ).append( '<div class="answer"><input type="checkbox" value="' + value + '" name="meta_answers_selected[' + cid + '][]">' +
+            '<input class="component-checkbox-answer wide" type="text" name="meta_answers[]" value="">' +
+            ' <span class="remove-item"><i class="fa fa-trash-o"></i></span></div>' );
+
+        },
+        removeAnswer: function ( e ) {
+            var self = this;
+            var el = e.currentTarget;
+            var answer_group = $( el ).parents( '.answer-group' );
+            var answer = $( el ).parents( '.answer' );
+            var container = $( el ).parents( '.module-holder' );
+            var cid = $( container ).attr( 'data-cid' );
+            var module = this.parentView.module_collection._byId[ cid ];
+
+            $( el ).parents( '.answer' ).detach();
+
+            // Fix Checkbox Indices
+            var boxes = $( answer_group ).find( '[name="meta_answers_selected[' + cid + '][]"]' );
+
+            var el_val = [];
+            $.each( boxes, function ( i, item ) {
+                if ( $( item ).is( ':checked' ) ) {
+                    el_val.push( i );
+                }
+                $( item ).val( i );
+            } );
+
+            module.set_meta( 'meta_answers_selected', el_val );
+
+
+            // Fix Textboxes
+            boxes = $( answer_group ).find( '[name="meta_answers[]"]' );
+
+            el_val = [];
+            $.each( boxes, function ( i, item ) {
+                el_val.push( $( item ).val() );
+            } );
+
+            // Change meta now
+            module.set_meta( 'meta_answers', el_val );
 
         }
 

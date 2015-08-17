@@ -1313,6 +1313,15 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   height: 27px;
   padding: 0 8px 0 5px;
 }
+.tab-content .unit-builder-content .module-holder .module-components .module-component .remove-item {
+  cursor: pointer;
+  margin-left: 10px;
+}
+.tab-content .unit-builder-content .module-holder .module-components .module-component .add-item {
+  cursor: pointer;
+  line-height: 3em;
+  margin-left: 36px;
+}
 .tab-content .unit-builder-content .module-holder .module-components span.description {
   display: block;
 }

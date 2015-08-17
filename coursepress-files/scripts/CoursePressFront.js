@@ -228,7 +228,7 @@ var CoursePress = CoursePress || {};
             }
             // Add Spinner
             $( elements ).find( '.response-processing' ).detach();
-            $( elements ).append('<span class="response-processing image spinner">&#xf111</span>');
+            $( elements ).find( '.module-submit-action' ).append('<span class="response-processing image spinner">&#xf111</span>');
 
             // Record Response
             var Course = Backbone.Model.extend( {

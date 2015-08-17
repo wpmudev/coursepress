@@ -189,9 +189,38 @@ class CoursePress_Model_Student {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
+		$grade = -1;
+
+		// Auto-grade the easy ones
+		switch( $attributes['module_type'] ) {
+			case 'input-checkbox':
+				$total = count( $attributes['answers_selected'] );
+				$correct = 0;
+				if( is_array( $response ) ) {
+					foreach( $response as $answer ) {
+						if( in_array( $answer, $attributes['answers_selected'] ) ) {
+							$correct += 1;
+						}
+					}
+				}
+
+				$grade = (int) ( $correct / $total * 100 );
+
+				break;
+			case 'input-select':
+			case 'input-radio':
+				if ( (int) $response === (int) $attributes['answers_selected'] ) {
+					$grade = 100;
+				} else {
+					$grade = 0;
+				}
+				break;
+
+		}
+		$grade = apply_filters( 'coursepress_autograde_module_response', $grade, $module_id, $student_id );
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response );
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/grades/' . $module_id . '/', -1 );
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/grades/' . $module_id . '/', $grade );
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/feedback/' . $module_id . '/', '' );
 		self::update_completion_data( $student_id, $course_id, $data );
 

@@ -524,6 +524,18 @@
       // Components
       .module-components {
 
+        .module-component {
+          .remove-item {
+            cursor: pointer;
+            margin-left: 10px;
+          }
+          .add-item {
+            cursor: pointer;
+            line-height: 3em;
+            margin-left: 36px;
+          }
+        }
+
         span.description {
           display: block;
         }
