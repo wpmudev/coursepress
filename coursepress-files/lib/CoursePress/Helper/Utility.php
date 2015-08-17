@@ -11,7 +11,43 @@ class CoursePress_Helper_Utility {
 	public static function init() {
 
 		add_action( 'wp_ajax_attachment_model', array( __CLASS__, 'attachment_model_ajax' ) );
+		add_action( 'init', array( __CLASS__, 'force_download_file_request' ), 1 );
+		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
+		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
+		add_filter('upload_mimes', array( __CLASS__, 'enable_extended_upload') );
+	}
 
+	public static function enable_extended_upload ( $mime_types =array() ) {
+
+		$add_the_filter = false;
+
+		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress' );
+		$matches = false;
+
+		if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
+			$add_the_filter = false;
+		}
+
+		preg_match('/(page=)(\w*)/', wp_get_referer(), $matches );
+		if( isset( $matches ) && isset( $matches[2] ) ) {
+			$page_ref = $matches[2];
+
+			if( in_array( $page_ref, $valid_pages ) ) {
+				$add_the_filter = true;
+			}
+
+		}
+
+		if( ! $add_the_filter ) {
+			return $mime_types;
+		}
+
+		// The MIME types listed here will be allowed in the media library.
+		// You can add as many MIME types as you want.
+		$mime_types['gz']  = 'application/x-gzip';
+		$mime_types['zip']  = 'application/zip';
+
+		return $mime_types;
 	}
 
 	// Sort multi-dimension arrays on 'order' value.
@@ -405,6 +441,183 @@ class CoursePress_Helper_Utility {
 
 	}
 
+
+	public static function safe_b64encode( $string ) {
+		$data = base64_encode( $string );
+		$data = str_replace( array( '+', '/', '=' ), array( '-', '_', '' ), $data );
+
+		return $data;
+	}
+
+	public static function safe_b64decode( $string ) {
+		$data = str_replace( array( '-', '_' ), array( '+', '/' ), $string );
+		$mod4 = strlen( $data ) % 4;
+		if ( $mod4 ) {
+			$data .= substr( '====', $mod4 );
+		}
+
+		return base64_decode( $data );
+	}
+
+	public static function encode( $value ) {
+		$security_key = NONCE_KEY;
+		if ( extension_loaded( 'mcrypt' ) && function_exists( 'mcrypt_module_open' ) ) {
+			if ( ! $value ) {
+				return false;
+			}
+
+			$text      = $value;
+			$iv_size   = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv        = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$crypttext = mcrypt_encrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $text, MCRYPT_MODE_ECB, $iv );
+
+			return trim( self::safe_b64encode( $crypttext ) );
+		} else {
+			return $value;
+		}
+	}
+
+	public static function decode( $value ) {
+		$security_key = NONCE_KEY;
+		if ( extension_loaded( 'mcrypt' ) && function_exists( 'mcrypt_module_open' ) ) {
+			if ( ! $value ) {
+				return false;
+			}
+
+			$crypttext   = self::safe_b64decode( $value );
+			$iv_size     = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv          = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$decrypttext = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $crypttext, MCRYPT_MODE_ECB, $iv );
+
+			return trim( $decrypttext );
+		} else {
+			return $value;
+		}
+	}
+
+	public static function get_file_size( $url, $human = true ) {
+		$bytes = 0;
+		// If its not a path... its probably a URL
+		if ( !preg_match( '/^\//', $url ) ) {
+			$header = wp_remote_head( $url );
+			if ( !is_wp_error( $header ) ) {
+				$bytes = $header[ 'headers' ][ 'content-length' ];
+			} else {
+				$bytes = 0;
+			}
+		} else {
+			try {
+				$bytes	 = filesize( $url );
+				$bytes	 = !empty( $bytes ) ? $bytes : 0;
+			} catch ( Exception $e ) {
+				$bytes = 0;
+			}
+		}
+
+		if ( 0 == $bytes ) {
+			$human = false;
+		}
+
+		return $human ? self::format_file_size( $bytes ) : $bytes;
+	}
+
+	public static function format_file_size( $bytes ) {
+		$bytes = (int) $bytes;
+		if ( $bytes >= 1073741824 ) {
+			$bytes = number_format( $bytes / 1073741824, 2 ) . ' GB';
+		} elseif ( $bytes >= 1048576 ) {
+			$bytes = number_format( $bytes / 1048576, 2 ) . ' MB';
+		} elseif ( $bytes >= 1024 ) {
+			$bytes = number_format( $bytes / 1024, 2 ) . ' KB';
+		} elseif ( $bytes > 1 ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( $bytes == 1 ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0 bytes';
+		}
+
+		return $bytes;
+	}
+
+	public static function force_download_file_request() {
+
+		if ( isset( $_GET[ 'fdcpf' ] ) ) {
+			ob_start();
+
+			$requested_file	 = self::decode( $_GET[ 'fdcpf' ] );
+
+			$requested_file_obj = wp_check_filetype( $requested_file );
+			header( 'Pragma: public' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check = 0, pre-check = 0' );
+			header( 'Cache-Control: private', false );
+			header( 'Content-Type: ' . $requested_file_obj[ "type" ] );
+			header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Connection: close' );
+
+			/**
+			 * Filter used to alter header params. E.g. removing 'timeout'.
+			 */
+			$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
+				'timeout'	 => 60,
+				'user-agent' => CoursePress_Core::$name . ' / ' . CoursePress_Core::$version . ';'
+			) );
+			echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+			exit();
+		}
+
+	}
+
+	public static function open_course_zip_object() {
+
+		if ( isset( $_GET[ 'oacpf' ] ) ) {
+			ob_start();
+
+			$requested_file	 = self::decode( $_GET[ 'oacpf' ] );
+
+
+			// Unzipping the magic
+			$upload_dir = wp_upload_dir();
+
+			$path = explode( '.', $requested_file );
+			$extension = array_pop( $path );
+			$path = implode( '.', $path );
+
+			if( 'zip' !== strtolower( $extension ) ) {
+				exit();
+			}
+
+			// Get access to zip functions
+			require_once(ABSPATH .'/wp-admin/includes/file.php'); //the cheat
+			WP_Filesystem();
+
+			$subdir = str_replace( $upload_dir['baseurl'], '', $path );
+			$subdir = explode( '/', $subdir );
+			$filename = array_pop( $subdir );
+			$subdir = implode( '/', $subdir );
+
+			$src_path = untrailingslashit( $upload_dir['basedir'] ) . trailingslashit( $subdir ) . $filename . '.' . $extension;
+			$object_dir = trailingslashit( untrailingslashit( $upload_dir['basedir'] ) . trailingslashit( $subdir ) . 'objects/' . $filename );
+			$file = $_GET['file'];
+			$file_path = $object_dir . $file;
+			$file_url_base = trailingslashit( str_replace( $filename, '', $path ) ) . trailingslashit( 'objects' ) . trailingslashit( $filename );
+			$file_url = $file_url_base . $file;
+
+			// Presume that its not unzipped yet.
+			if( ! file_exists( $object_dir ) || ! file_exists( $file_path ) ) {
+				// Unzip it
+				$unzipfile = unzip_file( $src_path, $object_dir );
+			}
+
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', CoursePress::TD ) . '</a>';
+			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
+			exit();
+		}
+
+	}
+
 	public static function truncateHtml( $text, $length = 100, $ending = '...', $exact = false, $considerHtml = true ) {
 		if ( $considerHtml ) {
 			// if the plain text is shorter than the maximum length, return the whole text
@@ -599,7 +812,31 @@ class CoursePress_Helper_Utility {
 		CoursePress_Model_Course::$last_course_subpage = sanitize_text_field( $page );
 	}
 
+	//public static function course_admin_filters() {
+	//
+	//	$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress' );
+	//
+	//	if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
+	//		return;
+	//	}
+	//
+	//	add_filter('upload_mimes', array( __CLASS__, 'add_zip_mimes') );
+	//
+	//}
+	//
+	//public static function add_zip_mimes ( $existing_mimes = array() ) {
+	//	// add your extension to the mimes array as below
+	//	$existing_mimes['zip'] = 'application/zip';
+	//	$existing_mimes['gz'] = 'application/x-gzip';
+	//	return $existing_mimes;
+	//}
 
-
+	public static function allowed_student_mimes() {
+		return apply_filters( 'coursepress_allowed_student_mimes', array(
+			'txt' => 'text/plain',
+			'pdf' => 'application/pdf',
+			'zip' => 'application/zip'
+		) );
+	}
 
 }

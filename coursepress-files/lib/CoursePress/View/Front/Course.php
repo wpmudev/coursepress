@@ -12,12 +12,124 @@ class CoursePress_View_Front_Course {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'coursepress_front_css' ) );
 		add_filter( 'get_the_author_description', array( __CLASS__, 'remove_author_bio_description' ), 10, 2 );
 
+		self::handle_module_uploads();
+
+	}
+
+	public static function init_ajax() {
+		add_action( 'wp_ajax_course_front', array( __CLASS__, 'process_course_ajax' ) );
+	}
+
+	public static function handle_module_uploads() {
+
+		if ( ! empty( $_REQUEST['course_action'] ) && 'upload-file' === $_REQUEST['course_action'] ) {
+
+			$json_data       = array();
+			$error           = false;
+			$ajax            = false;
+			$skip_processing = false;
+
+			$course_id  = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : false;
+			$unit_id    = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : false;
+			$module_id  = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : false;
+			$student_id = isset( $_REQUEST['student_id'] ) ? (int) $_REQUEST['student_id'] : false;
+
+			$student_progress = array();
+			if ( $student_id ) {
+				$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+			}
+
+			// Check if we should continue with this upload (in case students cheat with the code)
+			$attributes     = CoursePress_Model_Module::module_attributes( $module_id );
+			$responses      = CoursePress_Helper_Utility::get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $module_id );
+			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
+			$disabled       = ! $attributes['allow_retries'];
+			$disabled       = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
+
+			if ( $disabled ) {
+				$json_data['response'] = __( 'Maximum allowed retries exceeded.', CoursePress::TD );
+				$json_data['success']  = false;
+				$skip_processing       = true;
+			}
+
+			if ( ! $course_id && ! $unit_id && ! $module_id ) {
+				$json_data['response'] = __( 'Invalid data submitted', CoursePress::TD );
+				$json_data['success']  = false;
+				$skip_processing       = true;
+			}
+
+			if ( ! $skip_processing ) {
+				if ( isset( $_REQUEST['src'] ) && 'ajax' === $_REQUEST['src'] ) {
+					$ajax = true;
+				}
+
+
+				if ( ! function_exists( 'wp_handle_upload' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/file.php' );
+				}
+
+				$upload_overrides = array(
+					'test_form' => false,
+					'mimes'     => CoursePress_Helper_Utility::allowed_student_mimes()
+				);
+
+				$response = false;
+				if ( isset( $_FILES ) ) {
+
+					foreach ( $_FILES as $file ) {
+
+						try {
+
+							if ( ! function_exists( 'get_userdata' ) ) {
+								require_once( ABSPATH . 'wp-includes/pluggable.php' );
+							}
+
+							$response = wp_handle_upload( $file, $upload_overrides );
+
+							if ( isset( $response['error'] ) ) {
+								$json_data['response'] = $response['error'];
+								$json_data['success']  = false;
+							} else {
+								$json_data['response'] = $response;
+								$json_data['success']  = true;
+
+								// Record the response
+								if ( $student_id ) {
+									CoursePress_Model_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response, $student_progress );
+								}
+
+							}
+
+						} catch ( Exception $e ) {
+							$json_data['response'] = $e->getMessage();
+							$json_data['success']  = false;
+						}
+
+					}
+
+				} else {
+					$json_data['response'] = __( 'No files uploaded.', CoursePress::TD );
+					$json_data['success']  = false;
+				}
+
+			}
+
+			if ( $ajax ) {
+
+				// Response
+				echo json_encode( $json_data );
+				exit;
+
+			}
+
+		}
+
 	}
 
 	public static function load_plugin_templates() {
 		global $wp_query;
 
-		if( array_key_exists( 'coursename', $wp_query->query_vars ) && array_key_exists( 'unitname', $wp_query->query_vars ) ) {
+		if ( array_key_exists( 'coursename', $wp_query->query_vars ) && array_key_exists( 'unitname', $wp_query->query_vars ) ) {
 
 			$wp_query->is_page     = true;
 			$wp_query->is_singular = true;
@@ -111,14 +223,14 @@ class CoursePress_View_Front_Course {
 			if ( locate_template( array( 'single-course.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
 				//just output the content
 			} else {
-			//
-			//	//if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
-			//	if ( get_post_type() == 'course' ) {
-			//		$prepend_content = $this->get_template_details( $this->plugin_dir . 'includes/templates/single-course-before-details.php' );
-			//		$content		 = do_shortcode( $prepend_content . $content );
-			//	} else {
-			//		return $content;
-			//	}
+				//
+				//	//if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
+				//	if ( get_post_type() == 'course' ) {
+				//		$prepend_content = $this->get_template_details( $this->plugin_dir . 'includes/templates/single-course-before-details.php' );
+				//		$content		 = do_shortcode( $prepend_content . $content );
+				//	} else {
+				//		return $content;
+				//	}
 
 				//$content = CoursePress_Template_Course::course_enroll_box();
 				//$content .= CoursePress_Template_Course::course_about();
@@ -174,10 +286,10 @@ class CoursePress_View_Front_Course {
 
 	public static function render_course_archive() {
 
-		$category = CoursePress_Helper_Utility::the_course_category();
+		$category               = CoursePress_Helper_Utility::the_course_category();
 		$category_template_file = locate_template( array( 'archive-course-' . $category . '.php' ) );
 
-		if( ! empty( $category_template_file ) ) {
+		if ( ! empty( $category_template_file ) ) {
 
 		} elseif ( $theme_file = locate_template( array( 'archive-course.php' ) ) ) {
 
@@ -244,8 +356,8 @@ class CoursePress_View_Front_Course {
 			return;
 		}
 
-		$page	 = get_query_var( 'pagename' );
-		$course	 = get_query_var( 'course' );
+		$page       = get_query_var( 'pagename' );
+		$course     = get_query_var( 'course' );
 		$coursename = get_query_var( 'coursename' );
 
 		if ( $page == 'dashboard' || ! empty( $course ) || ! empty( $coursename ) ) {
@@ -262,8 +374,12 @@ class CoursePress_View_Front_Course {
 
 		$is_categoty_page = false;
 
+		// THIS IS WHERE WE WANT TO DO ACCESS CONTROL
+
+		$student_id = get_current_user_id();
+
 		// Do nothing if its a normal course page
-		if( array_key_exists( 'course', $wp->query_vars ) ) {
+		if ( array_key_exists( 'course', $wp->query_vars ) ) {
 
 			$course_id = CoursePress_Model_Course::by_name( $wp->query_vars['course'], true );
 			CoursePress_Helper_Utility::set_the_course( $course_id );
@@ -272,19 +388,20 @@ class CoursePress_View_Front_Course {
 			// Warning: A course should not have the same post_name as the category slug, it will be skipped
 			$is_categoty_page = $wp->query_vars['course'] === CoursePress_Core::get_slug( 'category' );
 
-			if( ! $is_categoty_page ) {
+			if ( ! $is_categoty_page ) {
 
 				CoursePress_Helper_Utility::$is_singular = true;
 
 				$args = array(
-					'slug'        => 'course_' . $course_id,
-					'title'		 => get_the_title( $course_id ),
+					'slug'    => 'course_' . $course_id,
+					'title'   => get_the_title( $course_id ),
 					//'show_title'  => false,
-					'content'     => self::render_course_main(),
-					'type'        => CoursePress_Model_Course::get_post_type_name( true ),
+					'content' => self::render_course_main(),
+					'type'    => CoursePress_Model_Course::get_post_type_name( true ),
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
+
 				return;
 
 			}
@@ -304,33 +421,38 @@ class CoursePress_View_Front_Course {
 
 			//'course_category'
 			$args = array(
-				'slug'        => 'course_archive',
+				'slug'       => 'course_archive',
 				//'title'		 => get_the_title( $post_parent ),
-				'show_title'  => false,
-				'content'     => self::render_course_archive(),
-				'type'        => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
+				'show_title' => false,
+				'content'    => self::render_course_archive(),
+				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
 			);
 
 			$pg = new CoursePress_Model_VirtualPage( $args );
+
 			return;
 		}
 
 		// Unit Archive and other unit pages
-		if( array_key_exists( 'coursename', $wp->query_vars ) && ! array_key_exists( 'unitname', $wp->query_vars ) ) {
+		if ( array_key_exists( 'coursename', $wp->query_vars ) && ! array_key_exists( 'unitname', $wp->query_vars ) ) {
 			$post_parent = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 
+			$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $post_parent );
+			error_log( print_r( $student_progress, true ) );
+
+			//error_log( print_r( wp_get_mime_types(), true ) );
 
 			// Discussion
-			if( array_key_exists( 'discussion_name', $wp->query_vars ) ) {
+			if ( array_key_exists( 'discussion_name', $wp->query_vars ) ) {
 				CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
 
 				$args = array(
-					'slug'        => 'discussion_' . $post_parent,
-					'title'		 => get_the_title( $post_parent ),
+					'slug'    => 'discussion_' . $post_parent,
+					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content'     => self::render_course_discussion(),
-					'type'        => 'course_discussion',
+					'content' => self::render_course_discussion(),
+					'type'    => 'course_discussion',
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
@@ -339,15 +461,15 @@ class CoursePress_View_Front_Course {
 			}
 
 			// Discussion Archive
-			if( array_key_exists( 'discussion_archive', $wp->query_vars ) ) {
+			if ( array_key_exists( 'discussion_archive', $wp->query_vars ) ) {
 				CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
 
 				$args = array(
-					'slug'        => 'discussion_archive_' . $post_parent,
-					'title'		 => get_the_title( $post_parent ),
+					'slug'    => 'discussion_archive_' . $post_parent,
+					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content'     => self::render_course_discussion_archive(),
-					'type'        => 'course_discussion_archive',
+					'content' => self::render_course_discussion_archive(),
+					'type'    => 'course_discussion_archive',
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
@@ -356,15 +478,15 @@ class CoursePress_View_Front_Course {
 			}
 
 			// Grades
-			if( array_key_exists( 'grades_archive', $wp->query_vars ) ) {
+			if ( array_key_exists( 'grades_archive', $wp->query_vars ) ) {
 				CoursePress_Helper_Utility::set_the_course_subpage( 'grades' );
 
 				$args = array(
-					'slug'        => 'grades_archive_' . $post_parent,
-					'title'		 => get_the_title( $post_parent ),
+					'slug'    => 'grades_archive_' . $post_parent,
+					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content'     => self::render_course_grades_archive(),
-					'type'        => 'course_grades_archive',
+					'content' => self::render_course_grades_archive(),
+					'type'    => 'course_grades_archive',
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
@@ -373,15 +495,15 @@ class CoursePress_View_Front_Course {
 			}
 
 			// Workbook
-			if( array_key_exists( 'workbook', $wp->query_vars ) ) {
+			if ( array_key_exists( 'workbook', $wp->query_vars ) ) {
 				CoursePress_Helper_Utility::set_the_course_subpage( 'workbook' );
 
 				$args = array(
-					'slug'        => 'workbook_' . $post_parent,
-					'title'		 => get_the_title( $post_parent ),
+					'slug'    => 'workbook_' . $post_parent,
+					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content'     => self::render_course_workbook(),
-					'type'        => 'course_workbook',
+					'content' => self::render_course_workbook(),
+					'type'    => 'course_workbook',
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
@@ -390,15 +512,15 @@ class CoursePress_View_Front_Course {
 			}
 
 			// Notifications
-			if( array_key_exists( 'notifications_archive', $wp->query_vars ) ) {
+			if ( array_key_exists( 'notifications_archive', $wp->query_vars ) ) {
 				CoursePress_Helper_Utility::set_the_course_subpage( 'notifications' );
 
 				$args = array(
-					'slug'        => 'notifications_archive_' . $post_parent,
-					'title'		 => get_the_title( $post_parent ),
+					'slug'    => 'notifications_archive_' . $post_parent,
+					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content'     => self::render_course_notifications_archive(),
-					'type'        => 'course_notifications_archive',
+					'content' => self::render_course_notifications_archive(),
+					'type'    => 'course_notifications_archive',
 				);
 
 				$pg = new CoursePress_Model_VirtualPage( $args );
@@ -412,23 +534,27 @@ class CoursePress_View_Front_Course {
 			CoursePress_Helper_Utility::set_the_course_subpage( 'units' );
 
 			$args = array(
-				'slug'        => 'unit_archive_' . $post_parent,
-				'title'		 => get_the_title( $post_parent ),
+				'slug'    => 'unit_archive_' . $post_parent,
+				'title'   => get_the_title( $post_parent ),
 				//'show_title'  => false,
-				'content'     => self::render_course_unit_archive(),
-				'type'        => CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
+				'content' => self::render_course_unit_archive(),
+				'type'    => CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
 			);
 
 			$pg = new CoursePress_Model_VirtualPage( $args );
+
 			return;
 		}
 
 		// Unit With Modules
-		if( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
+		if ( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
 			CoursePress_Helper_Utility::$is_singular = true;
-			$post_parent = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
+			$post_parent                             = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 			CoursePress_Helper_Utility::set_the_course_subpage( '' );
+
+			//$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $post_parent );
+			//error_log( print_r( $student_progress, true ) );
 
 			// Unit page
 			$unit_page = array_key_exists( 'paged', $wp->query_vars ) ? (int) $wp->query_vars['paged'] : 1;
@@ -440,7 +566,7 @@ class CoursePress_View_Front_Course {
 
 			$args = array(
 				'slug'        => $wp->query_vars['unitname'],
-				'title'		 => get_the_title( $post_parent ),
+				'title'       => get_the_title( $post_parent ),
 				//'show_title'  => false,
 				'content'     => self::render_course_unit( $post_ID ),
 				'type'        => CoursePress_Model_Unit::get_post_type_name( true ),
@@ -449,6 +575,7 @@ class CoursePress_View_Front_Course {
 			);
 
 			$pg = new CoursePress_Model_VirtualPage( $args );
+
 			return;
 		}
 
@@ -459,7 +586,7 @@ class CoursePress_View_Front_Course {
 		return array(
 			CoursePress_Model_Course::get_post_type_name( true ),
 			CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
-			CoursePress_Model_Unit::get_post_type_name( true ) ,
+			CoursePress_Model_Unit::get_post_type_name( true ),
 			CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
 		);
 	}
@@ -473,10 +600,10 @@ class CoursePress_View_Front_Course {
 		$post_type = get_post_type();
 
 		// Only enqueue when needed
-		if( in_array( $post_type, $valid_types ) ) {
+		if ( in_array( $post_type, $valid_types ) ) {
 
 			$style = CoursePress_Core::$plugin_lib_url . 'styles/coursepress_front.css';
-			wp_enqueue_style( 'coursepress_general', $style, array(), CoursePress_Core::$version );
+			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress_Core::$version );
 
 
 		}
@@ -487,10 +614,54 @@ class CoursePress_View_Front_Course {
 	public static function remove_author_bio_description( $description, $user_id ) {
 
 		$valid_types = self::get_valid_post_types();
-		$post_type = get_post_type();
+		$post_type   = get_post_type();
 
-		if( in_array( $post_type, $valid_types ) ) {
+		if ( in_array( $post_type, $valid_types ) ) {
 			return '';
+		}
+
+	}
+
+	public static function process_course_ajax() {
+
+		$data      = json_decode( file_get_contents( 'php://input' ) );
+		$json_data = array();
+		$success   = false;
+
+		if ( empty( $data->action ) ) {
+			$json_data['message'] = __( 'Course Update: No action.', CoursePress::TD );
+			wp_send_json_error( $json_data );
+		}
+
+		$action              = sanitize_text_field( $data->action );
+		$json_data['action'] = $action;
+
+		switch ( $action ) {
+
+			// Update Course
+			case 'record_module_response':
+
+				$course_id  = (int) $data->course_id;
+				$unit_id    = (int) $data->unit_id;
+				$module_id  = (int) $data->module_id;
+				$student_id = (int) $data->student_id;
+				$response   = $data->response;
+
+				CoursePress_Model_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+
+				$data = CoursePress_Helper_Utility::object_to_array( $data );
+
+				$json_data = array_merge( $json_data, $data );
+				$success   = true;
+
+				break;
+
+		}
+
+		if ( $success ) {
+			wp_send_json_success( $json_data );
+		} else {
+			wp_send_json_error( $json_data );
 		}
 
 	}

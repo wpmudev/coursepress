@@ -49,6 +49,7 @@ class CoursePress_Helper_JavaScript {
 			'allowed_video_extensions'  => wp_get_video_extensions(),
 			'allowed_audio_extensions'  => wp_get_audio_extensions(),
 			'allowed_image_extensions'  => CoursePress_Helper_Utility::get_image_extensions(),
+			'allowed_extensions'        => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'date_format'               => get_option( 'date_format' ),
 			'editor_visual'             => __( 'Visual', CoursePress::TD ),
 			'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
@@ -137,13 +138,33 @@ class CoursePress_Helper_JavaScript {
 		global $wp_query;
 
 		$post_type = get_post_type();
-		if ( ! empty( $post_type ) && $post_type === 'course' ) {
+		if ( ( ! empty( $post_type ) && $post_type === 'course' ) || array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ) {
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressFront.js';
 
+			$localize_array = array(
+				'_ajax_url'                  => CoursePress_Helper_Utility::get_ajax_url(),
+				'allowed_video_extensions'   => wp_get_video_extensions(),
+				'allowed_audio_extensions'   => wp_get_audio_extensions(),
+				'allowed_image_extensions'   => CoursePress_Helper_Utility::get_image_extensions(),
+				'allowed_extensions'         => apply_filters( 'coursepress_custom_allowed_extensions', false ),
+				'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
+				'no_browser_upload'          => __( 'Please try a different browser to upload your file.', CoursePress::TD ),
+				'invalid_upload_message'     => __( 'Please only upload any of the following files: ', CoursePress::TD ),
+				'file_uploaded_message'      => __( 'Your file has been submitted successfully.', CoursePress::TD ),
+				'file_upload_fail_message'   => __( 'There was a problem processing your file.', CoursePress::TD ),
+				'response_saved_message'     => __( 'Your response was recorded successfully.', CoursePress::TD ),
+				'response_fail_message'     => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
+			);
+
 			wp_enqueue_script( 'coursepress_object', $script, array(
-				'jquery'
+				'jquery',
+				'underscore',
+				'backbone'
 			), CoursePress_Core::$version );
+
+			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
+
 
 		}
 

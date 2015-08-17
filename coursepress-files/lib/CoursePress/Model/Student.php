@@ -15,9 +15,9 @@ class CoursePress_Model_Student {
 		$meta = get_user_meta( $user_id );
 		if ( $meta ) {
 			// Get only the enrolled courses
-			$meta	 = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
+			$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
 			// Map only the course IDs back to the array
-			$meta	 = array_map( array( __CLASS__, 'course_id_from_meta' ), $meta );
+			$meta = array_map( array( __CLASS__, 'course_id_from_meta' ), $meta );
 		}
 
 		return $meta;
@@ -32,7 +32,7 @@ class CoursePress_Model_Student {
 	 */
 	public static function filter_course_meta_array( $var ) {
 		$course_id_from_meta = self::course_id_from_meta( $var );
-		if ( !empty( $course_id_from_meta ) ) {
+		if ( ! empty( $course_id_from_meta ) ) {
 			return $var;
 		}
 
@@ -51,9 +51,9 @@ class CoursePress_Model_Student {
 	 */
 	public static function course_id_from_meta( $meta_value ) {
 		global $wpdb;
-		$prefix			 = $wpdb->prefix;
-		$base_prefix	 = $wpdb->base_prefix;
-		$current_blog	 = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
+		$prefix       = $wpdb->prefix;
+		$base_prefix  = $wpdb->base_prefix;
+		$current_blog = str_replace( '_', '', str_replace( $base_prefix, '', $prefix ) );
 		if ( is_multisite() && empty( $current_blog ) && defined( 'BLOG_ID_CURRENT_SITE' ) ) {
 			$current_blog = BLOG_ID_CURRENT_SITE;
 		}
@@ -65,12 +65,12 @@ class CoursePress_Model_Student {
 				// Get the blog ID that this meta key belongs to
 				$blog_id = '';
 				preg_match( '/(?<=' . $base_prefix . ')\d*/', $meta_value, $blog_id );
-				$blog_id = $blog_id[ 0 ];
+				$blog_id = $blog_id[0];
 
 				// First site...
 				if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == $current_blog ) {
-					$blog_id	 = $current_blog;
-					$course_id	 = str_replace( $base_prefix . 'enrolled_course_date_', '', $meta_value );
+					$blog_id   = $current_blog;
+					$course_id = str_replace( $base_prefix . 'enrolled_course_date_', '', $meta_value );
 				} else {
 					$course_id = str_replace( $base_prefix . $blog_id . '_enrolled_course_date_', '', $meta_value );
 				}
@@ -84,7 +84,7 @@ class CoursePress_Model_Student {
 				$course_id = str_replace( 'enrolled_course_date_', '', $meta_value );
 			}
 
-			if ( !empty( $course_id ) ) {
+			if ( ! empty( $course_id ) ) {
 				return $course_id;
 			} else {
 				return false;
@@ -113,7 +113,7 @@ class CoursePress_Model_Student {
 	 * @return bool
 	 */
 	public static function update_student_data( $student_id, $student_data ) {
-		if( ! isset( $student_data['ID'] ) ) {
+		if ( ! isset( $student_data['ID'] ) ) {
 			$student_data['ID'] = $student_id;
 		}
 		$student_data = apply_filters( 'coursepress_student_update_data', $student_data );
@@ -131,5 +131,107 @@ class CoursePress_Model_Student {
 			return false;
 		}
 	}
+
+	public static function init_completion_data( $student_id, $course_id ) {
+		$data = array();
+		CoursePress_Helper_Utility::set_array_val( $data, 'version', '2.0' );
+
+		self::update_completion_data( $student_id, $course_id, $data );
+
+		return $data;
+	}
+
+	public static function get_completion_data( $student_id, $course_id ) {
+
+		if ( ! function_exists( 'get_userdata' ) ) {
+			require_once( ABSPATH . 'wp-includes/pluggable.php' );
+		}
+
+		$data = get_user_option( 'course_' . $course_id . '_progress', $student_id );
+
+		if ( empty( $data ) ) {
+			$data = self::init_completion_data( $student_id, $course_id );
+		}
+
+		return $data;
+	}
+
+	public static function update_completion_data( $student_id, $course_id, $data ) {
+
+		$global_setting = ! is_multisite();
+		update_user_option( $student_id, 'course_' . $course_id . '_progress', $data, $global_setting );
+
+	}
+
+	public static function visited_page( $student_id, $course_id, $unit_id, $page, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/last_visited_page', $page );
+		self::update_completion_data( $student_id, $course_id, $data );
+
+		return $data;
+
+	}
+
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+
+		$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+
+		if ( empty( $attributes ) || 'output' === $attributes['mode'] ) {
+			return;
+		}
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response );
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/grades/' . $module_id . '/', -1 );
+		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/feedback/' . $module_id . '/', '' );
+		self::update_completion_data( $student_id, $course_id, $data );
+
+		return $data;
+
+	}
+
+	public static function get_grade( $student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		$grades = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $unit_id . '/grades/' . $module_id );
+
+		// Get last grade
+		if( ! $response_index ) {
+			$response_index = ( count( $grades ) - 1 );
+		}
+
+		return ! empty( $grades ) && isset( $grades[ $response_index ] ) ? $grades[ $response_index ] : false;
+
+	}
+
+	public static function get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		$feedback = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $unit_id . '/feedback/' . $module_id );
+
+		// Get last grade
+		if( ! $response_index ) {
+			$response_index = ( count( $feedback ) - 1 );
+		}
+
+		return ! empty( $feedback ) && isset( $feedback[ $response_index ] ) ? $feedback[ $response_index ] : false;
+
+	}
+
 
 }

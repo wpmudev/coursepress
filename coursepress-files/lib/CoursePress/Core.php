@@ -60,6 +60,9 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			CoursePress_View_Admin_Settings::init();
 
+			// Admin AJAX
+			CoursePress_View_Front_Course::init_ajax();
+
 		} else {
 			// Init shortcodes
 			CoursePress_Model_Shortcodes::init();
@@ -67,8 +70,9 @@ class CoursePress_Core {
 			// Now we're in the front
 			CoursePress_View_Front_Course::init();
 
-
 		}
+
+
 
 		// Initialize Utility actions
 		CoursePress_Helper_Utility::init();
@@ -76,6 +80,11 @@ class CoursePress_Core {
 		// Upgrade CoursePress if needed
 		CoursePress_Upgrade::init();
 
+	}
+
+
+	public static function process_course_ajax() {
+		error_log( '====================== akadjflksdfjdfakldfslkjfdalfdaj ========================');
 	}
 
 
@@ -336,6 +345,12 @@ class CoursePress_Core {
 
 		$new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ]                                                   = 'index.php?page_id=-1&instructor_username=$matches[1]';
 
+		$upload_dir = wp_upload_dir();
+		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
+		$new_rules[ '^' . self::get_slug( 'course' ) . '/file/([^/]*)/'  ]                           = 'wp-content/uploads/$matches[1]';
+
+
+
 		//Remove potential conflicts between single and virtual page on single site
 		/* if ( !is_multisite() ) {
 		  unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
@@ -355,7 +370,6 @@ class CoursePress_Core {
 		$x = '';
 		return array_merge( $new_rules, $rules );
 	}
-	
 
 	public static function test() {
 

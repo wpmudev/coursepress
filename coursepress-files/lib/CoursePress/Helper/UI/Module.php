@@ -685,6 +685,18 @@ class CoursePress_Helper_UI_Module {
 									"placeholder": "' . __( 'e.g. index.html', CoursePress::TD ) . '"
 								}
 							]
+						},
+						{
+							"label": "' . __( 'Link Text', CoursePress::TD ) . '",
+							"description": "' . __( 'This is the text of the link that will open your primary file.', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "text-input",
+									"name": "meta_link_text",
+									"class": "medium"
+								}
+							]
 						}
 					]
 				}

@@ -269,6 +269,26 @@ var CoursePress = CoursePress || {};
                 }
             }
         }
+
+        // None of the above, so lets check for custom extensions
+        if( _coursepress.allowed_extensions ) {
+
+            if ( CoursePress.utility.in_array( extension, _coursepress.allowed_extensions ) ) {
+                return true;
+            } else {
+                if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
+                    return true;
+                } else {
+                    if ( filename.length == 0 ) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+        }
+
+
     }
 
 
@@ -783,7 +803,7 @@ var CoursePress = CoursePress || {};
         args.invalid_message = args.invalid_message ? args.invalid_message : _coursepress.invalid_extension_message;
         args.description = args.description ? args.description : '';
 
-        var supported_extensions;
+        var supported_extensions = false;
         if ( 'image' === args.type ) {
             supported_extensions = _coursepress.allowed_image_extensions.join( ', ' );
         }
@@ -792,6 +812,9 @@ var CoursePress = CoursePress || {};
         }
         if ( 'video' === args.type ) {
             supported_extensions = _coursepress.allowed_video_extensions.join( ', ' );
+        }
+        if ( ! supported_extensions && _coursepress.allowed_extensions ) {
+            supported_extensions = _coursepress.allowed_extensions.join( ', ' );
         }
 
         var content = '<div class="' + args.container_class + '">';
@@ -839,7 +862,7 @@ var CoursePress = CoursePress || {};
                     } );
 
                     $( this ).on( 'click', function () {
-
+                        var self = this;
                         var target_url_field = parent;
 
                         wp.media.string.props = function ( props, attachment ) {
@@ -852,6 +875,7 @@ var CoursePress = CoursePress || {};
                                 $( target_url_field ).addClass( 'invalid_extension_field' );
                                 $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
                             }
+                            $( self ).trigger( 'change' );
                         }
 
                         wp.media.editor.send.attachment = function ( props, attachment ) {
@@ -863,8 +887,8 @@ var CoursePress = CoursePress || {};
                                 $( target_url_field ).addClass( 'invalid_extension_field' );
                                 $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
                             }
+                            $( self ).trigger( 'change' );
                         };
-                        console.log( wp );
                         wp.media.editor.open( target_url_field );
                         return false;
 

@@ -87,6 +87,7 @@ class CoursePress_Helper_Settings {
 	public static function admin_init() {
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_style' ) );
+		add_filter( 'coursepress_custom_allowed_extensions', array( __CLASS__, 'allow_zip_extension' ) );
 	}
 
 	public static function admin_plugins_loaded() {
@@ -122,6 +123,18 @@ class CoursePress_Helper_Settings {
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress_Core::$version );
+	}
+
+	public static function allow_zip_extension( $extensions ) {
+
+		if( empty( $extensions ) ) {
+			$extensions = array();
+		}
+
+		$extensions[] = 'zip';
+
+		return $extensions;
+
 	}
 
 }

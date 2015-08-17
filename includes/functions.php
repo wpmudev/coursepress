@@ -2031,9 +2031,8 @@ function cp_do_attachment_caption( $data ) {
 
 function cp_remove_related_videos( $html, $url, $args ) {
 
-
-	$newargs		 = $args;
-	$newargs[ 'rel' ]	 = 0;
+	$newargs = $args;
+	$newargs['rel'] = 0;
 
 	// build the query url
 	$parameters = http_build_query( $newargs );

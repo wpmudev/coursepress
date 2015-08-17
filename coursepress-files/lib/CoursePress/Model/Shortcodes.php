@@ -1963,6 +1963,8 @@ class CoursePress_Model_Shortcodes {
 			return '';
 		}
 
+		$student_id = get_current_user_id();
+
 		$content = '';
 
 		$unit_status = current_user_can( 'manage_options' ) ? array( 'publish', 'draft' ) : array( 'publish' );
@@ -1974,7 +1976,14 @@ class CoursePress_Model_Shortcodes {
 
 		$counter = 0;
 
+		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+
 		foreach( $units as $unit ) {
+
+
+			// COMPLETION LOGIC
+			//$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="extended"]' );
+
 
 			if( $counter == 0 ) {
 				$previous_unit = false;
@@ -1994,8 +2003,9 @@ class CoursePress_Model_Shortcodes {
 				$additional_li_class = 'li-locked-unit';
 			}
 
-			// COMPLETION LOGIC
-			//$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="extended"]' );
+
+
+
 			$unit_progress = '';
 
 			$post_name = empty( $unit->post_name ) ? $unit->ID : $unit->post_name;

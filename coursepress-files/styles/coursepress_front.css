@@ -3,3 +3,150 @@
 .navigation.post-navigation {
     display: none;
 }
+
+/* Default Background for .alt */
+/*
+.alt {
+    position: relative;
+}
+.alt:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #000;
+    display: block;
+    width: 100%;
+    content: '&nbsp;';
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=2)";
+    filter: alpha(opacity=2);
+    -moz-opacity: 0.02;
+    opacity: 0.02;
+}
+*/
+
+
+/* Module Styles */
+.module-container ul {
+    margin: 0;
+}
+
+.module-container .hide {
+    display: none;
+}
+
+.module-container .no-browser-support,
+.module-container .module-submit-action.button {
+    font-size: 0.9em;
+    /*padding: 4px 10px;*/
+    margin: 0.4em 0 0 0;
+    /*background: none;*/
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+    clear: both;
+}
+
+.module-container .module-submit-action.button {
+    margin-bottom: 1em;
+}
+
+.module-container .module-result,
+.module-container .module-response {
+    clear: both;
+    font-size: 0.9em;
+}
+
+.module-container .module-response span.label {
+    display: block;
+}
+
+.module-container .module-result {
+    font-size: 0.8em;
+    padding: 5px 10px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba( 0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.module-container .module-result .grade {
+    float: left;
+}
+
+.module-container .module-result .feedback {
+    clear: both;
+}
+
+.module-container .module-result .resubmit {
+    float: right;
+}
+
+.module-container .module-result .resubmit a {
+    cursor: pointer;
+}
+
+
+
+.module-container input[type=textbox],
+.module-container input[type=text],
+.module-container input[type=file],
+.module-container select {
+    width: 100%;
+}
+
+.module-container .upload-progress {
+    display: inline-block;
+    font-size: 0.8em;
+    padding: 0.5em;
+    margin-left: 20px;
+    float: left;
+}
+
+.module-container .upload-progress .invalid-extension {
+    color: #ff6666;
+}
+
+.module-container .upload-progress .spinner {
+    display: inline-block;
+    font-family: dashicons;
+    font-size: 13px;
+    height: 13px;
+    line-height: 13px;
+    text-align: center;
+    vertical-align: middle;
+    width: 13px;
+}
+
+
+/*-webkit-transform-origin: 50% 50%;*/
+/*-moz-transform-origin: 50% 50%;*/
+/*-o-transform-origin: 50% 50%;*/
+/*transform-origin: 50% 50%;*/
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+.spinner{
+    -webkit-animation:spinner 2s infinite linear;
+    animation:spinner 2s infinite linear;
+    width: 1em;
+    height: 1em;
+    font-size: 1em;
+}

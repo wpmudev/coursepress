@@ -9,13 +9,14 @@ class CoursePress_Template_Unit {
 		$unit = CoursePress_Helper_Utility::the_post();
 		$page = (int) CoursePress_Helper_Utility::the_post_page();
 
+		$student_id = get_current_user_id();
+		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+
 		$page_titles = get_post_meta( $unit->ID, 'page_title', true );
 		$show_page_titles = get_post_meta( $unit->ID, 'show_page_title', true );
 
 		$total_pages = count( $page_titles );
 		$page = $page > $total_pages ? $total_pages : $page; // Can't exceed total pages, so do the last one
-
-		$meta = get_post_meta( $unit->ID, 'input_modules', true );
 
 		// Sub Menu
 		$content = do_shortcode( '[course_unit_archive_submenu]' );
@@ -41,14 +42,12 @@ class CoursePress_Template_Unit {
 		foreach( $modules as $module ) {
 
 			$attributes = CoursePress_Model_Module::module_attributes( $module );
-			$content .= $module->ID . ' ' . $attributes['module_type'] . ' [' . $attributes['mode'] . ']<br />';
-			//
-			//if( array_key_exists( $module->ID, $input_modules ) ) {
-			//	$content .= $module->ID . ' INPUT<br />';
-			//} else {
-			//	$content .= $module->ID . ' OUTPUT<br />';
-			//}
 
+			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+			$template = 'CoursePress_Template_Module';
+			if( method_exists( $template, $method ) ) {
+				$content .= call_user_func( $template . '::' . $method, $module, $attributes );
+			}
 
 
 		}
@@ -68,15 +67,12 @@ class CoursePress_Template_Unit {
 		$content .= '</div>'; // .unit-wrapper
 
 
+		// Student Tracking:
+		CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
+
+
 		return $content;
 
-		//$post = CoursePress_Helper_Utility::the_post();
-		//if( empty( $post ) ) {
-		//	return __( 'Unit not found.', CoursePress::TD );
-		//}
-
-
-		//return print_r( $post, true );
 	}
 
 
