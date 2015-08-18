@@ -1117,4 +1117,6 @@ class CoursePress_Model_Course {
 		}
 	}
 
+
+
 }

@@ -143,26 +143,28 @@ class CoursePress_Model_Unit {
 		}
 	}
 
-	public static function is_unit_available( $unit, $previous_unit, $status = false ) {
+	public static function is_unit_available( $course, $unit, $previous_unit, $status = false ) {
 
 		if ( ! $status ) {
-			$status = self::get_unit_availability_status( $unit, $previous_unit );
+			$status = self::get_unit_availability_status( $course, $unit, $previous_unit );
 		}
 
 		return $status['available'];
 	}
 
-	public static function get_unit_availability_status( $unit, $previous_unit ) {
+	public static function get_unit_availability_status( $course, $unit, $previous_unit ) {
 
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
 		}
-		if ( ! is_object( $previous_unit ) ) {
-			$previous_unit = get_post( $previous_unit );
-		}
+
+		$course_id = is_object( $course ) ? $course->ID : (int) $course;
 
 		$unit_id          = $unit->ID;
-		$previous_unit_id = ! empty( $previous_unit ) ? $previous_unit->ID : false;
+		$previous_unit_id = false;
+		if( ! empty( $previous_unit ) ) {
+			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
+		}
 
 		$unit_available_date = get_post_meta( $unit_id, 'unit_availability', true );
 
@@ -179,12 +181,10 @@ class CoursePress_Model_Unit {
 
 		$available = true;
 
-		// COMPLETION LOGIC
 		$student_id = get_current_user_id();
-		//$mandatory_done	 = Student_Completion::is_mandatory_complete( $student_id, $unit->course_id, $previous_unit_id );
-		//$unit_completed	 = Student_Completion::is_unit_complete( $student_id, $unit->course_id, $previous_unit_id );
-		$mandatory_done = true;
-		$unit_completed = true;
+		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+		$mandatory_done = CoursePress_Model_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
+		$unit_completed = CoursePress_Model_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
 
 		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
 		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );

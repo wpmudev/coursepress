@@ -19,7 +19,7 @@ class CoursePress_Template_Unit {
 		$page = $page > $total_pages ? $total_pages : $page; // Can't exceed total pages, so do the last one
 
 		// Sub Menu
-		$content = do_shortcode( '[course_unit_archive_submenu]' );
+		$content = do_shortcode( '[course_unit_submenu]' );
 
 		// Get modules for the current page only;
 		$modules = CoursePress_Model_Course::get_unit_modules( $unit->ID, array('publish'), false, false, array( 'page' => $page ) );
@@ -49,7 +49,6 @@ class CoursePress_Template_Unit {
 				$content .= call_user_func( $template . '::' . $method, $module, $attributes );
 			}
 
-
 		}
 
 		// Pager
@@ -61,6 +60,15 @@ class CoursePress_Template_Unit {
 					$unit_url = $url_path . $i;
 					$content .= '<span class="page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
 				}
+
+			// Next
+			$next_page = $total_pages === $page || $total_pages === 1 ? '' : $page + 1;
+			if( ! empty( $next_page ) ) {
+				$unit_url = $url_path . $next_page;
+				$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', CoursePress::TD ) . '</button></a></span> ';
+			}
+
+
 			$content .= '</div>';
 		}
 
@@ -78,7 +86,8 @@ class CoursePress_Template_Unit {
 
 	public static function unit_archive() {
 
-		$content = do_shortcode( '[course_unit_archive_submenu]' );
+		$content = '';
+		$content .= do_shortcode( '[course_unit_submenu]' );
 
 		$content .= '
 			<div class="instructors-content">

@@ -24,6 +24,46 @@
 }
 */
 
+/* Sub Menu */
+.submenu.nav-submenu {
+    list-style: outside none none;
+}
+
+.submenu-item {
+    float: left;
+    margin: 0 10px 50px;
+}
+
+.submenu.nav-submenu:after {
+    content: '';
+    display: block;
+    min-height: 1px;
+    height: 1px;
+    width: 100%;
+    background-color: #000000;
+    opacity: 0.4;
+    clear: both;
+}
+
+
+/* Unit Archive Styles */
+.units-archive-list, .units-archive-list li {
+    clear: both;
+    list-style: none;
+}
+
+.units-archive-list li {
+    clear: both;
+}
+
+.units-archive-list li .course-progress-disc-container {
+    float: right;
+}
+
+.units-archive-list .unit-archive-single-module-status {
+    font-size: 0.9em;
+}
+
 
 /* Module Styles */
 .module-container ul {
@@ -33,6 +73,17 @@
 
 .module-container .hide {
     display: none;
+}
+
+.module-container .is-mandatory {
+    float: right;
+    font-style: oblique;
+    font-size: 0.7em;
+    opacity: 0.5;
+}
+
+.module-container .is-mandatory:before {
+    content: '* ';
 }
 
 .module-container .no-browser-support,
@@ -196,7 +247,15 @@
 
 }
 
+.unit-wrapper .pager {
+    clear: both;
+}
 
+.unit-wrapper .pager .next-button {
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+}
 
 
 

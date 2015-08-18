@@ -21,6 +21,7 @@ class CoursePress_Model_Shortcodes {
 		//add_shortcode( 'course_unit_single', array( __CLASS__, 'course_unit_single' ) );
 		add_shortcode( 'course_unit_details', array( __CLASS__, 'course_unit_details' ) );
 		add_shortcode( 'course_unit_archive_submenu', array( __CLASS__, 'course_unit_archive_submenu' ) );
+		add_shortcode( 'course_unit_submenu', array( __CLASS__, 'course_unit_submenu' ) );
 		//add_shortcode( 'course_breadcrumbs', array( __CLASS__, 'course_breadcrumbs' ) );
 		//add_shortcode( 'course_discussion', array( __CLASS__, 'course_discussion' ) );
 		//add_shortcode( 'get_parent_course_id', array( __CLASS__, 'get_parent_course_id' ) );
@@ -59,8 +60,8 @@ class CoursePress_Model_Shortcodes {
 		//// Course-progress
 		//add_shortcode( 'course_progress', array( __CLASS__, 'course_progress' ) );
 		//add_shortcode( 'course_unit_progress', array( __CLASS__, 'course_unit_progress' ) );
-		//add_shortcode( 'course_mandatory_message', array( __CLASS__, 'course_mandatory_message' ) );
-		//add_shortcode( 'course_unit_percent', array( __CLASS__, 'course_unit_percent' ) );
+		add_shortcode( 'course_mandatory_message', array( __CLASS__, 'course_mandatory_message' ) );
+		add_shortcode( 'course_unit_percent', array( __CLASS__, 'course_unit_percent' ) );
 		//// Other shortcodes
 		////add_shortcode( 'unit_discussion', array( __CLASS__, 'unit_discussion' ) );
 		//// Page Shortcodes
@@ -1970,25 +1971,26 @@ class CoursePress_Model_Shortcodes {
 		$unit_status = current_user_can( 'manage_options' ) ? array( 'publish', 'draft' ) : array( 'publish' );
 		$units = CoursePress_Model_Course::get_units( CoursePress_Helper_Utility::the_course( true ), $unit_status );
 
-		$content .= '<div class="unit-archive-list-wrapper>';
+		$content .= '<div class="unit-archive-list-wrapper">';
 
 		$content .= count( $units ) > 0 ? '<ul class="units-archive-list">' : '';
 
 		$counter = 0;
 
-		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+		//$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
 
 		foreach( $units as $unit ) {
 
+			$unit_id = $unit->ID;
+			$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="extended"]' );
 
-			// COMPLETION LOGIC
-			//$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="extended"]' );
 
-
+			$previous_unit_id = false;
 			if( $counter == 0 ) {
 				$previous_unit = false;
 			} else {
 				$previous_unit = $units[ $counter - 1 ];
+				$previous_unit_id = $previous_unit->ID;
 			}
 			$counter += 1;
 
@@ -1996,7 +1998,7 @@ class CoursePress_Model_Shortcodes {
 			$additional_li_class = '';
 
 			$unit_id = $unit->ID;
-			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $unit, $previous_unit );
+			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $unit, $previous_unit );
 
 			if ( !$is_unit_available ) {
 				$additional_class	 = 'locked-unit';
@@ -2004,19 +2006,13 @@ class CoursePress_Model_Shortcodes {
 			}
 
 
-
-
-			$unit_progress = '';
-
 			$post_name = empty( $unit->post_name ) ? $unit->ID : $unit->post_name;
 			$content .= '
 				<li class="' . esc_attr( $additional_li_class ) . '">
-					<div class="' . esc_attr( $additional_class ) . '"></div>
 					<div class="unit-archive-single">
-						' . do_shortcode( '[course_unit_details field="percent" format="true" style="extended"]' ) . '
 						' . $unit_progress . '
 						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">'. $unit->post_title . ' ' . ( $unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '') . '</a>
-						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '"]' ) . '
+						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' ) . '
 					</div>
 				</li>
 			';
@@ -2439,55 +2435,55 @@ class CoursePress_Model_Shortcodes {
 	public static function course_mandatory_message( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id'   => false,
+			'unit_id'   => CoursePress_Helper_Utility::the_post( true ),
 			'message'   => __( '%d of %d mandatory elements completed.', CoursePress::TD ),
 		), $atts, 'course_mandatory_message' ) );
 
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
-		}
-
+		$course_id = (int) $course_id;
 		$unit_id = (int) $unit_id;
 		$message = sanitize_text_field( $message );
 
-		//			$completion = new Course_Completion( $course_id );
-		//			$completion->init_student_status();
+		$student_id = get_current_user_id();
+		$mandatory = CoursePress_Model_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
 
-		$mandatory_required = Student_Completion::get_mandatory_steps_required( $unit_id );
-
-		if ( 0 == $mandatory_required ) {
-			return false;
+		if( empty( $student_id ) || empty( $course_id ) || empty( $unit_id ) || empty( $mandatory['required'] ) ) {
+			return '';
 		}
 
-		$mandatory_completed = Student_Completion::get_mandatory_steps_completed( get_current_user_id(), $course_id, $unit_id );
+		$mandatory_required = (int) $mandatory['required'];
+		if( empty( $mandatory_required ) ) {
+			return '';
+		}
 
-		//			return sprintf( $message, $completion->unit_completed_mandatory_steps( $unit_id ), $completion->unit_mandatory_steps( $unit_id ) );
-		return sprintf( $message, $mandatory_completed, $mandatory_required );
+		return sprintf( $message, (int) $mandatory['completed'], $mandatory_required );
 	}
 
 	public static function course_unit_percent( $atts ) {
 
 		extract( shortcode_atts( array(
-			'course_id'           => false,
-			'unit_id'             => false,
+			'course_id'           => CoursePress_Helper_Utility::the_course( true ),
+			'unit_id'             => CoursePress_Helper_Utility::the_post( true ),
 			'format'              => false,
 			'style'               => 'flat',
-			'decimal_places'      => '0',
+			//'decimal_places'      => '0',
 			'tooltip_alt'         => __( 'Percent of the unit completion', CoursePress::TD ),
 			'knob_fg_color'       => '#24bde6',
 			'knob_bg_color'       => '#e0e6eb',
-			'knob_data_thickness' => '.35',
-			'knob_data_width'     => '70',
-			'knob_data_height'    => '70',
+			'knob_data_thickness' => '0.18',
+			'knob_data_width'     => '60',
+			'knob_data_height'     => '60',
+			'knob_animation'      => true,
 		), $atts, 'course_unit_percent' ) );
 
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
+		$course_id = (int) $course_id;
+		$unit_id = (int) $unit_id;
+
+		if( empty( $course_id ) || empty( $unit_id ) ) {
+			return 0;
 		}
 
-		$unit_id             = (int) $unit_id;
 		$format              = sanitize_text_field( $format );
-		$decimal_places      = sanitize_text_field( $decimal_places );
+		//$decimal_places      = sanitize_text_field( $decimal_places );
 		$style               = sanitize_text_field( $style );
 		$tooltip_alt         = sanitize_text_field( $tooltip_alt );
 		$knob_fg_color       = sanitize_text_field( $knob_fg_color );
@@ -2496,11 +2492,16 @@ class CoursePress_Model_Shortcodes {
 		$knob_data_width     = (int) $knob_data_width;
 		$knob_data_height    = (int) $knob_data_height;
 
-		if ( empty( $unit_id ) || empty( $course_id ) ) {
-			$percent_value = 0;
-		} else {
-			$percent_value = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
+		$knob_animation = CoursePress_Helper_Utility::fix_bool( $knob_animation );
+
+		if( empty( $knob_data_width ) && ! empty( $knob_data_height ) ) {
+			$knob_data_width = $knob_data_height;
 		}
+
+		$knob_data_thickness = $knob_data_width * $knob_data_thickness;
+
+		//$percent_value = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
+		$percent_value = (int) CoursePress_Model_Student::get_unit_progress( get_current_user_id(), $course_id, $unit_id );
 
 		$content = '';
 		if ( $style == 'flat' ) {
@@ -2508,7 +2509,9 @@ class CoursePress_Model_Shortcodes {
 		} elseif ( $style == 'none' ) {
 			$content = $percent_value;
 		} else {
-			$content = '<a class="tooltip" alt="' . $tooltip_alt . '"><input class="knob" data-fgColor="' . $knob_fg_color . '" data-bgColor="' . $knob_bg_color . '" data-thickness="' . $knob_data_thickness . '" data-width="' . $knob_data_width . '" data-height="' . $knob_data_height . '" data-readOnly=true value="' . $percent_value . '"></a>';
+			$data_value = $percent_value / 100;
+			$animation = $knob_animation ? '' : ' data-animation="false"';
+			$content = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '"><div class="course-progress-disc" data-value="' . $data_value . '" data-start-angle="4.7" data-size="' . $knob_data_width . '" data-thickness="' . $knob_data_thickness . '" data-animation-start-value="1.0" data-fill="{ &quot;color&quot;: &quot;' . $knob_fg_color . '&quot; }" ' . $animation . '></div></a></div>';
 		}
 
 		return $content;
@@ -2798,12 +2801,29 @@ class CoursePress_Model_Shortcodes {
 	 * =========================
 	 *
 	 */
-	public static function course_unit_archive_submenu( $atts ) {
-		global $coursepress;
+
+	// Alias
+	public static function course_unit_submenu( $atts ) {
 
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true )
-		), $atts ) );
+		), $atts, 'course_unit_archive_submenu' ) );
+
+		$course_id = (int) $course_id;
+
+		if ( empty( $course_id ) ) {
+			return '';
+		}
+
+		return do_shortcode( '[course_unit_archive_submenu course_id="' . $course_id . '"]');
+
+	}
+
+	public static function course_unit_archive_submenu( $atts ) {
+
+		extract( shortcode_atts( array(
+			'course_id' => CoursePress_Helper_Utility::the_course( true )
+		), $atts, 'course_unit_archive_submenu' ) );
 
 		$course_id = (int) $course_id;
 
@@ -4233,85 +4253,47 @@ class CoursePress_Model_Shortcodes {
 		ob_start();
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id'   => false,
+			'unit_id'   => CoursePress_Helper_Utility::the_post( true ),
+			'previous_unit' => false,
 			'message'   => __( '%d of %d mandatory elements completed.', CoursePress::TD ),
 			'format'    => 'true',
 		), $atts, 'module_status' ) );
-
-		return '';
-
-		// COMPLETION LOGIC
 
 		$message = sanitize_text_field( $message );
 		$format  = sanitize_text_field( $format );
 		$format  = 'true' == $format ? true : false;
 
-		if ( $course_id ) {
-			$course_id = (int) $course_id;
-		}
+		$course_id = (int) $course_id;
 		$unit_id = (int) $unit_id;
+		$previous_unit_id = empty( $previous_unit ) ? false : (int) $previous_unit ;
 
-		if ( empty( $unit_id ) ) {
+		if ( empty( $unit_id ) || empty( $course_id) ) {
 			return '';
 		}
 
-		$criteria = Unit::get_module_completion_data( $unit_id );
+		$unit_status = CoursePress_Model_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit );
+		$unit_available = $unit_status['available'];
 
-		$unit_status                    = Unit::get_unit_availability_status( $unit_id );
-		$unit_available                 = Unit::is_unit_available( $unit_id, $unit_status );
-		$input_modules_count            = count( $criteria['all_input_ids'] );
-		$assessable_input_modules_count = count( $criteria['gradable_modules'] );
-		$mandatory_input_elements       = count( $criteria['mandatory_modules'] );
-		$mandatory_responses            = Student_Completion::get_mandatory_steps_completed( get_current_user_id(), $course_id, $unit_id );
-		//			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
-		// $is_unit_available				 = do_shortcode( '[course_unit_details field="is_unit_available"]' );
-		//			$input_modules_count			 = do_shortcode( '[course_unit_details field="input_modules_count"]' );
-		//			$assessable_input_modules_count	 = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
-		//			$mandatory_input_elements		 = do_shortcode( '[course_unit_details field="mandatory_input_modules_count"]' );
-		//			$mandatory_responses			 = do_shortcode( '[course_unit_details field="student_module_responses" additional="mandatory"]' );
-		//			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
+		$content = '<span class="unit-archive-single-module-status">';
 
-		$unit         = new Unit( $unit_id );
-		$unit->status = $unit_status;
-
-		if ( $input_modules_count > 0 ) {
-			?>
-			<span class="unit-archive-single-module-status"><?php
-				if ( $unit_available ) {
-					if ( $mandatory_input_elements > 0 ) {
-						echo sprintf( $message, $mandatory_responses, $mandatory_input_elements );
-					}
-				} else {
-					if ( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
-						esc_html_e( 'All mandatory answers are required in previous unit.', CoursePress::TD );
-					} elseif ( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
-						esc_html_e( 'Previous unit must be completed successfully.', CoursePress::TD );
-					}
-					if ( isset( $unit->status ) && ! $unit->status['date_restriction']['result'] ) {
-						echo __( 'Available', CoursePress::TD ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-					}
-				}
-				?></span>
-		<?php } else { ?>
-			<span class="unit-archive-single-module-status"><?php
-				if ( $unit_available ) {
-					//						 _e('Read-only');
-				} else {
-					if ( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
-						esc_html_e( 'All mandatory answers are required in previous unit.', CoursePress::TD );
-					} elseif ( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
-						esc_html_e( 'Previous unit must be completed successfully.', CoursePress::TD );
-					}
-					if ( isset( $unit->status ) && ! empty( $unit->status ) && ! $unit->status['date_restriction']['result'] ) {
-						echo __( 'Available', CoursePress::TD ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability"]' ) ) );
-					}
-				}
-				?></span>
-		<?php
+		if( $unit_available ) {
+			$content .= do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '" message="' . $message . '"]' );
+		} else {
+			if ( $unit->status['mandatory_required']['enabled'] && ! $unit_status['mandatory_required']['result'] && ! $unit_status['completion_required']['enabled'] ) {
+				$content .= esc_html__( 'All mandatory answers are required in previous unit.', CoursePress::TD );
+			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
+				$content .= esc_html__( 'Previous unit must be completed successfully.', CoursePress::TD );
+			}
+			if ( ! $unit_status['date_restriction']['result'] ) {
+				$date = get_post_meta( $unit_id, 'unit_availability', true );
+				$content .= esc_html__( 'Available', CoursePress::TD ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+			}
 		}
-		$content = ob_get_clean();
+
+		$content .= '</span>';
 
 		return $content;
+
 	}
 
 	public static function student_workbook_table( $args ) {
@@ -4595,6 +4577,10 @@ class CoursePress_Model_Shortcodes {
 
 		return self::$instance;
 	}
+
+
+
+	/* MODULE SHORTCODES */
 
 }
 

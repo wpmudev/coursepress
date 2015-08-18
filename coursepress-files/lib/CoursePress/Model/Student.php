@@ -262,5 +262,195 @@ class CoursePress_Model_Student {
 
 	}
 
+	public static function calculate_completion( $student_id, $course_id ) {
+
+		$student_progress = self::get_completion_data( $student_id, $course_id );
+		$student_units = array_keys( $student_progress['units'] );
+		$units = CoursePress_Model_Course::get_units_with_modules( $course_id );
+
+		$course_required_steps = 0;
+		$course_completed_steps = 0;
+
+		foreach( $units as $unit_id => $unit ) {
+
+			// Don't bother calculating completion if the student hasn't even started the unit
+			if( ! in_array( $unit_id, $student_units ) ) {
+				continue;
+			}
+
+
+			$required_steps = 0;
+			$completed_steps = 0;
+
+			// PAGES
+			$total_pages = count( $unit['pages'] );
+			$required_steps += $total_pages;
+			$visited_pages = CoursePress_Helper_Utility::get_array_val( $student_progress, 'units/' . $unit_id . '/visited_pages' );
+			$total_visited_pages = count( $visited_pages );
+			$completed_steps += $total_visited_pages;
+
+			if( $total_pages === $total_visited_pages ) {
+				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/all_pages', true );
+			}
+
+			// First milestone
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_steps', $required_steps );
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_steps', $completed_steps );
+
+			// MODULES
+			$assessable_mandatory = 0;
+			$mandatory = 0;
+			$student_assessable_mandatory = 0;
+			$student_mandatory = 0;
+			foreach( $unit[ 'pages' ] as $page ) {
+
+				foreach( $page['modules'] as $module_id => $module ) {
+
+					$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+
+					if( 'output' === $attributes['mode'] ) {
+						continue;
+					}
+
+					// Only worry about assessable units if they are mandatory
+					if( $attributes['assessable'] && $attributes['mandatory'] ) {
+
+						// Only worry about assessable units if they are mandatory
+						$required_steps += 1;
+						$assessable_mandatory += 1;
+
+						// Get the last grade and see if we pass
+						$grade = self::get_grade( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+
+						$pass = (int) $grade >= (int) $attributes['minimum_grade'];
+
+						if( $pass ) {
+
+							$completed_steps += 1;
+							$student_assessable_mandatory += 1;
+
+							CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/passed/' . $module_id, true );
+							CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/answered/' . $module_id, true );
+
+						}
+
+					} elseif( $attributes['mandatory'] ) {
+
+						// Mandatory questions must at least have an answer, even if its not assessable
+						$required_steps += 1;
+						$mandatory += 1;
+
+						// Is there a response?
+						$responses = CoursePress_Helper_Utility::get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $module_id );
+						$response_count = ! empty( $responses ) ? count( $responses ) : 0;
+
+						if( ! empty( $response_count ) ) {
+
+							$completed_steps += 1;
+							$student_mandatory += 1;
+
+							CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/answered/' . $module_id, true );
+						}
+
+					}  // Mandatory Assessable or just Mandatory
+
+
+				} // Module
+
+
+			} // Page
+
+
+			if( $assessable_mandatory === $student_assessable_mandatory ) {
+				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/all_required_assessable', true );
+			}
+
+			$total_mandatory = $mandatory + $assessable_mandatory;
+			$total_student_mandatory = $student_mandatory + $student_assessable_mandatory;
+
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_mandatory', $total_mandatory );
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_mandatory', $total_student_mandatory );
+
+			if( $total_mandatory === $total_student_mandatory ) {
+				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/all_mandatory', true );
+			}
+
+			// Next milestone
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_steps', $required_steps );
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_steps', $completed_steps );
+
+			// Is unit complete?
+			if( $required_steps === $completed_steps ) {
+				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed', true );
+			}
+
+			$progress = (int) ( $completed_steps / $required_steps * 100 );
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/progress', $progress );
+
+			// Update Course Steps
+			$course_required_steps += $required_steps;
+			$course_completed_steps += $completed_steps;
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/required_steps', $course_required_steps );
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed_steps', $course_completed_steps );
+
+		}
+
+		// Is course complete?
+		if( $course_required_steps === $course_completed_steps ) {
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
+		}
+
+		$progress = (int) ( $course_completed_steps / $course_required_steps * 100 );
+		CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/progress', $progress );
+
+		self::update_completion_data( $student_id, $course_id, $student_progress );
+
+		return $student_progress;
+	}
+
+	public static function get_mandatory_completion( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		return array(
+			'required' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/required_mandatory' ),
+			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' )
+		);
+
+	}
+
+	public static function get_unit_progress( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		return (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/progress' );
+
+	}
+
+	public static function is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		$mandatory = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/all_mandatory' );
+		return CoursePress_Helper_Utility::fix_bool( $mandatory );
+
+	}
+
+	public static function is_unit_complete( $student_id, $course_id, $unit_id, &$data = false ) {
+
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed' );
+		return CoursePress_Helper_Utility::fix_bool( $completed );
+
+	}
 
 }

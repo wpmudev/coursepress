@@ -155,7 +155,9 @@ class CoursePress_Helper_JavaScript {
 				'file_uploaded_message'      => __( 'Your file has been submitted successfully.', CoursePress::TD ),
 				'file_upload_fail_message'   => __( 'There was a problem processing your file.', CoursePress::TD ),
 				'response_saved_message'     => __( 'Your response was recorded successfully.', CoursePress::TD ),
-				'response_fail_message'     => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
+				'response_fail_message'      => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
+				'current_course'             => CoursePress_Helper_Utility::the_course( true ),
+				'current_student'            => get_current_user_id()
 			);
 
 			wp_enqueue_script( 'coursepress_object', $script, array(
@@ -166,6 +168,17 @@ class CoursePress_Helper_JavaScript {
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
+			//$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/jquery.knob.js';
+			//
+			//wp_enqueue_script( 'jquery-knob', $script, array(
+			//	'jquery'
+			//), CoursePress_Core::$version );
+
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/circle-progress.min.js';
+
+			wp_enqueue_script( 'circle-progress', $script, array(
+				'jquery'
+			), CoursePress_Core::$version );
 
 		}
 

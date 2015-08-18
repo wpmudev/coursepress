@@ -6,8 +6,14 @@ class CoursePress_Template_Module {
 		$content = '<div class="module-container module ' . $attributes['module_type'] . ' module-' . $module->ID . ' ' . $attributes['mode'] . '" data-type="' . $attributes['module_type'] . '" data-module="' . $module->ID . '">';
 
 		$show_title = isset( $attributes['show_title'] ) ? $attributes['show_title'] : false;
+		$mandatory = isset( $attributes['mandatory'] ) ? $attributes['mandatory'] : false;
+
 		if ( $show_title ) {
 			$content .= '<h4 class="module-title">' . $module->post_title . '</h4>';
+		}
+
+		if( $mandatory ) {
+			$content .= '<div class="is-mandatory">' . esc_html__( 'Mandatory', CoursePress::TD ) . '</div>';
 		}
 
 		return $content;
@@ -29,12 +35,15 @@ class CoursePress_Template_Module {
 		$feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_key, $student_progress );
 
 		$content .= '<div class="module-result">';
-		if( $grade > -1 ) {
-			$content .= '<div class="grade"><strong>' . esc_html__( 'Grade:', CoursePress::TD ) . '</strong> ' . $grade . '%</div>';
-		} else {
-			$content .= '<div class="grade"><strong>' . esc_html__( 'Ungraded', CoursePress::TD ) . '</strong></div>';
+
+		if( CoursePress_Helper_Utility::fix_bool( $attributes['assessable'] ) ) {
+			if ( $grade > - 1 ) {
+				$content .= '<div class="grade"><strong>' . esc_html__( 'Grade:', CoursePress::TD ) . '</strong> ' . $grade . '%</div>';
+			} else {
+				$content .= '<div class="grade"><strong>' . esc_html__( 'Ungraded', CoursePress::TD ) . '</strong></div>';
+			}
 		}
-		if( $attributes['minimum_grade'] > $grade && ! $disabled && CoursePress_Helper_Utility::fix_bool( $attributes['assessable'] ) ) {
+		if( $attributes['minimum_grade'] > $grade && ! $disabled ) {
 			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', CoursePress::TD ) . '</a></div>';
 		}
 		if( $feedback && ! empty( $feedback ) ) {
@@ -177,7 +186,7 @@ class CoursePress_Template_Module {
 			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			//$attributes['retry_attempts'] = 3; // DEBUG
-			$disabled = ! $attributes['allow_retries'];
+			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
@@ -276,7 +285,7 @@ class CoursePress_Template_Module {
 			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			//$attributes['retry_attempts'] = 3; // DEBUG
-			$disabled = ! $attributes['allow_retries'];
+			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
@@ -379,7 +388,7 @@ class CoursePress_Template_Module {
 			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			//$attributes['retry_attempts'] = 3; // DEBUG
-			$disabled = ! $attributes['allow_retries'];
+			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
@@ -480,7 +489,7 @@ class CoursePress_Template_Module {
 		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		//$attributes['retry_attempts'] = 3; // DEBUG
-		$disabled = ! $attributes['allow_retries'];
+		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
@@ -542,7 +551,7 @@ class CoursePress_Template_Module {
 		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		//$attributes['retry_attempts'] = 3; // DEBUG
-		$disabled = ! $attributes['allow_retries'];
+		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
@@ -604,7 +613,7 @@ class CoursePress_Template_Module {
 		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		//$attributes['retry_attempts'] = 3; // DEBUG
-		$disabled = ! $attributes['allow_retries'];
+		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
@@ -648,7 +657,7 @@ class CoursePress_Template_Module {
 				$file_name = array_pop( $file_name );
 
 				$content .= '<div class="module-response">
-					<p class="file_holder"><span class="label">' . esc_html__( 'Your file: ', CoursePress::TD ) . '</span>
+					<p class="file_holder"><span class="label">' . esc_html__( 'Uploaded file: ', CoursePress::TD ) . '</span>
 						<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $filesize ) . '</a>
 					</p>
 				</div>';

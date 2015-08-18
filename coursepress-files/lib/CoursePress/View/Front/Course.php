@@ -438,8 +438,8 @@ class CoursePress_View_Front_Course {
 			$post_parent = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 
-			$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $post_parent );
-			error_log( print_r( $student_progress, true ) );
+			//$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $post_parent );
+			//error_log( print_r( $student_progress, true ) );
 
 			//error_log( print_r( wp_get_mime_types(), true ) );
 
@@ -653,6 +653,17 @@ class CoursePress_View_Front_Course {
 
 				$json_data = array_merge( $json_data, $data );
 				$success   = true;
+
+				break;
+
+			case 'calculate_completion':
+
+				$course_id  = (int) $data->course_id;
+				$student_id = (int) $data->student_id;
+
+				$progress = CoursePress_Model_Student::calculate_completion( $student_id, $course_id );
+
+				$success = true;
 
 				break;
 

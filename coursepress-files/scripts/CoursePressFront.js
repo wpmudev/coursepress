@@ -1,20 +1,38 @@
 var CoursePress = CoursePress || {};
 
+CoursePress.Models = CoursePress.Models || {};
+
+CoursePress.Models.CourseFront = Backbone.Model.extend( {
+    url: _coursepress._ajax_url + '?action=course_front',
+    parse: function ( response, xhr ) {
+
+        // Trigger course update events
+        if ( true === response.success ) {
+            this.set( 'response_data', response.data );
+            this.trigger( 'coursepress:' + response.data.action + '_success', response.data );
+        } else {
+            this.set( 'response_data', {} );
+            this.trigger( 'coursepress:' + response.data.action + '_error', response.data );
+        }
+    },
+    defaults: {}
+} );
+
 (function ( $ ) {
 
     // Init YouTube
-    var tag = document.createElement('script');
+    var tag = document.createElement( 'script' );
     tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
+    firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
     function bind_buttons() {
 
-        $( '.apply-button' ).on( 'click', function( e ) {
+        $( '.apply-button' ).on( 'click', function ( e ) {
 
             var target = e.currentTarget;
 
-            if( $( target ).attr( 'data-link' ).length > 0 ) {
+            if ( $( target ).attr( 'data-link' ).length > 0 ) {
                 location.href = $( target ).attr( 'data-link' );
             }
 
@@ -27,7 +45,7 @@ var CoursePress = CoursePress || {};
     function bind_module_actions() {
 
         // Resubmit
-        $('.module-container .module-result .resubmit a' ).on( 'click', function( e ) {
+        $( '.module-container .module-result .resubmit a' ).on( 'click', function ( e ) {
 
             var parent = $( this ).parents( '.module-container' );
             var elements = $( parent ).find( '.module-elements' );
@@ -42,11 +60,11 @@ var CoursePress = CoursePress || {};
 
 
         // Validate File Selected
-        $('.module-container input[type=file]' ).on( 'change', function( e ) {
+        $( '.module-container input[type=file]' ).on( 'change', function ( e ) {
 
             var parent = $( this ).parents( '.module-container' );
             var filename = $( this ).val();
-            var extension = filename.split('.' ).pop();
+            var extension = filename.split( '.' ).pop();
             var allowed_extensions = _.keys( _coursepress.allowed_student_extensions );
 
             var allowed_string = allowed_extensions.join( ', ' );
@@ -57,16 +75,16 @@ var CoursePress = CoursePress || {};
 
             $( progress ).find( '.invalid-extension' ).detach();
 
-            if( ! allowed ) {
+            if ( !allowed ) {
                 console.log( progress );
                 $( progress ).append( '<span class="invalid-extension">' + _coursepress.invalid_upload_message + allowed_string + '</span>' );
-                console.log( 'NOT ALLOWED!');
+                console.log( 'NOT ALLOWED!' );
             }
 
-        });
+        } );
 
         // Submit Result
-        $('.module-submit-action.button' ).on( 'click', function( e )  {
+        $( '.module-submit-action.button' ).on( 'click', function ( e ) {
 
             var el = this;
             var parent = $( el ).parents( '.module-container' );
@@ -87,14 +105,14 @@ var CoursePress = CoursePress || {};
 
                 case 'input-checkbox':
                     value = [];
-                    $.each( $( parent ).find( '[name="module-' + module_id + '"]:checked' ), function( i, item ) {
+                    $.each( $( parent ).find( '[name="module-' + module_id + '"]:checked' ), function ( i, item ) {
                         value.push( i );
                     } );
                     not_valid = value.length === 0;
                     break;
                 case 'input-radio':
                     var el = $( parent ).find( '[name="module-' + module_id + '"]:checked' );
-                    if( el ) {
+                    if ( el ) {
                         value = $( el ).val();
                     } else {
                         not_valid = true;
@@ -114,18 +132,18 @@ var CoursePress = CoursePress || {};
                     break;
                 case 'input-upload':
 
-                    if( supportAjaxUploadWithProgress() ) {
+                    if ( supportAjaxUploadWithProgress() ) {
 
                         var formData = new FormData();
 
-                        var file = $( parent ).find( '[name=module-' + module_id + ']' )[0 ].files[0];
+                        var file = $( parent ).find( '[name=module-' + module_id + ']' )[ 0 ].files[ 0 ];
 
                         // Exit if extension not supported
-                        var extension = file.name.split('.' ).pop();
+                        var extension = file.name.split( '.' ).pop();
                         var allowed_extensions = _.keys( _coursepress.allowed_student_extensions );
                         var allowed = _.contains( allowed_extensions, extension );
 
-                        if ( ! allowed ) {
+                        if ( !allowed ) {
                             return;
                         }
 
@@ -141,46 +159,46 @@ var CoursePress = CoursePress || {};
                         var xhr = new XMLHttpRequest();
 
                         // Started
-                        xhr.upload.addEventListener('loadstart', function( e ) {
+                        xhr.upload.addEventListener( 'loadstart', function ( e ) {
 
                             var progress = $( parent ).find( '.upload-progress' );
                             $( progress ).find( '.spinner' ).detach();
-                            $( progress ).append('<span class="image spinner">&#xf111</span>');
+                            $( progress ).append( '<span class="image spinner">&#xf111</span>' );
 
-                        }, false);
+                        }, false );
                         // Progress
-                        xhr.upload.addEventListener('progress', function( e ) {
+                        xhr.upload.addEventListener( 'progress', function ( e ) {
 
-                            var percent = e.loaded/e.total*100;
+                            var percent = e.loaded / e.total * 100;
                             var percent_el = $( parent ).find( '.upload-percent' );
                             percent = parseInt( percent );
 
-                            if( percent_el.length > 0 ) {
-                                $( percent_el ).replaceWith('<span class="upload-percent">' + percent + '%</span>');
+                            if ( percent_el.length > 0 ) {
+                                $( percent_el ).replaceWith( '<span class="upload-percent">' + percent + '%</span>' );
                             } else {
-                                $( parent ).find( '.upload-progress' ).append('<span class="upload-percent">' + percent + '%</span>');
+                                $( parent ).find( '.upload-progress' ).append( '<span class="upload-percent">' + percent + '%</span>' );
                             }
 
-                        }, false);
+                        }, false );
 
-                        xhr.upload.addEventListener('load', function( e ) {
+                        xhr.upload.addEventListener( 'load', function ( e ) {
                             // Keep this here for future
-                        }, false);
+                        }, false );
 
-                        xhr.addEventListener('readystatechange', function( e ) {
+                        xhr.addEventListener( 'readystatechange', function ( e ) {
                             var status, text, readyState;
                             try {
                                 readyState = e.target.readyState;
                                 //text = e.target.responseText;
                                 status = e.target.status;
                             }
-                            catch(err) {
+                            catch ( err ) {
                                 return;
                             }
 
                             //var data = JSON.parse( e.target.responseText )
 
-                            if (readyState == 4 && status == '200' && e.target.responseText ) {
+                            if ( readyState == 4 && status == '200' && e.target.responseText ) {
 
                                 $( parent ).find( '.upload-percent' ).detach();
                                 $( parent ).find( '.upload-progress .spinner' ).detach();
@@ -204,16 +222,16 @@ var CoursePress = CoursePress || {};
 
                             }
 
-                        }, false);
+                        }, false );
 
                         // Set up request
-                        xhr.open('POST', uri, true);
+                        xhr.open( 'POST', uri, true );
 
                         // Fire!
-                        xhr.send(formData);
+                        xhr.send( formData );
 
                     } else {
-                        $( parent ).find('form' ).submit();
+                        $( parent ).find( 'form' ).submit();
                     }
 
                     // No processing past this point
@@ -223,31 +241,15 @@ var CoursePress = CoursePress || {};
 
             }
 
-            if( not_valid ) {
+            if ( not_valid ) {
                 return;
             }
             // Add Spinner
             $( elements ).find( '.response-processing' ).detach();
-            $( elements ).find( '.module-submit-action' ).append('<span class="response-processing image spinner">&#xf111</span>');
+            $( elements ).find( '.module-submit-action' ).append( '<span class="response-processing image spinner">&#xf111</span>' );
 
             // Record Response
-            var Course = Backbone.Model.extend( {
-                url: _coursepress._ajax_url + '?action=course_front',
-                parse: function ( response, xhr ) {
-
-                    // Trigger course update events
-                    if ( true === response.success ) {
-                        this.set( 'response_data', response.data );
-                        this.trigger( 'coursepress:' + response.data.action + '_success', response.data );
-                    } else {
-                        this.set( 'response_data', {} );
-                        this.trigger( 'coursepress:' + response.data.action + '_error', response.data );
-                    }
-                },
-                defaults: {}
-            } );
-
-            var model = new Course();
+            var model = new CoursePress.Models.CourseFront();
 
             model.set( 'action', 'record_module_response' );
             model.set( 'course_id', course_id );
@@ -281,7 +283,6 @@ var CoursePress = CoursePress || {};
             } );
 
 
-
         } );
 
     }
@@ -290,19 +291,95 @@ var CoursePress = CoursePress || {};
         return supportFileAPI() && supportAjaxUploadProgressEvents() && supportFormData();
         // Is the File API supported?
         function supportFileAPI() {
-            var fi = document.createElement('INPUT');
+            var fi = document.createElement( 'INPUT' );
             fi.type = 'file';
             return 'files' in fi;
         };
         // Are progress events supported?
         function supportAjaxUploadProgressEvents() {
             var xhr = new XMLHttpRequest();
-            return !! (xhr && ('upload' in xhr) && ('onprogress' in xhr.upload));
+            return !!(xhr && ('upload' in xhr) && ('onprogress' in xhr.upload));
         };
         // Is FormData supported?
         function supportFormData() {
-            return !! window.FormData;
+            return !!window.FormData;
         }
+    }
+
+
+    function course_completion() {
+
+        var model = new CoursePress.Models.CourseFront();
+
+        model.set( 'action', 'calculate_completion' );
+        model.set( 'course_id', _coursepress.current_course );
+        model.set( 'student_id', _coursepress.current_student );
+        model.save();
+
+    }
+
+    function external() {
+        //$( 'input.knob' ).knob();
+        var circles = $( '.course-progress-disc' ).circleProgress();
+        $.each( circles, function ( i, item ) {
+
+            //var data = $( item ).data( 'circleProgress' );
+            //var value = 100 * data.value;
+            //var ctx = data.ctx;
+            //ctx.textAlign = 'center';
+            //ctx.textBaseline = 'middle';
+            //ctx.fillText( value + '%', data.size / 2, data.size / 2 );
+            //ctx.save();
+            $( item ).on( 'circle-animation-progress', function ( e, v ) {
+                var obj = $( this ).data( 'circle-progress' ),
+                    ctx = obj.ctx,
+                    s = obj.size,
+                    sv = (100 * v).toFixed(),
+                    ov = (100 * obj.value ).toFixed(),
+                    fill = obj.arcFill;
+
+                sv = 100 - sv;
+                if ( sv < ov ) {
+                    sv = ov;
+                }
+                ctx.save();
+                ctx.font = s / 4.5 + "px sans-serif";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = fill;
+                ctx.fillText( sv + '%', s / 2 + s / 80, s / 2 );
+                ctx.restore();
+            } );
+
+            $( item ).on( 'circle-animation-end', function ( e ) {
+                var obj = $( this ).data( 'circle-progress' ),
+                    ctx = obj.ctx,
+                    s = obj.size,
+                    sv = (100 * obj.value ).toFixed(),
+                    fill = obj.arcFill;
+                obj.drawFrame( obj.value );
+                ctx.font = s / 4.5 + "px sans-serif";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = fill;
+                ctx.fillText( sv + '%', s / 2, s / 2 );
+            } );
+
+            // In case animation doesn't run
+            var obj = $( item ).data( 'circle-progress' ),
+                ctx = obj.ctx,
+                s = obj.size,
+                sv = (100 * obj.value ).toFixed(),
+                fill = obj.arcFill;
+            ctx.font = s / 4.5 + "px sans-serif";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = fill;
+            ctx.fillText( sv + '%', s / 2, s / 2 + s / 80 );
+
+
+        } );
+
     }
 
 
@@ -312,12 +389,15 @@ var CoursePress = CoursePress || {};
 
         bind_module_actions();
 
+        course_completion();
+
+        external();
 
 
-    });
+    } );
 
 
-} ) ( jQuery );
+})( jQuery );
 
 
 CoursePress.current = CoursePress.current || {};
@@ -327,10 +407,10 @@ function onYouTubeIframeAPIReady() {
     var $ = jQuery;
 
     // Course Featured Video
-    var videoID = $( '#feature-video-div' ).attr('data-video');
-    var width = $( '#feature-video-div' ).attr('data-width');
-    var height = $( '#feature-video-div' ).attr('data-height');
-    CoursePress.current.featuredVideo = new YT.Player( 'feature-video-div' ,
+    var videoID = $( '#feature-video-div' ).attr( 'data-video' );
+    var width = $( '#feature-video-div' ).attr( 'data-width' );
+    var height = $( '#feature-video-div' ).attr( 'data-height' );
+    CoursePress.current.featuredVideo = new YT.Player( 'feature-video-div',
         {
             videoId: videoID,
             width: width,
