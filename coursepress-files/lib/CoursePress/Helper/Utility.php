@@ -543,30 +543,35 @@ class CoursePress_Helper_Utility {
 	public static function force_download_file_request() {
 
 		if ( isset( $_GET[ 'fdcpf' ] ) ) {
-			ob_start();
-
 			$requested_file	 = self::decode( $_GET[ 'fdcpf' ] );
-
-			$requested_file_obj = wp_check_filetype( $requested_file );
-			header( 'Pragma: public' );
-			header( 'Expires: 0' );
-			header( 'Cache-Control: must-revalidate, post-check = 0, pre-check = 0' );
-			header( 'Cache-Control: private', false );
-			header( 'Content-Type: ' . $requested_file_obj[ "type" ] );
-			header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
-			header( 'Content-Transfer-Encoding: binary' );
-			header( 'Connection: close' );
-
-			/**
-			 * Filter used to alter header params. E.g. removing 'timeout'.
-			 */
-			$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
-				'timeout'	 => 60,
-				'user-agent' => CoursePress_Core::$name . ' / ' . CoursePress_Core::$version . ';'
-			) );
-			echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
-			exit();
+			self::download_file_request( $requested_file );
 		}
+
+	}
+
+	public static function download_file_request( $requested_file ) {
+
+		ob_start();
+
+		$requested_file_obj = wp_check_filetype( $requested_file );
+		header( 'Pragma: public' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check = 0, pre-check = 0' );
+		header( 'Cache-Control: private', false );
+		header( 'Content-Type: ' . $requested_file_obj[ "type" ] );
+		header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Connection: close' );
+
+		/**
+		 * Filter used to alter header params. E.g. removing 'timeout'.
+		 */
+		$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
+			'timeout'	 => 60,
+			'user-agent' => CoursePress_Core::$name . ' / ' . CoursePress_Core::$version . ';'
+		) );
+		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+		exit();
 
 	}
 
@@ -837,6 +842,50 @@ class CoursePress_Helper_Utility {
 			'pdf' => 'application/pdf',
 			'zip' => 'application/zip'
 		) );
+	}
+
+	public static function remove_related_videos( $html, $url, $args ) {
+
+		$newargs                   = $args;
+		$newargs['rel']            = 0;
+		$newargs['modestbranding'] = 1;
+
+		// build the query url
+		$parameters = http_build_query( $newargs );
+
+		// YouTube
+		$html = str_replace( 'feature=oembed', 'feature=oembed&' . $parameters, $html );
+
+		return $html;
+	}
+
+	public static function has_connection( $test_domain = "www.google.com" ) {
+		$cn = @fsockopen( $test_domain, 80, $err_num, $err, 5);
+		$connected = (bool) $cn;
+		if( $connected ) { fclose( $cn ); }
+		return $connected;
+	}
+
+	public static function get_user_name( $user_id, $last_first = false ) {
+		$user_id = (int) $user_id;
+		$display_name = get_user_option( 'display_name', $user_id );
+		$last         = get_user_option( 'last_name', $user_id );
+		$last         = ! empty( $last ) ? $last : '';
+		$first        = get_user_option( 'first_name', $user_id );
+		$first        = ! empty( $first ) ? $first : '';
+		$return_name  = '';
+		if( ! $last_first ) {
+			$return_name = ! empty( $first ) ? $first : '';
+			$return_name = ! empty( $last ) ? $return_name . ' ' . $last : $return_name;
+			$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+		} else {
+			$return_name = ! empty( $last ) ? $last : '';
+			$return_name = ! empty( $first ) && ! empty( $last ) ? $last . ', ' . $first : $return_name;
+			$return_name = empty( $return_name ) && ! empty ( $first ) && empty( $last ) ? $first : $return_name;
+			$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+		}
+
+		return $return_name;
 	}
 
 }

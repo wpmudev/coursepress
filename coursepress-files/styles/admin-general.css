@@ -956,18 +956,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   width: 170px;
 }
 
-.tab-content .wide {
-  width: 100%;
-}
-.tab-content .widemedium {
-  width: 80%;
-}
-.tab-content .medium {
-  width: 40%;
-}
-.tab-content .narrow {
-  width: 20%;
-}
 .tab-content .normal {
   font-weight: normal;
 }
@@ -1423,6 +1411,224 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 
 .module-input-upload a {
   background-position: -200px -40px;
+}
+
+/*--------------------------------------------------------------
+# 7. Assessments
+--------------------------------------------------------------*/
+.coursepress_settings_wrapper.assessment .unit-title {
+  margin-top: 15px;
+}
+.coursepress_settings_wrapper.assessment table {
+  width: 100%;
+}
+.coursepress_settings_wrapper.assessment table td, .coursepress_settings_wrapper.assessment table th, .coursepress_settings_wrapper.assessment table tr {
+  vertical-align: top;
+  text-align: left;
+}
+.coursepress_settings_wrapper.assessment table th.student,
+.coursepress_settings_wrapper.assessment table th.submission,
+.coursepress_settings_wrapper.assessment table th.response,
+.coursepress_settings_wrapper.assessment table th.grade,
+.coursepress_settings_wrapper.assessment table th.feedback,
+.coursepress_settings_wrapper.assessment table td.student-name,
+.coursepress_settings_wrapper.assessment table td.student-submission,
+.coursepress_settings_wrapper.assessment table td.student-answer,
+.coursepress_settings_wrapper.assessment table td.student-grade,
+.coursepress_settings_wrapper.assessment table td.instructor-feedback {
+  width: 10%;
+}
+.coursepress_settings_wrapper.assessment table th.activity,
+.coursepress_settings_wrapper.assessment table td.student-activity {
+  width: 50%;
+}
+.coursepress_settings_wrapper.assessment table tr.student-name td {
+  font-weight: bold;
+}
+.coursepress_settings_wrapper.assessment table thead tr th:first-child {
+  padding-left: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody tr td {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+.coursepress_settings_wrapper.assessment table tbody tr:last-child td {
+  border-bottom: none;
+}
+.coursepress_settings_wrapper.assessment table tbody tr:first-child td {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody tr td:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody tr td:last-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  padding-right: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody tr.treegrid-collapsed td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.coursepress_settings_wrapper.assessment table tbody:last-child tr:first-child td:first-child,
+.coursepress_settings_wrapper.assessment table thead + tbody tr:first-child td:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-left-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody:last-child tr:first-child td:last-child,
+.coursepress_settings_wrapper.assessment table thead + tbody tr:first-child td:last-child {
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-right-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td:first-child {
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td:last-child {
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td:first-child {
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td:last-child {
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-bottom-right-radius: 5px;
+}
+.coursepress_settings_wrapper.assessment table tbody.odd td {
+  background: #F9F9F9;
+}
+.coursepress_settings_wrapper.assessment table tbody.alt td,
+.coursepress_settings_wrapper.assessment table tbody.even td {
+  background: #FFFFFF;
+}
+.coursepress_settings_wrapper.assessment table tfoot td {
+  text-align: right;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container {
+  margin-top: 10px;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container span {
+  font-weight: bold;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container .unit-tabs {
+  display: inline-block;
+  margin-left: 10px;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container .unit-tabs .unit-tab {
+  display: inline-block;
+  margin-right: 5px;
+  width: 2em;
+  text-align: center;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 3px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #444444;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container .unit-tabs .unit-tab:hover,
+.coursepress_settings_wrapper.assessment .unit-tabs-container .unit-tabs .unit-tab.active {
+  background: #0091CD;
+  color: #ffffff;
+  cursor: pointer;
+}
+.coursepress_settings_wrapper.assessment .unit-tabs-container .unit-tabs .unit-tab.draft {
+  opacity: 0.4;
+  font-style: oblique;
+  font-weight: normal;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .course-name,
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .unit-name {
+  display: inline-block;
+  margin-right: 50px;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 3px 10px 20px 10px;
+  margin-top: 10px;
+  background: #F9F9F9;
+  overflow: hidden;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .response {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 5px 10px;
+  background: #ffffff;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .response ul li:before {
+  font-family: dashicons;
+  content: "";
+  display: inline-block;
+  font-size: 13px;
+  height: 12px;
+  line-height: 6px;
+  margin-right: 4px;
+  opacity: 0.5;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 11px;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .response ul li.chosen-answer.correct:before {
+  content: "\f147";
+  color: #41bb8a;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .response ul li.chosen-answer.incorrect:before {
+  content: "\f158";
+  color: #ff6666;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .instructor-feedback-label {
+  position: relative;
+  top: 40px;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .grading {
+  float: left;
+}
+.coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper .save-button {
+  padding-top: 20px;
+  text-align: right;
+}
+.coursepress_settings_wrapper.assessment .collapse-all-students > a,
+.coursepress_settings_wrapper.assessment .expand-all-students > a {
+  background: none repeat scroll 0 0 #f9f9f9;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+/*--------------------------------------------------------------
+# 8. Assessments
+--------------------------------------------------------------*/
+.coursepress_settings_wrapper.reports .column-report .pdf {
+  background-image: url("../assets/pdf_document.png");
+  background-size: 100% 100%;
+  width: 16px;
+  height: 16px;
+  display: block;
+  cursor: pointer;
+}
+.coursepress_settings_wrapper.reports .help-tooltip {
+  display: inline-block;
 }
 
 /*--------------------------------------------------------------

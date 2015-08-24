@@ -718,13 +718,13 @@ var CoursePress = CoursePress || {};
             update_nonce( data );
 
             console.log( data );
-            if( data.redirect ) {
-                var dest = location.href.replace('&tab=setup','')
+            if ( data.redirect ) {
+                var dest = location.href.replace( '&tab=setup', '' )
 
-                if( ! /\&id/.test( dest ) ) {
+                if ( !/\&id/.test( dest ) ) {
                     dest += '&id=' + data.course_id;
                 }
-                if( ! /\&action=edit/.test( dest ) ) {
+                if ( !/\&action=edit/.test( dest ) ) {
                     dest += '&action=edit';
                 }
 
@@ -872,12 +872,96 @@ var CoursePress = CoursePress || {};
     }
 
 
+    function bind_assessment_events() {
+
+        var ungraded_selector = '.coursepress_settings_wrapper.assessment .ungraded-elements [type="checkbox"]';
+        var submitted_selector = '.coursepress_settings_wrapper.assessment .submitted-elements [type="checkbox"]';
+
+        function update_modules( el ) {
+
+            var ungraded_checked = $( ungraded_selector ).is( ':checked' );
+            var submitted_checked = $( submitted_selector ).is( ':checked' )
+
+            $( 'tbody tr' ).css( 'display', 'none' );
+
+            var submitted_class = '';
+            if( submitted_checked ) {
+                $( 'tr.treegrid-expanded ~ tr.submitted' ).css( 'display', 'table-row' );
+                $( 'tr.treegrid-expanded ~ tr.not-submitted' ).css( 'display', 'none' );
+                submitted_class = '.submitted';
+            } else {
+                $( 'tr.treegrid-expanded ~ tr.submitted' ).css( 'display', 'table-row' );
+                $( 'tr.treegrid-expanded ~ tr.not-submitted' ).css( 'display', 'table-row' );
+            }
+
+
+            if( ungraded_checked ) {
+                $( 'tr.treegrid-expanded ~ tr.ungraded' + submitted_class ).css( 'display', 'table-row' );
+                $( 'tr.treegrid-expanded ~ tr.graded' + submitted_class ).css( 'display', 'none' );
+            } else {
+                $( 'tr.treegrid-expanded ~ tr.ungraded' + submitted_class ).css( 'display', 'table-row' );
+                $( 'tr.treegrid-expanded ~ tr.graded' + submitted_class ).css( 'display', 'table-row' );
+            }
+
+            $( 'tbody tr.student-name' ).css( 'display', 'table-row' );
+
+        }
+
+        $( ungraded_selector ).on( 'click', function( e ) { update_modules( this ); } );
+        $( submitted_selector ).on( 'click', function( e ) { update_modules( this ); } );
+
+        $( ".coursepress_settings_wrapper.assessment table" ).treegrid( { initialState: 'collapsed' } ).on( 'expand', function( e ) { update_modules( this ); } );
+
+        $( '.coursepress_settings_wrapper.assessment table .instructor-feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+
+
+        $( '.coursepress_settings_wrapper.assessment [name="course-list"]' ).on( 'change', function( e ) {
+            var course_id = $( this ).val();
+            location.href = _coursepress.assessment_grid_url + '&course_id=' + course_id;
+        } );
+
+        $( '.coursepress_settings_wrapper.assessment .collapse-all-students' ).on( 'click', function( e ) {
+            $( ".coursepress_settings_wrapper.assessment table" ).treegrid('collapseAll');
+        } );
+
+        $( '.coursepress_settings_wrapper.assessment .expand-all-students' ).on( 'click', function( e ) {
+            $( ".coursepress_settings_wrapper.assessment table" ).treegrid('expandAll');
+        } );
+
+
+    }
+
+    function bind_reports_events() {
+
+        $( '.coursepress_settings_wrapper.reports .help-tooltip' ).link_popup( { link_text:  '<span class="dashicons dashicons-editor-help"></span>', offset_x: 20 });
+
+        $( '.coursepress_settings_wrapper.reports [name="course-list"]' ).on( 'change', function( e ) {
+            var course_id = $( this ).val();
+            location.href = _coursepress.assessment_report_url + '&course_id=' + course_id;
+        } );
+
+        $( '.coursepress_settings_wrapper.reports .column-report .pdf' ).on( 'click', function( e ) {
+
+            var form = $( this ).parents('form')[0];
+            var student = $( this ).attr('data-student');
+
+            $( form ).find('[name=students]' ).val( student );
+            form.submit();
+
+        } );
+
+
+    }
+
     // Try to keep only one of these blocks and use functions/objects instead
     $( document ).ready( function ( $ ) {
 
         setup_UI();
         bind_buttons();
         bind_coursepress_events();
+
+        bind_assessment_events();
+        bind_reports_events();
 
         // Get setup marker and advance accordion
         var setup_marker = $( '#course-setup-steps .step-title .status.setup_marker' ).click();

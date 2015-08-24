@@ -44,7 +44,8 @@ class CoursePress_Model_VirtualPage {
 
 	// filter to create virtual page content
 	function virtualPage( $posts ) {
-		global $wp, $wp_query, $comment;
+		global $wp, $wp_query, $comment, $withcomments;
+		$withcomments = false;
 
 		// This will be 0 if its a virtual page.
 		if ( 0 < $wp_query->post_count ) {
@@ -106,7 +107,17 @@ class CoursePress_Model_VirtualPage {
 		$wp_query->query_vars['error'] = '';
 		$wp_query->is_404              = false;
 
+		if( 'closed' === $this->comment_status ) {
+			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
+		}
+
+
 		return ( $posts );
+	}
+
+	function hide_comments( $template ) {
+		$template = CoursePress_Core::$plugin_lib_path . 'lib/CoursePress/Template/no-comment.php';
+		return $template;
 	}
 
 	function hide_title( $title, $id ) {

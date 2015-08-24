@@ -583,6 +583,7 @@ class CoursePress_Model_Course {
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
 
 		self::$last_course_id = $course_id;
+		$combine = array();
 
 		if( ! array( $status ) ) {
 			$status = array( $status );
@@ -609,9 +610,8 @@ class CoursePress_Model_Course {
 
 		$query = new WP_Query( $post_args );
 
-		$combine = array();
-
 		foreach( $query->posts as $post ) {
+
 			if( 'module' == $post->post_type ) {
 				$post->module_order = get_post_meta( $post->ID, 'module_order', true );
 				$pages = get_post_meta( $post->post_parent, 'page_title', true );
@@ -627,6 +627,13 @@ class CoursePress_Model_Course {
 			} elseif( 'unit' == $post->post_type ) {
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );
+			}
+		}
+
+		// Fix legacy orphaned posts
+		foreach( $combine as $post_id => $unit ) {
+			if( ! isset( $unit['unit'] ) ) {
+				unset( $combine[ $post_id ] );
 			}
 		}
 
@@ -707,8 +714,14 @@ class CoursePress_Model_Course {
 		global $wpdb;
 
 		$args = array(
-			'meta_key' => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
-			'meta_compare' => 'EXISTS'
+			'meta_key' => 'last_name',
+			'orderby' => 'meta_value',
+			'meta_query' => array(
+				array(
+					'key'     => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+					'compare' => 'EXISTS'
+				),
+			)
 		);
 
 		if( $per_page > 0 ) {
@@ -723,9 +736,16 @@ class CoursePress_Model_Course {
 
 	public static function get_student_ids( $course_id, $count = false ) {
 		global $wpdb;
+
 		$students = self::get_users( array(
-			'meta_key' => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
-			'meta_compare' => 'EXISTS',
+			'meta_key' => 'last_name',
+			'orderby' => 'meta_value',
+			'meta_query' => array(
+				array(
+					'key'     => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+					'compare' => 'EXISTS'
+				),
+			),
 			'fields' => 'ID'
 		));
 

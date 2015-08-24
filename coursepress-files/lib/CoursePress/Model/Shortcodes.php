@@ -31,7 +31,7 @@ class CoursePress_Model_Shortcodes {
 		add_shortcode( 'course_featured', array( __CLASS__, 'course_featured' ) );
 		//add_shortcode( 'course_structure', array( __CLASS__, 'course_structure' ) );
 		add_shortcode( 'module_status', array( __CLASS__, 'module_status' ) );
-		//add_shortcode( 'student_workbook_table', array( __CLASS__, 'student_workbook_table' ) );
+		add_shortcode( 'student_workbook_table', array( __CLASS__, 'student_workbook_table' ) );
 		add_shortcode( 'course', array( __CLASS__, 'course' ) );
 		//// Sub-shortcodes
 		add_shortcode( 'course_title', array( __CLASS__, 'course_title' ) );
@@ -105,8 +105,8 @@ class CoursePress_Model_Shortcodes {
 			'show_title'      => 'no',
 		), $atts, 'course' ) );
 
-		$course_id       = (int) $course_id;
-		if( empty( $course_id ) ) {
+		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) {
 			return '';
 		}
 		$show            = sanitize_text_field( $show );
@@ -1114,32 +1114,12 @@ class CoursePress_Model_Shortcodes {
 				$embed_args['height'] = $height;
 			}
 
-			$post_type = get_post_type();
-			$is_course = ! empty( $post_type ) && 'course' === $post_type;
-			if ( $is_course && preg_match( '/(youtube.com|youtu.be)/', $video_src ) ) {
-
-				if ( preg_match( '/youtube.com/', $video_src ) ) {
-					$videoID = preg_replace( '/.*v\=/', '', $video_src );
-				} else {
-					$videoID = preg_replace( '/.*youtu.be\//', '', $video_src );
-				}
-
-				$video = wp_oembed_get( $video_src, $embed_args );
-				if ( 'default' == $width ) {
-					preg_match( '/width="(\d*)"/', $video, $match );
-					$embed_args['width'] = $match[1];
-				}
-
-				if ( 'default' == $height ) {
-					preg_match( '/height="(\d*)"/', $video, $match );
-					$embed_args['height'] = $match[1];
-				}
-
-				$video = '<div data-video="' . $videoID . '" id="feature-video-div" data-width="' . $embed_args['width'] . '" data-height="' . $embed_args['height'] . '"></div>';
-
-			} else {
-				$video = wp_oembed_get( $video_src, $embed_args );
+			// Add YouTube filter
+			if ( preg_match( '/youtube.com|youtu.be/', $video_src ) ) {
+				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
 			}
+
+			$video = wp_oembed_get( $video_src, $embed_args );
 
 			$content .= $video;
 		}
@@ -1303,7 +1283,7 @@ class CoursePress_Model_Shortcodes {
 				'type'  => 'label',
 			),
 			'access'              => array(
-				'label' => ! $is_instructor ? sanitize_text_field( $access_text ) : sanitize_text_field( $instructor_text ) ,
+				'label' => ! $is_instructor ? sanitize_text_field( $access_text ) : sanitize_text_field( $instructor_text ),
 				'attr'  => array(
 					'class'     => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
 					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units' ) ) ),
@@ -1311,7 +1291,7 @@ class CoursePress_Model_Shortcodes {
 				'type'  => 'button',
 			),
 			'continue'            => array(
-				'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ) ,
+				'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 				'attr'  => array(
 					'class'     => 'apply-button apply-button-enrolled ' . $class,
 					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units' ) ) ),
@@ -1956,7 +1936,7 @@ class CoursePress_Model_Shortcodes {
 	public static function unit_archive_list( $atts ) {
 
 		extract( shortcode_atts( array(
-			'course_id'       => CoursePress_Helper_Utility::the_course( true ),
+			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 		), $atts, 'unit_archive_list' ) );
 
 		$course_id = (int) $course_id;
@@ -1969,7 +1949,7 @@ class CoursePress_Model_Shortcodes {
 		$content = '';
 
 		$unit_status = current_user_can( 'manage_options' ) ? array( 'publish', 'draft' ) : array( 'publish' );
-		$units = CoursePress_Model_Course::get_units( CoursePress_Helper_Utility::the_course( true ), $unit_status );
+		$units       = CoursePress_Model_Course::get_units( CoursePress_Helper_Utility::the_course( true ), $unit_status );
 
 		$content .= '<div class="unit-archive-list-wrapper">';
 
@@ -1979,29 +1959,29 @@ class CoursePress_Model_Shortcodes {
 
 		//$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
 
-		foreach( $units as $unit ) {
+		foreach ( $units as $unit ) {
 
-			$unit_id = $unit->ID;
+			$unit_id       = $unit->ID;
 			$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="extended"]' );
 
 
 			$previous_unit_id = false;
-			if( $counter == 0 ) {
+			if ( $counter == 0 ) {
 				$previous_unit = false;
 			} else {
-				$previous_unit = $units[ $counter - 1 ];
+				$previous_unit    = $units[ $counter - 1 ];
 				$previous_unit_id = $previous_unit->ID;
 			}
 			$counter += 1;
 
-			$additional_class	 = '';
+			$additional_class    = '';
 			$additional_li_class = '';
 
-			$unit_id = $unit->ID;
+			$unit_id           = $unit->ID;
 			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $unit, $previous_unit );
 
-			if ( !$is_unit_available ) {
-				$additional_class	 = 'locked-unit';
+			if ( ! $is_unit_available ) {
+				$additional_class    = 'locked-unit';
 				$additional_li_class = 'li-locked-unit';
 			}
 
@@ -2011,7 +1991,7 @@ class CoursePress_Model_Shortcodes {
 				<li class="' . esc_attr( $additional_li_class ) . '">
 					<div class="unit-archive-single">
 						' . $unit_progress . '
-						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">'. $unit->post_title . ' ' . ( $unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '') . '</a>
+						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $unit->post_title . ' ' . ( $unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '' ) . '</a>
 						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' ) . '
 					</div>
 				</li>
@@ -2174,37 +2154,37 @@ class CoursePress_Model_Shortcodes {
 		), $atts, 'course_list' ) );
 
 
-		$status              = sanitize_html_class( $status );
-		$instructor          = sanitize_text_field( $instructor );
-		$instructor_msg      = sanitize_text_field( $instructor_msg );
-		$student             = sanitize_text_field( $student );
-		$student_msg         = sanitize_text_field( $student_msg );
-		$two_column          = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $two_column ) );
-		$title_column        = sanitize_text_field( $title_column );
-		$left_class          = sanitize_html_class( $left_class );
-		$right_class         = sanitize_html_class( $right_class );
-		$course_class        = sanitize_html_class( $course_class );
-		$title_link          = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $title_link ) );
-		$title_class         = sanitize_html_class( $title_class );
-		$title_tag           = sanitize_html_class( $title_tag );
-		$course_status       = sanitize_text_field( $course_status );
-		$list_wrapper_before = sanitize_html_class( $list_wrapper_before );
-		$list_wrapper_after  = sanitize_html_class( $list_wrapper_after );
+		$status                    = sanitize_html_class( $status );
+		$instructor                = sanitize_text_field( $instructor );
+		$instructor_msg            = sanitize_text_field( $instructor_msg );
+		$student                   = sanitize_text_field( $student );
+		$student_msg               = sanitize_text_field( $student_msg );
+		$two_column                = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $two_column ) );
+		$title_column              = sanitize_text_field( $title_column );
+		$left_class                = sanitize_html_class( $left_class );
+		$right_class               = sanitize_html_class( $right_class );
+		$course_class              = sanitize_html_class( $course_class );
+		$title_link                = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $title_link ) );
+		$title_class               = sanitize_html_class( $title_class );
+		$title_tag                 = sanitize_html_class( $title_tag );
+		$course_status             = sanitize_text_field( $course_status );
+		$list_wrapper_before       = sanitize_html_class( $list_wrapper_before );
+		$list_wrapper_after        = sanitize_html_class( $list_wrapper_after );
 		$list_wrapper_before_class = sanitize_html_class( $list_wrapper_before_class );
-		$show                = sanitize_text_field( $show );
-		$show_button         = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_button ) );
-		$show_divider        = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_divider ) );
-		$show_title          = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_title ) );
-		$show_media          = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_media ) );
-		$media_type          = ! empty( $media_type ) ? sanitize_text_field( $media_type ) : 'image';
-		$media_priority      = ! empty( $media_priority ) ? sanitize_text_field( $media_priority ) : 'image';
-		$admin_links         = sanitize_text_field( $admin_links );
-		$admin_links         = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $admin_links ) );
-		$manage_link_title   = sanitize_text_field( $manage_link_title );
-		$finished_link_title = sanitize_text_field( $finished_link_title );
-		$limit               = (int) $limit;
-		$order               = sanitize_html_class( $order );
-		$class               = sanitize_html_class( $class );
+		$show                      = sanitize_text_field( $show );
+		$show_button               = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_button ) );
+		$show_divider              = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_divider ) );
+		$show_title                = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_title ) );
+		$show_media                = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $show_media ) );
+		$media_type                = ! empty( $media_type ) ? sanitize_text_field( $media_type ) : 'image';
+		$media_priority            = ! empty( $media_priority ) ? sanitize_text_field( $media_priority ) : 'image';
+		$admin_links               = sanitize_text_field( $admin_links );
+		$admin_links               = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $admin_links ) );
+		$manage_link_title         = sanitize_text_field( $manage_link_title );
+		$finished_link_title       = sanitize_text_field( $finished_link_title );
+		$limit                     = (int) $limit;
+		$order                     = sanitize_html_class( $order );
+		$class                     = sanitize_html_class( $class );
 
 		$status = 'published' == $status ? 'publish' : $status;
 
@@ -2363,7 +2343,7 @@ class CoursePress_Model_Shortcodes {
 		}
 
 		if ( ( ! $courses || 0 == count( $courses ) ) && ! empty( $student ) ) {
-			$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress_Core::get_setting('slugs/course') ) . '">' . __( 'here', CoursePress::TD ) . '</a>' );
+			$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress_Core::get_setting( 'slugs/course' ) ) . '">' . __( 'here', CoursePress::TD ) . '</a>' );
 		}
 
 		// </div> course-list
@@ -2440,18 +2420,18 @@ class CoursePress_Model_Shortcodes {
 		), $atts, 'course_mandatory_message' ) );
 
 		$course_id = (int) $course_id;
-		$unit_id = (int) $unit_id;
-		$message = sanitize_text_field( $message );
+		$unit_id   = (int) $unit_id;
+		$message   = sanitize_text_field( $message );
 
 		$student_id = get_current_user_id();
-		$mandatory = CoursePress_Model_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
+		$mandatory  = CoursePress_Model_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
 
-		if( empty( $student_id ) || empty( $course_id ) || empty( $unit_id ) || empty( $mandatory['required'] ) ) {
+		if ( empty( $student_id ) || empty( $course_id ) || empty( $unit_id ) || empty( $mandatory['required'] ) ) {
 			return '';
 		}
 
 		$mandatory_required = (int) $mandatory['required'];
-		if( empty( $mandatory_required ) ) {
+		if ( empty( $mandatory_required ) ) {
 			return '';
 		}
 
@@ -2471,18 +2451,18 @@ class CoursePress_Model_Shortcodes {
 			'knob_bg_color'       => '#e0e6eb',
 			'knob_data_thickness' => '0.18',
 			'knob_data_width'     => '60',
-			'knob_data_height'     => '60',
+			'knob_data_height'    => '60',
 			'knob_animation'      => true,
 		), $atts, 'course_unit_percent' ) );
 
 		$course_id = (int) $course_id;
-		$unit_id = (int) $unit_id;
+		$unit_id   = (int) $unit_id;
 
-		if( empty( $course_id ) || empty( $unit_id ) ) {
+		if ( empty( $course_id ) || empty( $unit_id ) ) {
 			return 0;
 		}
 
-		$format              = sanitize_text_field( $format );
+		$format = sanitize_text_field( $format );
 		//$decimal_places      = sanitize_text_field( $decimal_places );
 		$style               = sanitize_text_field( $style );
 		$tooltip_alt         = sanitize_text_field( $tooltip_alt );
@@ -2494,7 +2474,7 @@ class CoursePress_Model_Shortcodes {
 
 		$knob_animation = CoursePress_Helper_Utility::fix_bool( $knob_animation );
 
-		if( empty( $knob_data_width ) && ! empty( $knob_data_height ) ) {
+		if ( empty( $knob_data_width ) && ! empty( $knob_data_height ) ) {
 			$knob_data_width = $knob_data_height;
 		}
 
@@ -2510,8 +2490,9 @@ class CoursePress_Model_Shortcodes {
 			$content = $percent_value;
 		} else {
 			$data_value = $percent_value / 100;
-			$animation = $knob_animation ? '' : ' data-animation="false"';
-			$content = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '"><div class="course-progress-disc" data-value="' . $data_value . '" data-start-angle="4.7" data-size="' . $knob_data_width . '" data-thickness="' . $knob_data_thickness . '" data-animation-start-value="1.0" data-fill="{ &quot;color&quot;: &quot;' . $knob_fg_color . '&quot; }" ' . $animation . '></div></a></div>';
+			$animation  = $knob_animation ? '' : ' data-animation="false"';
+			$content    = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '"><div class="course-progress-disc" data-value="' . $data_value . '" data-start-angle="4.7" data-size="' . $knob_data_width . '" data-thickness="' . $knob_data_thickness . '" data-animation-start-value="1.0" data-fill="{ &quot;color&quot;: &quot;' . $knob_fg_color . '&quot; }" ' . $animation . '></div></a></div>';
+			//$content    = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '"><div class="course-progress-disc" data-value="' . $data_value . '" data-start-angle="4.7" data-size="' . $knob_data_width . '" data-thickness="' . $knob_data_thickness . '" data-animation-start-value="1.0" data-fill="{}" ' . $animation . '></div></a></div>';
 		}
 
 		return $content;
@@ -2584,7 +2565,7 @@ class CoursePress_Model_Shortcodes {
 
 		// Support previous arguments
 		$count = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $count ) );
-		$list = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $list ) );
+		$list  = CoursePress_Helper_Utility::fix_bool( sanitize_html_class( $list ) );
 		$style = $count ? 'count' : $style;
 		$style = $list ? 'list-flat' : $style;
 
@@ -2593,8 +2574,8 @@ class CoursePress_Model_Shortcodes {
 
 		$instructors = CoursePress_Model_Course::get_instructors( $course_id, true );
 
-		$list        = array();
-		$content     = '';
+		$list    = array();
+		$content = '';
 
 		if ( 0 < count( $instructors ) && $show_label ) {
 			if ( ! empty( $label_tag ) ) {
@@ -2623,7 +2604,7 @@ class CoursePress_Model_Shortcodes {
 
 							$content .= '<div class="instructor-profile ' . $class . '">';
 
-							if( $link_all ) {
+							if ( $link_all ) {
 								$content .= '<a href="' . esc_url_raw( $profile_href ) . '">';
 							}
 
@@ -2641,7 +2622,7 @@ class CoursePress_Model_Shortcodes {
 							$content .= ! $link_all ? '</a>' : '';
 							$content .= '</div>';
 
-							if( $link_all ) {
+							if ( $link_all ) {
 								$content .= '</a>';
 							}
 
@@ -2662,7 +2643,7 @@ class CoursePress_Model_Shortcodes {
 
 			case 'block':
 				$content = '<div class="instructor-block ' . $class . '">' . $content . '</div>';
-				if ( $show_divider  && ( 0 < count( $instructors ) ) ) {
+				if ( $show_divider && ( 0 < count( $instructors ) ) ) {
 					$content .= '<div class="divider"></div>';
 				}
 				break;
@@ -2700,7 +2681,7 @@ class CoursePress_Model_Shortcodes {
 
 
 		$instructor_id = (int) $instructor_id;
-		if( empty( $instructor_id ) ) {
+		if ( empty( $instructor_id ) ) {
 			return '';
 		}
 
@@ -2710,7 +2691,7 @@ class CoursePress_Model_Shortcodes {
 		$content = '';
 
 		$avatar = get_avatar( $instructor_id, $thumb_size );
-		if (  ! empty( $avatar ) ) {
+		if ( ! empty( $avatar ) ) {
 
 			preg_match( '/src=(\'|")(\S*)(\'|")/', $avatar, $match );
 			$avatar_url = $match[2];
@@ -2731,7 +2712,7 @@ class CoursePress_Model_Shortcodes {
 		), $atts ) );
 
 		$instructor_id = (int) $instructor_id;
-		if( empty( $instructor_id ) ) {
+		if ( empty( $instructor_id ) ) {
 			return '';
 		}
 		$instructor = get_userdata( $instructor_id );
@@ -2815,7 +2796,7 @@ class CoursePress_Model_Shortcodes {
 			return '';
 		}
 
-		return do_shortcode( '[course_unit_archive_submenu course_id="' . $course_id . '"]');
+		return do_shortcode( '[course_unit_archive_submenu course_id="' . $course_id . '"]' );
 
 	}
 
@@ -2836,18 +2817,18 @@ class CoursePress_Model_Shortcodes {
 		$content = '
 		<div class="submenu-main-container">
 			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-units ' . ( $subpage == 'units' ? 'submenu-active' : '') . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit' ) ) .'">' . esc_html__( 'Units', CoursePress::TD ) . '</a></li>
-				<li class="submenu-item submenu-notifications ' . ( $subpage == 'notifications' ? 'submenu-active' : '') . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'notification' ) ) . '">' . esc_html__( 'Notifications', CoursePress::TD ) . '</a></li>
+				<li class="submenu-item submenu-units ' . ( $subpage == 'units' ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit' ) ) . '">' . esc_html__( 'Units', CoursePress::TD ) . '</a></li>
+				<li class="submenu-item submenu-notifications ' . ( $subpage == 'notifications' ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'notification' ) ) . '">' . esc_html__( 'Notifications', CoursePress::TD ) . '</a></li>
 		';
 
 		$pages = CoursePress_Model_Course::allow_pages( $course_id );
 
 		if ( $pages['course_discussion'] ) {
-			$content .= '<li class="submenu-item submenu-discussions ' . ( $subpage == 'discussions' ? 'submenu-active' : '') . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'discussion' ) ) . '">' . esc_html__( 'Discussions', CoursePress::TD ) . '</a></li>';
+			$content .= '<li class="submenu-item submenu-discussions ' . ( $subpage == 'discussions' ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'discussion' ) ) . '">' . esc_html__( 'Discussions', CoursePress::TD ) . '</a></li>';
 		}
 
 		if ( $pages['workbook'] ) {
-			$content .= '<li class="submenu-item submenu-workbook ' . ( $subpage == 'workbook' ? 'submenu-active' : '') . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'workbook' ) ) . '">' .esc_html__( 'Workbook', CoursePress::TD ) . '</a></li>';
+			$content .= '<li class="submenu-item submenu-workbook ' . ( $subpage == 'workbook' ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'workbook' ) ) . '">' . esc_html__( 'Workbook', CoursePress::TD ) . '</a></li>';
 		}
 
 		$content .= '<li class="submenu-item submenu-info"><a href="' . esc_url_raw( get_permalink( $course_id ) ) . '">' . esc_html__( 'Course Details', CoursePress::TD ) . '</a></li>';
@@ -2869,7 +2850,7 @@ class CoursePress_Model_Shortcodes {
 			//if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
 			//	$certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', CoursePress::TD ) );
 
-				//$content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
+			//$content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			//}
 		}
 
@@ -2944,25 +2925,26 @@ class CoursePress_Model_Shortcodes {
 		), $atts ) );
 
 		$course_id = (int) $course_id;
-		if( empty( $course_id ) ) {
+		if ( empty( $course_id ) ) {
 			return '';
 		}
 
-		$field     = sanitize_html_class( $field );
+		$field = sanitize_html_class( $field );
 
 		$map = array(
-			'action_links' => 'action_links',
-			'class_size' => 'class_size',
-			'enroll_type' => 'enrollment_type',
-			'course_start_date' => 'start',
-			'course_end_date' => 'end',
+			'action_links'          => 'action_links',
+			'class_size'            => 'class_size',
+			'enroll_type'           => 'enrollment_type',
+			'course_start_date'     => 'start',
+			'course_end_date'       => 'end',
 			'enrollment_start_date' => 'enrollment_start',
-			'enrollment_end_date' => 'enrollment_end',
-			'price' => 'cost',
-			'button' => 'button',
+			'enrollment_end_date'   => 'enrollment_end',
+			'price'                 => 'cost',
+			'button'                => 'button',
 		);
 
 		$action = in_array( $field, $map ) ? $map[ $field ] : $field;
+
 		return do_shortcode( '[course course_id="' . $course_id . '" show="' . $action . '"]' );
 
 	}
@@ -3301,9 +3283,9 @@ class CoursePress_Model_Shortcodes {
 			//	$last_visited_page     = cp_get_last_visited_unit_page( $unit_id );
 			//	$unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id ) . 'page/' . trailingslashit( $last_visited_page );
 			//} else {
-				$unit = get_post( $unit_id );
-				$content = get_permalink( $course_id ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $unit->post_name;
-				//$unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id );
+			$unit    = get_post( $unit_id );
+			$content = get_permalink( $course_id ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $unit->post_name;
+			//$unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id );
 			//}
 		}
 
@@ -3832,9 +3814,6 @@ class CoursePress_Model_Shortcodes {
 	}
 
 
-
-
-
 	/* =========== PAGES SHORTCODES =============== */
 
 	public static function cp_pages( $atts ) {
@@ -3908,8 +3887,8 @@ class CoursePress_Model_Shortcodes {
 		$signup_prefix = empty( $signup_url ) ? '&' : '?';
 		$login_prefix  = empty( $login_url ) ? '&' : '?';
 
-		$signup_url    = empty( $signup_url ) ? CoursePress_Core::get_slug( 'signup', true ) : $signup_url;
-		$login_url     = empty( $login_url ) ? CoursePress_Core::get_slug( 'signup', true ) : $login_url;
+		$signup_url = empty( $signup_url ) ? CoursePress_Core::get_slug( 'signup', true ) : $signup_url;
+		$login_url  = empty( $login_url ) ? CoursePress_Core::get_slug( 'signup', true ) : $login_url;
 
 		if ( ! empty( $redirect_url ) ) {
 			$signup_url = $signup_url . $signup_prefix . 'redirect_url=' . urlencode( $redirect_url );
@@ -4252,34 +4231,34 @@ class CoursePress_Model_Shortcodes {
 	public static function module_status( $atts ) {
 		ob_start();
 		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id'   => CoursePress_Helper_Utility::the_post( true ),
+			'course_id'     => CoursePress_Helper_Utility::the_course( true ),
+			'unit_id'       => CoursePress_Helper_Utility::the_post( true ),
 			'previous_unit' => false,
-			'message'   => __( '%d of %d mandatory elements completed.', CoursePress::TD ),
-			'format'    => 'true',
+			'message'       => __( '%d of %d mandatory elements completed.', CoursePress::TD ),
+			'format'        => 'true',
 		), $atts, 'module_status' ) );
 
 		$message = sanitize_text_field( $message );
 		$format  = sanitize_text_field( $format );
 		$format  = 'true' == $format ? true : false;
 
-		$course_id = (int) $course_id;
-		$unit_id = (int) $unit_id;
-		$previous_unit_id = empty( $previous_unit ) ? false : (int) $previous_unit ;
+		$course_id        = (int) $course_id;
+		$unit_id          = (int) $unit_id;
+		$previous_unit_id = empty( $previous_unit ) ? false : (int) $previous_unit;
 
-		if ( empty( $unit_id ) || empty( $course_id) ) {
+		if ( empty( $unit_id ) || empty( $course_id ) ) {
 			return '';
 		}
 
-		$unit_status = CoursePress_Model_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit );
+		$unit_status    = CoursePress_Model_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit );
 		$unit_available = $unit_status['available'];
 
 		$content = '<span class="unit-archive-single-module-status">';
 
-		if( $unit_available ) {
+		if ( $unit_available ) {
 			$content .= do_shortcode( '[course_mandatory_message course_id="' . $course_id . '" unit_id="' . $unit_id . '" message="' . $message . '"]' );
 		} else {
-			if ( $unit->status['mandatory_required']['enabled'] && ! $unit_status['mandatory_required']['result'] && ! $unit_status['completion_required']['enabled'] ) {
+			if ( $unit_status['mandatory_required']['enabled'] && ! $unit_status['mandatory_required']['result'] && ! $unit_status['completion_required']['enabled'] ) {
 				$content .= esc_html__( 'All mandatory answers are required in previous unit.', CoursePress::TD );
 			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
 				$content .= esc_html__( 'Previous unit must be completed successfully.', CoursePress::TD );
@@ -4297,6 +4276,249 @@ class CoursePress_Model_Shortcodes {
 	}
 
 	public static function student_workbook_table( $args ) {
+		$args = shortcode_atts(
+			array(
+				'course_id'                         => CoursePress_Helper_Utility::the_course( true ),
+				'unit_id'                           => false,
+				'module_column_title'               => __( 'Element', CoursePress::TD ),
+				'title_column_title'                => __( 'Title', CoursePress::TD ),
+				'submission_date_column_title'      => __( 'Submitted', CoursePress::TD ),
+				'response_column_title'             => __( 'Answer', CoursePress::TD ),
+				'grade_column_title'                => __( 'Grade', CoursePress::TD ),
+				'comment_column_title'              => __( 'Feedback', CoursePress::TD ),
+				'module_response_description_label' => __( 'Description', CoursePress::TD ),
+				'comment_label'                     => __( 'Comment', CoursePress::TD ),
+				'view_link_label'                   => __( 'View', CoursePress::TD ),
+				'view_link_class'                   => 'assessment-view-response-link button button-units',
+				'comment_link_class'                => 'assessment-view-response-link button button-units',
+				'pending_grade_label'               => __( 'Pending', CoursePress::TD ),
+				'unit_unread_label'                 => __( 'Unit Unread', CoursePress::TD ),
+				'unit_read_label'                   => __( 'Unit Read', CoursePress::TD ),
+				'single_correct_label'              => __( 'Correct', CoursePress::TD ),
+				'single_incorrect_label'            => __( 'Incorrect', CoursePress::TD ),
+				'no_content_label'                  => __( 'No modules to display.', CoursePress::TD ),
+				'non_assessable_label'              => __( '**' ),
+				'table_class'                       => 'widefat shadow-table assessment-archive-table workbook-table',
+				'table_labels_th_class'             => 'manage-column',
+				'show_page'                         => false,
+				'show_course_progress'              => true,
+			)
+			, $args, 'student_workbook_table' );
+
+		$course_id  = (int) $args['course_id'];
+		$unit_id  = (int) $args['unit_id'];
+		$student_id = get_current_user_id();
+
+
+		if( empty( $course_id ) || empty( $student_id ) ) {
+			return '';
+		}
+
+		$module_column_title               = sanitize_text_field( $args['module_column_title'] );
+		$title_column_title                = sanitize_text_field( $args['title_column_title'] );
+		$submission_date_column_title      = sanitize_text_field( $args['submission_date_column_title'] );
+		$response_column_title             = sanitize_text_field( $args['response_column_title'] );
+		$grade_column_title                = sanitize_text_field( $args['grade_column_title'] );
+		$comment_column_title              = sanitize_text_field( $args['comment_column_title'] );
+		$module_response_description_label = sanitize_text_field( $args['module_response_description_label'] );
+		$comment_label                     = sanitize_text_field( $args['comment_label'] );
+		$view_link_label                   = sanitize_text_field( $args['view_link_label'] );
+		$view_link_class                   = sanitize_text_field( $args['view_link_class'] );
+		$comment_link_class                = sanitize_text_field( $args['comment_link_class'] );
+		$pending_grade_label               = sanitize_text_field( $args['pending_grade_label'] );
+		$unit_unread_label                 = sanitize_text_field( $args['unit_unread_label'] );
+		$unit_read_label                   = sanitize_text_field( $args['unit_read_label'] );
+		$non_assessable_label              = sanitize_text_field( $args['non_assessable_label'] );
+		$no_content_label                  = sanitize_text_field( $args['no_content_label'] );
+		$table_class                       = sanitize_text_field( $args['table_class'] );
+		$table_labels_th_class             = sanitize_text_field( $args['table_labels_th_class'] );
+		$single_correct_label              = sanitize_text_field( $args['single_correct_label'] );
+		$single_incorrect_label            = sanitize_text_field( $args['single_incorrect_label'] );
+		$show_page                         = CoursePress_Helper_Utility::fix_bool( $args['show_page'] );
+		$show_course_progress              = CoursePress_Helper_Utility::fix_bool( $args['show_course_progress'] );
+
+
+		$columns = array(
+			// "module" => $module_column_title,
+			"title"           => $title_column_title,
+			"submission_date" => $submission_date_column_title,
+			"response"        => $response_column_title,
+			"grade"           => $grade_column_title,
+			"comment"         => $comment_column_title,
+		);
+
+		$col_sizes = array(
+			//'45',
+			//'15',
+			//'10',
+			//'13',
+			//'5'
+			'45',
+			'15',
+			'12',
+			'13',
+			'15'
+		);
+
+		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+
+		$content = '';
+		$unit_list = CoursePress_Model_Course::get_units_with_modules( $course_id );
+
+		if( ! empty( $unit_id ) && array_key_exists( $unit_id, $unit_list ) ) {
+			$unit_list = array( $unit_list[ $unit_id ] );
+		}
+
+		if( $show_course_progress && empty( $unit_id ) ) {
+			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', CoursePress::TD ) . '<small>' . CoursePress_Model_Student::get_course_progress( $student_id, $course_id, $student_progress )  . '%</small>' . '</h3>';
+		}
+
+		foreach( $unit_list as $unit_id => $unit ) {
+
+			if( ! array_key_exists( $unit_id, $student_progress['units'] ) ) {
+				continue;
+			}
+
+			$content .= '<div class="workbook-unit unit-' . $unit_id . '">';
+
+			$content .= '<h3 class="unit-title">' . esc_html( $unit['unit']->post_title ) . '</h3>';
+
+			$progress = CoursePress_Model_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
+			$content .= '<div class="unit-progress">' . sprintf( __( 'Unit Progress: %s%%', CoursePress::TD), $progress ) . '</div>';
+
+			$content .= '
+			<table cellspacing="0" class="' . $table_class . '">
+				<thead>
+					<tr>';
+
+			$n = 0;
+			foreach ( $columns as $key => $col ) {
+
+				$content .= '
+						<th class="' . esc_attr( $table_labels_th_class ) . ' column-' . esc_attr( $key ) . '" width="' . esc_attr( $col_sizes[ $n ] ) . '%"  scope="col">' . esc_html( $col ) . '</th>
+			';
+
+				$n ++;
+			}
+
+			$content .= '
+					</tr>
+				</thead>';
+
+
+			$content .= '
+				<tbody>
+			';
+
+			if( isset( $unit['pages'] ) ) {
+				foreach ( $unit['pages'] as $page ) {
+
+					if( $show_page ) {
+						$content .= '<tr class="page page-separator"><td colspan="5">' . $page['title'] . '</td></tr>';
+					}
+
+					foreach ( $page['modules'] as $module_id => $module ) {
+
+						$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+						if( 'output' === $attributes['mode'] ) {
+							continue;
+						}
+
+						$title = empty( $module->post_title ) ? $module->post_content : $module->post_title;
+						$response = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$grade = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+
+						$response_display = $response['response'];
+						switch( $attributes['module_type'] ) {
+
+							case 'input-checkbox':
+								$response_display = '';
+								if( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
+									foreach( $response['response'] as $r ) {
+										$response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
+									}
+								}
+
+								break;
+
+							case 'input-radio':
+							case 'input-select':
+								$response_display = '';
+								if( isset( $response['response'] ) ) {
+									$response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
+								}
+
+								break;
+							case 'input-upload':
+
+								if( $response ) {
+									$url = $response['response']['url'];
+
+									$file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
+									$file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
+									$file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
+
+									$file_name = explode( '/', $url );
+									$file_name = array_pop( $file_name );
+
+									$url = CoursePress_Helper_Utility::encode( $url );
+									$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+
+									$response_display = '<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
+								} else {
+									$response_display = '';
+								}
+
+								break;
+						}
+
+						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
+
+						$grade = (int) $grade === -1 ? __( 'Ungraded', CoursePress::TD ) : $grade;
+
+						$mandatory = CoursePress_Helper_Utility::fix_bool( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-star-filled mandatory"></span>' : '';
+						$non_assessable = CoursePress_Helper_Utility::fix_bool( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
+
+						$extra = $mandatory . $non_assessable;
+
+						$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
+
+						$feedback_display = ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) .  '</em></div></div>' : '';
+
+						$content .= '<tr>
+							<td class="title">' . $title . ' ' . $extra . '</td>
+							<td class="submit-date">' . $response_date . '</td>
+							<td class="view-response ' . $attributes['module_type'] . '">' . $response_display . '</td>
+							<td class="grade">' . $grade['grade'] . '</td>
+							<td class="feedback">' . $feedback_display . '</td>
+						</tr>';
+
+					}
+
+				}
+			} else {
+				$content .= '<tr class="empty"><td colspan="5">' . esc_html( $no_content_label ) . '</td></tr>';
+			}
+
+			$content .= '
+				</tbody>
+				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', CoursePress::TD ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', CoursePress::TD ) . '</td></tr></tfoot>
+			';
+
+			$content .= '
+			</table>
+			';
+
+
+			$content .= '</div>';  // .workbook-unit
+		}
+
+		return $content;
+
+	}
+
+	public static function student_workbook_table_old( $args ) {
 		ob_start();
 		extract( shortcode_atts(
 			array(
@@ -4563,21 +4785,6 @@ class CoursePress_Model_Shortcodes {
 
 		return $content;
 	}
-
-	public static function instance( $instance = null ) {
-		if ( ! $instance || 'CoursePress_Shortcodes' != get_class( $instance ) ) {
-			if ( is_null( self::$instance ) ) {
-				self::$instance = new CoursePress_Shortcodes();
-			}
-		} else {
-			if ( is_null( self::$instance ) ) {
-				self::$instance = $instance;
-			}
-		}
-
-		return self::$instance;
-	}
-
 
 
 	/* MODULE SHORTCODES */

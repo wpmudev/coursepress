@@ -76,8 +76,6 @@ class CoursePress_Template_Course {
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );
 
-		error_log( $course_id );
-
 		$content = '' .
 			           //do_shortcode( '[course_instructors]' ) .
 			           //do_shortcode( '[coursecourse_media_instructor_avatar instructor_id="1"]' ) .
@@ -126,7 +124,7 @@ class CoursePress_Template_Course {
 		           //do_shortcode( '[course_language]' ) .
 		           //do_shortcode( '[course_category]' ) .
 		           //do_shortcode( '[course_list_image]' ) .
-		           //do_shortcode( '[course_featured_video]' ) .
+		           do_shortcode( '[course_featured_video]' ) .
 		           do_shortcode( '[course_join_button]' ) .
 		           //do_shortcode( '[course_thumbnail]' ) .
 		           //do_shortcode( '[course_media]' ) .

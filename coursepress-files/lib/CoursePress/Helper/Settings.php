@@ -86,6 +86,11 @@ class CoursePress_Helper_Settings {
 
 	public static function admin_init() {
 
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : 'coursepress';
+		if ( in_array( $page, self::get_valid_pages() ) ) {
+			do_action( 'coursepress_settings_page_pre_render_' . $page );
+		}
+
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_style' ) );
 		add_filter( 'coursepress_custom_allowed_extensions', array( __CLASS__, 'allow_zip_extension' ) );
 	}

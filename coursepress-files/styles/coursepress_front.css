@@ -1,7 +1,10 @@
-
 /* Remove Pre- Nex- Navigation in WP 4.0+ */
 .navigation.post-navigation {
     display: none;
+}
+
+.hidden {
+    display:none;
 }
 
 /* Default Background for .alt */
@@ -27,22 +30,30 @@
 /* Sub Menu */
 .submenu.nav-submenu {
     list-style: outside none none;
+    border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
+    overflow: hidden;
+    margin: 0 0 20px 0;
+    padding: 0;
 }
 
 .submenu-item {
-    float: left;
-    margin: 0 10px 50px;
+    /*float: left;*/
+    /*margin: 0 10px 50px;*/
+    display: inline-block;
+    margin: 0 10px 10px 0;
+    padding: 0 0 10px 0;
+    /*text-align: center;*/
 }
 
 .submenu.nav-submenu:after {
-    content: '';
-    display: block;
-    min-height: 1px;
-    height: 1px;
-    width: 100%;
-    background-color: #000000;
-    opacity: 0.4;
-    clear: both;
+    /*content: '<hr />';*/
+    /*display: block;*/
+    /*min-height: 1px;*/
+    /*height: 1px;*/
+    /*width: 100%;*/
+    /*background-color: #000000;*/
+    /*opacity: 0.4;*/
+    /*clear: both;*/
 }
 
 
@@ -61,14 +72,34 @@
 }
 
 .units-archive-list .unit-archive-single-module-status {
-    font-size: 0.9em;
+    font-size: 0.7em;
+    font-style: oblique;
+    opacity: 0.5;
 }
 
+.units-archive-list .unit-archive-single {
+    margin: 0 0 10px 0;
+}
+.units-archive-list .unit-archive-single p {
+    margin: 0;
+}
+
+.li-locked-unit a {
+    opacity: 0.4;
+    text-decoration: none;
+}
+
+.li-locked-unit .unit-archive-single-title {
+    text-decoration: none;
+    border: none;
+    cursor: not-allowed;
+}
 
 /* Module Styles */
 .module-container ul {
     margin: 0;
     list-style: none;
+    padding-left: 0;
 }
 
 .module-container .hide {
@@ -87,18 +118,21 @@
 }
 
 .module-container .no-browser-support,
-.module-container .module-submit-action.button {
+.module-container .module-submit-action {
     font-size: 0.9em;
     /*padding: 4px 10px;*/
     margin: 0.4em 0 0 0;
     /*background: none;*/
-    display: inline-block;
-    float: left;
+    /*display: inline-block;*/
+    /*float: left;*/
+    /*display: block;*/
     cursor: pointer;
     clear: both;
+    border: none;
+    text-decoration: underline;
 }
 
-.module-container .module-submit-action.button {
+.module-container .module-submit-action {
     margin-bottom: 1em;
 }
 
@@ -184,7 +218,7 @@
     text-align: center;
     display: inline-block;
     margin-right: 4px;
-    border: 1px solid #000000;
+    /*border: 1px solid #000000;*/
     opacity: 0.5;
     width: 11px;
     height: 12px;
@@ -249,6 +283,7 @@
 
 .unit-wrapper .pager {
     clear: both;
+    margin: 10px 0;
 }
 
 .unit-wrapper .pager .next-button {
@@ -257,6 +292,114 @@
     cursor: pointer;
 }
 
+/* Workbook Table */
+.workbook-table {
+    clear: both;
+}
+
+.workbook-table td {
+    position: relative;
+}
+
+.workbook-table .page-separator,
+.workbook-table th {
+    font-size: 0.8em;
+    /*font-weight: 300;*/
+}
+
+.workbook-table td {
+    /*font-size: 1em;*/
+    font-weight: 300;
+}
+
+.workbook-table .footer-key td,
+.workbook-table .empty td,
+.workbook-table .page-separator td {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-style: oblique;
+    font-size: 0.8em;
+}
+
+
+.workbook-unit .unit-title {
+    margin: 0;
+    float: left;
+}
+
+.workbook-unit .unit-progress {
+    margin: 0;
+    float: right;
+    font-size: 0.9em;
+}
+
+.workbook-unit .mandatory {
+    font-size: 7px;
+    /*position: absolute;*/
+    line-height: 2em;
+    width: auto;
+    height: auto;
+    color: #ff6666;
+}
+
+.workbook-unit .non-assessable {
+    font-size: 7px;
+    /*position: absolute;*/
+    line-height: 2em;
+    width: auto;
+    height: auto;
+    color: #24BDE6;
+}
+
+
+/* JQUERY UI */
+.link-popup .popup{
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    padding: 10px;
+    width: 320px;
+    max-height: 400px;
+    z-index: 2;
+    overflow: hidden;
+}
+.link-popup .popup-button {
+    float: right;
+    text-align: right;
+    cursor: pointer;
+}
+
+.link-popup .popup-link {
+    cursor: pointer;
+}
+
+.workbook-table .feedback .link-popup .popup-link,
+.workbook-table .view-response .link-popup .popup-link {
+    text-decoration: none;
+    border: none;
+    /*font-size: 2em;*/
+}
+
+.workbook-table .view-response.input-textarea .popup {
+    overflow: scroll;
+}
+
+.workbook-table .view-response.input-checkbox .popup .popup-content p {
+    margin:0;
+}
+
+.workbook-table .link-popup .popup-content p:last-child {
+    margin-bottom: 0;
+}
+
+h3.course-completion-progress {
+    margin-bottom: 50px;
+}
+
+h3.course-completion-progress small {
+    display:inline-block;
+    float: right;
+}
 
 
 

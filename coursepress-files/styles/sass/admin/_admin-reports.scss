@@ -1,0 +1,16 @@
+.coursepress_settings_wrapper.reports{
+
+  .column-report .pdf {
+    background-image: url( '#{$imagePath}pdf_document.png' );
+    background-size: 100% 100%;
+    width: 16px;
+    height: 16px;
+    display: block;
+    cursor: pointer;
+  }
+
+  .help-tooltip {
+    display: inline-block;
+  }
+
+}

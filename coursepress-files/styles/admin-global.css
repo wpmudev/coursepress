@@ -1,3 +1,23 @@
+.wide {
+  width: 100%;
+}
+
+.widemedium {
+  width: 80%;
+}
+
+.medium {
+  width: 40%;
+}
+
+.narrow {
+  width: 20%;
+}
+
+.hidden {
+  display: none;
+}
+
 /**
  * UI COMPONENTS
  */
@@ -109,6 +129,34 @@
 .coursepress-ui-toggle-switch.on .left.red,
 .coursepress-ui-toggle-switch.off .right.green {
   color: #D4D4D4;
+}
+
+/* JQUERY UI */
+.link-popup .popup {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px;
+  width: 320px;
+  max-height: 400px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.link-popup .popup-button {
+  float: right;
+  text-align: right;
+  cursor: pointer;
+}
+
+.link-popup .popup-link {
+  cursor: pointer;
+}
+
+.link-popup .popup-link,
+.link-popup .popup-link {
+  text-decoration: none;
+  border: none;
 }
 
 /**

@@ -110,16 +110,34 @@ class CoursePress {
 	private static function class_loader( $class ) {
 
 		$namespaces = apply_filters( 'coursepress_class_loader_namespaces', array(
-			'CoursePress'
+			'CoursePress' => false,
 		) );
 
 		$basedir = trailingslashit( dirname( __FILE__ ) ) . self::$plugin_lib;
 		$class   = trim( $class );
 
-		foreach ( $namespaces as $namespace ) {
+		foreach ( $namespaces as $namespace => $options ) {
 			if ( preg_match( '/^' . $namespace . '/', $class ) ) {
-				$filename = $basedir . '/lib/' . str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+
+				$namespace_folder = isset( $options['namespace_folder'] ) && true === $options['namespace_folder'] ? $namespace . '/' : '';
+
+				$filename = $basedir . '/lib/' . $namespace_folder . str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+
+				// Override filename via array
+				if( isset( $options['overrides'] ) && is_array( $options['overrides'] ) ) {
+
+					$file = explode( DIRECTORY_SEPARATOR, $filename );
+					$file_base = array_pop( $file );
+
+					if( array_key_exists( $file_base, $options['overrides'] ) ) {
+						$file[] = $options['overrides'][ $file_base ];
+						$filename = implode( DIRECTORY_SEPARATOR, $file );
+					}
+				}
+
+				// Override filename via filter
 				$filename = apply_filters( 'coursepress_class_file_override', $filename );
+
 				if ( is_readable( $filename ) ) {
 					include_once $filename;
 

@@ -174,7 +174,11 @@ class CoursePress_Model_Module {
 		$meta = get_post_meta( $module_id );
 
 		$legacy = self::legacy_map();
-		$module_type = $meta['module_type'][0];
+		$module_type = isset( $meta['module_type'] ) ? $meta['module_type'][0] : false;
+
+		if( false === $module_type ) {
+			return false;
+		}
 
 		if ( array_key_exists( $module_type, $legacy ) ) {
 			self::fix_legacy_meta( $module_id, $meta );
@@ -189,9 +193,10 @@ class CoursePress_Model_Module {
 			'mode' => $input ? 'input' : 'output',
 		);
 
+
 		if( 'section' != $module_type ) {
 			$attributes = array_merge( $attributes, array(
-				'duration'       => $meta['duration'][0],
+				'duration'       => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
 				'show_title'     => CoursePress_Helper_Utility::fix_bool( $meta['show_title'][0] ),
 				'allow_retries'  => isset( $meta['allow_retries'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['allow_retries'][0] ) : true,
 				'retry_attempts' => isset( $meta['retry_attempts'] ) ? (int) $meta['retry_attempts'][0] : 0,

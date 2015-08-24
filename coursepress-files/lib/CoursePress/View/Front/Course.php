@@ -85,7 +85,7 @@ class CoursePress_View_Front_Course {
 							}
 
 							$response = wp_handle_upload( $file, $upload_overrides );
-
+							$response['size'] = $file['size'];
 							if ( isset( $response['error'] ) ) {
 								$json_data['response'] = $response['error'];
 								$json_data['success']  = false;
@@ -241,8 +241,6 @@ class CoursePress_View_Front_Course {
 			}
 		}
 
-		error_log( $content );
-
 		return $content;
 	}
 
@@ -342,7 +340,19 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function render_course_workbook() {
-		return 'Workbook....';
+		if ( $theme_file = locate_template( array( 'archive-unit-workbook.php' ) ) ) {
+		} else {
+			//wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
+			if ( locate_template( array( 'archive-unit-workbook.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
+				//just output the content
+			} else {
+
+				$content = CoursePress_Template_Workbook::render_workbook();
+
+			}
+		}
+
+		return $content;
 	}
 
 	public static function render_course_notifications_archive() {
@@ -586,6 +596,7 @@ class CoursePress_View_Front_Course {
 		return array(
 			CoursePress_Model_Course::get_post_type_name( true ),
 			CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
+			CoursePress_Model_Course::get_post_type_name( true ) . '_workbook',
 			CoursePress_Model_Unit::get_post_type_name( true ),
 			CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
 		);

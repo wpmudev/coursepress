@@ -7,7 +7,9 @@ var CoursePress = CoursePress || {};
 
     CoursePress.editor = CoursePress.editor || {};
 
-    CoursePress.editor.init_mode = getUserSetting( 'editor' );
+    if( typeof getUserSetting !== 'undefined' ) {
+        CoursePress.editor.init_mode = getUserSetting( 'editor' );
+    }
 
     CoursePress.editor.create = function ( target, id, name, content, append, height ) {
 
@@ -732,6 +734,21 @@ var CoursePress = CoursePress || {};
         model.get_attachment( url, target, fallback, field );
     }
 
+    CoursePress.utility.hex_to_rgb = function ( hex ) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
     CoursePress.UI = CoursePress.UI || {};
 
 
@@ -842,6 +859,40 @@ var CoursePress = CoursePress || {};
 
     }
 
+    CoursePress.UI.link_popup = function ( id, name, args ) {
+        //console.log( args );
+        if ( undefined === name ) {
+            name = id;
+        }
+
+        if ( undefined === args ) {
+            args = {};
+        }
+
+        var content = '';
+
+        if( args.content.length <= 0 ) {
+            return '';
+        }
+
+        args.content = args.content ? args.content : '';
+        args.link_text = args.link_text ? args.link_text : '';
+        args.class = args.class ? args.class : '';
+
+        content = '<div id="' + id + '" name="' + name + '" class="link-popup ' + args.class + '">' +
+        '<a class="popup-link">' + args.link_text + '</a>' +
+        '<div class="popup hidden">' +
+        '<div class="popup-before"></div>' +
+        '<div class="popup-button">&times;</div>' +
+        '<div class="popup-content">' +
+        args.content +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        return content;
+    }
+
     // Add UI extensions
     $.fn.extend( {
             browse_media_field: function ( options ) {
@@ -918,7 +969,93 @@ var CoursePress = CoursePress || {};
                         return;
                     } );
                 } );
+            },
+
+            link_popup: function ( options ) {
+                var self = this;
+                self.options = options;
+                self.link = {};
+                this.each( function ( index, item ) {
+
+                    var id = $( this ).attr( 'id' );
+                    var name = $( this ).attr( 'name' );
+                    var classes = $( this ).attr( 'class' );
+                    var content = this.innerHTML;
+                    var link_text = self.options || 'Link';
+
+                    var args = {};
+
+                    args.content = content;
+                    args.link_text = self.options.link_text;
+                    args.class = classes;
+                    args.offset_x = self.options.offset_x || 35;
+
+                    content = CoursePress.UI.link_popup( id, name, args );
+
+                    $( item ).empty();
+                    //$( item ).append( content );
+                    $( item ).append( content );
+
+                    var link = $( item ).find('.popup-link');
+
+                    $( link ).on('click', function(event) {
+
+                        $('.link-popup .popup-link').removeClass( 'open' );
+                        $('.popup .popup-before[display!="none"], .popup .popup-button[display!="none"], .popup .popup-content[display!="none"]').parent().fadeOut(100);
+
+
+                        if ( $( this ).hasClass('open') )
+                        {
+                            $( this ).removeClass('open');
+                            $( document ).click();
+                        } else {
+                            event.stopPropagation();
+                            $( this ).addClass('open');
+
+                            var popup = $(this).siblings('.popup');
+                            var popup_before = $(this).siblings('.popup').find('.popup-before');
+
+                            if (($(document).width()) - ($(this).offset().left + args.offset_x) > popup.width()) {
+                                popup.css("left", $(this).position().left + args.offset_x);
+                            } else {
+                                popup.css("left", $(this).position().left - (popup.width() + 10));
+                                popup_before.css("transform", 'rotate(180deg)');
+                                popup_before.css("-ms-transform", 'rotate(180deg)');
+                                popup_before.css("-webkit-transform", 'rotate(180deg)');
+                                popup_before.css("left", popup.width());
+                            }
+
+                            popup.css("position", "absolute");
+                            popup.css("top", $(this).position().top - 7);
+                            popup.fadeIn(300);
+                        }
+
+                    });
+
+                    $('.popup').on('click', function(e) {
+                        e.stopPropagation();
+                    });
+
+                    $('.popup-content').on('click', function(e) {
+                        //e.preventDefault();
+                    });
+
+
+                } );
+
+                $(document).click(function() {
+                    $('.link-popup .popup-link').removeClass( 'open' );
+                    $('.popup .popup-before[display!="none"], .popup .popup-button[display!="none"], .popup .popup-content[display!="none"]').parent().fadeOut(100);
+                });
+
+                $('.link-popup .popup-button ' ).on( 'click', function() {
+                    $('.link-popup .popup-link').removeClass( 'open' );
+                    $('.popup .popup-before[display!="none"], .popup .popup-button[display!="none"], .popup .popup-content[display!="none"]').parent().fadeOut(100);
+                });
+
             }
+
+
         }
     );
 

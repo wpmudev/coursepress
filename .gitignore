@@ -61,3 +61,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+# PDF Cache
+coursepress-files/pdf-cache/

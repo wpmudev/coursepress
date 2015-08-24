@@ -22,7 +22,7 @@ class CoursePress_Helper_JavaScript {
 
 	public static function enqueue_scripts() {
 
-		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress' );
+		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress', 'coursepress_assessments', 'coursepress_reports' );
 
 		if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
 			return;
@@ -54,13 +54,15 @@ class CoursePress_Helper_JavaScript {
 			'editor_visual'             => __( 'Visual', CoursePress::TD ),
 			'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
 			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', CoursePress::TD ),
+			'assessment_grid_url'       => admin_url( 'admin.php?page=coursepress_assessments' ),
+			'assessment_report_url'       => admin_url( 'admin.php?page=coursepress_reports' )
 		);
 
 
 		// Models
 
 		/** COURSEPRESS_COURSE */
-		if ( 'coursepress_course' === $_GET['page'] ) {
+		if ( 'coursepress_course' === $_GET['page'] || 'coursepress_assessments' === $_GET['page'] || 'coursepress_reports' === $_GET['page'] ) {
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/Course.js';
 			wp_enqueue_script( 'coursepress_course', $script, array(
 				'jquery-ui-accordion',
@@ -141,6 +143,15 @@ class CoursePress_Helper_JavaScript {
 		$post_type = get_post_type();
 		if ( ( ! empty( $post_type ) && $post_type === 'course' ) || array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ) {
 
+			// CoursePress Object
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress.js';
+			wp_enqueue_script( 'coursepress_object', $script, array(
+				'jquery',
+				'backbone',
+				'underscore'
+			), CoursePress_Core::$version );
+
+
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressFront.js';
 
 			$localize_array = array(
@@ -157,10 +168,11 @@ class CoursePress_Helper_JavaScript {
 				'response_saved_message'     => __( 'Your response was recorded successfully.', CoursePress::TD ),
 				'response_fail_message'      => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
 				'current_course'             => CoursePress_Helper_Utility::the_course( true ),
-				'current_student'            => get_current_user_id()
+				'current_student'            => get_current_user_id(),
+				'workbook_view_answer'       => __( 'View', CoursePress::TD )
 			);
 
-			wp_enqueue_script( 'coursepress_object', $script, array(
+			wp_enqueue_script( 'coursepress_front', $script, array(
 				'jquery',
 				'underscore',
 				'backbone'

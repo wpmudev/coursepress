@@ -90,6 +90,30 @@ class CoursePress_Helper_UI {
 
 	}
 
+	public static function get_course_dropdown( $id, $name, $courses, $options = array() ) {
+
+		$content = '';
+		$content .= '<select name="' . $name . '" id="' . $id . '"';
+		$content .= isset( $options['placeholder'] ) ? ' data_placeholder="' . esc_attr( $options['placeholder'] ) . '" ' : '';
+		$content .= isset( $options['class'] ) ? ' class="' . esc_attr( $options['class'] ) . '" ' : '';
+		$content .= '>';
+
+		$value = isset( $options['value'] ) ? $options['value'] : false;
+
+		foreach( $courses as $course ) {
+
+			$selected = $value !== false ? selected( $value, $course->ID, false ) : '';
+
+			$content .= '<option value="' . $course->ID . '" ' . $selected . '>' . $course->post_title . '</option>';
+		}
+
+		$content .= '</select>';
+
+		return $content;
+
+	}
+
+
 	public static function get_user_dropdown( $id, $name, $options = array() ) {
 
 		$content = '';

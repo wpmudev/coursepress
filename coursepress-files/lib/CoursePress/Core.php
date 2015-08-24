@@ -52,6 +52,7 @@ class CoursePress_Core {
 		// Initialize Plugin Integrations
 		CoursePress_Helper_Integration::init();
 
+
 		if ( is_admin() ) {
 			// Initialize Admin Settings
 			CoursePress_Helper_Settings::init();
@@ -81,12 +82,6 @@ class CoursePress_Core {
 		CoursePress_Upgrade::init();
 
 	}
-
-
-	public static function process_course_ajax() {
-		error_log( '====================== akadjflksdfjdfakldfslkjfdalfdaj ========================');
-	}
-
 
 	public static function get_network_setting( $key, $default = null ) {
 		return self::get_setting( $key, $default, is_multisite() );

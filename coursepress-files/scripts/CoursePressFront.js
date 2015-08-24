@@ -1,30 +1,34 @@
 var CoursePress = CoursePress || {};
 
-CoursePress.Models = CoursePress.Models || {};
-
-CoursePress.Models.CourseFront = Backbone.Model.extend( {
-    url: _coursepress._ajax_url + '?action=course_front',
-    parse: function ( response, xhr ) {
-
-        // Trigger course update events
-        if ( true === response.success ) {
-            this.set( 'response_data', response.data );
-            this.trigger( 'coursepress:' + response.data.action + '_success', response.data );
-        } else {
-            this.set( 'response_data', {} );
-            this.trigger( 'coursepress:' + response.data.action + '_error', response.data );
-        }
-    },
-    defaults: {}
-} );
-
 (function ( $ ) {
 
+    CoursePress.Models = CoursePress.Models || {};
+    CoursePress.UI = CoursePress.UI || {};
+    CoursePress.utility = CoursePress.utility || {};
+
+    CoursePress.Models.CourseFront = Backbone.Model.extend( {
+        url: _coursepress._ajax_url + '?action=course_front',
+        parse: function ( response, xhr ) {
+
+            // Trigger course update events
+            if ( true === response.success ) {
+                this.set( 'response_data', response.data );
+                this.trigger( 'coursepress:' + response.data.action + '_success', response.data );
+            } else {
+                this.set( 'response_data', {} );
+                if( response.data ) {
+                    this.trigger( 'coursepress:' + response.data.action + '_error', response.data );
+                }
+            }
+        },
+        defaults: {}
+    } );
+
     // Init YouTube
-    var tag = document.createElement( 'script' );
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
-    firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
+    //var tag = document.createElement( 'script' );
+    //tag.src = "https://www.youtube.com/iframe_api";
+    //var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
+    //firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
     function bind_buttons() {
 
@@ -38,6 +42,16 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
 
         } );
 
+        $( '.li-locked-unit a' ).on('click', function( e ) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        } );
+
+
+        //$( '.view-response' ).link_popup( { link_text:  _coursepress.workbook_view_answer });
+        //$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
+        $( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
+        $( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
 
     }
 
@@ -84,7 +98,7 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
         } );
 
         // Submit Result
-        $( '.module-submit-action.button' ).on( 'click', function ( e ) {
+        $( '.module-submit-action' ).on( 'click', function ( e ) {
 
             var el = this;
             var parent = $( el ).parents( '.module-container' );
@@ -106,7 +120,7 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
                 case 'input-checkbox':
                     value = [];
                     $.each( $( parent ).find( '[name="module-' + module_id + '"]:checked' ), function ( i, item ) {
-                        value.push( i );
+                        value.push( $( item ).val() );
                     } );
                     not_valid = value.length === 0;
                     break;
@@ -265,10 +279,19 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
 
                 $( result ).detach();
                 $( elements ).addClass( 'hide' );
-                $( response ).replaceWith( '<div class="module-response">' +
+
+                var html = '<div class="module-response">' +
                     '<p class="file_holder">' + _coursepress.response_saved_message + '</p>' +
-                    '</div>'
-                );
+                    '</div>';
+
+                console.log( response );
+                if( 0 === response.length ) {
+                    $( parent ).append( html );
+                } else {
+                    $( response ).replaceWith( html );
+                }
+
+
             } );
 
             model.on( 'coursepress:record_module_response_error', function ( data ) {
@@ -276,10 +299,16 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
 
                 $( result ).detach();
                 $( elements ).addClass( 'hide' );
-                $( response ).replaceWith( '<div class="module-response">' +
+
+                var html = '<div class="module-response">' +
                     '<p class="file_holder">' + _coursepress.response_fail_message + '</p>' +
-                    '</div>'
-                );
+                    '</div>';
+
+                if( 0 === response.length ) {
+                    $( parent ).append( html );
+                } else {
+                    $( response ).replaceWith( html );
+                }
             } );
 
 
@@ -320,8 +349,15 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
 
     function external() {
         //$( 'input.knob' ).knob();
-        var circles = $( '.course-progress-disc' ).circleProgress();
+
+        var a_col = $( 'ul.units-archive-list a' ).css('color');
+        var p_col = $( 'body' ).css('color').replace('rgb(', '' ).replace(')', '' ).split( ',');
+        var init = { color: a_col }
+        var circles = $( '.course-progress-disc' ).circleProgress( { fill: init, emptyFill: 'rgba(' + p_col[0] + ', ' + p_col[1] + ', ' + p_col[2] + ', .1)' });
         $.each( circles, function ( i, item ) {
+
+            var parent = $( item ).parents('ul')[0];
+            var a_col = $( parent ).find('a').css('color');
 
             //var data = $( item ).data( 'circleProgress' );
             //var value = 100 * data.value;
@@ -337,7 +373,6 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
                     sv = (100 * v).toFixed(),
                     ov = (100 * obj.value ).toFixed(),
                     fill = obj.arcFill;
-
                 sv = 100 - sv;
                 if ( sv < ov ) {
                     sv = ov;
@@ -361,7 +396,7 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
                 ctx.font = s / 4.5 + "px sans-serif";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillStyle = fill;
+                ctx.fillStyle = a_col;
                 ctx.fillText( sv + '%', s / 2, s / 2 );
             } );
 
@@ -402,30 +437,30 @@ CoursePress.Models.CourseFront = Backbone.Model.extend( {
 
 CoursePress.current = CoursePress.current || {};
 
-function onYouTubeIframeAPIReady() {
-
-    var $ = jQuery;
-
-    // Course Featured Video
-    var videoID = $( '#feature-video-div' ).attr( 'data-video' );
-    var width = $( '#feature-video-div' ).attr( 'data-width' );
-    var height = $( '#feature-video-div' ).attr( 'data-height' );
-    CoursePress.current.featuredVideo = new YT.Player( 'feature-video-div',
-        {
-            videoId: videoID,
-            width: width,
-            height: height,
-            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0, 'showinfo': 0 },
-            events: {
-                //'onReady': function( event ) {}
-                //'onPlaybackQualityChange': onPlayerPlaybackQualityChange,
-                //'onStateChange': onPlayerStateChange,
-                //'onError': onPlayerError
-            }
-        }
-    );
-
-}
+//function onYouTubeIframeAPIReady() {
+//
+//    var $ = jQuery;
+//
+//    // Course Featured Video
+//    var videoID = $( '#feature-video-div' ).attr( 'data-video' );
+//    var width = $( '#feature-video-div' ).attr( 'data-width' );
+//    var height = $( '#feature-video-div' ).attr( 'data-height' );
+//    CoursePress.current.featuredVideo = new YT.Player( 'feature-video-div',
+//        {
+//            videoId: videoID,
+//            width: width,
+//            height: height,
+//            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0, 'showinfo': 0 },
+//            events: {
+//                //'onReady': function( event ) {}
+//                //'onPlaybackQualityChange': onPlayerPlaybackQualityChange,
+//                //'onStateChange': onPlayerStateChange,
+//                //'onError': onPlayerError
+//            }
+//        }
+//    );
+//
+//}
 
 
 
