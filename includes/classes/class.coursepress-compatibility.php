@@ -356,24 +356,22 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 		}
 
 		function get_plugins() {
-			// WP default plugins
-			// array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs' );
-			// WP teeny plugins
-			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )			
+			global $wp_version;
+
 			$plugins = array(
-				// 'inlinepopups',
-				// 'tabfocus',
-				// 'paste',
-				// 'media',
-				// 'fullscreen',
-				// 'wordpress',
-				// 'wpeditimage',
-				// 'wpgallery',
 				'wplink',
-				// 'wpdialogs',
 				'textcolor', // not in 3.8
 				'hr' // not in 3.8
 			);
+
+			if ( version_compare( $wp_version, '4.3', '>=' ) ) {
+				$plugins = array(
+					'wordpress',
+					'wplink',
+					'textcolor',
+					'hr'
+				);
+			}
 
 			return $plugins;
 		}
