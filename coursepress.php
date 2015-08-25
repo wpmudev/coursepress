@@ -6,7 +6,7 @@
   Author: WPMU DEV
   Author URI: http://premium.wpmudev.org
   Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-  Version: 1.2.5.8
+  Version: 1.2.5.9
   TextDomain: cp
   Domain Path: /languages/
   WDP ID: 913071

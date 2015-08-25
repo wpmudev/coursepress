@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.5.9 =
+* Fix WP 4.3 compatibility issue with visual editors
+
 = 1.2.5.8 =
 * Fixed issues with WooCommerce sale price
 * Added check for course category specific templates (i.e. archive-course-categoryslug.php)
