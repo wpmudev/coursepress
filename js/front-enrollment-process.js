@@ -74,7 +74,7 @@ jQuery( document ).ready( function( $ ) {
         var errors = 0;
         var required_errors = 0;
 
-        $( ".required" ).each( function( index ) {
+        $( "#popup_login_form .required" ).each( function( index ) {
             if ( $( this ).val() == '' ) {
                 required_errors++;
                 errors++;
@@ -85,7 +85,7 @@ jQuery( document ).ready( function( $ ) {
         } );
 
         if ( required_errors > 0 ) {
-            $( '.validation_errors' ).html( cp_vars.message_all_fields_are_required );
+            $( '#popup_login_form .validation_errors' ).html( cp_vars.message_all_fields_are_required );
         } else {
             var username = $( '#cp_popup_username' ).val();
             var password = $( '#cp_popup_password' ).val();
@@ -142,7 +142,7 @@ jQuery( document ).ready( function( $ ) {
         var errors = 0;
         var required_errors = 0;
 
-        $( ".required" ).each( function( index ) {
+        $( "#popup_signup_form .required" ).each( function( index ) {
             if ( $( this ).val() == '' ) {
                 required_errors++;
                 errors++;
@@ -153,14 +153,14 @@ jQuery( document ).ready( function( $ ) {
         } );
 
         if ( required_errors > 0 ) {
-            $( ".required" ).each( function( index ) {
+            $( "#popup_signup_form .required" ).each( function( index ) {
                 if ( $( this ).val() == '' ) {
                     validate_mark_error_field( $( this ).attr( 'id' ) );
                 } else {
                     validate_mark_blank_error_field( $( this ).attr( 'id' ) );
                 }
             } );
-            $( '.validation_errors' ).html( cp_vars.message_all_fields_are_required );
+            $( '#popup_signup_form .validation_errors' ).html( cp_vars.message_all_fields_are_required );
         } else {//continue with checking
 
             validate_mark_no_error_field( 'cp_popup_student_first_name' );
@@ -169,7 +169,7 @@ jQuery( document ).ready( function( $ ) {
             var username = $( '#cp_popup_username' ).val();
             if ( username.length < 4 ) {
                 errors++;
-                $( '.validation_errors' ).html( cp_vars.message_username_minimum_length );
+                $( '#popup_signup_form .validation_errors' ).html( cp_vars.message_username_minimum_length );
             } else {//check if user already exists
                 $.post(
                     cp_vars.admin_ajax_url, {
@@ -279,7 +279,7 @@ jQuery( document ).ready( function( $ ) {
             }
         }
         if ( errors == 0 ) {
-            $( '.validation_errors' ).html( '' );
+            $( '#popup_signup_form .validation_errors' ).html( '' );
         }
     }
 

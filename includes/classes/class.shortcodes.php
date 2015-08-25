@@ -1865,6 +1865,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'limit'						 => -1,
 				'order'						 => 'ASC',
 				'class'						 => '',
+				'pagination'					=> false
 			), $atts, 'course_list' ) );
 
 			if ( !empty( $course_id ) ) {
@@ -1969,6 +1970,11 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				'post_status'	 => $status,
 				'posts_per_page' => $limit
 			);
+			
+			if( $pagination ){
+				$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+				$post_args['paged'] = $paged;
+			}
 
 			if ( !empty( $include_ids ) ) {
 				$post_args = wp_parse_args( array( 'include' => $include_ids ), $post_args );
@@ -2066,6 +2072,20 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			// </div> course-list
 			$content .= 0 < count( $courses ) && !empty( $list_wrapper_before ) ? '</' . $list_wrapper_after . '>' : '';
+			
+			if( $pagination ){
+				global $wp_query;
+				$total_course = wp_count_posts( 'course' );
+
+				$big = 999999999; // need an unlikely integer
+				
+				$content .= paginate_links( array(
+					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+					'format' => '?paged=%#%',
+					'current' => max( 1, get_query_var('paged') ),
+					'total' => $total_course->publish
+				) );
+			}
 
 			return $content;
 		}
