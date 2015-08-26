@@ -88,7 +88,7 @@ jQuery( document ).ready( function( $ ) {
         var errors = 0;
         var required_errors = 0;
 
-        $( ".required" ).each( function( index ) {
+        $( "#popup_login_form .required" ).each( function( index ) {
             if ( $( this ).val() == '' ) {
                 required_errors++;
                 errors++;
@@ -99,7 +99,7 @@ jQuery( document ).ready( function( $ ) {
         } );
 
         if ( required_errors > 0 ) {
-            $( '.validation_errors' ).html( cp_vars.message_all_fields_are_required );
+            $( '#popup_login_form .validation_errors' ).html( cp_vars.message_all_fields_are_required );
         } else {
             var username = $( '#cp_popup_username' ).val();
             var password = $( '#cp_popup_password' ).val();
@@ -132,7 +132,7 @@ jQuery( document ).ready( function( $ ) {
                                         open_popup( step, $( '.apply-button.login' ).attr( 'data-course-id' ) );
                                     } else {
                                         errors++;
-                                        $( '.validation_errors' ).html( cp_vars.message_passcode_invalid );
+                                        $( '#popup_login_form .validation_errors' ).html( cp_vars.message_passcode_invalid );
                                         validate_mark_error_field( 'cp_popup_passcode' );
                                     }
                                 }
@@ -142,7 +142,7 @@ jQuery( document ).ready( function( $ ) {
                             open_popup( step, $( '.apply-button.login' ).attr( 'data-course-id' ) );
                         }
                     } else {//show some error
-                        $( '.validation_errors' ).html( cp_vars.message_login_error );
+                        $( '#popup_login_form .validation_errors' ).html( cp_vars.message_login_error );
                         validate_mark_error_field( 'cp_popup_username' );
                         validate_mark_error_field( 'cp_popup_password' );
 
@@ -157,7 +157,7 @@ jQuery( document ).ready( function( $ ) {
         var required_errors = 0;
 
         // Restrict to input buttons
-        $( "input.required" ).each( function( index ) {
+        $( "#popup_login_form input.required" ).each( function( index ) {
             if ( $( this ).val() == '' ) {
                 required_errors++;
                 errors++;
@@ -168,14 +168,14 @@ jQuery( document ).ready( function( $ ) {
         } );
 
         if ( required_errors > 0 ) {
-            $( "input.required" ).each( function( index ) {
+            $( "#popup_login_form input.required" ).each( function( index ) {
                 if ( $( this ).val() == '' ) {
                     validate_mark_error_field( $( this ).attr( 'id' ) );
                 } else {
                     validate_mark_blank_error_field( $( this ).attr( 'id' ) );
                 }
             } );
-            $( '.validation_errors' ).html( cp_vars.message_all_fields_are_required );
+            $( '#popup_login_form .validation_errors' ).html( cp_vars.message_all_fields_are_required );
         } else {//continue with checking
 
             // Remove error marks
@@ -185,7 +185,7 @@ jQuery( document ).ready( function( $ ) {
             var username = $( '#cp_popup_username' ).val();
             if ( username.length < 4 ) {
                 errors++;
-                $( '.validation_errors' ).html( cp_vars.message_username_minimum_length );
+                $( '#popup_login_form .validation_errors' ).html( cp_vars.message_username_minimum_length );
             } else {//check if user already exists
                 $.post(
                     cp_vars.admin_ajax_url, {
@@ -196,7 +196,7 @@ jQuery( document ).ready( function( $ ) {
                     if ( status == 'success' ) {
                         if ( Number( data ) > 0 ) {//user exists
                             errors++;
-                            $( '.validation_errors' ).html( cp_vars.message_username_exists );
+                            $( '#popup_login_form .validation_errors' ).html( cp_vars.message_username_exists );
                             validate_mark_error_field( 'cp_popup_username' );
                         } else {//check email address
 
@@ -209,7 +209,7 @@ jQuery( document ).ready( function( $ ) {
                             // Do email fields match?
                             if ( email != email_confirmation ) {
                                 errors++;
-                                $( '.validation_errors' ).html( cp_vars.message_emails_dont_match );
+                                $( '#popup_login_form .validation_errors' ).html( cp_vars.message_emails_dont_match );
                                 validate_mark_error_field( 'cp_popup_email' );
                                 validate_mark_error_field( 'cp_popup_email_confirmation' );
                             } else {
@@ -224,7 +224,7 @@ jQuery( document ).ready( function( $ ) {
                                     if ( status == 'success' ) {
                                         if ( Number( data ) > 0 ) {//email exists
                                             errors++;
-                                            $( '.validation_errors' ).html( cp_vars.message_email_exists );
+                                            $( '#popup_login_form .validation_errors' ).html( cp_vars.message_email_exists );
                                             validate_mark_error_field( 'cp_popup_email' );
                                             validate_mark_error_field( 'cp_popup_email_confirmation' );
                                         } else {//check passwords
@@ -239,13 +239,13 @@ jQuery( document ).ready( function( $ ) {
                                             // Check if passwords match
                                             if ( password != password_confirmation ) {
                                                 errors++;
-                                                $( '.validation_errors' ).html( cp_vars.message_passwords_dont_match );
+                                                $( '#popup_login_form .validation_errors' ).html( cp_vars.message_passwords_dont_match );
                                                 validate_mark_error_field( 'cp_popup_password' );
                                                 validate_mark_error_field( 'cp_popup_password_confirmation' );
                                             } else {//check password for minimum lenght
                                                 if ( password.length < cp_vars.minimum_password_lenght ) {
                                                     errors++;
-                                                    $( '.validation_errors' ).html( cp_vars.message_password_minimum_length );
+                                                    $( '#popup_login_form .validation_errors' ).html( cp_vars.message_password_minimum_length );
                                                     validate_mark_error_field( 'cp_popup_password' );
                                                 } else {//valid data, continue with submit
                                                     if ( $( "#cp_popup_passcode" ).length > 0 ) {
@@ -268,7 +268,7 @@ jQuery( document ).ready( function( $ ) {
                                                                     open_popup( step, $( '#data-course-id' ).attr( 'data-course-id' ), $( '#popup_signup_form' ).serialize() );
                                                                 } else {
                                                                     errors++;
-                                                                    $( '.validation_errors' ).html( cp_vars.message_passcode_invalid );
+                                                                    $( '#popup_login_form .validation_errors' ).html( cp_vars.message_passcode_invalid );
                                                                     validate_mark_error_field( 'cp_popup_passcode' );
                                                                 }
                                                             }
@@ -280,7 +280,7 @@ jQuery( document ).ready( function( $ ) {
                                                                 //continue
                                                             } else {
                                                                 errors++;
-                                                                $( '.validation_errors' ).html( cp_vars.message_tos_invalid );
+                                                                $( '#popup_login_form .validation_errors' ).html( cp_vars.message_tos_invalid );
                                                                 //validate_mark_error_field( 'cp_popup_passcode' );
                                                             }
                                                         }
@@ -304,7 +304,7 @@ jQuery( document ).ready( function( $ ) {
             }
         }
         if ( errors == 0 ) {
-            $( '.validation_errors' ).html( '' );
+            $( '#popup_login_form .validation_errors' ).html( '' );
         }
     }
 

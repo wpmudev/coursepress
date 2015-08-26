@@ -8,6 +8,17 @@ CHANGE LOG
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.
+* Fixed discussion display in CoursePress theme.
+* Fixed menu metabox to show all published courses.
+* Fixed JavaScript conflict with sign up window.
+* Fixed unordered lists in CoursePress theme.
+* Fixed 1 showing when resubmitting answers.
+* Fixed issues where virtual pages didn't work on some sub directory installs.
+* Fixed resubmit limitations not working for some answers.
+* Changed Users can now resubmit answers for file uploads and text boxes while grades are pending.
+* Fixed uppercase usernames now supported by popup.
+* Fixed possible compatibility issue with themes and page titles.
+
 
 = 1.2.5.9 =
 * Fix WP 4.3 compatibility issue with visual editors

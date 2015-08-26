@@ -4323,7 +4323,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 			<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
 					if ( $unit_available ) {
-//						 _e('Read-only');
+//						 _e('Read-only','cp');
 					} else {
 						if ( isset( $unit->status ) && $unit->status[ 'mandatory_required' ][ 'enabled' ] && !$unit->status[ 'mandatory_required' ][ 'result' ] && !$unit->status[ 'completion_required' ][ 'enabled' ] ) {
 							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );

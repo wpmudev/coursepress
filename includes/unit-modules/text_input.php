@@ -62,7 +62,7 @@ class text_input_module extends Unit_Module {
 			'author'         => $user_ID,
 			'post_type'      => 'module_response',
 			'post_parent'    => $response_request_ID,
-			'post_status'    => 'publish'
+			'post_status'    => $status
 		);
 
 		if ( $ids_only ) {
@@ -74,6 +74,10 @@ class text_input_module extends Unit_Module {
 		if ( isset( $already_respond_posts[0] ) && is_object( $already_respond_posts[0] ) ) {
 			$response = $already_respond_posts[0];
 		} else {
+			$response = $already_respond_posts;
+		}
+
+		if ( $limit == - 1 ) {
 			$response = $already_respond_posts;
 		}
 
@@ -114,11 +118,11 @@ class text_input_module extends Unit_Module {
 				<?php } else {
 					?>
 					<div class="module_textarea_input">
-						<input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo( isset( $data->placeholder_text ) && $data->placeholder_text !== '' ? esc_attr( $data->placeholder_text ) : ' ' ); ?>" value="<?php echo( is_object( $response ) && count( $response >= 1 ) ? esc_attr( $response->post_content ) : ' ' ); ?>" <?php echo $enabled; ?> />
+						<input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo(isset($data->placeholder_text) && $data->placeholder_text !== '' ? esc_attr($data->placeholder_text) : ' ' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> />
 					</div>
 				<?php } ?>
 
-				<?php echo parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
+				<?php parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
 
 			</div>
 		<?php } else {
@@ -140,7 +144,7 @@ class text_input_module extends Unit_Module {
 					<?php } ?>
 				</div>
 
-				<?php echo parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
+				<?php parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
 
 			</div>
 		<?php

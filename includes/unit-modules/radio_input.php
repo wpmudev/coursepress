@@ -66,7 +66,7 @@ class radio_input_module extends Unit_Module {
 			'author'         => $user_ID,
 			'post_type'      => 'module_response',
 			'post_parent'    => $response_request_ID,
-			'post_status'    => 'publish'
+			'post_status'    => $status
 		);
 
 		if ( $ids_only ) {
@@ -81,13 +81,17 @@ class radio_input_module extends Unit_Module {
 			$response = $already_respond_posts;
 		}
 
+		if ( $limit == - 1 ) {
+			$response = $already_respond_posts;
+		}
+
+
 		return $response;
 	}
 
 	public static function front_main( $data ) {
 		$data->name = __CLASS__;
 		$response   = radio_input_module::get_response( get_current_user_id(), $data->ID );
-
 		$all_responses = radio_input_module::get_response( get_current_user_id(), $data->ID, 'private', - 1 );
 
 		$grade = false;

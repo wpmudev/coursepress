@@ -72,6 +72,10 @@ class file_input_module extends Unit_Module {
 			$response = $already_respond_posts;
 		}
 
+		if ( $limit == - 1 ) {
+			$response = $already_respond_posts;
+		}
+
 		return $response;
 	}
 
@@ -113,7 +117,7 @@ class file_input_module extends Unit_Module {
 				?>
 			</div>
 
-			<?php echo parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
+			<?php parent::grade_status_and_resubmit( $data, $grade, $all_responses, $response ); ?>
 
 		</div>
 

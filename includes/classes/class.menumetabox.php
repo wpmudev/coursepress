@@ -76,6 +76,7 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 							'post_mime_type' => '',
 							'post_parent'    => '',
 							'post_status'    => 'publish',
+							'posts_per_page'  => -1,
 						);
 
 						$courses = get_posts( $args );

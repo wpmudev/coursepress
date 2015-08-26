@@ -231,6 +231,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		function update_module_response( $data ) {
 			global $user_id, $wpdb, $coursepress;
 
+			$user_id = get_current_user_id();
 			$unit_id   = get_post_ancestors( $data->response_id );
 			$course_id = get_post_meta( $unit_id[0], 'course_id', true );
 
@@ -248,7 +249,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$post['ID'] = $data->ID; //If ID is set, wp_insert_post will do the UPDATE instead of insert
 			}
 
-			//Check if response already exists ( from the user. Only one response is allowed per persponse request / module per user )
+			 //LEGACY: Check if response already exists ( from the user. Only one response is allowed per persponse request / module per user )
 			$already_respond_posts_args = array(
 				'posts_per_page' => 1,
 				'meta_key'       => 'user_ID',
@@ -567,6 +568,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 							if ( isset( $form_message ) ) {
 								?><p class="form-info-regular"><?php echo $form_message; ?></p>
 							<?php } ?>
+
 							<input type="submit" class="apply-button-enrolled submit-elements-data-button" name="submit_modules_data_<?php echo( $is_last_page ? 'done' : 'save' ); ?>" value="<?php echo( $is_last_page ? __( 'Done', 'cp' ) : __( 'Next', 'cp' ) ); ?>">
 						<?php
 						} else {
@@ -654,7 +656,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 					if ( ! empty( $mandatory_answer ) && 'yes' == $mandatory_answer ) {
 						Student_Completion::record_mandatory_answer( $user_id, $course_id, $unit_id, $module_id );
 					}
-                    Student_Completion::record_gradable_result( $user_id, $course_id, $unit_id, $module_id, floatval( $grade_data['grade'] ) );
+					Student_Completion::record_gradable_result( $user_id, $course_id, $unit_id, $module_id, floatval( $grade_data['grade'] ) );
 				}
 
 				return true;
@@ -665,27 +667,27 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		public static function get_response_grade( $response_id, $data = '' ) {
 			$grade_data = get_post_meta( $response_id, 'response_grade' );
-			$module_id = wp_get_post_parent_id( $response_id );
+			$module_id  = wp_get_post_parent_id( $response_id );
 
 			$autograde_modules = Unit_Module::auto_grade_modules();
-			$module_type = get_post_meta( $module_id, 'module_type', true );
+			$module_type       = get_post_meta( $module_id, 'module_type', true );
 
 			// Check if this needs to be auto graded
-			if( in_array( $module_type, $autograde_modules ) && 100 > $grade_data[0]['grade'] ) {
+			if ( in_array( $module_type, $autograde_modules ) && 100 > $grade_data[0]['grade'] ) {
 
-				$grade = $grade_data[0]['grade'];
-				$response = get_post( $response_id );
+				$grade      = $grade_data[0]['grade'];
+				$response   = get_post( $response_id );
 				$student_id = $response->post_author;
-				$unit_id   = get_post_ancestors( $module_id );
-				$unit_id   = $unit_id[0];
-				$course_id = get_post_meta( $unit_id, 'course_id', true );
+				$unit_id    = get_post_ancestors( $module_id );
+				$unit_id    = $unit_id[0];
+				$course_id  = get_post_meta( $unit_id, 'course_id', true );
 
 				// Multiple or single correct answer?
 				$correct_answers = get_post_meta( $module_id, 'checked_answer', true );
 				$correct_answers = empty( $correct_answers ) ? get_post_meta( $module_id, 'checked_answers', true ) : $correct_answers;
 
-				if( ! is_array( $correct_answers ) ) {
-					if( trim( $response->post_content ) == trim( $correct_answers ) ) {
+				if ( ! is_array( $correct_answers ) ) {
+					if ( trim( $response->post_content ) == trim( $correct_answers ) ) {
 						$grade = 100;
 					}
 				} else {
@@ -694,18 +696,18 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 					if ( count( $student_answers ) !== 0 ) {
 						$cleaned_answers = array();
 						foreach ( $correct_answers as $answer ) {
-							$value =  stripslashes( $answer );
-							$value = strip_tags( $value );
-							$value = htmlentities( $value );
+							$value             = stripslashes( $answer );
+							$value             = strip_tags( $value );
+							$value             = htmlentities( $value );
 							$cleaned_answers[] = $value;
 						}
 						$right_answers = $cleaned_answers;
 
 						$cleaned_response = array();
-						foreach( $student_answers as $answer ) {
-							$value =  stripslashes( $answer );
-							$value = strip_tags( $value );
-							$value = htmlentities( $value );
+						foreach ( $student_answers as $answer ) {
+							$value              = stripslashes( $answer );
+							$value              = strip_tags( $value );
+							$value              = htmlentities( $value );
 							$cleaned_response[] = $value;
 						}
 						$chosen_answers = $cleaned_response;
@@ -726,7 +728,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 							$grade_cnt = count( $right_answers );
 						}
 
-						$grade   = round( ( $grade / $grade_cnt ), 0 );
+						$grade = round( ( $grade / $grade_cnt ), 0 );
 					}
 
 				}
@@ -772,36 +774,36 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
 						unset( $ungraded_responses[ $key ] );
-                        continue;
+						continue;
 					}
 
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
 						unset( $ungraded_responses[ $key ] );
-                        continue;
+						continue;
 					}
 
-                    $module = get_post($ungraded_response->post_parent);
-                    if($module){
-                        $class_name = $module->module_type;
-                        $response = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
-                        if ( count( $response ) >= 1 ) {
-                            $grade_data = Unit_Module::get_response_grade( $response->ID );
-                            if($grade_data){ // If there are more than one response submitted and it is already graded.
-                                unset( $ungraded_responses[ $key ] );
-                                continue;
-                            }
-                        }
+					$module = get_post( $ungraded_response->post_parent );
+					if ( $module ) {
+						$class_name = $module->module_type;
+						$response   = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
+						if ( count( $response ) >= 1 ) {
+							$grade_data = Unit_Module::get_response_grade( $response->ID );
+							if ( $grade_data ) { // If there are more than one response submitted and it is already graded.
+								unset( $ungraded_responses[ $key ] );
+								continue;
+							}
+						}
 
-                    $unit = get_post($module->post_parent);
-                    $course_id = $unit->post_parent;
-                        // Count only answers from students that are still enrolled in the course.
-                    if ( !get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
-                        unset( $ungraded_responses[ $key ] );
-                        continue;
-                    }
+						$unit      = get_post( $module->post_parent );
+						$course_id = $unit->post_parent;
+						// Count only answers from students that are still enrolled in the course.
+						if ( ! get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
+							unset( $ungraded_responses[ $key ] );
+							continue;
+						}
+					}
+
 				}
-
-				  }
 
 				return count( $ungraded_responses ); // - $admins_responses;
 			} else {
@@ -827,39 +829,39 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$ungraded_responses = get_posts( $args );
 
 				//Count only ungraded responses from STUDENTS!
-                foreach ( $ungraded_responses as $key => $ungraded_response ) {
+				foreach ( $ungraded_responses as $key => $ungraded_response ) {
 
-                    if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
-                        unset( $ungraded_responses[ $key ] );
-                        continue;
+					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
+						unset( $ungraded_responses[ $key ] );
+						continue;
 					}
 
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
-                        unset( $ungraded_responses[ $key ] );
-                        continue;
+						unset( $ungraded_responses[ $key ] );
+						continue;
 					}
 
 
-                    $module = get_post($ungraded_response->post_parent);
-                    if($module){
-                        $class_name = $module->module_type;
-                        $response = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
-                        if ( count( $response ) >= 1 ) {
-                            $grade_data = Unit_Module::get_response_grade( $response->ID );
-                            if($grade_data){ // If there are more than one response submitted and it is already graded.
-                                unset( $ungraded_responses[ $key ] );
-                                continue;
-                            }
-                        }
+					$module = get_post( $ungraded_response->post_parent );
+					if ( $module ) {
+						$class_name = $module->module_type;
+						$response   = call_user_func( $class_name . '::get_response', $ungraded_response->post_author, $module->ID );
+						if ( count( $response ) >= 1 ) {
+							$grade_data = Unit_Module::get_response_grade( $response->ID );
+							if ( $grade_data ) { // If there are more than one response submitted and it is already graded.
+								unset( $ungraded_responses[ $key ] );
+								continue;
+							}
+						}
 
-                        $unit = get_post($module->post_parent);
-                        $course_id = $unit->post_parent;
-                        // Count only answers from students that are still enrolled in the course.
-                        if ( !get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
-                            unset( $ungraded_responses[ $key ] );
-                            continue;
-                        }
-                    }
+						$unit      = get_post( $module->post_parent );
+						$course_id = $unit->post_parent;
+						// Count only answers from students that are still enrolled in the course.
+						if ( ! get_user_option( 'enrolled_course_date_' . $course_id, $ungraded_response->post_author ) ) {
+							unset( $ungraded_responses[ $key ] );
+							continue;
+						}
+					}
 
 				}
 
@@ -958,11 +960,19 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			$data, $grade, $responses, $last_public_response = false, $show_grade = true,
 			$total_correct = false, $total_answers = false
 		) {
+			$number_of_answers = 1 < (int) count( $responses ) ? (int) count( $responses ) + (int) count( $last_public_response ) : (int) count( $responses );
 			$number_of_answers = (int) count( $responses ) + (int) count( $last_public_response );
+
+			// Allow unlimited resubmits while grade is pending
+			$allowed_resubmits = array(
+				'file_input_module',
+				'text_input_module',
+			);
 
 			$limit_attempts       = $data->limit_attempts; //yes or no
 			$limit_attempts_value = $data->limit_attempts_value;
 			$attempts_remaining   = $limit_attempts_value - $number_of_answers;
+			$minimum_grade        = isset( $data->minimum_grade_required ) ? (int) $data->minimum_grade_required : 100;
 
 			if ( isset( $limit_attempts ) && $limit_attempts == 'yes' && 'yes' == $data->gradable_answer ) {
 				$limit_attempts_value = $limit_attempts_value;
@@ -970,20 +980,28 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$limit_attempts_value = - 1; //unlimited
 			}
 
-			if ( $grade && $data->gradable_answer ) {
+			$allow_free_resubmit = in_array( $data->name, $allowed_resubmits ) && empty( $grade );
 
-				if ( $grade['grade'] < $data->minimum_grade_required && $data->mandatory_answer ) {
+			if (
+				( $grade && 'yes' == $data->gradable_answer ) ||
+				$allow_free_resubmit
+			) {
+
+				if ( $grade['grade'] < $data->minimum_grade_required && 'yes' == $data->mandatory_answer ) {
 					self::mandatory_message( $data );
 				}
+
+				$grade_value = isset( $grade['grade'] ) ? $grade['grade'] : - 1;
+
 				?>
 				<div class="module_grade">
 					<div class="module_grade_left">
 						<?php
-						if ( $grade['grade'] < 100 ) {
-							if ( ( $number_of_answers < $limit_attempts_value ) || $limit_attempts_value == - 1 ) {
+						if ( $grade_value < $minimum_grade ) {
+							if ( ( $number_of_answers < $limit_attempts_value ) || $limit_attempts_value == - 1 || $allow_free_resubmit ) {
 								global $wp;
-//								$class_name = get_class( $this );
-//								$response     = call_user_func( $class_name.'::get_response', get_current_user_id(), $data->ID );
+								//								$class_name = get_class( $this );
+								//								$response     = call_user_func( $class_name.'::get_response', get_current_user_id(), $data->ID );
 								$unit_id      = wp_get_post_parent_id( $data->ID );
 								$course_id    = get_post_meta( $unit_id, 'course_id', true );
 								$module_id    = $data->ID;
@@ -993,7 +1011,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 								?>
 								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Submit different answer', 'cp' ); ?></a>
 								<?php
-								if ( $attempts_remaining > 0 ) {
+								if ( $attempts_remaining > 0 && ! $allow_free_resubmit ) {
 									if ( $attempts_remaining == 1 ) {
 										_e( '(1 attempt remaining)', 'cp' );
 									} else {
@@ -1005,7 +1023,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 						?>
 					</div>
 					<div class="module_grade_right">
-						<?php if ( $show_grade ) : ?>
+						<?php if ( $show_grade && ! $allow_free_resubmit ) { ?>
 							<?php
 							echo __( 'Graded: ', 'cp' ) . $grade['grade'] . '%';
 							if ( isset( $data->minimum_grade_required ) && is_numeric( $data->minimum_grade_required ) ) {
@@ -1026,8 +1044,9 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 								}
 							}
 							?>
-						<?php endif; ?>
+
 						<?php
+						}
 						if ( ( ! empty( $total_correct ) || 0 == $total_correct ) && ! empty( $total_answers ) ) {
 							printf( __( '%d of %d correct', 'cp' ), $total_correct, $total_answers );
 						}
@@ -1037,8 +1056,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			<?php
 			} else {
 				// if ( $data->gradable_answer && 'enabled' != $enabled ) {
-				if ( $data->gradable_answer ) {
-					if ( $data->mandatory_answer ) {
+				if ( 'yes' == $data->gradable_answer ) {
+					if ( 'yes' == $data->mandatory_answer ) {
 						self::mandatory_message( $data );
 					}
 					if ( (int) count( $responses ) > 1 ) {

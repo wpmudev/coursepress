@@ -110,7 +110,7 @@ if ( ! class_exists( 'CoursePress_Virtual_Page' ) ) {
 			return ( $posts );
 		}
 
-		function hide_title( $title, $id ) {
+		function hide_title( $title, $id = null ) {
 			if ( $this->show_title ) {
 				return $title;
 			} else {

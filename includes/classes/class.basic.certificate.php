@@ -339,7 +339,9 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		}
 
 		public static function certificate_content() {
-			return self::option( 'certificate_content' );
+			$content = self::option( 'certificate_content' );
+			$content = ! empty( $content ) ? $content : self::_default_certificate_content();
+			return $content;
 		}
 
 		public static function make_pdf( $student, $course, $url = false ) {
