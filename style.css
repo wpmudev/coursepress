@@ -2453,6 +2453,32 @@ h1.discussion-title{
     padding: 20px;
 }
 
+/* DISCUSSION ARCHIVE FIXES */
+.discussion-archive-single-meta {
+    clear:both;
+}
+
+.discussion-archive-list .discussion-archive-single {
+    width: 80%;
+}
+
+.discussion-archive-list .discussion-archive-single-meta {
+    width: 10%;
+}
+
+.discussion-comments .comment-list > li {
+    list-style: none;
+}
+
+.notification-archive-list .notification-archive-single-meta {
+    width: 10%;
+}
+
+.notification-archive-list .notification-archive-single {
+    width: 80%;
+    margin-top: 20px;
+}
+
 #answer_the_question_button{
     background-color: #74d1d4;
     padding: 5px 30px 5px 30px;
@@ -2885,6 +2911,11 @@ li.current_page_item a{
     text-shadow: none;
     text-transform: uppercase;
     white-space: nowrap;
+}
+
+.entry-content ul{
+    list-style: outside none disc;
+    margin-left: 48px;
 }
 
 /*
