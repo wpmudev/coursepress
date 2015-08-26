@@ -7,8 +7,6 @@ $s    = ( isset( $_GET['s'] ) ? $_GET['s'] : '' );
 /* * **************************GENERATING REPORT******************************** */
 if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
-	ob_end_clean();
-	ob_start();
 	$course_id          = ( int ) $_POST['course_id'];
 	$course             = new Course( $course_id );
 	$course_units       = $course->get_units();
@@ -36,6 +34,9 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	}
 
 	$report_title = $report_title .= ' | ' . $report_classes;
+
+    ob_end_clean();
+    ob_start();
 	?>
 	<h1 style="text-align:center;"><?php echo $course_details->post_title; ?></h1>
 	<hr/><br/>
@@ -204,15 +205,15 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 		$users_num ++;
 	}//post users
 
+    $report_content = apply_filters('cp_report_content_output', ob_get_clean());
+
+
 	if ( $users_num == 1 ) {
 		$report_title = $report_title .= ' | ' . $user_object->first_name . ' ' . $user_object->last_name;
 	} else {
 		$report_title = $report_title .= ' | ' . __( 'All Students', 'cp' );
 	}
 
-
-	$report_content = ob_get_clean();
-	//$report_title = __( 'Report', 'cp' );
 	$report_name = __( $report_title . '.pdf', 'cp' );
 	$coursepress->pdf_report( $report_content, $report_name, $report_title );
 	exit;

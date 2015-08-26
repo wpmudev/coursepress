@@ -52,7 +52,7 @@ jQuery( document ).ready( function( $ ) {
      //numberFormat: "C"
      });*/
 
-    $( ".assessable_checkbox" ).live( 'change', function() {
+    $( document.body ).on( 'change', '.assessable_checkbox', function() {
         var checked = $( this ).prop( 'checked' );
         var second_group = $( this ).parent().parent().parent().find( '.second-group-check' );
         if ( checked ) {
@@ -63,21 +63,21 @@ jQuery( document ).ready( function( $ ) {
     } );
 
 
-    jQuery( '.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button' ).live( 'click', function() {
+    jQuery( document.body ).on( 'click', '.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button', function() {
         var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var active_element = jQuery( '#unit-page-' + current_unit_page + ' .modules_accordion' ).accordion( "option", "active" );
         jQuery( '#active_element' ).val( active_element );
     } );
 
-    jQuery( '#add_student_class' ).live( 'input', function() {
+    jQuery( document.body ).on( 'input', '#add_student_class', function() {
         return false;
     } );
 
-    jQuery( '.element_title' ).live( 'input', function() {
+    jQuery( document.body ).on( 'input', '.element_title', function() {
         jQuery( this ).parent().parent().find( '.h3-label-left' ).html( jQuery( this ).val() );
     } );
 
-    jQuery( '#unit_name' ).live( 'input', function() {
+    jQuery( document.body ).on( 'input', '#unit_name', function() {
         jQuery( '.mp-wrap .mp-tab.active a' ).html( jQuery( this ).val() );
     } );
 
@@ -218,7 +218,7 @@ function update_sortable_indexes() {
 jQuery( document ).ready( function()
 {
 
-    jQuery( '.remove_module_link' ).live( 'click', function() {
+    jQuery( document.body ).on( 'click', '.remove_module_link', function() {
         var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var accordion_elements_count = ( jQuery( '#unit-page-' + current_unit_page + ' .modules_accordion div.module-holder-title' ).length );//.modules_accordion').find('.modules_accordion div.module-holder-title').length);
 
@@ -240,7 +240,7 @@ jQuery( document ).ready( function()
 
     } );
 
-    jQuery( '.audio_url_button' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.audio_url_button', function()
     {
         var target_url_field = jQuery( this ).prevAll( ".audio_url:first" );
 
@@ -277,7 +277,7 @@ jQuery( document ).ready( function( $ )
 
     } );
 
-    jQuery( '.video_url_button' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.video_url_button', function()
     {
         var target_url_field = jQuery( this ).prevAll( ".video_url:first" );
         var target_id_field = jQuery( this ).prevAll( ".attachment_id:first" );
@@ -324,7 +324,7 @@ jQuery( document ).ready( function( $ )
         return false;
     } );
 
-    jQuery( '.course_video_url_button' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.course_video_url_button', function()
     {
         var target_url_field = jQuery( this ).prevAll( ".course_video_url:first" );
 
@@ -362,7 +362,7 @@ jQuery( document ).ready( function( $ )
 
 jQuery( document ).ready( function()
 {
-    jQuery( '.file_url_button' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.file_url_button', function()
     {
 
         var target_url_field = jQuery( this ).prevAll( ".file_url:first" );
@@ -374,7 +374,7 @@ jQuery( document ).ready( function()
         return false;
     } );
 
-    jQuery( '.image_url_button' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.image_url_button', function()
     {
 
         var target_url_field = jQuery( this ).prevAll( ".image_url:first" );
@@ -429,7 +429,7 @@ jQuery( document ).ready( function()
 
 jQuery( document ).ready( function()
 {
-    jQuery( '.insert-media-cp' ).live( 'click', function()
+    jQuery( document.body ).on( 'click', '.insert-media-cp', function()
     {
 
         var rand_id = jQuery( this ).attr( "data-editor" );
@@ -1933,7 +1933,7 @@ jQuery( document ).ready( function( $ ) {
 
 
     /* Show Media Caption Toggle */
-    $( '[name*="show_media_caption"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="show_media_caption"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).parents( '.caption-settings' ).find( '.caption-source' ).removeClass( 'hidden' );
             $( this ).siblings( '[name*="show_caption_field"]' ).val( 'yes' );
@@ -1942,7 +1942,7 @@ jQuery( document ).ready( function( $ ) {
             $( this ).siblings( '[name*="show_caption_field"]' ).val( 'no' );
         }
     } );
-    $( '[name*="_caption_source"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="_caption_source"]', function( event ) {
         if ( $( this ).val() == 'media' ) {
             $( this ).siblings( '[name*="caption_field"]' ).val( 'media' );
         } else {
@@ -1951,7 +1951,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Hide related media */
-    $( '[name*="hide_related_media"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="hide_related_media"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="hide_related_media_field"]' ).val( 'yes' );
         } else {
@@ -1960,7 +1960,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden title field. Resolves issue with $_POST arrays. */
-    $( '[name*="show_title_on_front"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="show_title_on_front"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="show_title_field"]' ).val( 'yes' );
         } else {
@@ -1969,7 +1969,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden mandatory field. Resolves issue with $_POST arrays. */
-    $( '[name*="module_mandatory_answer"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="module_mandatory_answer"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_mandatory_answer"]' ).val( 'yes' );
         } else {
@@ -1978,7 +1978,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden Assessable field. Resolves issue with $_POST arrays. */
-    $( '[name*="module_gradable_answer"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="module_gradable_answer"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_gradable_answer"]' ).val( 'yes' );
         } else {
@@ -1987,7 +1987,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden Limit Attempts field. Resolves issue with $_POST arrays. */
-    $( '[name*="module_limit_attempts"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '[name*="module_limit_attempts"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_limit_attempts_field"]' ).val( 'yes' );
         } else {
@@ -1996,7 +1996,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set Unit Page Titles. */
-    $( '.show_page_title [name*="show_page_title"]' ).live( "change", function( event ) {
+    $( document.body ).on( 'change', '.show_page_title [name*="show_page_title"]', function( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '.show_page_title [name*="show_page_title_field"]' ).val( 'yes' );
         } else {

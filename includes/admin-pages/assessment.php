@@ -290,24 +290,23 @@ if ( isset( $_GET['response_id'] ) ) {
 							$classes = 'all';
 						}
 
-						/* if ( $classes !== 'all' ) {
-						  $args = array(
-						  'meta_query' => array(
-						  array(
-						  'key' => $class_meta_query_key,
-						  'value' => $classes,
-						  ) )
-						  );
-						  } else {
-						  $args = array(
-						  'meta_query' => array(
-						  array(
-						  'key' => $class_meta_query_key
-						  ) )
-						  );
-						  } */
+                        $meta_key = '';
+                        if ( is_multisite() ) {
+                            $meta_key = $wpdb->prefix . 'enrolled_course_class_' . $current_course_id;
+                        } else {
+                            $meta_key = 'enrolled_course_class_' . $current_course_id;
+                        }
 
-						//$student_search = new WP_User_Query( $args );
+                        $args = array(
+                            'meta_query' => array(
+                                'relation' => 'AND',
+                                array(
+                                    'key'     => $meta_key,
+                                    'value'   => '',
+                                    'compare' => 'EXISTS'
+                                )
+                            )
+                        );
 
 						$additional_url_args              = array();
 						$additional_url_args['course_id'] = $current_course_id;
@@ -505,6 +504,7 @@ if ( isset( $_GET['response_id'] ) ) {
 													<?php }//general col visibility       ?>
 												</tr>
 												<?php
+                                                unset($comment);
 												$current_row ++;
 											}
 										}

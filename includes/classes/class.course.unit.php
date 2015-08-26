@@ -766,6 +766,13 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$input_module_meta = maybe_unserialize( $input_module_meta );
 
+            if( $input_module_meta[ $module_id ]['mandatory_answer'] != $meta['mandatory_answer']
+                || $input_module_meta[ $module_id ]['gradable_answer'] != $meta['gradable_answer']
+                || $input_module_meta[ $module_id ]['minimum_grade_required'] != $meta['minimum_grade_required']
+            ){
+                do_action( 'coursepress_module_completion_criteria_change', $unit_id, $module_id, $meta, $input_module_meta[ $module_id ] );
+            }
+
 			$input_module_meta[ $module_id ] = $meta;
 
 			update_post_meta( $unit_id, 'input_modules', $input_module_meta );

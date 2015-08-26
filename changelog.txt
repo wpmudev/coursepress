@@ -6,6 +6,9 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.6.0 =
+* Fixed completion system synchronization.
+
 = 1.2.5.9 =
 * Fix WP 4.3 compatibility issue with visual editors
 
