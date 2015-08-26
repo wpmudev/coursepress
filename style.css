@@ -2325,6 +2325,11 @@ select.units_dropdown::-ms-expand {
     margin-top: 38px;
 }
 
+.discussion-archive-list li {
+    clear: both;
+}
+
+
 .discussion-archive-single-meta{
     float: left;
     width: 90px;
