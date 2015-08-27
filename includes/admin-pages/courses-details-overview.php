@@ -1375,7 +1375,7 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 									?>
 									<div class="limited_courses_message">
 										<?php
-										printf( __( 'While %s is suitable for offering a few courses, you may have bigger goals for your site. %s takes the features you love from %s and unlocks the ability to create an unlimited number of courses. And get 12 payment gateways making it even easier to accept payments for your premium content.' ), $this->name, '<a href="http://premium.wpmudev.org/project/coursepress-pro/">' . __( 'CoursePress PRO' ) . '</a>', $this->name );
+										printf( __( 'While %s is suitable for offering a few courses, you may have bigger goals for your site. %s takes the features you love from %s and unlocks the ability to create an unlimited number of courses. And get 12 payment gateways making it even easier to accept payments for your premium content.' ), $this->name, '<a href="http://premium.wpmudev.org/project/coursepress-pro/">' . __( 'CoursePress Pro', 'cp' ) . '</a>', $this->name );
 										//printf(__('You can create only %s courses with Standard version of %s. Check out the %s.'), $wp_course_search->courses_per_page, $this->name, '<a href="http://premium.wpmudev.org/project/coursepress-pro/">' . __('PRO version') . '</a>');
 										?>
 									</div>

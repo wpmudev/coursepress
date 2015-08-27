@@ -81,6 +81,8 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		 */
 		public $wp_version;
 
+		public $plugins = array();
+
 		/**
 		 * Adds a reference of this object to $instance, populates default strings,
 		 *
@@ -94,47 +96,56 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				return false;
 			}
 
-
-
 			//Menu where plugin could be installed
 			$this->tab  = 'cp-marketpress';
 			$this->menu = $screen_base . '_settings&tab=' . $this->tab;
 
-			if ( CoursePress_Capabilities::is_pro() ) {
-				$this->plugin = array(
-					array(
-						'name'           => 'MarketPress',
-						// The plugin name.
-						'slug'           => 'marketpress',
-						// The plugin slug (typically the folder name).
-						'base_path'      => 'marketpress/marketpress.php',
-						//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
-						'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
-						// The plugin source.
-						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
-						'external_url'   => '',
-						// http://premium.wpmudev.org/project/e-commerce/
-					),
+			$this->plugins['marketpress'] = array(
+					'name'           => 'MarketPress',
+					// The plugin name.
+					'slug'           => 'marketpress',
+					// The plugin slug (typically the folder name).
+					'base_path'      => 'marketpress/marketpress.php',
+					//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
+					'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
+					// The plugin source.
+					'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
+					'alt_message' => __( 'Plugin already installed.', 'cp' ),
+					'external_url'   => '',
+					// http://premium.wpmudev.org/project/e-commerce/
+			);
+
+			$this->plugins['wordpress-ecommerce'] = array(
+					'name'           => 'MarketPress - WordPress eCommerce',
+					// The plugin name.
+					'slug'           => 'wordpress-ecommerce',
+					'alt_slug'       => 'marketpress',
+					// The plugin slug (typically the folder name).
+					'base_path'      => 'wordpress-ecommerce/marketpress.php',
+					'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
+					//without protocol (i.e. https://) because it may be killed by mod_security
+					'source_message' => __( 'WordPress.org Repository', 'cp' ),
+					'external_url'   => '',
+					// https://wordpress.org/plugins/wordpress-ecommerce/
 				);
+
+
+			if ( CoursePress_Capabilities::is_pro() ) {
+				$this->plugin = $this->plugins['marketpress'];
 			}
 			if ( ! CoursePress_Capabilities::is_pro() ) {
-				$this->plugin = array(
-					array(
-						'name'           => 'MarketPress - WordPress eCommerce',
-						// The plugin name.
-						'slug'           => 'wordpress-ecommerce',
-						// The plugin slug (typically the folder name).
-						'base_path'      => 'wordpress-ecommerce/marketpress.php',
-						'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
-						//without protocol (i.e. https://) because it may be killed by mod_security
-						'source_message' => __( 'WordPress.org Repository', 'cp' ),
-						'external_url'   => '',
-						// https://wordpress.org/plugins/wordpress-ecommerce/
-					),
-				);
+				$this->plugin = $this->plugins['wordpress-ecommerce'];
 			}
 
-			$this->plugin = $this->plugin[0];
+			if( ! function_exists( 'get_plugins' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			// If its one or the other, override it here
+			if( ! empty( $this->plugin['alt_slug'] ) && $this->is_plugin_installed( '/' . $this->plugin['alt_slug'] ) ) {
+				$this->plugin = $this->plugins[ $this->plugin['alt_slug'] ];
+				$this->plugin['source_message'] = ! empty( $this->plugin['alt_message'] ) ? $this->plugin['alt_message'] : '';
+			}
 
 			$this->config = array(
 				'default_path' => '', // Default absolute path to pre-packaged plugins.
@@ -393,6 +404,15 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 											?>
 										</span>
 								</div>
+								<?php
+
+									if( ! empty( $this->plugin['alt_slug'] ) ) {
+
+
+
+									}
+
+								?>
 							</td>
 							<td class="source column-source"><?php echo $this->plugin['source_message']; ?></td>
 							<td class="status column-status">
