@@ -73,18 +73,8 @@ if ( cp_is_chat_plugin_active() ) {
 						$editor_id      = ( esc_attr( isset( $data->ID ) ? 'editor_' . $data->ID : rand( 1, 9999 ) ) );
 						$editor_content = htmlspecialchars_decode( ( isset( $data->post_content ) ? $data->post_content : '' ) );
 
-						$args = array(
-							"textarea_name" => $editor_name,
-							"textarea_rows" => 5,
-							"quicktags"     => true,
-							"teeny"         => false,
-							"editor_class"  => 'cp-editor cp-unit-element',
-						);
-
-						// Filter $args before showing editor
-						$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-						wp_editor( $editor_content, $editor_id, $args );
+						$editor = '<textarea id="' . $editor_id . '" name="' . $editor_name . '" class="coursepress-editor">' . $editor_content . '</textarea>';
+						echo trim( $editor );
 						?>
 					</div>
 

@@ -317,26 +317,28 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												$editor_name	 = "course_excerpt";
 												$editor_id		 = "course_excerpt";
 												$editor_content	 = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
-
-												$args = array(
-													"textarea_name"	 => $editor_name,
-													"editor_class"	 => 'cp-editor cp-course-overview',
-													"textarea_rows"	 => 3,
-													"media_buttons"	 => false,
-													"quicktags"		 => false,
-												);
-
-												if ( !isset( $course_excerpt->post_excerpt ) ) {
-													$course_excerpt					 = new StdClass;
-													$course_excerpt->post_excerpt	 = '';
-												}
-
-												$desc = '';
-
-												// Filter $args
-												$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-												wp_editor( $editor_content, $editor_id, $args );
+												//
+												//$args = array(
+												//	"textarea_name"	 => $editor_name,
+												//	"editor_class"	 => 'cp-editor cp-course-overview',
+												//	"textarea_rows"	 => 3,
+												//	"media_buttons"	 => false,
+												//	"quicktags"		 => false,
+												//);
+												//
+												//if ( !isset( $course_excerpt->post_excerpt ) ) {
+												//	$course_excerpt					 = new StdClass;
+												//	$course_excerpt->post_excerpt	 = '';
+												//}
+												//
+												//$desc = '';
+												//
+												//// Filter $args
+												//$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+												//
+												//wp_editor( $editor_content, $editor_id, $args );
+												$editor = '<textarea id="' . $editor_id . '" name="' . $editor_name . '" class="coursepress-editor">' . $editor_content . '</textarea>';
+												echo trim( $editor );
 												$supported_image_extensions = implode( ", ", cp_wp_get_image_extensions() );
 												?>
 											</div>
@@ -491,24 +493,27 @@ $offer_paid	 = apply_filters( 'coursepress_offer_paid_courses', true );
 												$editor_id		 = "course_description";
 												$editor_content	 = htmlspecialchars_decode( isset( $course_details->post_content ) ? $course_details->post_content : ''  );
 
+												//$args = array(
+												//	"textarea_name"	 => $editor_name,
+												//	"editor_class"	 => 'cp-editor cp-course-overview',
+												//	"textarea_rows"	 => 10,
+												//);
+												//
+												//if ( !isset( $course_details->post_content ) ) {
+												//	$course_details					 = new StdClass;
+												//	$course_details->post_content	 = '';
+												//}
+												//
+												//$desc = '';
+												//
+												//// Filter $args before showing editor
+												//$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+												//
+												//wp_editor( $editor_content, $editor_id, $args );
 
-												$args = array(
-													"textarea_name"	 => $editor_name,
-													"editor_class"	 => 'cp-editor cp-course-overview',
-													"textarea_rows"	 => 10,
-												);
+												$editor = '<textarea id="' . $editor_id . '" name="' . $editor_name . '" class="coursepress-editor">' . $editor_content . '</textarea>';
+												echo trim( $editor );
 
-												if ( !isset( $course_details->post_content ) ) {
-													$course_details					 = new StdClass;
-													$course_details->post_content	 = '';
-												}
-
-												$desc = '';
-
-												// Filter $args before showing editor
-												$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-												wp_editor( $editor_content, $editor_id, $args );
 												?>
 											</div>
 

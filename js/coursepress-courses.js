@@ -1,40 +1,42 @@
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
+
+
 
     /*if ( $( '#cp-unit-details-holder' ).length ) {
 
-        setInterval( function() {
-            cp_submit_unit_data();
-        }, 10000 );
+     setInterval( function() {
+     cp_submit_unit_data();
+     }, 10000 );
 
-        $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).live( 'change',
-            function() {
-                var par = $( this ).parent().closest( '.module-content' );
-                var par_id = $( par ).attr( 'id' );
-                $( '#' + par_id + ' input, #' + par_id + ' select, #' + par_id + ' textarea' ).each( function() {
-                    var $t = $( this );
-                    $t.attr( {
-                        name: $t.attr( 'noname' ),
-                    } )
-                        .removeAttr( 'noname' );
-                } );
-            }
-        );
+     $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).live( 'change',
+     function() {
+     var par = $( this ).parent().closest( '.module-content' );
+     var par_id = $( par ).attr( 'id' );
+     $( '#' + par_id + ' input, #' + par_id + ' select, #' + par_id + ' textarea' ).each( function() {
+     var $t = $( this );
+     $t.attr( {
+     name: $t.attr( 'noname' ),
+     } )
+     .removeAttr( 'noname' );
+     } );
+     }
+     );
 
-    }*/
+     }*/
 
     /*function cp_submit_unit_data() {
-        var data = $( '#unit-add' ).serialize();
-        $.post( coursepress_units.admin_ajax_url, data );
+     var data = $( '#unit-add' ).serialize();
+     $.post( coursepress_units.admin_ajax_url, data );
 
-        $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).each( function() {
-            var $t = $( this );
-            $t.attr( {
-                noname: $t.attr( 'name' ),
-            } )
-                .removeAttr( 'name' );
-        } );
+     $( '.unit-page-holder .modules_accordion input, .unit-page-holder .modules_accordion select' ).each( function() {
+     var $t = $( this );
+     $t.attr( {
+     noname: $t.attr( 'name' ),
+     } )
+     .removeAttr( 'name' );
+     } );
 
-    }*/
+     }*/
 
     $( ".grade_spinner" ).spinner( {
         min: 1,
@@ -52,7 +54,7 @@ jQuery( document ).ready( function( $ ) {
      //numberFormat: "C"
      });*/
 
-    $( document.body ).on( 'change', '.assessable_checkbox', function() {
+    $( document.body ).on( 'change', '.assessable_checkbox', function () {
         var checked = $( this ).prop( 'checked' );
         var second_group = $( this ).parent().parent().parent().find( '.second-group-check' );
         if ( checked ) {
@@ -63,57 +65,57 @@ jQuery( document ).ready( function( $ ) {
     } );
 
 
-    jQuery( document.body ).on( 'click', '.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button', function() {
+    jQuery( document.body ).on( 'click', '.modules_accordion .module-holder-title, #unit-pages .ui-tabs-nav li, .save-unit-button', function () {
         var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var active_element = jQuery( '#unit-page-' + current_unit_page + ' .modules_accordion' ).accordion( "option", "active" );
         jQuery( '#active_element' ).val( active_element );
     } );
 
-    jQuery( document.body ).on( 'input', '#add_student_class', function() {
+    jQuery( document.body ).on( 'input', '#add_student_class', function () {
         return false;
     } );
 
-    jQuery( document.body ).on( 'input', '.element_title', function() {
+    jQuery( document.body ).on( 'input', '.element_title', function () {
         jQuery( this ).parent().parent().find( '.h3-label-left' ).html( jQuery( this ).val() );
     } );
 
-    jQuery( document.body ).on( 'input', '#unit_name', function() {
+    jQuery( document.body ).on( 'input', '#unit_name', function () {
         jQuery( '.mp-wrap .mp-tab.active a' ).html( jQuery( this ).val() );
     } );
 
     function submit_elements() {
 
 
-        jQuery( "input[name*='radio_input_module_radio_check']:checked" ).each( function() {
+        jQuery( "input[name*='radio_input_module_radio_check']:checked" ).each( function () {
             var vl = jQuery( this ).parent().find( '.radio_answer' ).val();
             jQuery( this ).closest( ".module-content" ).find( '.checked_index' ).val( vl );
         } );
 
-        jQuery( "input[name*='text_input_module_answer_length']:checked" ).each( function() {
+        jQuery( "input[name*='text_input_module_answer_length']:checked" ).each( function () {
             jQuery( this ).closest( ".module-content" ).find( '.checked_index' ).val( jQuery( this ).val() );
         } );
 
-        jQuery( "input[name*='audio_module_loop']" ).each( function( i, obj ) {
+        jQuery( "input[name*='audio_module_loop']" ).each( function ( i, obj ) {
             jQuery( this ).attr( "name", "audio_module_loop[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + ']' );
         } );
 
-        jQuery( "input[name*='audio_module_autoplay']" ).each( function( i, obj ) {
+        jQuery( "input[name*='audio_module_autoplay']" ).each( function ( i, obj ) {
             jQuery( this ).attr( "name", "audio_module_autoplay[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + ']' );
         } );
 
-        jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
+        jQuery( "input[name*='radio_answers']" ).each( function ( i, obj ) {
             jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
         } );
 
 
-        jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
+        jQuery( "input[name*='radio_check']" ).each( function ( i, obj ) {
             jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
         } );
 
         jQuery( "#unit-add" ).submit();
     }
 
-    jQuery( ".unit-control-buttons .save-unit-button" ).click( function() {
+    jQuery( ".unit-control-buttons .save-unit-button" ).click( function () {
         $( '.wp-switch-editor.switch-tmce' ).click();
 
         var unit_page_num = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
@@ -133,7 +135,7 @@ jQuery( document ).ready( function( $ ) {
         submit_elements();
     } );
 
-    jQuery( ".unit-control-buttons .button-publish" ).click( function() {
+    jQuery( ".unit-control-buttons .button-publish" ).click( function () {
         //submit_elements();
     } );
 } );
@@ -162,12 +164,12 @@ function withdrawAllFromClass() {
     }
 }
 
-jQuery( function() {
+jQuery( function () {
 
     jQuery( "#sortable-units" ).sortable( {
         placeholder: "ui-state-highlight",
         items: "li:not(.static)",
-        stop: function( event, ui ) {
+        stop: function ( event, ui ) {
             update_sortable_indexes();
         }
     } );
@@ -179,7 +181,7 @@ jQuery( function() {
 
     current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
 
-    jQuery( "#unit-page-" + current_unit_page + " .unit-module-list" ).change( function() {
+    jQuery( "#unit-page-" + current_unit_page + " .unit-module-list" ).change( function () {
         jQuery( "#unit-page-" + current_unit_page + " .module_description" ).html( jQuery( this ).find( ':selected' ).data( 'module-description' ) );
     } );
 
@@ -188,18 +190,18 @@ jQuery( function() {
 } );
 
 function update_sortable_indexes() {
-    jQuery( '.numberCircle' ).each( function( i, obj ) {
+    jQuery( '.numberCircle' ).each( function ( i, obj ) {
         jQuery( this ).html( i + 1 );
     } );
 
-    jQuery( '.unit_order' ).each( function( i, obj ) {
+    jQuery( '.unit_order' ).each( function ( i, obj ) {
         jQuery( this ).val( i + 1 );
     } );
 
     var positions = new Array();
 
-    jQuery( '.unit_id' ).each( function( i, obj ) {
-        positions[i] = jQuery( this ).val();
+    jQuery( '.unit_id' ).each( function ( i, obj ) {
+        positions[ i ] = jQuery( this ).val();
     } );
 
     var data = {
@@ -207,7 +209,7 @@ function update_sortable_indexes() {
         positions: positions.toString()
     };
 
-    jQuery.post( ajaxurl, data, function( response ) {
+    jQuery.post( ajaxurl, data, function ( response ) {
         //alert(response);
     } );
 
@@ -215,10 +217,9 @@ function update_sortable_indexes() {
 
 /* Native WP media browser for audio module (unit module) */
 
-jQuery( document ).ready( function()
-{
+jQuery( document ).ready( function () {
 
-    jQuery( document.body ).on( 'click', '.remove_module_link', function() {
+    jQuery( document.body ).on( 'click', '.remove_module_link', function () {
         var current_unit_page = jQuery( '#unit-pages .ui-tabs-nav .ui-state-active a' ).html();
         var accordion_elements_count = ( jQuery( '#unit-page-' + current_unit_page + ' .modules_accordion div.module-holder-title' ).length );//.modules_accordion').find('.modules_accordion div.module-holder-title').length);
 
@@ -240,12 +241,10 @@ jQuery( document ).ready( function()
 
     } );
 
-    jQuery( document.body ).on( 'click', '.audio_url_button', function()
-    {
+    jQuery( document.body ).on( 'click', '.audio_url_button', function () {
         var target_url_field = jQuery( this ).prevAll( ".audio_url:first" );
 
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
             if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
                 $( target_url_field ).removeClass( 'invalid_extension_field' );
                 $( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
@@ -262,10 +261,9 @@ jQuery( document ).ready( function()
 
 /* Native WP media browser for video module (unit module) */
 
-jQuery( document ).ready( function( $ )
-{
+jQuery( document ).ready( function ( $ ) {
     // Prevent 'Enter' key from submitting page on unit builder
-    jQuery( document ).keypress( function( event ) {
+    jQuery( document ).keypress( function ( event ) {
 
         if ( event.keyCode == 13 ) {
             var unitBuilder = jQuery( '.unit-detail-settings' );
@@ -277,14 +275,12 @@ jQuery( document ).ready( function( $ )
 
     } );
 
-    jQuery( document.body ).on( 'click', '.video_url_button', function()
-    {
+    jQuery( document.body ).on( 'click', '.video_url_button', function () {
         var target_url_field = jQuery( this ).prevAll( ".video_url:first" );
         var target_id_field = jQuery( this ).prevAll( ".attachment_id:first" );
         var caption_field = jQuery( this ).parents( '.module-content' ).find( '.caption-source .element_title_description' );
 
-        wp.media.string.props = function( props, attachment )
-        {
+        wp.media.string.props = function ( props, attachment ) {
 
             jQuery( target_url_field ).val( props.url );
 
@@ -303,8 +299,7 @@ jQuery( document ).ready( function( $ )
             return props;
         };
 
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
             if ( attachment !== undefined ) {
                 if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
                     $( target_url_field ).removeClass( 'invalid_extension_field' );
@@ -324,12 +319,10 @@ jQuery( document ).ready( function( $ )
         return false;
     } );
 
-    jQuery( document.body ).on( 'click', '.course_video_url_button', function()
-    {
+    jQuery( document.body ).on( 'click', '.course_video_url_button', function () {
         var target_url_field = jQuery( this ).prevAll( ".course_video_url:first" );
 
-        wp.media.string.props = function( props, attachment )
-        {
+        wp.media.string.props = function ( props, attachment ) {
             if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
                 $( target_url_field ).removeClass( 'invalid_extension_field' );
                 $( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
@@ -340,8 +333,7 @@ jQuery( document ).ready( function( $ )
             jQuery( target_url_field ).val( props.url );
         }
 
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
             if ( cp_is_extension_allowed( attachment.url, target_url_field ) ) {//extension is allowed
                 $( target_url_field ).removeClass( 'invalid_extension_field' );
                 $( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
@@ -360,29 +352,24 @@ jQuery( document ).ready( function( $ )
 
 /* Native WP media browser for file module (for instructors) */
 
-jQuery( document ).ready( function()
-{
-    jQuery( document.body ).on( 'click', '.file_url_button', function()
-    {
+jQuery( document ).ready( function () {
+    jQuery( document.body ).on( 'click', '.file_url_button', function () {
 
         var target_url_field = jQuery( this ).prevAll( ".file_url:first" );
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
             jQuery( target_url_field ).val( attachment.url );
         };
         wp.media.editor.open( this );
         return false;
     } );
 
-    jQuery( document.body ).on( 'click', '.image_url_button', function()
-    {
+    jQuery( document.body ).on( 'click', '.image_url_button', function () {
 
         var target_url_field = jQuery( this ).prevAll( ".image_url:first" );
         var target_id_field = jQuery( this ).prevAll( ".attachment_id:first" );
         var caption_field = jQuery( this ).parents( '.module-content' ).find( '.caption-source .element_title_description' );
 
-        wp.media.string.props = function( props, attachment )
-        {
+        wp.media.string.props = function ( props, attachment ) {
 
             jQuery( target_url_field ).val( props.url );
 
@@ -402,8 +389,7 @@ jQuery( document ).ready( function()
             return props;
         };
 
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
 
             if ( attachment !== undefined ) {
                 // console.log( attachment );
@@ -427,15 +413,12 @@ jQuery( document ).ready( function()
 } );
 
 
-jQuery( document ).ready( function()
-{
-    jQuery( document.body ).on( 'click', '.insert-media-cp', function()
-    {
+jQuery( document ).ready( function () {
+    jQuery( document.body ).on( 'click', '.insert-media-cp', function () {
 
         var rand_id = jQuery( this ).attr( "data-editor" );
 
-        wp.media.editor.send.attachment = function( props, attachment )
-        {
+        wp.media.editor.send.attachment = function ( props, attachment ) {
             tinyMCE.execCommand( 'mceFocus', false, rand_id );
             var ed = tinyMCE.get( rand_id );
             var range = ed.selection.getRng();
@@ -461,13 +444,13 @@ jQuery( document ).ready( function()
 } );
 
 
-jQuery.urlParam = function( name ) {
+jQuery.urlParam = function ( name ) {
     var results = new RegExp( '[\?&]' + name + '=([^&#]*)' ).exec( window.location.href );
     if ( results == null ) {
         return null;
     }
     else {
-        return results[1] || 0;
+        return results[ 1 ] || 0;
     }
 }
 
@@ -486,7 +469,7 @@ function cp_editor_key_down( ed, page, tab ) {
 
             // Mark as dirty when wp_editor content changes on 'Course Setup' page.
             $( '#' + ed.id ).parents( '.course-section' ).addClass( 'dirty' );
-            if ( $( $( '#' + ed.id ).parents( '.course-section.step' ).find( '.status.saved' )[0] ).hasClass( 'saved' ) ) {
+            if ( $( $( '#' + ed.id ).parents( '.course-section.step' ).find( '.status.saved' )[ 0 ] ).hasClass( 'saved' ) ) {
                 $( '#' + ed.id ).parents( '.course-section.step' ).find( 'input.button.update' ).css( 'display', 'inline-block' );
             }
 
@@ -552,20 +535,20 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
                         course_id: response.course_id,
                         user_id: uid,
                     }
-                ).done( function( data, status ) {
+                ).done( function ( data, status ) {
 
-                    var instructor_id = response.instructor;
-                    var response2 = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                    var response_type = $( $.parseHTML( response2.content ) );
+                        var instructor_id = response.instructor;
+                        var response2 = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                        var response_type = $( $.parseHTML( response2.content ) );
 
-                    if ( $( "#instructor_holder_" + instructor_id ).length == 0 && response2.instructor_added ) {
-                        $( '.instructor-avatar-holder.empty' ).hide();
-                        $( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
-                    }
+                        if ( $( "#instructor_holder_" + instructor_id ).length == 0 && response2.instructor_added ) {
+                            $( '.instructor-avatar-holder.empty' ).hide();
+                            $( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + response2.instructor_gravatar + '<span class="instructor-name">' + response2.instructor_name + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
+                        }
 
-                    //window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
+                        //window.location = $('form#course-add').attr('action')  + '&course_id=' + response.course_id;
 
-                } );
+                    } );
                 // return;
             }
 
@@ -577,17 +560,16 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
             return;
         }
 
-        $( $( '.' + step + '.dirty' )[0] ).removeClass( 'dirty' )
+        $( $( '.' + step + '.dirty' )[ 0 ] ).removeClass( 'dirty' )
         $( statusElement ).removeClass( 'progress' );
 
         var is_paid = $( '[name=meta_paid_course]' ).is( ':checked' ) ? true : false;
-        var has_gateway = $( $( '.step-6 .course-enable-gateways' )[0] ).hasClass( 'gateway-active' );
+        var has_gateway = $( $( '.step-6 .course-enable-gateways' )[ 0 ] ).hasClass( 'gateway-active' );
 
         // Different logic required here for last step
         if ( step == 'step-6' ) {
             // Paid product
-            if ( is_paid )
-            {
+            if ( is_paid ) {
                 // Gateway is setup and next action is set
                 if ( has_gateway && 'unit_setup' == nextAction ) {
                     $course_id = $( '[name=course_id]' ).val();
@@ -618,12 +600,12 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
         } else {
             $( statusElement ).addClass( 'saved' );
 
-            var buttons = $( statusElement ).parents( '.course-section' ).find( '.course-form .course-step-buttons' )[0];
+            var buttons = $( statusElement ).parents( '.course-section' ).find( '.course-form .course-step-buttons' )[ 0 ];
 
             $( '#step-done-message' ).remove();
             $( buttons ).append( '<span id="step-done-message">&nbsp;<i class="fa fa-check"></i></span>' );
             // Popup Message
-            $( '#step-done-message' ).show( function() {
+            $( '#step-done-message' ).show( function () {
                 $( this ).fadeOut( 1000 );
             } );
 
@@ -639,12 +621,14 @@ function autosave_course_setup_done( data, status, step, statusElement, nextActi
 
 /** Prepare AJAX post vars */
 function step_1_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
-    var tmce = initialVars['tmce'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
+    var tmce = initialVars[ 'tmce' ];
 
     var content = '';
-    if ( tmce && tinyMCE.get( 'course_excerpt' ) ) {
+
+    var setting = typeof getUserSetting !== 'undefined' ? getUserSetting( 'editor' ) : 'html';
+    if ( tinyMCE && tinyMCE.get( 'course_excerpt' ) && 'html' !== setting ) {
         content = tinyMCE.get( 'course_excerpt' ).getContent();
     } else {
         content = $( '[name=course_excerpt]' ).val();
@@ -657,11 +641,11 @@ function step_1_update( attr ) {
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         course_excerpt: content,
         meta_featured_url: $( '[name=meta_featured_url]' ).val(),
@@ -670,15 +654,15 @@ function step_1_update( attr ) {
         meta_course_language: $( '[name=meta_course_language]' ).val(),
         course_category: $( '[name=meta_course_category]' ).val(),
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
         meta_course_setup_marker: 'step-2',
     }
 }
 
 function step_2_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
-    var tmce = initialVars['tmce'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
+    var tmce = initialVars[ 'tmce' ];
 
     var content = '';
     if ( tmce && tinyMCE.get( 'course_description' ) ) {
@@ -690,13 +674,13 @@ function step_2_update( attr ) {
     //var show_boxes = {};
     //var preview_boxes = {};
 
-    var show_unit_boxes = { };
-    var preview_unit_boxes = { };
+    var show_unit_boxes = {};
+    var preview_unit_boxes = {};
 
-    var show_page_boxes = { };
-    var preview_page_boxes = { };
+    var show_page_boxes = {};
+    var preview_page_boxes = {};
 
-    $( "input[name^=meta_show_unit]" ).each( function() {
+    $( "input[name^=meta_show_unit]" ).each( function () {
         var unit_id = $( this ).attr( 'data-id' );
 
         show_unit_boxes[ unit_id ] = $( sanitize_checkbox( $( "input[name=meta_show_unit\\[" + unit_id + "\\]]" ) ) ).val();
@@ -704,7 +688,7 @@ function step_2_update( attr ) {
 
     } );
 
-    $( "input[name^=meta_show_page]" ).each( function() {
+    $( "input[name^=meta_show_page]" ).each( function () {
         var page_id = $( this ).attr( 'data-id' );
 
         show_page_boxes[ page_id ] = $( sanitize_checkbox( $( "input[name=meta_show_page\\[" + page_id + "\\]]" ) ) ).val();
@@ -713,23 +697,23 @@ function step_2_update( attr ) {
     } );
 
     /*
-     
+
      $("input[name^=module_element]").each(function() {
      var mod_id = $(this).val();
-     
+
      show_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_show_module\\[" + mod_id + "\\]]"))).val();
      preview_boxes[ mod_id ] = $(sanitize_checkbox($("input[name=meta_preview_module\\[" + mod_id + "\\]]"))).val();
-     
+
      });
      */
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         meta_course_video_url: $( '[name=meta_course_video_url]' ).val(),
         course_description: content,
@@ -742,16 +726,16 @@ function step_2_update( attr ) {
         //meta_show_module: show_boxes,
         //meta_preview_module: preview_boxes,
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
         meta_course_setup_marker: 'step-3',
     }
 }
 
 function step_3_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
 
-    var instructors = $( "input[name^=instructor]" ).map( function() {
+    var instructors = $( "input[name^=instructor]" ).map( function () {
         return $( this ).val();
     } ).get();
     if ( $( instructors ).length == 0 ) {
@@ -760,30 +744,30 @@ function step_3_update( attr ) {
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         instructor: instructors,
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
         meta_course_setup_marker: 'step-4',
     }
 }
 
 function step_4_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         meta_open_ended_course: $( '[name=meta_open_ended_course]' ).is( ':checked' ) ? 'on' : 'off',
         meta_course_start_date: $( '[name=meta_course_start_date]' ).val(),
@@ -792,36 +776,36 @@ function step_4_update( attr ) {
         meta_enrollment_start_date: $( '[name=meta_enrollment_start_date]' ).val(),
         meta_enrollment_end_date: $( '[name=meta_enrollment_end_date]' ).val(),
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
         meta_course_setup_marker: 'step-5',
     }
 }
 
 function step_5_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         meta_limit_class_size: $( '[name=meta_limit_class_size]' ).is( ':checked' ) ? 'on' : 'off',
         meta_class_size: $( '[name=meta_class_size]' ).val(),
         meta_allow_course_discussion: $( '[name=meta_allow_course_discussion]' ).is( ':checked' ) ? 'on' : 'off',
         meta_allow_workbook_page: $( '[name=meta_allow_workbook_page]' ).is( ':checked' ) ? 'on' : 'off',
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
         meta_course_setup_marker: 'step-6',
     }
 }
 
 function step_6_update( attr ) {
-    var theStatus = attr['status'];
-    var initialVars = attr['initialVars'];
+    var theStatus = attr[ 'status' ];
+    var initialVars = attr[ 'initialVars' ];
 
     var passcode_val = false;
     var prerequisite_val = false;
@@ -837,11 +821,11 @@ function step_6_update( attr ) {
 
     return {
         // Don't remove
-        action: initialVars['action'],
-        course_id: initialVars['course_id'],
-        course_name: initialVars['course_name'],
-        course_nonce: initialVars['course_nonce'],
-        user_id: initialVars['user_id'],
+        action: initialVars[ 'action' ],
+        course_id: initialVars[ 'course_id' ],
+        course_name: initialVars[ 'course_name' ],
+        course_nonce: initialVars[ 'course_nonce' ],
+        user_id: initialVars[ 'user_id' ],
         // Alter as required
         meta_enroll_type: $( '[name=meta_enroll_type]' ).val(),
         meta_prerequisite: prerequisite_val,
@@ -855,8 +839,8 @@ function step_6_update( attr ) {
         meta_mp_product_id: $( '[name=meta_mp_product_id]' ).val(),
         //meta_allow_workbook_page: $('[name=meta_allow_workbook_page]').is(':checked') ? 'on' : 'off',
         // Don't remove
-        meta_course_setup_progress: initialVars['meta_course_setup_progress'],
-        meta_course_setup_marker: initialVars['meta_course_setup_marker'],
+        meta_course_setup_progress: initialVars[ 'meta_course_setup_progress' ],
+        meta_course_setup_marker: initialVars[ 'meta_course_setup_marker' ],
     }
 }
 
@@ -958,8 +942,8 @@ function validateCourseFields( step, ignore ) {
         case 6:
         case '6':
 
-            var has_gateway = $( $( '.step-6 .course-enable-gateways' )[0] ).hasClass( 'gateway-active' );
-            
+            var has_gateway = $( $( '.step-6 .course-enable-gateways' )[ 0 ] ).hasClass( 'gateway-active' );
+
             if ( $( '[name=meta_enroll_type]' ).val() == 'passcode' ) {
                 if ( $( '[name=meta_passcode]' ).val() == "" ) {
                     $( '[for=meta_enroll_type]' ).parent().append( '<span class="error">' + coursepress_units.required_course_passcode + '</span>' );
@@ -1015,7 +999,7 @@ function courseAutoUpdate( step, nextAction ) {
 
     clearCourseErrorMessages();
 
-    var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[0] ).siblings( '.status' )[0];
+    var theStatus = $( $( '.course-section.step-' + step + ' .course-section-title h3' )[ 0 ] ).siblings( '.status' )[ 0 ];
 
     var statusNice = '';
     if ( $( theStatus ).hasClass( 'saved' ) ) {
@@ -1031,7 +1015,7 @@ function courseAutoUpdate( step, nextAction ) {
     $( theStatus ).removeClass( 'invalid' );
     $( theStatus ).removeClass( 'attention' );
 
-    var dirty = $( '.step-' + step + '.dirty' )[0];
+    var dirty = $( '.step-' + step + '.dirty' )[ 0 ];
     // Step 5 doesn't have anything that MUST be set, so override.
     if ( !dirty && step == 5 ) {
         dirty = true;
@@ -1067,16 +1051,16 @@ function courseAutoUpdate( step, nextAction ) {
         // console.log( initial_vars );
         var func = 'step_' + step + '_update';
         // Get the AJAX post vars from step_[x]_update();
-        var post_vars = window[func]( { status: theStatus, initialVars: initial_vars } );
+        var post_vars = window[ func ]( { status: theStatus, initialVars: initial_vars } );
 
         // AJAX CALL
         $.post(
             coursepress_units.admin_ajax_url, post_vars
-            ).done( function( data, status ) {
-            // Handle return
-            autosave_course_setup_done( data, status, 'step-' + step, theStatus, nextAction );
-        } ).fail( function( data ) {
-        } );
+        ).done( function ( data, status ) {
+                // Handle return
+                autosave_course_setup_done( data, status, 'step-' + step, theStatus, nextAction );
+            } ).fail( function ( data ) {
+            } );
 
     } else {
         $( theStatus ).addClass( statusNice );
@@ -1101,14 +1085,14 @@ function mark_dirty( element ) {
     $ = jQuery;
 
     // Mark as dirty
-    var parent_section = $( element ).parents( '.course-section.step' )[0];
+    var parent_section = $( element ).parents( '.course-section.step' )[ 0 ];
     if ( parent_section ) {
         if ( !$( parent_section ).hasClass( 'dirty' ) ) {
             $( parent_section ).addClass( 'dirty' );
         }
     }
 
-    if ( $( $( element ).parents( '.course-section.step' ).find( '.course-section-title .status' )[0] ).hasClass( 'saved' ) ) {
+    if ( $( $( element ).parents( '.course-section.step' ).find( '.course-section-title .status' )[ 0 ] ).hasClass( 'saved' ) ) {
         $( element ).parents( '.course-section.step' ).find( 'input.button.update' ).css( 'display', 'inline-block' );
     }
 
@@ -1118,7 +1102,7 @@ function mark_dirty( element ) {
 function section_touched( element ) {
     $ = jQuery;
 
-    var parent_section = $( element ).parents( '.course-section.step' )[0];
+    var parent_section = $( element ).parents( '.course-section.step' )[ 0 ];
     if ( parent_section ) {
         if ( !$( parent_section ).hasClass( 'touched' ) ) {
             $( parent_section ).addClass( 'touched' );
@@ -1132,21 +1116,22 @@ function is_section_touched( element ) {
     if ( $( element ).hasClass( 'course-section' ) ) {
         return $( element ).hasClass( 'touched' );
     } else {
-        var parent_section = $( element ).parents( '.course-section.step' )[0];
+        var parent_section = $( element ).parents( '.course-section.step' )[ 0 ];
         return $( parent_section ).hasClass( 'touched' );
     }
 }
 
 
 /** Handle Course Setup Wizard */
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
 
+    var self = this;
 
-    $( window ).bind( 'tb_unload', function( e ) {
+    $( window ).bind( 'tb_unload', function ( e ) {
         if ( $( e ).parents( '.step-6' ) ) {
-            $( $( e ).parents( '.course-section.step' )[0] ).addClass( 'dirty' );
+            $( $( e ).parents( '.course-section.step' )[ 0 ] ).addClass( 'dirty' );
 
-            var statusElement = $( $( '.course-section.step-6 .course-section-title h3' )[0] ).siblings( '.status' )[0];
+            var statusElement = $( $( '.course-section.step-6 .course-section-title h3' )[ 0 ] ).siblings( '.status' )[ 0 ];
 
             //Does course have an active gateway now?
             $( statusElement ).addClass( 'progress' );
@@ -1154,46 +1139,46 @@ jQuery( document ).ready( function( $ ) {
                 coursepress_units.admin_ajax_url, {
                     action: 'course_has_gateway',
                 }
-            ).done( function( data, status ) {
-                if ( status == 'success' ) {
-                    var step = 6;
-                    var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                    if ( response.has_gateway ) {
-                        $( $( '.step-6 .course-enable-gateways' )[0] ).addClass( 'gateway-active' );
-                        $( '.step-6 .button-edit-gateways' ).css( 'display', 'inline-block' );
-                        $( '.step-6 .button-incomplete-gateways' ).css( 'display', 'none' );
-                        $( statusElement ).removeClass( 'progress' );
-                        $( statusElement ).removeClass( 'attention' );
-                        $( statusElement ).removeClass( 'invalid' );
-                        $( statusElement ).addClass( 'saved' );
-                        set_update_progress( step, 'saved' );
-                    } else {
-                        $( $( '.step-6 .course-enable-gateways' )[0] ).removeClass( 'gateway-active' );
-                        $( '.step-6 .button-edit-gateways' ).css( 'display', 'none' );
-                        $( '.step-6 .button-incomplete-gateways' ).css( 'display', 'inline-block' );
-                        $( statusElement ).removeClass( 'progress' );
-                        $( statusElement ).removeClass( 'saved' );
-                        $( statusElement ).removeClass( 'invalid' );
-                        $( statusElement ).addClass( 'attention' );
-                        set_update_progress( step, 'attention' );
+            ).done( function ( data, status ) {
+                    if ( status == 'success' ) {
+                        var step = 6;
+                        var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                        if ( response.has_gateway ) {
+                            $( $( '.step-6 .course-enable-gateways' )[ 0 ] ).addClass( 'gateway-active' );
+                            $( '.step-6 .button-edit-gateways' ).css( 'display', 'inline-block' );
+                            $( '.step-6 .button-incomplete-gateways' ).css( 'display', 'none' );
+                            $( statusElement ).removeClass( 'progress' );
+                            $( statusElement ).removeClass( 'attention' );
+                            $( statusElement ).removeClass( 'invalid' );
+                            $( statusElement ).addClass( 'saved' );
+                            set_update_progress( step, 'saved' );
+                        } else {
+                            $( $( '.step-6 .course-enable-gateways' )[ 0 ] ).removeClass( 'gateway-active' );
+                            $( '.step-6 .button-edit-gateways' ).css( 'display', 'none' );
+                            $( '.step-6 .button-incomplete-gateways' ).css( 'display', 'inline-block' );
+                            $( statusElement ).removeClass( 'progress' );
+                            $( statusElement ).removeClass( 'saved' );
+                            $( statusElement ).removeClass( 'invalid' );
+                            $( statusElement ).addClass( 'attention' );
+                            set_update_progress( step, 'attention' );
+                        }
+                        // Update step-6
+                        courseAutoUpdate( 6 );
                     }
-                    // Update step-6
-                    courseAutoUpdate( 6 );
-                }
-            } );
+                } );
         }
     } );
 
 
     /** If a section is not market as saved, automatically mark it as dirty. */
-    $.each( $( '.course-section.step' ), function( index, value ) {
-        if ( !$( $( $( '.course-section.step' )[index] ).find( '.status' )[0] ).hasClass( 'saved' ) ) {
-            $( $( '.course-section.step' )[index] ).addClass( 'dirty' )
+    $.each( $( '.course-section.step' ), function ( index, value ) {
+        if ( !$( $( $( '.course-section.step' )[ index ] ).find( '.status' )[ 0 ] ).hasClass( 'saved' ) ) {
+            $( $( '.course-section.step' )[ index ] ).addClass( 'dirty' )
         }
     } );
 
     /** Done course setup. */
-    $( '.course-section.step input.done' ).click( function( e ) {
+    $( '.course-section.step input.done' ).click( function ( e ) {
         var step = 6;
         if ( validateCourseFields( step ) ) {
             courseAutoUpdate( step, 'unit_setup' );
@@ -1201,24 +1186,24 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /** Inline step update. */
-    $( '.course-section.step input.update' ).click( function( e ) {
-        var course_section = $( this ).parents( '.course-section.step' )[0];
-        var step = $( course_section ).attr( 'class' ).match( /step-\d+/ )[0].replace( /^\D+/g, '' );
+    $( '.course-section.step input.update' ).click( function ( e ) {
+        var course_section = $( this ).parents( '.course-section.step' )[ 0 ];
+        var step = $( course_section ).attr( 'class' ).match( /step-\d+/ )[ 0 ].replace( /^\D+/g, '' );
         if ( validateCourseFields( step ) ) {
             courseAutoUpdate( step );
         }
     } );
 
     /** Proceed to next step. */
-    $( '.course-section.step input.next' ).click( function( e ) {
+    $( '.course-section.step input.next' ).click( function ( e ) {
 
         /**
-         * Get the current step we're on. 
+         * Get the current step we're on.
          *
          * Looks for <div class="course-section step step-[x]"> and extracts the number.
          **/
-        var course_section = $( this ).parents( '.course-section.step' )[0];
-        var step = $( course_section ).attr( 'class' ).match( /step-\d+/ )[0].replace( /^\D+/g, '' );
+        var course_section = $( this ).parents( '.course-section.step' )[ 0 ];
+        var step = $( course_section ).attr( 'class' ).match( /step-\d+/ )[ 0 ].replace( /^\D+/g, '' );
 
         if ( validateCourseFields( step ) ) {
 
@@ -1226,7 +1211,7 @@ jQuery( document ).ready( function( $ ) {
             var nextStep = parseInt( step ) + 1;
 
             // Attempt to get the next section.
-            var nextSection = $( this ).parents( '.course-details .course-section' ).siblings( '.step-' + nextStep )[0];
+            var nextSection = $( this ).parents( '.course-details .course-section' ).siblings( '.step-' + nextStep )[ 0 ];
 
             // If next section exists
             if ( nextSection ) {
@@ -1256,21 +1241,21 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /** Return to previous step. */
-    $( '.course-section.step input.prev' ).click( function( e ) {
+    $( '.course-section.step input.prev' ).click( function ( e ) {
 
         /**
-         * Get the current step we're on. 
+         * Get the current step we're on.
          *
          * Looks for <div class="course-section step step-[x]"> and extracts the number.
          **/
-        var step = $( $( this ).parents( '.course-section.step' )[0] ).attr( 'class' ).match( /step-\d+/ )[0].replace( /^\D+/g, '' );
+        var step = $( $( this ).parents( '.course-section.step' )[ 0 ] ).attr( 'class' ).match( /step-\d+/ )[ 0 ].replace( /^\D+/g, '' );
 
         if ( validateCourseFields( step, !is_section_touched( this ) ) ) {
             // Previous section
             var prevStep = parseInt( step ) - 1;
 
             // Attempt to get the previous section.
-            var prevSection = $( this ).parents( '.course-details .course-section' ).siblings( '.step-' + prevStep )[0];
+            var prevSection = $( this ).parents( '.course-details .course-section' ).siblings( '.step-' + prevStep )[ 0 ];
 
             // If previous section exists
             if ( prevSection ) {
@@ -1299,23 +1284,23 @@ jQuery( document ).ready( function( $ ) {
         } // Validate fields
     } );
 
-    $( '.course-section.step .course-section-title h3' ).click( function( e ) {
+    $( '.course-section.step .course-section-title h3' ).click( function ( e ) {
 
         // Get current "active" step
-        var activeElement = $( '.course-section.step.active' )[0];
+        var activeElement = $( '.course-section.step.active' )[ 0 ];
         var activeStep = 1;
         if ( typeof activeElement != 'undefined' ) {
-            activeStep = $( activeElement ).attr( 'class' ).match( /step-\d+/ )[0].replace( /^\D+/g, '' );
+            activeStep = $( activeElement ).attr( 'class' ).match( /step-\d+/ )[ 0 ].replace( /^\D+/g, '' );
         }
 
-        var thisElement = $( this ).parents( '.course-section.step' )[0];
+        var thisElement = $( this ).parents( '.course-section.step' )[ 0 ];
         var thisElementFormVisible = $( thisElement ).children( '.course-form' ).is( ':visible' );
-        var thisStep = $( thisElement ).attr( 'class' ).match( /step-\d+/ )[0].replace( /^\D+/g, '' );
+        var thisStep = $( thisElement ).attr( 'class' ).match( /step-\d+/ )[ 0 ].replace( /^\D+/g, '' );
 
-        var preceedingElement = $( '.course-section.step-' + ( thisStep - 1 ) )[0];
-        var preceedingStatus = $( preceedingElement ).find( '.status' )[0];
+        var preceedingElement = $( '.course-section.step-' + ( thisStep - 1 ) )[ 0 ];
+        var preceedingStatus = $( preceedingElement ).find( '.status' )[ 0 ];
 
-        var thisStatus = $( this ).siblings( '.status' )[0];
+        var thisStatus = $( this ).siblings( '.status' )[ 0 ];
 
         // Only move to a saved step or a previous step (asuming that it has to be saved)
         if ( $( thisStatus ).hasClass( 'saved' ) || $( thisStatus ).hasClass( 'attention' ) || thisStep < activeStep || ( thisStep > 1 && $( preceedingStatus ).hasClass( 'saved' ) ) ) {
@@ -1353,7 +1338,7 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
-    $( '#invite-instructor-trigger' ).click( function() {
+    $( '#invite-instructor-trigger' ).click( function () {
 
         // Course ID
         var course_id = $( '[name=course_id]' ).val();
@@ -1375,56 +1360,56 @@ jQuery( document ).ready( function( $ ) {
                 user_id: uid,
                 instructor_nonce: instructor_nonce,
             }
-        ).done( function( data, status ) {
-            // Handle return
-            if ( status == 'success' ) {
-                // console.log( data );
-                var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                // console.log( response )
-                var response_type = $( $.parseHTML( response.content ) );
+        ).done( function ( data, status ) {
+                // Handle return
+                if ( status == 'success' ) {
+                    // console.log( data );
+                    var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                    // console.log( response )
+                    var response_type = $( $.parseHTML( response.content ) );
 
-                if ( $( response_type ).hasClass( 'status-success' ) ) {
+                    if ( $( response_type ).hasClass( 'status-success' ) ) {
 
-                    var remove_button = '';
-                    if ( response.capability ) {
-                        remove_button = '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' + response.data.code + '\', ' + course_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>';
+                        var remove_button = '';
+                        if ( response.capability ) {
+                            remove_button = '<div class="instructor-remove"><a href="javascript:removePendingInstructor(\'' + response.data.code + '\', ' + course_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>';
+                        }
+
+                        var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
+                            '<div class="instructor-status">PENDING</div>' +
+                            remove_button +
+                            '<img class="avatar avatar-80 photo" width="80" height="80" src="//www.gravatar.com/avatar/' + CryptoJS.MD5( response.data.email ) + '" alt="admin">' +
+                            '<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
+                            '</div>';
+
+                        $( '#instructors-info' ).append( content );
+
+                        $( '[name=invite_instructor_first_name]' ).val( '' );
+                        $( '[name=invite_instructor_last_name]' ).val( '' );
+                        $( '[name=invite_instructor_email]' ).val( '' );
                     }
 
-                    var content = '<div class="instructor-avatar-holder pending" id="' + response.data.code + '">' +
-                        '<div class="instructor-status">PENDING</div>' +
-                        remove_button +
-                        '<img class="avatar avatar-80 photo" width="80" height="80" src="//www.gravatar.com/avatar/' + CryptoJS.MD5( response.data.email ) + '" alt="admin">' +
-                        '<span class="instructor-name">' + response.data.first_name + ' ' + response.data.last_name + '</span>' +
-                        '</div>';
+                    if ( $( '#invite-message' ) ) {
+                        $( '#invite-message' ).remove()
+                    }
+                    ;
+                    $( 'div.instructor-invite .submit-message' ).append( '<div id="invite-message" style="display:none;">' + response.content + '</div>' )
+                    // Popup Message
+                    $( '#invite-message' ).show( function () {
+                        $( this ).fadeOut( 3000 );
+                    } );
+                    $( '[name=invite_instructor_first_name]' ).trigger( 'focus' );
 
-                    $( '#instructors-info' ).append( content );
-
-                    $( '[name=invite_instructor_first_name]' ).val( '' );
-                    $( '[name=invite_instructor_last_name]' ).val( '' );
-                    $( '[name=invite_instructor_email]' ).val( '' );
+                } else {
                 }
-
-                if ( $( '#invite-message' ) ) {
-                    $( '#invite-message' ).remove()
-                }
-                ;
-                $( 'div.instructor-invite .submit-message' ).append( '<div id="invite-message" style="display:none;">' + response.content + '</div>' )
-                // Popup Message
-                $( '#invite-message' ).show( function() {
-                    $( this ).fadeOut( 3000 );
-                } );
-                $( '[name=invite_instructor_first_name]' ).trigger( 'focus' );
-
-            } else {
-            }
-        } ).fail( function( data ) {
-        } );
+            } ).fail( function ( data ) {
+            } );
 
     } );
 
 
     // Submit Invite on 'Return/Enter' 
-    $( '.instructor-invite input' ).keypress( function( event ) {
+    $( '.instructor-invite input' ).keypress( function ( event ) {
         if ( event.which == 13 ) {
             switch ( $( this ).attr( 'name' ) ) {
 
@@ -1443,42 +1428,56 @@ jQuery( document ).ready( function( $ ) {
         }
     } );
 
-    $( '.date' ).click( function( event ) {
+    $( '.date' ).click( function ( event ) {
         if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {
             $( this ).find( '.dateinput' ).datepicker( "show" );
         }
     } );
 
-    $( '.course-section .featured_url_button' ).click( function() {
+    $( '.course-section .featured_url_button' ).click( function () {
         // Mark as dirty
         mark_dirty( this );
         section_touched( this );
     } );
-    $( '.course-section .course_video_url_button' ).click( function() {
+    $( '.course-section .course_video_url_button' ).click( function () {
         // Mark as dirty
         mark_dirty( this );
         section_touched( this );
     } );
-    $( '.course-section .course_video_url' ).keydown( function() {
+    $( '.course-section .course_video_url' ).keydown( function () {
         // Mark as dirty
         mark_dirty( this );
         section_touched( this );
     } );
 
 
-    $( '.course-form textarea' ).change( function() {
-        // Mark as dirty		
-        mark_dirty( this );
-        section_touched( this );
-    } );
-    $( '.course-form select' ).change( function() {
+    $( '.course-form textarea' ).change( function () {
         // Mark as dirty		
         mark_dirty( this );
         section_touched( this );
     } );
 
+    CoursePress.Events.on( 'editor:keyup', function( el ) {
 
-    $( '#add-instructor-trigger' ).click( function() {
+        // Is it the text editor or the textarea
+        var target = undefined === el.container ? el : el.container;
+
+        // Only on Course Setup page...
+        if( $( target ).parents('.course-section' ).length > 0 ) {
+            mark_dirty( $( target ) );
+            section_touched( $( target ) );
+        }
+
+    } );
+
+    $( '.course-form select' ).change( function () {
+        // Mark as dirty		
+        mark_dirty( this );
+        section_touched( this );
+    } );
+
+
+    $( '#add-instructor-trigger' ).click( function () {
 
         // Course ID
         var course_id = $( '[name=course_id]' ).val();
@@ -1503,38 +1502,38 @@ jQuery( document ).ready( function( $ ) {
                 course_id: course_id,
                 user_id: uid,
             }
-        ).done( function( data, status ) {
-            // Handle return
-            if ( status == 'success' ) {
+        ).done( function ( data, status ) {
+                // Handle return
+                if ( status == 'success' ) {
 
-                var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                var response_type = $( $.parseHTML( response.content ) );
+                    var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                    var response_type = $( $.parseHTML( response.content ) );
 
-                if ( $( "#instructor_holder_" + instructor_id ).length == 0 && response.instructor_added ) {
-                    $( '.instructor-avatar-holder.empty' ).hide();
-                    $( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[instructor_id] + '<span class="instructor-name">' + jQuery( '#instructors option:selected' ).text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
+                    if ( $( "#instructor_holder_" + instructor_id ).length == 0 && response.instructor_added ) {
+                        $( '.instructor-avatar-holder.empty' ).hide();
+                        $( '#instructors-info' ).append( '<div class="instructor-avatar-holder" id="instructor_holder_' + instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' + instructor_id + ' );"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a></div>' + instructor_avatars[ instructor_id ] + '<span class="instructor-name">' + jQuery( '#instructors option:selected' ).text() + '</span></div><input type="hidden" id="instructor_' + instructor_id + '" name="instructor[]" value="' + instructor_id + '" />' );
+                    } else {
+                        alert( response.reason );
+                    }
+
                 } else {
-                    alert( response.reason );
                 }
-
-            } else {
-            }
-        } ).fail( function( data ) {
-        } );
+            } ).fail( function ( data ) {
+            } );
 
 
     } );
 
 
-    $( '.course-form input' ).keypress( function( event ) {
+    $( '.course-form input' ).keypress( function ( event ) {
         $( this ).change();
     } );
-    $( '.course-form textarea' ).keypress( function( event ) {
+    $( '.course-form textarea' ).keypress( function ( event ) {
         $( this ).change();
     } );
 
     /** Mark "dirty" content */
-    $( '.course-form input' ).change( function() {
+    $( '.course-form input' ).change( function () {
         mark_dirty( this );
         section_touched( this );
 
@@ -1550,11 +1549,10 @@ jQuery( document ).ready( function( $ ) {
     } );
 
 
-
 } );
 
 // Popup that shows upon 'Course Setup' completed or when 0 units are found.
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
     var unit_count = $( '[name="unit_count"]' ).val();
 
     if ( unit_count == 0 ) {
@@ -1576,7 +1574,7 @@ jQuery( document ).ready( function( $ ) {
             top: '10px',
             right: '10px',
             cursor: 'pointer',
-        } ).click( function( event ) {
+        } ).click( function ( event ) {
             $( this ).parent().remove();
         } );
     }
@@ -1606,77 +1604,77 @@ function toggle_checkbox_option( target, event ) {
 
 function add_check_label_handler( target ) {
     $ = jQuery;
-    $( target ).siblings( 'span' ).click( function( event ) {
+    $( target ).siblings( 'span' ).click( function ( event ) {
         toggle_checkbox_option( target, event );
     } );
 }
 
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
     // allow <span> to trigger checkbox
     add_check_label_handler( '#limit_class_size' );
     add_check_label_handler( '#allow_course_discussion' );
     add_check_label_handler( '#allow_workbook_page' );
 
-    $( '#paid_course' ).click( function( event ) {
+    $( '#paid_course' ).click( function ( event ) {
         toggle_payment_box( event, false );
     } );
-    $( '#marketpressprompt' ).click( function( event ) {
+    $( '#marketpressprompt' ).click( function ( event ) {
         toggle_payment_box( event, true );
     } );
 
-    $( 'div.button.cp-activate-mp-lite' ).click( function( event ) {
+    $( 'div.button.cp-activate-mp-lite' ).click( function ( event ) {
         event.stopPropagation();
 
         $.post(
             coursepress_units.admin_ajax_url, {
                 action: 'cp_activate_mp_lite',
             }
-        ).done( function( data, status ) {
-            if ( status == 'success' ) {
+        ).done( function ( data, status ) {
+                if ( status == 'success' ) {
 
-                var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                if ( response && response.mp_lite_activated ) {
-                    $( '.cp-markertpress-not-active' ).addClass( 'hidden' );
-                    $( '.cp-markertpress-is-active' ).removeClass( 'hidden' );
+                    var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                    if ( response && response.mp_lite_activated ) {
+                        $( '.cp-markertpress-not-active' ).addClass( 'hidden' );
+                        $( '.cp-markertpress-is-active' ).removeClass( 'hidden' );
 
-                    //
-                    var content = '<div class="update green top-right">' + coursepress_units.mp_activated_prompt + '<i class="fa fa-times-circle" /></div>';
-                    var the_top = $( '.course-section.step-6 .course-form' ).position().top + 200;
-                    $( '#wpbody-content' ).append( content );
-                    $( '.update.green.top-right' ).css( {
-                        position: 'absolute',
-                        top: the_top,
-                        right: '60px',
-                        'background-color': '#fff',
-                        'border-left': '4px solid #6DC36C',
-                        'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
-                        padding: '15px 25px 15px 15px',
-                    } );
-                    $( '.update.green.top-right .fa-times-circle' ).css( {
-                        'font-size': '20px',
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        cursor: 'pointer',
-                    } ).click( function( event ) {
-                        $( this ).parent().remove();
-                    } );
-                    setTimeout( function() {
-                        $( '.update.green.top-right' ).fadeOut( '2000' );
-                    }, 3000 );
+                        //
+                        var content = '<div class="update green top-right">' + coursepress_units.mp_activated_prompt + '<i class="fa fa-times-circle" /></div>';
+                        var the_top = $( '.course-section.step-6 .course-form' ).position().top + 200;
+                        $( '#wpbody-content' ).append( content );
+                        $( '.update.green.top-right' ).css( {
+                            position: 'absolute',
+                            top: the_top,
+                            right: '60px',
+                            'background-color': '#fff',
+                            'border-left': '4px solid #6DC36C',
+                            'box-shadow': '0 1px 1px 0 rgba(0, 0, 0, 0.1)',
+                            padding: '15px 25px 15px 15px',
+                        } );
+                        $( '.update.green.top-right .fa-times-circle' ).css( {
+                            'font-size': '20px',
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            cursor: 'pointer',
+                        } ).click( function ( event ) {
+                            $( this ).parent().remove();
+                        } );
+                        setTimeout( function () {
+                            $( '.update.green.top-right' ).fadeOut( '2000' );
+                        }, 3000 );
 
 
-                } else {
-                    $( '.cp-markertpress-is-active' ).addClass( 'hidden' );
-                    $( '.cp-markertpress-not-active' ).removeClass( 'hidden' );
+                    } else {
+                        $( '.cp-markertpress-is-active' ).addClass( 'hidden' );
+                        $( '.cp-markertpress-not-active' ).removeClass( 'hidden' );
+                    }
                 }
-            }
-        } );
+            } );
 
 
     } );
 
-    $( '[name="meta_course_structure_options"]' ).change( function( event ) {
+    $( '[name="meta_course_structure_options"]' ).change( function ( event ) {
 
         if ( $( this ).prop( 'checked' ) ) {
             $( '.course-structure [name^="meta_show_unit"]' ).attr( 'checked', 'checked' );
@@ -1700,7 +1698,7 @@ jQuery( document ).ready( function( $ ) {
     }
 
 
-    $( '.unit-control-buttons .button-preview' ).click( function( event ) {
+    $( '.unit-control-buttons .button-preview' ).click( function ( event ) {
         $( '.wp-switch-editor.switch-tmce' ).click();
         event.preventDefault();
         $( '#unit-add' ).append( '<input type="hidden" name="preview_redirect_url" id="preview_redirect_url" value="yes" />' );
@@ -1737,18 +1735,15 @@ jQuery( document ).ready( function( $ ) {
 } );
 
 
-
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
     var unit_state_toggle = {
-        init: function() {
+        init: function () {
             this.attachHandlers( '.unit-state .control' );
         },
         controls: {
-            $radio_slide_init: function( selector )
-            {
+            $radio_slide_init: function ( selector ) {
                 //console.log('requested');
-                $( selector ).click( function()
-                {
+                $( selector ).click( function () {
                     if ( $( this ).hasClass( 'disabled' ) ) {
                         return;
                     }
@@ -1790,53 +1785,51 @@ jQuery( document ).ready( function( $ ) {
                                 course_id: course_id,
                                 user_id: uid,
                             }
-                        ).done( function( data, status ) {
-                            if ( status == 'success' ) {
+                        ).done( function ( data, status ) {
+                                if ( status == 'success' ) {
 
-                                var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                                // console.log(response);
-                                // Apply a new nonce when returning
-                                if ( response && response.toggle ) {
-                                    $( $( selector ).parents( 'form' )[0] ).find( '.unit_state_id' ).attr( 'data-nonce', response.nonce );
-                                    // Else, toggle back.	
-                                } else {
-                                    if ( $( selector ).hasClass( 'on' ) ) {
-                                        $( selector ).removeClass( 'on' );
-                                        $( selector ).parent().find( '.live' ).removeClass( 'on' );
-                                        $( selector ).parent().find( '.draft' ).addClass( 'on' );
-                                        $( '#unit_state' ).val( 'draft' );
-                                        $( '.mp-tab.active .unit-state-circle' ).removeClass( 'active' );
+                                    var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                                    // console.log(response);
+                                    // Apply a new nonce when returning
+                                    if ( response && response.toggle ) {
+                                        $( $( selector ).parents( 'form' )[ 0 ] ).find( '.unit_state_id' ).attr( 'data-nonce', response.nonce );
+                                        // Else, toggle back.
                                     } else {
-                                        $( selector ).addClass( 'on' );
-                                        $( selector ).parent().find( '.draft' ).removeClass( 'on' );
-                                        $( selector ).parent().find( '.live' ).addClass( 'on' );
-                                        $( '#unit_state' ).val( 'publish' );
-                                        $( '.mp-tab.active .unit-state-circle' ).addClass( 'active' );
+                                        if ( $( selector ).hasClass( 'on' ) ) {
+                                            $( selector ).removeClass( 'on' );
+                                            $( selector ).parent().find( '.live' ).removeClass( 'on' );
+                                            $( selector ).parent().find( '.draft' ).addClass( 'on' );
+                                            $( '#unit_state' ).val( 'draft' );
+                                            $( '.mp-tab.active .unit-state-circle' ).removeClass( 'active' );
+                                        } else {
+                                            $( selector ).addClass( 'on' );
+                                            $( selector ).parent().find( '.draft' ).removeClass( 'on' );
+                                            $( selector ).parent().find( '.live' ).addClass( 'on' );
+                                            $( '#unit_state' ).val( 'publish' );
+                                            $( '.mp-tab.active .unit-state-circle' ).addClass( 'active' );
+                                        }
                                     }
                                 }
-                            }
-                        } );
+                            } );
 
                     }
                 } );
             }
         },
-        attachHandlers: function( selector ) {
+        attachHandlers: function ( selector ) {
             //console.log('handlers attached');
             this.controls.$radio_slide_init( selector );
         }
     };
 
     var course_state_toggle = {
-        init: function() {
+        init: function () {
             this.attachHandlers( '.course-state .control' );
         },
         controls: {
-            $radio_slide_init: function( selector )
-            {
+            $radio_slide_init: function ( selector ) {
                 //console.log('requested');
-                $( selector ).click( function()
-                {
+                $( selector ).click( function () {
                     if ( $( this ).hasClass( 'disabled' ) ) {
                         return;
                     }
@@ -1866,34 +1859,34 @@ jQuery( document ).ready( function( $ ) {
                             course_nonce: course_nonce,
                             user_id: uid,
                         }
-                    ).done( function( data, status ) {
-                        if ( status == 'success' ) {
+                    ).done( function ( data, status ) {
+                            if ( status == 'success' ) {
 
-                            var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-                            // console.log(response);
-                            // Apply a new nonce when returning
-                            if ( response && response.toggle ) {
-                                $( '#course_state_id' ).attr( 'data-nonce', response.nonce );
-                                // Else, toggle back.	
-                            } else {
-                                if ( $( selector ).hasClass( 'on' ) ) {
-                                    $( selector ).removeClass( 'on' );
-                                    $( selector ).parent().find( '.live' ).removeClass( 'on' );
-                                    $( selector ).parent().find( '.draft' ).addClass( 'on' );
-                                    $( '#course_state' ).val( 'draft' );
+                                var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+                                // console.log(response);
+                                // Apply a new nonce when returning
+                                if ( response && response.toggle ) {
+                                    $( '#course_state_id' ).attr( 'data-nonce', response.nonce );
+                                    // Else, toggle back.
                                 } else {
-                                    $( selector ).addClass( 'on' );
-                                    $( selector ).parent().find( '.draft' ).removeClass( 'on' );
-                                    $( selector ).parent().find( '.live' ).addClass( 'on' );
+                                    if ( $( selector ).hasClass( 'on' ) ) {
+                                        $( selector ).removeClass( 'on' );
+                                        $( selector ).parent().find( '.live' ).removeClass( 'on' );
+                                        $( selector ).parent().find( '.draft' ).addClass( 'on' );
+                                        $( '#course_state' ).val( 'draft' );
+                                    } else {
+                                        $( selector ).addClass( 'on' );
+                                        $( selector ).parent().find( '.draft' ).removeClass( 'on' );
+                                        $( selector ).parent().find( '.live' ).addClass( 'on' );
+                                    }
                                 }
                             }
-                        }
-                    } );
+                        } );
 
                 } );
             }
         },
-        attachHandlers: function( selector ) {
+        attachHandlers: function ( selector ) {
             //console.log('handlers attached');
             this.controls.$radio_slide_init( selector );
         }
@@ -1904,11 +1897,11 @@ jQuery( document ).ready( function( $ ) {
 } );
 
 /* iFrame fix for MP Gateway popup. */
-jQuery( document ).ready( function( $ ) {
-    $( '.button-edit-gateways' ).click( function() {
+jQuery( document ).ready( function ( $ ) {
+    $( '.button-edit-gateways' ).click( function () {
         fix_tinymce_in_iframe();
     } );
-    $( '.button-incomplete-gateways' ).click( function() {
+    $( '.button-incomplete-gateways' ).click( function () {
         fix_tinymce_in_iframe();
     } );
 } );
@@ -1919,8 +1912,8 @@ function fix_tinymce_in_iframe() {
     }
     var the_box = '.coursepress_page_course_details #TB_iframeContent';
     var delay = 1000;//1 seconds
-    setTimeout( function() {
-        $( the_box ).on( 'load', function() {
+    setTimeout( function () {
+        $( the_box ).on( 'load', function () {
             tinyMCE.execCommand( 'mceRepaint' );
             jQuery( the_box ).contents().find( '[id*="tmce"]' ).parents( '.wp-editor-wrap' ).find( '.mce-panel' ).show();
             jQuery( the_box ).contents().find( '#mp-need-help' ).hide();
@@ -1929,11 +1922,11 @@ function fix_tinymce_in_iframe() {
 }
 
 
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
 
 
     /* Show Media Caption Toggle */
-    $( document.body ).on( 'change', '[name*="show_media_caption"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="show_media_caption"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).parents( '.caption-settings' ).find( '.caption-source' ).removeClass( 'hidden' );
             $( this ).siblings( '[name*="show_caption_field"]' ).val( 'yes' );
@@ -1942,7 +1935,7 @@ jQuery( document ).ready( function( $ ) {
             $( this ).siblings( '[name*="show_caption_field"]' ).val( 'no' );
         }
     } );
-    $( document.body ).on( 'change', '[name*="_caption_source"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="_caption_source"]', function ( event ) {
         if ( $( this ).val() == 'media' ) {
             $( this ).siblings( '[name*="caption_field"]' ).val( 'media' );
         } else {
@@ -1951,7 +1944,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Hide related media */
-    $( document.body ).on( 'change', '[name*="hide_related_media"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="hide_related_media"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="hide_related_media_field"]' ).val( 'yes' );
         } else {
@@ -1960,7 +1953,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden title field. Resolves issue with $_POST arrays. */
-    $( document.body ).on( 'change', '[name*="show_title_on_front"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="show_title_on_front"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="show_title_field"]' ).val( 'yes' );
         } else {
@@ -1969,7 +1962,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden mandatory field. Resolves issue with $_POST arrays. */
-    $( document.body ).on( 'change', '[name*="module_mandatory_answer"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="module_mandatory_answer"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_mandatory_answer"]' ).val( 'yes' );
         } else {
@@ -1978,7 +1971,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden Assessable field. Resolves issue with $_POST arrays. */
-    $( document.body ).on( 'change', '[name*="module_gradable_answer"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="module_gradable_answer"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_gradable_answer"]' ).val( 'yes' );
         } else {
@@ -1987,7 +1980,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set hidden Limit Attempts field. Resolves issue with $_POST arrays. */
-    $( document.body ).on( 'change', '[name*="module_limit_attempts"]', function( event ) {
+    $( document.body ).on( 'change', '[name*="module_limit_attempts"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '[name*="module_limit_attempts_field"]' ).val( 'yes' );
         } else {
@@ -1996,7 +1989,7 @@ jQuery( document ).ready( function( $ ) {
     } );
 
     /* Set Unit Page Titles. */
-    $( document.body ).on( 'change', '.show_page_title [name*="show_page_title"]', function( event ) {
+    $( document.body ).on( 'change', '.show_page_title [name*="show_page_title"]', function ( event ) {
         if ( $( this ).attr( 'checked' ) ) {
             $( this ).siblings( '.show_page_title [name*="show_page_title_field"]' ).val( 'yes' );
         } else {
@@ -2029,11 +2022,11 @@ jQuery( document ).ready( function( $ ) {
         } );
     }
 
-    $( window ).resize( function() {
+    $( window ).resize( function () {
         slim_scroll_load();
     } );
 
-    $( window ).load( function() {
+    $( window ).load( function () {
         slim_scroll_load();
     } );
 

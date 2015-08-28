@@ -585,6 +585,28 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 				jQuery( ".delete_unit_page" ).show();
 			}
 
+			CoursePress.editor.init();
+			//$.each( $( '.coursepress-editor' ), function ( index, editor ) {
+			//	var id = $( editor ).attr( 'id' );
+			//
+			//	var content = $( '#' + id ).val();
+			//	var name = $( editor ).attr( 'name' );
+			//	var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 400;
+			//
+			//	CoursePress.editor.create( editor, id, name, content, false, height );
+			//
+			//	$( '[name="' + name + '"]' ).on('keyup', function( object ) {
+			//
+			//		// Fix Enter/Return key
+			//		if( 13 === object.keyCode ) {
+			//			$( this ).val( $( this ).val() + "\n" );
+			//		}
+			//
+			//		CoursePress.Events.trigger( 'editor:keyup', this );
+			//	});
+			//
+			//} );
+
 			jQuery( '#unit-pages' ).css( 'display', 'block' );
 			jQuery( '.unit_pages_preloader' ).css( 'display', 'none' );
 			jQuery( '.unit-pages-navigation' ).css( 'opacity', '1' );
