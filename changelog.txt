@@ -10,7 +10,8 @@ CHANGE LOG
 * Fixed: Resubmit link showing even if no answer has been submitted.
 * Fixed: Can now freely move "back" to a previous page without having to complete mandatory elements.
 * Fixed: PHP notice when attempting to make a unit live when it hasn't been saved yet.
-
+* Fixed: Instructors can only assess their own students. Course creators need to add themselves as instructors if they want to assess.
+* Fixed: Improved performance for Preview Units/Pages/Modules.
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.
@@ -24,7 +25,6 @@ CHANGE LOG
 * Changed Users can now resubmit answers for file uploads and text boxes while grades are pending.
 * Fixed uppercase usernames now supported by popup.
 * Fixed possible compatibility issue with themes and page titles.
-
 
 = 1.2.5.9 =
 * Fix WP 4.3 compatibility issue with visual editors

@@ -139,6 +139,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 		public $screen_base = '';
 
 		/**
+		 * Are we on a preview unit/page/module?
+		 *
+		 * @since 1.2.6.1
+		 * @var mixed
+		 */
+		public $preview_data = null;
+
+		/**
 		 * CoursePress constructor.
 		 *
 		 * @since 1.0.0
@@ -2148,10 +2156,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function is_preview( $unit_id, $page_num = false ) {
 			global $wp, $wpquery;
+
 			if ( isset( $_GET[ 'try' ] ) ) {
 
-				$unit	 = new Unit( $unit_id );
-				$course	 = new Course( $unit->details->post_parent );
+				if( null === $this->preview_data ) {
+					$this->preview_data = array();
+				}
+
+				if( ! isset( $this->preview_data['course_id'] ) ) {
+
+					$unit = get_post( $unit_id );
+					$course	 = new Course( $unit->post_parent );
+
+					$this->preview_data['course_id'] = $unit->post_parent;
+					$this->preview_data['preview_unit'] = $course->details->preview_unit_boxes;
+					$this->preview_data['preview_page']	= $course->details->preview_page_boxes;
+				}
 
 				if ( $page_num ) {
 					$paged = $page_num;
@@ -2159,13 +2179,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$paged = !empty( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
 				}
 
-				$preview_unit	 = $course->details->preview_unit_boxes;
-				$preview_page	 = $course->details->preview_page_boxes;
-
-				if ( isset( $preview_unit[ $unit_id ] ) && $preview_unit[ $unit_id ] == 'on' ) {
+				if ( isset( $this->preview_data['preview_unit'][ $unit_id ] ) && $this->preview_data['preview_unit'][ $unit_id ] == 'on' ) {
 					return true;
 				} else {
-					if ( isset( $preview_page[ $unit_id . '_' . $paged ] ) && $preview_page[ $unit_id . '_' . $paged ] == 'on' ) {
+					if ( isset( $this->preview_data['preview_page'][ $unit_id . '_' . $paged ] ) && $this->preview_data['preview_page'][ $unit_id . '_' . $paged ] == 'on' ) {
 						return true;
 					} else {
 						return false;

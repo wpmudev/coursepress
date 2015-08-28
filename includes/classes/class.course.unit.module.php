@@ -749,6 +749,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		public static function get_ungraded_response_count( $course_id = '' ) {
 
+			$counter = 0;
+
 			if ( $course_id == '' ) {
 
 				$args = array(
@@ -771,6 +773,12 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				//Count only ungraded responses from STUDENTS!
 				foreach ( $ungraded_responses as $key => $ungraded_response ) {
+
+					// Only show count for courses an Instructor can actually assess
+					$course_id = get_post_meta( $ungraded_response->ID, 'course_id', true );
+					if( ! CoursePress_Capabilities::is_course_instructor( $course_id ) ) {
+						continue;
+					}
 
 					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
 						unset( $ungraded_responses[ $key ] );
@@ -803,9 +811,10 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 						}
 					}
 
+					$counter += 1;
 				}
 
-				return count( $ungraded_responses ); // - $admins_responses;
+				return $counter;
 			} else {
 
 				$args = array(
@@ -825,6 +834,10 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 						)
 					)
 				);
+
+				if( ! CoursePress_Capabilities::is_course_instructor( $course_id ) ) {
+					return 0;
+				}
 
 				$ungraded_responses = get_posts( $args );
 

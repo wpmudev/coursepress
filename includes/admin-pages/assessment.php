@@ -19,10 +19,11 @@ if ( isset( $_GET['delete_response'] ) && ( current_user_can( 'coursepress_delet
 }
 ?>
 
-<div class="wrap nosubsub cp-wrap">
+	<div class="wrap nosubsub cp-wrap">
 <?php if ( $user_id !== '' && $course_id !== '' ) { ?>
 	<?php _e( 'Go to:', 'cp' ); ?>
 	<a href="<?php echo admin_url( 'admin.php?action=workbook&student_id=' . $user_id . '&page=students&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'cp' ); ?></a> |
+
 	<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'cp' ); ?></a>
 <?php } ?>
 	<div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
@@ -39,6 +40,13 @@ if ( isset( $_GET['response_id'] ) ) {
 	$response_id = (int) $_GET['response_id'];
 	$module_id   = (int) $_GET['module_id'];
 	$unit_id     = (int) $_GET['unit_id'];
+
+	$course_id = get_post_meta( $response_id, 'course_id', true );
+	if ( ! CoursePress_Capabilities::is_course_instructor( $course_id ) ) {
+		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', 'cp' ) . '</p>';
+	}
+
+
 	?>
 	<div class="assessment-response-wrap">
 		<form action="" name="assessment-response" method="post">
@@ -177,11 +185,18 @@ if ( isset( $_GET['response_id'] ) ) {
 
 						$count = Unit_Module::get_ungraded_response_count( $course->ID );
 
+						// Only instructors can assess
+						$can_assess = CoursePress_Capabilities::is_course_instructor( $course->ID );
+
+						if ( ! $can_assess ) {
+							continue;
+						}
+
 						$course_obj    = new Course( $course->ID );
 						$course_object = $course_obj->get_course();
-						$num_students = $course_obj->get_number_of_students();
+						$num_students  = $course_obj->get_number_of_students();
 						if ( $course_obj->get_number_of_students() >= 1 ) {
-							if( empty( $first_course_id ) ) {
+							if ( empty( $first_course_id ) ) {
 								$first_course_id = $course->ID;
 							}
 							$courses_with_students ++;
@@ -259,7 +274,6 @@ if ( isset( $_GET['response_id'] ) ) {
 	</div><!--tablenav-->
 
 	<?php
-	$x = '';
 	if ( $current_course_id !== 0 ) {//courses exists, at least one is in place
 		if ( count( $course_units ) >= 1 ) {
 			?>
@@ -290,23 +304,23 @@ if ( isset( $_GET['response_id'] ) ) {
 							$classes = 'all';
 						}
 
-                        $meta_key = '';
-                        if ( is_multisite() ) {
-                            $meta_key = $wpdb->prefix . 'enrolled_course_class_' . $current_course_id;
-                        } else {
-                            $meta_key = 'enrolled_course_class_' . $current_course_id;
-                        }
+						$meta_key = '';
+						if ( is_multisite() ) {
+							$meta_key = $wpdb->prefix . 'enrolled_course_class_' . $current_course_id;
+						} else {
+							$meta_key = 'enrolled_course_class_' . $current_course_id;
+						}
 
-                        $args = array(
-                            'meta_query' => array(
-                                'relation' => 'AND',
-                                array(
-                                    'key'     => $meta_key,
-                                    'value'   => '',
-                                    'compare' => 'EXISTS'
-                                )
-                            )
-                        );
+						$args = array(
+							'meta_query' => array(
+								'relation' => 'AND',
+								array(
+									'key'     => $meta_key,
+									'value'   => '',
+									'compare' => 'EXISTS'
+								)
+							)
+						);
 
 						$additional_url_args              = array();
 						$additional_url_args['course_id'] = $current_course_id;
@@ -504,7 +518,7 @@ if ( isset( $_GET['response_id'] ) ) {
 													<?php }//general col visibility       ?>
 												</tr>
 												<?php
-                                                unset($comment);
+												unset( $comment );
 												$current_row ++;
 											}
 										}
