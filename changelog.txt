@@ -12,6 +12,7 @@ CHANGE LOG
 * Fixed: PHP notice when attempting to make a unit live when it hasn't been saved yet.
 * Fixed: Instructors can only assess their own students. Course creators need to add themselves as instructors if they want to assess.
 * Fixed: Improved performance for Preview Units/Pages/Modules.
+* Fixed: Input elements cannot be submitted when "Previewing" a Unit. It will display "Preview only".
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.

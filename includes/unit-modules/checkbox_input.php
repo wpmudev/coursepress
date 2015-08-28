@@ -88,8 +88,17 @@ class checkbox_input_module extends Unit_Module {
 
 	public static function front_main( $data ) {
 		$data->name    = __CLASS__;
-		$response      = checkbox_input_module::get_response( get_current_user_id(), $data->ID );
-		$all_responses = checkbox_input_module::get_response( get_current_user_id(), $data->ID, 'private', - 1 );
+
+		$preview_data = CoursePress::instance()->preview_data;
+		$preview = false;
+		if( isset( $preview_data ) && ! empty( $preview_data ) ) {
+			$response = array();
+			$all_responses = array();
+			$preview = true;
+		} else {
+			$response      = text_input_module::get_response( get_current_user_id(), $data->ID );
+			$all_responses = text_input_module::get_response( get_current_user_id(), $data->ID, 'private', - 1 );
+		}
 
 		if ( is_object( $response ) ) {
 			$student_checked_answers = get_post_meta( $response->ID, 'student_checked_answers', true );
