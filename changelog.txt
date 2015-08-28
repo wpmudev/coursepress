@@ -13,6 +13,7 @@ CHANGE LOG
 * Fixed: Instructors can only assess their own students. Course creators need to add themselves as instructors if they want to assess.
 * Fixed: Improved performance for Preview Units/Pages/Modules.
 * Fixed: Input elements cannot be submitted when "Previewing" a Unit. It will display "Preview only".
+* Fixed: New implementation of CoursePress editor now allows dynamic editors including Visual/HTML toggles.
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.
