@@ -137,6 +137,11 @@ class video_module extends Unit_Module {
 	}
 
 	function hide_related_videos( $data ) {
+
+		if( ! isset( $data ) || ! isset( $data->hide_related_media) ) {
+			return;
+		}
+
 		?>
 		<label class="hide_related_media">
 				<input type="checkbox" name="<?php echo $this->name; ?>_hide_related_media[<?php $data->id ?>]" value="yes" <?php echo( ! empty( $data ) && isset( $data->hide_related_media ) && $data->hide_related_media == 'yes' ? 'checked' : ( empty( $data ) || ! isset( $data->hide_related_media ) ) ? 'checked' : '' ) ?> />

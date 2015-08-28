@@ -11,6 +11,11 @@ jQuery(document).ready(function($) {
 
 function check_for_mandatory_answers() {
 
+    // Skip checking if moving backwards
+    if( jQuery("#dont_save_student_progress_indication" ).length > 0 ) {
+        return true;
+    }
+
     if (jQuery("#save_student_progress_indication").length == 0) {
 
         var mandatory_errors = 0;
@@ -81,6 +86,31 @@ function check_for_mandatory_answers() {
     }
 }
 
+function change_unit_page( e ) {
+
+    var $ = jQuery;
+    var target = e.currentTarget;
+
+    var action = jQuery("#modules_form").attr("action");
+    var active_page = jQuery('#navigation-pagination .active a').html();
+    var last_page = jQuery('#navigation-pagination li:last-child a').html();
+
+
+    var button = parseInt( $( target ).html() );
+
+    jQuery("#modules_form").attr("action", action + 'page/' + parseInt( button ) + '/');
+
+    if( button < active_page ) {
+        // Don't submit normally
+        $('#modules_form').append('<input type="hidden" id="dont_save_student_progress_indication" name="dont_save_student_progress_indication" />');
+        $("#modules_form" ).submit();
+    } else {
+        // Submit normally!
+        $('.submit-elements-data-button' ).click();
+    }
+
+}
+
 jQuery(document).ready(function() {
     jQuery('.save_elements_message_ok').delay(2000).fadeOut('slow');
 
@@ -88,16 +118,10 @@ jQuery(document).ready(function() {
     jQuery('.module-pagination a').click(function(e) {
         e.preventDefault();
 
-        //if(check_for_mandatory_answers()){
-
-        //var action = jQuery("#modules_form").attr("action");
         jQuery('#go_to_page').val(jQuery(this).html());
 
-        //jQuery("#modules_form").attr("action", action + 'page/' + jQuery(this).html() + '/');
+        change_unit_page( e );
 
-        jQuery('.apply-button-enrolled').click();
-        //return false;
-        //}
     });
 
     jQuery('.submit-elements-data-button').click(function(e) {
@@ -109,11 +133,14 @@ jQuery(document).ready(function() {
 
         jQuery("#modules_form").remove('.event_origin');
 
+        var active_page = jQuery('#navigation-pagination .active a').html();
+        var last_page = jQuery('#navigation-pagination li:last-child a').html();
+
+
         if (e.originalEvent) {//clicked button directly, not pagination
 
             jQuery("#modules_form").append('<input type="hidden" name="event_origin" value="button" />');
-            var active_page = jQuery('#navigation-pagination .active a').html();
-            var last_page = jQuery('#navigation-pagination li:last-child a').html();
+
 
             if (active_page != last_page) {
                 next_page = parseInt(active_page) + 1;

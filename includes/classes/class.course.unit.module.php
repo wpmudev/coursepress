@@ -960,7 +960,6 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			$data, $grade, $responses, $last_public_response = false, $show_grade = true,
 			$total_correct = false, $total_answers = false
 		) {
-			$number_of_answers = 1 < (int) count( $responses ) ? (int) count( $responses ) + (int) count( $last_public_response ) : (int) count( $responses );
 			$number_of_answers = (int) count( $responses ) + (int) count( $last_public_response );
 
 			// Allow unlimited resubmits while grade is pending
@@ -980,7 +979,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$limit_attempts_value = - 1; //unlimited
 			}
 
-			$allow_free_resubmit = in_array( $data->name, $allowed_resubmits ) && empty( $grade );
+			$allow_free_resubmit = in_array( $data->name, $allowed_resubmits ) && empty( $grade ) && 0 < $number_of_answers;
 
 			if (
 				( $grade && 'yes' == $data->gradable_answer ) ||
