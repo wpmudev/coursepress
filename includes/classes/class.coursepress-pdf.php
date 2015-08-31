@@ -213,12 +213,16 @@ class CoursePress_PDF extends TCPDF {
 		// ---------------------------------------------------------
 
 		// set font
+		$reports_font = get_option( 'reports_font', 'helvetica' );
+
 		if( isset( $args['base_font'] ) ) {
 			$pdf->SetFont( $args['base_font']['family'], '', $args['base_font']['size'] );
-		} else {
+		}else if( isset( $reports_font ) ){
+			$pdf->SetFont( $reports_font, '', 14 );
+		}else{
 			$pdf->SetFont( 'helvetica', '', 14 );
 		}
-
+		
 		// add a page
 		$pdf->AddPage();
 
