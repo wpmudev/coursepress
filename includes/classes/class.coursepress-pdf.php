@@ -222,7 +222,7 @@ class CoursePress_PDF extends TCPDF {
 		}else{
 			$pdf->SetFont( 'helvetica', '', 14 );
 		}
-		
+
 		// add a page
 		$pdf->AddPage();
 
