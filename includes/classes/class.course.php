@@ -364,7 +364,10 @@ if ( !class_exists( 'Course' ) ) {
 					if ( cp_use_woo() ) {
 						$mp_product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
 					} else {
-						$mp_product_id = $this->mp_product_id( $course_id );
+						do_action( 'coursepress_mp_update_product', $course_id );
+						return true;
+
+						//$mp_product_id = $this->mp_product_id( $course_id );
 					}
 
 					$post = array(
@@ -416,31 +419,32 @@ if ( !class_exists( 'Course' ) ) {
 							update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( (!empty( $_POST[ 'mp_is_sale' ] ) ? $_POST[ 'mp_is_sale' ] : '' ), true ) );
 							update_post_meta( $post_id, 'cp_course_id', $this->id );
 						} else {
-							update_post_meta( $this->id, 'mp_product_id', $post_id );
-							update_post_meta( $this->id, 'marketpress_product', $post_id );
-
-							$price		 = cp_filter_content( (!empty( $_POST[ 'mp_price' ] ) ? $_POST[ 'mp_price' ] : 0 ), true );
-							$sale_price	 = cp_filter_content( (!empty( $_POST[ 'mp_sale_price' ] ) ? $_POST[ 'mp_sale_price' ] : 0 ), true );
-							update_post_meta( $post_id, 'mp_sku', $sku );
-							update_post_meta( $post_id, 'mp_var_name', serialize( array() ) );
-							update_post_meta( $post_id, 'mp_price', $price );
-							update_post_meta( $post_id, 'mp_sale_price', $sale_price );
-							update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( (!empty( $_POST[ 'mp_is_sale' ] ) ? $_POST[ 'mp_is_sale' ] : '' ), true ) );
-							update_post_meta( $post_id, 'mp_file', get_permalink( $this->id ) );
-							update_post_meta( $post_id, 'cp_course_id', $this->id );
+							//update_post_meta( $this->id, 'mp_product_id', $post_id );
+							//update_post_meta( $this->id, 'marketpress_product', $post_id );
+							//
+							//$price		 = cp_filter_content( (!empty( $_POST[ 'mp_price' ] ) ? $_POST[ 'mp_price' ] : 0 ), true );
+							//$sale_price	 = cp_filter_content( (!empty( $_POST[ 'mp_sale_price' ] ) ? $_POST[ 'mp_sale_price' ] : 0 ), true );
+							//update_post_meta( $post_id, 'mp_sku', $sku );
+							//update_post_meta( $post_id, 'mp_var_name', serialize( array() ) );
+							//update_post_meta( $post_id, 'mp_price', $price );
+							//update_post_meta( $post_id, 'mp_sale_price', $sale_price );
+							//update_post_meta( $post_id, 'mp_is_sale', cp_filter_content( (!empty( $_POST[ 'mp_is_sale' ] ) ? $_POST[ 'mp_is_sale' ] : '' ), true ) );
+							//update_post_meta( $post_id, 'mp_file', get_permalink( $this->id ) );
+							//update_post_meta( $post_id, 'cp_course_id', $this->id );
 						}
 						// Remove product if its not a paid course (clean up MarketPress products)
 					} elseif ( isset( $_POST[ 'meta_paid_course' ] ) && 'off' == $_POST[ 'meta_paid_course' ] ) {
 						if ( $mp_product_id && 0 != $mp_product_id ) {
-							if ( get_post_type( $mp_product_id ) == 'product' ) {
-								wp_delete_post( $mp_product_id );
-							}
+							//if ( get_post_type( $mp_product_id ) == 'product' ) {
+							//	wp_delete_post( $mp_product_id );
+							//}
 							if ( cp_use_woo() ) {
 								delete_post_meta( $this->id, 'woo_product_id' );
 								delete_post_meta( $this->id, 'woo_product' );
 							} else {
-								delete_post_meta( $this->id, 'mp_product_id' );
-								delete_post_meta( $this->id, 'marketpress_product' );
+								// Don't delete these anymore...
+								//delete_post_meta( $this->id, 'mp_product_id' );
+								//delete_post_meta( $this->id, 'marketpress_product' );
 							}
 						}
 					}
@@ -1003,7 +1007,7 @@ if ( !class_exists( 'Course' ) ) {
 						}
 					}
 
-					delete_post_meta( $new_course_id, 'me ta_mp_pr oduct_id' );
+					delete_post_meta( $new_course_id, 'meta_mp_product_id' );
 					delete_post_meta( $new_course_id, 'mp_product_id' );
 					delete_post_meta( $new_course_id, 'mp_sale_price' );
 					delete_post_meta( $new_course_id, 'mp_price' );

@@ -113,6 +113,11 @@ if ( !class_exists( 'Student' ) ) {
 			}
 		}
 
+		// Same as above, but static
+		public static function enrolled_in_course( $course_id, $user_id ) {
+			return get_user_option( 'enrolled_course_date_' . $course_id, $user_id ) ? true : false;
+		}
+
 		/**
 		 * Check to see if a user has visited a course.
 		 *
@@ -262,6 +267,62 @@ if ( !class_exists( 'Student' ) ) {
 			return true;
 			//TO DO: add new payment status if it's paid
 		}
+
+		// Static enroll method
+		public static function enroll( $course_id, $student_id, $class = '', $group = '' ) {
+
+			$current_time = current_time( 'mysql' );
+
+			$global_option = !is_multisite();
+
+			/**
+			 * Update metadata with relevant details.
+			 */
+			update_user_option( $student_id, 'enrolled_course_date_' . $course_id, $current_time, $global_option ); //Link courses and student ( in order to avoid custom tables ) for easy MySql queries ( get courses stats, student courses, etc. )
+			update_user_option( $student_id, 'enrolled_course_class_' . $course_id, $class, $global_option );
+			update_user_option( $student_id, 'enrolled_course_group_' . $course_id, $group, $global_option );
+			update_user_option( $student_id, 'role', 'student', $global_option ); //alternative to roles used
+
+			/**
+			 * Filter can be used to override email details.
+			 */
+			$user_info = get_userdata( $student_id );
+			$email_args = apply_filters( 'coursepress_student_enrollment_email_args', array(
+				'email_type'		 => 'enrollment_confirmation',
+				'course_id'			 => $course_id,
+				'dashboard_address'	 => CoursePress::instance()->get_student_dashboard_slug( true ),
+				'student_first_name' => $user_info->first_name,
+				'student_last_name'	 => $user_info->last_name,
+				'student_email'		 => $user_info->user_email
+			) );
+
+			/**
+			 * If a valid email address is given, use it to email the student with enrollment information.
+			 */
+			if ( is_email( $email_args[ 'student_email' ] ) ) {
+				coursepress_send_email( $email_args );
+			}
+
+			/**
+			 * Setup actions for when a student enrolls.
+			 * Can be used to create notifications or tracking student actions.
+			 */
+			$instructors = Course::get_course_instructors_ids( $course_id  );
+			do_action( 'student_enrolled_instructor_notification', $student_id, $course_id, $instructors );
+			do_action( 'student_enrolled_student_notification', $student_id, $course_id );
+
+			/**
+			 * Perform action after a Student is enrolled.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_student_enrolled', $student_id, $course_id );
+
+			return true;
+		}
+
+
+
 
 		//Withdraw student from the course
 

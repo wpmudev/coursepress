@@ -15,6 +15,7 @@ CHANGE LOG
 * Fixed: Input elements cannot be submitted when "Previewing" a Unit. It will display "Preview only".
 * Fixed: New implementation of CoursePress editor now allows dynamic editors including Visual/HTML toggles.
 * Fixed: Certificates correctly uses the selected 'Reports' font as set in settings.
+* Added: Integration for MarketPress 3.0.
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.
