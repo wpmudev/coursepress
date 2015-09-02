@@ -2718,7 +2718,7 @@ li.current_page_item a{
 }
 
 .post-type-archive-course .quick-course-info .course-cost{
-    width: 17%;
+    width: 20%;
 }
 
 .dashboard-random-courses .featured-course-title {
@@ -2790,6 +2790,24 @@ li.current_page_item a{
 .post-type-archive-course .quick-course-info .course-cost .mp_product_price {
     background-position: -872px -232px;
 }
+
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price .mp_product_price-sale,
+.post-type-archive-course .quick-course-info .course-cost .mp_special_price .mp_current_price {
+    font-weight: normal;
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    -o-transform: scale(1);
+    -ms-tranform: scale(1);
+    transform: scale(1);
+    margin: 0;
+    padding:0;
+}
+
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price-sale + .mp_product_price-normal,
+.post-type-archive-course .quick-course-info .course-cost del.mp_old_price {
+    display: none;
+}
+
 .module_description ol{
     list-style: decimal;
     padding:0;
