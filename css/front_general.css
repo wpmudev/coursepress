@@ -626,27 +626,52 @@ h1.notification-title{
     text-overflow: ellipsis;
 }
 
-.post-type-archive-course .quick-course-info .course-cost .mp_product_price {
+.post-type-archive-course .quick-course-info .course-cost:before {
     background-image: url( "../images/Assets.svg" );
     background-position: -873px -233px;
     background-repeat: no-repeat;
-    line-height: 0px;
-    margin-right: 0px;
-    padding: 2px 0 0 20px;
+    margin-top:1px;
+    width:20px;
+    height:20px;
+    display: inline-block;
+    content: '\00a0';
+    float: left;
 }
-.post-type-archive-course .quick-course-info .course-cost {	
+.post-type-archive-course .quick-course-info .course-cost {
     width: 25%;
     float: left;
-    font-size: 12px;
-    font-weight: 400;
-    color: #828282;
     margin-top: 13px;
-    display: block;
-    /*    text-transform: uppercase;*/
-    text-transform: capitalize;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+.post-type-archive-course .quick-course-info .course-cost * {
+    font-size: 12px;
+    min-height: 12px;
+    font-weight: 400;
+    color: #828282;
+    display: inline-block;
+    float: left;
+    padding: 0;
+    margin: 0;
+}
+
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price .mp_product_price-sale,
+.post-type-archive-course .quick-course-info .course-cost .mp_special_price .mp_current_price {
+    font-weight: bold;
+    position: relative;
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    -ms-tranform: scale(1.2);
+    transform: scale(1.2);
+    margin: 0;
+    padding:0 0 0 5px;
+}
+.post-type-archive-course .quick-course-info .course-cost .mp_product_price-sale + .mp_product_price-normal,
+.post-type-archive-course .quick-course-info .course-cost del.mp_old_price {
+    float: right;
+    margin-left: 10px;
 }
 
 .post-type-archive-course .quick-course-info .go-to-course-button{
