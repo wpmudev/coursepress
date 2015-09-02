@@ -6,16 +6,16 @@ class CP_Featured_Course extends WP_Widget {
 		$widget_ops = array( 'classname'   => 'cp_featured_widget',
 		                     'description' => __( 'Displays a selected course as featured', 'cp' )
 		);
-		$this->WP_Widget( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
+		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
 	}
 
 	function form( $instance ) {
 		$instance          = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
 		$title             = $instance['title'];
-		$button_title      = $instance['button_title'];
-		$selected_course   = $instance['course'];
-		$selected_type     = $instance['type'];
-		$selected_priority = $instance['priority'];
+		$button_title      = !empty( $instance['button_title'] ) ? $instance['button_title'] : '';
+		$selected_course   = !empty( $instance['course'] ) ? $instance['course'] : '';
+		$selected_type     = !empty( $instance['type'] ) ? $instance['type'] : '';
+		$selected_priority = !empty( $instance['priority'] ) ? $instance['priority'] : '';
 
 		$args = array(
 			'posts_per_page' => - 1,
