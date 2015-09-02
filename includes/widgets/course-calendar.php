@@ -8,7 +8,9 @@ class CP_Course_Calendar extends WP_Widget {
 		$widget_ops = array( 'classname'   => 'cp_course_calendar_widget',
 		                     'description' => __( 'Displays the course calendar.', 'cp' )
 		);
-		$this->WP_Widget( 'CP_Course_Calendar', __( 'Course Calendar', 'cp' ), $widget_ops );
+
+		parent::__construct( 'CP_Course_Calendar', __( 'Course Calendar', 'cp' ), $widget_ops );
+
 		$this->date_indicator = array(
 			'indicator_light_block' => __( 'Light theme - Block', 'cp' ),
 			'indicator_light_line'  => __( 'Light theme - Line', 'cp' ),
