@@ -34,6 +34,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 		private static $updated = false;
 		private static $course_id = 0;
 		private static $product_ctp = 'product';
+		private static $looping = false;
 
 		public static function init() {
 
@@ -71,6 +72,18 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 					 * Reference to order ID, will need to get the actual product using the MarketPress Order class
 					 */
 					add_action( 'mp_order_order_paid', array( __CLASS__, 'course_paid_3pt0' ) );
+
+					/**
+					 * Override thumbnail placeholder with course list image.
+					 * Note: Typically course products won't have thumbnails, but if a product image is set, this filter
+					 * will not override the set product image.
+					 */
+					add_filter( 'mp_product_image_show_placeholder', array( __CLASS__, 'placeholder_to_course_image' ), 10, 2 );
+
+					/**
+					 * Return course list image as product image for: `mp_product_images` meta
+					 */
+					add_filter( 'get_post_metadata', array( __CLASS__, 'course_product_images_meta' ), 10, 4 );
 
 					self::$product_ctp = MP_Product::get_post_type();
 
@@ -591,6 +604,61 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 				}
 			}
 		}
+
+		public static function placeholder_to_course_image( $show, $post_id ) {
+
+			$course_id = ! empty( $post_id ) ? get_post_meta( $post_id, 'course_id', true ) : 0;
+
+			if( ! empty ( $course_id ) ) {
+
+				self::$course_id = $course_id;
+				add_filter( 'mp_default_product_img', array( __CLASS__, 'replace_image' ) );
+
+				return 1;
+			}
+
+			return $show;
+		}
+
+		public static function replace_image( $img_src ) {
+
+			$featured_url = get_post_meta( self::$course_id, 'featured_url', true );
+
+			if( ! empty( $featured_url ) ) {
+				if ( is_ssl() ) {
+					$featured_url = str_replace( 'http://', 'https://', $featured_url );
+				}
+
+				$img_src = $featured_url;
+			}
+
+			return $img_src;
+		}
+
+		public static function course_product_images_meta( $value, $post_id, $meta_key, $single ) {
+
+			if( 'mp_product_images' === $meta_key && ! self::$looping ) {
+
+				// Avoid looping, because we're calling this meta again.
+				self::$looping = true;
+
+				$product_images = get_post_meta( $post_id, $meta_key, $single );
+
+				if( empty( $product_images ) ) {
+					$course_id = ! empty( $post_id ) ? get_post_meta( $post_id, 'course_id', true ) : 0;
+					$featured_url = ! empty( $course_id ) ? get_post_meta( $course_id, 'featured_url', true ) : '';
+					$admin_edit = isset( $_GET['action'] ) && 'edit' === $_GET['action'];
+					$value = ! empty( $featured_url ) && ! $admin_edit ? $featured_url : $value;
+				}
+
+				// No longer looping
+				self::$looping = false;
+			}
+
+			return $value;
+		}
+
+
 
 	}
 
