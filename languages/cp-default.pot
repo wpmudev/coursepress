@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Pro 1.2.6.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2015-08-28 02:30:50+00:00\n"
+"POT-Creation-Date: 2015-09-03 11:52:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,96 +24,91 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: coursepress.php:1385
+#: coursepress.php:1395
 msgid ""
 "<p>Thank you for signing up for <a href =\"%s\">%s</a>. We hope you enjoy "
 "your experience.</p>"
 msgstr ""
 
-#: coursepress.php:1400
+#: coursepress.php:1410
 msgid "You may track the status of this order here:<br />%s"
 msgstr ""
 
-#: coursepress.php:1486 includes/admin-pages/courses-details-overview.php:872
-#: includes/admin-pages/courses-details-students.php:525
-msgid "E-Mail"
-msgstr ""
-
-#: coursepress.php:1533
+#: coursepress.php:1545
 msgid "Pay with PayPal"
 msgstr ""
 
-#: coursepress.php:1537
+#: coursepress.php:1549
 msgid "Bank Transfer"
 msgstr ""
 
-#: coursepress.php:1541
+#: coursepress.php:1553
 msgid "Pay by Credit Card"
 msgstr ""
 
-#: coursepress.php:1600
+#: coursepress.php:1612
 msgid "Only lowercase letters (a-z) and numbers are allowed."
 msgstr ""
 
-#: coursepress.php:2029 includes/admin-pages/settings.php:107
+#: coursepress.php:2072 includes/admin-pages/settings.php:107
 msgid "Instructor Capabilities"
 msgstr ""
 
-#: coursepress.php:2034
+#: coursepress.php:2077
 msgid ""
 "Can't assign instructor capabilities. User has no assigned role on this "
 "blog. See 'Role' above."
 msgstr ""
 
-#: coursepress.php:2045
+#: coursepress.php:2088
 msgid "Capabilities"
 msgstr ""
 
-#: coursepress.php:2048
+#: coursepress.php:2091
 msgid "Granted Instructor Capabilities"
 msgstr ""
 
-#: coursepress.php:2050
+#: coursepress.php:2093
 msgid "Revoked Instructor Capabilities"
 msgstr ""
 
-#: coursepress.php:2248
+#: coursepress.php:2291
 msgid "Course Image"
 msgstr ""
 
-#: coursepress.php:2565
+#: coursepress.php:2608
 msgid "Add New Discussion"
 msgstr ""
 
-#: coursepress.php:2679 coursepress.php:5489 coursepress.php:5607
+#: coursepress.php:2722 coursepress.php:5565 coursepress.php:5683
 #: includes/classes/class.shortcodes.php:2657
 msgid "Inbox"
 msgstr ""
 
-#: coursepress.php:2703
+#: coursepress.php:2746
 msgid "Sent Message"
 msgstr ""
 
-#: coursepress.php:2727 includes/classes/class.shortcodes.php:2661
+#: coursepress.php:2770 includes/classes/class.shortcodes.php:2661
 msgid "New Message"
 msgstr ""
 
-#: coursepress.php:2920
+#: coursepress.php:2963
 msgid "This Unit is not available at the moment. Please check back later."
 msgstr ""
 
-#: coursepress.php:3122 includes/admin-pages/discussions.php:197
+#: coursepress.php:3165 includes/admin-pages/discussions.php:197
 #: includes/admin-pages/notifications-details.php:89
 #: includes/admin-pages/notifications.php:216
 msgid "All Courses"
 msgstr ""
 
-#: coursepress.php:3415
+#: coursepress.php:3464
 msgid "There was an issue determining where %s is installed. Please reinstall it."
 msgstr ""
 
-#: coursepress.php:3513 coursepress.php:3605 coursepress.php:5420
-#: coursepress.php:5543 coursepress.php:5684
+#: coursepress.php:3562 coursepress.php:3654 coursepress.php:5496
+#: coursepress.php:5619 coursepress.php:5760
 #: includes/admin-pages/courses.php:138
 #: includes/admin-pages/instructors-profile.php:28
 #: includes/admin-pages/instructors-profile.php:143
@@ -133,8 +128,8 @@ msgstr ""
 msgid "Courses"
 msgstr ""
 
-#: coursepress.php:3521 coursepress.php:3606
-#: includes/admin-pages/courses-details-overview.php:546
+#: coursepress.php:3570 coursepress.php:3655
+#: includes/admin-pages/courses-details-overview.php:553
 #: includes/admin-pages/courses-details.php:51
 #: includes/admin-pages/courses.php:242
 #: includes/admin-pages/discussions-details.php:108
@@ -143,32 +138,32 @@ msgstr ""
 #: includes/admin-pages/notifications.php:165
 #: includes/classes/class.woocommerce-integration.php:66
 #: includes/templates/popup-window-payment.php:36
-#: includes/widgets/course-calendar.php:41
+#: includes/widgets/course-calendar.php:43
 #: includes/widgets/course-structure.php:29
 #: includes/widgets/featured-course.php:32
 msgid "Course"
 msgstr ""
 
-#: coursepress.php:3523 coursepress.php:3611
+#: coursepress.php:3572 coursepress.php:3660
 #: includes/admin-pages/courses-details.php:48
 msgid "New Course"
 msgstr ""
 
-#: coursepress.php:3533 coursepress.php:3655
+#: coursepress.php:3582 coursepress.php:3704
 #: includes/admin-pages/settings-instructor-capabilities.php:59
-#: includes/widgets/course-categories.php:13
-#: includes/widgets/course-categories.php:19
+#: includes/widgets/course-categories.php:12
+#: includes/widgets/course-categories.php:18
 msgid "Course Categories"
 msgstr ""
 
-#: coursepress.php:3536 includes/admin-pages/instructors.php:66
+#: coursepress.php:3585 includes/admin-pages/instructors.php:66
 #: includes/admin-pages/settings-instructor-capabilities.php:61
 #: includes/classes/class.shortcodes.php:2426
 #: themes/coursepress/content-course-overview.php:92
 msgid "Instructors"
 msgstr ""
 
-#: coursepress.php:3542 includes/admin-pages/courses-details.php:122
+#: coursepress.php:3591 includes/admin-pages/courses-details.php:122
 #: includes/admin-pages/courses.php:244 includes/admin-pages/courses.php:336
 #: includes/admin-pages/courses.php:347
 #: includes/admin-pages/settings-instructor-capabilities.php:63
@@ -176,18 +171,18 @@ msgstr ""
 msgid "Students"
 msgstr ""
 
-#: coursepress.php:3557 includes/admin-pages/assessment.php:30
+#: coursepress.php:3606 includes/admin-pages/assessment.php:30
 #: includes/admin-pages/settings-instructor-capabilities.php:75
 msgid "Assessment"
 msgstr ""
 
-#: coursepress.php:3564 includes/admin-pages/reports.php:272
+#: coursepress.php:3613 includes/admin-pages/reports.php:272
 #: includes/admin-pages/settings-general.php:765
 #: includes/admin-pages/settings-instructor-capabilities.php:76
 msgid "Reports"
 msgstr ""
 
-#: coursepress.php:3570 coursepress.php:3786
+#: coursepress.php:3619 coursepress.php:3835
 #: includes/admin-pages/notifications.php:103
 #: includes/admin-pages/settings-instructor-capabilities.php:64
 #: includes/admin-pages/settings-instructor-capabilities.php:77
@@ -196,7 +191,7 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: coursepress.php:3576 coursepress.php:3813 coursepress.php:3814
+#: coursepress.php:3625 coursepress.php:3862 coursepress.php:3863
 #: includes/admin-pages/discussions.php:74
 #: includes/admin-pages/settings-instructor-capabilities.php:65
 #: includes/admin-pages/settings-instructor-capabilities.php:78
@@ -205,32 +200,32 @@ msgstr ""
 msgid "Discussions"
 msgstr ""
 
-#: coursepress.php:3584
+#: coursepress.php:3633
 msgid "Certificates"
 msgstr ""
 
-#: coursepress.php:3591 includes/admin-pages/courses-details-units.php:82
+#: coursepress.php:3640 includes/admin-pages/courses-details-units.php:82
 #: includes/admin-pages/settings.php:80
 msgid "Settings"
 msgstr ""
 
-#: coursepress.php:3607 coursepress.php:3684 coursepress.php:3710
-#: coursepress.php:3736 coursepress.php:3762 coursepress.php:3788
-#: coursepress.php:3815
+#: coursepress.php:3656 coursepress.php:3733 coursepress.php:3759
+#: coursepress.php:3785 coursepress.php:3811 coursepress.php:3837
+#: coursepress.php:3864
 msgid "Create New"
 msgstr ""
 
-#: coursepress.php:3608
+#: coursepress.php:3657
 msgid "Create New Course"
 msgstr ""
 
-#: coursepress.php:3609
+#: coursepress.php:3658
 msgid "Edit Course"
 msgstr ""
 
-#: coursepress.php:3610 coursepress.php:3687 coursepress.php:3713
-#: coursepress.php:3739 coursepress.php:3765 coursepress.php:3791
-#: coursepress.php:3818 includes/admin-pages/certificates.php:119
+#: coursepress.php:3659 coursepress.php:3736 coursepress.php:3762
+#: coursepress.php:3788 coursepress.php:3814 coursepress.php:3840
+#: coursepress.php:3867 includes/admin-pages/certificates.php:119
 #: includes/admin-pages/courses.php:341
 #: includes/admin-pages/discussions.php:185
 #: includes/admin-pages/notifications.php:233
@@ -248,55 +243,55 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: coursepress.php:3612 coursepress.php:3616
+#: coursepress.php:3661 coursepress.php:3665
 #: includes/admin-pages/courses.php:349
 #: includes/classes/class.shortcodes.php:2053
 msgid "View Course"
 msgstr ""
 
-#: coursepress.php:3613 includes/admin-pages/courses.php:169
+#: coursepress.php:3662 includes/admin-pages/courses.php:169
 #: includes/admin-pages/courses.php:171
 msgid "Search Courses"
 msgstr ""
 
-#: coursepress.php:3614 themes/coursepress/content-none.php:13
+#: coursepress.php:3663 themes/coursepress/content-none.php:13
 msgid "No Courses Found"
 msgstr ""
 
-#: coursepress.php:3615
+#: coursepress.php:3664
 msgid "No Courses found in Trash"
 msgstr ""
 
-#: coursepress.php:3656 coursepress.php:3663
-#: includes/admin-pages/courses-details-overview.php:374
+#: coursepress.php:3705 coursepress.php:3712
+#: includes/admin-pages/courses-details-overview.php:377
 msgid "Course Category"
 msgstr ""
 
-#: coursepress.php:3657
+#: coursepress.php:3706
 msgid "Search Course Categories"
 msgstr ""
 
-#: coursepress.php:3658
+#: coursepress.php:3707
 msgid "All Course Categories"
 msgstr ""
 
-#: coursepress.php:3659
+#: coursepress.php:3708
 msgid "Edit Course Categories"
 msgstr ""
 
-#: coursepress.php:3660
+#: coursepress.php:3709
 msgid "Update Course Category"
 msgstr ""
 
-#: coursepress.php:3661
+#: coursepress.php:3710
 msgid "Add New Course Category"
 msgstr ""
 
-#: coursepress.php:3662
+#: coursepress.php:3711
 msgid "New Course Category Name"
 msgstr ""
 
-#: coursepress.php:3682 includes/admin-pages/courses-details.php:121
+#: coursepress.php:3731 includes/admin-pages/courses-details.php:121
 #: includes/admin-pages/courses.php:243 includes/admin-pages/courses.php:331
 #: includes/admin-pages/courses.php:332 includes/admin-pages/courses.php:344
 #: includes/admin-pages/courses.php:374
@@ -306,252 +301,252 @@ msgstr ""
 msgid "Units"
 msgstr ""
 
-#: coursepress.php:3683 includes/templates/page-add-new-discussion.php:41
+#: coursepress.php:3732 includes/templates/page-add-new-discussion.php:41
 msgid "Unit"
 msgstr ""
 
-#: coursepress.php:3685
+#: coursepress.php:3734
 msgid "Create New Unit"
 msgstr ""
 
-#: coursepress.php:3686
+#: coursepress.php:3735
 msgid "Edit Unit"
 msgstr ""
 
-#: coursepress.php:3688
+#: coursepress.php:3737
 msgid "New Unit"
 msgstr ""
 
-#: coursepress.php:3689 coursepress.php:3693
+#: coursepress.php:3738 coursepress.php:3742
 msgid "View Unit"
 msgstr ""
 
-#: coursepress.php:3690
+#: coursepress.php:3739
 msgid "Search Units"
 msgstr ""
 
-#: coursepress.php:3691
+#: coursepress.php:3740
 msgid "No Units Found"
 msgstr ""
 
-#: coursepress.php:3692
+#: coursepress.php:3741
 msgid "No Units found in Trash"
 msgstr ""
 
-#: coursepress.php:3708
+#: coursepress.php:3757
 msgid "Modules"
 msgstr ""
 
-#: coursepress.php:3709
+#: coursepress.php:3758
 msgid "Module"
 msgstr ""
 
-#: coursepress.php:3711
+#: coursepress.php:3760
 msgid "Create New Module"
 msgstr ""
 
-#: coursepress.php:3712
+#: coursepress.php:3761
 msgid "Edit Module"
 msgstr ""
 
-#: coursepress.php:3714
+#: coursepress.php:3763
 msgid "New Module"
 msgstr ""
 
-#: coursepress.php:3715 coursepress.php:3719
+#: coursepress.php:3764 coursepress.php:3768
 msgid "View Module"
 msgstr ""
 
-#: coursepress.php:3716
+#: coursepress.php:3765
 msgid "Search Modules"
 msgstr ""
 
-#: coursepress.php:3717
+#: coursepress.php:3766
 msgid "No Modules Found"
 msgstr ""
 
-#: coursepress.php:3718
+#: coursepress.php:3767
 msgid "No Modules found in Trash"
 msgstr ""
 
-#: coursepress.php:3734 includes/admin-pages/certificates.php:57
+#: coursepress.php:3783 includes/admin-pages/certificates.php:57
 msgid "Certificate Templates"
 msgstr ""
 
-#: coursepress.php:3735
+#: coursepress.php:3784
 msgid "Certificate Template"
 msgstr ""
 
-#: coursepress.php:3737
+#: coursepress.php:3786
 msgid "Create New Template"
 msgstr ""
 
-#: coursepress.php:3738
+#: coursepress.php:3787
 msgid "Edit Template"
 msgstr ""
 
-#: coursepress.php:3740
+#: coursepress.php:3789
 msgid "New Template"
 msgstr ""
 
-#: coursepress.php:3741 coursepress.php:3745
+#: coursepress.php:3790 coursepress.php:3794
 msgid "View Template"
 msgstr ""
 
-#: coursepress.php:3742 includes/admin-pages/certificates.php:76
+#: coursepress.php:3791 includes/admin-pages/certificates.php:76
 #: includes/admin-pages/certificates.php:78
 msgid "Search Templates"
 msgstr ""
 
-#: coursepress.php:3743
+#: coursepress.php:3792
 msgid "No Templates Found"
 msgstr ""
 
-#: coursepress.php:3744
+#: coursepress.php:3793
 msgid "No Templates found in Trash"
 msgstr ""
 
-#: coursepress.php:3760
+#: coursepress.php:3809
 msgid "Module Responses"
 msgstr ""
 
-#: coursepress.php:3761
+#: coursepress.php:3810
 msgid "Module Response"
 msgstr ""
 
-#: coursepress.php:3763
+#: coursepress.php:3812
 msgid "Create New Response"
 msgstr ""
 
-#: coursepress.php:3764
+#: coursepress.php:3813
 msgid "Edit Response"
 msgstr ""
 
-#: coursepress.php:3766
+#: coursepress.php:3815
 msgid "New Response"
 msgstr ""
 
-#: coursepress.php:3767 coursepress.php:3771
+#: coursepress.php:3816 coursepress.php:3820
 msgid "View Response"
 msgstr ""
 
-#: coursepress.php:3768
+#: coursepress.php:3817
 msgid "Search Responses"
 msgstr ""
 
-#: coursepress.php:3769
+#: coursepress.php:3818
 msgid "No Module Responses Found"
 msgstr ""
 
-#: coursepress.php:3770
+#: coursepress.php:3819
 msgid "No Responses found in Trash"
 msgstr ""
 
-#: coursepress.php:3787 includes/admin-pages/notifications-details.php:53
+#: coursepress.php:3836 includes/admin-pages/notifications-details.php:53
 #: includes/admin-pages/notifications.php:164
 msgid "Notification"
 msgstr ""
 
-#: coursepress.php:3789
+#: coursepress.php:3838
 msgid "Create New Notification"
 msgstr ""
 
-#: coursepress.php:3790
+#: coursepress.php:3839
 msgid "Edit Notification"
 msgstr ""
 
-#: coursepress.php:3792
+#: coursepress.php:3841
 msgid "New Notification"
 msgstr ""
 
-#: coursepress.php:3793 coursepress.php:3797
+#: coursepress.php:3842 coursepress.php:3846
 msgid "View Notification"
 msgstr ""
 
-#: coursepress.php:3794 includes/admin-pages/notifications.php:127
+#: coursepress.php:3843 includes/admin-pages/notifications.php:127
 #: includes/admin-pages/notifications.php:129
 msgid "Search Notifications"
 msgstr ""
 
-#: coursepress.php:3795
+#: coursepress.php:3844
 msgid "No Notifications Found"
 msgstr ""
 
-#: coursepress.php:3796
+#: coursepress.php:3845
 msgid "No Notifications found in Trash"
 msgstr ""
 
-#: coursepress.php:3816
+#: coursepress.php:3865
 msgid "Create New Discussion"
 msgstr ""
 
-#: coursepress.php:3817
+#: coursepress.php:3866
 msgid "Edit Discussion"
 msgstr ""
 
-#: coursepress.php:3819
+#: coursepress.php:3868
 msgid "New Discussion"
 msgstr ""
 
-#: coursepress.php:3820 coursepress.php:3824
+#: coursepress.php:3869 coursepress.php:3873
 msgid "View Discussion"
 msgstr ""
 
-#: coursepress.php:3821 includes/admin-pages/discussions.php:100
+#: coursepress.php:3870 includes/admin-pages/discussions.php:100
 #: includes/admin-pages/discussions.php:102
 msgid "Search Discussions"
 msgstr ""
 
-#: coursepress.php:3822
+#: coursepress.php:3871
 msgid "No Discussions Found"
 msgstr ""
 
-#: coursepress.php:3823
+#: coursepress.php:3872
 msgid "No Discussions found in Trash"
 msgstr ""
 
-#: coursepress.php:3936 coursepress.php:3978 coursepress.php:4033
-#: coursepress.php:4136 coursepress.php:4246 coursepress.php:4393
-#: coursepress.php:4394 coursepress.php:4444
+#: coursepress.php:3985 coursepress.php:4027 coursepress.php:4082
+#: coursepress.php:4185 coursepress.php:4295 coursepress.php:4442
+#: coursepress.php:4443 coursepress.php:4493
 msgid "Invalid request. Security check failed."
 msgstr ""
 
-#: coursepress.php:4119
+#: coursepress.php:4168
 msgid "Instructor already added."
 msgstr ""
 
-#: coursepress.php:4352
+#: coursepress.php:4401
 msgid "Invitation successfully sent."
 msgstr ""
 
-#: coursepress.php:4365 coursepress.php:4366
+#: coursepress.php:4414 coursepress.php:4415
 msgid "Email failed to send."
 msgstr ""
 
-#: coursepress.php:4380
+#: coursepress.php:4429
 msgid "Invitation already exists."
 msgstr ""
 
-#: coursepress.php:4430
+#: coursepress.php:4479
 msgid "Instructor invitation cancelled."
 msgstr ""
 
-#: coursepress.php:4522
+#: coursepress.php:4571
 msgid "<h3>Invitation activated.</h3>"
 msgstr ""
 
-#: coursepress.php:4523
+#: coursepress.php:4572
 msgid ""
 "<p>Congratulations. You are now an instructor in the following course:</p>\n"
 "\t\t\t\t\t\t\t\t\t\t<p>%s</p>\n"
 "\t\t\t\t\t\t\t\t\t"
 msgstr ""
 
-#: coursepress.php:4542
+#: coursepress.php:4591
 msgid "<h3>Invalid Invitation</h3>"
 msgstr ""
 
-#: coursepress.php:4543
+#: coursepress.php:4592
 msgid ""
 "\n"
 "\t\t\t\t\t\t\t<p>This invitation link is not associated with your email "
@@ -562,11 +557,11 @@ msgid ""
 "\t\t\t\t\t\t"
 msgstr ""
 
-#: coursepress.php:4563
+#: coursepress.php:4612
 msgid "<h3>Invitation not found.</h3>"
 msgstr ""
 
-#: coursepress.php:4564
+#: coursepress.php:4613
 msgid ""
 "\n"
 "\t\t\t\t\t\t\t<p>This invitation could not be found or is no longer "
@@ -575,11 +570,11 @@ msgid ""
 "\t\t\t\t\t\t"
 msgstr ""
 
-#: coursepress.php:4582
+#: coursepress.php:4631
 msgid "<h3>Login Required</h3>"
 msgstr ""
 
-#: coursepress.php:4583
+#: coursepress.php:4632
 msgid ""
 "\n"
 "\t\t\t\t\t\t\t<p>To accept your invitation request you will need to be "
@@ -589,131 +584,131 @@ msgid ""
 "\t\t\t\t\t\t"
 msgstr ""
 
-#: coursepress.php:4809 includes/admin-pages/student-add.php:69
+#: coursepress.php:4858 includes/admin-pages/student-add.php:69
 #: includes/classes/class.shortcodes.php:4096
 #: includes/classes/class.shortcodes.php:4100
 #: themes/coursepress/part-contact.php:39
 msgid "All fields are required."
 msgstr ""
 
-#: coursepress.php:4810
+#: coursepress.php:4859
 msgid "Username must be at least 4 characters in length"
 msgstr ""
 
-#: coursepress.php:4811
+#: coursepress.php:4860
 msgid "Username already exists or invalid. Please choose another one."
 msgstr ""
 
-#: coursepress.php:4812
+#: coursepress.php:4861
 msgid "E-mail already exists or invalid. Please choose another one."
 msgstr ""
 
-#: coursepress.php:4813
+#: coursepress.php:4862
 msgid "E-mails mismatch."
 msgstr ""
 
-#: coursepress.php:4814
+#: coursepress.php:4863
 msgid "Passwords mismatch."
 msgstr ""
 
-#: coursepress.php:4815
+#: coursepress.php:4864
 msgid "Password must be at least %d characters in length."
 msgstr ""
 
-#: coursepress.php:4817
+#: coursepress.php:4866
 msgid "Username and/or password is not valid."
 msgstr ""
 
-#: coursepress.php:4818
+#: coursepress.php:4867
 msgid "Passcode is not valid."
 msgstr ""
 
-#: coursepress.php:4819 includes/classes/class.shortcodes.php:4039
+#: coursepress.php:4868 includes/classes/class.shortcodes.php:4039
 msgid "You must agree to the Terms of Service in order to signup."
 msgstr ""
 
-#: coursepress.php:4833
+#: coursepress.php:4882
 msgid ""
 "Please confirm that you want to withdraw from the course. If you withdraw, "
 "you will no longer be able to see your records for this course."
 msgstr ""
 
-#: coursepress.php:4874
+#: coursepress.php:4923
 msgid "The data has been saved successfully."
 msgstr ""
 
-#: coursepress.php:4881
+#: coursepress.php:4930
 msgid "Your progress has been saved successfully."
 msgstr ""
 
-#: coursepress.php:4999
+#: coursepress.php:5048
 msgid "Please confirm that you want to remove the instructor from this course?"
 msgstr ""
 
-#: coursepress.php:5000
+#: coursepress.php:5049
 msgid ""
 "Please confirm that you want to cancel the invite. Instuctor will receive a "
 "warning when trying to activate."
 msgstr ""
 
-#: coursepress.php:5001
+#: coursepress.php:5050
 msgid ""
 "Please confirm that you want to permanently delete the course, its units, "
 "unit elements and responses?"
 msgstr ""
 
-#: coursepress.php:5002
+#: coursepress.php:5051
 msgid ""
 "Please confirm that you want to permanently delete this student answer / "
 "reponse?"
 msgstr ""
 
-#: coursepress.php:5003
+#: coursepress.php:5052
 msgid "Please confirm that you want to permanently delete the notification?"
 msgstr ""
 
-#: coursepress.php:5004
+#: coursepress.php:5053
 msgid "Please confirm that you want to permanently delete the discussion?"
 msgstr ""
 
-#: coursepress.php:5005
+#: coursepress.php:5054
 msgid ""
 "Please confirm that you want to withdraw student from this course. If you "
 "withdraw, you will no longer be able to see student's records for this "
 "course."
 msgstr ""
 
-#: coursepress.php:5006
+#: coursepress.php:5055
 msgid ""
 "Please confirm that you want to permanently delete the unit, its elements "
 "and responses?"
 msgstr ""
 
-#: coursepress.php:5008
+#: coursepress.php:5057
 msgid ""
 "Please confirm that you want to permanently delete selected element and its "
 "responses?"
 msgstr ""
 
-#: coursepress.php:5009
+#: coursepress.php:5058
 msgid ""
 "Please confirm that you want to permanently delete this unit page, all its "
 "elements and student responses?"
 msgstr ""
 
-#: coursepress.php:5010
+#: coursepress.php:5059
 msgid "Please confirm that you want to remove this unit page and all its elements?"
 msgstr ""
 
-#: coursepress.php:5011
+#: coursepress.php:5060
 msgid "Please confirm that you want to remove selected element?"
 msgstr ""
 
-#: coursepress.php:5012
+#: coursepress.php:5061
 msgid "Delete unit page and all elements"
 msgstr ""
 
-#: coursepress.php:5013 coursepress.php:5072
+#: coursepress.php:5062 coursepress.php:5148
 #: includes/admin-pages/discussions.php:144
 #: includes/admin-pages/instructors.php:96
 #: includes/admin-pages/instructors.php:137
@@ -723,32 +718,32 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: coursepress.php:5014
+#: coursepress.php:5063
 msgid "Class name cannot be empty"
 msgstr ""
 
-#: coursepress.php:5015
+#: coursepress.php:5064
 msgid "Class name already exists"
 msgstr ""
 
-#: coursepress.php:5041
+#: coursepress.php:5092
 msgid "Please confirm that you want to withdraw all students from this class?"
 msgstr ""
 
-#: coursepress.php:5042
+#: coursepress.php:5093
 msgid ""
 "Please confirm that you want to permanently delete the class? All students "
 "form this class will be moved to the Default class automatically."
 msgstr ""
 
-#: coursepress.php:5043
+#: coursepress.php:5094
 msgid ""
 "You have selected 'This is a Paid Course'.\n"
 " In order to continue you must first setup a payment gateway by clicking on "
 "'Setup Payment Gateways'"
 msgstr ""
 
-#: coursepress.php:5044
+#: coursepress.php:5095
 msgid ""
 "<div>You have successfully completed your Basic Course "
 "Setup.</div><div>This can be changed anytime by clicking on \"Course "
@@ -757,134 +752,138 @@ msgid ""
 "<strong>one</strong> unit created to publish the course.</div>"
 msgstr ""
 
-#: coursepress.php:5045
+#: coursepress.php:5096
 msgid "<div>Marketpress has been activated successfully.</div>"
 msgstr ""
 
-#: coursepress.php:5046
+#: coursepress.php:5097
 msgid "<strong>Course Name</strong> is a required field."
 msgstr ""
 
-#: coursepress.php:5047
+#: coursepress.php:5098
 msgid "<strong>Course Excerpt</strong> is a required field."
 msgstr ""
 
-#: coursepress.php:5048
+#: coursepress.php:5099
 msgid "<strong>Course Description</strong> is a required field."
 msgstr ""
 
-#: coursepress.php:5049
+#: coursepress.php:5100
 msgid "<strong>Course Start Date</strong> is a required field."
 msgstr ""
 
-#: coursepress.php:5050
+#: coursepress.php:5101
 msgid ""
 "<strong>Course Start Date</strong> is a required field when \"This course "
 "has no end date\" is <strong>not</strong> selected."
 msgstr ""
 
-#: coursepress.php:5051
+#: coursepress.php:5102
 msgid ""
 "<strong>Enrollment Start Date</strong> is a required field when \"Users can "
 "enroll anytime\" is <strong>not</strong> selected."
 msgstr ""
 
-#: coursepress.php:5052
+#: coursepress.php:5103
 msgid ""
 "<strong>Enrollment End Date</strong> is a required field when \"Users can "
 "enroll anytime\" is <strong>not</strong> selected."
 msgstr ""
 
-#: coursepress.php:5053
+#: coursepress.php:5104
 msgid "Value can not be 0 if \"Limit class size\" is selected."
 msgstr ""
 
-#: coursepress.php:5054
+#: coursepress.php:5105
 msgid ""
 "<strong>Pass Code</strong> required when \"Anyone with a pass code\" is "
 "selected"
 msgstr ""
 
-#: coursepress.php:5055
+#: coursepress.php:5106
 msgid ""
 "<strong>Payment Gateway</strong> needs to be setup before you can sell this "
 "course."
 msgstr ""
 
-#: coursepress.php:5056
+#: coursepress.php:5107
 msgid ""
 "<strong>Price</strong> is a required field when \"This is a Paid Course\" "
 "is selected."
 msgstr ""
 
-#: coursepress.php:5057
+#: coursepress.php:5108
 msgid ""
 "<strong>Sale Price</strong> is a required field when \"Enable Sale Price\" "
 "is selected."
 msgstr ""
 
-#: coursepress.php:5058
+#: coursepress.php:5109
 msgid ""
 "There is some information missing or incorrect. Please check your input and "
 "try again."
 msgstr ""
 
-#: coursepress.php:5073
+#: coursepress.php:5131
+msgid "Visual"
+msgstr ""
+
+#: coursepress.php:5149
 msgid "Please confirm that you want to permanently delete the group?"
 msgstr ""
 
-#: coursepress.php:5130
+#: coursepress.php:5206
 msgid "Maximum of 4 certificate elements are allowed per row."
 msgstr ""
 
-#: coursepress.php:5142
+#: coursepress.php:5218
 msgid ""
 "Please confirm that you want to remove the student and the all associated "
 "records?"
 msgstr ""
 
-#: coursepress.php:5151
+#: coursepress.php:5227
 msgid ""
 "Please confirm that you want to remove the instructor and the all "
 "associated records?"
 msgstr ""
 
-#: coursepress.php:5210
+#: coursepress.php:5286
 msgid "Enrollment"
 msgstr ""
 
-#: coursepress.php:5239 includes/classes/class.menumetabox.php:144
+#: coursepress.php:5315 includes/classes/class.menumetabox.php:144
 #: includes/classes/class.shortcodes.php:3905
 #: includes/templates/popup-window-login.php:2
 #: includes/templates/popup-window-login.php:39
 msgid "Login"
 msgstr ""
 
-#: coursepress.php:5267 includes/templates/popup-window-signup.php:2
+#: coursepress.php:5343 includes/templates/popup-window-signup.php:2
 msgid "Sign Up"
 msgstr ""
 
-#: coursepress.php:5295
+#: coursepress.php:5371
 msgid "Dashboard - Courses"
 msgstr ""
 
-#: coursepress.php:5321
+#: coursepress.php:5397
 msgid "Dashboard - My Profile"
 msgstr ""
 
-#: coursepress.php:5370
+#: coursepress.php:5446
 msgid ""
 "<strong>%s is almost ready</strong>. You must <a href "
 "=\"options-permalink.php\">update your permalink structure</a> to something "
 "other than the default for it to work."
 msgstr ""
 
-#: coursepress.php:5383 coursepress.php:5519 coursepress.php:5636
-#: coursepress.php:5739
+#: coursepress.php:5459 coursepress.php:5595 coursepress.php:5712
+#: coursepress.php:5815
 msgid "Log Out"
 msgstr ""
 
-#: coursepress.php:5436 coursepress.php:5558 coursepress.php:5699
+#: coursepress.php:5512 coursepress.php:5634 coursepress.php:5775
 #: includes/functions.php:978 includes/functions.php:1007
 #: includes/templates/enrollment-process.php:37
 #: includes/templates/enrollment-process.php:46
@@ -892,19 +891,19 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: coursepress.php:5453 coursepress.php:5571 coursepress.php:5710
+#: coursepress.php:5529 coursepress.php:5647 coursepress.php:5786
 #: includes/classes/class.menumetabox.php:121
 #: includes/classes/class.menumetabox.php:124
 msgid "My Courses"
 msgstr ""
 
-#: coursepress.php:5468 coursepress.php:5586 coursepress.php:5724
+#: coursepress.php:5544 coursepress.php:5662 coursepress.php:5800
 #: includes/classes/class.menumetabox.php:131
 #: includes/classes/class.menumetabox.php:134
 msgid "My Profile"
 msgstr ""
 
-#: coursepress.php:5521 coursepress.php:5638 coursepress.php:5741
+#: coursepress.php:5597 coursepress.php:5714 coursepress.php:5817
 #: includes/classes/class.shortcodes.php:4244
 msgid "Log In"
 msgstr ""
@@ -980,7 +979,7 @@ msgstr ""
 #: includes/admin-pages/assessment.php:338
 #: includes/admin-pages/student-workbook.php:186
 #: includes/classes/class.shortcodes.php:4349
-#: includes/widgets/course-calendar.php:37
+#: includes/widgets/course-calendar.php:39
 #: includes/widgets/course-structure.php:25
 #: includes/widgets/featured-course.php:28
 #: includes/widgets/latest-courses.php:19
@@ -1010,7 +1009,7 @@ msgstr ""
 
 #: includes/admin-pages/assessment.php:342
 #: includes/admin-pages/student-workbook.php:190
-#: includes/classes/class.course.unit.module.php:613
+#: includes/classes/class.course.unit.module.php:614
 #: includes/classes/class.shortcodes.php:4353
 #: includes/classes/class.shortcodes.php:4355
 msgid "Comment"
@@ -1084,8 +1083,8 @@ msgstr ""
 #: includes/admin-pages/notifications.php:104
 #: includes/admin-pages/settings-groups.php:29
 #: includes/admin-pages/students.php:72 includes/admin-pages/students.php:73
-#: includes/unit-modules/checkbox_input.php:239
-#: includes/unit-modules/checkbox_input.php:304
+#: includes/unit-modules/checkbox_input.php:238
+#: includes/unit-modules/checkbox_input.php:303
 #: includes/unit-modules/radio_input.php:227
 #: includes/unit-modules/radio_input.php:290
 msgid "Add New"
@@ -1099,7 +1098,7 @@ msgstr ""
 #: includes/admin-pages/notifications.php:238
 #: includes/admin-pages/students.php:106
 #: includes/classes/class.certificate_templates.php:202
-#: includes/classes/class.course.unit.module.php:1176
+#: includes/classes/class.course.unit.module.php:1194
 msgid "Delete"
 msgstr ""
 
@@ -1129,7 +1128,7 @@ msgid "Certificate PDF Settings"
 msgstr ""
 
 #: includes/admin-pages/certificates.php:299
-#: includes/admin-pages/courses-details-overview.php:258
+#: includes/admin-pages/courses-details-overview.php:259
 #: includes/admin-pages/unit-details.php:231
 #: includes/admin-pages/unit-details.php:472
 msgid "Preview"
@@ -1147,75 +1146,75 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:235
+#: includes/admin-pages/courses-details-overview.php:236
 msgid "Course Setup"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:292
+#: includes/admin-pages/courses-details-overview.php:293
 msgid "Step 1 - Course Overview"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:302
+#: includes/admin-pages/courses-details-overview.php:303
 #: includes/certificate-elements/course_name.php:10
 #: includes/certificate-elements/course_name.php:19
 msgid "Course Name"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:313
+#: includes/admin-pages/courses-details-overview.php:314
 msgid "Course Excerpt / Short Overview"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:346
+#: includes/admin-pages/courses-details-overview.php:349
 msgid "Listing Image"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:347
+#: includes/admin-pages/courses-details-overview.php:350
 msgid ""
 "The image is used on the \"Courses\" listing ( archive ) page along with "
 "the course excerpt."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:355
+#: includes/admin-pages/courses-details-overview.php:358
 #: includes/classes/class.basic.certificate.php:154
 msgid "Add Image URL or Browse for Image"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:356
-#: includes/admin-pages/courses-details-overview.php:476
+#: includes/admin-pages/courses-details-overview.php:359
+#: includes/admin-pages/courses-details-overview.php:480
 #: includes/certificate-elements/logo.php:19
 #: includes/classes/class.basic.certificate.php:155
 #: includes/classes/class.certificate_template_elements.php:106
-#: includes/unit-modules/audio.php:97 includes/unit-modules/file.php:116
-#: includes/unit-modules/image.php:98 includes/unit-modules/video.php:103
+#: includes/unit-modules/audio.php:97 includes/unit-modules/file.php:107
+#: includes/unit-modules/image.php:88 includes/unit-modules/video.php:94
 msgid "Browse"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:367
-#: includes/admin-pages/courses-details-overview.php:478
+#: includes/admin-pages/courses-details-overview.php:370
+#: includes/admin-pages/courses-details-overview.php:482
 #: includes/classes/class.basic.certificate.php:156
-#: includes/unit-modules/audio.php:99 includes/unit-modules/image.php:100
-#: includes/unit-modules/video.php:105
+#: includes/unit-modules/audio.php:99 includes/unit-modules/image.php:90
+#: includes/unit-modules/video.php:96
 msgid "Extension of the file is not valid. Please use one of the following: %s"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:375
+#: includes/admin-pages/courses-details-overview.php:378
 #: includes/admin-pages/settings-instructor-capabilities.php:96
 msgid "Manage Categories"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:422
+#: includes/admin-pages/courses-details-overview.php:425
 #: includes/admin-pages/settings-shortcodes.php:659
 msgid "Course Language"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:429
-#: includes/admin-pages/courses-details-overview.php:791
-#: includes/admin-pages/courses-details-overview.php:888
-#: includes/admin-pages/courses-details-overview.php:977
-#: includes/admin-pages/courses-details-overview.php:1032
-#: includes/classes/class.course.unit.module.php:572
-#: includes/classes/class.course.unit.module.php:576
-#: includes/classes/class.course.unit.module.php:581
+#: includes/admin-pages/courses-details-overview.php:432
+#: includes/admin-pages/courses-details-overview.php:798
+#: includes/admin-pages/courses-details-overview.php:898
+#: includes/admin-pages/courses-details-overview.php:988
+#: includes/admin-pages/courses-details-overview.php:1044
+#: includes/classes/class.course.unit.module.php:573
+#: includes/classes/class.course.unit.module.php:577
+#: includes/classes/class.course.unit.module.php:582
 #: includes/classes/class.coursesearch.php:146
 #: includes/classes/class.discussionsearch.php:74
 #: includes/classes/class.instructorsearch.php:103
@@ -1224,51 +1223,51 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:430
-#: includes/admin-pages/courses-details-overview.php:792
-#: includes/admin-pages/courses-details-overview.php:889
-#: includes/admin-pages/courses-details-overview.php:978
-#: includes/admin-pages/courses-details-overview.php:1033
-#: includes/admin-pages/courses-details-overview.php:1349
+#: includes/admin-pages/courses-details-overview.php:433
+#: includes/admin-pages/courses-details-overview.php:799
+#: includes/admin-pages/courses-details-overview.php:899
+#: includes/admin-pages/courses-details-overview.php:989
+#: includes/admin-pages/courses-details-overview.php:1045
+#: includes/admin-pages/courses-details-overview.php:1289
 #: includes/admin-pages/discussions-details.php:156
 #: includes/admin-pages/notifications-details.php:177
 msgid "Update"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:440
+#: includes/admin-pages/courses-details-overview.php:444
 msgid "Step 2 - Course Description"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:468
+#: includes/admin-pages/courses-details-overview.php:472
 #: includes/admin-pages/settings-general.php:641
 #: includes/admin-pages/settings-general.php:679
 #: includes/widgets/featured-course.php:48
 msgid "Featured Video"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:469
+#: includes/admin-pages/courses-details-overview.php:473
 msgid ""
 "This is used on the Course Overview page and will be displayed with the "
 "course description."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:472
+#: includes/admin-pages/courses-details-overview.php:476
 msgid "Add URL or Browse"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:484
+#: includes/admin-pages/courses-details-overview.php:488
 #: includes/admin-pages/settings-shortcodes.php:221
 msgid "Course Description"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:488
+#: includes/admin-pages/courses-details-overview.php:492
 msgid ""
 "This is an in-depth description of the course. It should include such "
 "things like an overview, outcomes, possible requirements, etc."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:518
-#: includes/admin-pages/courses-details-overview.php:532
+#: includes/admin-pages/courses-details-overview.php:525
+#: includes/admin-pages/courses-details-overview.php:539
 #: includes/admin-pages/settings-shortcodes.php:1052
 #: includes/classes/class.shortcodes.php:1528
 #: includes/widgets/course-structure.php:9
@@ -1276,56 +1275,56 @@ msgstr ""
 msgid "Course Structure"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:521
+#: includes/admin-pages/courses-details-overview.php:528
 msgid ""
 "This gives you the option to show/hide Course Units, Lessons, Estimated "
 "Time and Free Preview options on the Course Overview page"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:526
+#: includes/admin-pages/courses-details-overview.php:533
 msgid "Show the Course Overview structure and Preview Options"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:528
+#: includes/admin-pages/courses-details-overview.php:535
 msgid "Display Time Estimates for Units and Lessons"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:533
+#: includes/admin-pages/courses-details-overview.php:540
 msgid "Show"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:534
+#: includes/admin-pages/courses-details-overview.php:541
 msgid "Free Preview"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:535
+#: includes/admin-pages/courses-details-overview.php:542
 msgid "Time"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:556
+#: includes/admin-pages/courses-details-overview.php:563
 msgid "There are currently no units to display"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:583
+#: includes/admin-pages/courses-details-overview.php:590
 msgid "[draft] "
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:611
+#: includes/admin-pages/courses-details-overview.php:618
 msgid "There are currently no pages to display"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:625
+#: includes/admin-pages/courses-details-overview.php:632
 #: includes/classes/class.course.php:206
 #: includes/classes/class.shortcodes.php:1643
 #: includes/classes/class.shortcodes.php:1646
 msgid "Untitled Page"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:790
-#: includes/admin-pages/courses-details-overview.php:887
-#: includes/admin-pages/courses-details-overview.php:976
-#: includes/admin-pages/courses-details-overview.php:1031
-#: includes/admin-pages/courses-details-overview.php:1348
+#: includes/admin-pages/courses-details-overview.php:797
+#: includes/admin-pages/courses-details-overview.php:897
+#: includes/admin-pages/courses-details-overview.php:987
+#: includes/admin-pages/courses-details-overview.php:1043
+#: includes/admin-pages/courses-details-overview.php:1288
 #: includes/classes/class.coursesearch.php:147
 #: includes/classes/class.discussionsearch.php:75
 #: includes/classes/class.instructorsearch.php:104
@@ -1334,23 +1333,23 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:802
+#: includes/admin-pages/courses-details-overview.php:810
 msgid "Step 3 - Instructors"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:812
+#: includes/admin-pages/courses-details-overview.php:820
 msgid "Course Instructor(s)"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:815
+#: includes/admin-pages/courses-details-overview.php:823
 msgid "Select one or more instructor to facilitate this course"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:823
+#: includes/admin-pages/courses-details-overview.php:832
 msgid "Assign"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:824
+#: includes/admin-pages/courses-details-overview.php:833
 msgid ""
 "NOTE: If you need to add an instructor that is not on the list, please "
 "finish creating your course and save it. To create a new instructor, you "
@@ -1358,30 +1357,30 @@ msgid ""
 "list. Then come back to this course and you can then select the instructor."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:834
+#: includes/admin-pages/courses-details-overview.php:844
 msgid "You do not have required permissions to assign instructors to a course."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:839
+#: includes/admin-pages/courses-details-overview.php:849
 msgid "Assigned Instructors:"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:844
+#: includes/admin-pages/courses-details-overview.php:854
 msgid "Please Assign Instructor"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:862
+#: includes/admin-pages/courses-details-overview.php:872
 msgid "Invite New Instructor"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:865
+#: includes/admin-pages/courses-details-overview.php:875
 msgid ""
 "If the instructor can not be found in the list above, you will need to "
 "invite them via email."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:868
-#: includes/admin-pages/courses-details-overview.php:869
+#: includes/admin-pages/courses-details-overview.php:878
+#: includes/admin-pages/courses-details-overview.php:879
 #: includes/admin-pages/courses-details-students.php:158
 #: includes/admin-pages/courses-details-students.php:517
 #: includes/admin-pages/instructors-profile.php:134
@@ -1398,8 +1397,8 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:870
-#: includes/admin-pages/courses-details-overview.php:871
+#: includes/admin-pages/courses-details-overview.php:880
+#: includes/admin-pages/courses-details-overview.php:881
 #: includes/admin-pages/courses-details-students.php:521
 #: includes/admin-pages/instructors-profile.php:137
 #: includes/admin-pages/instructors-profile.php:154
@@ -1410,107 +1409,112 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:873
+#: includes/admin-pages/courses-details-overview.php:882
+#: includes/admin-pages/courses-details-students.php:525
+msgid "E-Mail"
+msgstr ""
+
+#: includes/admin-pages/courses-details-overview.php:883
 msgid "instructor@email.com"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:876
+#: includes/admin-pages/courses-details-overview.php:886
 msgid "Send Invite"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:899
+#: includes/admin-pages/courses-details-overview.php:910
 msgid "Step 4 - Course Dates"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:909
+#: includes/admin-pages/courses-details-overview.php:920
 #: includes/admin-pages/settings-shortcodes.php:324
 msgid "Course Dates"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:914
+#: includes/admin-pages/courses-details-overview.php:925
 msgid "This course has no end date"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:918
+#: includes/admin-pages/courses-details-overview.php:929
 msgid "This is the duration the course will be open to the students"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:922
-#: includes/admin-pages/courses-details-overview.php:954
+#: includes/admin-pages/courses-details-overview.php:933
+#: includes/admin-pages/courses-details-overview.php:965
 msgid "Start Date"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:929
-#: includes/admin-pages/courses-details-overview.php:961
+#: includes/admin-pages/courses-details-overview.php:940
+#: includes/admin-pages/courses-details-overview.php:972
 msgid "End Date"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:941
+#: includes/admin-pages/courses-details-overview.php:952
 msgid "Enrollment Dates"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:946
+#: includes/admin-pages/courses-details-overview.php:957
 msgid "Users can enroll at any time"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:950
+#: includes/admin-pages/courses-details-overview.php:961
 msgid "These are the dates that students can enroll"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:988
+#: includes/admin-pages/courses-details-overview.php:1000
 msgid "Step 5 - Classes, Discussion & Workbook"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1000
+#: includes/admin-pages/courses-details-overview.php:1012
 msgid "Limit class size"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1003
+#: includes/admin-pages/courses-details-overview.php:1015
 msgid ""
 "Use this setting to set a limit for all classes. Uncheck for unlimited "
 "class size( s )."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1012
+#: includes/admin-pages/courses-details-overview.php:1024
 msgid "Allow Course Discussion"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1015
+#: includes/admin-pages/courses-details-overview.php:1027
 msgid ""
 "If checked, students can post questions and receive answers at a course "
 "level. A 'Discusssion' menu item is added for the student to see ALL "
 "discussions occuring from all class members and instructors."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1020
+#: includes/admin-pages/courses-details-overview.php:1032
 msgid "Show student Workbook"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1023
+#: includes/admin-pages/courses-details-overview.php:1035
 msgid "If checked, students can see their progress and grades."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1048
+#: includes/admin-pages/courses-details-overview.php:1061
 msgid "Step 6 - Enrollment & Course Cost"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1050
+#: includes/admin-pages/courses-details-overview.php:1063
 msgid "Step 6 - Enrollment"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1063
+#: includes/admin-pages/courses-details-overview.php:1076
 msgid "Who can Enroll in this course"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1066
+#: includes/admin-pages/courses-details-overview.php:1079
 msgid "Select the limitations on accessing and enrolling in this course."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1072
+#: includes/admin-pages/courses-details-overview.php:1085
 msgid "Manually added only"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1087
+#: includes/admin-pages/courses-details-overview.php:1100
 msgid ""
 "NOTE: If you need to manually add a student, students must be registered on "
 "your site first. To do this for a student, you can do this yourself by "
@@ -1518,96 +1522,88 @@ msgid ""
 "can then select them from this list."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1092
+#: includes/admin-pages/courses-details-overview.php:1105
 msgid "Prerequisite Course"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1096
+#: includes/admin-pages/courses-details-overview.php:1109
 msgid ""
 "Students will need to complete the following prerequisite course in order "
 "to enroll."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1123
+#: includes/admin-pages/courses-details-overview.php:1136
 msgid "Pass Code"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1127
+#: includes/admin-pages/courses-details-overview.php:1140
 msgid "Students will need to enter this pass code in order to enroll."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1142
-#: includes/admin-pages/courses-details-overview.php:1224
+#: includes/admin-pages/courses-details-overview.php:1155
+#: includes/admin-pages/courses-details-overview.php:1238
 msgid "Cost to participate in this course"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1147
-#: includes/admin-pages/courses-details-overview.php:1229
+#: includes/admin-pages/courses-details-overview.php:1160
+#: includes/admin-pages/courses-details-overview.php:1243
 msgid "This is a Paid Course"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1178
-#: includes/admin-pages/courses-details-overview.php:1285
+#: includes/admin-pages/courses-details-overview.php:1191
+#: includes/classes/class.marketpress-integration.php:487
 msgid "Automatically generate Stock Keeping Unit (SKU)"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1186
-#: includes/admin-pages/courses-details-overview.php:1296
+#: includes/admin-pages/courses-details-overview.php:1199
+#: includes/classes/class.marketpress-integration.php:495
 #: includes/templates/popup-window-payment.php:37
 msgid "Price"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1198
-#: includes/admin-pages/courses-details-overview.php:1308
+#: includes/admin-pages/courses-details-overview.php:1211
+#: includes/classes/class.marketpress-integration.php:506
 msgid "Enabled Sale Price"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1199
-#: includes/admin-pages/courses-details-overview.php:1309
+#: includes/admin-pages/courses-details-overview.php:1212
+#: includes/classes/class.marketpress-integration.php:508
 msgid "Sale Price"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1239
+#: includes/admin-pages/courses-details-overview.php:1253
 msgid "Sell your courses online with MarketPress."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1246
+#: includes/admin-pages/courses-details-overview.php:1260
 msgid "Begin Activating MarketPress Lite"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1246
+#: includes/admin-pages/courses-details-overview.php:1260
 #: includes/admin-pages/settings.php:115
 msgid "MarketPress"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1249
+#: includes/admin-pages/courses-details-overview.php:1263
 msgid "Begin Activating MarketPress"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1322
-msgid "Setup Payment Gateways"
-msgstr ""
-
-#: includes/admin-pages/courses-details-overview.php:1325
-msgid "Edit Payment Gateways"
-msgstr ""
-
-#: includes/admin-pages/courses-details-overview.php:1350
-#: includes/classes/class.course.unit.module.php:572
-#: includes/classes/class.course.unit.module.php:576
-#: includes/classes/class.course.unit.module.php:581
+#: includes/admin-pages/courses-details-overview.php:1290
+#: includes/classes/class.course.unit.module.php:573
+#: includes/classes/class.course.unit.module.php:577
+#: includes/classes/class.course.unit.module.php:582
 msgid "Done"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1358
+#: includes/admin-pages/courses-details-overview.php:1298
 msgid "Show Grades Page for Students"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1364
+#: includes/admin-pages/courses-details-overview.php:1304
 msgid "If checked, students can see their course performance and grades by units."
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1378
+#: includes/admin-pages/courses-details-overview.php:1318
 msgid ""
 "While %s is suitable for offering a few courses, you may have bigger goals "
 "for your site. %s takes the features you love from %s and unlocks the "
@@ -1619,7 +1615,7 @@ msgstr ""
 msgid "CoursePress Pro"
 msgstr ""
 
-#: includes/admin-pages/courses-details-overview.php:1395
+#: includes/admin-pages/courses-details-overview.php:1335
 msgid "Add Units &raquo;"
 msgstr ""
 
@@ -4039,7 +4035,7 @@ msgid "Shows  \"Course Details\" and \"Withdraw\" links to students."
 msgstr ""
 
 #: includes/admin-pages/settings-shortcodes.php:904
-#: includes/widgets/course-calendar.php:11
+#: includes/widgets/course-calendar.php:12
 msgid "Course Calendar"
 msgstr ""
 
@@ -4872,16 +4868,16 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/classes/class.course.php:106 includes/classes/class.course.php:458
+#: includes/classes/class.course.php:106 includes/classes/class.course.php:462
 #: includes/classes/class.course.unit.php:57
 #: includes/classes/class.course.unit.php:325
 #: includes/classes/class.course.unit.php:404
 #: includes/classes/class.notification.php:33
 #: includes/unit-modules/audio.php:68 includes/unit-modules/chat.php:43
-#: includes/unit-modules/checkbox_input.php:167
-#: includes/unit-modules/file.php:65 includes/unit-modules/file_input.php:148
-#: includes/unit-modules/image.php:47 includes/unit-modules/radio_input.php:160
-#: includes/unit-modules/text.php:45 includes/unit-modules/text_input.php:161
+#: includes/unit-modules/checkbox_input.php:176
+#: includes/unit-modules/file.php:65 includes/unit-modules/file_input.php:157
+#: includes/unit-modules/image.php:47 includes/unit-modules/radio_input.php:169
+#: includes/unit-modules/text.php:45 includes/unit-modules/text_input.php:170
 #: includes/unit-modules/video.php:51
 msgid "Untitled"
 msgstr ""
@@ -4922,106 +4918,110 @@ msgstr ""
 msgid "The module data has been submitted successfully."
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:590
+#: includes/classes/class.course.unit.module.php:591
 msgid "Save Progress & Exit"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:887
+#: includes/classes/class.course.unit.module.php:888
 msgid ""
 "The title is used to identify this module element and is useful for "
 "assessment."
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:896
+#: includes/classes/class.course.unit.module.php:897
 msgid "Mandatory Answer"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:897
+#: includes/classes/class.course.unit.module.php:898
 msgid "A response is required to continue"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:907
+#: includes/classes/class.course.unit.module.php:908
 msgid "Assessable"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:908
+#: includes/classes/class.course.unit.module.php:909
 msgid "The answer will be graded"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:916
+#: includes/classes/class.course.unit.module.php:917
 msgid "Placeholder Text"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:917
+#: includes/classes/class.course.unit.module.php:918
 msgid "Additional instructions visible in the input field as a placeholder"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:929
+#: includes/classes/class.course.unit.module.php:930
 msgid "Show Title"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:930
+#: includes/classes/class.course.unit.module.php:931
 msgid "The title is displayed as a heading"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:938
+#: includes/classes/class.course.unit.module.php:939
 msgid "Minimum grade required"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:940
+#: includes/classes/class.course.unit.module.php:941
 msgid "Set the minimum grade (%) required to pass the task"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:950
+#: includes/classes/class.course.unit.module.php:951
 msgid "Limit Attempts"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:952
+#: includes/classes/class.course.unit.module.php:953
 msgid "Limit attempts of this task"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:960
-#: includes/classes/class.course.unit.module.php:962
+#: includes/classes/class.course.unit.module.php:961
+#: includes/classes/class.course.unit.module.php:963
 msgid "* Mandatory"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1024
+#: includes/classes/class.course.unit.module.php:990
+msgid "Preview only"
+msgstr ""
+
+#: includes/classes/class.course.unit.module.php:1042
 msgid "Submit different answer"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1028
+#: includes/classes/class.course.unit.module.php:1046
 msgid "(1 attempt remaining)"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1030
+#: includes/classes/class.course.unit.module.php:1048
 msgid "(%d attempts remaining)"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1040
+#: includes/classes/class.course.unit.module.php:1058
 msgid "Graded: "
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1044
+#: includes/classes/class.course.unit.module.php:1062
 msgid "Passed"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1049
+#: includes/classes/class.course.unit.module.php:1067
 msgid "Not yet passed"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1053
+#: includes/classes/class.course.unit.module.php:1071
 msgid "Not Passed"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1063
+#: includes/classes/class.course.unit.module.php:1081
 msgid "%d of %d correct"
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1077
+#: includes/classes/class.course.unit.module.php:1095
 msgid "Grade Pending."
 msgstr ""
 
-#: includes/classes/class.course.unit.module.php:1087
+#: includes/classes/class.course.unit.module.php:1105
 msgid "Time Estimation (mins)"
 msgstr ""
 
@@ -5044,6 +5044,14 @@ msgstr ""
 
 #: includes/classes/class.instructorsearch.php:109
 msgid "instructors"
+msgstr ""
+
+#: includes/classes/class.marketpress-integration.php:526
+msgid "Setup Payment Gateways"
+msgstr ""
+
+#: includes/classes/class.marketpress-integration.php:528
+msgid "Edit Payment Gateways"
 msgstr ""
 
 #: includes/classes/class.menumetabox.php:21
@@ -5859,8 +5867,8 @@ msgid "Course General"
 msgstr ""
 
 #: includes/templates/page-add-new-discussion.php:44
-#: includes/unit-modules/checkbox_input.php:203
-#: includes/unit-modules/radio_input.php:196
+#: includes/unit-modules/checkbox_input.php:212
+#: includes/unit-modules/radio_input.php:205
 msgid "Question"
 msgstr ""
 
@@ -5994,10 +6002,10 @@ msgid "Won't change if empty."
 msgstr ""
 
 #: includes/unit-modules/audio.php:86 includes/unit-modules/chat.php:60
-#: includes/unit-modules/checkbox_input.php:186
-#: includes/unit-modules/file.php:81 includes/unit-modules/file_input.php:165
-#: includes/unit-modules/image.php:64 includes/unit-modules/radio_input.php:179
-#: includes/unit-modules/text.php:62 includes/unit-modules/text_input.php:179
+#: includes/unit-modules/checkbox_input.php:195
+#: includes/unit-modules/file.php:81 includes/unit-modules/file_input.php:174
+#: includes/unit-modules/image.php:64 includes/unit-modules/radio_input.php:188
+#: includes/unit-modules/text.php:62 includes/unit-modules/text_input.php:188
 #: includes/unit-modules/video.php:68
 msgid "Element Title"
 msgstr ""
@@ -6022,24 +6030,24 @@ msgstr ""
 msgid "Autoplay"
 msgstr ""
 
-#: includes/unit-modules/audio.php:155
+#: includes/unit-modules/audio.php:146
 msgid "Add audio files with player to the unit"
 msgstr ""
 
-#: includes/unit-modules/audio.php:156
+#: includes/unit-modules/audio.php:147
 msgid "Audio"
 msgstr ""
 
-#: includes/unit-modules/chat.php:66 includes/unit-modules/file_input.php:182
-#: includes/unit-modules/text.php:70 includes/unit-modules/text_input.php:196
+#: includes/unit-modules/chat.php:66 includes/unit-modules/file_input.php:191
+#: includes/unit-modules/text.php:70 includes/unit-modules/text_input.php:205
 msgid "Content"
 msgstr ""
 
-#: includes/unit-modules/chat.php:104
+#: includes/unit-modules/chat.php:94
 msgid "Add a chat box from the Wordpress Chat plugin"
 msgstr ""
 
-#: includes/unit-modules/chat.php:105
+#: includes/unit-modules/chat.php:95
 msgid "Live Chat"
 msgstr ""
 
@@ -6049,42 +6057,42 @@ msgstr ""
 msgid "No answer / response"
 msgstr ""
 
-#: includes/unit-modules/checkbox_input.php:234
+#: includes/unit-modules/checkbox_input.php:233
 msgid "Answers"
 msgstr ""
 
-#: includes/unit-modules/checkbox_input.php:245
+#: includes/unit-modules/checkbox_input.php:244
 #: includes/unit-modules/radio_input.php:232
 msgid "Set the correct answer"
 msgstr ""
 
-#: includes/unit-modules/checkbox_input.php:322
+#: includes/unit-modules/checkbox_input.php:321
 msgid "Multiple choice question where multiple options can be selected"
 msgstr ""
 
-#: includes/unit-modules/checkbox_input.php:323
+#: includes/unit-modules/checkbox_input.php:322
 msgid "Multiple Choice"
 msgstr ""
 
-#: includes/unit-modules/file.php:110
+#: includes/unit-modules/file.php:101
 msgid "Link Text"
 msgstr ""
 
-#: includes/unit-modules/file.php:111
+#: includes/unit-modules/file.php:102
 msgid "Download"
 msgstr ""
 
-#: includes/unit-modules/file.php:114
+#: includes/unit-modules/file.php:105
 msgid "Enter a URL or Browse for a file."
 msgstr ""
 
-#: includes/unit-modules/file.php:132
+#: includes/unit-modules/file.php:123
 msgid ""
 "Ask students to upload a file. Useful if students need to send you various "
 "files like essays, homework etc."
 msgstr ""
 
-#: includes/unit-modules/file.php:133
+#: includes/unit-modules/file.php:124
 msgid "File Download"
 msgstr ""
 
@@ -6100,7 +6108,7 @@ msgstr ""
 msgid "File not uploaded yet."
 msgstr ""
 
-#: includes/unit-modules/file_input.php:114
+#: includes/unit-modules/file_input.php:123
 msgid "File successfully uploaded. "
 msgstr ""
 
@@ -6114,47 +6122,47 @@ msgstr ""
 msgid "File Upload"
 msgstr ""
 
-#: includes/unit-modules/image.php:95
+#: includes/unit-modules/image.php:85
 msgid "Enter a URL or Browse for an image."
 msgstr ""
 
-#: includes/unit-modules/image.php:118
+#: includes/unit-modules/image.php:108
 msgid "Image, 100% width"
 msgstr ""
 
-#: includes/unit-modules/image.php:119
+#: includes/unit-modules/image.php:109
 msgid "Image"
 msgstr ""
 
-#: includes/unit-modules/image.php:134 includes/unit-modules/video.php:165
+#: includes/unit-modules/image.php:124 includes/unit-modules/video.php:156
 msgid "Show Caption"
 msgstr ""
 
-#: includes/unit-modules/image.php:135
+#: includes/unit-modules/image.php:125
 msgid "Show a caption for this image."
 msgstr ""
 
-#: includes/unit-modules/image.php:145 includes/unit-modules/video.php:176
+#: includes/unit-modules/image.php:135 includes/unit-modules/video.php:167
 msgid "Media Caption"
 msgstr ""
 
-#: includes/unit-modules/image.php:148 includes/unit-modules/video.php:179
+#: includes/unit-modules/image.php:138 includes/unit-modules/video.php:170
 msgid "Media has no caption."
 msgstr ""
 
-#: includes/unit-modules/image.php:168 includes/unit-modules/video.php:200
+#: includes/unit-modules/image.php:158 includes/unit-modules/video.php:191
 msgid "Custom Caption"
 msgstr ""
 
-#: includes/unit-modules/image.php:170 includes/unit-modules/video.php:202
+#: includes/unit-modules/image.php:160 includes/unit-modules/video.php:193
 msgid "Please enter a custom caption here."
 msgstr ""
 
-#: includes/unit-modules/page_break.php:90
+#: includes/unit-modules/page_break.php:81
 msgid "Breaks the Unit into more pages"
 msgstr ""
 
-#: includes/unit-modules/page_break.php:91
+#: includes/unit-modules/page_break.php:82
 msgid "Page Break"
 msgstr ""
 
@@ -6166,19 +6174,19 @@ msgstr ""
 msgid "Single Choice"
 msgstr ""
 
-#: includes/unit-modules/section_break.php:86
+#: includes/unit-modules/section_break.php:78
 msgid "Inserts section break ( <hr> element )"
 msgstr ""
 
-#: includes/unit-modules/section_break.php:87
+#: includes/unit-modules/section_break.php:79
 msgid "Section Break"
 msgstr ""
 
-#: includes/unit-modules/text.php:105
+#: includes/unit-modules/text.php:96
 msgid "Add text block to the unit."
 msgstr ""
 
-#: includes/unit-modules/text.php:106
+#: includes/unit-modules/text.php:97
 msgid "Text"
 msgstr ""
 
@@ -6202,35 +6210,35 @@ msgstr ""
 msgid "Answer Field"
 msgstr ""
 
-#: includes/unit-modules/video.php:99
+#: includes/unit-modules/video.php:90
 msgid "Put a URL or Browse for a video file."
 msgstr ""
 
-#: includes/unit-modules/video.php:100
+#: includes/unit-modules/video.php:91
 msgid ""
 "You can enter a Youtube or Vimeo link (oEmbed support is required). "
 "Alternatively you can Browse for a file - supported video extensions (%s)"
 msgstr ""
 
-#: includes/unit-modules/video.php:133
+#: includes/unit-modules/video.php:124
 msgid "Allows adding video files and video embeds to the unit"
 msgstr ""
 
-#: includes/unit-modules/video.php:134
+#: includes/unit-modules/video.php:125
 msgid "Video"
 msgstr ""
 
-#: includes/unit-modules/video.php:149
+#: includes/unit-modules/video.php:140
 msgid "Hide Related Videos"
 msgstr ""
 
-#: includes/unit-modules/video.php:150
+#: includes/unit-modules/video.php:141
 msgid ""
 "Hide related videos for some video services (e.g. YouTube). Services like "
 "Vimeo sets this per video."
 msgstr ""
 
-#: includes/unit-modules/video.php:166
+#: includes/unit-modules/video.php:157
 msgid "Show a caption for this video."
 msgstr ""
 
@@ -6238,48 +6246,48 @@ msgstr ""
 msgid "Displays the course calendar."
 msgstr ""
 
-#: includes/widgets/course-calendar.php:13
+#: includes/widgets/course-calendar.php:15
 msgid "Light theme - Block"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:14
+#: includes/widgets/course-calendar.php:16
 msgid "Light theme - Line"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:15
+#: includes/widgets/course-calendar.php:17
 msgid "Dark theme - Block"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:16
+#: includes/widgets/course-calendar.php:18
 msgid "Dark theme - Line"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:17
+#: includes/widgets/course-calendar.php:19
 msgid "Theme/Custom CSS"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:43
+#: includes/widgets/course-calendar.php:45
 #: includes/widgets/course-structure.php:31
 msgid "- current -"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:55
+#: includes/widgets/course-calendar.php:57
 msgid "Previous Month Text:"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:56
+#: includes/widgets/course-calendar.php:58
 msgid "« Previous"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:58
+#: includes/widgets/course-calendar.php:60
 msgid "Next Month Text:"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:59
+#: includes/widgets/course-calendar.php:61
 msgid "Next »"
 msgstr ""
 
-#: includes/widgets/course-calendar.php:62
+#: includes/widgets/course-calendar.php:64
 msgid "Dates indicators"
 msgstr ""
 
@@ -6287,11 +6295,11 @@ msgstr ""
 msgid "A list or dropdown of course categories."
 msgstr ""
 
-#: includes/widgets/course-categories.php:69
+#: includes/widgets/course-categories.php:68
 msgid "Title:"
 msgstr ""
 
-#: includes/widgets/course-categories.php:74
+#: includes/widgets/course-categories.php:73
 msgid "Show course counts"
 msgstr ""
 
@@ -6723,6 +6731,11 @@ msgstr ""
 
 #. Author URI of the plugin/theme
 msgid "http://premium.wpmudev.org"
+msgstr ""
+
+#: coursepress.php:5132
+msgctxt "Name for the Text editor tab (formerly HTML)"
+msgid "Text"
 msgstr ""
 
 #: includes/classes/class.shortcodes.php:3747
