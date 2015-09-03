@@ -16,6 +16,7 @@ CHANGE LOG
 * Fixed: New implementation of CoursePress editor now allows dynamic editors including Visual/HTML toggles.
 * Fixed: Certificates correctly uses the selected 'Reports' font as set in settings.
 * Added: Integration for MarketPress 3.0.
+* Added: CoursePress now bundled with MarketPress 3.0. Note: Best way to upgrade is using WPMU Dev Dashboard. Alternatively, remove MarketPress 2.9 and install from CoursePress settings.
 
 = 1.2.6.0 =
 * Fixed completion system synchronization.
