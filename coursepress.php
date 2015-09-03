@@ -683,7 +683,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 *
 			 * @since 1.0.0
 			 */
-			add_action( 'init', array( &$this, 'load_widgets' ), 1 );
+			add_action( 'init', array( &$this, 'load_widgets' ), 0 );
 
 			/**
 			 * Class to handle shortcodes.
