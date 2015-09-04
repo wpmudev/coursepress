@@ -78,12 +78,38 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 					 * Note: Typically course products won't have thumbnails, but if a product image is set, this filter
 					 * will not override the set product image.
 					 */
-					add_filter( 'mp_product_image_show_placeholder', array( __CLASS__, 'placeholder_to_course_image' ), 10, 2 );
+					add_filter( 'mp_product_image_show_placeholder', array(
+						__CLASS__,
+						'placeholder_to_course_image'
+					), 10, 2 );
 
 					/**
 					 * Return course list image as product image for: `mp_product_images` meta
 					 */
 					add_filter( 'get_post_metadata', array( __CLASS__, 'course_product_images_meta' ), 10, 4 );
+
+
+					add_filter( 'mp_order/notification_subject', array(
+						__CLASS__,
+						'cp_mp_order_notification_subject',
+						10,
+						2
+					) );
+					add_filter( 'mp_order/notification_body', array(
+						__CLASS__,
+						'cp_mp_order_notification_body',
+						10,
+						2
+					) );
+
+					add_filter( 'mp_meta/product', array( __CLASS__, 'verify_meta' ), 10, 3 );
+
+					// Fix missing MP3.0 meta fields
+					add_filter( 'wpmudev_field/get_value/sku', array( __CLASS__, 'fix_mp3_sku' ), 10, 4 );
+					add_filter( 'wpmudev_field/get_value/regular_price', array( __CLASS__, 'fix_mp3_regular_price' ), 10, 4 );
+					add_filter( 'wpmudev_field/get_value/has_sale', array( __CLASS__, 'fix_mp3_has_sale' ), 10, 4 );
+					add_filter( 'wpmudev_field/get_value/sale_price[amount]', array( __CLASS__, 'fix_mp3_sale_price_amount' ), 10, 4 );
+					add_filter( 'wpmudev_field/get_value/file_url', array( __CLASS__, 'fix_mp3_file_url' ), 10, 4 );
 
 					self::$product_ctp = MP_Product::get_post_type();
 
@@ -92,7 +118,24 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 				case '2.0':
 
 					add_action( 'mp_new_order', array( __CLASS__, 'listen_for_paid_status_for_courses_2pt0' ) );
-					add_action( 'mp_order_paid', array( __CLASS__, 'listen_for_paid_status_changes_for_courses_2pt0' ) );
+					add_action( 'mp_order_paid', array(
+						__CLASS__,
+						'listen_for_paid_status_changes_for_courses_2pt0'
+					) );
+
+					add_filter( 'mp_order_notification_subject', array(
+						__CLASS__,
+						'cp_mp_order_notification_subject',
+						10,
+						2
+					) );
+					add_filter( 'mp_order_notification_body', array(
+						__CLASS__,
+						'cp_mp_order_notification_body',
+						10,
+						2
+					) );
+
 					break;
 			}
 
@@ -312,7 +355,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 						'post_status' => 'publish'
 					);
 					self::$updated = true;
-					$post_id = wp_update_post( $product );
+					$post_id       = wp_update_post( $product );
 				}
 
 				self::update_product_meta( $post_id, $mp_product_details, $course_id );
@@ -327,7 +370,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 						'post_status' => 'draft'
 					);
 					self::$updated = true;
-					$post_id = wp_update_post( $product );
+					$post_id       = wp_update_post( $product );
 				}
 
 				self::update_product_meta( $post_id, $mp_product_details, $course_id );
@@ -400,11 +443,11 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			}
 
 			$meta = array(
-				'mp_sku'           => $sku,
-				'mp_price' => $price,
-				'mp_is_sale'       => $is_sale,
-				'mp_sale_price'    => $sale_price,
-				'paid_course'      => $is_paid ? 'on' : 'off'
+				'mp_sku'        => $sku,
+				'mp_price'      => $price,
+				'mp_is_sale'    => $is_sale,
+				'mp_sale_price' => $sale_price,
+				'paid_course'   => $is_paid ? 'on' : 'off'
 			);
 
 			foreach ( $meta as $key => $value ) {
@@ -431,10 +474,10 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 			$auto_sku    = $course->details->auto_sku;
 			$mp_settings = get_option( 'mp_settings' );
-			$gateways = 0;
+			$gateways    = 0;
 
-			foreach( (array) $mp_settings['gateways']['allowed'] as $gw => $active ) {
-				$gateways += (int) $active;
+			foreach ( (array) $mp_settings['gateways']['allowed'] as $gw => $active ) {
+				$gateways += ! empty( $active ) ? 1 : 0;
 			}
 
 			$gateways = $gateways > 0 ? true : false;
@@ -449,9 +492,9 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 				$mp_product_details = get_post_custom( $course_id );
 			}
 
-			$product_id     = isset( $mp_product_details['mp_product_id'] ) ? (int) $mp_product_details['mp_product_id'][0] : false;
-			$product_id     = empty( $product_id ) && isset( $mp_product_details['marketpress_product'] ) ? (int) $mp_product_details['marketpress_product'][0] : $product_id;
-			$mp_product_id  = $product_id;
+			$product_id    = isset( $mp_product_details['mp_product_id'] ) ? (int) $mp_product_details['mp_product_id'][0] : false;
+			$product_id    = empty( $product_id ) && isset( $mp_product_details['marketpress_product'] ) ? (int) $mp_product_details['marketpress_product'][0] : $product_id;
+			$mp_product_id = $product_id;
 
 			$product_exists = 0 != $mp_product_id ? true : false;
 
@@ -517,7 +560,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 				wp_dequeue_script( 'mp-need-help' );
 
 				$gateway_url = admin_url( 'edit.php?post_type=' . self::$product_ctp . '&page=marketpress&tab=gateways&cp_admin_ref=cp_course_creation_page' );
-				if( self::get_base() === '3.0' ) {
+				if ( self::get_base() === '3.0' ) {
 					$gateway_url = admin_url( 'admin.php?page=store-settings-payments&cp_admin_ref=cp_course_creation_page' );
 				}
 
@@ -544,7 +587,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			return $content;
 		}
 
-		public static function course_paid_3pt0 ( $object_id ) {
+		public static function course_paid_3pt0( $object_id ) {
 
 			// We're dealing with MarketPress 3.x, so lets use its objects to enroll the user
 			$order      = new MP_Order( $object_id );
@@ -552,13 +595,13 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			$cart       = $order->get_cart();
 			$items      = $cart->get_items();
 
-			foreach( $items as $product_id => $qty ) {
+			foreach ( $items as $product_id => $qty ) {
 
 				$course_id = (int) get_post_meta( $product_id, 'course_id', true );
-				$user_id = $order_post->post_author;
+				$user_id   = $order_post->post_author;
 
 				// If not enrolled...
-				if( ! Student::enrolled_in_course( $course_id, $user_id ) ) {
+				if ( ! Student::enrolled_in_course( $course_id, $user_id ) ) {
 
 					//Then enroll..
 					Student::enroll( $course_id, $user_id );
@@ -609,7 +652,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 			$course_id = ! empty( $post_id ) ? get_post_meta( $post_id, 'course_id', true ) : 0;
 
-			if( ! empty ( $course_id ) ) {
+			if ( ! empty ( $course_id ) ) {
 
 				self::$course_id = $course_id;
 				add_filter( 'mp_default_product_img', array( __CLASS__, 'replace_image' ) );
@@ -624,7 +667,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 			$featured_url = get_post_meta( self::$course_id, 'featured_url', true );
 
-			if( ! empty( $featured_url ) ) {
+			if ( ! empty( $featured_url ) ) {
 				if ( is_ssl() ) {
 					$featured_url = str_replace( 'http://', 'https://', $featured_url );
 				}
@@ -637,18 +680,18 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 		public static function course_product_images_meta( $value, $post_id, $meta_key, $single ) {
 
-			if( 'mp_product_images' === $meta_key && ! self::$looping ) {
+			if ( 'mp_product_images' === $meta_key && ! self::$looping ) {
 
 				// Avoid looping, because we're calling this meta again.
 				self::$looping = true;
 
 				$product_images = get_post_meta( $post_id, $meta_key, $single );
 
-				if( empty( $product_images ) ) {
-					$course_id = ! empty( $post_id ) ? get_post_meta( $post_id, 'course_id', true ) : 0;
+				if ( empty( $product_images ) ) {
+					$course_id    = ! empty( $post_id ) ? get_post_meta( $post_id, 'course_id', true ) : 0;
 					$featured_url = ! empty( $course_id ) ? get_post_meta( $course_id, 'featured_url', true ) : '';
-					$admin_edit = isset( $_GET['action'] ) && 'edit' === $_GET['action'];
-					$value = ! empty( $featured_url ) && ! $admin_edit ? $featured_url : $value;
+					$admin_edit   = isset( $_GET['action'] ) && 'edit' === $_GET['action'];
+					$value        = ! empty( $featured_url ) && ! $admin_edit ? $featured_url : $value;
 				}
 
 				// No longer looping
@@ -658,7 +701,171 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			return $value;
 		}
 
+		public static function cp_mp_order_notification_subject( $subject, $order ) {
+			if ( cp_get_order_course_id( $order->ID ) ) {
+				return coursepress_get_mp_order_email_subject();
+			} else {
+				return $subject;
+			}
+		}
 
+		public static function cp_mp_order_notification_body( $content, $order ) {
+
+			if ( '3.0' === self::get_base() && ! is_object( $order ) && ! empty( $order ) ) {
+				$order = new MP_Order( $order );
+			}
+
+			if ( cp_get_order_course_id( $order->ID ) ) {
+				$course_id = cp_get_order_course_id( $order->ID );
+				$course    = new Course( $course_id );
+
+				$tags = array(
+					'CUSTOMER_NAME',
+					'BLOG_NAME',
+					'LOGIN_ADDRESS',
+					'WEBSITE_ADDRESS',
+					'COURSE_ADDRESS',
+					'COURSE_TITLE',
+					'ORDER_ID',
+					'ORDER_STATUS_URL'
+				);
+
+				$course_title   = '';
+				$course_address = '';
+				$order_name = '';
+				$tracking_url = '';
+
+				switch ( self::get_base() ) {
+
+					case '3.0':
+						$cart       = $order->get_cart();
+						$items      = $cart->get_items();
+
+						$order_post = get_post( $order->ID );
+						$course_title   = '';
+						$course_address = '';
+						$order_name     = $order->get_meta( 'mp_billing_info->first_name' ) . ' ' . $order->get_meta( 'mp_billing_info->last_name' );
+
+						$counter = 0;
+						foreach ( $items as $product_id => $qty ) {
+							$counter += 1;
+							$course_id = (int) get_post_meta( $product_id, 'course_id', true );
+							$course_title .= get_post_field( 'post_title', $course_id );
+							$course_address .= get_permalink( $course_id );
+							if ( count( $items ) > 0 && $counter !== count( $items ) ) {
+								$course_title .= ', ';
+								$course_address .= ', ';
+							}
+						}
+
+						$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order_post->post_title . '/' );
+
+						break;
+
+					case '2.0':
+
+						$order_name = $order->mp_shipping_info['name'];
+						$course_address = $course->get_permalink();
+						$course_title = $course->details->post_title;
+
+						$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order->post_title . '/' );
+
+						break;
+
+				}
+
+				$tags_replaces = array(
+					$order_name,
+					get_bloginfo(),
+					cp_student_login_address(),
+					home_url(),
+					$course_address,
+					$course_title,
+					$order->ID,
+					$tracking_url
+				);
+
+				$message = coursepress_get_mp_order_content_email();
+
+				$message = str_replace( $tags, $tags_replaces, $message );
+
+				add_filter( 'wp_mail_from', 'my_mail_from_function', 99 );
+
+				if ( ! function_exists( 'my_mail_from_function' ) ) {
+
+					function my_mail_from_function( $email ) {
+						return coursepress_get_mp_order_from_email();
+					}
+
+				}
+
+				add_filter( 'wp_mail_from_name', 'my_mail_from_name_function', 99 );
+
+				if ( ! function_exists( 'my_mail_from_name_function' ) ) {
+
+					function my_mail_from_name_function( $name ) {
+						return coursepress_get_mp_order_from_name();
+					}
+
+				}
+
+				return $message;
+			} else {
+				return $content;
+			}
+		}
+
+		public static function verify_meta( $value, $post_id, $name ) {
+
+			$meta_keys = array(
+				'sku'               => 'mp_sku',
+				'regular_price'     => 'mp_price',
+				'has_sale'          => 'mp_is_sale',
+				'sale_price_amount' => 'mp_sale_price',
+				'course_id'         => 'mp_course_id',
+				'file_url'          => 'mp_file'
+			);
+
+			if( array_key_exists( $name, $meta_keys ) ) {
+
+				$course_id = get_post_meta( $post_id, 'course_id', true );
+				$course_id = empty( $course_id ) ? get_post_meta( $post_id, 'mp_course_id', true ) : $course_id;
+
+				if( empty( $course_id ) ) {
+					return $value;
+				}
+
+				$item_value = get_post_meta( $post_id, $name, true );
+				$item_value = empty( $item_value ) ? get_post_meta( $post_id, $meta_keys[ $name ], true ) : $item_value;
+				$item_value = is_array( $item_value ) ? $item_value[0] : $item_value;
+
+				return empty( $item_value ) ? $value : $item_value;
+
+			}
+
+			return $value;
+
+		}
+
+		public static function fix_mp3_sku( $value, $post_id, $raw, $field ) {
+			return self::verify_meta( $value, $post_id, 'sku' );
+		}
+
+		public static function fix_mp3_regular_price( $value, $post_id, $raw, $field ) {
+			return self::verify_meta( $value, $post_id, 'regular_price' );
+		}
+
+		public static function fix_mp3_has_sale( $value, $post_id, $raw, $field ) {
+			return self::verify_meta( $value, $post_id, 'has_sale' );
+		}
+
+		public static function fix_mp3_sale_price_amount( $value, $post_id, $raw, $field ) {
+			return self::verify_meta( $value, $post_id, 'sale_price_amount' );
+		}
+
+		public static function fix_mp3_file_url( $value, $post_id, $raw, $field ) {
+			return self::verify_meta( $value, $post_id, 'file_url' );
+		}
 
 	}
 

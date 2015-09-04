@@ -6,6 +6,12 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.6.2 =
+* Fixed: MarketPress 3.0 fatal error warning when sending notifications.
+* Fixed: Prompt for gateway settings even if gateway is enabled (MP3.0 integration)
+* Fixed: Missing course prices when upgrading to MarketPress 3.0.
+* Note:  Temporarily reverting bundled MarketPress to version 2.9.6.2.
+
 = 1.2.6.1 =
 * Fixed: Resubmit link showing even if no answer has been submitted.
 * Fixed: Can now freely move "back" to a previous page without having to complete mandatory elements.
