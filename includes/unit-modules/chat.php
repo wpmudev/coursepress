@@ -21,7 +21,7 @@ if ( cp_is_chat_plugin_active() ) {
 		public static function front_main( $data ) {
 			$data->name = __CLASS__;
 			?>
-			<div class="<?php echo $data->name; ?> front-single-module<?php echo( chat_module::FRONT_SAVE == true ? '-save' : '' ); ?>">
+			<div id="module-<?php echo $data->ID; ?>" class="<?php echo $data->name; ?> front-single-module<?php echo( chat_module::FRONT_SAVE == true ? '-save' : '' ); ?>">
 				<?php if ( $data->post_title != '' && parent::display_title_on_front( $data ) ) { ?>
 					<h2 class="module_title"><?php echo $data->post_title; ?></h2>
 				<?php } ?>
