@@ -291,7 +291,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		public static function is_unit_complete( $student_id, $course_id, $unit_id ) {
 			$progress = self::calculate_unit_completion( $student_id, $course_id, $unit_id, false );
 
-			return ( 100 == (int) $progress ) ? true : false;
+			return ( 100 <= (int) $progress ) ? true : false;
 		}
 
 		public static function is_course_complete( $student_id, $course_id ) {
@@ -333,6 +333,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			$completed = $total - self::get_remaining_steps( $student_id, $course_id, $unit_id );
 
 			$progress = $completed / $total * 100.0;
+			$progress = $progress > 100 ? 100 : $progress;
 
 			$data['unit'][ $unit_id ]['unit_progress'] = $progress;
 
@@ -372,6 +373,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				}
 
 				$progress                = $progress / $total_units;
+				$progress = $progress > 100 ? 100 : $progress;
 				$data['course_progress'] = $progress;
 			}
 
