@@ -11,6 +11,18 @@ class CoursePress_Template_Unit {
 
 		$student_id = get_current_user_id();
 		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		// Page access
+		$preview = CoursePress_Model_Course::previewability( $course_id );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+
+		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) && ! empty( $preview['structure'][ $unit->ID ][ $page ] );
+		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit->ID ] ) && true === $preview['structure'][ $unit->ID ] ? true : $can_preview_page;
+		if( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
+			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
+		}
 
 		$page_titles = get_post_meta( $unit->ID, 'page_title', true );
 		$show_page_titles = get_post_meta( $unit->ID, 'show_page_title', true );
@@ -41,43 +53,83 @@ class CoursePress_Template_Unit {
 		// Modules
 		foreach( $modules as $module ) {
 
-			$attributes = CoursePress_Model_Module::module_attributes( $module );
+			$attributes = CoursePress_Model_Module::attributes( $module );
 
 			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 			$template = 'CoursePress_Template_Module';
-			if( method_exists( $template, $method ) ) {
+
+			$preview_modules = isset( $preview['structure'][ $unit->ID ][ $page ] ) ? array_keys( $preview['structure'][ $unit->ID ][ $page ] ) : array();
+			$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit->ID ] ) && ! is_array( $preview['structure'][ $unit->ID ] ) );
+			if( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
+				continue;
+			}
+
+			if( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
 				$content .= call_user_func( $template . '::' . $method, $module, $attributes );
 			}
 
 		}
 
 		// Pager
-		if( $total_pages > 1 ) {
-			$url_path = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
-			            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
-			$content .= '<div class="pager">';
-				for( $i = 1; $i <= $total_pages; $i++ ) {
-					$unit_url = $url_path . $i;
-					$content .= '<span class="page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
-				}
+		$preview_pages = isset( $preview['structure'][ $unit->ID ] ) ? array_keys( $preview['structure'][ $unit->ID ] ) : array();
 
-			// Next
-			$next_page = $total_pages === $page || $total_pages === 1 ? '' : $page + 1;
-			if( ! empty( $next_page ) ) {
-				$unit_url = $url_path . $next_page;
-				$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', CoursePress::TD ) . '</button></a></span> ';
+		$url_path = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
+		            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
+		$content .= '<div class="pager">';
+		for( $i = 1; $i <= $total_pages; $i++ ) {
+			$unit_url = $url_path . $i;
+			if( ( $enrolled || $is_instructor ) || ( ! $enrolled && ! $is_instructor && in_array( $i, $preview_pages ) ) || ( ! $enrolled && ! $is_instructor && ! is_array( $preview['structure'][ $unit->ID ] ) ) ) {
+				$content .= '<span class="page page-' . $i . '"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
 			}
-
-
-			$content .= '</div>';
 		}
+
+		// Next Page
+		if( ! $enrolled && ! $is_instructor ) {
+			$next_page = 0;
+			for( $i = ( $page + 1 ); $i <= $total_pages; $i++ ) {
+				if( empty( $next_page ) && ( in_array( $i, $preview_pages ) || ! is_array( $preview['structure'][ $unit->ID ] ) ) ) {
+					$next_page = $i;
+				}
+			}
+		} else {
+			$next_page = $total_pages === $page || $total_pages === 1 ? '' : $page + 1;
+		}
+		if( ! empty( $next_page ) ) {
+			$unit_url = $url_path . $next_page;
+			$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', CoursePress::TD ) . '</button></a></span> ';
+		}
+
+		// Next unit
+		$units = CoursePress_Model_Course::get_unit_ids( $course_id );
+		$unit_index = array_search( $unit->ID, $units );
+		$next_unit = 0;
+		for( $i = $unit_index; $i < count( $units ); $i++ ) {
+			if( empty( $next_unit ) && $unit_index !== $i && $unit_index < ( count( $units ) - 1 ) ) {
+
+				$preview_units = isset( $preview['structure'] ) ? array_keys( $preview['structure'] ) : array();
+				$can_preview_unit = in_array( $units[ $i ], $preview_units );
+				$unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $units[ $i ], $units[ $unit_index ] ) || $is_instructor;
+
+				if( ( ( $enrolled || $is_instructor ) && $unit_available ) || ( ! $enrolled && ! $is_instructor && $can_preview_unit && $unit_available ) ) {
+					$next_unit = $units[ $i ];
+				}
+			}
+		}
+		if( ! empty( $next_unit ) && empty( $next_page ) ) {
+			$unit_url = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
+			            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( get_post_field( 'post_name', $next_unit ) );
+			$content .= '<span class="next-button unit unit-' . $next_unit .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next Unit', CoursePress::TD ) . '</button></a></span> ';
+		}
+
+
+		$content .= '</div>'; // .pager
 
 		$content .= '</div>'; // .unit-wrapper
 
-
 		// Student Tracking:
-		CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
-
+		if( $enrolled ) {
+			CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
+		}
 
 		return $content;
 
@@ -97,11 +149,10 @@ class CoursePress_Template_Unit {
 
 		// COMPLETION LOGIC
 		//if ( 100 == (int) $progress ) {
-		//	echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
+		//	echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', CoursePress::TD ) );
 		//}
 
 		$content .= do_shortcode( '[unit_archive_list]' );
-
 
 		return $content;
 

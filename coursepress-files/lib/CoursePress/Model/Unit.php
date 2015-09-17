@@ -7,21 +7,21 @@ class CoursePress_Model_Unit {
 	public static function get_format() {
 
 		return array(
-			'post_type' => self::$post_type,
+			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels'             => array(
-					'name'               => __( 'Units', 'cp' ),
-					'singular_name'      => __( 'Unit', 'cp' ),
-					'add_new'            => __( 'Create New', 'cp' ),
-					'add_new_item'       => __( 'Create New Unit', 'cp' ),
-					'edit_item'          => __( 'Edit Unit', 'cp' ),
-					'edit'               => __( 'Edit', 'cp' ),
-					'new_item'           => __( 'New Unit', 'cp' ),
-					'view_item'          => __( 'View Unit', 'cp' ),
-					'search_items'       => __( 'Search Units', 'cp' ),
-					'not_found'          => __( 'No Units Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Units found in Trash', 'cp' ),
-					'view'               => __( 'View Unit', 'cp' )
+					'name'               => __( 'Units', CoursePress::TD ),
+					'singular_name'      => __( 'Unit', CoursePress::TD ),
+					'add_new'            => __( 'Create New', CoursePress::TD ),
+					'add_new_item'       => __( 'Create New Unit', CoursePress::TD ),
+					'edit_item'          => __( 'Edit Unit', CoursePress::TD ),
+					'edit'               => __( 'Edit', CoursePress::TD ),
+					'new_item'           => __( 'New Unit', CoursePress::TD ),
+					'view_item'          => __( 'View Unit', CoursePress::TD ),
+					'search_items'       => __( 'Search Units', CoursePress::TD ),
+					'not_found'          => __( 'No Units Found', CoursePress::TD ),
+					'not_found_in_trash' => __( 'No Units found in Trash', CoursePress::TD ),
+					'view'               => __( 'View Unit', CoursePress::TD )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -35,7 +35,7 @@ class CoursePress_Model_Unit {
 
 	}
 
-	public static function get_post_type_name( $with_prefix = false ) {
+	public static function get_post_type_name( $with_prefix = true ) {
 		if ( ! $with_prefix ) {
 			return self::$post_type;
 		} else {
@@ -82,7 +82,7 @@ class CoursePress_Model_Unit {
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', sprintf( "%02d:%02d:%02d", $page_hours, $page_minutes, $page_seconds ) );
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $page_hours );
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $page_minutes );
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $page_seconds );
+				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $page_seconds );
 			}
 
 			$total_seconds = $page_seconds + ( $page_minutes * 60 ) + ( $page_hours * 3600 );
@@ -108,7 +108,7 @@ class CoursePress_Model_Unit {
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', sprintf( "%02d:%02d:%02d", $unit_hours, $unit_minutes, $unit_seconds ) );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $unit_hours );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $unit_minutes );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $unit_seconds );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $unit_seconds );
 
 		return $estimations;
 	}

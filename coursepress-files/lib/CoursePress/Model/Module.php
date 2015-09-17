@@ -7,24 +7,24 @@ class CoursePress_Model_Module {
 	public static function get_format() {
 
 		return array(
-			'post_type' => self::$post_type,
+			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels'			 => array(
-					'name'				 => __( 'Modules', 'cp' ),
-					'singular_name'		 => __( 'Module', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Module', 'cp' ),
-					'edit_item'			 => __( 'Edit Module', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Module', 'cp' ),
-					'view_item'			 => __( 'View Module', 'cp' ),
-					'search_items'		 => __( 'Search Modules', 'cp' ),
-					'not_found'			 => __( 'No Modules Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Modules found in Trash', 'cp' ),
-					'view'				 => __( 'View Module', 'cp' )
+					'name'				 => __( 'Modules', CoursePress::TD ),
+					'singular_name'		 => __( 'Module', CoursePress::TD ),
+					'add_new'			 => __( 'Create New', CoursePress::TD ),
+					'add_new_item'		 => __( 'Create New Module', CoursePress::TD ),
+					'edit_item'			 => __( 'Edit Module', CoursePress::TD ),
+					'edit'				 => __( 'Edit', CoursePress::TD ),
+					'new_item'			 => __( 'New Module', CoursePress::TD ),
+					'view_item'			 => __( 'View Module', CoursePress::TD ),
+					'search_items'		 => __( 'Search Modules', CoursePress::TD ),
+					'not_found'			 => __( 'No Modules Found', CoursePress::TD ),
+					'not_found_in_trash' => __( 'No Modules found in Trash', CoursePress::TD ),
+					'view'				 => __( 'View Module', CoursePress::TD )
 				),
 				'public'			 => false,
-				'show_ui'			 => true,
+				'show_ui'			 => false,
 				'publicly_queryable' => false,
 				'capability_type'	 => 'module',
 				'map_meta_cap'		 => true,
@@ -34,7 +34,7 @@ class CoursePress_Model_Module {
 
 	}
 
-	public static function get_post_type_name( $with_prefix = false ) {
+	public static function get_post_type_name( $with_prefix = true ) {
 		if ( ! $with_prefix ) {
 			return self::$post_type;
 		} else {
@@ -163,7 +163,7 @@ class CoursePress_Model_Module {
 
 	}
 
-	public static function module_attributes( $module ) {
+	public static function attributes( $module ) {
 
 		if( is_object( $module ) ) {
 			$module_id = $module->ID;

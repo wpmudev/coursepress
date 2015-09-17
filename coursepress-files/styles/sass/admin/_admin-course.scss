@@ -112,12 +112,37 @@
   color: #ffffff;
 }
 
-.step-container {
+.coursepress-course-step-container {
 
   padding: 10px;
   background: #ffffff;
   border: 1px solid #f1f1f1;
 
+}
+
+.coursepress-course-step-container.metaboxes {
+
+  box-sizing: border-box;
+  width: 70%;
+  float:left;
+
+}
+
+.course-edit-metaboxes {
+  box-sizing: border-box;
+  width: 30%;
+  float:right;
+  padding-left: 20px;
+}
+.course-edit-metaboxes:after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+.coursepress_page_coursepress_course .course-edit-metaboxes .postbox,
+.coursepress-pro_page_coursepress_course .course-edit-metaboxes .postbox {
+  padding: 5px;
 }
 
 #course-setup-steps .step-title .status {
@@ -197,6 +222,13 @@
   border:none;
   background-repeat: no-repeat;
   background-size: 20px;
+}
+
+#course-setup-steps .wide.course-step-buttons > span {
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 30px;
+  color: #6fc26e;
 }
 
 /* Course Structure */

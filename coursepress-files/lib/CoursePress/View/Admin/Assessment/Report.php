@@ -36,8 +36,6 @@ class CoursePress_View_Admin_Assessment_Report {
 
 	public static function process_form() {
 
-		//if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'student-grade-feedback' ) ) {
-		//}
 		if ( isset( $_REQUEST['action'] ) && 'coursepress_report' === $_REQUEST['action'] ) {
 
 			$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
@@ -153,7 +151,7 @@ class CoursePress_View_Admin_Assessment_Report {
 					//';
 					foreach ( $page['modules'] as $module_id => $module ) {
 
-						$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+						$attributes = CoursePress_Model_Module::attributes( $module_id );
 
 						if ( false === $attributes || 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 							continue;

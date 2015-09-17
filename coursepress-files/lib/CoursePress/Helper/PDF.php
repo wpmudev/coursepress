@@ -21,11 +21,8 @@
  */
 
 
-//include_once( CoursePress::instance()->plugin_dir . 'includes/external/tcpdf/config/lang/eng.php' );
-//require_once( CoursePress::instance()->plugin_dir . 'includes/external/tcpdf/tcpdf.php' );
-
 /**
- * Class to Override TCPF.
+ * Class to Extend TCPF.
  *
  * @since 1.2.1
  *
@@ -81,92 +78,105 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 	}
 
+	public static function fonts() {
+
+		// Saving system resources, we wont scan the font directory.
+		$fonts = array(
+			'cid0cs.php' =>  __( "Arial Unicode MS (Simplified Chinese)", CoursePress::TD ),
+			'cid0ct.php' => __( "Arial Unicode MS (Chinese Traditional)", CoursePress::TD ),
+			'cid0jp.php' => __( "Arial Unicode MS (Japanese)", CoursePress::TD ),
+			'cid0kr.php' =>  __( "Arial Unicode MS (Korean)", CoursePress::TD ),
+			'courier.php' => __( "Courier", CoursePress::TD ),
+			'courierb.php' => '',
+			'courierbi.php' => '',
+			'courieri.php' => '',
+			'helvetica.php' => __( "Helvetica", CoursePress::TD ),
+			'helveticab.php' => '',
+			'helveticabi.php' => '',
+			'helveticai.php' => '',
+			'symbol.php' => __( "Symbol", CoursePress::TD ),
+			'times.php' => __( "Times-Roman", CoursePress::TD ),
+			'timesb.php' => '',
+			'timesbi.php' => '',
+			'timesi.php' => '',
+			'uni2cid_ac15.php' => __( "Adobe-CNS1-5", CoursePress::TD ),
+			'uni2cid_ag15.php' => __( "Adobe-GB1-5", CoursePress::TD ),
+			'uni2cid_aj16.php' => __( "Adobe-Japan1-6", CoursePress::TD ),
+			'uni2cid_ak12.php' => __( "Adobe-Korea1-2", CoursePress::TD ),
+			'zapfdingbats.php' => __( "ZapfDingbats", CoursePress::TD ),
+		);
+
+		if( defined( 'TCPDF_PLUGIN_ACTIVE' ) && TCPDF_PLUGIN_ACTIVE ) {
+			$fonts = array_merge( $fonts, array(
+				'aealarabiya.php' => __( "Al Arabiya", CoursePress::TD ),
+				'aefurat.php' => __( "Furat", CoursePress::TD ),
+				'dejavusans.php' => __( "DejaVu Sans", CoursePress::TD ),
+				'dejavusansb.php' => '',
+				'dejavusansbi.php' => '',
+				'dejavusanscondensed.php' => __( "DejaVu Sans Condensed", CoursePress::TD ),
+				'dejavusanscondensedb.php' => '',
+				'dejavusanscondensedbi.php' => '',
+				'dejavusanscondensedi.php' => '',
+				'dejavusansextralight.php' => __( "DejaVu Sans ExtraLight", CoursePress::TD ),
+				'dejavusansi.php' => '',
+				'dejavusansmono.php' => __( "DejaVu Sans Mono", CoursePress::TD ),
+				'dejavusansmonob.php' => '',
+				'dejavusansmonobi.php' => '',
+				'dejavusansmonoi.php' => '',
+				'dejavuserif.php' => __( "DejaVu Serif", CoursePress::TD ),
+				'dejavuserifb.php' => '',
+				'dejavuserifbi.php' => '',
+				'dejavuserifcondensed.php' => __( "DejaVu Serif Condensed", CoursePress::TD ),
+				'dejavuserifcondensedb.php' => '',
+				'dejavuserifcondensedbi.php' => '',
+				'dejavuserifcondensedi.php' => '',
+				'dejavuserifi.php' => '',
+				'freemono.php' => __( "Free Mono", CoursePress::TD ),
+				'freemonob.php' => '',
+				'freemonobi.php' => '',
+				'freemonoi.php' => '',
+				'freesans.php' => __( "Free Sans", CoursePress::TD ),
+				'freesansb.php' => '',
+				'freesansbi.php' => '',
+				'freesansi.php' => '',
+				'freeserif.php' => __( "Free Serif", CoursePress::TD ),
+				'freeserifb.php' => '',
+				'freeserifbi.php' => '',
+				'freeserifi.php' => '',
+				'hysmyeongjostdmedium.php' => __( "MyungJo Medium (Korean)", CoursePress::TD ),
+				'kozgopromedium.php' => __( "Kozuka Gothic Pro (Japanese Sans-Serif)", CoursePress::TD ),
+				'kozminproregular.php' => __( "Kozuka Mincho Pro (Japanese Serif)", CoursePress::TD ),
+				'msungstdlight.php' => __( "MSung Light (Traditional Chinese)", CoursePress::TD ),
+				'pdfacourier.php' => __( "PDFA Courier", CoursePress::TD ),
+				'pdfacourierb.php' => '',
+				'pdfacourierbi.php' => '',
+				'pdfacourieri.php' => '',
+				'pdfahelvetica.php' => __( "PDFA Helvetica", CoursePress::TD ),
+				'pdfahelveticab.php' => '',
+				'pdfahelveticabi.php' => '',
+				'pdfahelveticai.php' => '',
+				'pdfasymbol.php' => __( "PDFA Symbol", CoursePress::TD ),
+				'pdfatimes.php' => __( "PDFA Times", CoursePress::TD ),
+				'pdfatimesb.php' => '',
+				'pdfatimesbi.php' => '',
+				'pdfatimesi.php' => '',
+				'pdfazapfdingbats.php' => __( "PDFA ZapfDingbats", CoursePress::TD ),
+				'stsongstdlight.php' => __( "STSong Light (Simplified Chinese)", CoursePress::TD ),
+			) );
+		}
+
+		// If you are hooking this, make sure you are using fonts for TCPDF and that they are located in relevant font path
+		return apply_filters( 'coursepress_pdf_font_list', $fonts );
+
+	}
 
 	protected function getFontsList() {
 
-		// Saving system resources, we wont scan the font directory.
-		// If you are hooking this, make sure you are using fonts for TCPDF and that they are located in ../coursepress-files/lib/TCPDF/fonts/
-		$fonts = apply_filters( 'coursepress_pdf_font_list', array(
-			//'aealarabiya.php',
-			//'aefurat.php',
-			'cid0cs.php',
-			'cid0ct.php',
-			'cid0jp.php',
-			'cid0kr.php',
-			'courier.php',
-			'courierb.php',
-			'courierbi.php',
-			'courieri.php',
-			//'dejavusans.php',
-			//'dejavusansb.php',
-			//'dejavusansbi.php',
-			//'dejavusanscondensed.php',
-			//'dejavusanscondensedb.php',
-			//'dejavusanscondensedbi.php',
-			//'dejavusanscondensedi.php',
-			//'dejavusansextralight.php',
-			//'dejavusansi.php',
-			//'dejavusansmono.php',
-			//'dejavusansmonob.php',
-			//'dejavusansmonobi.php',
-			//'dejavusansmonoi.php',
-			//'dejavuserif.php',
-			//'dejavuserifb.php',
-			//'dejavuserifbi.php',
-			//'dejavuserifcondensed.php',
-			//'dejavuserifcondensedb.php',
-			//'dejavuserifcondensedbi.php',
-			//'dejavuserifcondensedi.php',
-			//'dejavuserifi.php',
-			//'freemono.php',
-			//'freemonob.php',
-			//'freemonobi.php',
-			//'freemonoi.php',
-			//'freesans.php',
-			//'freesansb.php',
-			//'freesansbi.php',
-			//'freesansi.php',
-			//'freeserif.php',
-			//'freeserifb.php',
-			//'freeserifbi.php',
-			//'freeserifi.php',
-			'helvetica.php',
-			'helveticab.php',
-			'helveticabi.php',
-			'helveticai.php',
-			//'hysmyeongjostdmedium.php',
-			//'kozgopromedium.php',
-			//'kozminproregular.php',
-			//'msungstdlight.php',
-			//'pdfacourier.php',
-			//'pdfacourierb.php',
-			//'pdfacourierbi.php',
-			//'pdfacourieri.php',
-			//'pdfahelvetica.php',
-			//'pdfahelveticab.php',
-			//'pdfahelveticabi.php',
-			//'pdfahelveticai.php',
-			//'pdfasymbol.php',
-			//'pdfatimes.php',
-			//'pdfatimesb.php',
-			//'pdfatimesbi.php',
-			//'pdfatimesi.php',
-			//'pdfazapfdingbats.php',
-			//'stsongstdlight.php',
-			'symbol.php',
-			'times.php',
-			'timesb.php',
-			'timesbi.php',
-			'timesi.php',
-			'uni2cid_ac15.php',
-			'uni2cid_ag15.php',
-			'uni2cid_aj16.php',
-			'uni2cid_ak12.php',
-			'zapfdingbats.php',
-		) );
+		$fonts = CoursePress_Helper_PDF::fonts();
+		$font_path = apply_filters( 'coursepress_pdf_font_path', TCPDF_FONTS::_getfontpath() );
 
-		foreach ( $fonts as $font ) {
-			array_push( $this->fontlist, strtolower( trailingslashit( TCPDF_FONTS::_getfontpath() ) . $font ) );
+		foreach ( $fonts as $font => $font_name ) {
+			array_push( $this->fontlist, strtolower( trailingslashit( $font_path ) . $font ) );
 		}
 
 	}
@@ -211,7 +221,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	public static function make_pdf( $html, $args = array() ) {
 
 		if ( ! isset( $args['title'] ) || empty( $args['title'] ) ) {
-			$args['title'] = __( 'CoursePress Report', 'cp' );
+			$args['title'] = __( 'CoursePress Report', CoursePress::TD );
 		}
 
 		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );

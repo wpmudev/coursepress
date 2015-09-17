@@ -33,14 +33,30 @@ var CoursePress = CoursePress || {};
     function bind_buttons() {
 
         $( '.apply-button' ).on( 'click', function ( e ) {
-
             var target = e.currentTarget;
 
             if ( $( target ).attr( 'data-link' ).length > 0 ) {
                 location.href = $( target ).attr( 'data-link' );
             }
-
         } );
+
+        $( 'button' ).on( 'click', function ( e ) {
+            var target = e.currentTarget;
+
+            if ( $( target ).attr( 'data-link' ).length > 0 ) {
+                location.href = $( target ).attr( 'data-link' );
+            }
+        } );
+
+        // Make course boxes clickable
+        $( '.course_list_box_item.clickable' ).on( 'click', function( e ) {
+            var target = e.currentTarget;
+
+            if ( $( target ).attr( 'data-link' ).length > 0 ) {
+                location.href = $( target ).attr( 'data-link' );
+            }
+        } );
+
 
         $( '.li-locked-unit a' ).on('click', function( e ) {
             e.stopImmediatePropagation();
@@ -52,6 +68,7 @@ var CoursePress = CoursePress || {};
         //$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
         $( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
         $( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+
 
     }
 
@@ -210,9 +227,13 @@ var CoursePress = CoursePress || {};
                                 return;
                             }
 
-                            //var data = JSON.parse( e.target.responseText )
+                            // Set a default as ready state might trigger xhr requests
+                            var data = { success: false };
+                            try {
+                                data = JSON.parse( e.target.responseText );
+                            } catch( e ){}
 
-                            if ( readyState == 4 && status == '200' && e.target.responseText ) {
+                            if ( readyState == 4 && status == '200' && data.success ) {
 
                                 $( parent ).find( '.upload-percent' ).detach();
                                 $( parent ).find( '.upload-progress .spinner' ).detach();
@@ -223,8 +244,7 @@ var CoursePress = CoursePress || {};
                                     '</div>'
                                 );
 
-                            } else {
-
+                            } else if( readyState == 4 ) {
                                 $( parent ).find( '.upload-percent' ).detach();
                                 $( parent ).find( '.upload-progress .spinner' ).detach();
                                 $( result ).detach();
@@ -233,7 +253,6 @@ var CoursePress = CoursePress || {};
                                     '<p class="file_holder">' + _coursepress.file_upload_fail_message + '</p>' +
                                     '</div>'
                                 );
-
                             }
 
                         }, false );
@@ -359,13 +378,6 @@ var CoursePress = CoursePress || {};
             var parent = $( item ).parents('ul')[0];
             var a_col = $( parent ).find('a').css('color');
 
-            //var data = $( item ).data( 'circleProgress' );
-            //var value = 100 * data.value;
-            //var ctx = data.ctx;
-            //ctx.textAlign = 'center';
-            //ctx.textBaseline = 'middle';
-            //ctx.fillText( value + '%', data.size / 2, data.size / 2 );
-            //ctx.save();
             $( item ).on( 'circle-animation-progress', function ( e, v ) {
                 var obj = $( this ).data( 'circle-progress' ),
                     ctx = obj.ctx,
@@ -418,6 +430,15 @@ var CoursePress = CoursePress || {};
     }
 
 
+    function bind_course_discussions() {
+
+        $( '.course-discussion-content.new .button-links .submit-discussion' ).on( 'click', function( e ) {
+            $( this ).parents( 'form' ).submit();
+        } );
+
+    }
+
+
     $( document ).ready( function ( $ ) {
 
         bind_buttons();
@@ -425,6 +446,8 @@ var CoursePress = CoursePress || {};
         bind_module_actions();
 
         course_completion();
+
+        bind_course_discussions();
 
         external();
 

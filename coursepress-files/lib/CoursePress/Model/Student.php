@@ -179,7 +179,7 @@ class CoursePress_Model_Student {
 
 	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
 
-		$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+		$attributes = CoursePress_Model_Module::attributes( $module_id );
 
 		if ( empty( $attributes ) || 'output' === $attributes['mode'] ) {
 			return;
@@ -381,20 +381,25 @@ class CoursePress_Model_Student {
 
 	public static function calculate_completion( $student_id, $course_id ) {
 
+		if( empty( $student_id ) ) {
+			return;
+		}
+
 		$student_progress = self::get_completion_data( $student_id, $course_id );
-		$student_units    = array_keys( $student_progress['units'] );
+		$student_units    = isset( $student_progress['units'] ) ? array_keys( $student_progress['units'] ) : array();
 		$units            = CoursePress_Model_Course::get_units_with_modules( $course_id );
 
 		$course_required_steps  = 0;
 		$course_completed_steps = 0;
 
+		$total_units = count( $units );
+		$total_completion = 0;
 		foreach ( $units as $unit_id => $unit ) {
 
 			// Don't bother calculating completion if the student hasn't even started the unit
 			if ( ! in_array( $unit_id, $student_units ) ) {
 				continue;
 			}
-
 
 			$required_steps  = 0;
 			$completed_steps = 0;
@@ -423,7 +428,7 @@ class CoursePress_Model_Student {
 
 				foreach ( $page['modules'] as $module_id => $module ) {
 
-					$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+					$attributes = CoursePress_Model_Module::attributes( $module_id );
 
 					if ( 'output' === $attributes['mode'] ) {
 						continue;
@@ -503,6 +508,7 @@ class CoursePress_Model_Student {
 
 			$progress = (int) ( $completed_steps / $required_steps * 100 );
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/progress', $progress );
+			$total_completion += $progress;
 
 			// Update Course Steps
 			$course_required_steps += $required_steps;
@@ -517,7 +523,8 @@ class CoursePress_Model_Student {
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
 		}
 
-		$progress = (int) ( $course_completed_steps / $course_required_steps * 100 );
+		//$progress = (int) ( ( $course_completed_steps / $course_required_steps * 100 ) / $total_units );
+		$progress = $total_units > 0 ? (int) ( $total_completion / $total_units ) : 0;
 		CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/progress', $progress );
 
 		self::update_completion_data( $student_id, $course_id, $student_progress );
@@ -588,9 +595,10 @@ class CoursePress_Model_Student {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/completed' );
+		$progress = (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/progress' );
+		//$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/completed' );
 
-		return CoursePress_Helper_Utility::fix_bool( $completed );
+		return 100 === $progress;
 
 	}
 
@@ -606,7 +614,7 @@ class CoursePress_Model_Student {
 			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
 
 			foreach ( $modules as $mod_key => $module ) {
-				$attributes = CoursePress_Model_Module::module_attributes( $mod_key );
+				$attributes = CoursePress_Model_Module::attributes( $mod_key );
 				if( 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 					unset( $modules[ $mod_key ] );
 				}
@@ -631,7 +639,7 @@ class CoursePress_Model_Student {
 		foreach ( $units as $key => $unit ) {
 			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
 			foreach ( $modules as $mod_key => $module ) {
-				$attributes = CoursePress_Model_Module::module_attributes( $mod_key );
+				$attributes = CoursePress_Model_Module::attributes( $mod_key );
 				if( 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 					unset( $modules[ $mod_key ] );
 					continue;

@@ -1,0 +1,152 @@
+<?php
+
+class CoursePress_View_Front_General {
+
+	public static function init() {
+
+		// CoursePress Menus
+		if ( CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ) {
+
+			/**
+			 * Create CoursePress basic menus automatically.
+			 *
+			 * @since 1.0.0
+			 */
+			add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'main_navigation_links' ), 10, 2 );
+		}
+
+	}
+
+	public static function main_navigation_links( $sorted_menu_items, $args ) {
+
+		$current_url = 'http';
+		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+			$current_url .= "s";
+		}
+		$current_url .= "://";
+		if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" ) {
+			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+		} else {
+			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+		}
+
+		$theme_location = 'primary';
+		if ( ! has_nav_menu( $theme_location ) ) {
+			$theme_locations = get_nav_menu_locations();
+			foreach ( (array) $theme_locations as $key => $location ) {
+				$theme_location = $key;
+				break;
+			}
+		}
+
+		if ( $args->theme_location == $theme_location ) {//put extra menu items only in primary ( most likely header ) menu
+			$is_in = is_user_logged_in();
+
+			$courses = new stdClass;
+
+			$courses->title            = __( 'Courses', CoursePress::TD );
+			$courses->description      = '';
+			$courses->menu_item_parent = 0;
+			$courses->ID               = 'cp-courses';
+			$courses->db_id            = '';
+			$courses->url              = CoursePress_Core::get_slug( 'courses', true );
+			if ( $current_url == $courses->url ) {
+				$courses->classes[] = 'current_page_item';
+			}
+			$sorted_menu_items[] = $courses;
+
+			/* Student Dashboard page */
+
+			if ( $is_in ) {
+				$dashboard = new stdClass;
+
+				$dashboard->title            = __( 'Dashboard', CoursePress::TD );
+				$dashboard->description      = '';
+				$dashboard->menu_item_parent = 0;
+				$dashboard->ID               = 'cp-dashboard';
+				$dashboard->db_id            = - 9998;
+				$dashboard->url              = CoursePress_Core::get_slug( 'student_dashboard', true );
+				$dashboard->classes[]        = 'dropdown';
+				/* if ( $current_url == $dashboard->url ) {
+				  $dashboard->classes[] = 'current_page_item';
+				  } */
+				$sorted_menu_items[] = $dashboard;
+
+
+				/* Student Dashboard > Courses page */
+
+				$dashboard_courses = new stdClass;
+
+				$dashboard_courses->title            = __( 'My Courses', CoursePress::TD );
+				$dashboard_courses->description      = '';
+				$dashboard_courses->menu_item_parent = - 9998;
+				$dashboard_courses->ID               = 'cp-dashboard-courses';
+				$dashboard_courses->db_id            = '';
+				$dashboard_courses->url              = CoursePress_Core::get_slug( 'student_dashboard', true );
+				if ( $current_url == $dashboard_courses->url ) {
+					$dashboard_courses->classes[] = 'current_page_item';
+				}
+				$sorted_menu_items[] = $dashboard_courses;
+
+				/* Student Dashboard > Settings page */
+
+				$settings_profile = new stdClass;
+
+				$settings_profile->title            = __( 'My Profile', CoursePress::TD );
+				$settings_profile->description      = '';
+				$settings_profile->menu_item_parent = - 9998;
+				$settings_profile->ID               = 'cp-dashboard-settings';
+				$settings_profile->db_id            = '';
+				$settings_profile->url              = CoursePress_Core::get_slug( 'student_settings', true );
+				if ( $current_url == $settings_profile->url ) {
+					$settings_profile->classes[] = 'current_page_item';
+				}
+				$sorted_menu_items[] = $settings_profile;
+
+				/* Inbox */
+				//if ( get_option( 'show_messaging', 0 ) == 1 ) {
+				//	$unread_count = cp_messaging_get_unread_messages_count();
+				//	if ( $unread_count > 0 ) {
+				//		$unread_count = ' (' . $unread_count . ')';
+				//	} else {
+				//		$unread_count = '';
+				//	}
+				//	$settings_inbox = new stdClass;
+				//
+				//	$settings_inbox->title            = __( 'Inbox', CoursePress::TD ) . $unread_count;
+				//	$settings_inbox->description      = '';
+				//	$settings_inbox->menu_item_parent = - 9998;
+				//	$settings_inbox->ID               = 'cp-dashboard-inbox';
+				//	$settings_inbox->db_id            = '';
+				//	$settings_inbox->url              = $this->get_inbox_slug( true );
+				//	if ( cp_curPageURL() == $settings_inbox->url ) {
+				//		$settings_profile->classes[] = 'current_page_item';
+				//	}
+				//	$sorted_menu_items[] = $settings_inbox;
+				//}
+			}
+
+			/* Log in / Log out links */
+			$login = new stdClass;
+			if ( $is_in ) {
+				$login->title = __( 'Log Out', CoursePress::TD );
+			} else {
+				$login->title = __( 'Log In', CoursePress::TD );
+			}
+			$login->description      = '';
+			$login->menu_item_parent = 0;
+			$login->ID               = 'cp-logout';
+			$login->db_id            = '';
+			$use_custom = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
+			$login->url              = $is_in ? wp_logout_url() : ( $use_custom ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url() );
+
+			$sorted_menu_items[] = $login;
+		}
+
+		return $sorted_menu_items;
+
+	}
+
+
+}
+

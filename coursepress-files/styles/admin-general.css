@@ -10,20 +10,47 @@ A. Responsive
 /*--------------------------------------------------------------
 # 1. Settings Wrapper
 --------------------------------------------------------------*/
+.coursepress_communications_wrapper,
 .coursepress_settings_wrapper {
   margin: 15px 15px 15px 0px;
 }
 
+.coursepress_communications_wrapper h3,
 .coursepress_settings_wrapper h3 {
   color: #23282d;
   font-size: 1.4em;
   margin: 0 5px 0 0;
 }
 
+.coursepress_communications_wrapper .description,
 .coursepress_settings_wrapper .description {
   color: #888;
   font-size: 0.9em;
   margin: 0 5px 0 0;
+}
+
+.coursepress_communications_wrapper.notifications form.edit,
+.coursepress_communications_wrapper.discussions form.edit {
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #f1f1f1;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.coursepress_communications_wrapper.notifications form label,
+.coursepress_communications_wrapper.discussions form label {
+  display: block;
+  margin-top: 20px;
+}
+.coursepress_communications_wrapper.notifications form label.right,
+.coursepress_communications_wrapper.discussions form label.right {
+  float: right;
+}
+.coursepress_communications_wrapper.notifications form label:last-child,
+.coursepress_communications_wrapper.notifications form label:first-child,
+.coursepress_communications_wrapper.discussions form label:last-child,
+.coursepress_communications_wrapper.discussions form label:first-child {
+  margin: 0;
 }
 
 /*--------------------------------------------------------------
@@ -247,7 +274,7 @@ A. Responsive
 }
 
 .wp-list-table .manage-column.column-status {
-  width: 85px;
+  width: 90px;
 }
 
 .coursepress_course_add_student_wrapper {
@@ -409,10 +436,34 @@ A. Responsive
   color: #ffffff;
 }
 
-.step-container {
+.coursepress-course-step-container {
   padding: 10px;
   background: #ffffff;
   border: 1px solid #f1f1f1;
+}
+
+.coursepress-course-step-container.metaboxes {
+  box-sizing: border-box;
+  width: 70%;
+  float: left;
+}
+
+.course-edit-metaboxes {
+  box-sizing: border-box;
+  width: 30%;
+  float: right;
+  padding-left: 20px;
+}
+
+.course-edit-metaboxes:after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+.coursepress_page_coursepress_course .course-edit-metaboxes .postbox,
+.coursepress-pro_page_coursepress_course .course-edit-metaboxes .postbox {
+  padding: 5px;
 }
 
 #course-setup-steps .step-title .status {
@@ -489,6 +540,13 @@ A. Responsive
   border: none;
   background-repeat: no-repeat;
   background-size: 20px;
+}
+
+#course-setup-steps .wide.course-step-buttons > span {
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 30px;
+  color: #6fc26e;
 }
 
 /* Course Structure */

@@ -246,7 +246,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-									$checked = CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ? 'checked' : '';
+		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][show_coursepress_menu]" ' . $checked  . ' />
 									';
@@ -300,7 +300,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) ? 'checked' : '';
+		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][use_custom_login]" ' . $checked  . ' />
 								</td>
@@ -328,7 +328,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Core::get_setting( 'general/redirect_after_login', 1 ) ? 'checked' : '';
+		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/redirect_after_login', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][redirect_after_login]" ' . $checked  . ' />
 								</td>
@@ -356,7 +356,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Core::get_setting( 'instructor/show_username', 1 ) ? 'checked' : '';
+		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'instructor/show_username', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[instructor][show_username]" ' . $checked  . ' />
 								</td>
@@ -553,37 +553,21 @@ class CoursePress_View_Admin_Settings_General {
 								<td>';
 
 		$reports_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
+		$reports_font = empty( $reports_font ) ? 'helvetica' : $reports_font;
+		$fonts = CoursePress_Helper_PDF::fonts();
 		$content .= '
 									<select name="coursepress_settings[reports][font]" class="widefat" id="course_order_by_direction">
-										<option value="aealarabiya" ' . selected( $reports_font, "aealarabiya", false ) . '>' . __( "Al Arabiya", CoursePress::TD ) . '</option>
-										<option value="aefurat" ' . selected( $reports_font, "aefurat", false ) . '>' . __( "Furat", CoursePress::TD ) . '</option>
-										<option value="cid0cs" ' . selected( $reports_font, "cid0cs", false ) . '>' . __( "Arial Unicode MS (Simplified Chinese)", CoursePress::TD ) . '</option>
-										<option value="cid0jp" ' . selected( $reports_font, "cid0jp", false ) . '>' . __( "Arial Unicode MS (Japanese)", CoursePress::TD ) . '</option>
-										<option value="cid0kr" ' . selected( $reports_font, "cid0kr", false ) . '>' . __( "Arial Unicode MS (Korean)", CoursePress::TD ) . '</option>
-										<option value="courier" ' . selected( $reports_font, "courier", false ) . '>' . __( "Courier", CoursePress::TD ) . '</option>
-										<option value="dejavusans" ' . selected( $reports_font, "dejavusans", false ) . '>' . __( "DejaVu Sans", CoursePress::TD ) . '</option>
-										<option value="dejavusanscondensed" ' . selected( $reports_font, "dejavusanscondensed", false ) . '>' . __( "DejaVu Sans Condensed", CoursePress::TD ) . '</option>
-										<option value="dejavusansextralight" ' . selected( $reports_font, "dejavusansextralight", false ) . '>' . __( "DejaVu Sans ExtraLight", CoursePress::TD ) . '</option>
-										<option value="dejavusansmono" ' . selected( $reports_font, "dejavusansmono", false ) . '>' . __( "DejaVu Sans Mono", CoursePress::TD ) . '</option>
-										<option value="dejavuserif" ' . selected( $reports_font, "dejavuserif", false ) . '>' . __( "DejaVu Serif", CoursePress::TD ) . '</option>
-										<option value="dejavuserifcondensed" ' . selected( $reports_font, "dejavuserifcondensed", false ) . '>' . __( "DejaVu Serif Condensed", CoursePress::TD ) . '</option>
-										<option value="freemono" ' . selected( $reports_font, "freemono", false ) . '>' . __( "FreeMono", CoursePress::TD ) . '</option>
-										<option value="freesans" ' . selected( $reports_font, "freesans", false ) . '>' . __( "FreeSans", CoursePress::TD ) . '</option>
-										<option value="freeserif" ' . selected( $reports_font, "freeserif", false ) . '>' . __( "FreeSerif", CoursePress::TD ) . '</option>
-										<option value="helvetica" ' . selected( $reports_font, "helvetica", false ) . '>' . __( "Helvetica", CoursePress::TD ) . '</option>
-										<option value="hysmyeongjostdmedium" ' . selected( $reports_font, "hysmyeongjostdmedium", false ) . '>' . __( "MyungJo Medium (Korean)", CoursePress::TD ) . '</option>
-										<option value="kozgopromedium" ' . selected( $reports_font, "kozgopromedium", false ) . '>' . __( "Kozuka Gothic Pro (Japanese Sans-Serif)", CoursePress::TD ) . '</option>
-										<option value="kozminproregular" ' . selected( $reports_font, "kozminproregular", false ) . '>' . __( "Kozuka Mincho Pro (Japanese Serif)", CoursePress::TD ) . '</option>
-										<option value="msungstdlight" ' . selected( $reports_font, "msungstdlight", false ) . '>' . __( "MSung Light (Traditional Chinese)", CoursePress::TD ) . '</option>
-										<option value="pdfacourier" ' . selected( $reports_font, "pdfacourier", false ) . '>' . __( "PDFA Courier", CoursePress::TD ) . '</option>
-										<option value="pdfahelvetica" ' . selected( $reports_font, "pdfahelvetica", false ) . '>' . __( "PDFA Helvetica", CoursePress::TD ) . '</option>
-										<option value="pdfasymbol" ' . selected( $reports_font, "pdfasymbol", false ) . '>' . __( "PDFA Symbol", CoursePress::TD ) . '</option>
-										<option value="pdfatimes" ' . selected( $reports_font, "pdfatimes", false ) . '>' . __( "PDFA Times", CoursePress::TD ) . '</option>
-										<option value="pdfazapfdingbats" ' . selected( $reports_font, "pdfazapfdingbats", false ) . '>' . __( "PDFA Zapfdingbats", CoursePress::TD ) . '</option>
-										<option value="stsongstdlight" ' . selected( $reports_font, "stsongstdlight", false ) . '>' . __( "STSong Light (Simplified Chinese)", CoursePress::TD ) . '</option>
-										<option value="symbol" ' . selected( $reports_font, "symbol", false ) . '>' . __( "Symbol", CoursePress::TD ) . '</option>
-										<option value="times" ' . selected( $reports_font, "times", false ) . '>' . __( "Times-Roman", CoursePress::TD ) . '</option>
-										<option value="zapfdingbats" ' . selected( $reports_font, "zapfdingbats", false ) . '>' . __( "ZapfDingbats", CoursePress::TD ) . '</option>
+					';
+
+		foreach( $fonts as $font_php => $font_name ) {
+			if( ! empty( $font_name ) ) {
+				$font = str_replace( '.php', '', $font_php );
+				$content .= '
+										<option value="' . esc_attr( $font ) . '" ' . selected( $reports_font, $font, false ) . '>' . esc_html( $font_name ) . '</option>
+				';
+			}
+		}
+	    $content .= '
 									</select>
 								</td>
 							</tr>
@@ -605,16 +589,18 @@ class CoursePress_View_Admin_Settings_General {
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$post_settings['general']['show_coursepress_menu'] = isset($post_settings['general']['show_coursepress_menu']) ? : false;
-			$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? : false;
-			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : false;
+			$post_settings['general']['show_coursepress_menu'] = isset($post_settings['general']['show_coursepress_menu']) ? : 'off';
+			$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? : 'off';
+			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : 'off';
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
 
 			// Don't replace settings if there is nothing to replace
 			if ( ! empty( $post_settings ) ) {
-				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
+				$new_settings = CoursePress_Core::merge_settings( $settings, $post_settings );
+
+				CoursePress_Core::update_setting( false, $new_settings ); // false will replace all settings
 			}
 
 		}

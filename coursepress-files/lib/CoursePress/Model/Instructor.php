@@ -49,6 +49,11 @@ class CoursePress_Model_Instructor {
 		foreach ( $courses as $course ) {
 			$course_id = $course;
 
+			// Careful that we don't pick up students
+			if( preg_match('/_progress$/', $course_id ) ) {
+				continue;
+			}
+
 			// Dealing with multisite nuances
 			if ( is_multisite() ) {
 				// Primary blog?
@@ -167,6 +172,10 @@ class CoursePress_Model_Instructor {
 		// Check cache first!
 		$user_id = wp_cache_get( $hash, 'coursepress_userhash' );
 
+		if( is_multisite() ) {
+			$hash = $wpdb->prefix . $hash;
+		}
+
 		// Not in cache, so retrieve
 		if( empty( $user_id ) ) {
 			$sql     = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
@@ -200,10 +209,21 @@ class CoursePress_Model_Instructor {
 		 * we'll populate it with current value. Will be an empty array if
 		 * nothing exists. We're only interested in the key anyway.
 		 */
-		update_user_option( $user_id, $hash, get_user_option( $hash, $user_id ), $global_option );
+		update_user_option( $user_id, $hash, get_user_option( $hash, $user_id, $global_option ), $global_option );
 
 		// Put it in cache
 		wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
+	}
+
+	public static function get_hash( $user ) {
+		$user_id       = self::_get_id( $user );
+		$user          = get_userdata( $user_id );
+		$hash          = md5( $user->user_login );
+		$global_option = ! is_multisite();
+
+		$option = get_user_option( $hash, $user_id, $global_option );
+
+		return null !== $option ? $hash : false;
 	}
 
 

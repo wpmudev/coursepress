@@ -22,7 +22,19 @@ class CoursePress_Helper_JavaScript {
 
 	public static function enqueue_scripts() {
 
-		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress', 'coursepress_assessments', 'coursepress_reports' );
+		$course_js_pages = array(
+			'coursepress_course',
+			'coursepress_assessments',
+			'coursepress_reports',
+			'coursepress_notifications',
+			'coursepress_discussions'
+		);
+
+		$valid_pages = array_merge( $course_js_pages, array(
+			'coursepress_settings',
+			'coursepress',
+		) );
+
 
 		if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
 			return;
@@ -62,7 +74,7 @@ class CoursePress_Helper_JavaScript {
 		// Models
 
 		/** COURSEPRESS_COURSE */
-		if ( 'coursepress_course' === $_GET['page'] || 'coursepress_assessments' === $_GET['page'] || 'coursepress_reports' === $_GET['page'] ) {
+		if ( in_array( $_GET['page'], $course_js_pages ) ) {
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress/Course.js';
 			wp_enqueue_script( 'coursepress_course', $script, array(
 				'jquery-ui-accordion',
@@ -88,6 +100,14 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['email_validation_pattern']         = __( '.+@.+', CoursePress::TD );
 			$localize_array['student_delete_confirm']        = __( 'Please confirm that you want to remove the student from this course.', CoursePress::TD );
 			$localize_array['student_delete_all_confirm']        = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', CoursePress::TD );
+
+			// Discussion / Notification
+			$localize_array['notification_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected notifications. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
+			$localize_array['notification_delete'] = __( 'Please confirm that you want to delete this notification. Warning: This cannot be undone.', CoursePress::TD );
+
+			$localize_array['discussion_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected discussions. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
+			$localize_array['discussion_delete'] = __( 'Please confirm that you want to delete this discussion. Warning: This cannot be undone.', CoursePress::TD );
+
 
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
@@ -141,7 +161,25 @@ class CoursePress_Helper_JavaScript {
 		global $wp_query;
 
 		$post_type = get_post_type();
-		if ( ( ! empty( $post_type ) && $post_type === 'course' ) || array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ) {
+
+		$valid_cpt = array(
+			CoursePress_Model_Course::get_post_type_name(),
+			'course_notifications_archive',
+			'course_workbook',
+			'course_discussion_archive',
+			'course_discussion',
+			'course_archive',
+			'coursepress_instructor', // virtual post type
+			'coursepress_student_dashboard',
+			'coursepress_student_login',
+			'coursepress_student_signup',
+			CoursePress_Model_Discussion::get_post_type_name(),
+		);
+
+		if (
+			( ! empty( $post_type ) && in_array( $post_type, $valid_cpt ) ) ||
+		    array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query )
+		) {
 
 			// CoursePress Object
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress.js';

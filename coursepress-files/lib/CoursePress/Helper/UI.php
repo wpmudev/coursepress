@@ -90,7 +90,11 @@ class CoursePress_Helper_UI {
 
 	}
 
-	public static function get_course_dropdown( $id, $name, $courses, $options = array() ) {
+	public static function get_course_dropdown( $id, $name, $courses = false, $options = array() ) {
+
+		if( false === $courses ) {
+			$courses = get_posts( 'post_type=' . CoursePress_Model_Course::get_post_type_name() );
+		}
 
 		$content = '';
 		$content .= '<select name="' . $name . '" id="' . $id . '"';
@@ -99,6 +103,10 @@ class CoursePress_Helper_UI {
 		$content .= '>';
 
 		$value = isset( $options['value'] ) ? $options['value'] : false;
+
+		$first_option = isset( $options['first_option'] ) ? (array) $options['first_option'] : false;
+		$selected = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
+		$content .= ! empty( $first_option ) ? '<option value="' . $first_option['value'] . '" ' . $selected . '>' . esc_html( $first_option['text'] ) . '</option>' : '';
 
 		foreach( $courses as $course ) {
 
@@ -112,6 +120,50 @@ class CoursePress_Helper_UI {
 		return $content;
 
 	}
+
+	public static function get_unit_dropdown( $id, $name, $course_id, $units = false, $options = array() ) {
+
+		if( false === $units && 'all' !== $course_id ) {
+			$units = get_posts( array(
+				'post_type' => CoursePress_Model_Unit::get_post_type_name(),
+				'post_parent' => $course_id
+			) );
+		}
+
+		// Sort units
+		if( 'all' !== $course_id ) {
+			foreach ( $units as $unit ) {
+				$unit->unit_order = (int) get_post_meta( $unit->ID, 'unit_order', true );
+			}
+			$units = CoursePress_Helper_Utility::sort_on_object_key( $units, 'unit_order' );
+		}
+
+		$content = '';
+		$content .= '<select name="' . $name . '" id="' . $id . '"';
+		$content .= isset( $options['placeholder'] ) ? ' data_placeholder="' . esc_attr( $options['placeholder'] ) . '" ' : '';
+		$content .= isset( $options['class'] ) ? ' class="' . esc_attr( $options['class'] ) . '" ' : '';
+		$content .= '>';
+
+		$value = isset( $options['value'] ) ? $options['value'] : false;
+
+		$first_option = isset( $options['first_option'] ) ? (array) $options['first_option'] : false;
+		$selected = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
+		$content .= ! empty( $first_option ) ? '<option value="' . $first_option['value'] . '" ' . $selected . '>' . esc_html( $first_option['text'] ) . '</option>' : '';
+
+		if( 'all' !== $course_id ) {
+			foreach ( $units as $unit ) {
+				$selected = $value !== false ? selected( $value, $unit->ID, false ) : '';
+				$content .= '<option value="' . $unit->ID . '" ' . $selected . '>' . $unit->post_title . '</option>';
+			}
+		}
+
+		$content .= '</select>';
+
+		return $content;
+
+	}
+
+
 
 
 	public static function get_user_dropdown( $id, $name, $options = array() ) {

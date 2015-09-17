@@ -103,8 +103,6 @@ class CoursePress {
 		 */
 		//include_once( CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 
-
-
 	}
 
 	private static function class_loader( $class ) {
@@ -148,6 +146,5 @@ class CoursePress {
 
 		return false;
 	}
-
 
 }

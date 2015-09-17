@@ -32,10 +32,8 @@ class CoursePress_View_Admin_CoursePress {
 			}
 		}
 
-		// Respond to bulk actions in courses list
-		//add_action( 'admin_action_coursepress_course_publish', array( __CLASS__, 'publish_course_action' ) );
-		//add_action( 'admin_action_coursepress_course_unpublish', array( __CLASS__, 'unpublish_course_action' ) );
-		//add_action( 'admin_action_coursepress_course_delete', array( __CLASS__, 'delete_course_action' ) );
+		// For non dynamic editors
+		add_filter( 'tiny_mce_before_init', array( __CLASS__, 'init_tiny_mce_listeners' ) );
 
 	}
 
@@ -51,15 +49,13 @@ class CoursePress_View_Admin_CoursePress {
 			'menu_title' => self::$menu_title,
 		);
 
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-		$category = $prefix . CoursePress_Model_Course::get_post_category_name();
-		$cpt = $prefix . CoursePress_Model_Course::get_post_type_name();
-		$pages[ 'course_categories' ] = array(
+		$category                   = CoursePress_Model_Course::get_post_category_name();
+		$cpt                        = CoursePress_Model_Course::get_post_type_name();
+		$pages['course_categories'] = array(
 			'title'      => __( 'Edit Course Categories', CoursePress::TD ),
 			'menu_title' => __( 'Course Categories', CoursePress::TD ),
-			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
-			'callback' => 'none'
+			'handle'     => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
+			'callback'   => 'none'
 		);
 
 		return $pages;
@@ -71,8 +67,12 @@ class CoursePress_View_Admin_CoursePress {
 		$courseListTable = new CoursePress_Helper_Table_CourseList();
 		$courseListTable->prepare_items();
 
-		$content = '<div class="coursepress_settings_wrapper">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+		$url = admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug );
+
+		$content = '<div class="coursepress_settings_wrapper wrap">' .
+		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+                    <a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', CoursePress::TD ) . '</a>
+		            </h3>
 		            <hr />';
 
 		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
@@ -85,7 +85,32 @@ class CoursePress_View_Admin_CoursePress {
 
 		echo apply_filters( 'coursepress_admin_page_main', $content );
 
-
 	}
+
+	public static function init_tiny_mce_listeners( $initArray ) {
+
+		$detect_pages = array(
+			'coursepress_page_coursepress_course',
+			'coursepress-pro_page_coursepress_course',
+		);
+
+		$page = get_current_screen()->id;
+
+		if ( in_array( $page, $detect_pages ) ) {
+			//$initArray['height']              = '360px';
+			$initArray['relative_urls']       = false;
+			$initArray['url_converter']       = false;
+			$initArray['url_converter_scope'] = false;
+
+			$initArray['setup'] = 'function( ed ) {
+						ed.on( \'keyup\', function( args ) {
+							CoursePress.Events.trigger(\'editor:keyup\',ed);
+						} );
+				}';
+		}
+
+		return $initArray;
+	}
+
 
 }

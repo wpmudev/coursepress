@@ -1,15 +1,47 @@
+.coursepress_communications_wrapper,
 .coursepress_settings_wrapper {
   margin: 15px 15px 15px 0px;
 }
 
+.coursepress_communications_wrapper h3,
 .coursepress_settings_wrapper h3 {
   color: #23282d;
   font-size: 1.4em;
   margin: 0 5px 0 0;
 }
 
+.coursepress_communications_wrapper .description,
 .coursepress_settings_wrapper .description {
   color: #888;
   font-size: 0.9em;
   margin: 0 5px 0 0;
+}
+
+.coursepress_communications_wrapper.notifications form.edit,
+.coursepress_communications_wrapper.discussions form.edit {
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #f1f1f1;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.coursepress_communications_wrapper.notifications,
+.coursepress_communications_wrapper.discussions {
+
+  form label {
+    display: block;
+    margin-top: 20px;
+  }
+
+  form label.right {
+    float: right;
+  }
+
+  form label:last-child,
+  form label:first-child {
+    margin:0;
+  }
+
+
+
 }

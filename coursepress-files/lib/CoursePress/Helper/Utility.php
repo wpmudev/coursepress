@@ -7,6 +7,7 @@ class CoursePress_Helper_Utility {
 	private static $image_url; // used to get attachment ID
 	public static $is_singular;
 	public static $post_page = 1;
+	public static $embed_args = array();
 
 	public static function init() {
 
@@ -129,7 +130,7 @@ class CoursePress_Helper_Utility {
 
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
-			if ( ! isset( $a[ $k ] ) ) {
+			if ( ! isset( $a[ $k ] ) || ! is_array( $a[ $k ] ) ) {
 				$a[ $k ] = array();
 			}
 			$a = &$a[ $k ];
@@ -703,7 +704,7 @@ class CoursePress_Helper_Utility {
 			}
 		}
 		// add the defined ending to the text
-		$truncate .= $ending;
+		$truncate .= ' ' . $ending;
 		if ( $considerHtml ) {
 			// close all unclosed html-tags
 			foreach ( $open_tags as $tag ) {
@@ -844,14 +845,35 @@ class CoursePress_Helper_Utility {
 		) );
 	}
 
+
+	public static function remove_youtube_controls($code){
+		if(strpos($code, 'youtu.be') !== false || strpos($code, 'youtube.com') !== false){
+
+			$parameters = http_build_query( self::$embed_args );
+
+			$return = preg_replace("@src=(['\"])?([^'\">s]*)@", "src=$1$2&" . $parameters, $code);
+			error_log( $return );
+			return $return;
+		}
+		return $code;
+	}
+
 	public static function remove_related_videos( $html, $url, $args ) {
 
-		$newargs                   = $args;
-		$newargs['rel']            = 0;
-		$newargs['modestbranding'] = 1;
+		self::$embed_args                   = $args;
+		self::$embed_args['color']          = 'white';
+		self::$embed_args['rel']            = 0;
+		self::$embed_args['modestbranding'] = 1;
+		self::$embed_args['showinfo']       = 0;
+
+		self::$embed_args = apply_filters( 'coursepress_video_embed_args', self::$embed_args, $html, $url, $args );
 
 		// build the query url
-		$parameters = http_build_query( $newargs );
+		$parameters = http_build_query( self::$embed_args );
+
+		// Another attempt to remove Youtube features
+		add_filter('embed_handler_html', array( __CLASS__, 'remove_youtube_controls' ) );
+		add_filter('embed_oembed_html', array( __CLASS__, 'remove_youtube_controls' ) );
 
 		// YouTube
 		$html = str_replace( 'feature=oembed', 'feature=oembed&' . $parameters, $html );
@@ -866,7 +888,7 @@ class CoursePress_Helper_Utility {
 		return $connected;
 	}
 
-	public static function get_user_name( $user_id, $last_first = false ) {
+	public static function get_user_name( $user_id, $last_first = false, $username = true ) {
 		$user_id = (int) $user_id;
 		$display_name = get_user_option( 'display_name', $user_id );
 		$last         = get_user_option( 'last_name', $user_id );
@@ -877,12 +899,18 @@ class CoursePress_Helper_Utility {
 		if( ! $last_first ) {
 			$return_name = ! empty( $first ) ? $first : '';
 			$return_name = ! empty( $last ) ? $return_name . ' ' . $last : $return_name;
-			$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+			if( $username ) {
+				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+			}
+			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
 		} else {
 			$return_name = ! empty( $last ) ? $last : '';
 			$return_name = ! empty( $first ) && ! empty( $last ) ? $last . ', ' . $first : $return_name;
 			$return_name = empty( $return_name ) && ! empty ( $first ) && empty( $last ) ? $first : $return_name;
-			$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+			if( $username ) {
+				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
+			}
+			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
 		}
 
 		return $return_name;

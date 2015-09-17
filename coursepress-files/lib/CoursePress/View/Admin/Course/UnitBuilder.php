@@ -239,7 +239,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						if ( $update ) {
 
 							$course_id = (int) $_REQUEST['course_id'];
-							$unit['post_type'] = 'unit';
+							$unit['post_type'] = CoursePress_Model_Unit::get_post_type_name();
 							$unit['post_parent'] = $course_id;
 							if( $new_unit ) {
 								$unit['post_status'] = 'draft';
@@ -316,7 +316,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$update = isset( $module['flag'] ) && 'dirty' === $module['flag'];
 						unset( $module['flag'] );
 
-						$module['post_type']   = 'module';
+						$module['post_type']   = CoursePress_Model_Module::get_post_type_name();
 						$module['post_parent'] = $unit_id;
 						$module['post_status'] = 'publish';
 						if ( $update ) {
@@ -403,7 +403,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$data['ping_status']    = 'closed';
 					$data['comment_status'] = 'closed';
 					$data['post_parent']    = (int) $_REQUEST['unit_id'];
-					$data['post_type']      = 'module';
+					$data['post_type']      = CoursePress_Model_Module::get_post_type_name();
 					$data['post_status']    = 'publish';
 
 					$id = wp_insert_post( $data );

@@ -59,7 +59,9 @@ class CoursePress_Core {
 
 			// Initialize Admin Views
 			CoursePress_View_Admin_CoursePress::init();
+			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Settings::init();
+
 
 			// Admin AJAX
 			CoursePress_View_Front_Course::init_ajax();
@@ -69,7 +71,11 @@ class CoursePress_Core {
 			CoursePress_Model_Shortcodes::init();
 
 			// Now we're in the front
+			CoursePress_View_Front_General::init();
 			CoursePress_View_Front_Course::init();
+			CoursePress_View_Front_Instructor::init();
+			CoursePress_View_Front_Dashboard::init();
+			CoursePress_View_Front_Login::init();
 
 		}
 
@@ -118,6 +124,7 @@ class CoursePress_Core {
 
 	public static function update_setting( $key, $value, $network = false ) {
 
+		$x = '';
 		if ( false === $network ) {
 			$settings = get_option( 'coursepress_settings' );
 		} else {
@@ -290,6 +297,8 @@ class CoursePress_Core {
 			'Course',
 			'Unit',
 			'Module',
+			'Discussion',
+			'Notification'
 		) );
 	}
 
@@ -321,6 +330,7 @@ class CoursePress_Core {
 	public static function add_rewrite_rules( $rules ) {
 		$new_rules = array();
 
+		//$new_rules[ '^' . self::get_slug( 'course' )  ]                  = 'index.php?page_id=-1&course_category';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/page/([^/]*)/?' ]     = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/?' ]                  = 'index.php?page_id=-1&course_category=$matches[1]';
 
@@ -340,10 +350,14 @@ class CoursePress_Core {
 
 		$new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ]                                                   = 'index.php?page_id=-1&instructor_username=$matches[1]';
 
+		// Courses slug need to redirect to course archive pages
+		$new_rules[ '^' . self::get_slug( 'course' ) . '/page/([^/]*)/?' ]     = 'index.php?page_id=-1&course_category=all&paged=$matches[1]';
+		$new_rules[ '^' . self::get_slug( 'course' ) . '/?$' ]  = 'index.php?page_id=-1&course_category=all';
+
+
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/file/([^/]*)/'  ]                           = 'wp-content/uploads/$matches[1]';
-
 
 
 		//Remove potential conflicts between single and virtual page on single site

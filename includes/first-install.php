@@ -97,7 +97,7 @@ Sed egestas erat nec purus sollicitudin, vel elementum dolor blandit. Praesent i
             'post_content' => cp_filter_content($course_content),
             'post_status' => $course_status,
             'post_title' => cp_filter_content($course_title, true),
-            'post_type' => 'course',
+            'post_type' => CoursePress_Model_Course::get_post_type_name(),
         );
 
         $course_id = wp_insert_post( $new_course );

@@ -27,7 +27,7 @@ class CoursePress_Upgrade {
 		//$settings = get_option( 'coursepress_settings', array() );
 		//error_log( print_r( CoursePress_Core::get_network_setting('general/version'), true ) );
 
-		//return false;
+		return false;
 
 		/**
 		 * Upgrade blog options

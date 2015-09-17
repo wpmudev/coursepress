@@ -116,8 +116,22 @@ class CoursePress_View_Admin_Course_Edit {
 		// Setup Nonce
 		$setup_nonce = wp_create_nonce( 'setup-course' );
 
+		$course_id      = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$course = false;
+		if( ! empty( $course_id ) ) {
+			$course = get_post( $course_id );
+		}
+
+		ob_start();
+		do_meta_boxes( self::$slug, 'side', $course );
+		$metabox_side = ob_get_clean();
+
+		global $wp_meta_boxes;
+		$has_metaboxes = ! empty( $wp_meta_boxes ) && array_key_exists( self::$slug, $wp_meta_boxes );
+
+		$metabox_class = $has_metaboxes ? 'metaboxes' : '';
 		$content = '
-        <div class="step-container">
+        <div class="coursepress-course-step-container ' . $metabox_class . '">
 			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">
 				' . self::render_setup_step_1() . '
 				' . self::render_setup_step_2() . '
@@ -129,7 +143,15 @@ class CoursePress_View_Admin_Course_Edit {
 		</div>
 		';
 
+		if( $has_metaboxes ) {
+			$content .= '<div class="course-edit-metaboxes">' . $metabox_side . '</div>';
+		}
+
 		return $content;
+	}
+
+	public static function test() {
+		echo "MOO";
 	}
 
 	private static function render_setup_step_1() {
@@ -244,9 +266,9 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step next step-1" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-1" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-1" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -411,14 +433,20 @@ class CoursePress_View_Admin_Course_Edit {
 					$alt          = $count % 2 ? 'even' : 'odd';
 					$module_title = ! empty( $module->post_title ) ? $module->post_title : __( 'Untitled Module', CoursePress::TD );
 
-					$mod_view_checked    = isset( $visible_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $module->ID ] ) : '';
-					$mod_preview_checked = isset( $preview_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $preview_modules[ $module->ID ] ) : '';
+					$mod_key = $page_key . '_' . (int) $module->ID;
+
+					$mod_view_checked    = isset( $visible_modules[ $mod_key ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $mod_key ] ) : '';
+					$mod_preview_checked = isset( $preview_modules[ $mod_key ] ) ? CoursePress_Helper_Utility::checked( $preview_modules[ $mod_key ] ) : '';
+
+					// Legacy, use it just to update
+					$mod_view_checked    = empty( $mod_view_checked ) && isset( $visible_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $visible_modules[ $module->ID ] ) : $mod_view_checked;
+					$mod_preview_checked = empty( $mod_preview_checked ) && isset( $preview_modules[ $module->ID ] ) ? CoursePress_Helper_Utility::checked( $preview_modules[ $module->ID ] ) : $mod_preview_checked;
 
 					$content .= '
 								<tr class="module module-' . $module->ID . ' treegrid-' . $count . ' treegrid-parent-' . $page_parent . ' ' . $draft_class . ' ' . $alt . '">
 			                        <td>' . $module_title . '</td>
-			                        <td><input type="checkbox" name="meta_structure_visible_modules[' . $module->ID . ']" value="1" ' . $mod_view_checked . '/></td>
-			                        <td><input type="checkbox" name="meta_structure_preview_modules[' . $module->ID . ']" value="1" ' . $mod_preview_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_visible_modules[' . $mod_key . ']" value="1" ' . $mod_view_checked . '/></td>
+			                        <td><input type="checkbox" name="meta_structure_preview_modules[' . $mod_key . ']" value="1" ' . $mod_preview_checked . '/></td>
 			                        <td>' . CoursePress_Model_Module::get_time_estimation( $module->ID, '1:00', true ) . '</td>
 			                    </tr>
 					';
@@ -426,6 +454,19 @@ class CoursePress_View_Admin_Course_Edit {
 				}
 
 			}
+
+			// Fix broken pages
+			//$page_titles = get_post_meta( $unit->ID, 'page_title', true );
+			//if( empty( $page_titles ) ) {
+			//	$page_titles = array();
+			//	$page_visible = array();
+			//	foreach ( $unit['pages'] as $key => $page ) {
+			//		$page_titles[ 'page_' . $key ] = $page['title'];
+			//		$page_visible[] = true;
+			//	}
+			//	update_post_meta( $unit->ID, 'page_title', $page_titles );
+			//	update_post_meta( $unit->ID, 'show_page_title', $page_visible );
+			//}
 
 		}
 
@@ -447,10 +488,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step prev step-2" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-2" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-2" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-2" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -543,10 +584,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step prev step-3" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-3" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-3" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-3" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -638,10 +679,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step prev step-4" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-4" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-4" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-4" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -717,10 +758,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step prev step-5" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step next step-5" value="' . esc_attr__( 'Next', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-5" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-5" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End
@@ -921,10 +962,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Buttons
 		$content .= '
-				<div class="wide">
+				<div class="wide course-step-buttons">
 					<input type="button" class="button step prev step-6" value="' . esc_attr__( 'Previous', CoursePress::TD ) . '" />
 					<input type="button" class="button step finish step-6" value="' . esc_attr__( 'Finish', CoursePress::TD ) . '" />
-					<input type="button" class="button step update step-6" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
+					<input type="button" class="button step update hidden step-6" value="' . esc_attr__( 'Update', CoursePress::TD ) . '" />
 				</div>';
 
 		// End

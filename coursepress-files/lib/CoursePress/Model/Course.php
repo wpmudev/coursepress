@@ -10,25 +10,27 @@ class CoursePress_Model_Course {
 	private static $email_type;
 	public static $last_course_category = '';
 	public static $last_course_subpage = '';
+	public static $previewability = false;
+	public static $structure_visibility = false;
 
 	public static function get_format() {
 
 		return array(
-			'post_type' => self::$post_type,
+			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels'              => array(
-					'name'               => __( 'Courses', 'cp' ),
-					'singular_name'      => __( 'Course', 'cp' ),
-					'add_new'            => __( 'Create New', 'cp' ),
-					'add_new_item'       => __( 'Create New Course', 'cp' ),
-					'edit_item'          => __( 'Edit Course', 'cp' ),
-					'edit'               => __( 'Edit', 'cp' ),
-					'new_item'           => __( 'New Course', 'cp' ),
-					'view_item'          => __( 'View Course', 'cp' ),
-					'search_items'       => __( 'Search Courses', 'cp' ),
-					'not_found'          => __( 'No Courses Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
-					'view'               => __( 'View Course', 'cp' )
+					'name'               => __( 'Courses', CoursePress::TD ),
+					'singular_name'      => __( 'Course', CoursePress::TD ),
+					'add_new'            => __( 'Create New', CoursePress::TD ),
+					'add_new_item'       => __( 'Create New Course', CoursePress::TD ),
+					'edit_item'          => __( 'Edit Course', CoursePress::TD ),
+					'edit'               => __( 'Edit', CoursePress::TD ),
+					'new_item'           => __( 'New Course', CoursePress::TD ),
+					'view_item'          => __( 'View Course', CoursePress::TD ),
+					'search_items'       => __( 'Search Courses', CoursePress::TD ),
+					'not_found'          => __( 'No Courses Found', CoursePress::TD ),
+					'not_found_in_trash' => __( 'No Courses found in Trash', CoursePress::TD ),
+					'view'               => __( 'View Course', CoursePress::TD )
 				),
 				'public'              => false,
 				'exclude_from_search' => false,
@@ -58,15 +60,15 @@ class CoursePress_Model_Course {
 			'post_type'     => $prefix . self::$post_type,
 			'taxonomy_args' => apply_filters( 'coursepress_register_course_category', array(
 					'labels'            => array(
-						'name'          => __( 'Course Categories', 'cp' ),
-						'singular_name' => __( 'Course Category', 'cp' ),
-						'search_items'  => __( 'Search Course Categories', 'cp' ),
-						'all_items'     => __( 'All Course Categories', 'cp' ),
-						'edit_item'     => __( 'Edit Course Categories', 'cp' ),
-						'update_item'   => __( 'Update Course Category', 'cp' ),
-						'add_new_item'  => __( 'Add New Course Category', 'cp' ),
-						'new_item_name' => __( 'New Course Category Name', 'cp' ),
-						'menu_name'     => __( 'Course Category', 'cp' ),
+						'name'          => __( 'Course Categories', CoursePress::TD ),
+						'singular_name' => __( 'Course Category', CoursePress::TD ),
+						'search_items'  => __( 'Search Course Categories', CoursePress::TD ),
+						'all_items'     => __( 'All Course Categories', CoursePress::TD ),
+						'edit_item'     => __( 'Edit Course Categories', CoursePress::TD ),
+						'update_item'   => __( 'Update Course Category', CoursePress::TD ),
+						'add_new_item'  => __( 'Add New Course Category', CoursePress::TD ),
+						'new_item_name' => __( 'New Course Category Name', CoursePress::TD ),
+						'menu_name'     => __( 'Course Category', CoursePress::TD ),
 					),
 					'hierarchical'      => true,
 					'sort'              => true,
@@ -464,7 +466,7 @@ class CoursePress_Model_Course {
 		return $val;
 	}
 
-	public static function get_post_type_name( $with_prefix = false ) {
+	public static function get_post_type_name( $with_prefix = true ) {
 		if ( ! $with_prefix ) {
 			return self::$post_type;
 		} else {
@@ -475,7 +477,7 @@ class CoursePress_Model_Course {
 		}
 	}
 
-	public static function get_post_category_name( $with_prefix = false ) {
+	public static function get_post_category_name( $with_prefix = true ) {
 		if ( ! $with_prefix ) {
 			return self::$post_taxonomy;
 		} else {
@@ -545,7 +547,7 @@ class CoursePress_Model_Course {
 	public static function get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false ) {
 
 		$post_args = array(
-			'post_type'     => 'unit',
+			'post_type'     => CoursePress_Model_Unit::get_post_type_name(),
 			'post_parent'   => $course_id,
 			'post_status'   => $status,
 			'posts_per_page'=> - 1,
@@ -601,7 +603,7 @@ class CoursePress_Model_Course {
 		add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
 
 		$post_args = array(
-			'post_type'     => array( 'unit', 'module' ),
+			'post_type'     => array( CoursePress_Model_Unit::get_post_type_name(), CoursePress_Model_Module::get_post_type_name() ),
 			'post_parent'   => $course_id,
 			'posts_per_page' => -1,
 			'order'         => 'ASC',
@@ -610,9 +612,12 @@ class CoursePress_Model_Course {
 
 		$query = new WP_Query( $post_args );
 
+		$unit_cpt = CoursePress_Model_Unit::get_post_type_name();
+		$module_cpt = CoursePress_Model_Module::get_post_type_name();
+
 		foreach( $query->posts as $post ) {
 
-			if( 'module' == $post->post_type ) {
+			if( $module_cpt == $post->post_type ) {
 				$post->module_order = get_post_meta( $post->ID, 'module_order', true );
 				$pages = get_post_meta( $post->post_parent, 'page_title', true );
 				$page = get_post_meta( $post->ID, 'module_page', true );
@@ -624,17 +629,32 @@ class CoursePress_Model_Course {
 
 				$path = $post->post_parent . '/pages/' . $page . '/modules/' . $post->ID;
 				CoursePress_Helper_Utility::set_array_val( $combine, $path, $post );
-			} elseif( 'unit' == $post->post_type ) {
+			} elseif( $unit_cpt == $post->post_type ) {
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );
 			}
 		}
 
-		// Fix legacy orphaned posts
+		// Fix legacy orphaned posts and page titles
 		foreach( $combine as $post_id => $unit ) {
+
 			if( ! isset( $unit['unit'] ) ) {
 				unset( $combine[ $post_id ] );
 			}
+
+			// Fix broken page titles
+			$page_titles = get_post_meta( $post_id, 'page_title', true );
+			if( empty( $page_titles ) ) {
+				$page_titles = array();
+				$page_visible = array();
+				foreach ( $unit['pages'] as $key => $page ) {
+					$page_titles[ 'page_' . $key ] = $page['title'];
+					$page_visible[] = true;
+				}
+				update_post_meta( $post_id, 'page_title', $page_titles );
+				update_post_meta( $post_id, 'show_page_title', $page_visible );
+			}
+
 		}
 
 		remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
@@ -647,7 +667,7 @@ class CoursePress_Model_Course {
 	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() ) {
 
 		$post_args = array(
-			'post_type'     => 'module',
+			'post_type'     => CoursePress_Model_Module::get_post_type_name(),
 			'post_parent'   => $unit_id,
 			'post_status'   => $status,
 			'posts_per_page'=> -1,
@@ -763,7 +783,7 @@ class CoursePress_Model_Course {
 	}
 
 	public static function student_enrolled( $student_id, $course_id ) {
-		$enrolled = get_user_option( $student_id, 'enrolled_course_date_' . $course_id );
+		$enrolled = get_user_option( 'enrolled_course_date_' . $course_id, $student_id );
 		return ! empty( $enrolled ) ? $enrolled : '';
 	}
 
@@ -1110,6 +1130,77 @@ class CoursePress_Model_Course {
 			return $instructor_objects;
 		}
 
+	}
+
+	public static function structure_visibility( $course_id ) {
+
+		if( empty( self::$structure_visibility ) ) {
+			$units   = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() ) );
+			$pages   = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_pages', array() ) );
+			$modules = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_modules', array() ) );
+
+			$visibility = array();
+
+			foreach( array_keys( $units ) as $key ) {
+				$visibility[ $key ] = true;
+			}
+
+			foreach( array_keys( $pages ) as $key ) {
+				list( $unit, $page ) = explode( '_', $key );
+				CoursePress_Helper_Utility::set_array_val( $visibility, $unit . '/' . $page , true );
+			}
+
+			foreach( array_keys( $modules ) as $key ) {
+				list( $unit, $page, $module ) = explode( '_', $key );
+				CoursePress_Helper_Utility::set_array_val( $visibility, $unit . '/' . $page . '/' . $module, true );
+			}
+
+			self::$structure_visibility['structure'] = $visibility;
+
+			if( ! empty( $units) || ! empty( $page ) || ! empty( $modules ) ) {
+				self::$structure_visibility['has_visible'] = true;
+			} else {
+				self::$structure_visibility['has_visible'] = false;
+			}
+		}
+
+		return self::$structure_visibility;
+	}
+
+	public static function previewability( $course_id ) {
+
+		if( empty( self::$previewability ) ) {
+
+			$units  = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_units', array() ) );
+			$pages  = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() ) );
+			$modules = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_modules', array() ) );
+
+			$preview_structure = array();
+
+			foreach( array_keys( $units ) as $key ) {
+				$preview_structure[ $key ] = true;
+			}
+
+			foreach( array_keys( $pages ) as $key ) {
+				list( $unit, $page ) = explode( '_', $key );
+				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/' . $page , true );
+			}
+
+			foreach( array_keys( $modules ) as $key ) {
+				list( $unit, $page, $module ) = explode( '_', $key );
+				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/' . $page . '/' . $module, true );
+			}
+
+			self::$previewability['structure'] = $preview_structure;
+
+			if( ! empty( $units) || ! empty( $page ) || ! empty( $modules ) ) {
+				self::$previewability['has_previews'] = true;
+			} else {
+				self::$previewability['has_previews'] = false;
+			}
+		}
+
+		return self::$previewability;
 	}
 
 	static function by_name( $slug, $id_only ) {

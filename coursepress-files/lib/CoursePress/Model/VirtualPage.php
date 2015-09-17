@@ -55,14 +55,15 @@ class CoursePress_Model_VirtualPage {
 		$virtual_post = '';
 
 		// Try a real post first and then override it with args
-		if( ! empty( $this->ID ) ) {
-			CoursePress_Model_VirtualPage::$the_post_id = $this->ID;
-			$virtual_post                               = get_post( $this->ID );
-			$virtual_post->post_content                 = $this->content;
-			$virtual_post->post_title                   = $this->title;
-			$virtual_post->post_parent                  = $this->post_parent;
-			$virtual_post->post_type                    = $this->type;
-		}
+		//if( ! empty( $this->ID ) ) {
+		//	CoursePress_Model_VirtualPage::$the_post_id = $this->ID;
+		//	$virtual_post                               = get_post( $this->ID );
+		//	$virtual_post->post_content                 = $this->content;
+		//	$virtual_post->post_title                   = $this->title;
+		//	$virtual_post->post_parent                  = $this->post_parent;
+		//	$virtual_post->post_type                    = $this->type;
+		//	return array( $virtual_post );
+		//}
 
 		if( empty( $virtual_post ) ) {
 

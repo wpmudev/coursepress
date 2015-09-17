@@ -21,7 +21,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'ajax'     => false //should this table support ajax?
 		] );
 
-		$this->post_type = CoursePress_Model_PostFormats::prefix() . $post_format['post_type'];
+		$this->post_type = CoursePress_Model_Course::get_post_type_name();
 		$this->count     = wp_count_posts( $this->post_type );
 
 	}
@@ -94,7 +94,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function column_units( $item ) {
 
 		$post_args = array(
-			'post_type'   => 'unit',
+			'post_type'   => CoursePress_Model_Unit::get_post_type_name(),
 			'post_parent' => $item->ID,
 			'post_status' => array( 'publish', 'private', 'draft' )
 		);
@@ -226,8 +226,6 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 
 	protected function course_filter( $which = '' ) {
-
-
 
 		if ( 'top' !== $which ) {
 			return;

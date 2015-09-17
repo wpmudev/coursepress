@@ -126,7 +126,7 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$student          = get_userdata( $student_id );
 		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-		$attributes       = CoursePress_Model_Module::module_attributes( $module_id );
+		$attributes       = CoursePress_Model_Module::attributes( $module_id );
 		$module           = get_post( $module_id );
 		$course           = get_post( $course_id );
 		$unit             = get_post( $unit_id );
@@ -410,7 +410,7 @@ class CoursePress_View_Admin_Assessment_List {
 					$modules = $page['modules'];
 					foreach ( $modules as $module_id => $module ) {
 
-						$attributes = CoursePress_Model_Module::module_attributes( $module_id );
+						$attributes = CoursePress_Model_Module::attributes( $module_id );
 						if ( 'output' === $attributes['mode'] ) {
 							continue;
 						}

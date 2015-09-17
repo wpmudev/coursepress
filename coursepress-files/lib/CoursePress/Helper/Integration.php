@@ -25,10 +25,16 @@ class CoursePress_Helper_Integration {
 
 		// Other Integrations
 
-		// Add TCPDF
+		// After plugins loaded
+		add_action( 'plugins_loaded', array( __CLASS__, 'plugins_loaded' ) );
+
+
+	}
+
+	public static function plugins_loaded() {
+
+		// Add TCPDF if it has not yet been added by another plugin
 		add_filter( 'coursepress_class_loader_namespaces', array( __CLASS__, 'add_tcpf' ) );
-
-
 	}
 
 	private static function get_plugins() {
