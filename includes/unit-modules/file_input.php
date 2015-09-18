@@ -89,8 +89,8 @@ class file_input_module extends Unit_Module {
 			$all_responses = array();
 			$preview = true;
 		} else {
-			$response      = text_input_module::get_response( get_current_user_id(), $data->ID );
-			$all_responses = text_input_module::get_response( get_current_user_id(), $data->ID, 'private', - 1 );
+			$response      = file_input_module::get_response( get_current_user_id(), $data->ID );
+			$all_responses = file_input_module::get_response( get_current_user_id(), $data->ID, 'private', - 1 );
 		}
 
 		$grade = false;
@@ -287,12 +287,6 @@ class file_input_module extends Unit_Module {
 
 			if ( $_FILES ) {
 
-				// Record mandatory question answered
-				$course_id = get_post_meta( $data->unit_id, 'course_id', true );
-				if ( isset( $data->metas ) && isset( $data->metas['mandatory_answer'] ) && 'yes' == $data->metas['mandatory_answer'] ) {
-					Student_Completion::record_mandatory_answer( get_current_user_id(), $course_id, $data->unit_id, $data->ID );
-				}
-
 				foreach ( $_FILES as $file => $array ) {
 
 					$response_id = intval( str_replace( $this->name . '_front_', '', $file ) );
@@ -326,11 +320,18 @@ class file_input_module extends Unit_Module {
 
 							$attach_id = wp_insert_attachment( $attachment, $filename, $response_id );
 
-							$unit_id   = get_post_ancestors( $response_id );
-							$course_id = get_post_meta( $unit_id[0], 'course_id', true );
+							$post_ancestors   = get_post_ancestors( $response_id );
+							$unit_id   = $post_ancestors[0];
+							$course_id = get_post_meta( $unit_id, 'course_id', true );
 
 							update_post_meta( $attach_id, 'user_ID', get_current_user_ID() );
 							update_post_meta( $attach_id, 'course_id', $course_id );
+
+							// Record mandatory question answered
+							$mandatory_answer = get_post_meta( $response_id, 'mandatory_answer', true );
+							if ( ! empty( $mandatory_answer ) && 'yes' == $mandatory_answer ) {
+								Student_Completion::record_mandatory_answer( get_current_user_id(), $course_id, $unit_id, $response_id );
+							}
 						} else {
 							?>
 							<p class="form-info-red"><?php echo $movefile['error']; ?></p>
