@@ -109,7 +109,8 @@ class CoursePress_Model_Capabilities {
 
 	public static function init() {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
-		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities_on_login' ), 10, 2 );
+		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
+		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
 	}
 
 	/**
@@ -148,12 +149,19 @@ class CoursePress_Model_Capabilities {
 	 * @since 1.2.3.3.
 	 *
 	 */
-	public static function restore_capabilities_on_login( $user_login, $user ) {
+	public static function restore_capabilities( $user_login = false, $user ) {
 		if ( user_can( $user, 'manage_options' ) && !user_can( $user, 'coursepress_dashboard_cap' ) ) {
 			self::assign_admin_capabilities( $user->ID );
 		}
 	}
 
+
+	public static function fix_admin_capabilities () {
+		$user_id = get_current_user_id();
+		if ( user_can( $user_id, 'manage_options' ) && ! user_can( $user_id, 'coursepress_dashboard_cap' ) ) {
+			self::assign_admin_capabilities( $user_id );
+		}
+	}
 
 	public static function assign_admin_capabilities( $user ) {
 
