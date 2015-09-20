@@ -419,16 +419,43 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 					$unit_id   = (int) $_GET['u'];
 					$module_id = (int) $_GET['m'];
 					$response  = get_post( (int) $_GET['resubmit_answer'] );
+					$response_id = false;
 					if ( isset( $response ) && isset( $response->post_author ) && $response->post_author == get_current_user_ID() ) {
+						$response_id = $response->ID;
 						$resubmitted_response = array(
-							'ID'          => $response->ID,
+							'ID'          => $response_id,
 							'post_status' => 'private'
 						);
 						wp_update_post( $resubmitted_response );
 					}
 					Student_Completion::clear_mandatory_answer( $user_id, $course_id, $unit_id, $module_id );
-					wp_redirect( $_GET['resubmit_redirect_to'] );
+					wp_redirect( add_query_arg(
+						array(
+							'resubmitting' => $module_id,
+							'previous_response' => $response_id
+						),
+						$_GET['resubmit_redirect_to'] ) . '#module-' . $module_id
+					);
 					exit;
+				} else if ( !empty($_GET['resubmit_cancel']) ){
+					$response_id = $_GET['resubmit_cancel'];
+					$response  = get_post( (int) $response_id );
+					$user_id   = get_current_user_id();
+					$course_id = (int) $_GET['c'];
+					$unit_id   = (int) $_GET['u'];
+					$module_id = (int) $_GET['m'];
+					if ( isset( $response ) && isset( $response->post_author ) && $response->post_author == get_current_user_ID() ) {
+						$resubmitted_response = array(
+							'ID'          => $response_id,
+							'post_status' => 'publish'
+						);
+						wp_update_post( $resubmitted_response );
+
+						Student_Completion::record_mandatory_answer( $user_id, $course_id, $unit_id, $module_id );
+
+						wp_redirect( $_GET['resubmit_redirect_to']  . '#module-' . $module_id);
+					}
+
 				}
 			}
 
@@ -1013,6 +1040,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			$allow_free_resubmit = in_array( $data->name, $allowed_resubmits ) && empty( $grade ) && 0 < $number_of_answers;
 
 			if (
+				( !empty( $_GET['resubmitting']) && 'yes' == $data->gradable_answer ) ||
 				( $grade && 'yes' == $data->gradable_answer ) ||
 				$allow_free_resubmit
 			) {
@@ -1037,10 +1065,22 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 								$module_id    = $data->ID;
 								$paged        = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
 								$permalink    = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
-								$resubmit_url = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink . '&m=' . $module_id . '&c=' . $course_id . '&u=' . $unit_id;
-								?>
-								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Submit different answer', 'cp' ); ?></a>
-								<?php
+								if( empty( $_GET['resubmitting']) ){
+									$resubmit_url = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink . '&m=' . $module_id . '&c=' . $course_id . '&u=' . $unit_id;
+									?>
+									<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Submit different answer', 'cp' ); ?></a>
+									<?php
+								} else {
+									$previous_response = !empty( $_GET['previous_response'] ) ? $_GET['previous_response'] : '';
+									$resubmit_url = $permalink . '?resubmit_cancel=' . $previous_response . '&resubmit_redirect_to=' . $permalink . '&m=' . $module_id . '&c=' . $course_id . '&u=' . $unit_id;
+									if( $module_id == $_GET['resubmitting']){
+										?>
+										<a name="answer-<?php echo $previous_response; ?>" href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response cancel"><?php _e( 'Cancel', 'cp' ); ?></a>
+										<?php
+									}
+
+								}
+
 								if ( $attempts_remaining > 0 && ! $allow_free_resubmit ) {
 									if ( $attempts_remaining == 1 ) {
 										_e( '(1 attempt remaining)', 'cp' );
