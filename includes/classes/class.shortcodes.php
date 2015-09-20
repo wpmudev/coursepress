@@ -2382,6 +2382,7 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 				$percent_value = 0;
 			} else {
 				$percent_value = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
+				$percent_value = $percent_value > 100 ? 100 : $percent_value;
 			}
 
 			$content = '';
