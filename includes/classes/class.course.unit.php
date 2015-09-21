@@ -14,6 +14,7 @@ if ( !class_exists( 'Unit' ) ) {
 		var $details;
 		var $course_id	 = '';
 		var $status		 = array();
+		public static $last_units_request = array();
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
 			$this->id		 = $id;
@@ -102,11 +103,6 @@ if ( !class_exists( 'Unit' ) ) {
 
 			$available = true;
 
-//			$completion = new Course_Completion( $unit->course_id );
-//			$completion->init_student_status();
-//			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
-//			$mandatory_done	 = $completion->unit_all_pages_viewed( $previous_unit_id ) && $completion->unit_all_mandatory_answered( $previous_unit_id );
-//			$unit_completed	 = 100 == $completion->unit_progress( $previous_unit_id );
 			$student_id		 = get_current_user_id();
 			$mandatory_done	 = Student_Completion::is_mandatory_complete( $student_id, $unit->course_id, $previous_unit_id );
 			$unit_completed	 = Student_Completion::is_unit_complete( $student_id, $unit->course_id, $previous_unit_id );
@@ -152,6 +148,9 @@ if ( !class_exists( 'Unit' ) ) {
 
 		static function get_units_from_course( $course_id, $status = 'publish', $id_only = true ) {
 
+			// If its not the same request, then its a new request (this will be new every new page load, but not subsequent queries on the same load)
+			$new_request = ! ( isset( self::$last_units_request['course_id'] ) && self::$last_units_request['course_id'] == $course_id && self::$last_units_request['status'] == $status && self::$last_units_request['id_only'] == $id_only && ! empty( self::$last_units_request['units'] ) );
+
 			$args = array(
 				'post_type'		 => 'unit',
 				'post_status'	 => $status,
@@ -175,7 +174,7 @@ if ( !class_exists( 'Unit' ) ) {
 			$units = array();
 
 			// Attempt to load from cache or create new cache object
-			if ( !self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) ) {
+			if ( !self::load( self::TYPE_UNIT_STATIC, $type . '-' . $status . '-' . $course_id, $units ) && $new_request ) {
 
 				// Clear it out just incase something did load
 				$units = array();
@@ -199,7 +198,17 @@ if ( !class_exists( 'Unit' ) ) {
 				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Saved to cache..');
 			} else {
 				// cp_write_log( $type . '-' . $status . '-' . $course_id . ': Loaded from cache...');
+
+				if( ! $new_request && empty( $units ) ) {
+					$units = self::$last_units_request['units'];
+				}
+
 			};
+
+			self::$last_units_request['course_id'] = $course_id;
+			self::$last_units_request['status'] = $status;
+			self::$last_units_request['id_only'] = $id_only;
+			self::$last_units_request['units'] = $units;
 
 			return $units;
 		}
@@ -474,6 +483,17 @@ if ( !class_exists( 'Unit' ) ) {
 			} else {
 				return !empty( $this->details->page_title ) ? $this->details->page_title[ (int) ( $page_number - 1 ) ] : '';
 			}
+		}
+
+		public static function page_name( $unit_id, $page_number ) {
+			$page_titles = get_post_meta( $unit_id, 'page_title', true );
+			if ( cp_unit_uses_new_pagination( $unit_id ) ) {
+				return !empty( $page_titles[ 'page_' . $page_number ] ) ? $page_titles[ 'page_' . (int) $page_number ] : '';
+				//return !empty( $this->details->page_title[ 'page_' . $page_number ] ) ? $this->details->page_title[ 'page_' . (int) $page_number ] : '';
+			} else {
+				return !empty( $page_titles ) ? $page_titles[ (int) ( $page_number - 1 ) ] : '';
+			}
+			return '';
 		}
 
 		function delete_unit( $force_delete ) {

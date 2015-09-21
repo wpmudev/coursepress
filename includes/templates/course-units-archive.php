@@ -3,6 +3,7 @@
 //$course_id			 = do_shortcode( '[get_parent_course_id]' );
 //$course_id			 = (int) $course_id;
 $progress = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
+
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
 
 ?>
@@ -22,6 +23,14 @@ if ( 100 == (int) $progress ) {
 		<?php if ( have_posts() ) { ?>
 			<?php
 			while ( have_posts() ) : the_post();
+
+				$draft = get_post_status() !== 'publish';
+				$show_draft = $draft && cp_can_see_unit_draft();
+
+				if( $draft && ! $show_draft ) {
+					continue;
+				}
+
 				$additional_class    = '';
 				$additional_li_class = '';
 				$unit_id             = get_the_ID();
@@ -38,7 +47,8 @@ if ( 100 == (int) $progress ) {
 				?>
 				<li class="<?php echo esc_attr( $additional_li_class ); ?>">
 					<?php echo $additional_content; ?>
-					<a href="<?php echo esc_url( do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . $unit_id . '"]' ) ); ?>" rel="bookmark"><?php the_title() . ' ' . ( get_post_status() !== 'publish' && cp_can_see_unit_draft() ? _e( ' [DRAFT]', 'cp' ) : '' ); ?></a><?php echo $unit_progress; ?>
+					<?php echo do_shortcode('[course_unit_title link="yes" last_page="no"]'); ?>
+					<?php echo $unit_progress; ?>
 					<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' ); ?>
 				</li>
 			<?php

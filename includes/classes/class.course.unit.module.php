@@ -12,6 +12,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		var $details;
 		var $parent_unit = '';
 		var $unit_id = 0;
+		public static $last_modules_request = array();
 
 		private static $auto_grade_modules = array( 'checkbox_input_module_X', 'radio_input_module' );
 
@@ -338,13 +339,16 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			$modules = false;
 
+			// If its not the same request, then its a new request (this will be new every new page load, but not subsequent queries on the same load)
+			$new_request = ! ( isset( self::$last_modules_request['unit_id'] ) && self::$last_modules_request['unit_id'] == $unit_id && self::$last_modules_request['unit_page'] == $unit_page && self::$last_modules_request['ids_only'] == $ids_only && ! empty( self::$last_modules_request['modules'] ) );
+
 			// Attempt to load from cache or create new cache object
 			if ( $ids_only ) {
 				$cache_id = $unit_id . '-' . $unit_page . '-ids';
 			} else {
 				$cache_id = $unit_id . '-' . $unit_page;
 			}
-			if ( ! self::load( self::TYPE_UNIT_MODULES, $cache_id, $modules ) ) {
+			if ( ! self::load( self::TYPE_UNIT_MODULES, $cache_id, $modules ) && $new_request ) {
 
 				// Get the modules
 				if ( $unit_pagination && $unit_page > 0 ) {
@@ -389,8 +393,19 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				// cp_write_log( 'Unit Modules[' . $unit_id . ']: Saved to cache..');
 			} else {
-				// cp_write_log( 'Unit Modules[' . $unit_id . ']: Loaded from cache...');
+
+				// If its not pulled from cache, perhaps it will be in the static method (if query is called more than once)
+				if( ! $new_request && empty( $modules ) ) {
+					$modules = self::$last_modules_request['modules'];
+				}
+
 			};
+
+			// Setup/override the static array
+			self::$last_modules_request['unit_id'] = $unit_id;
+			self::$last_modules_request['unit_page'] = $unit_page;
+			self::$last_modules_request['ids_only'] = $ids_only;
+			self::$last_modules_request['modules'] = $modules;
 
 			return $modules;
 		}

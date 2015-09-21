@@ -6,6 +6,14 @@ CHANGE LOG
 
 == Changelog ==
 
+= 1.2.6.3 =
+* Updated: Improvements for 'Submit different answer' workflow.
+* Fixed: Handle cases when percentage is greater than 100.
+* Fixed: Last visited page issue.
+* Fixed: Fix mandatory answer not being recorded for File Input modules.
+* Updated: Performance improvements on `Units` view and loading modules.
+* Updated: Performance improvements with CoursePress Theme.
+
 = 1.2.6.2 =
 * Fixed: MarketPress 3.0 fatal error warning when sending notifications.
 * Fixed: Prompt for gateway settings even if gateway is enabled (MP3.0 integration)

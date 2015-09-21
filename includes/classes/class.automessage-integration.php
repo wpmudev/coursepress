@@ -26,6 +26,7 @@ if ( ! class_exists( 'CP_Automessage_Integration' ) ) {
 
 		function add_new_hooks( $hooks ) {
 			global $cp_automessage_hooks;
+
 			//Student Enrolled - Instructors Notification
 			$hooks['student_enrolled_instructor_notification']                     = array( 'action_nicename' => __( 'Student Enrolled - Instructor(s) Notification', 'cp' ) );
 			$hooks['student_enrolled_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)

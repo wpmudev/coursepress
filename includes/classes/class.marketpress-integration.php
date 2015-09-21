@@ -104,6 +104,8 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 					add_filter( 'mp_meta/product', array( __CLASS__, 'verify_meta' ), 10, 3 );
 
+					add_filter( 'mp_product/on_sale', array( __CLASS__, 'fix_mp3_on_sale'), 10, 2 );
+
 					// Fix missing MP3.0 meta fields
 					add_filter( 'wpmudev_field/get_value/sku', array( __CLASS__, 'fix_mp3_sku' ), 10, 4 );
 					add_filter( 'wpmudev_field/get_value/regular_price', array( __CLASS__, 'fix_mp3_regular_price' ), 10, 4 );
@@ -380,6 +382,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 		public static function update_course_from_product( $product_id, $post, $before_update ) {
 
+			$x = '';
 			// If its not a product, exit
 			if ( self::$product_ctp !== $post->post_type || ! self::is_active() ) {
 				return;
@@ -866,6 +869,17 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 		public static function fix_mp3_file_url( $value, $post_id, $raw, $field ) {
 			return self::verify_meta( $value, $post_id, 'file_url' );
 		}
+
+		public static function fix_mp3_on_sale( $on_sale, $product ) {
+			$course_id = empty( self::$course_id ) ? get_post_meta( $product->ID, 'course_id', true ) : self::$course_id;
+
+			if( ! empty( $course_id ) ) {
+				$on_sale = (int) get_post_meta( $course_id, 'mp_is_sale', true );
+			}
+
+			return $on_sale;
+		}
+
 
 	}
 

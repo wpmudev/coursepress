@@ -2970,7 +2970,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						$pg = new CoursePress_Virtual_Page( $args );
 					}
 				} else {
-
 					if ( $theme_file != '' ) {
 						global $wp;
 						do_shortcode( '[course_unit_single unit_id="' . $vars['unit_id'] . '"]' ); //required for getting unit results
@@ -2981,7 +2980,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						$args = array(
 							'slug'        => $wp->request,
 							// 'title' => $unit->details->post_title,
-							'title'       => get_the_title( $unit->details->post_parent ),
+							'title'       => isset( $unit->details ) ? get_the_title( $unit->details->post_parent ) : '',
 							'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-single.php', $vars ),
 							'type'        => 'unit',
 							'is_page'     => true,
