@@ -26,7 +26,7 @@ $post = $unit->details;
         <?php while ( have_posts() ) : the_post(); ?>
             <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                 <header class="entry-header">
-                    <h3 class="entry-title"><?php echo do_shortcode('[course_title course_id="' . $course_id . '"]'); ?></h3>
+                    <h3 class="entry-title course-title"><?php echo do_shortcode('[course_title course_id="' . $course_id . '"]'); ?></h3>
                     <?php
                     //echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="parent_course"]');
                     ?>
@@ -38,15 +38,8 @@ $post = $unit->details;
 
                 <div class="clearfix"></div>
 
-                <?php echo do_shortcode('[course_unit_details unit_id="' . get_the_ID() . '" field="unit_page_title" unit_title="'.get_the_title().'"]'); ?>
+                <?php echo do_shortcode( '[course_unit_page_title unit_id="' . $unit->details->ID . '" title_tag="h3" show_unit_title="yes"]' ); ?>
 
-                <div class="entry-content">
-                    <?php
-                    if ( $paged == 1 ) { //Unit introduction will be shown only on the first page
-                        the_content();
-                    }
-                    ?>
-                </div>
                 <?php
                 Unit_Module::get_modules_front($unit->details->ID);
                 ?>

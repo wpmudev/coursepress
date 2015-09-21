@@ -2936,6 +2936,15 @@ li.current_page_item a{
     margin-left: 48px;
 }
 
+
+.course-unit-page-title {
+    margin: 20px 0;
+}
+
+.course-title {
+    font-size: 30px;
+}
+
 /*
 RESPONSIVE
 */

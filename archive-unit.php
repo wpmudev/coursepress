@@ -74,7 +74,8 @@ get_header();
 						<div class="unit-archive-single">
 							<?php //echo do_shortcode( '[course_unit_details field="percent" format="true" style="extended"]' ); ?>
 							<?php echo $unit_progress; ?>
-							<a class="unit-archive-single-title" href="<?php echo do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ); ?>" rel="bookmark"><?php the_title() . ' ' . (get_post_status() !== 'publish' && current_user_can( 'manage_options' ) ? _e( ' [DRAFT]', 'cp' ) : ''); ?></a>
+							<?php echo do_shortcode('[course_unit_title link="yes" last_page="yes"]'); ?>
+							<!-- <a class="unit-archive-single-title" href="<?php //echo do_shortcode( '[course_unit_details field="permalink" last_visited="true" unit_id="' . get_the_ID() . '"]' ); ?>" rel="bookmark"><?php the_title() . ' ' . (get_post_status() !== 'publish' && current_user_can( 'manage_options' ) ? _e( ' [DRAFT]', 'cp' ) : ''); ?></a> -->
 							<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' ); ?>
 						</div>
 					</li>
