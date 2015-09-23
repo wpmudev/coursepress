@@ -1,8 +1,133 @@
 module.exports = function(grunt) {
-  
-	// Project configuration.
+    'use strict';
+
+    // Plugin Config
+    var plugin_info = {
+        version: '1.2.6.3',
+        branches: {
+            dev: 'coursepress/pro',
+            wporg: 'coursepress/standard',
+            base: 'master'
+        },
+        marketpress_file: ''
+    };
+
+    var plugin_patterns = {
+        dev: [
+            { match: /<%= wpmudev.plugin.name %>/g, replace: 'CoursePress Pro' },
+            { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
+            { match: /<%= wpmudev.plugin.textdomain %>/g, replace: 'cp' },
+            { match: /<%= wpmudev.plugin.option.is_pro %>/g, replace: 'true' },
+            { match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
+            { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
+            { match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
+            { match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
+        ],
+        wporg: [
+            { match: /<%= wpmudev.plugin.name %>/g, replace: 'CoursePress' },
+            { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
+            { match: /<%= wpmudev.plugin.textdomain %>/g, replace: 'coursepress' },
+            { match: /<%= wpmudev.plugin.option.is_pro %>/g, replace: 'false' },
+            { match: /\/\/<wpmudev.plugin.pro_only([^<]+)/mg, replace: '' },
+            { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
+            { match: /\/\/<wpmudev.plugin.free_only>/g, replace: '' },
+            { match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
+            { match: /<%= wpmudev.plugin.changelog %>/g, replace: (function() {
+                var changelog = grunt.file.read('./changelog.txt');
+                changelog = changelog.replace(/^(\S|\s)*==.changelog.==\S*/igm, '' ).trim();
+                return changelog;
+            })() }
+        ],
+        files: [ { expand: true, src: [
+            '**/*.php',
+            '**/*.css',
+            '**/*.js',
+            '**/*.html',
+            '**/*.txt',
+            '!node_modules/**',
+            '!includes/external/**',
+            '!Gruntfile.js',
+            '!package.json',
+            '!build/**',
+            '!grunt_tasks/**',
+            '!.git/**'
+        ], dest: './' } ]
+    };
+
+	// Grunt configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+
+        // Plugin config
+        build: {
+            dev: {
+            },
+            wporg: {
+            }
+        },
+
+        // Git config
+        gitcheckout: {
+            dev: {
+                options: { branch: plugin_info.branches.dev, overwrite: true }
+            },
+            wporg: {
+                options: { branch: plugin_info.branches.wporg, overwrite: true }
+            },
+            base: {
+                options: { branch: plugin_info.branches.base }
+            }
+        },
+        gitadd: {
+            dev: {
+                options: { all: true }
+            },
+            wporg: {
+                options: { all: true }
+            }
+        },
+        gitcommit: {
+            dev: {
+                options: { message: "Built from '" + plugin_info.branches.base + "'", allowEmpty: true },
+                files: { src: ['.'] }
+            },
+            wporg: {
+                options: { message: "Built from '" + plugin_info.branches.base + "'", allowEmpty: true },
+                files: { src: ['.'] }
+            }
+        },
+
+        // Cleanup config
+        clean: {
+            dev: [
+                "./readme.txt",
+            ],
+            wporg: [
+                "./includes/classes/class.basic.certificate.php",
+                "./includes/external/dashboard/",
+                './includes/plugins/*marketpress*.zip',
+                './readme.md',
+                './changelog.txt'
+            ]
+        },
+
+        // Replace config
+        replace: {
+            dev: {
+                options: {
+                    patterns: plugin_patterns.dev
+                },
+                files: plugin_patterns.files
+            },
+            wporg: {
+                options: {
+                    patterns: plugin_patterns.wporg
+                },
+                files: plugin_patterns.files
+            }
+        },
+
+        // i18n config
 		makepot: {
 		    target: {
 		        options: {
@@ -23,14 +148,16 @@ module.exports = function(grunt) {
 		wpmu_pot2mo: {
 		    files: {
 		        src: 'languages/*.pot',
-		        expand: true,
-		    },
-		},
+		        expand: true
+		    }
+		}
 	});
 
-	// Load wp-i18n
+	// Load grunt modules
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
-	
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-git');
+    grunt.loadNpmTasks('grunt-replace');
 
 	// Adapted from https://github.com/MicheleBertoli/grunt-po2mo
 	grunt.registerMultiTask('wpmu_pot2mo', 'Compile .pot files into binary .mo files with msgfmt.', function() {
@@ -50,10 +177,30 @@ module.exports = function(grunt) {
 
 		});
 	});
-	
-	
+
 	// Default task(s).
 	grunt.registerTask( 'default', ['makepot', 'wpmu_pot2mo'] );
+
+    // Plugin build tasks
+    grunt.registerTask('build', 'Run all tasks.', function(target) {
+        if (target == null) {
+            grunt.warn('Target must be specified - build:dev or build:wporg');
+        }
+
+        grunt.task.run('gitcheckout:' + target );
+        grunt.task.run('replace:' + target );
+        grunt.task.run('clean:' + target );
+        grunt.task.run('gitadd:' + target );
+        grunt.task.run('gitcommit:' + target );
+        grunt.task.run('gitcheckout:base');
+
+    });
+
+    // Build pro and standard repo
+    grunt.registerTask( 'buildAll', function() {
+        grunt.task.run('build:dev');
+        grunt.task.run('build:wporg');
+    } );
 	
 
 };
