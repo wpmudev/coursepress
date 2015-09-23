@@ -1,5 +1,13 @@
 # README #
 
+**NOTE: This is new**
+
+The **core** development branch for CoursePress 1.x is `coursepress/base`. This branch ultimately is responsible for creating the `coursepress/pro` and `coursepress/standard` branches. Consider it to be a "super branch".  
+
+Code in `coursepress/base` are heavily templated and should not be used as plugins because it will break. Any changes made to this branch will be pushed into either `coursepress/pro` or `coursepress/standard` via **grunt tasks**, `grunt build:dev` and `grunt build:wporg` respectively. This will not be automatically pushed to this repo. Test locally first!
+
+**Note to support: ** You will still use `coursepress/pro` or `coursepress/standard` branches for your pull requests.
+
 CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
 
 ## CoursePress Pro (coursepress/pro)  
@@ -121,6 +129,8 @@ This is where `git submodule update` fits in. It makes sure that you have the la
 ### Releasing
 
 #### Grunt Task Runner (automating)  
+
+**NOTE: This section needs updating. Additional grunt tasks now exist to make deployment easier.**
 
 You can use `grunt` to run a few automation tasks:  
 
