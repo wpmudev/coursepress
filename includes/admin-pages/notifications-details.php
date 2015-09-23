@@ -50,13 +50,13 @@ if ( isset( $_GET['notification_id'] ) ) {
 <div class="wrap nosubsub cp-wrap">
 	<div class="icon32" id="icon-themes"><br></div>
 
-	<h2><?php _e( 'Notification', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_notification_cap' ) || current_user_can( 'coursepress_create_my_notification_cap' ) || current_user_can( 'coursepress_create_my_assigned_notification_cap' ) ) { ?>
-			<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=notifications&action=add_new' ); ?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?>
+	<h2><?php _e( 'Notification', '<%= wpmudev.plugin.textdomain %>' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_notification_cap' ) || current_user_can( 'coursepress_create_my_notification_cap' ) || current_user_can( 'coursepress_create_my_assigned_notification_cap' ) ) { ?>
+			<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=notifications&action=add_new' ); ?>"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a><?php } ?>
 	</h2>
 
 	<?php
-	$message['ca'] = __( 'New Notification added successfully!', 'cp' );
-	$message['cu'] = __( 'Notification updated successfully.', 'cp' );
+	$message['ca'] = __( 'New Notification added successfully!', '<%= wpmudev.plugin.textdomain %>' );
+	$message['cu'] = __( 'Notification updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
 	?>
 
 	<div class='wrap nocoursesub'>
@@ -78,15 +78,15 @@ if ( isset( $_GET['notification_id'] ) ) {
 					<div id='edit-sub' class='course-holder-wrap'>
 						<div class='course-holder'>
 							<div class='course-details'>
-								<label for='notification_name'><?php _e( 'Notify Students in selected courses', 'cp' ); ?></label>
+								<label for='notification_name'><?php _e( 'Notify Students in selected courses', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 
-								<p><?php _e( 'Notifications are shown to end users in their Notifications menu item', 'cp' ); ?></p>
+								<p><?php _e( 'Notifications are shown to end users in their Notifications menu item', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 
 								<div class="full">
-									<label><?php _e( 'Course', 'cp' ); ?></label>
+									<label><?php _e( 'Course', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 									<select name="meta_course_id" class="chosen-select">
 										<?php if ( current_user_can( 'coursepress_create_notification_cap' ) || current_user_can( 'coursepress_update_notification_cap' ) ) { ?>
-											<option value="" <?php selected( $meta_course_id, '' ); ?>><?php _e( 'All Courses', 'cp' ); ?></option>
+											<option value="" <?php selected( $meta_course_id, '' ); ?>><?php _e( 'All Courses', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 										<?php } ?>
 										<?php
 
@@ -139,7 +139,7 @@ if ( isset( $_GET['notification_id'] ) ) {
 								</div>
 								<br clear="all"/>
 
-								<label for='notification_name'><?php _e( 'Notification Title', 'cp' ); ?></label>
+								<label for='notification_name'><?php _e( 'Notification Title', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 								<input class='wide' type='text' name='notification_name' id='notification_name' value='<?php
 								if ( isset( $_GET['notification_id'] ) ) {
 									echo esc_attr( stripslashes( $notification->details->post_title ) );
@@ -147,7 +147,7 @@ if ( isset( $_GET['notification_id'] ) ) {
 								?>'/>
 
 								<br/><br/>
-								<label for='course_name'><?php _e( 'Notification Content', 'cp' ); ?></label>
+								<label for='course_name'><?php _e( 'Notification Content', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 								<?php
 
 								$editor_name    = "notification_description";
@@ -174,10 +174,10 @@ if ( isset( $_GET['notification_id'] ) ) {
 									<?php
 									if ( current_user_can( 'manage_options' ) || ( $notification_id == 0 && current_user_can( 'coursepress_create_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_notification_cap' ) ) || ( $notification_id != 0 && current_user_can( 'coursepress_update_my_notification_cap' ) && $notification_details->post_author == get_current_user_id() ) || ( current_user_can( 'coursepress_create_my_notification_cap' ) && $available_course_options > 0 ) ) {//do not show anything
 										?>
-										<input type="submit" value="<?php ( $notification_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class="button-primary"/>
+										<input type="submit" value="<?php ( $notification_id == 0 ? _e( 'Create', '<%= wpmudev.plugin.textdomain %>' ) : _e( 'Update', '<%= wpmudev.plugin.textdomain %>' ) ); ?>" class="button-primary"/>
 									<?php
 									} else {
-										_e( 'You do not have required permissions for this action', 'cp' );
+										_e( 'You do not have required permissions for this action', '<%= wpmudev.plugin.textdomain %>' );
 									}
 									?>
 								</div>

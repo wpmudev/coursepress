@@ -11,11 +11,11 @@ if ( empty( $tab ) ) {
 	} else {
 		?>
 		<div id="error-page">
-			<p><?php _e( 'You do not have required permissions to access Settings.', 'cp' ); ?></p>
+			<p><?php _e( 'You do not have required permissions to access Settings.', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 		</div>
 		<?php
 		exit;
-		//die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
+		//die( __( 'You do not have required permissions to access Settings.', '<%= wpmudev.plugin.textdomain %>' ) );
 	}
 }
 
@@ -77,12 +77,12 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 
 <div class='wrap mp-wrap nocoursesub cp-wrap' id="settings-wrap">
 	<div class="icon32 icon32-posts-page" id="icon-options-general"><br></div>
-	<h2><?php _e( 'Settings', 'cp' ); ?></h2>
+	<h2><?php _e( 'Settings', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
 
 	<?php
 	if ( isset( $_POST['submit'] ) ) {
 		?>
-		<div id="message" class="updated fade"><p><?php _e( 'Settings saved successfully.', 'cp' ); ?></p></div>
+		<div id="message" class="updated fade"><p><?php _e( 'Settings saved successfully.', '<%= wpmudev.plugin.textdomain %>' ); ?></p></div>
 	<?php
 	}
 	?>
@@ -91,28 +91,28 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 	<?php
 	$menus = array();
 	if ( current_user_can( 'manage_options' ) ) {
-		$menus['general'] = __( 'General', 'cp' );
+		$menus['general'] = __( 'General', '<%= wpmudev.plugin.textdomain %>' );
 	}
 
 	/* if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
-	  //$menus['groups'] = __( 'Class Groups', 'cp' ); //to do in the next release
+	  //$menus['groups'] = __( 'Class Groups', '<%= wpmudev.plugin.textdomain %>' ); //to do in the next release
 	  } */
 
 	if ( current_user_can( 'manage_options' ) ) {
-		/* $menus['payment'] = __( 'Payment Settings', 'cp' ); */
-		$menus['email'] = __( 'E-mail Settings', 'cp' );
+		/* $menus['payment'] = __( 'Payment Settings', '<%= wpmudev.plugin.textdomain %>' ); */
+		$menus['email'] = __( 'E-mail Settings', '<%= wpmudev.plugin.textdomain %>' );
 	}
 
 	if ( current_user_can( 'manage_options' ) ) {
-		$menus['instructor_capabilities'] = __( 'Instructor Capabilities', 'cp' );
+		$menus['instructor_capabilities'] = __( 'Instructor Capabilities', '<%= wpmudev.plugin.textdomain %>' );
 	}
 
 	if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) || current_user_can( 'manage_options' ) ) {
-		$menus['shortcodes'] = __( 'Shortcodes', 'cp' );
+		$menus['shortcodes'] = __( 'Shortcodes', '<%= wpmudev.plugin.textdomain %>' );
 	}
 
 	if ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) {
-		$menus['cp-marketpress'] = __( 'MarketPress', 'cp' );
+		$menus['cp-marketpress'] = __( 'MarketPress', '<%= wpmudev.plugin.textdomain %>' );
 	}
 
 	$menus = apply_filters( 'coursepress_settings_new_menus', $menus );
@@ -131,7 +131,7 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 			}
 			?>
 			<li class="mp-tab">
-				<a class="mp-tab-link" href="<?php echo admin_url( 'admin.php?page=courses&quick_setup' ); ?>"><?php _e( 'View Setup Guide', 'cp' ); ?></a>
+				<a class="mp-tab-link" href="<?php echo admin_url( 'admin.php?page=courses&quick_setup' ); ?>"><?php _e( 'View Setup Guide', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
 			</li>
 		</ul>
 	</div>

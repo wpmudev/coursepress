@@ -24,7 +24,7 @@ class checkbox_input_module extends Unit_Module {
 			?>
 			<div class="module_text_response_answer">
 				<?php if ( $show_label ) { ?>
-					<label><?php _e( 'Response', 'cp' ); ?></label>
+					<label><?php _e( 'Response', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 				<?php } ?>
 				<div class="front_response_content radio_input_module">
 					<ul class='radio_answer_check_li'>
@@ -50,7 +50,7 @@ class checkbox_input_module extends Unit_Module {
 
 		<?php
 		} else {
-			_e( 'No answer / response', 'cp' );
+			_e( 'No answer / response', '<%= wpmudev.plugin.textdomain %>' );
 		}
 		?>
 		<div class="full regular-border-divider"></div>
@@ -173,7 +173,7 @@ class checkbox_input_module extends Unit_Module {
 
             <h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
                 <span class="h3-label">
-                    <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
+                    <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
                     <?php
 		parent::get_module_move_link();
@@ -192,7 +192,7 @@ class checkbox_input_module extends Unit_Module {
                 <input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
-		_e( 'Element Title', 'cp' );
+		_e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' );
 		$this->time_estimation( $data );
 		?></label>
                 <?php echo $this->element_title_description(); ?>
@@ -209,7 +209,7 @@ class checkbox_input_module extends Unit_Module {
 		<?php echo $this->limit_attempts_element( $data ); ?>
                 </div>
 
-                <label class="bold-label"><?php _e( 'Question', 'cp' ); ?></label>
+                <label class="bold-label"><?php _e( 'Question', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 
                 <div class="editor_in_place">
 
@@ -230,18 +230,18 @@ class checkbox_input_module extends Unit_Module {
                             <tr>
 
                                 <th width="96%">
-                        <div class="checkbox_answer_check"><?php _e( 'Answers', 'cp' ); ?></div>
+                        <div class="checkbox_answer_check"><?php _e( 'Answers', '<%= wpmudev.plugin.textdomain %>' ); ?></div>
                         <div class="checkbox_answer"></div>
                         </th>
 
                         <th width="3%">
-                            <!--<a class="checkbox_new_link"><?php _e( 'Add New', 'cp' ); ?></a>-->
+                            <!--<a class="checkbox_new_link"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a>-->
                         </th>
 
                         </tr>
 
                         <tr>
-                            <td class="label" colspan="2"><?php _e( 'Set the correct answer', 'cp' ); ?></td>
+                            <td class="label" colspan="2"><?php _e( 'Set the correct answer', '<%= wpmudev.plugin.textdomain %>' ); ?></td>
                         </tr>
 
                         <?php
@@ -300,7 +300,7 @@ class checkbox_input_module extends Unit_Module {
                         </tbody>
                     </table>
 
-                    <a class="checkbox_new_link button-secondary"><?php _e( 'Add New', 'cp' ); ?></a>
+                    <a class="checkbox_new_link button-secondary"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
 
                 </div>
 
@@ -318,8 +318,8 @@ class checkbox_input_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Multiple choice question where multiple options can be selected', 'cp' );
-		$this->label       = __( 'Multiple Choice', 'cp' );
+		$this->description = __( 'Multiple choice question where multiple options can be selected', '<%= wpmudev.plugin.textdomain %>' );
+		$this->label       = __( 'Multiple Choice', '<%= wpmudev.plugin.textdomain %>' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

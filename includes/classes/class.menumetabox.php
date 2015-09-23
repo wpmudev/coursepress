@@ -18,7 +18,7 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 		public function add_menu_metabox() {
 			add_meta_box(
 				'coursepress-menu-panel',
-				__( 'CoursePress', 'cp' ),
+				__( 'CoursePress', '<%= wpmudev.plugin.textdomain %>' ),
 				array( $this, 'nav_html' ),
 				'nav-menus',
 				'side',
@@ -51,14 +51,14 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-published" href="<?php if ( $nav_menu_selected_id ) {
 							echo esc_url( add_query_arg( $post_type_name . '-tab', 'cp-published', remove_query_arg( $removed_args ) ) );
 						} ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-published">
-							<?php _e( 'Courses', 'cp' ); ?>
+							<?php _e( 'Courses', '<%= wpmudev.plugin.textdomain %>' ); ?>
 						</a>
 					</li>
 					<li <?php echo( 'cp-special-pages' == $current_tab ? ' class="tabs"' : '' ); ?>>
 						<a class="nav-tab-link" data-type="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-cp-special-pages" href="<?php if ( $nav_menu_selected_id ) {
 							echo esc_url( add_query_arg( $post_type_name . '-tab', 'cp-special-pages', remove_query_arg( $removed_args ) ) );
 						} ?>#tabs-panel-posttype-<?php echo $post_type_name; ?>-cp-special-pages">
-							<?php _e( 'Pages', 'cp' ); ?>
+							<?php _e( 'Pages', '<%= wpmudev.plugin.textdomain %>' ); ?>
 						</a>
 					</li>
 				</ul>
@@ -108,50 +108,50 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
-								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'Course List', 'cp' ); ?>
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'Course List', '<%= wpmudev.plugin.textdomain %>' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Courses', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Courses', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_course_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-courses">
 						</li>
 						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
-								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Courses', 'cp' ); ?>
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Courses', '<%= wpmudev.plugin.textdomain %>' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Courses', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Courses', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-dashboard">
 						</li>
 						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
-								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Profile', 'cp' ); ?>
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'My Profile', '<%= wpmudev.plugin.textdomain %>' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Profile', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'My Profile', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_student_settings_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-dashboard">
 						</li>
 						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
-								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Login', 'cp' ); ?>
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Login', '<%= wpmudev.plugin.textdomain %>' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Login', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Login', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_login_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-login">
 						</li>
 						<?php $_nav_menu_placeholder = $_nav_menu_placeholder - 1; ?>
 						<li>
 							<label class="menu-item-title">
-								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Signup', 'cp' ); ?>
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="<?php echo $_nav_menu_placeholder; ?>"> <?php echo __( 'CoursePress Signup', '<%= wpmudev.plugin.textdomain %>' ); ?>
 							</label>
 							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Signup', 'cp' ); ?>">
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php echo __( 'Signup', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="<?php echo CoursePress::instance()->get_signup_slug( true ); ?>">
 							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-classes]" value="coursepress-menu-item coursepress-menu-item-signup">
 						</li>
@@ -170,10 +170,10 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 							),
 							remove_query_arg( $removed_args )
 						) );
-						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e( 'Select All', 'cp' ); ?></a>
+						?>#posttype-<?php echo $post_type_name; ?>" class="select-all"><?php _e( 'Select All', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
 					</span>
 					<span class="add-to-menu">
-						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'cp' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>"/>
+						<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', '<%= wpmudev.plugin.textdomain %>' ); ?>" name="add-course-menu-item" id="<?php echo esc_attr( 'submit-posttype-' . $post_type_name ); ?>"/>
 						<span class="spinner"></span>
 					</span>
 				</p>

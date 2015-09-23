@@ -29,12 +29,12 @@ $mp->set_cart_cookie( $cart );
 ?>
 
 
-<div class="cp_popup_title"><?php 1 == $gateway_count ? _e( 'Payment', 'cp' ) : _e( 'Payment Options', 'cp' ); ?></div>
+<div class="cp_popup_title"><?php 1 == $gateway_count ? _e( 'Payment', '<%= wpmudev.plugin.textdomain %>' ) : _e( 'Payment Options', '<%= wpmudev.plugin.textdomain %>' ); ?></div>
 <input type="hidden" name="signup-next-step" value="process_payment"/>
 <table class="popup-payment-info">
 	<tr>
-		<th><?php _e( 'Course', 'cp' ); ?></th>
-		<th><?php _e( 'Price', 'cp' ); ?></th>
+		<th><?php _e( 'Course', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
+		<th><?php _e( 'Price', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 	<tr></tr>
 	<td><?php echo esc_html( $course->details->post_title ); ?></td>
 	<td><?php echo do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' ); ?></td>

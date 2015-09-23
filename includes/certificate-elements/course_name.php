@@ -7,7 +7,7 @@ if ( ! class_exists( 'cp_course_name_element' ) ) {
 		var $element_title = '';
 
 		function on_creation() {
-			$this->element_title = apply_filters( 'coursepress_course_name_element_title', __( 'Course Name', 'cp' ) );
+			$this->element_title = apply_filters( 'coursepress_course_name_element_title', __( 'Course Name', '<%= wpmudev.plugin.textdomain %>' ) );
 		}
 
 		function template_content( $course_id = false, $user_id = false, $preview = false ) {
@@ -16,5 +16,5 @@ if ( ! class_exists( 'cp_course_name_element' ) ) {
 
 	}
 
-	cp_register_template_element( 'cp_course_name_element', __( 'Course Name', 'cp' ) );
+	cp_register_template_element( 'cp_course_name_element', __( 'Course Name', '<%= wpmudev.plugin.textdomain %>' ) );
 }

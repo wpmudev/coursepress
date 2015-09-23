@@ -50,8 +50,8 @@ if ( isset( $_GET['discussion_id'] ) ) {
 <div class="wrap nosubsub discussions-details cp-wrap">
 	<div class="icon32" id="icon-themes"><br></div>
 
-	<h2><?php _e( 'Discussion', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
-			<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?>
+	<h2><?php _e( 'Discussion', '<%= wpmudev.plugin.textdomain %>' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
+			<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a><?php } ?>
 	</h2>
 
 	<div class='wrap nocoursesub'>
@@ -73,7 +73,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 					<div id='edit-sub' class='course-holder-wrap'>
 						<div class='course-holder'>
 							<div class='course-details'>
-								<label for='discussion_name'><?php _e( 'Discussion Title', 'cp' ); ?></label>
+								<label for='discussion_name'><?php _e( 'Discussion Title', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 								<input class='wide' type='text' name='discussion_name' id='discussion_name' value='<?php
 								if ( isset( $_GET['discussion_id'] ) ) {
 									echo esc_attr( stripslashes( $discussion->details->post_title ) );
@@ -81,7 +81,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 								?>'/>
 
 								<br/><br/>
-								<label for='course_name'><?php _e( 'Discussion Content', 'cp' ); ?></label>
+								<label for='course_name'><?php _e( 'Discussion Content', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 								<?php
 
 								$editor_name    = "discussion_description";
@@ -105,7 +105,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 								<br clear="all"/>
 
 								<div class="full">
-									<label><?php _e( 'Course', 'cp' ); ?></label>
+									<label><?php _e( 'Course', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 									<select name="meta_course_id">
 										<?php
 										$args = array(
@@ -153,10 +153,10 @@ if ( isset( $_GET['discussion_id'] ) ) {
 									<?php
 									if ( current_user_can( 'manage_options' ) || ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id() ) ) {//do not show anything
 										?>
-										<input type="submit" value="<?php ( $discussion_id == 0 ? _e( 'Create', 'cp' ) : _e( 'Update', 'cp' ) ); ?>" class="button-primary"/>
+										<input type="submit" value="<?php ( $discussion_id == 0 ? _e( 'Create', '<%= wpmudev.plugin.textdomain %>' ) : _e( 'Update', '<%= wpmudev.plugin.textdomain %>' ) ); ?>" class="button-primary"/>
 									<?php
 									} else {
-										_e( 'You do not have required permissions for this action', 'cp' );
+										_e( 'You do not have required permissions for this action', '<%= wpmudev.plugin.textdomain %>' );
 									}
 									?>
 								</div>

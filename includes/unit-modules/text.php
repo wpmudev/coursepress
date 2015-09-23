@@ -42,7 +42,7 @@ class text_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -59,7 +59,7 @@ class text_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
 				<label class="bold-label"><?php
-					_e( 'Element Title', 'cp' );
+					_e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' );
 					$this->time_estimation( $data );
 					?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -67,7 +67,7 @@ class text_module extends Unit_Module {
 
 				<?php echo $this->show_title_on_front_element( $data ); ?>
 
-				<label class="bold-label"><?php _e( 'Content', 'cp' ); ?></label>
+				<label class="bold-label"><?php _e( 'Content', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 
 				<div class="editor_in_place">
 					<?php
@@ -93,8 +93,8 @@ class text_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Add text block to the unit.', 'cp' );
-		$this->label       = __( 'Text', 'cp' );
+		$this->description = __( 'Add text block to the unit.', '<%= wpmudev.plugin.textdomain %>' );
+		$this->label       = __( 'Text', '<%= wpmudev.plugin.textdomain %>' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

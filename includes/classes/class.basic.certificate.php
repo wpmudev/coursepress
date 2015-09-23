@@ -42,7 +42,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 					$new_menu[ $key ] = $value;
 				} else {
 					if( ! $inserted) {
-						$new_menu['basic_certificate'] = __( 'Basic Certificate', 'cp' );
+						$new_menu['basic_certificate'] = __( 'Basic Certificate', '<%= wpmudev.plugin.textdomain %>' );
 						$inserted = true;
 					}
 					$new_menu[ $key ] = $value;
@@ -50,7 +50,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			}
 
 			if( ! $inserted) {
-				$new_menu['basic_certificate'] = __( 'Basic Certificate', 'cp' );
+				$new_menu['basic_certificate'] = __( 'Basic Certificate', '<%= wpmudev.plugin.textdomain %>' );
 			}
 
 			return $new_menu;
@@ -73,19 +73,19 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				?>
 
 				<div class="postbox">
-					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Certificate Options', 'cp' ); ?></span></h3>
+					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Certificate Options', '<%= wpmudev.plugin.textdomain %>' ); ?></span></h3>
 					<div class="inside">
 						<table class="form-table">
 							<tbody>
 							<tr valign="top">
 								<th scope="row">
-									<?php _e( 'Enable Basic Certificate', 'cp' ); ?>
+									<?php _e( 'Enable Basic Certificate', '<%= wpmudev.plugin.textdomain %>' ); ?>
 									<a class="help-icon" href="javascript:;"></a>
 										<div class="tooltip">
 											<div class="tooltip-before"></div>
 											<div class="tooltip-button">&times;</div>
 											<div class="tooltip-content">
-												<?php _e( 'Adds a "Certificate" link to completed courses on the student dashboard.', 'cp' ); ?>
+												<?php _e( 'Adds a "Certificate" link to completed courses on the student dashboard.', '<%= wpmudev.plugin.textdomain %>' ); ?>
 											</div>
 										</div>
 								</th>
@@ -94,7 +94,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 								</td>
 							</tr>
 							<!--<tr valign="top">-->
-								<!--<th scope="row">--><?php //_e( 'Email certificate when course is completed.', 'cp' ); ?><!--</th>-->
+								<!--<th scope="row">--><?php //_e( 'Email certificate when course is completed.', '<%= wpmudev.plugin.textdomain %>' ); ?><!--</th>-->
 								<!--<td>-->
 									<!--<input type='checkbox' value="1" name='cert_field_auto_email' --><?php //echo( checked( self::option( 'auto_email' ) ) ); ?><!-- />-->
 								<!--</td>-->
@@ -106,11 +106,11 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				</div>
 
 				<div class="postbox">
-					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Certificate Layout', 'cp' ); ?></span></h3>
+					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Certificate Layout', '<%= wpmudev.plugin.textdomain %>' ); ?></span></h3>
 
 					<div class="inside">
-						<p class="description"><?php _e( 'Use the editor below to create the layout of your certificate.', 'cp' ); ?></p>
-						<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST', 'cp' ); ?></p>
+						<p class="description"><?php _e( 'Use the editor below to create the layout of your certificate.', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
+						<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 						<table class="form-table">
 							<tbody id="items">
 								<tr>
@@ -136,13 +136,13 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 								<tr>
 									<td>
 
-										<strong><?php esc_html_e( 'Background Image', 'cp' ); ?></strong>
+										<strong><?php esc_html_e( 'Background Image', '<%= wpmudev.plugin.textdomain %>' ); ?></strong>
 										<a class="help-icon" href="javascript:;"></a>
 										<div class="tooltip">
 											<div class="tooltip-before"></div>
 											<div class="tooltip-button">&times;</div>
 											<div class="tooltip-content">
-												<?php echo sprintf( __( 'The image will be resized to fit the full page. For best results use 1:1414 as the ratio for image dimensions.<br /><br /><strong>Examples:</strong><br />595x842px (Portrait 72dpi)<br />1754x1240px (Landscape 150dpi)<br />2480x3508px (Portrait 300dpi).', 'cp' ) ) ; ?>
+												<?php echo sprintf( __( 'The image will be resized to fit the full page. For best results use 1:1414 as the ratio for image dimensions.<br /><br /><strong>Examples:</strong><br />595x842px (Portrait 72dpi)<br />1754x1240px (Landscape 150dpi)<br />2480x3508px (Portrait 300dpi).', '<%= wpmudev.plugin.textdomain %>' ) ) ; ?>
 											</div>
 										</div><br />
 										<?php
@@ -151,32 +151,32 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 										<div class="certificate_background_image_holder">
 											<input class="image_url certificate_background_url" type="text" size="36" name="cert_field_background_url" value="<?php
 											echo esc_attr( self::option( 'background_url' ) );
-											?>" placeholder="<?php _e( 'Add Image URL or Browse for Image', 'cp' ); ?>"/>
-											<input class="certificate_background_button button-secondary" type="button" value="<?php _e( 'Browse', 'cp' ); ?>"/>
-											<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_image_extensions ); ?></div>
+											?>" placeholder="<?php _e( 'Add Image URL or Browse for Image', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+											<input class="certificate_background_button button-secondary" type="button" value="<?php _e( 'Browse', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+											<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', '<%= wpmudev.plugin.textdomain %>' ), $supported_image_extensions ); ?></div>
 										</div>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<p>
-											<strong><?php esc_html_e( 'Content Padding', 'cp' ); ?></strong>
-											<span class="description"><?php esc_html_e( 'Can be any CSS units. E.g. "0.2em"', 'cp'); ?></span>
+											<strong><?php esc_html_e( 'Content Padding', '<%= wpmudev.plugin.textdomain %>' ); ?></strong>
+											<span class="description"><?php esc_html_e( 'Can be any CSS units. E.g. "0.2em"', '<%= wpmudev.plugin.textdomain %>'); ?></span>
 										</p>
 
-										<span><?php esc_html_e( 'Top', 'cp' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_top" name="cert_field_padding_top" value="<?php echo esc_html( self::option('padding_top') ); ?>" />
-										<span><?php esc_html_e( 'Bottom', 'cp' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_bottom" name="cert_field_padding_bottom" value="<?php echo esc_html( self::option('padding_bottom') ); ?>" />
-										<span><?php esc_html_e( 'Left', 'cp' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_left" name="cert_field_padding_left" value="<?php echo esc_html( self::option('padding_left') ); ?>" />
-										<span><?php esc_html_e( 'Right', 'cp' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_right" name="cert_field_padding_right" value="<?php echo esc_html( self::option('padding_right') ); ?>" />
+										<span><?php esc_html_e( 'Top', '<%= wpmudev.plugin.textdomain %>' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_top" name="cert_field_padding_top" value="<?php echo esc_html( self::option('padding_top') ); ?>" />
+										<span><?php esc_html_e( 'Bottom', '<%= wpmudev.plugin.textdomain %>' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_bottom" name="cert_field_padding_bottom" value="<?php echo esc_html( self::option('padding_bottom') ); ?>" />
+										<span><?php esc_html_e( 'Left', '<%= wpmudev.plugin.textdomain %>' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_left" name="cert_field_padding_left" value="<?php echo esc_html( self::option('padding_left') ); ?>" />
+										<span><?php esc_html_e( 'Right', '<%= wpmudev.plugin.textdomain %>' ) ?></span><input type="text" size="6" style="width: 80px;" class="padding_right" name="cert_field_padding_right" value="<?php echo esc_html( self::option('padding_right') ); ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<strong><?php esc_html_e( 'Page Orientation', 'cp' ); ?></strong><br />
+										<strong><?php esc_html_e( 'Page Orientation', '<%= wpmudev.plugin.textdomain %>' ); ?></strong><br />
 										<?php $selected_type = self::option( 'orientation' ); ?>
 										<select name="cert_field_orientation" style="width: max-width: 200px;" id="cert_field_orientation">
-											<option value="L" <?php selected( $selected_type, 'L', true ); ?>><?php _e( 'Landscape', 'cp' ); ?></option>
-											<option value="P" <?php selected( $selected_type, 'P', true ); ?>><?php _e( 'Portrait', 'cp' ); ?></option>
+											<option value="L" <?php selected( $selected_type, 'L', true ); ?>><?php _e( 'Landscape', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+											<option value="P" <?php selected( $selected_type, 'P', true ); ?>><?php _e( 'Portrait', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 										</select>
 									</td>
 								</tr>
@@ -192,7 +192,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				<?php // self::render_css_setting(); ?>
 
 				<p class="save-shanges">
-					<?php submit_button( __( 'Save Changes', 'cp' ) ); ?>
+					<?php submit_button( __( 'Save Changes', '<%= wpmudev.plugin.textdomain %>' ) ); ?>
 				</p>
 
 			</form>
@@ -204,9 +204,9 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		private static function render_css_setting() {
 			?>
 			<div class="postbox">
-				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'CSS', 'cp' ); ?></span></h3>
+				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'CSS', '<%= wpmudev.plugin.textdomain %>' ); ?></span></h3>
 				<div class="inside">
-					<p class="description"><?php _e( 'You can specify individual CSS rules for each of the certificate fields.<br />The follow CSS classes are available: .first_name, .last_name, .course_name, .completion_date, .certificate_number, .unit_list.<br />They are all wrapped in the .basic_certificate DIV tag.', 'cp' ); ?></p>
+					<p class="description"><?php _e( 'You can specify individual CSS rules for each of the certificate fields.<br />The follow CSS classes are available: .first_name, .last_name, .course_name, .completion_date, .certificate_number, .unit_list.<br />They are all wrapped in the .basic_certificate DIV tag.', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 					<table class="form-table">
 						<tbody id="items">
 						<tr>
@@ -232,37 +232,37 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 		public static function render_email_settings() {
 		?>
 			<div class="postbox">
-				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Basic Certificate E-mail', 'cp' ); ?></span></h3>
+				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Basic Certificate E-mail', '<%= wpmudev.plugin.textdomain %>' ); ?></span></h3>
 
 				<div class="inside">
-					<p class="description"><?php _e( 'E-mail to send certificate to student upon course completion. (if enabled)', 'cp' ); ?></p>
+					<p class="description"><?php _e( 'E-mail to send certificate to student upon course completion. (if enabled)', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 					<table class="form-table">
 						<tbody id="items">
 						<tr>
-							<th><?php _e( 'From Name', 'cp' ); ?></th>
+							<th><?php _e( 'From Name', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 							<td>
 								<input type="text" name="cert_field_from_name" value="<?php echo esc_attr( self::option( 'from_name' ) ); ?>"/>
 							</td>
 						</tr>
 
 						<tr>
-							<th><?php _e( 'From E-mail', 'cp' ); ?></th>
+							<th><?php _e( 'From E-mail', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 							<td>
 								<input type="text" name="cert_field_from_email" value="<?php echo esc_attr( self::option( 'from_email' ) ); ?>"/>
 							</td>
 						</tr>
 
 						<tr>
-							<th><?php _e( 'E-mail Subject', 'cp' ); ?></th>
+							<th><?php _e( 'E-mail Subject', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 							<td>
 								<input type="text" name="cert_field_email_subject" value="<?php echo esc_attr( self::option( 'email_subject' ) ); ?>"/>
 							</td>
 						</tr>
 
 						<tr>
-							<th><?php _e( 'E-mail Content', 'cp' ); ?></th>
+							<th><?php _e( 'E-mail Content', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 							<td>
-								<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', 'cp' ); ?></p>
+								<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
 								<?php
 								$editor_name    = "cert_field_email_content";
 								$editor_id      = "cert_field_email_content";
@@ -359,7 +359,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 
 			$course_completed_details = self::_get_fields( $student, $course );
 
-			$certificate_title = sprintf( __('Certificate %s', 'cp' ), $course_completed_details['certificate_number'] );
+			$certificate_title = sprintf( __('Certificate %s', '<%= wpmudev.plugin.textdomain %>' ), $course_completed_details['certificate_number'] );
 
 			// Get the styles and replace fields if they exist
 			$top = self::option( 'padding_top' );
@@ -445,12 +445,12 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				%3$s
 
 				Date: %4$s
-				Certificate no.: %5$s', 'cp' ), $fields[0], $fields[1], $fields[2], $fields[3], $fields[4] );
+				Certificate no.: %5$s', '<%= wpmudev.plugin.textdomain %>' ), $fields[0], $fields[1], $fields[2], $fields[3], $fields[4] );
 			return $default_certification_content;
 		}
 
 		private static function _default_email_subject() {
-			return sprintf( __( '[%s] Congratulations. You passed your course.', 'cp' ), get_option( 'blogname' ) );
+			return sprintf( __( '[%s] Congratulations. You passed your course.', '<%= wpmudev.plugin.textdomain %>' ), get_option( 'blogname' ) );
 		}
 
 		private static function _default_email_content() {
@@ -461,7 +461,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				Congratulations! You have completed the course: %2$s
 
 				Please find attached your certificate of completion.'
-				, 'cp' ), 'FIRST_NAME', 'COURSE_NAME'
+				, '<%= wpmudev.plugin.textdomain %>' ), 'FIRST_NAME', 'COURSE_NAME'
 			);
 
 			return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );

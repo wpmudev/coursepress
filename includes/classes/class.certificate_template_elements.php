@@ -62,13 +62,13 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_document_sizes() {
 			$document_template_size = isset( $this->template_metas['document_template_size'][0] ) ? $this->template_metas['document_template_size'][0] : 'A4';
 			?>
-			<label><?php _e( 'Certificate Paper Size', 'cp' ); ?></label>
+			<label><?php _e( 'Certificate Paper Size', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 			<select name="document_template_size_post_meta">
-				<option value="A4" <?php selected( $document_template_size, 'A4', true ); ?>><?php echo esc_attr_e( 'A4 (210 × 297)', 'cp' ); ?></option>
-				<option value="A5" <?php selected( $document_template_size, 'A5', true ); ?>><?php echo esc_attr_e( 'A5 (148 × 210)', 'cp' ); ?></option>
-				<option value="A6" <?php selected( $document_template_size, 'A6', true ); ?>><?php echo esc_attr_e( 'A6 (105 × 148)', 'cp' ); ?></option>
-				<option value="A7" <?php selected( $document_template_size, 'A7', true ); ?>><?php echo esc_attr_e( 'A7 (74 × 105)', 'cp' ); ?></option>
-				<option value="A8" <?php selected( $document_template_size, 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', 'cp' ); ?></option>
+				<option value="A4" <?php selected( $document_template_size, 'A4', true ); ?>><?php echo esc_attr_e( 'A4 (210 × 297)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="A5" <?php selected( $document_template_size, 'A5', true ); ?>><?php echo esc_attr_e( 'A5 (148 × 210)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="A6" <?php selected( $document_template_size, 'A6', true ); ?>><?php echo esc_attr_e( 'A6 (105 × 148)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="A7" <?php selected( $document_template_size, 'A7', true ); ?>><?php echo esc_attr_e( 'A7 (74 × 105)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="A8" <?php selected( $document_template_size, 'A8', true ); ?>><?php echo esc_attr_e( 'A8 (52 × 74)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 				<?php do_action( 'coursepress_additional_template_document_size' ); ?>
 			</select>
 		<?php
@@ -77,10 +77,10 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_document_orientation() {
 			$document_template_orientation = isset( $this->template_metas['document_template_orientation'][0] ) ? $this->template_metas['document_template_orientation'][0] : 'P';
 			?>
-			<label><?php _e( 'Orientation', 'cp' ); ?></label>
+			<label><?php _e( 'Orientation', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 			<select name="document_template_orientation_post_meta">
-				<option value="P" <?php selected( $document_template_orientation, 'P', true ); ?>><?php echo esc_attr_e( 'Portrait', 'cp' ); ?></option>
-				<option value="L" <?php selected( $document_template_orientation, 'L', true ); ?>><?php echo esc_attr_e( 'Landscape', 'cp' ); ?></option>
+				<option value="P" <?php selected( $document_template_orientation, 'P', true ); ?>><?php echo esc_attr_e( 'Portrait', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="L" <?php selected( $document_template_orientation, 'L', true ); ?>><?php echo esc_attr_e( 'Landscape', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 			</select>
 		<?php
 		}
@@ -90,10 +90,10 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			$right_margin = isset( $this->template_metas['document_template_right_margin'][0] ) ? $this->template_metas['document_template_right_margin'][0] : $right;
 			$left_margin  = isset( $this->template_metas['document_template_left_margin'][0] ) ? $this->template_metas['document_template_left_margin'][0] : $left;
 			?>
-			<label><?php _e( 'Document Margins', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( $top_margin ); ?>" />
-			<?php _e( 'Right', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( $right_margin ); ?>" />
-			<?php _e( 'Left', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( $left_margin ); ?>" />
+			<label><?php _e( 'Document Margins', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+			<?php _e( 'Top', '<%= wpmudev.plugin.textdomain %>' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( $top_margin ); ?>" />
+			<?php _e( 'Right', '<%= wpmudev.plugin.textdomain %>' ); ?> <input class="template_margin" type="text" name="document_template_right_margin_post_meta" value="<?php echo esc_attr( $right_margin ); ?>" />
+			<?php _e( 'Left', '<%= wpmudev.plugin.textdomain %>' ); ?> <input class="template_margin" type="text" name="document_template_left_margin_post_meta" value="<?php echo esc_attr( $left_margin ); ?>" />
 			</p>
 			<?php
 		}
@@ -101,20 +101,20 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		function get_full_background_image() {
 			$template_background_image = ( isset( $this->template_metas['document_template_background_image'][0] ) && $this->template_metas['document_template_background_image'][0] !== '' ? $this->template_metas['document_template_background_image'][0] : '' );
 			?>
-			<label><?php _e( 'Certificate Background Image', 'cp' ); ?></label>
+			<label><?php _e( 'Certificate Background Image', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 			<input class="file_url" type="text" size="36" name="document_template_background_image_post_meta" value="<?php echo esc_attr( $template_background_image ); ?>"/>
-			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', 'cp' ); ?>"/>
+			<input class="file_url_button button-secondary" type="button" value="<?php esc_attr_e( 'Browse', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
 		<?php
 		}
 
 		function get_cell_alignment() {
 			$cell_alignment = isset( $this->template_metas[ $this->element_name . '_cell_alignment' ][0] ) ? $this->template_metas[ $this->element_name . '_cell_alignment' ][0] : 'left';
 			?>
-			<label><?php _e( 'Cell Alignment', 'cp' ); ?></label>
+			<label><?php _e( 'Cell Alignment', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 			<select name="<?php echo $this->element_name; ?>_cell_alignment_post_meta">
-				<option value="left" <?php selected( $cell_alignment, 'left', true ); ?>><?php echo esc_attr_e( 'Left', 'cp' ); ?></option>
-				<option value="right" <?php selected( $cell_alignment, 'right', true ); ?>><?php echo esc_attr_e( 'Right', 'cp' ); ?></option>
-				<option value="center" <?php selected( $cell_alignment, 'center', true ); ?>><?php echo esc_attr_e( 'Center', 'cp' ); ?></option>
+				<option value="left" <?php selected( $cell_alignment, 'left', true ); ?>><?php echo esc_attr_e( 'Left', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="right" <?php selected( $cell_alignment, 'right', true ); ?>><?php echo esc_attr_e( 'Right', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="center" <?php selected( $cell_alignment, 'center', true ); ?>><?php echo esc_attr_e( 'Center', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 			</select>
 		<?php
 		}
@@ -123,29 +123,29 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 			$top_padding    = isset( $this->template_metas[ $this->element_name . '_top_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][0] : '0';
 			$bottom_padding = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][0] : '0';
 			?>
-			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>
-			<?php _e( 'Top', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" /><br />
-			<?php _e( 'Bottom', 'cp' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( $bottom_padding ); ?>" />
+			<label><?php _e( 'Element Break Lines', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+			<?php _e( 'Top', '<%= wpmudev.plugin.textdomain %>' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_top_padding_post_meta" value="<?php echo esc_attr( $top_padding ); ?>" /><br />
+			<?php _e( 'Bottom', '<%= wpmudev.plugin.textdomain %>' ); ?> <input class="template_element_padding" type="text" name="<?php echo $this->element_name; ?>_bottom_padding_post_meta" value="<?php echo esc_attr( $bottom_padding ); ?>" />
 			</p>
 			<?php
 		}
 
 		function get_font_style() {
 			?>
-			<label><?php _e( 'Font Style', 'cp' ); ?></label>
+			<label><?php _e( 'Font Style', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 
 			<select name="<?php echo $this->element_name; ?>_font_style_post_meta">
 				<?php
 				$font_style = isset( $this->template_metas[ $this->element_name . '_font_style' ][0] ) ? $this->template_metas[ $this->element_name . '_font_style' ][0] : '';
 				?>
-				<option value="" <?php selected( $font_style, '', true ); ?>><?php echo _e( 'Regular', 'cp' ); ?></option>
-				<option value="B" <?php selected( $font_style, 'B', true ); ?>><?php echo _e( 'Bold', 'cp' ); ?></option>
-				<option value="BI" <?php selected( $font_style, 'BI', true ); ?>><?php echo _e( 'Bold + Italic', 'cp' ); ?></option>
-				<option value="BU" <?php selected( $font_style, 'BU', true ); ?>><?php echo _e( 'Bold + Underline', 'cp' ); ?></option>
-				<option value="BIU" <?php selected( $font_style, 'BIU', true ); ?>><?php echo _e( 'Bold + Underline + Italic', 'cp' ); ?></option>
-				<option value="I" <?php selected( $font_style, 'I', true ); ?>><?php echo _e( 'Italic', 'cp' ); ?></option>
-				<option value="IU" <?php selected( $font_style, 'IU', true ); ?>><?php echo _e( 'Italic + Underline', 'cp' ); ?></option>
-				<option value="U" <?php selected( $font_style, 'U', true ); ?>><?php echo _e( 'Underline', 'cp' ); ?></option>
+				<option value="" <?php selected( $font_style, '', true ); ?>><?php echo _e( 'Regular', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="B" <?php selected( $font_style, 'B', true ); ?>><?php echo _e( 'Bold', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="BI" <?php selected( $font_style, 'BI', true ); ?>><?php echo _e( 'Bold + Italic', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="BU" <?php selected( $font_style, 'BU', true ); ?>><?php echo _e( 'Bold + Underline', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="BIU" <?php selected( $font_style, 'BIU', true ); ?>><?php echo _e( 'Bold + Underline + Italic', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="I" <?php selected( $font_style, 'I', true ); ?>><?php echo _e( 'Italic', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="IU" <?php selected( $font_style, 'IU', true ); ?>><?php echo _e( 'Italic + Underline', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value="U" <?php selected( $font_style, 'U', true ); ?>><?php echo _e( 'Underline', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 			</select>
 		<?php
 		}
@@ -167,40 +167,40 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 
 		function tcpdf_get_fonts( $prefix = 'document', $default_font = 'helvetica' ) {
 			?>
-			<label><?php _e( 'Font', 'cp' ); ?></label>
+			<label><?php _e( 'Font', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 			<select name="<?php echo $prefix; ?>_font_post_meta">
 				<?php
 				$document_font = isset( $this->template_metas[ $prefix . '_font' ][0] ) ? $this->template_metas[ $prefix . '_font' ][0] : $default_font;
 				?>
-				<option value='aealarabiya' <?php selected( $document_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', 'cp' ); ?></option>
-				<option value='aefurat' <?php selected( $document_font, 'aefurat', true ); ?>><?php _e( 'Furat', 'cp' ); ?></option>
-				<option value='cid0cs' <?php selected( $document_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', 'cp' ); ?></option>
-				<option value='cid0jp' <?php selected( $document_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', 'cp' ); ?></option>
-				<option value='cid0kr' <?php selected( $document_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', 'cp' ); ?></option>
-				<option value='courier <?php selected( $document_font, 'courier', true ); ?>'><?php _e( 'Courier', 'cp' ); ?></option>
-				<option value='dejavusans' <?php selected( $document_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', 'cp' ); ?></option>
-				<option value='dejavusanscondensed' <?php selected( $document_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', 'cp' ); ?></option>
-				<option value='dejavusansextralight' <?php selected( $document_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', 'cp' ); ?></option>
-				<option value='dejavusansmono' <?php selected( $document_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', 'cp' ); ?></option>
-				<option value='dejavuserif' <?php selected( $document_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', 'cp' ); ?></option>
-				<option value='dejavuserifcondensed' <?php selected( $document_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', 'cp' ); ?></option>
-				<option value='freemono' <?php selected( $document_font, 'freemono', true ); ?>><?php _e( 'FreeMono', 'cp' ); ?></option>
-				<option value='freesans' <?php selected( $document_font, 'freesans', true ); ?>><?php _e( 'FreeSans', 'cp' ); ?></option>
-				<option value='freeserif' <?php selected( $document_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', 'cp' ); ?></option>
-				<option value='helvetica' <?php selected( $document_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', 'cp' ); ?></option>
-				<option value='hysmyeongjostdmedium' <?php selected( $document_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', 'cp' ); ?></option>
-				<option value='kozgopromedium' <?php selected( $document_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'cp' ); ?></option>
-				<option value='kozminproregular' <?php selected( $document_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', 'cp' ); ?></option>
-				<option value='msungstdlight' <?php selected( $document_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', 'cp' ); ?></option>
-				<option value='pdfacourier' <?php selected( $document_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', 'cp' ); ?></option>
-				<option value='pdfahelvetica' <?php selected( $document_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', 'cp' ); ?></option>
-				<option value='pdfasymbol' <?php selected( $document_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', 'cp' ); ?></option>
-				<option value='pdfatimes' <?php selected( $document_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', 'cp' ); ?></option>
-				<option value='pdfazapfdingbats' <?php selected( $document_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', 'cp' ); ?></option>
-				<option value='stsongstdlight' <?php selected( $document_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', 'cp' ); ?></option>
-				<option value='symbol' <?php selected( $document_font, 'symbol', true ); ?>><?php _e( 'Symbol', 'cp' ); ?></option>
-				<option value='times' <?php selected( $document_font, 'times', true ); ?>><?php _e( 'Times-Roman', 'cp' ); ?></option>
-				<option value='zapfdingbats' <?php selected( $document_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', 'cp' ); ?></option>
+				<option value='aealarabiya' <?php selected( $document_font, 'aealarabiya', true ); ?>><?php _e( 'Al Arabiya', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='aefurat' <?php selected( $document_font, 'aefurat', true ); ?>><?php _e( 'Furat', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='cid0cs' <?php selected( $document_font, 'cid0cs', true ); ?>><?php _e( 'Arial Unicode MS (Simplified Chinese)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='cid0jp' <?php selected( $document_font, 'cid0jp', true ); ?>><?php _e( 'Arial Unicode MS (Japanese)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='cid0kr' <?php selected( $document_font, 'cid0kr', true ); ?>><?php _e( 'Arial Unicode MS (Korean)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='courier <?php selected( $document_font, 'courier', true ); ?>'><?php _e( 'Courier', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavusans' <?php selected( $document_font, 'dejavusans', true ); ?>><?php _e( 'DejaVu Sans', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavusanscondensed' <?php selected( $document_font, 'dejavusanscondensed', true ); ?>><?php _e( 'DejaVu Sans Condensed', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavusansextralight' <?php selected( $document_font, 'dejavusansextralight', true ); ?>><?php _e( 'DejaVu Sans ExtraLight', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavusansmono' <?php selected( $document_font, 'dejavusansmono', true ); ?>><?php _e( 'DejaVu Sans Mono', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavuserif' <?php selected( $document_font, 'dejavuserif', true ); ?>><?php _e( 'DejaVu Serif', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='dejavuserifcondensed' <?php selected( $document_font, 'dejavuserifcondensed', true ); ?>><?php _e( 'DejaVu Serif Condensed', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='freemono' <?php selected( $document_font, 'freemono', true ); ?>><?php _e( 'FreeMono', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='freesans' <?php selected( $document_font, 'freesans', true ); ?>><?php _e( 'FreeSans', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='freeserif' <?php selected( $document_font, 'freeserif', true ); ?>><?php _e( 'FreeSerif', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='helvetica' <?php selected( $document_font, 'helvetica', true ); ?>><?php _e( 'Helvetica', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='hysmyeongjostdmedium' <?php selected( $document_font, 'hysmyeongjostdmedium', true ); ?>><?php _e( 'MyungJo Medium (Korean)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='kozgopromedium' <?php selected( $document_font, 'kozgopromedium', true ); ?>><?php _e( 'Kozuka Gothic Pro (Japanese Sans-Serif)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='kozminproregular' <?php selected( $document_font, 'kozminproregular', true ); ?>><?php _e( 'Kozuka Mincho Pro (Japanese Serif)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='msungstdlight' <?php selected( $document_font, 'msungstdlight', true ); ?>><?php _e( 'MSung Light (Traditional Chinese)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='pdfacourier' <?php selected( $document_font, 'pdfacourier', true ); ?>><?php _e( 'PDFA Courier', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='pdfahelvetica' <?php selected( $document_font, 'pdfahelvetica', true ); ?>><?php _e( 'PDFA Helvetica', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='pdfasymbol' <?php selected( $document_font, 'pdfasymbol', true ); ?>><?php _e( 'PDFA Symbol', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='pdfatimes' <?php selected( $document_font, 'pdfatimes', true ); ?>><?php _e( 'PDFA Times', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='pdfazapfdingbats' <?php selected( $document_font, 'pdfazapfdingbats', true ); ?>><?php _e( 'PDFA Zapfdingbats', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='stsongstdlight' <?php selected( $document_font, 'stsongstdlight', true ); ?>><?php _e( 'STSong Light (Simplified Chinese)', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='symbol' <?php selected( $document_font, 'symbol', true ); ?>><?php _e( 'Symbol', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='times' <?php selected( $document_font, 'times', true ); ?>><?php _e( 'Times-Roman', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+				<option value='zapfdingbats' <?php selected( $document_font, 'zapfdingbats', true ); ?>><?php _e( 'ZapfDingbats', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 				<?php do_action( 'coursepress_template_font' ); ?>
 			</select>
 		<?php
@@ -213,14 +213,14 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 				if ( $box_title ) {
 					echo $box_title;
 				} else {
-					_e( 'Font Size', 'cp' );
+					_e( 'Font Size', '<%= wpmudev.plugin.textdomain %>' );
 				}
 				?></label>
 			<select name="<?php echo $this->element_name; ?>_font_size_post_meta">
 				<?php
 				for ( $i = 8; $i <= 100; $i ++ ) {
 					?>
-					<option value='<?php echo $i; ?>' <?php selected( $font_size, $i, true ); ?>><?php echo $i; ?> <?php _e( 'pt', 'cp' ); ?></option>
+					<option value='<?php echo $i; ?>' <?php selected( $font_size, $i, true ); ?>><?php echo $i; ?> <?php _e( 'pt', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 				<?php
 				}
 				?>

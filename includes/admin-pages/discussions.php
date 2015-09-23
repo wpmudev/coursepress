@@ -25,9 +25,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 					case 'delete':
 						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
 							$discussion->delete_discussion();
-							$message = __( 'Selected discussions have been deleted successfully.', 'cp' );
+							$message = __( 'Selected discussions have been deleted successfully.', '<%= wpmudev.plugin.textdomain %>' );
 						} else {
-							$message = __( "You don't have right permissions to delete the discussion.", 'cp' );
+							$message = __( "You don't have right permissions to delete the discussion.", '<%= wpmudev.plugin.textdomain %>' );
 						}
 						break;
 				}
@@ -57,27 +57,27 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 	if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['discussion_id'] ) && is_numeric( $_GET['discussion_id'] ) ) {
 
 		if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'delete_discussion_' . $_GET['discussion_id'] ) ) {
-			die( __( 'Cheating huh?', 'cp' ) );
+			die( __( 'Cheating huh?', '<%= wpmudev.plugin.textdomain %>' ) );
 		}
 
 		$discussion_object = $discussion->get_discussion();
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
 			$discussion->delete_discussion( $force_delete = true );
-			$message = __( 'Selected discussion has been deleted successfully.', 'cp' );
+			$message = __( 'Selected discussion has been deleted successfully.', '<%= wpmudev.plugin.textdomain %>' );
 		} else {
-			$message = __( "You don't have right permissions to delete the discussion.", 'cp' );
+			$message = __( "You don't have right permissions to delete the discussion.", '<%= wpmudev.plugin.textdomain %>' );
 		}
 	}
 	?>
 	<div class="wrap nosubsub cp-wrap">
 		<div class="icon32" id="icon-themes"><br></div>
-		<h2><?php _e( 'Discussions', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
-				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?>
+		<h2><?php _e( 'Discussions', '<%= wpmudev.plugin.textdomain %>' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
+				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a><?php } ?>
 		</h2>
 
 		<?php
-		$ms['da'] = __( 'New Discussion added successfully!', 'cp' );
-		$ms['du'] = __( 'Discussion updated successfully.', 'cp' );
+		$ms['da'] = __( 'New Discussion added successfully!', '<%= wpmudev.plugin.textdomain %>' );
+		$ms['du'] = __( 'Discussion updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
 
 		if ( isset( $_GET['ms'] ) ) {
 			$message = $ms[ $_GET['ms'] ];
@@ -97,9 +97,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Discussions', 'cp' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Discussions', '<%= wpmudev.plugin.textdomain %>' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( $s ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Discussions', 'cp' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Discussions', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -110,10 +110,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) ) { ?>
 					<div class="alignleft actions">
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
-							<option value="delete"><?php _e( 'Delete', 'cp' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+							<option value="delete"><?php _e( 'Delete', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 						</select>
-						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'cp' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
 					</div>
 				<?php } ?>
 
@@ -128,8 +128,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		wp_nonce_field( 'bulk-discussions' );
 
 		$columns = array(
-			"discussion_title" => __( 'Discussion', 'cp' ),
-			"course"           => __( 'Course', 'cp' ),
+			"discussion_title" => __( 'Discussion', '<%= wpmudev.plugin.textdomain %>' ),
+			"course"           => __( 'Course', '<%= wpmudev.plugin.textdomain %>' ),
 		);
 
 
@@ -141,7 +141,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		);
 
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) ) ) {
-			$columns["remove"] = __( 'Remove', 'cp' );
+			$columns["remove"] = __( 'Remove', '<%= wpmudev.plugin.textdomain %>' );
 			$col_sizes[]       = '7';
 		}
 		?>
@@ -182,10 +182,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 
 						<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $discussion_object->ID ); ?></div>
 						<div class="row-actions">
-							<span class="edit_discussion"><a href="<?php echo admin_url( 'admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID ); ?>"><?php _e( 'Edit', 'cp' ); ?></a> | </span>
+							<span class="edit_discussion"><a href="<?php echo admin_url( 'admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID ); ?>"><?php _e( 'Edit', '<%= wpmudev.plugin.textdomain %>' ); ?></a> | </span>
 
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_course_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) { ?>
-								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_' . $discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();"><?php _e( 'Delete', 'cp' ); ?></a></span>
+								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_' . $discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();"><?php _e( 'Delete', '<%= wpmudev.plugin.textdomain %>' ); ?></a></span>
 							<?php } ?>
 						</div>
 					</td>
@@ -194,7 +194,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 						$course      = new Course( $discussion_object->course_id );
 						$course_name = $course->details->post_title;
 					} else {
-						$course_name = __( 'All Courses', 'cp' );
+						$course_name = __( 'All Courses', '<%= wpmudev.plugin.textdomain %>' );
 					}
 					?>
 					<td <?php echo $style; ?>> <?php echo $course_name; ?> </td>
@@ -218,7 +218,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				?>
 				<tr>
 					<td colspan="6">
-						<div class="zero-courses"><?php _e( 'No discussions found.', 'cp' ) ?></div>
+						<div class="zero-courses"><?php _e( 'No discussions found.', '<%= wpmudev.plugin.textdomain %>' ) ?></div>
 					</td>
 				</tr>
 			<?php

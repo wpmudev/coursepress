@@ -65,7 +65,7 @@ class audio_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -83,7 +83,7 @@ class audio_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
 				<label class="bold-label"><?php
-					_e( 'Element Title', 'cp' );
+					_e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' );
 					$this->time_estimation( $data );
 					?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -92,29 +92,29 @@ class audio_module extends Unit_Module {
 				<?php echo $this->show_title_on_front_element( $data ); ?>
 
 				<div class="audio_url_holder">
-					<label><?php echo sprintf( __( 'Put a URL or Browse for an audio file. Supported audio extensions ( %s )', 'cp' ), $supported_audio_extensions ); ?>
+					<label><?php echo sprintf( __( 'Put a URL or Browse for an audio file. Supported audio extensions ( %s )', '<%= wpmudev.plugin.textdomain %>' ), $supported_audio_extensions ); ?>
 						<input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr( ( isset( $data->audio_url ) ? $data->audio_url : '' ) ); ?>"/>
-						<input class="audio_url_button" type="button" value="<?php _e( 'Browse', 'cp' ); ?>"/>
+						<input class="audio_url_button" type="button" value="<?php _e( 'Browse', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
 
-						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_audio_extensions ); ?></div>
+						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', '<%= wpmudev.plugin.textdomain %>' ), $supported_audio_extensions ); ?></div>
 					</label>
 				</div>
 
 				<div class="audio_additional_controls">
-					<label><?php _e( 'Play in a loop', 'cp' ); ?></label>
+					<label><?php _e( 'Play in a loop', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
 					<?php
 					$data_loop     = ( isset( $data->loop ) ? $data->loop : 'No' );
 					$data_autoplay = ( isset( $data->autoplay ) ? $data->autoplay : 'No' );
 					?>
-					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_loop, 'Yes', true ); ?>/> <?php _e( 'Yes', 'cp' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_loop, 'Yes', true ); ?>/> <?php _e( 'Yes', '<%= wpmudev.plugin.textdomain %>' ); ?>
 					<br/><br/>
-					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_loop, 'No', true ); ?>/> <?php _e( 'No', 'cp' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_loop, 'No', true ); ?>/> <?php _e( 'No', '<%= wpmudev.plugin.textdomain %>' ); ?>
 					<br/><br/>
 
-					<label><?php _e( 'Autoplay', 'cp' ); ?></label>
-					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_autoplay, 'Yes', true ); ?>/> <?php _e( 'Yes', 'cp' ); ?>
+					<label><?php _e( 'Autoplay', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_autoplay, 'Yes', true ); ?>/> <?php _e( 'Yes', '<%= wpmudev.plugin.textdomain %>' ); ?>
 					<br/><br/>
-					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_autoplay, 'No', true ); ?>/> <?php _e( 'No', 'cp' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_autoplay, 'No', true ); ?>/> <?php _e( 'No', '<%= wpmudev.plugin.textdomain %>' ); ?>
 					<br/><br/>
 				</div>
 
@@ -143,8 +143,8 @@ class audio_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Add audio files with player to the unit', 'cp' );
-		$this->label       = __( 'Audio', 'cp' );
+		$this->description = __( 'Add audio files with player to the unit', '<%= wpmudev.plugin.textdomain %>' );
+		$this->label       = __( 'Audio', '<%= wpmudev.plugin.textdomain %>' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

@@ -8,10 +8,10 @@
 				<div class="cp_messaging_wrap"><?php messaging_inbox_page_output(); ?></div>
 			<?php
 			} else {
-				_e( 'Messaging plugin is not active.', 'cp' );
+				_e( 'Messaging plugin is not active.', '<%= wpmudev.plugin.textdomain %>' );
 			}
 		} else {
-			_e( 'Messaging is not allowed.', 'cp' );
+			_e( 'Messaging is not allowed.', '<%= wpmudev.plugin.textdomain %>' );
 		}
 		?>
 	</main>

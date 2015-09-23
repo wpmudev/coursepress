@@ -11,10 +11,10 @@
 
 			<?php
 			} else {
-				_e( 'Messaging plugin is not active.', 'cp' );
+				_e( 'Messaging plugin is not active.', '<%= wpmudev.plugin.textdomain %>' );
 			}
 		} else {
-			_e( 'Messaging is not allowed.', 'cp' );
+			_e( 'Messaging is not allowed.', '<%= wpmudev.plugin.textdomain %>' );
 		}
 		?>
 	</main>

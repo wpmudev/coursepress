@@ -134,10 +134,10 @@ class CoursePress_Pagination {
 		$this->calculate == true;
 		$error = false;
 		if ( $this->urlF and $this->urlF != '%' and strpos( $this->target, $this->urlF ) === false ) {
-			//_e( "You have specified one wildcard to replace, but does it does not exist in the target", 'cp' );
+			//_e( "You have specified one wildcard to replace, but does it does not exist in the target", '<%= wpmudev.plugin.textdomain %>' );
 			$error = true;
 		} elseif ( $this->urlF and $this->urlF == '%' and strpos( $this->target, $this->urlF ) === false ) {
-			//_e( "You must specify the wildcard% target to replace the page number", 'cp' );
+			//_e( "You must specify the wildcard% target to replace the page number", '<%= wpmudev.plugin.textdomain %>' );
 			$error = true;
 		}
 
@@ -189,7 +189,7 @@ class CoursePress_Pagination {
 			}
 			//}
 
-			$this->pagination .= '&nbsp;<span class="paging-input">' . $this->page . ' ' . __( 'of', 'cp' ) . ' <span class="total-pages">' . $lastpage . '</span></span>&nbsp;';
+			$this->pagination .= '&nbsp;<span class="paging-input">' . $this->page . ' ' . __( 'of', '<%= wpmudev.plugin.textdomain %>' ) . ' <span class="total-pages">' . $lastpage . '</span></span>&nbsp;';
 
 			if ( $this->page ) {
 				if ( $this->page < $counter - 1 ) {
@@ -198,7 +198,7 @@ class CoursePress_Pagination {
 					$this->pagination .= "&nbsp;<a class=\"next-page disabled\">&rsaquo;</a>&nbsp;<a class=\"last-page disabled\">&raquo;</a>";
 				}
 				if ( $this->showCounter ) {
-					$this->pagination .= "<div class=\"pagination_data\">(" . $this->total_pages . " " . __( 'Pages', 'cp' ) . "   )</div>";
+					$this->pagination .= "<div class=\"pagination_data\">(" . $this->total_pages . " " . __( 'Pages', '<%= wpmudev.plugin.textdomain %>' ) . "   )</div>";
 				}
 			}
 		}

@@ -7,9 +7,9 @@ module.exports = function(grunt) {
         branches: {
             dev: 'coursepress/pro',
             wporg: 'coursepress/standard',
-            base: 'master'
+            base: 'coursepress/base'
         },
-        marketpress_file: ''
+        marketpress_file: '128762_marketpress-ecommerce-3.0.0.2.zip'
     };
 
     var plugin_patterns = {
@@ -18,6 +18,7 @@ module.exports = function(grunt) {
             { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
             { match: /<%= wpmudev.plugin.textdomain %>/g, replace: 'cp' },
             { match: /<%= wpmudev.plugin.option.is_pro %>/g, replace: 'true' },
+            { match: /<%= wpmudev.plugin.option.marketpress_file %>/g, replace: plugin_info.marketpress_file },
             { match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },

@@ -6,17 +6,17 @@ class CP_Course_Calendar extends WP_Widget {
 
 	function CP_Course_Calendar() {
 		$widget_ops = array( 'classname'   => 'cp_course_calendar_widget',
-		                     'description' => __( 'Displays the course calendar.', 'cp' )
+		                     'description' => __( 'Displays the course calendar.', '<%= wpmudev.plugin.textdomain %>' )
 		);
 
-		parent::__construct( 'CP_Course_Calendar', __( 'Course Calendar', 'cp' ), $widget_ops );
+		parent::__construct( 'CP_Course_Calendar', __( 'Course Calendar', '<%= wpmudev.plugin.textdomain %>' ), $widget_ops );
 
 		$this->date_indicator = array(
-			'indicator_light_block' => __( 'Light theme - Block', 'cp' ),
-			'indicator_light_line'  => __( 'Light theme - Line', 'cp' ),
-			'indicator_dark_block'  => __( 'Dark theme - Block', 'cp' ),
-			'indicator_dark_line'   => __( 'Dark theme - Line', 'cp' ),
-			'indicator_none'        => __( 'Theme/Custom CSS', 'cp' ),
+			'indicator_light_block' => __( 'Light theme - Block', '<%= wpmudev.plugin.textdomain %>' ),
+			'indicator_light_line'  => __( 'Light theme - Line', '<%= wpmudev.plugin.textdomain %>' ),
+			'indicator_dark_block'  => __( 'Dark theme - Block', '<%= wpmudev.plugin.textdomain %>' ),
+			'indicator_dark_line'   => __( 'Dark theme - Line', '<%= wpmudev.plugin.textdomain %>' ),
+			'indicator_none'        => __( 'Theme/Custom CSS', '<%= wpmudev.plugin.textdomain %>' ),
 		);
 	}
 
@@ -36,13 +36,13 @@ class CP_Course_Calendar extends WP_Widget {
 
 		$courses = get_posts( $args );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'cp' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', '<%= wpmudev.plugin.textdomain %>' ); ?>:
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'cp' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', '<%= wpmudev.plugin.textdomain %>' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'course' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'course' ); ?>">
-					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', 'cp' ); ?></option>
+					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 					<?php
 					foreach ( $courses as $course ) {
 						?>
@@ -54,14 +54,14 @@ class CP_Course_Calendar extends WP_Widget {
 			</label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'pre_text' ); ?>"><?php _e( 'Previous Month Text:', 'cp' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '« Previous', 'cp' ) : esc_attr( $pre_text ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'pre_text' ); ?>"><?php _e( 'Previous Month Text:', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '« Previous', '<%= wpmudev.plugin.textdomain %>' ) : esc_attr( $pre_text ) ); ?>"/></label>
 		</p>
-		<p><label for="<?php echo $this->get_field_id( 'next_text' ); ?>"><?php _e( 'Next Month Text:', 'cp' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next »', 'cp' ) : esc_attr( $next_text ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'next_text' ); ?>"><?php _e( 'Next Month Text:', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next »', '<%= wpmudev.plugin.textdomain %>' ) : esc_attr( $next_text ) ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'indicator' ); ?>"><?php _e( 'Dates indicators', 'cp' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'indicator' ); ?>"><?php _e( 'Dates indicators', '<%= wpmudev.plugin.textdomain %>' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'indicator' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'indicator' ); ?>">
 					<?php
 					foreach ( $this->date_indicator as $key => $value ) {

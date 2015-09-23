@@ -7,7 +7,7 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 		var $element_title = 'Logo';
 
 		function on_creation() {
-			$this->element_title = apply_filters( 'coursepress_logo_element_title', __( 'Logo', 'cp' ) );
+			$this->element_title = apply_filters( 'coursepress_logo_element_title', __( 'Logo', '<%= wpmudev.plugin.textdomain %>' ) );
 		}
 
 		function admin_content() {
@@ -15,8 +15,8 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 			echo parent::get_element_margins();
 			?>
 			<label>
-				<input class="file_url" type="text" size="36" name="meta_featured_url" value="" placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', 'cp' ); ?>"/>
-				<input class="file_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'cp' ); ?>">
+				<input class="file_url" type="text" size="36" name="meta_featured_url" value="" placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+				<input class="file_url_button button-secondary" type="button" value="<?php _e( 'Browse', '<%= wpmudev.plugin.textdomain %>' ); ?>">
 			</label>
 		<?php
 		}
@@ -32,5 +32,5 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 
 	}
 
-	cp_register_template_element( 'cp_logo_element', __( 'Logo', 'cp' ) );
+	cp_register_template_element( 'cp_logo_element', __( 'Logo', '<%= wpmudev.plugin.textdomain %>' ) );
 }

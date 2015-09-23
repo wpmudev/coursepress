@@ -109,8 +109,8 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
 					'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
 					// The plugin source.
-					'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
-					'alt_message' => __( 'Plugin already installed.', 'cp' ),
+					'source_message' => __( 'Included in the CoursePress Plugin', '<%= wpmudev.plugin.textdomain %>' ),
+					'alt_message' => __( 'Plugin already installed.', '<%= wpmudev.plugin.textdomain %>' ),
 					'external_url'   => '',
 					// http://premium.wpmudev.org/project/e-commerce/
 			);
@@ -124,7 +124,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					'base_path'      => 'wordpress-ecommerce/marketpress.php',
 					'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 					//without protocol (i.e. https://) because it may be killed by mod_security
-					'source_message' => __( 'WordPress.org Repository', 'cp' ),
+					'source_message' => __( 'WordPress.org Repository', '<%= wpmudev.plugin.textdomain %>' ),
 					'external_url'   => '',
 					// https://wordpress.org/plugins/wordpress-ecommerce/
 				);
@@ -157,19 +157,19 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			);
 
 			$this->strings = array(
-				'page_title'                      => __( 'Install Plugin', 'cp' ),
-				'installing'                      => sprintf( __( 'Installing Plugin: %s', 'cp' ), $this->plugin['name'] ),
-				'oops'                            => __( 'Something went wrong with the plugin API.', 'cp' ),
-				'notice_can_install_recommended'  => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'cp' ), $this->plugin['name'] ),
+				'page_title'                      => __( 'Install Plugin', '<%= wpmudev.plugin.textdomain %>' ),
+				'installing'                      => sprintf( __( 'Installing Plugin: %s', '<%= wpmudev.plugin.textdomain %>' ), $this->plugin['name'] ),
+				'oops'                            => __( 'Something went wrong with the plugin API.', '<%= wpmudev.plugin.textdomain %>' ),
+				'notice_can_install_recommended'  => sprintf( __( 'Install %1$s plugin in order to sell courses.', '<%= wpmudev.plugin.textdomain %>' ), $this->plugin['name'] ),
 				'notice_can_activate_recommended' => '',
-				'install_link'                    => sprintf( __( 'Install %1$s', 'cp' ), $this->plugin['name'] ),
-				'activate_link'                   => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'cp' ), $this->plugin['name'] ),
-				'return'                          => __( 'Return to MarketPress Installer', 'cp' ),
-				'dashboard'                       => __( 'Return to the dashboard', 'cp' ),
-				'plugin_activated'                => __( 'Plugin activated successfully.', 'cp' ),
-				'activated_successfully'          => __( 'The following plugin was activated successfully:', 'cp' ),
-				'complete'                        => __( 'Installed and activated successfully.', 'cp' ),
-				'dismiss'                         => __( 'Dismiss this notice', 'cp' ),
+				'install_link'                    => sprintf( __( 'Install %1$s', '<%= wpmudev.plugin.textdomain %>' ), $this->plugin['name'] ),
+				'activate_link'                   => sprintf( __( 'Activate %1$s plugin in order to sell courses', '<%= wpmudev.plugin.textdomain %>' ), $this->plugin['name'] ),
+				'return'                          => __( 'Return to MarketPress Installer', '<%= wpmudev.plugin.textdomain %>' ),
+				'dashboard'                       => __( 'Return to the dashboard', '<%= wpmudev.plugin.textdomain %>' ),
+				'plugin_activated'                => __( 'Plugin activated successfully.', '<%= wpmudev.plugin.textdomain %>' ),
+				'activated_successfully'          => __( 'The following plugin was activated successfully:', '<%= wpmudev.plugin.textdomain %>' ),
+				'complete'                        => __( 'Installed and activated successfully.', '<%= wpmudev.plugin.textdomain %>' ),
+				'dismiss'                         => __( 'Dismiss this notice', '<%= wpmudev.plugin.textdomain %>' ),
 			);
 
 			self::$instance = $this;
@@ -263,17 +263,17 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		public function get_plugin_status( $plugin_dir ) {
 			$status = '';
 			if ( $this->is_plugin_installed( '/' . $plugin_dir ) ) {
-				$status .= '<font color="green">' . __( 'Installed', 'cp' ) . '</font>';
+				$status .= '<font color="green">' . __( 'Installed', '<%= wpmudev.plugin.textdomain %>' ) . '</font>';
 			} else {
-				$status .= '<font color="red">' . __( 'Not Installed', 'cp' ) . '</font>';
+				$status .= '<font color="red">' . __( 'Not Installed', '<%= wpmudev.plugin.textdomain %>' ) . '</font>';
 			}
 
 			$status .= ' / ';
 
 			if ( is_plugin_active( $this->plugin['base_path'] ) ) {
-				$status .= '<font color="green">' . __( 'Active', 'cp' ) . '</font>';
+				$status .= '<font color="green">' . __( 'Active', '<%= wpmudev.plugin.textdomain %>' ) . '</font>';
 			} else {
-				$status .= '<font color="red">' . __( 'Inactive', 'cp' ) . '</font>';
+				$status .= '<font color="red">' . __( 'Inactive', '<%= wpmudev.plugin.textdomain %>' ) . '</font>';
 			}
 
 			return $status;
@@ -291,9 +291,9 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( ! is_plugin_active( $this->plugin['base_path'] ) ) {
 				if ( $installed ) {
 					$active = false;
-					$status .= __( 'Activate ', 'cp' );
+					$status .= __( 'Activate ', '<%= wpmudev.plugin.textdomain %>' );
 				} else {
-					$status .= __( 'Install & Activate ', 'cp' );
+					$status .= __( 'Install & Activate ', '<%= wpmudev.plugin.textdomain %>' );
 				}
 			} else {
 				$active = true;
@@ -316,7 +316,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( ! $this->is_plugin_installed( '/' . $this->plugin['slug'] ) ) {
 				$actions = array(
 					'install' => sprintf(
-						'<a href="%1$s" title="' . __( 'Install', 'cp' ) . ' %2$s">' . __( 'Install', 'cp' ) . '</a>', wp_nonce_url(
+						'<a href="%1$s" title="' . __( 'Install', '<%= wpmudev.plugin.textdomain %>' ) . ' %2$s">' . __( 'Install', '<%= wpmudev.plugin.textdomain %>' ) . '</a>', wp_nonce_url(
 						esc_url_raw( add_query_arg(
 							array(
 								'page'              => CP_Plugin_Activation::$instance->menu,
@@ -333,7 +333,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			elseif ( ! $this->is_plugin_active( $this->plugin['base_path'] ) ) {
 				$actions = array(
 					'activate' => sprintf(
-						'<a href="%1$s" title="' . __( 'Activate', 'cp' ) . ' %2$s">' . __( 'Activate', 'cp' ) . '</a>', esc_url( add_query_arg(
+						'<a href="%1$s" title="' . __( 'Activate', '<%= wpmudev.plugin.textdomain %>' ) . ' %2$s">' . __( 'Activate', '<%= wpmudev.plugin.textdomain %>' ) . '</a>', esc_url( add_query_arg(
 						array(
 							'page'                     => CP_Plugin_Activation::$instance->menu,
 							'plugin'                   => $this->plugin['slug'],
@@ -376,9 +376,9 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					<table class="wp-list-table widefat fixed plugins">
 						<thead>
 						<tr>
-							<th scope="col" id="plugin" class="manage-column column-plugin" style=""><?php _e( 'Plugin', 'cp' ); ?></th>
-							<th scope="col" id="source" class="manage-column column-source" style=""><?php _e( 'Source', 'cp' ); ?></th>
-							<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', 'cp' ); ?></th>
+							<th scope="col" id="plugin" class="manage-column column-plugin" style=""><?php _e( 'Plugin', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
+							<th scope="col" id="source" class="manage-column column-source" style=""><?php _e( 'Source', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
+							<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', '<%= wpmudev.plugin.textdomain %>' ); ?></th>
 						</tr>
 						</thead>
 						<?php
@@ -530,7 +530,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 				// All plugins are active, so we display the complete string and hide the plugin menu.
 				if ( empty( $complete ) ) {
-					echo '<p>' . sprintf( $this->strings['complete'], '<a href="' . admin_url() . '" title="' . __( 'Return to the Dashboard', 'cp' ) . '">' . __( 'Return to the Dashboard', 'cp' ) . '</a>' ) . '</p>';
+					echo '<p>' . sprintf( $this->strings['complete'], '<a href="' . admin_url() . '" title="' . __( 'Return to the Dashboard', '<%= wpmudev.plugin.textdomain %>' ) . '">' . __( 'Return to the Dashboard', '<%= wpmudev.plugin.textdomain %>' ) . '</a>' ) . '</p>';
 					echo '<style type="text/css">#adminmenu .wp-submenu li.current { display: none !important; }</style>';
 				}
 
@@ -664,15 +664,15 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					// Register the nag messages and prepare them to be processed.
 					$nag_class = version_compare( $this->wp_version, '3.8', '<' ) ? 'updated' : 'update-nag';
 					if ( ! empty( $this->strings['nag_type'] ) ) {
-						add_settings_error( 'cp', 'cp', $rendered, sanitize_html_class( strtolower( $this->strings['nag_type'] ) ) );
+						add_settings_error( '<%= wpmudev.plugin.textdomain %>', '<%= wpmudev.plugin.textdomain %>', $rendered, sanitize_html_class( strtolower( $this->strings['nag_type'] ) ) );
 					} else {
-						add_settings_error( 'cp', 'cp', $rendered, $nag_class );
+						add_settings_error( '<%= wpmudev.plugin.textdomain %>', '<%= wpmudev.plugin.textdomain %>', $rendered, $nag_class );
 					}
 				}
 
 				// Admin options pages already output settings_errors, so this is to avoid duplication.
 				if ( 'options-general' !== $current_screen->parent_base ) {
-					settings_errors( 'cp' );
+					settings_errors( '<%= wpmudev.plugin.textdomain %>' );
 				}
 			}
 		}

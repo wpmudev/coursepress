@@ -15,7 +15,7 @@ if ( ! class_exists( 'CoursePress_Virtual_Page' ) ) {
 		var $type = null;
 		var $comment_status = 'closed';
 
-		// const TITLE_COURSE_LIST = __( 'Courses', 'cp' );
+		// const TITLE_COURSE_LIST = __( 'Courses', '<%= wpmudev.plugin.textdomain %>' );
 
 		function __construct( $args ) {
 			if ( ! isset( $args['slug'] ) ) {

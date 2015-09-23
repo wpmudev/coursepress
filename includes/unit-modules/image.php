@@ -44,7 +44,7 @@ class image_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -61,7 +61,7 @@ class image_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
 				<label class="bold-label"><?php
-					_e( 'Element Title', 'cp' );
+					_e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' );
 					$this->time_estimation( $data );
 					?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -82,12 +82,12 @@ class image_module extends Unit_Module {
 				</div>
 
 				<div class="file_url_holder">
-					<label><?php _e( 'Enter a URL or Browse for an image.', 'cp' ); ?>
+					<label><?php _e( 'Enter a URL or Browse for an image.', '<%= wpmudev.plugin.textdomain %>' ); ?>
 						<input class="image_url" type="text" size="36" name="<?php echo $this->name; ?>_image_url[]" value="<?php echo esc_attr( ( isset( $data->image_url ) ? $data->image_url : '' ) ); ?>"/>
 						<input class="attachment_id" type="hidden" size="36" name="<?php echo $this->name; ?>_attachment_id[]" value="<?php echo esc_attr( ( isset( $data->attachment_id ) ? $data->attachment_id : '0' ) ); ?>"/>
-						<input class="image_url_button" type="button" value="<?php _e( 'Browse', 'cp' ); ?>"/>
+						<input class="image_url_button" type="button" value="<?php _e( 'Browse', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
 
-						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_image_extensions ); ?></div>
+						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', '<%= wpmudev.plugin.textdomain %>' ), $supported_image_extensions ); ?></div>
 					</label>
 				</div>
 
@@ -105,8 +105,8 @@ class image_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Image, 100% width', 'cp' );
-		$this->label       = __( 'Image', 'cp' );
+		$this->description = __( 'Image, 100% width', '<%= wpmudev.plugin.textdomain %>' );
+		$this->label       = __( 'Image', '<%= wpmudev.plugin.textdomain %>' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}
@@ -121,8 +121,8 @@ class image_module extends Unit_Module {
 			<label class="show_media_caption">
 				<input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ? 'checked' : ( empty( $data ) || ! isset( $data->show_media_caption ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ? 'yes' : empty( $data ) ? 'yes' : 'no' ) ?>"/>
-				<?php _e( 'Show Caption', 'cp' ); ?><br/>
-				<span class="element_title_description"><?php _e( 'Show a caption for this image.', 'cp' ); ?></span>
+				<?php _e( 'Show Caption', '<%= wpmudev.plugin.textdomain %>' ); ?><br/>
+				<span class="element_title_description"><?php _e( 'Show a caption for this image.', '<%= wpmudev.plugin.textdomain %>' ); ?></span>
 			</label>
 
 			<div class="caption-source <?php echo ( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ) || empty( $data ) ? '' : 'hidden'; ?>">
@@ -132,10 +132,10 @@ class image_module extends Unit_Module {
 				// Usually the module ID, but if we cant use the ID, we'll take a timestamp
 				$unique = ! empty( $data ) ? $data->ID : time();
 				?>
-				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked( $caption_source, 'media', true ); ?>/> <?php _e( 'Media Caption', 'cp' ); ?>
+				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked( $caption_source, 'media', true ); ?>/> <?php _e( 'Media Caption', '<%= wpmudev.plugin.textdomain %>' ); ?>
 				<span class="element_title_description">
 					<?php
-					$no_caption_text = __( 'Media has no caption.', 'cp' );
+					$no_caption_text = __( 'Media has no caption.', '<%= wpmudev.plugin.textdomain %>' );
 					$attachment_id   = false;
 					if ( ! empty( $data ) ) {
 						$attachment_id = ! empty( $data->attachment_id ) ? $data->attachment_id : false;
@@ -155,9 +155,9 @@ class image_module extends Unit_Module {
 					}
 					?>
 				</span>
-				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked( $caption_source, 'custom', true ); ?>/> <?php _e( 'Custom Caption', 'cp' ); ?>
+				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked( $caption_source, 'custom', true ); ?>/> <?php _e( 'Custom Caption', '<%= wpmudev.plugin.textdomain %>' ); ?>
 				<input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>"/>
-				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo( ! empty( $data ) && isset( $data->caption_custom_text ) ? $data->caption_custom_text : '' ); ?>" placeholder="<?php echo( ! empty( $data ) && isset( $data->caption_custom_text ) ? '' : __( 'Please enter a custom caption here.', 'cp' ) ); ?>"/><br/><br/>
+				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo( ! empty( $data ) && isset( $data->caption_custom_text ) ? $data->caption_custom_text : '' ); ?>" placeholder="<?php echo( ! empty( $data ) && isset( $data->caption_custom_text ) ? '' : __( 'Please enter a custom caption here.', '<%= wpmudev.plugin.textdomain %>' ) ); ?>"/><br/><br/>
 			</div>
 		</div>
 	<?php

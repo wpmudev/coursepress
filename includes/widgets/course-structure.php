@@ -4,9 +4,9 @@ class CP_Course_Structure extends WP_Widget {
 
 	function CP_Course_Structure() {
 		$widget_ops = array( 'classname'   => 'cp_course_strucutre_widget',
-		                     'description' => __( 'Displays a selected course structure', 'cp' )
+		                     'description' => __( 'Displays a selected course structure', '<%= wpmudev.plugin.textdomain %>' )
 		);
-		parent::__construct( 'CP_Course_Structure', __( 'Course Structure', 'cp' ), $widget_ops );
+		parent::__construct( 'CP_Course_Structure', __( 'Course Structure', '<%= wpmudev.plugin.textdomain %>' ), $widget_ops );
 	}
 
 	function form( $instance ) {
@@ -22,13 +22,13 @@ class CP_Course_Structure extends WP_Widget {
 
 		$courses = get_posts( $args );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'cp' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', '<%= wpmudev.plugin.textdomain %>' ); ?>:
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'cp' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', '<%= wpmudev.plugin.textdomain %>' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'course' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'course' ); ?>">
-					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', 'cp' ); ?></option>
+					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
 					<?php
 					foreach ( $courses as $course ) {
 						?>
@@ -85,7 +85,7 @@ class CP_Course_Structure extends WP_Widget {
 			}
 
 			echo '<div class="course_structure_widget">';
-			// $course->course_structure_front( __('Free', 'cp') );
+			// $course->course_structure_front( __('Free', '<%= wpmudev.plugin.textdomain %>') );
 			echo do_shortcode( '[course_structure course_id="' . $course_id . '" label="" show_title="no" show_divider="no"]' );
 			// Strange bug.
 			echo '</div>&nbsp;';

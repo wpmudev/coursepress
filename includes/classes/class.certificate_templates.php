@@ -124,7 +124,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 			$page = preg_replace( "/\s\s+/", '', $page ); //Strip excess whitespace
 			$pdf->writeHTML( $page, true, 0, true, 0 ); //Write page
 			$pdf->lastPage();
-			$pdf->Output( ( isset( $course->details->post_name ) ? $course->details->post_name : __( 'Certificate', 'cp' ) ) . '.pdf', ( $force_download ? 'D' : 'I' ) );
+			$pdf->Output( ( isset( $course->details->post_name ) ? $course->details->post_name : __( 'Certificate', '<%= wpmudev.plugin.textdomain %>' ) ) . '.pdf', ( $force_download ? 'D' : 'I' ) );
 			exit;
 		}
 
@@ -167,7 +167,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 			$default_fields = array(
 				array(
 					'field_name'        => 'post_title',
-					'field_title'       => __( 'Template Name', 'cp' ),
+					'field_title'       => __( 'Template Name', '<%= wpmudev.plugin.textdomain %>' ),
 					'field_type'        => 'text',
 					'field_description' => '',
 					'post_field_type'   => 'post_title',
@@ -175,7 +175,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 				),
 				array(
 					'field_name'        => 'post_date',
-					'field_title'       => __( 'Date', 'cp' ),
+					'field_title'       => __( 'Date', '<%= wpmudev.plugin.textdomain %>' ),
 					'field_type'        => 'text',
 					'field_description' => '',
 					'post_field_type'   => 'post_date',
@@ -192,14 +192,14 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$columns = array();
 
-			$columns['ID'] = __( 'ID', 'cp' );
+			$columns['ID'] = __( 'ID', '<%= wpmudev.plugin.textdomain %>' );
 
 			foreach ( $results as $result ) {
 				$columns[ $result['field_name'] ] = $result['field_title'];
 			}
 
-			$columns['edit']   = __( 'Edit', 'cp' );
-			$columns['delete'] = __( 'Delete', 'cp' );
+			$columns['edit']   = __( 'Edit', '<%= wpmudev.plugin.textdomain %>' );
+			$columns['delete'] = __( 'Delete', '<%= wpmudev.plugin.textdomain %>' );
 
 			return $columns;
 		}

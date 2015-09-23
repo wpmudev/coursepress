@@ -797,7 +797,7 @@ function coursepress_get_invitation_passcode_from_email() {
 }
 
 function coursepress_get_invitation_passcode_email_subject() {
-	return get_option( 'invitation_passcode_email_subject', __( 'Invitation to a Course ( Psss...for selected ones only )', 'cp' ) );
+	return get_option( 'invitation_passcode_email_subject', __( 'Invitation to a Course ( Psss...for selected ones only )', '<%= wpmudev.plugin.textdomain %>' ) );
 }
 
 function coursepress_get_invitation_content_passcode_email() {
@@ -815,7 +815,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' );
+%5$s Team', '<%= wpmudev.plugin.textdomain %>' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>', 'PASSCODE' );
 
 	return get_option( 'invitation_content_passcode_email', $default_invitation_content_passcode_email );
 }
@@ -831,7 +831,7 @@ function coursepress_get_invitation_from_email() {
 }
 
 function coursepress_get_invitation_email_subject() {
-	return get_option( 'invitation_email_subject', __( 'Invitation to a Course', 'cp' ) );
+	return get_option( 'invitation_email_subject', __( 'Invitation to a Course', '<%= wpmudev.plugin.textdomain %>' ) );
 }
 
 function coursepress_get_invitation_content_email() {
@@ -847,7 +847,7 @@ Check this page for more info on the course: %4$s
 If you have any question feel free to contact us.
 
 Yours sincerely,
-%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
+%5$s Team', '<%= wpmudev.plugin.textdomain %>' ), 'STUDENT_FIRST_NAME', 'COURSE_NAME', 'COURSE_EXCERPT', '<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
 
 	return get_option( 'invitation_content_email', $default_invitation_content_email );
 }
@@ -863,7 +863,7 @@ function coursepress_get_registration_from_email() {
 }
 
 function coursepress_get_registration_email_subject() {
-	return get_option( 'registration_email_subject', __( 'Registration Status', 'cp' ) );
+	return get_option( 'registration_email_subject', __( 'Registration Status', '<%= wpmudev.plugin.textdomain %>' ) );
 }
 
 function coursepress_get_registration_content_email() {
@@ -874,7 +874,7 @@ Congratulations! You have registered account with %2$s successfully! You may log
 Get started by exploring our courses here: %4$s
 
 Yours sincerely,
-%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
+%5$s Team', '<%= wpmudev.plugin.textdomain %>' ), 'STUDENT_FIRST_NAME', 'BLOG_NAME', '<a href="LOGIN_ADDRESS">LOGIN_ADDRESS</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>' );
 
 	return get_option( 'registration_content_email', $default_registration_content_email );
 }
@@ -890,7 +890,7 @@ function coursepress_get_mp_order_from_email() {
 }
 
 function coursepress_get_mp_order_email_subject() {
-	return get_option( 'mp_order_email_subject', __( 'Order Confirmation', 'cp' ) );
+	return get_option( 'mp_order_email_subject', __( 'Order Confirmation', '<%= wpmudev.plugin.textdomain %>' ) );
 }
 
 function coursepress_get_mp_order_content_email() {
@@ -903,7 +903,7 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 Yours sincerely,
-%5$s Team', 'cp' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
+%5$s Team', '<%= wpmudev.plugin.textdomain %>' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', '<%= wpmudev.plugin.textdomain %>' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
 
 	return get_option( 'mp_order_content_email', $default_mp_order_content_email );
 }
@@ -919,7 +919,7 @@ function coursepress_get_enrollment_from_email() {
 }
 
 function coursepress_get_enrollment_email_subject() {
-	return get_option( 'enrollment_email_subject', __( 'Enrollment Confirmation', 'cp' ) );
+	return get_option( 'enrollment_email_subject', __( 'Enrollment Confirmation', '<%= wpmudev.plugin.textdomain %>' ) );
 }
 
 function coursepress_get_enrollment_content_email() {
@@ -932,7 +932,7 @@ You may check all courses you are enrolled in here: %3$s.
 Or you can explore other courses in your %4$s
 
 Yours sincerely,
-%5$s Team', 'cp' ), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
+%5$s Team', '<%= wpmudev.plugin.textdomain %>' ), 'STUDENT_FIRST_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', '<%= wpmudev.plugin.textdomain %>' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
 
 	return get_option( 'enrollment_content_email', $default_enrollment_content_email );
 }
@@ -948,7 +948,7 @@ function coursepress_get_instructor_invitation_from_email() {
 }
 
 function cp_get_instructor_invitation_email_subject() {
-	return get_option( 'instructor_invitation_email_subject', sprintf( __( 'Invitation to be an instructor at %s', 'cp' ), get_option( 'blogname' ) ) );
+	return get_option( 'instructor_invitation_email_subject', sprintf( __( 'Invitation to be an instructor at %s', '<%= wpmudev.plugin.textdomain %>' ), get_option( 'blogname' ) ) );
 }
 
 function cp_get_instructor_invitation_email() {
@@ -966,7 +966,7 @@ If you haven\'t yet got a username you will need to create one.
 
 %4$s
 	'
-	, 'cp' ), 'INSTRUCTOR_FIRST_NAME', 'COURSE_NAME', '<a href="CONFIRMATION_LINK">CONFIRMATION_LINK</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>'
+	, '<%= wpmudev.plugin.textdomain %>' ), 'INSTRUCTOR_FIRST_NAME', 'COURSE_NAME', '<a href="CONFIRMATION_LINK">CONFIRMATION_LINK</a>', '<a href="WEBSITE_ADDRESS">WEBSITE_ADDRESS</a>'
 	);
 
 	return get_option( 'instructor_invitation_email', $default_instructor_invitation_email );
@@ -1107,7 +1107,7 @@ function cp_instructors_pending( $course_id, $has_capability ) {
 
 function cp_students_drop_down() {
 	$content = '';
-	$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
+	$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', '<%= wpmudev.plugin.textdomain %>' ) . '" class="chosen-select">';
 
 	$args = array(
 		'role'			 => '',
@@ -1149,7 +1149,7 @@ function cp_students_drop_down() {
 
 function cp_instructors_drop_down( $class = '' ) {
 	$content = '';
-	$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'cp' ) . '" class="' . $class . '">';
+	$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', '<%= wpmudev.plugin.textdomain %>' ) . '" class="' . $class . '">';
 
 	$args = array(
 		//'role' => 'instructor',
