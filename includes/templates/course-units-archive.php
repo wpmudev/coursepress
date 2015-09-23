@@ -12,11 +12,11 @@ do_shortcode( '[course_units_loop]' ); //required for getting unit results
 echo do_shortcode( '[course_unit_archive_submenu]' );
 $complete_message = '';
 if ( 100 == (int) $progress ) {
-	$complete_message = '<div class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', '<%= wpmudev.plugin.textdomain %>' ) . '</div>';
+	$complete_message = '<div class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</div>';
 }
 
 ?>
-<h2><?php _e( 'Course Units', '<%= wpmudev.plugin.textdomain %>' );
+<h2><?php _e( 'Course Units', 'cp' );
 	echo ' ' . $complete_message; ?></h2>
 <div class="units-archive">
 	<ul class="units-archive-list">

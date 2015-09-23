@@ -7,7 +7,7 @@ if ( ! class_exists( 'cp_text_element' ) ) {
 		var $element_title = '';
 
 		function on_creation() {
-			$this->element_title = apply_filters( 'coursepress_certificate_title_element_title', __( 'Custom Text', '<%= wpmudev.plugin.textdomain %>' ) );
+			$this->element_title = apply_filters( 'coursepress_certificate_title_element_title', __( 'Custom Text', 'cp' ) );
 
 		}
 
@@ -17,5 +17,5 @@ if ( ! class_exists( 'cp_text_element' ) ) {
 
 	}
 
-	cp_register_template_element( 'cp_text_element', __( 'Custom Text', '<%= wpmudev.plugin.textdomain %>' ) );
+	cp_register_template_element( 'cp_text_element', __( 'Custom Text', 'cp' ) );
 }

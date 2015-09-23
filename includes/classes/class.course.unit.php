@@ -55,7 +55,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( !empty( $unit ) ) {
 
 				if ( $unit->post_title == '' ) {
-					$unit->post_title = __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' );
+					$unit->post_title = __( 'Untitled', 'cp' );
 				}
 
 				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
@@ -289,7 +289,7 @@ if ( !class_exists( 'Unit' ) ) {
 				if ( $minutes >= 1 || $seconds >= 1 ) {
 					return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ( $minutes . ':' . ( $seconds <= 9 ? '0' . $seconds : $seconds ) . ' min' ) );
 				} else {
-					return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', '<%= wpmudev.plugin.textdomain %>' ) );
+					return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
 				}
 			}
 		}
@@ -320,7 +320,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( $minutes >= 1 || $seconds >= 1 ) {
 				return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ( $minutes . ':' . ( $seconds <= 9 ? '0' . $seconds : $seconds ) . ' min' ) );
 			} else {
-				return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', '<%= wpmudev.plugin.textdomain %>' ) );
+				return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'cp' ) );
 			}
 		}
 
@@ -331,7 +331,7 @@ if ( !class_exists( 'Unit' ) ) {
 				'post_author'	 => $user_id,
 				'post_content'	 => '',
 				'post_status'	 => 'auto-draft', //$post_status
-				'post_title'	 => __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ),
+				'post_title'	 => __( 'Untitled', 'cp' ),
 				'post_type'		 => 'unit',
 				'post_parent'	 => $course_id
 			);
@@ -410,7 +410,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 				$unit = get_post( $unit_id, $this->output );
 
-				if ( $_POST[ 'unit_name' ] !== '' && $_POST[ 'unit_name' ] !== __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) /* && $_POST['unit_description'] !== '' */ ) {
+				if ( $_POST[ 'unit_name' ] !== '' && $_POST[ 'unit_name' ] !== __( 'Untitled', 'cp' ) /* && $_POST['unit_description'] !== '' */ ) {
 					if ( $unit->post_status !== 'publish' ) {
 						$post_status = 'private';
 					} else {

@@ -45,10 +45,10 @@ $students_count = $course->get_number_of_students();
 
 	<h2><?php
 		if ( $course_id == '' ) {
-			_e( 'New Course', '<%= wpmudev.plugin.textdomain %>' );
+			_e( 'New Course', 'cp' );
 		}
 		if ( $course_id != '' ) {
-			_e( 'Course', '<%= wpmudev.plugin.textdomain %>' );
+			_e( 'Course', 'cp' );
 		}
 
 		if ( ! isset( $_GET['course_id'] ) ) {
@@ -67,21 +67,21 @@ $students_count = $course->get_number_of_students();
 	</h2>
 
 	<?php
-	$message['ca']  = __( 'New Course added successfully!', '<%= wpmudev.plugin.textdomain %>' );
-	$message['cu']  = __( 'Course updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['usc'] = __( 'Unit status changed successfully', '<%= wpmudev.plugin.textdomain %>' );
-	$message['ud']  = __( 'Unit deleted successfully', '<%= wpmudev.plugin.textdomain %>' );
-	$message['ua']  = __( 'New Unit added successfully!', '<%= wpmudev.plugin.textdomain %>' );
-	$message['uu']  = __( 'Unit updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['as']  = __( 'Student added to the class successfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['ac']  = __( 'New class has been added successfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['dc']  = __( 'Selected class has been deleted successfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['us']  = __( 'Selected student has been withdrawed successfully from the course.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['usl'] = __( 'Selected students has been withdrawed successfully from the course.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['is']  = __( 'Invitation sent sucessfully.', '<%= wpmudev.plugin.textdomain %>' );
-	$message['ia']  = __( 'Successfully added as instructor.', '<%= wpmudev.plugin.textdomain %>' );
+	$message['ca']  = __( 'New Course added successfully!', 'cp' );
+	$message['cu']  = __( 'Course updated successfully.', 'cp' );
+	$message['usc'] = __( 'Unit status changed successfully', 'cp' );
+	$message['ud']  = __( 'Unit deleted successfully', 'cp' );
+	$message['ua']  = __( 'New Unit added successfully!', 'cp' );
+	$message['uu']  = __( 'Unit updated successfully.', 'cp' );
+	$message['as']  = __( 'Student added to the class successfully.', 'cp' );
+	$message['ac']  = __( 'New class has been added successfully.', 'cp' );
+	$message['dc']  = __( 'Selected class has been deleted successfully.', 'cp' );
+	$message['us']  = __( 'Selected student has been withdrawed successfully from the course.', 'cp' );
+	$message['usl'] = __( 'Selected students has been withdrawed successfully from the course.', 'cp' );
+	$message['is']  = __( 'Invitation sent sucessfully.', 'cp' );
+	$message['ia']  = __( 'Successfully added as instructor.', 'cp' );
 
-	$error_message['wrong_email'] = __( 'Please enter valid e-mail address', '<%= wpmudev.plugin.textdomain %>' );
+	$error_message['wrong_email'] = __( 'Please enter valid e-mail address', 'cp' );
 
 	if ( isset( $_GET['unit_id'] ) && isset( $_GET['new_status'] ) ) {
 		$_GET['ms'] = 'usc';
@@ -117,9 +117,9 @@ $students_count = $course->get_number_of_students();
 
 	<?php
 	$menus             = array();
-	$menus['overview'] = __( 'Course Overview', '<%= wpmudev.plugin.textdomain %>' );
-	$menus['units']    = __( 'Units', '<%= wpmudev.plugin.textdomain %>' ) . ( count( $units ) >= 1 ? ' ( ' . count( $units ) . ' )' : '' );
-	$menus['students'] = __( 'Students', '<%= wpmudev.plugin.textdomain %>' ) . ( $students_count >= 1 ? ' ( ' . $students_count . ' )' : '' );
+	$menus['overview'] = __( 'Course Overview', 'cp' );
+	$menus['units']    = __( 'Units', 'cp' ) . ( count( $units ) >= 1 ? ' ( ' . count( $units ) . ' )' : '' );
+	$menus['students'] = __( 'Students', 'cp' ) . ( $students_count >= 1 ? ' ( ' . $students_count . ' )' : '' );
 	$menus             = apply_filters( 'coursepress_course_new_menus', $menus );
 	?>
 
@@ -142,7 +142,7 @@ $students_count = $course->get_number_of_students();
 			 $course = new Course( $course_id );
 			 if ( $course->can_show_permalink() ) {
 			 ?>
-			 <a class="nav-tab view-course-link" href="<?php echo get_permalink( $course_id ); ?>" target="_new"><?php _e( 'View Course', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+			 <a class="nav-tab view-course-link" href="<?php echo get_permalink( $course_id ); ?>" target="_new"><?php _e( 'View Course', 'cp' ); ?></a>
 			 <?php
 			 }
 			 } */
@@ -153,7 +153,7 @@ $students_count = $course->get_number_of_students();
 		  $unit = new Course( $unit_id );
 		  if ( $unit->can_show_permalink() ) {
 		  ?>
-		  <a class="nav-tab view-course-link" href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'View Unit', '<%= wpmudev.plugin.textdomain %>' );?></a>
+		  <a class="nav-tab view-course-link" href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'View Unit', 'cp' );?></a>
 		  <?php
 		  }
 		  } */
@@ -166,7 +166,7 @@ $students_count = $course->get_number_of_students();
 				$data_nonce  = wp_create_nonce( 'toggle-' . $course_id );
 				?>
 				<div id="course_state_id" data-id="<?php echo $course_id ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
-				<span class="publish-course-message"><?php _e( 'Publish Course', '<%= wpmudev.plugin.textdomain %>' ); ?></span>
+				<span class="publish-course-message"><?php _e( 'Publish Course', 'cp' ); ?></span>
 				<span class="draft <?php echo ( $course_object->post_status == 'unpublished' ) ? 'on' : '' ?>"><i class="fa fa-ban"></i></span>
 
 				<div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo ( $course_object->post_status == 'unpublished' ) ? '' : 'on' ?>">

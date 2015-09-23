@@ -14,7 +14,7 @@ $coursepress->check_access( $course_id );
 <?php
 echo do_shortcode( '[course_unit_archive_submenu]' );
 ?>
-	<h2><?php _e( 'Notifications', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
+	<h2><?php _e( 'Notifications', 'cp' ); ?></h2>
 	<div class="clearfix"></div>
 
 	<ul class="notification-archive-list">

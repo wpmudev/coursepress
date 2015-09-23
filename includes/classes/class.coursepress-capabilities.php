@@ -532,7 +532,7 @@ class CoursePress_Capabilities {
 	 * @return bool
 	 */
 	public static function is_pro() {
-		return '<%= wpmudev.plugin.option.is_pro %>' === 'true';
+		return 'true' === 'true';
 	}
 
 	/**

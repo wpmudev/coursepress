@@ -10,7 +10,7 @@ if ( is_multisite() ) {
 
 if ( isset( $_GET['delete_response'] ) && ( current_user_can( 'coursepress_delete_student_response_cap' ) || current_user_can( 'manage_options' ) ) ) {
 	if ( ! isset( $_GET['cp_delete_response_nonce'] ) || ! wp_verify_nonce( $_GET['cp_delete_response_nonce'], 'delete_response' ) ) {
-		die( __( 'You do not have required persmissions for this action.', '<%= wpmudev.plugin.textdomain %>' ) );
+		die( __( 'You do not have required persmissions for this action.', 'cp' ) );
 	} else {
 		Unit_Module::delete_module_response( (int) $_GET['response_id'] );
 		wp_redirect( admin_url( 'admin.php?page=assessment&course_id=' . (int) $_GET['course_id'] . '&unit_id=' . (int) $_GET['unit_id'] . '&assessment_page=' . (int) $_GET['assessment_page'] ) );
@@ -21,13 +21,13 @@ if ( isset( $_GET['delete_response'] ) && ( current_user_can( 'coursepress_delet
 
 	<div class="wrap nosubsub cp-wrap">
 <?php if ( $user_id !== '' && $course_id !== '' ) { ?>
-	<?php _e( 'Go to:', '<%= wpmudev.plugin.textdomain %>' ); ?>
-	<a href="<?php echo admin_url( 'admin.php?action=workbook&student_id=' . $user_id . '&page=students&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', '<%= wpmudev.plugin.textdomain %>' ); ?></a> |
+	<?php _e( 'Go to:', 'cp' ); ?>
+	<a href="<?php echo admin_url( 'admin.php?action=workbook&student_id=' . $user_id . '&page=students&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'cp' ); ?></a> |
 
-	<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+	<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'cp' ); ?></a>
 <?php } ?>
 	<div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
-	<h2><?php _e( 'Assessment', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
+	<h2><?php _e( 'Assessment', 'cp' ); ?></h2>
 
 <?php
 if ( isset( $_GET['page_num'] ) ) {
@@ -43,7 +43,7 @@ if ( isset( $_GET['response_id'] ) ) {
 
 	$course_id = get_post_meta( $response_id, 'course_id', true );
 	if ( ! CoursePress_Capabilities::is_course_instructor( $course_id ) ) {
-		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', '<%= wpmudev.plugin.textdomain %>' ) . '</p>';
+		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', 'cp' ) . '</p>';
 	}
 
 
@@ -76,7 +76,7 @@ if ( isset( $_GET['response_id'] ) ) {
 
 						<?php if ( isset( $unit_module->post_content ) && ! empty( $unit_module->post_content ) ) { ?>
 							<div class="module_response_description">
-								<label><?php _e( 'Description', '<%= wpmudev.plugin.textdomain %>' ); ?>
+								<label><?php _e( 'Description', 'cp' ); ?>
 									<?php if ( current_user_can( 'coursepress_delete_student_response_cap' ) || current_user_can( 'manage_options' ) ) { ?>
 										<a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=assessment&course_id=' . (int) $_GET['course_id'] . '&unit_id=' . (int) $_GET['unit_id'] . '&user_id=' . (int) $_GET['user_id'] . '&module_id=' . (int) $_GET['module_id'] . '&response_id=' . (int) $_GET['response_id'] . '&assessment_page=' . (int) $_GET['assessment_page'] . '&delete_response' ), 'delete_response', 'cp_delete_response_nonce' ); ?>" onclick="return removeStudentResponse();">
 											<i class="fa fa-times-circle cp-move-icon remove-response-btn"></i>
@@ -110,24 +110,24 @@ if ( isset( $_GET['response_id'] ) ) {
 							$grade_time      = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $grade_data['time'] );
 
 							if ( ! empty( $grade ) ) {
-								_e( 'Grade by ', '<%= wpmudev.plugin.textdomain %>' );
+								_e( 'Grade by ', 'cp' );
 								?>
 								<a href="<?php echo admin_url( 'admin.php?page=instructors&action=view&instructor_id=' . $instructor_id ); ?>"><?php echo esc_html( $instructor_name->display_name ); ?></a>
 								<?php
-								_e( ' on ' . $grade_time, '<%= wpmudev.plugin.textdomain %>' );
+								_e( ' on ' . $grade_time, 'cp' );
 							}
 							?>
 
 						</div>
 
-						<?php submit_button( __( 'Save Changes', '<%= wpmudev.plugin.textdomain %>' ), 'primary', 'save-response-changes' ); ?>
+						<?php submit_button( __( 'Save Changes', 'cp' ), 'primary', 'save-response-changes' ); ?>
 
 						<?php
 						$assessable = get_post_meta( $module_id, 'gradable_answer', true );
 						if ( $assessable == 'yes' ) {
 							?>
 							<select name="response_grade" id="response_grade">
-								<option value=""><?php _e( 'Choose Grade', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+								<option value=""><?php _e( 'Choose Grade', 'cp' ); ?></option>
 								<?php
 								for ( $i = 0; $i <= 100; $i ++ ) {
 									?>
@@ -211,7 +211,7 @@ if ( isset( $_GET['response_id'] ) ) {
 
 					if ( $courses_with_students == 0 ) {
 						?>
-						<option value=""><?php _e( '0 courses with enrolled students.', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+						<option value=""><?php _e( '0 courses with enrolled students.', 'cp' ); ?></option>
 					<?php
 					}
 					?>
@@ -241,8 +241,8 @@ if ( isset( $_GET['response_id'] ) ) {
 						}
 						?>
 						<!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-																													<option value="all" <?php // selected( $classes, 'all', true );        ?>><?php // _e( 'All Classes', '<%= wpmudev.plugin.textdomain %>' );        ?></option>
-																													<option value="" <?php // selected( $classes, '', true );        ?>><?php // _e( 'Default', '<%= wpmudev.plugin.textdomain %>' );        ?></option>
+																													<option value="all" <?php // selected( $classes, 'all', true );        ?>><?php // _e( 'All Classes', 'cp' );        ?></option>
+																													<option value="" <?php // selected( $classes, '', true );        ?>><?php // _e( 'Default', 'cp' );        ?></option>
 							<?php
 						//$course_classes = get_post_meta( $current_course_id, 'course_classes', true );
 						//foreach ( $course_classes as $course_class ) {
@@ -253,7 +253,7 @@ if ( isset( $_GET['response_id'] ) ) {
 						?>
 																												</select>-->
 
-						<label class="ungraded"><?php _e( 'Ungraded Elements Only', '<%= wpmudev.plugin.textdomain %>' ); ?>
+						<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'cp' ); ?>
 							<?php
 							if ( isset( $_GET['ungraded'] ) && $_GET['ungraded'] == 'yes' ) {
 								$ungraded_filter = 'yes';
@@ -333,13 +333,13 @@ if ( isset( $_GET['response_id'] ) ) {
 							<h2><?php echo $current_unit->post_title; ?></h2>
 							<?php
 							$columns = array(
-								"name"            => __( 'Student', '<%= wpmudev.plugin.textdomain %>' ),
-								"module"          => __( 'Element', '<%= wpmudev.plugin.textdomain %>' ),
-								"title"           => __( 'Title', '<%= wpmudev.plugin.textdomain %>' ),
-								"submission_date" => __( 'Submitted', '<%= wpmudev.plugin.textdomain %>' ),
-								"response"        => __( 'Response', '<%= wpmudev.plugin.textdomain %>' ),
-								"grade"           => __( 'Grade', '<%= wpmudev.plugin.textdomain %>' ),
-								"comment"         => __( 'Comment', '<%= wpmudev.plugin.textdomain %>' ),
+								"name"            => __( 'Student', 'cp' ),
+								"module"          => __( 'Element', 'cp' ),
+								"title"           => __( 'Title', 'cp' ),
+								"submission_date" => __( 'Submitted', 'cp' ),
+								"response"        => __( 'Response', 'cp' ),
+								"grade"           => __( 'Grade', 'cp' ),
+								"comment"         => __( 'Comment', 'cp' ),
 							);
 
 
@@ -446,20 +446,20 @@ if ( isset( $_GET['response_id'] ) ) {
 														<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
 															<?php echo $mod->post_title; ?>
 															<div class="extra-information visible-extra-small">
-																<?php _e( 'Submitted:', '<%= wpmudev.plugin.textdomain %>' ); ?>
-																<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', '<%= wpmudev.plugin.textdomain %>' ) ); ?>
+																<?php _e( 'Submitted:', 'cp' ); ?>
+																<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'cp' ) ); ?>
 															</div>
 														</td>
 
 														<td class="column-submission-date <?php echo $style . ' ' . $visibility_class; ?>">
-															<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', '<%= wpmudev.plugin.textdomain %>' ) ); ?>
+															<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'cp' ) ); ?>
 														</td>
 
 														<td class="column-response <?php echo $style . ' ' . $visibility_class; ?>">
 															<?php
 															if ( count( $response ) >= 1 ) {
 																?>
-																<a class="assessment-view-response-link" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $current_unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+																<a class="assessment-view-response-link" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $current_unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'cp' ); ?></a>
 															<?php
 															} else {
 																echo '-';
@@ -480,23 +480,23 @@ if ( isset( $_GET['response_id'] ) ) {
 																	if ( isset( $grade_data ) ) {
 																		?>
 																		<a class="response_grade" alt="<?php
-																		_e( 'Grade by ', '<%= wpmudev.plugin.textdomain %>' );
+																		_e( 'Grade by ', 'cp' );
 																		echo $instructor_name->display_name;
-																		_e( ' on ' . $grade_time, '<%= wpmudev.plugin.textdomain %>' );
+																		_e( ' on ' . $grade_time, 'cp' );
 																		?>" title="<?php
-																		_e( 'Grade by ', '<%= wpmudev.plugin.textdomain %>' );
+																		_e( 'Grade by ', 'cp' );
 																		echo $instructor_name->display_name;
-																		_e( ' on ' . $grade_time, '<%= wpmudev.plugin.textdomain %>' );
+																		_e( ' on ' . $grade_time, 'cp' );
 																		?>"><?php echo $grade; ?>%</a>
 																	<?php
 																	} else {
-																		_e( 'Pending grade', '<%= wpmudev.plugin.textdomain %>' );
+																		_e( 'Pending grade', 'cp' );
 																	}
 																} else {
 																	echo '-';
 																}
 															} else {
-																_e( 'Non-assessable', '<%= wpmudev.plugin.textdomain %>' );
+																_e( 'Non-assessable', 'cp' );
 															}
 															?>
 														</td>
@@ -528,7 +528,7 @@ if ( isset( $_GET['response_id'] ) ) {
 								if ( ! isset( $input_modules_count ) || isset( $input_modules_count ) && $input_modules_count == 0 ) {
 									?>
 									<tr>
-										<td colspan="7"><?php _e( '0 input elements in the selected unit.', '<%= wpmudev.plugin.textdomain %>' ); ?></td>
+										<td colspan="7"><?php _e( '0 input elements in the selected unit.', 'cp' ); ?></td>
 									</tr>
 								<?php
 								}
@@ -550,7 +550,7 @@ if ( isset( $_GET['response_id'] ) ) {
 		<?php
 		} else {
 			?>
-			<p><?php _e( '0 Units within the selected course.', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
+			<p><?php _e( '0 Units within the selected course.', 'cp' ); ?></p>
 		<?php
 		}
 	}//Course exists

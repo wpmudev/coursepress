@@ -89,7 +89,7 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 					'add_args' => $args
 				) );
 				if ( $this->paging_text ) {
-					$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', '<%= wpmudev.plugin.textdomain %>' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
+					$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'cp' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
 					);
 				}
 			}
@@ -100,13 +100,13 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 			$pagination->Items( $this->get_total() );
 			$pagination->limit( $this->users_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', '<%= wpmudev.plugin.textdomain %>' );
-			$pagination->prevT         = __( 'Previous', '<%= wpmudev.plugin.textdomain %>' );
+			$pagination->nextT         = __( 'Next', 'cp' );
+			$pagination->prevT         = __( 'Previous', 'cp' );
 			$pagination->target( "admin.php?page=instructors" );
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
 			$pagination->prevIcon( '&#9668;' );
-			$pagination->items_title = __( 'instructors', '<%= wpmudev.plugin.textdomain %>' );
+			$pagination->items_title = __( 'instructors', 'cp' );
 			$pagination->show();
 		}
 

@@ -25,12 +25,12 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	if ( isset( $_POST['classes'] ) ) {
 		$report_classes = $_POST['classes'];
 		if ( $report_classes == '' ) {
-			$report_classes = __( 'Default Class', '<%= wpmudev.plugin.textdomain %>' );
+			$report_classes = __( 'Default Class', 'cp' );
 		} else {
-			$report_classes .= __( ' Class', '<%= wpmudev.plugin.textdomain %>' );
+			$report_classes .= __( ' Class', 'cp' );
 		}
 	} else {
-		$report_classes = __( 'All Classes', '<%= wpmudev.plugin.textdomain %>' );
+		$report_classes = __( 'All Classes', 'cp' );
 	}
 
 	$report_title = $report_title .= ' | ' . $report_classes;
@@ -81,7 +81,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 				?>
 				<table cellspacing="0" cellpadding="5">
 					<tr>
-						<td colspan="4" style="color:#ccc;"><?php _e( 'Read-only', '<%= wpmudev.plugin.textdomain %>' ); ?></td>
+						<td colspan="4" style="color:#ccc;"><?php _e( 'Read-only', 'cp' ); ?></td>
 					</tr>
 				</table>
 			<?php
@@ -119,7 +119,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 									</td>
 
 									<td style="border-bottom: 1px solid #cccccc;">
-										<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', '<%= wpmudev.plugin.textdomain %>' ) ); ?>
+										<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'cp' ) ); ?>
 									</td>
 
 									<td style="border-bottom: 1px solid #cccccc;">
@@ -136,7 +136,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 													$responses ++;
 													$overall_grade = $overall_grade + $grade;
 												} else {
-													_e( 'Pending grade', '<%= wpmudev.plugin.textdomain %>' );
+													_e( 'Pending grade', 'cp' );
 												}
 											} else {
 												echo '0%';
@@ -144,7 +144,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
 											$assessable_answers ++;
 										} else {
-											_e( 'Non-assessable', '<%= wpmudev.plugin.textdomain %>' );
+											_e( 'Non-assessable', 'cp' );
 										}
 										?>
 									</td>
@@ -175,7 +175,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 			<table cellspacing="0" cellpadding="10">
 				<tr>
 					<td colspan="2" style="background-color: #2396A0; color:#fff;">
-						<?php _e( 'Average response grade: ', '<%= wpmudev.plugin.textdomain %>' ); ?>
+						<?php _e( 'Average response grade: ', 'cp' ); ?>
 						<?php
 						if ( $overall_grade > 0 ) {
 							echo round( ( $overall_grade / $responses ), 2 ) . '%';
@@ -185,7 +185,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 						?>
 					</td>
 					<td colspan="2" style="text-align: right; background-color: #2396A0; color:#fff; font-weight: bold;">
-						<?php _e( 'TOTAL:', '<%= wpmudev.plugin.textdomain %>' ); ?>
+						<?php _e( 'TOTAL:', 'cp' ); ?>
 						<?php
 						if ( $overall_grade > 0 ) {
 							echo round( ( $overall_grade / $assessable_answers ), 2 ) . '%';
@@ -211,10 +211,10 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	if ( $users_num == 1 ) {
 		$report_title = $report_title .= ' | ' . $user_object->first_name . ' ' . $user_object->last_name;
 	} else {
-		$report_title = $report_title .= ' | ' . __( 'All Students', '<%= wpmudev.plugin.textdomain %>' );
+		$report_title = $report_title .= ' | ' . __( 'All Students', 'cp' );
 	}
 
-	$report_name = __( $report_title . '.pdf', '<%= wpmudev.plugin.textdomain %>' );
+	$report_name = __( $report_title . '.pdf', 'cp' );
 	$coursepress->pdf_report( $report_content, $report_name, $report_title );
 	exit;
 }//generate report initiated
@@ -235,15 +235,15 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
 				case 'delete':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
 						$student->delete_student();
-						// $message = __( 'Selected students has been removed successfully.', '<%= wpmudev.plugin.textdomain %>' );
-						$message = __( 'Selected students has been withdrawed from all courses successfully.', '<%= wpmudev.plugin.textdomain %>' );
+						// $message = __( 'Selected students has been removed successfully.', 'cp' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
 					}
 					break;
 
 				case 'withdraw':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) {
 						$student->withdraw_from_all_courses();
-						$message = __( 'Selected students has been withdrawed from all courses successfully.', '<%= wpmudev.plugin.textdomain %>' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'cp' );
 					}
 					break;
 			}
@@ -269,7 +269,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 ?>
 <div class="wrap nosubsub reports cp-wrap">
 	<div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
-	<h2><?php _e( 'Reports', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
+	<h2><?php _e( 'Reports', 'cp' ); ?></h2>
 
 	<?php
 	if ( isset( $message ) ) {
@@ -319,7 +319,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 					if ( $courses_with_students == 0 ) {
 						?>
-						<option value=""><?php _e( '0 courses with enrolled students.', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+						<option value=""><?php _e( '0 courses with enrolled students.', 'cp' ); ?></option>
 					<?php
 					}
 					?>
@@ -350,8 +350,8 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 						}
 						?>
 						<!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                <option value="all" <?php //selected( $classes, 'all', true );  ?>><?php //_e( 'All Classes', '<%= wpmudev.plugin.textdomain %>' );  ?></option>
-                                <option value="" <?php //selected( $classes, '', true );  ?>><?php //_e( 'Default', '<%= wpmudev.plugin.textdomain %>' );  ?></option>
+                                <option value="all" <?php //selected( $classes, 'all', true );  ?>><?php //_e( 'All Classes', 'cp' );  ?></option>
+                                <option value="" <?php //selected( $classes, '', true );  ?>><?php //_e( 'Default', 'cp' );  ?></option>
                         <?php
 						//$course_classes = get_post_meta( $current_course_id, 'course_classes', true );
 						// foreach ( $course_classes as $course_class ) {
@@ -374,13 +374,13 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 	<?php
 	$columns = array(
-		"ID"             => __( 'ID', '<%= wpmudev.plugin.textdomain %>' ),
-		"user_fullname"  => __( 'Full Name', '<%= wpmudev.plugin.textdomain %>' ),
-		"user_firstname" => __( 'First Name', '<%= wpmudev.plugin.textdomain %>' ),
-		"user_lastname"  => __( 'Surname', '<%= wpmudev.plugin.textdomain %>' ),
-		"responses"      => __( 'Responses', '<%= wpmudev.plugin.textdomain %>' ),
-		"average_grade"  => __( 'Average Grade', '<%= wpmudev.plugin.textdomain %>' ),
-		"report"         => __( 'Report', '<%= wpmudev.plugin.textdomain %>' ),
+		"ID"             => __( 'ID', 'cp' ),
+		"user_fullname"  => __( 'Full Name', 'cp' ),
+		"user_firstname" => __( 'First Name', 'cp' ),
+		"user_lastname"  => __( 'Surname', 'cp' ),
+		"responses"      => __( 'Responses', 'cp' ),
+		"average_grade"  => __( 'Average Grade', 'cp' ),
+		"report"         => __( 'Report', 'cp' ),
 	);
 
 	$col_sizes = array(
@@ -473,7 +473,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 	                            <?php echo $user_object->last_name; ?></span>
 
 						<div class="visible-extra-small">
-							<?php _e( 'Responses:', '<%= wpmudev.plugin.textdomain %>' ); ?> <?php echo $user_object->get_number_of_responses( $current_course_id ); ?>
+							<?php _e( 'Responses:', 'cp' ); ?> <?php echo $user_object->get_number_of_responses( $current_course_id ); ?>
 						</div>
 					</td>
 					<td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
@@ -492,7 +492,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 				?>
 				<tr>
 					<td colspan="8">
-						<div class="zero"><?php _e( 'No students found.', '<%= wpmudev.plugin.textdomain %>' ); ?></div>
+						<div class="zero"><?php _e( 'No students found.', 'cp' ); ?></div>
 					</td>
 				</tr>
 			<?php
@@ -504,7 +504,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 		<div class="tablenav">
 			<div class="alignleft actions">
 				<select name="units" class="chosen-select">
-					<option value=""><?php _e( 'All Units', '<%= wpmudev.plugin.textdomain %>' ) ?></option>
+					<option value=""><?php _e( 'All Units', 'cp' ) ?></option>
 					<?php
 					$course       = new Course( $current_course_id );
 					$course_units = $course->get_units();
@@ -516,7 +516,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 					?>
 
 				</select>
-				<?php submit_button( __( 'Generate Report', '<%= wpmudev.plugin.textdomain %>' ), 'primary', 'generate_report_button', false ); ?>
+				<?php submit_button( __( 'Generate Report', 'cp' ), 'primary', 'generate_report_button', false ); ?>
 			</div>
 
 			<div class="tablenav-pages"><?php $student_search->page_links(); ?></div>

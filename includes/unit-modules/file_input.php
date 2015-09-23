@@ -31,11 +31,11 @@ class file_input_module extends Unit_Module {
 			?>
 			<div class="module_file_response_answer">
 				<?php if ( $show_label ) { ?>
-					<label><?php _e( 'Uploaded File', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+					<label><?php _e( 'Uploaded File', 'cp' ); ?></label>
 				<?php } ?>
 				<div class="front_response_content">
 					<a href="<?php echo trailingslashit( home_url() ) . '?fdcpf=' . $response->guid; ?>"><?php
-						_e( 'Download file ', '<%= wpmudev.plugin.textdomain %>' );
+						_e( 'Download file ', 'cp' );
 						echo ' ( ' . $file_extension . ' )';
 						?></a>
 				</div>
@@ -43,7 +43,7 @@ class file_input_module extends Unit_Module {
 
 		<?php
 		} else {
-			_e( 'File not uploaded yet.', '<%= wpmudev.plugin.textdomain %>' );
+			_e( 'File not uploaded yet.', 'cp' );
 		}
 		?>
 		<div class="full regular-border-divider"></div>
@@ -120,8 +120,8 @@ class file_input_module extends Unit_Module {
 					<input type="file" <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" <?php echo $enabled; ?> />
 				<?php
 				} else {
-					_e( 'File successfully uploaded. ', '<%= wpmudev.plugin.textdomain %>' );
-					// printf( '<a target="_blank" href="%s" style="padding-left: 20px">%s</a>', $response->guid, __( 'View/Download File', '<%= wpmudev.plugin.textdomain %>' ) );
+					_e( 'File successfully uploaded. ', 'cp' );
+					// printf( '<a target="_blank" href="%s" style="padding-left: 20px">%s</a>', $response->guid, __( 'View/Download File', 'cp' ) );
 				}
 				?>
 			</div>
@@ -154,7 +154,7 @@ class file_input_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 		parent::get_module_move_link();
@@ -171,7 +171,7 @@ class file_input_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
 				<label class="bold-label"><?php
-		_e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' );
+		_e( 'Element Title', 'cp' );
 		$this->time_estimation( $data );
 		?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -188,7 +188,7 @@ class file_input_module extends Unit_Module {
 		<?php echo $this->limit_attempts_element( $data ); ?>
 			</div>
 
-			<label class="bold-label"><?php _e( 'Content', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+			<label class="bold-label"><?php _e( 'Content', 'cp' ); ?></label>
 
 			<div class="editor_in_place">
 				<?php
@@ -212,8 +212,8 @@ class file_input_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Add file upload blocks to the unit. Useful if students need to send you various files like essay, homework etc.', '<%= wpmudev.plugin.textdomain %>' );
-		$this->label       = __( 'File Upload', '<%= wpmudev.plugin.textdomain %>' );
+		$this->description = __( 'Add file upload blocks to the unit. Useful if students need to send you various files like essay, homework etc.', 'cp' );
+		$this->label       = __( 'File Upload', 'cp' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

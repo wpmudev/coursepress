@@ -18,15 +18,15 @@ if ( isset( $_POST['item_title'] ) ) {
 		wp_nonce_field( 'update-coursepress-options' );
 		?>
 		<div class="postbox">
-			<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Groups', '<%= wpmudev.plugin.textdomain %>' ); ?></span></h3>
+			<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Groups', 'cp' ); ?></span></h3>
 
 			<div class="inside">
-				<p class='description'><?php _e( 'Manage default course Groups', '<%= wpmudev.plugin.textdomain %>' ); ?></p>
+				<p class='description'><?php _e( 'Manage default course Groups', 'cp' ); ?></p>
 				<table class="form-table">
 					<tbody id="items">
 					<tr>
-						<th><strong><?php _e( 'Group Name', '<%= wpmudev.plugin.textdomain %>' ); ?></strong></th>
-						<th><a href="javascript:new_link();"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a></th>
+						<th><strong><?php _e( 'Group Name', 'cp' ); ?></strong></th>
+						<th><a href="javascript:new_link();"><?php _e( 'Add New', 'cp' ); ?></a></th>
 					</tr>
 
 					<?php
@@ -42,7 +42,7 @@ if ( isset( $_POST['item_title'] ) ) {
 								</td>
 								<td width="10%"><?php //if ( $i != 1 ) {
 									?>
-									<a href="javascript:removeElement( 'items','r<?php echo $i; ?>' );"><?php _e( 'Remove', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+									<a href="javascript:removeElement( 'items','r<?php echo $i; ?>' );"><?php _e( 'Remove', 'cp' ); ?></a>
 									<?php
 									//}
 									?></td>
@@ -68,7 +68,7 @@ if ( isset( $_POST['item_title'] ) ) {
 		<!--/postbox-->
 
 		<p class="save-shanges">
-			<?php submit_button( __( 'Save Changes', '<%= wpmudev.plugin.textdomain %>' ) ); ?>
+			<?php submit_button( __( 'Save Changes', 'cp' ) ); ?>
 		</p>
 
 	</form>
