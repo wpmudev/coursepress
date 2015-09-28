@@ -32,10 +32,13 @@ class CoursePress_View_Front_Course {
 		add_action( 'init', array( __CLASS__, 'handle_form_posts' ) );
 		//self::handle_form_posts();
 
+		CoursePress_View_Front_EnrollmentPopup::init();
 	}
 
 	public static function init_ajax() {
 		add_action( 'wp_ajax_course_front', array( __CLASS__, 'process_course_ajax' ) );
+
+		CoursePress_View_Front_EnrollmentPopup::init_ajax();
 	}
 
 	public static function handle_form_posts() {
@@ -531,7 +534,7 @@ class CoursePress_View_Front_Course {
 					'slug'    => 'course_' . $course_id,
 					'title'   => get_the_title( $course_id ),
 					//'show_title'  => false,
-					'content' => self::render_course_main(),
+					'content' => apply_filters( 'coursepress_view_course', self::render_course_main(), $course_id, 'main' ),
 					'type'    => CoursePress_Model_Course::get_post_type_name( true ),
 				);
 
@@ -567,7 +570,7 @@ class CoursePress_View_Front_Course {
 				'slug'       => 'course_archive',
 				'title'		 => $title,
 				'show_title' => true,
-				'content'    => self::render_course_archive(),
+				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
 				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
 				'is_archive' => true
 			);
@@ -620,7 +623,7 @@ class CoursePress_View_Front_Course {
 					'ID'             => ! empty( $discussion ) ? $discussion->ID : '',
 					'slug'           => 'discussion_' . $post_parent,
 					'title'          => $discussion_title,
-					'content'        => $discussion_content,
+					'content'        => apply_filters( 'coursepress_view_course', $discussion_content, $post_parent, 'discussion' ),
 					'type'           => 'course_discussion',
 					'comment_status' => $comment_status,
 
@@ -646,7 +649,7 @@ class CoursePress_View_Front_Course {
 					'slug'    => 'discussion_archive_' . $post_parent,
 					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content' => self::render_course_discussion_archive(),
+					'content'        => apply_filters( 'coursepress_view_course', self::render_course_discussion_archive(), $post_parent, 'discussion_archive' ),
 					'type'    => 'course_discussion_archive',
 				);
 
@@ -671,7 +674,7 @@ class CoursePress_View_Front_Course {
 					'slug'    => 'grades_archive_' . $post_parent,
 					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content' => self::render_course_grades_archive(),
+					'content'        => apply_filters( 'coursepress_view_course', self::render_course_grades_archive(), $post_parent, 'grades_archive' ),
 					'type'    => 'course_grades_archive',
 				);
 
@@ -696,7 +699,7 @@ class CoursePress_View_Front_Course {
 					'slug'    => 'workbook_' . $post_parent,
 					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content' => self::render_course_workbook(),
+					'content'        => apply_filters( 'coursepress_view_course', self::render_course_workbook(), $post_parent, 'workbook' ),
 					'type'    => 'course_workbook',
 				);
 
@@ -721,7 +724,7 @@ class CoursePress_View_Front_Course {
 					'slug'    => 'notifications_archive_' . $post_parent,
 					'title'   => get_the_title( $post_parent ),
 					//'show_title'  => false,
-					'content' => self::render_course_notifications_archive(),
+					'content'        => apply_filters( 'coursepress_view_course', self::render_course_notifications_archive(), $post_parent, 'workbook' ),
 					'type'    => 'course_notifications_archive',
 				);
 
@@ -743,7 +746,7 @@ class CoursePress_View_Front_Course {
 				'slug'    => 'unit_archive_' . $post_parent,
 				'title'   => get_the_title( $post_parent ),
 				//'show_title'  => false,
-				'content' => self::render_course_unit_archive(),
+				'content'        => apply_filters( 'coursepress_view_course', self::render_course_unit_archive(), $post_parent, 'workbook' ),
 				'type'    => CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
 			);
 
@@ -786,7 +789,7 @@ class CoursePress_View_Front_Course {
 				'slug'        => $wp->query_vars['unitname'],
 				'title'       => get_the_title( $post_parent ),
 				//'show_title'  => false,
-				'content'     => self::render_course_unit( $post_ID ),
+				'content'        => apply_filters( 'coursepress_view_course_unit', self::render_course_unit( $post_ID ), $post_parent, $post_ID ),
 				'type'        => CoursePress_Model_Unit::get_post_type_name( true ),
 				'post_parent' => $post_parent,
 				'ID'          => $post_ID // Will load the real post
@@ -808,7 +811,7 @@ class CoursePress_View_Front_Course {
 				'slug'       => 'course_archive',
 				//'title'		 => get_the_title( $post_parent ),
 				'show_title' => false,
-				'content'    => self::render_course_archive(),
+				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
 				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
 				'is_archive' => true
 			);

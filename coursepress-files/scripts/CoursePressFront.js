@@ -6,6 +6,62 @@ var CoursePress = CoursePress || {};
     CoursePress.UI = CoursePress.UI || {};
     CoursePress.utility = CoursePress.utility || {};
 
+    CoursePress.utility.checkPasswordStrength = function( $pass1,
+                                                          $pass2,
+                                                          $strengthResult,
+                                                          $submitButton,
+                                                          blacklistArray ) {
+        var pass1 = $pass1.val();
+        var pass2 = $pass2.val();
+
+        // Reset the form & meter
+        if( $submitButton ) {
+            $submitButton.attr( 'disabled', 'disabled' );
+        }
+        $strengthResult.removeClass( 'short bad good strong' );
+
+        // Extend our blacklist array with those from the inputs & site data
+        blacklistArray = blacklistArray.concat( wp.passwordStrength.userInputBlacklist() )
+
+        // Get the password strength
+        var strength = wp.passwordStrength.meter( pass1, blacklistArray, pass2 );
+
+        // Add the strength meter results
+        switch ( strength ) {
+
+            case 2:
+                $strengthResult.addClass( 'bad' ).html( pwsL10n.bad );
+                break;
+
+            case 3:
+                $strengthResult.addClass( 'good' ).html( pwsL10n.good );
+                break;
+
+            case 4:
+                $strengthResult.addClass( 'strong' ).html( pwsL10n.strong );
+                break;
+
+            case 5:
+                $strengthResult.addClass( 'short' ).html( pwsL10n.mismatch );
+                break;
+
+            default:
+                $strengthResult.addClass( 'short' ).html( pwsL10n.short );
+
+        }
+
+        // The meter function returns a result even if pass2 is empty,
+        // enable only the submit button if the password is strong and
+        // both passwords are filled up
+        if( $submitButton ) {
+            if ( 2 < strength && strength !== 5 && '' !== pass2.trim() ) {
+                $submitButton.removeAttr( 'disabled' );
+            }
+        }
+
+        return strength;
+    }
+
     CoursePress.Models.CourseFront = Backbone.Model.extend( {
         url: _coursepress._ajax_url + '?action=course_front',
         parse: function ( response, xhr ) {
@@ -24,18 +80,470 @@ var CoursePress = CoursePress || {};
         defaults: {}
     } );
 
+    // AJAX Posts
+    CoursePress.Models.Post = CoursePress.Models.Post || Backbone.Model.extend( {
+        url: _coursepress._ajax_url + '?action=',
+        parse: function ( response, xhr ) {
+
+            var context = this.get( 'context' );
+
+            // Trigger course update events
+            if ( true === response.success ) {
+
+                if ( undefined === response.data ) {
+                    response.data = {};
+                }
+                this.set( 'response_data', response.data );
+                var method = 'coursepress:' + context + response.data.action + '_success';
+                this.trigger( method, response.data );
+            } else {
+                if ( 0 !== response ) {
+                    this.set( 'response_data', {} );
+                    this.trigger( 'coursepress:' + context + response.data.action + '_error', response.data );
+                }
+            }
+            CoursePress.Post.set( 'action', '' );
+        },
+        prepare: function ( action, context ) {
+            this.url = this.get( 'base_url' ) + action;
+
+            if ( undefined !== context ) {
+                this.set( 'context', context )
+            }
+        },
+        defaults: {
+            base_url: _coursepress._ajax_url + '?action=',
+            context: 'response:'
+        }
+    } );
+    CoursePress.Post = new CoursePress.Models.Post();
+
+    CoursePress.Enrollment = CoursePress.Enrollment || {};
+    CoursePress.Enrollment.dialog = CoursePress.Enrollment.dialog || {}
+
+    // Prepare the enrollment modal
+    function create_modal_model() {
+
+        $steps = $( '[data-type="modal-step"]' );
+
+        if( typeof $steps == 'undefined' || $steps.length == 0 ) {
+            return;
+        }
+
+        CoursePress.Enrollment.Modal = Backbone.Modal.extend( {
+            template: _.template( $( '#modal-template' ).html() ),
+            viewContainer: '.enrollment-modal-container',
+            submitEl: '.done',
+            cancelEl: '.cancel',
+            options: 'meh',
+            // Dynamically create the views from the templates.
+            // This allows for WP filtering to add/remove steps
+            views: (function () {
+
+                var object = {};
+
+                $.each( $steps, function ( index, item ) {
+                    var step = index + 1;
+                    var id = $( item ).attr( 'id' );
+                    object[ 'click #step' + step ] = {
+                        view: _.template( $( '#' + id ).html() ),
+                        onActive: 'setActive'
+                    };
+                } );
+
+                return object;
+            })(),
+            events: {
+                'click .previous': 'previousStep',
+                'click .next': 'nextStep'
+            },
+            previousStep: function ( e ) {
+                e.preventDefault();
+                this.previous();
+                if ( typeof this.onPrevious === "function" ) {
+                    this.onPrevious();
+                }
+            },
+            nextStep: function ( e ) {
+                e.preventDefault();
+                this.next();
+                if ( typeof this.onNext === "function" ) {
+                    this.onNext();
+                }
+            },
+            setActive: function( options ) {
+                console.log( options );
+                this.trigger( 'modal:updated', { view: this, options: options } );
+            }
+        } );
+
+        // Create a modal view class
+        CoursePress.Enrollment.dialog = new CoursePress.Enrollment.Modal();
+
+        CoursePress.Enrollment.dialog.beforeSubmit = function() {
+            var step = this.currentIndex;
+            process_popup_enrollment( step );
+            if( step === ( CoursePress.Enrollment.dialog.views.length - 1 ) ) {
+                $('.enrolment-container-div' ).addClass('hidden');
+            } else {
+
+            }
+            return false;
+        }
+
+        CoursePress.Enrollment.dialog.openAtAction = function( action ) {
+            var steps = $( '[data-type="modal-step"]' );
+
+            $.each( steps, function( i, step ) {
+                var step_action = step.attr('data-modal-action');
+                if( typeof step_action !== 'undefined' && action === step_action ) {
+                    CoursePress.Enrollment.dialog.openAt( i );
+                }
+            });
+        }
+
+        CoursePress.Enrollment.dialog.on( 'modal:updated', function( e ) {
+            //console.log( 'Activated...');
+            //console.log( this.currentIndex );
+        });
+
+
+        // Dialog return actions
+        CoursePress.Enrollment.dialog.handle_signup_return = function( data ) {
+
+            var signup_errors = data['signup_errors'];
+
+            if( signup_errors.length === 0 && data['user_data']['logged_in'] === true ) {
+
+                // We're in! Now lets enroll
+                CoursePress.Enrollment.dialog.attempt_enroll( data );
+
+            } else {
+
+                if( signup_errors.length > 0 ) {
+
+                    $( '.bbm-wrapper #error-messages' ).html('');
+
+                    // Display signup errors
+                    var err_msg = '<ul>';
+                    signup_errors.forEach( function ( item ) {
+                        err_msg += '<li>' + item + '</li>';
+                    } );
+                    err_msg += '</ul>';
+
+                    $( '.bbm-wrapper #error-messages' ).html( err_msg );
+                    $( 'input[name=password]' ).val('');
+                    $( 'input[name=password_confirmation]' ).val('');
+
+                } else {
+
+                    // Redirect to login
+                    var steps = $( '[data-type="modal-step"]' );
+
+                    $.each( steps, function( i, step ) {
+                        var action = step.attr('data-modal-action');
+                        if( typeof action !== 'undefined' && 'login' === action ) {
+                            CoursePress.Enrollment.dialog.openAt( i );
+                        }
+                    });
+                }
+
+            }
+
+        }
+
+        CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
+
+            if( data['logged_in'] === true ) {
+                if( ! data['already_enrolled'] ) {
+                    CoursePress.Enrollment.dialog.attempt_enroll( data );
+                } else {
+                    location.href = _coursepress.course_url;
+                }
+            }
+        }
+
+        // Student successfully enrolled
+        CoursePress.Enrollment.dialog.handle_enroll_student_return = function( data ) {
+
+            var steps = $( '[data-type="modal-step"]' );
+
+            if( true === data['success'] ) {
+                $.each( steps, function ( i, step ) {
+                    var action = $( step ).attr( 'data-modal-action' );
+                    if ( typeof action !== 'undefined' && 'enrolled' === action ) {
+                        CoursePress.Enrollment.dialog.openAt( i );
+                    }
+                } );
+            }
+
+            $('.enrolment-container-div' ).removeClass('hidden');
+
+        }
+
+
+        CoursePress.Enrollment.dialog.signup_validation = function() {
+
+            var valid = true; // we're optimists
+            $('.bbm-wrapper #error-messages' ).html('');
+
+            var errors = [];
+            // All fields required
+            if (
+                '' === $( 'input[name=first_name]' ).val().trim() ||
+                '' === $( 'input[name=last_name]' ).val().trim() ||
+                '' === $( 'input[name=username]' ).val().trim() ||
+                '' === $( 'input[name=email]' ).val().trim() ||
+                '' === $( 'input[name=password]' ).val().trim() ||
+                '' === $( 'input[name=password_confirmation]' ).val().trim()
+            ) {
+                valid = false;
+                errors.push( _coursepress.signup_errors['all_fields'] );
+            }
+
+            var strength = CoursePress.utility.checkPasswordStrength(
+                $('input[name=password]'),         // First password field
+                $('input[name=password_confirmation]'), // Second password field
+                $('#password-strength'),           // Strength meter
+                false,
+                []        // Blacklisted words
+            );
+
+            // Can't have a weak password
+            if( strength <= 2 ) {
+                valid = false;
+                errors.push( _coursepress.signup_errors['weak_password'] );
+            }
+            // Passwords must match
+            if( strength === 5 ) {
+                valid = false;
+                errors.push( _coursepress.signup_errors['mismatch_password'] );
+            }
+
+            if( errors.length > 0 ) {
+                var err_msg = '<ul>';
+                errors.forEach( function ( item ) {
+                    err_msg += '<li>' + item + '</li>';
+                } );
+                err_msg += '</ul>';
+
+                $( '.bbm-wrapper #error-messages' ).html( err_msg );
+            }
+
+            return valid;
+
+        }
+
+        CoursePress.Enrollment.dialog.signup_data = function( data ) {
+
+            data.first_name = $( 'input[name=first_name]' ).val();
+            data.last_name = $( 'input[name=last_name]' ).val();
+            data.username = $( 'input[name=username]' ).val();
+            data.email = $( 'input[name=email]' ).val();
+            data.password = $( 'input[name=password]' ).val();
+            data.nonce = $( '.bbm-modal-nonce.signup' ).attr('data-nonce');
+
+            return data;
+        }
+
+        CoursePress.Enrollment.dialog.login_data = function( data ) {
+            var course_id = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-course');
+            data.username = $( 'input[name=username]' ).val();
+            data.password = $( 'input[name=password]' ).val();
+            data.course_id = course_id;
+            data.nonce = $( '.bbm-modal-nonce.login' ).attr('data-nonce');
+            return data;
+        }
+
+        CoursePress.Enrollment.dialog.attempt_enroll = function( enroll_data ) {
+
+            var nonce = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce');
+            var course_id = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-course');
+
+            CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
+            CoursePress.Post.set( 'action', 'enroll_student' );
+
+            var data = {
+                nonce: nonce,
+                student_id: enroll_data['user_data']['ID'],
+                course_id: course_id,
+                step: ''
+            };
+
+            CoursePress.Post.set( 'data', data );
+            CoursePress.Post.save();
+
+            // Manual hook here as this is not a step in the modal templates
+            CoursePress.Post.off( 'coursepress:enrollment:enroll_student_success' );
+            CoursePress.Post.on( 'coursepress:enrollment:enroll_student_success', function ( data ) {
+                // Update nonce
+                $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
+                console.log(data);
+                if( typeof data['callback'] !== 'undefined' ) {
+                    var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+                    if ( typeof fn === 'function' ) {
+                        console.log('callback is next....' + data['callback'] );
+                        fn( data );
+                        return;
+                    }
+                }
+            } );
+
+        }
+
+        // Password Indicator
+        $( 'body' ).on( 'keyup', 'input[name=password], input[name=password_confirmation]',
+            function( event ) {
+                CoursePress.utility.checkPasswordStrength(
+                    $('input[name=password]'),         // First password field
+                    $('input[name=password_confirmation]'), // Second password field
+                    $('#password-strength'),           // Strength meter
+                    false, //$('.bbm-button.done.signup'),           // Submit button
+                    []        // Blacklisted words
+                );
+            }
+        );
+
+
+    }
+
+
     // Init YouTube
     //var tag = document.createElement( 'script' );
     //tag.src = "https://www.youtube.com/iframe_api";
     //var firstScriptTag = document.getElementsByTagName( 'script' )[ 0 ];
     //firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
+
+    function render_popup_enrollment() {
+        var newDiv = $(document.createElement('div'));
+        $( 'body' ).append( newDiv );
+        $( newDiv ).addClass('enrolment-container-div');
+        if( _coursepress.current_student > 0 ) {
+
+            // Is paid course?
+            var is_paid = false; //debug
+
+            if( ! is_paid ) {
+
+                $(newDiv ).addClass('hidden');
+
+                var enroll_data = {
+                    user_data: {
+                        ID: parseInt( _coursepress.current_student )
+                    }
+                };
+
+                // We're logged in, so lets try to enroll
+                CoursePress.Enrollment.dialog.attempt_enroll( enroll_data );
+
+                $(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+            } else {
+
+
+                $(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+                CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
+            }
+
+
+
+        } else {
+            $(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+        }
+
+
+    }
+
+    function process_popup_enrollment( step ) {
+
+        if( typeof step === "undefined" ) {
+            return false;
+        }
+
+        var action = $( $( '[data-type="modal-step"]' )[ step ] ).attr('data-modal-action');
+        var nonce = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce');
+
+        CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
+        CoursePress.Post.set( 'action', action );
+
+        if( action == 'signup' ) {
+            var fn = CoursePress.Enrollment.dialog[ 'signup_validation' ];
+            if ( typeof fn === 'function' && true !== fn() ) {
+                return;
+            }
+        }
+
+        var data = {
+            nonce: nonce,
+            step: step
+        };
+
+        var fn = CoursePress.Enrollment.dialog[ action + '_data' ];
+        if ( typeof fn === 'function' ) {
+            data = fn( data );
+        }
+
+        CoursePress.Post.set( 'data', data );
+        CoursePress.Post.save();
+
+        CoursePress.Post.on( 'coursepress:enrollment:' + action + '_success', function ( data ) {
+
+            // Update nonce
+            $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
+            console.log(data);
+            if( typeof data['callback'] !== 'undefined' ) {
+                var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+                if ( typeof fn === 'function' ) {
+                    console.log('callback is next....' + data['callback'] );
+                    fn( data );
+                    return;
+                }
+            }
+            if( typeof data.last_step !== 'undefined' && parseInt( data.last_step ) < ( CoursePress.Enrollment.dialog.views.length -1 ) ) {
+                CoursePress.Enrollment.dialog.openAt( parseInt( data.last_step ) + 1 );
+                $('.enrolment-container-div' ).removeClass('hidden');
+            }
+
+        } );
+
+        CoursePress.Post.on( 'coursepress:enrollment:' + action + '_error', function ( data ) {
+            if( typeof data['callback'] !== 'undefined' ) {
+                var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+                if ( typeof fn === 'function' ) {
+                    fn( data );
+                    return;
+                }
+
+            }
+        } );
+
+    }
+
+    function bind_enrollment_actions() {
+
+
+        CoursePress.Post.on( 'coursepress:notification:delete_success', function ( data ) {
+            location.reload();
+        } );
+
+
+    }
+
     function bind_buttons() {
+
+        $( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( e ) {
+           var target = e.currentTarget;
+            var event = e || window.event;
+            event.preventDefault();
+            event.stopPropagation();
+            render_popup_enrollment();
+
+        });
 
         $( '.apply-button' ).on( 'click', function ( e ) {
             var target = e.currentTarget;
 
-            if ( $( target ).attr( 'data-link' ).length > 0 ) {
+            if ( typeof $( target ).attr( 'data-link' ) !== 'undefined' && $( target ).attr( 'data-link' ).length > 0 ) {
                 location.href = $( target ).attr( 'data-link' );
             }
         } );
@@ -43,7 +551,7 @@ var CoursePress = CoursePress || {};
         $( 'button' ).on( 'click', function ( e ) {
             var target = e.currentTarget;
 
-            if ( $( target ).attr( 'data-link' ).length > 0 ) {
+            if ( typeof $( target ).attr( 'data-link' ) !== 'undefined' && $( target ).attr( 'data-link' ).length > 0 ) {
                 location.href = $( target ).attr( 'data-link' );
             }
         } );
@@ -52,7 +560,7 @@ var CoursePress = CoursePress || {};
         $( '.course_list_box_item.clickable' ).on( 'click', function( e ) {
             var target = e.currentTarget;
 
-            if ( $( target ).attr( 'data-link' ).length > 0 ) {
+            if ( typeof $( target ).attr( 'data-link' ) !== 'undefined' && $( target ).attr( 'data-link' ).length > 0 ) {
                 location.href = $( target ).attr( 'data-link' );
             }
         } );
@@ -107,9 +615,7 @@ var CoursePress = CoursePress || {};
             $( progress ).find( '.invalid-extension' ).detach();
 
             if ( !allowed ) {
-                console.log( progress );
                 $( progress ).append( '<span class="invalid-extension">' + _coursepress.invalid_upload_message + allowed_string + '</span>' );
-                console.log( 'NOT ALLOWED!' );
             }
 
         } );
@@ -303,7 +809,6 @@ var CoursePress = CoursePress || {};
                     '<p class="file_holder">' + _coursepress.response_saved_message + '</p>' +
                     '</div>';
 
-                console.log( response );
                 if( 0 === response.length ) {
                     $( parent ).append( html );
                 } else {
@@ -441,16 +946,19 @@ var CoursePress = CoursePress || {};
 
     $( document ).ready( function ( $ ) {
 
+        create_modal_model();
+
         bind_buttons();
 
         bind_module_actions();
+
+        bind_enrollment_actions();
 
         course_completion();
 
         bind_course_discussions();
 
         external();
-
 
     } );
 

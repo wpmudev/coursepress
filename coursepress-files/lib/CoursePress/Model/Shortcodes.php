@@ -66,6 +66,7 @@ class CoursePress_Model_Shortcodes {
 		////add_shortcode( 'unit_discussion', array( __CLASS__, 'unit_discussion' ) );
 		//// Page Shortcodes
 		add_shortcode( 'course_signup', array( __CLASS__, 'course_signup' ) );
+		add_shortcode( 'course_signup_form', array( __CLASS__, 'course_signup_form' ) );
 		//add_shortcode( 'cp_pages', array( __CLASS__, 'cp_pages' ) );
 
 		add_shortcode( 'unit_archive_list', array( __CLASS__, 'unit_archive_list' ) );
@@ -4640,6 +4641,279 @@ class CoursePress_Model_Shortcodes {
 							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', CoursePress::TD ) . '"><br>
 						</label>
 						<input name="redirect_to" value="' . esc_url( CoursePress_Core::get_slug( 'student_dashboard', true ) ) . '" type="hidden">
+						<input name="testcookie" value="1" type="hidden">
+						<input name="course_signup_login" value="1" type="hidden">
+				';
+
+				ob_start();
+				do_action( 'coursepress_before_end_form_fields' );
+				$content .= ob_get_clean();
+
+				$content .= '</form>';
+
+				ob_start();
+				do_action( 'coursepress_after_login_form' );
+				$content .= ob_get_clean();
+
+				break;
+		}
+
+		return $content;
+	}
+
+	public static function course_signup_form( $atts ) {
+
+		$allowed = array( 'signup', 'login' );
+
+		extract( shortcode_atts( array(
+			'course_id' => CoursePress_Helper_Utility::the_course( true ),
+			'page'               => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
+			'class' => '',
+			'login_link_url' => '#',
+			'login_link_id' => '',
+			'login_link_class' => '',
+			'login_link_label' => __( 'Already have an account? <a href="%s" class="%s" id="%s">Login to your account</a>!', CoursePress::TD ),
+			'signup_link_url' => '#',
+			'signup_link_id' => '',
+			'signup_link_class' => '',
+			'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', CoursePress::TD ),
+			'forgot_password_label' => __('Forgot Password?', CoursePress::TD),
+			'submit_button_class' => '',
+			'submit_button_attributes' => '',
+			'submit_button_label' => '',
+			'show_submit' => 'yes',
+			'strength_meter_placeholder' => 'yes',
+		), $atts, 'course_signup_form' ) );
+
+		$course_id = (int) $course_id;
+		$class = sanitize_text_field( $class );
+
+		$login_link_id = sanitize_text_field( $login_link_id );
+		$login_link_class = sanitize_text_field( $login_link_class );
+		$login_link_url = !empty( esc_url_raw( $login_link_url ) ) ? $login_link_url : '#' . $login_link_id;
+
+		//$login_link_label = ( $login_link_label );
+		$login_link_label = sprintf( $login_link_label, $login_link_url, $login_link_class, $login_link_id );
+		$signup_link_id = sanitize_text_field( $signup_link_id );
+		$signup_link_class = sanitize_text_field( $signup_link_class );
+		$signup_link_url = esc_url_raw( $signup_link_url );
+		//$signup_link_label = sanitize_text_field( $signup_link_label );
+		$signup_link_label = sprintf( $signup_link_label, $signup_link_url, $signup_link_class, $signup_link_id );
+		$forgot_password_label = sanitize_text_field( $forgot_password_label );
+		$submit_button_class = sanitize_text_field( $submit_button_class );
+		$submit_button_attributes = sanitize_text_field( $submit_button_attributes );
+		$submit_button_label = sanitize_text_field( $submit_button_label );
+
+		$show_submit = CoursePress_Helper_Utility::fix_bool( $show_submit );
+		$strength_meter_placeholder = CoursePress_Helper_Utility::fix_bool( $strength_meter_placeholder );
+
+		$page = in_array( $page, $allowed ) ? $page : 'signup';
+
+		$signup_prefix = empty( $signup_url ) ? '&' : '?';
+		$login_prefix  = empty( $login_url ) ? '&' : '?';
+
+		$signup_url = CoursePress_Core::get_slug( 'signup', true );
+		$login_url  = CoursePress_Core::get_slug( 'login', true );
+		$forgot_url = wp_lostpassword_url();
+
+		//Set a cookie now to see if they are supported by the browser.
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+		if ( SITECOOKIEPATH != COOKIEPATH ) {
+			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
+		};
+
+		$content = '';
+		switch ( $page ) {
+
+			case 'signup':
+
+				if ( ! is_user_logged_in() ) {
+					if ( CoursePress_Helper_Utility::users_can_register() ) {
+						$form_message_class = '';
+						$form_message       = '';
+
+						ob_start();
+						do_action( 'coursepress_before_signup_form' );
+						$content .= ob_get_clean();
+
+						$content .= '
+							<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form">
+						';
+
+						ob_start();
+						do_action( 'coursepress_before_all_signup_fields' );
+						$content .= ob_get_clean();
+
+						if( $strength_meter_placeholder ) {
+							$content .= '<span id="error-messages"></span>';
+						}
+
+						// First name
+						$content .= '
+							<input type="hidden" name="course_id" value="' . esc_attr( $course_id ) . '"/>
+							<label class="firstname">
+								<span>' . esc_html__( 'First Name', CoursePress::TD ) . ':</span>
+								<input type="text" name="first_name" />
+							</label>
+						';
+						ob_start();
+						do_action( 'coursepress_after_signup_first_name' );
+						$content .= ob_get_clean();
+
+						// Last name
+						$content .= '
+							<label class="lastname">
+								<span>' . esc_html__( 'Last Name', CoursePress::TD ). ':</span>
+								<input type="text" name="last_name" />
+							</label>
+						';
+						ob_start();
+						do_action( 'coursepress_after_signup_last_name' );
+						$content .= ob_get_clean();
+
+						// Username
+						$content .= '
+							<label class="username">
+								<span>' . esc_html__( 'Username', CoursePress::TD ). ':</span>
+								<input type="text" name="username" />
+							</label>
+						';
+						ob_start();
+						do_action( 'coursepress_after_signup_username' );
+						$content .= ob_get_clean();
+
+						// Email
+						$content .= '
+							<label class="email">
+								<span>' . esc_html__( 'E-mail', CoursePress::TD ). ':</span>
+								<input type="text" name="email" />
+							</label>
+						';
+						ob_start();
+						do_action( 'coursepress_after_signup_email' );
+						$content .= ob_get_clean();
+
+						// Password
+						$content .= '
+							<label class="password">
+								<span>' . esc_html__( 'Password', CoursePress::TD ). ':</span>
+								<input type="password" name="password" value=""/>
+							</label>
+						';
+						ob_start();
+						do_action( 'coursepress_after_signup_password' );
+						$content .= ob_get_clean();
+
+						// Confirm
+						$content .= '
+							<label class="password-confirm right">
+								<span>' . esc_html__( 'Confirm Password', CoursePress::TD ) . ':</span>
+								<input type="password" name="password_confirmation" value=""/>
+							</label>
+						';
+
+						if( $strength_meter_placeholder ) {
+							$content .= '<span id="password-strength"></span>';
+						}
+
+						if ( shortcode_exists( 'signup-tos' ) ) {
+							if ( get_option( 'show_tos', 0 ) == '1' ) {
+								$content .= '<label class="tos full">';
+								ob_start();
+								echo do_shortcode( '[signup-tos]' );
+								$content .= ob_get_clean();
+								$content .= '</label>';
+							}
+						}
+
+						ob_start();
+						do_action( 'coursepress_after_all_signup_fields' );
+						$content .= ob_get_clean();
+
+						$content .= '
+							<label class="existing-link full">
+								' . $login_link_label .'
+							</label>
+						';
+
+						if( $show_submit ) {
+							$content .= '
+							<label class="submit-link full-right">
+								<input type="submit" ' . esc_attr( $submit_button_attributes ) . ' class="' . esc_attr( $course_id ) . '" value="' . esc_attr( $submit_button_label ) . '"/>
+							</label>
+							';
+						}
+
+						ob_start();
+						do_action( 'coursepress_after_submit' );
+						$content .= ob_get_clean();
+
+						$content .= wp_nonce_field( 'student_signup', '_wpnonce', true, false );
+						$content .= '
+							</form>
+							<div class="clearfix" style="clear: both;"></div>
+						';
+
+						ob_start();
+						do_action( 'coursepress_after_signup_form' );
+						$content .= ob_get_clean();
+
+					} else {
+						$content .= __( 'Registrations are not allowed.', CoursePress::TD );
+					}
+				}
+
+				break;
+
+			case 'login':
+
+				$content = '';
+
+				ob_start();
+				do_action( 'coursepress_before_login_form' );
+				$content .= ob_get_clean();
+				$content .= '
+					<form name="loginform" id="student-settings" class="student-settings login-form" method="post">
+				';
+				ob_start();
+				do_action( 'coursepress_after_start_form_fields' );
+				$content .= ob_get_clean();
+
+				$content .= '
+						<label class="username">
+							<span>' . esc_html__( 'Username', CoursePress::TD ) . '</span>
+							<input type="text" name="log" />
+						</label>
+						<label class="password">
+							<span>' . esc_html__( 'Password', CoursePress::TD ) . '</span>
+							<input type="password" name="pwd" />
+						</label>
+
+				';
+
+				ob_start();
+				do_action( 'coursepress_form_fields' );
+				$content .= ob_get_clean();
+
+				$content .= '
+			            <label class="existing-link full">
+			                 ' . $signup_link_label .'
+						</label>
+						<label class="forgot-link half-left">
+							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', CoursePress::TD ) . '</a>
+						</label>
+						';
+
+
+				if( $show_submit ) {
+					$content .= '
+						<label class="submit-link full-right">
+							<!--<input type="submit" ' . esc_attr( $submit_button_attributes ) . ' class="' . esc_attr( $course_id ) . '" value="' . esc_attr( $submit_button_label ) . '"/>-->
+						</label>
+							';
+				}
+
+				$content .= '
 						<input name="testcookie" value="1" type="hidden">
 						<input name="course_signup_login" value="1" type="hidden">
 				';

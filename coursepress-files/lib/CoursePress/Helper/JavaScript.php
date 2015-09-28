@@ -206,12 +206,22 @@ class CoursePress_Helper_JavaScript {
 				'response_saved_message'     => __( 'Your response was recorded successfully.', CoursePress::TD ),
 				'response_fail_message'      => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
 				'current_course'             => CoursePress_Helper_Utility::the_course( true ),
+				'course_url'                 => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 				'current_student'            => get_current_user_id(),
-				'workbook_view_answer'       => __( 'View', CoursePress::TD )
+				'workbook_view_answer'       => __( 'View', CoursePress::TD ),
+				'signup_errors'              => array(
+					'all_fields' => __( 'All fields required.', CoursePress::TD ),
+					'email_invalid' => __( 'Invalid e-mail address.', CoursePress::TD ),
+					'email_exists' => __( 'That e-mail address is already taken.', CoursePress::TD ),
+					'user_exists' => __( 'That usernam is already taken.', CoursePress::TD ),
+					'weak_password' => __( 'Weak passwords not allowed.', CoursePress::TD ),
+					'mismatch_password' => __( 'Passwords do not match.', CoursePress::TD )
+				)
 			);
 
 			wp_enqueue_script( 'coursepress_front', $script, array(
 				'jquery',
+				'jquery-ui-dialog',
 				'underscore',
 				'backbone'
 			), CoursePress_Core::$version );
@@ -225,9 +235,14 @@ class CoursePress_Helper_JavaScript {
 			//), CoursePress_Core::$version );
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/circle-progress.min.js';
-
 			wp_enqueue_script( 'circle-progress', $script, array(
 				'jquery'
+			), CoursePress_Core::$version );
+
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/backbone.modal-min.js';
+			wp_enqueue_script( 'backbone-modal', $script, array(
+				'backbone',
+				'password-strength-meter'
 			), CoursePress_Core::$version );
 
 		}

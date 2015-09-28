@@ -897,6 +897,40 @@ ul.notification-archive-list {
 }
 
 
+.enrolment-container-div {
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding-top: 30px;
+    overflow: hidden;
+}
+
+.enrolment-container-div .bbm-wrapper {
+    margin: 0 auto;
+    max-width: 480px;
+    width: 100%;
+    background: #ffffff;
+    padding: 0 10px 10px 10px;
+    border: 1px solid rgba( 0, 0, 0, 0.2 );
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    -webkit-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+.enrolment-container-div .bbm-wrapper #error-messages,
+.enrolment-container-div .bbm-wrapper #password-strength {
+    display:block;
+    font-style: italic;
+}
+
+.enrolment-container-div .bbm-wrapper #error-messages {
+    color: #d92e23;
+}
 /*.student-settings.login-form .half-left,*/
 /*.student-settings.signup-form .half-left,*/
 /*.student-settings.login-form .half-right,*/

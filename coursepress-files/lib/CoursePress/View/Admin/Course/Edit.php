@@ -150,10 +150,6 @@ class CoursePress_View_Admin_Course_Edit {
 		return $content;
 	}
 
-	public static function test() {
-		echo "MOO";
-	}
-
 	private static function render_setup_step_1() {
 
 		$course_id   = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
