@@ -16,11 +16,11 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 		$post_format = CoursePress_Model_Discussion::get_format();
 
-		parent::__construct( [
+		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
 			'plural'   => $post_format['post_args']['labels']['name'],
 			'ajax'     => false //should this table support ajax?
-		] );
+		) );
 
 		$this->post_type = CoursePress_Model_Discussion::get_post_type_name();
 		$this->count     = wp_count_posts( CoursePress_Model_Discussion::get_post_type_name() );
