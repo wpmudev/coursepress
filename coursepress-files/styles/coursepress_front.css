@@ -931,6 +931,19 @@ ul.notification-archive-list {
 .enrolment-container-div .bbm-wrapper #error-messages {
     color: #d92e23;
 }
+
+
+.entry-content .coursepress-course-share a {
+    border: none;
+    text-decoration: none;
+    padding:0;
+}
+
+.entry-content .coursepress-course-share a * {
+    padding:0 0 0.4em 0;
+    vertical-align: middle;
+}
+
 /*.student-settings.login-form .half-left,*/
 /*.student-settings.signup-form .half-left,*/
 /*.student-settings.login-form .half-right,*/
