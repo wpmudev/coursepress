@@ -222,7 +222,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$cpt                = CoursePress_Model_Course::get_post_type_name( true );
 		$url                = 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt;
 		$terms              = CoursePress_Model_Course::get_terms();
-		$course_terms_array = CoursePress_Model_Course::get_course_terms( (int) $_GET['id'], true );
+		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
+		$course_terms_array = CoursePress_Model_Course::get_course_terms( $id, true );
 
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
 
