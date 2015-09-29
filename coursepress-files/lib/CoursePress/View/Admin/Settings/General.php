@@ -24,7 +24,7 @@ class CoursePress_View_Admin_Settings_General {
 	public static function return_content( $content, $slug, $tab ) {
 
 		$my_course_prefix = __( 'my-course', CoursePress::TD );
-		$my_course_prefix = sanitize_text_field( CoursePress_Core::get_setting( 'slugs/course' ) ) . '/'. $my_course_prefix;
+		$my_course_prefix = sanitize_text_field( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '/'. $my_course_prefix;
 		$page_dropdowns = array();
 
 		$pages_args     = array(
@@ -68,58 +68,58 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Courses Slug', CoursePress::TD ) . '</th>
 								<td>' . esc_html( trailingslashit( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][course]" id="course_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/course' ) ) . '" />&nbsp;/
-									<p class="description">' . esc_html( 'Your course URL will look like: ', CoursePress::TD ) . esc_html( trailingslashit( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course' ) ) . esc_html( '/my-course/', CoursePress::TD ) . '</p>
+									&nbsp;<input type="text" name="coursepress_settings[slugs][course]" id="course_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '" />&nbsp;/
+									<p class="description">' . esc_html( 'Your course URL will look like: ', CoursePress::TD ) . esc_html( trailingslashit( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . esc_html( '/my-course/', CoursePress::TD ) . '</p>
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Course Category Slug', CoursePress::TD ) . '</th>
-								<td>' . esc_html( trailingslashit( home_url() ) . trailingslashit( esc_html( CoursePress_Core::get_setting( 'slugs/course' ) ) ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][category]" id="category_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/category' ) ) . '" />&nbsp;/
-									<p class="description">' . esc_html__( 'Your course category URL will look like: ', CoursePress::TD ) . trailingslashit( esc_url( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course' ) . '/' . CoursePress_Core::get_setting( 'slugs/category' ) ) . esc_html__( '/your-category/', CoursePress::TD ) . '</p>
+								<td>' . esc_html( trailingslashit( home_url() ) . trailingslashit( esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) ) ) . '
+									&nbsp;<input type="text" name="coursepress_settings[slugs][category]" id="category_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/category', 'course_category' ) ) . '" />&nbsp;/
+									<p class="description">' . esc_html__( 'Your course category URL will look like: ', CoursePress::TD ) . trailingslashit( esc_url( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) . '/' . CoursePress_Core::get_setting( 'slugs/category', 'course_category' ) ) . esc_html__( '/your-category/', CoursePress::TD ) . '</p>
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Units Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][units]" id="units_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/units' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][units]" id="units_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Course Notifications Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][notifications]" id="notifications_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/notifications' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][notifications]" id="notifications_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/notifications', 'notifications' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Course Discussions Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][discussions]" id="discussions_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/discussions' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][discussions]" id="discussions_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/discussions', 'discussion' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row">' . esc_html__( 'Course New Discussion Slug', CoursePress::TD ) . '</th>
-								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . trailingslashit( esc_attr( CoursePress_Core::get_setting( 'slugs/discussions' ) ) ) .'
-									&nbsp;<input type="text" name="coursepress_settings[slugs][discussions_new]" id="discussions_new_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/discussions_new' ) ) . '" />&nbsp;/
+								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . trailingslashit( esc_attr( CoursePress_Core::get_setting( 'slugs/discussions', 'discussion' ) ) ) .'
+									&nbsp;<input type="text" name="coursepress_settings[slugs][discussions_new]" id="discussions_new_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Course Grades Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][grades]" id="grades_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/grades' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][grades]" id="grades_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/grades', 'grades' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Course Workbook Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . trailingslashit( esc_html( $my_course_prefix ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][workbook]" id="workbook_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/workbook' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][workbook]" id="workbook_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/workbook', 'workbook' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Enrollment Process Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][enrollment]" id="enrollment_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/enrollment' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][enrollment]" id="enrollment_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/enrollment', 'enrollment_process' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
@@ -133,7 +133,7 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Login Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][login]" id="login_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/login' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][login]" id="login_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/login', 'student-login' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
@@ -147,7 +147,7 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Signup Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][signup]" id="signup_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/signup' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][signup]" id="signup_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/signup', 'courses-signup' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
@@ -161,7 +161,7 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Student Dashboard Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][student_dashboard]" id="student_dashboard_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/student_dashboard' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][student_dashboard]" id="student_dashboard_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/student_dashboard', 'courses-dashboard' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
@@ -175,7 +175,7 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Student Dashboard Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][student_settings]" id="student_settings_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/student_settings' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][student_settings]" id="student_settings_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/student_settings', 'student-settings' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
@@ -189,7 +189,7 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Instructor Profile Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][instructor_profile]" id="instructor_profile_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/instructor_profile' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][instructor_profile]" id="instructor_profile_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/instructor_profile', 'instructor' ) ) . '" />&nbsp;/
 								</td>
 							</tr>';
 
@@ -200,19 +200,19 @@ class CoursePress_View_Admin_Settings_General {
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Messaging: Inbox Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][inbox]" id="inbox_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/inbox' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][inbox]" id="inbox_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/inbox', 'student-inbox' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row">' . esc_html__( 'Sent Messages Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][sent_messages]" id="sent_messages" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/sent_messages' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][sent_messages]" id="sent_messages" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/sent_messages', 'student-sent-messages' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row">' . esc_html__( 'New Messages Slug', CoursePress::TD ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][new_messages]" id="new_messages_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/new_messages' ) ) . '" />&nbsp;/
+									&nbsp;<input type="text" name="coursepress_settings[slugs][new_messages]" id="new_messages_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/new_messages', 'student-new-message' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 			';

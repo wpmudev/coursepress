@@ -73,7 +73,7 @@ class CoursePress_Model_Course {
 					'hierarchical'      => true,
 					'sort'              => true,
 					'args'              => array( 'orderby' => 'term_order' ),
-					'rewrite'           => array( 'slug' => CoursePress_Core::get_setting( 'slugs/category' ) ),
+					'rewrite'           => array( 'slug' => CoursePress_Core::get_setting( 'slugs/category', 'course_category' ) ),
 					'show_admin_column' => true,
 					'capabilities'      => array(
 						'manage_terms' => 'coursepress_course_categories_manage_terms_cap',

@@ -1296,7 +1296,7 @@ class CoursePress_Model_Shortcodes {
 				'label' => ! $is_instructor ? sanitize_text_field( $access_text ) : sanitize_text_field( $instructor_text ),
 				'attr'  => array(
 					'class'     => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
-					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units' ) ) ),
+					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) ),
 				),
 				'type'  => 'button',
 			),
@@ -1304,7 +1304,7 @@ class CoursePress_Model_Shortcodes {
 				'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 				'attr'  => array(
 					'class'     => 'apply-button apply-button-enrolled ' . $class,
-					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units' ) ) ),
+					'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) ),
 				),
 				'type'  => 'button',
 			),
@@ -1415,7 +1415,7 @@ class CoursePress_Model_Shortcodes {
 			} elseif ( ! $course->course_started && ! $course->open_ended_course ) {
 				// COURSE HASN'T STARTED
 				$button_option = 'not_started';
-			} elseif ( ! $is_single && false === strpos( $_SERVER['REQUEST_URI'], CoursePress_Core::get_setting( 'slugs/student_dashboard' ) ) ) {
+			} elseif ( ! $is_single && false === strpos( $_SERVER['REQUEST_URI'], CoursePress_Core::get_setting( 'slugs/student_dashboard', 'courses-dashboard' ) ) ) {
 				// SHOW DETAILS | Dashboard
 				$button_option = 'details';
 			} else {
@@ -2709,7 +2709,7 @@ class CoursePress_Model_Shortcodes {
 		}
 
 		if ( ( ! $courses || 0 == count( $courses ) ) && ! empty( $student ) ) {
-			$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress_Core::get_setting( 'slugs/course' ) ) . '">' . __( 'here', CoursePress::TD ) . '</a>' );
+			$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '">' . __( 'here', CoursePress::TD ) . '</a>' );
 		}
 
 		// </div> course-list
@@ -2886,7 +2886,7 @@ class CoursePress_Model_Shortcodes {
 	public static function course_instructors( $atts ) {
 		global $wp_query;
 
-		$instructor_profile_slug = CoursePress_Core::get_setting( 'slugs/instructor_profile' );
+		$instructor_profile_slug = CoursePress_Core::get_setting( 'slugs/instructor_profile', 'instructor' );
 
 		extract( shortcode_atts( array(
 			'course_id'       => CoursePress_Helper_Utility::the_course( true ),
@@ -3093,7 +3093,7 @@ class CoursePress_Model_Shortcodes {
 	}
 
 	public static function instructor_profile_url( $atts ) {
-		$instructor_profile_slug = CoursePress_Core::get_setting( 'slugs/instructor_profile' );
+		$instructor_profile_slug = CoursePress_Core::get_setting( 'slugs/instructor_profile', 'instructor' );
 
 		extract( shortcode_atts( array(
 			'instructor_id' => 0
