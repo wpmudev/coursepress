@@ -922,6 +922,10 @@ ul.notification-archive-list {
     box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
 }
 
+.enrolment-container-div .bbm-wrapper a {
+    text-decoration: underline;
+}
+
 .enrolment-container-div .bbm-wrapper #error-messages,
 .enrolment-container-div .bbm-wrapper #password-strength {
     display:block;

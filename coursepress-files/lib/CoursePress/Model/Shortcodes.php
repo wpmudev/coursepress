@@ -4690,7 +4690,8 @@ class CoursePress_Model_Shortcodes {
 
 		$login_link_id = sanitize_text_field( $login_link_id );
 		$login_link_class = sanitize_text_field( $login_link_class );
-		$login_link_url = !empty( esc_url_raw( $login_link_url ) ) ? $login_link_url : '#' . $login_link_id;
+		$login_link_url = esc_url_raw( $login_link_url );
+		$login_link_url = !empty( $login_link_url  ) ? $login_link_url : '#' . $login_link_id;
 
 		//$login_link_label = ( $login_link_label );
 		$login_link_label = sprintf( $login_link_label, $login_link_url, $login_link_class, $login_link_id );
