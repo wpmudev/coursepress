@@ -70,9 +70,9 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 		$edit_page = CoursePress_View_Admin_Communication_Discussion::$slug;
 
-		$actions = [
+		$actions = array(
 			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
-		];
+		);
 
 		return $title . '<br />' . $excerpt . $this->row_actions( $actions );
 	}

@@ -115,6 +115,8 @@ class CoursePress_Core {
 	}
 
 	public static function merge_settings( $settings_old, $settings_new ) {
+		$settings_old = ! empty( $settings_old ) && is_array( $settings_old ) ? $settings_old : array();
+		$settings_new = ! empty( $settings_new ) && is_array( $settings_new ) ? $settings_new : array();
 		return CoursePress_Helper_Utility::merge_distinct( $settings_old, $settings_new );
 	}
 
