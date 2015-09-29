@@ -765,9 +765,13 @@ class CoursePress_View_Front_Course {
 			CoursePress_Helper_Utility::set_the_course_subpage( '' );
 
 			// Access control
+			$student_id = get_current_user_id();
+			$instructors = CoursePress_Model_Course::get_instructors( $post_parent );
+			$is_instructor = in_array( $student_id, $instructors );
+
 			$preview  = CoursePress_Model_Course::previewability( $post_parent );
 			$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $post_parent ) : false;
-			if ( ! $enrolled && ! $preview['has_previews'] ) {
+			if ( ! $enrolled && ! $preview['has_previews'] && ! $is_instructor ) {
 				self::no_access_redirect( $post_parent );
 			}
 
