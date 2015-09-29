@@ -947,10 +947,17 @@ class CoursePress_View_Front_Course {
 			case 'course_discussion':
 			case CoursePress_Model_Discussion::get_post_type_name():
 
-				$course_id      = get_post_meta( $post->ID, 'course_id', true );
-				$course         = get_post( $course_id );
-				$discussion_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . $course->post_name . '/';
-				$permalink      = trailingslashit( $discussion_url . CoursePress_Core::get_slug( 'discussion' ) ) . $post->post_name;
+				$course_id      = (int) get_post_meta( $post->ID, 'course_id', true );
+				$course_id      = ! empty( $course_id ) ? $course_id : CoursePress_Helper_Utility::the_course( true );
+
+				if( ! empty( $course_id ) ) {
+					$course         = get_post( $course_id );
+					$discussion_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . $course->post_name . '/';
+					$permalink      = trailingslashit( $discussion_url . CoursePress_Core::get_slug( 'discussion' ) ) . $post->post_name;
+				} else {
+					return '';
+				}
+
 
 				break;
 
