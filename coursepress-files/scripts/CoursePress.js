@@ -74,10 +74,14 @@ var CoursePress = CoursePress || {};
             mode = 'set'
         }
 
-        if ( undefined === tinyMCE ) {
+        if ( undefined === tinyMCE || 'html' === getUserSetting( 'editor' ) ) {
+
+            id = 'html' === getUserSetting( 'editor' ) ? '#' + id : id;
+
             if ( 'set' === mode ) {
                 $( id ).val( content );
             }
+
             return $( id ).val();
         } else {
             if ( 'set' === mode ) {

@@ -9,6 +9,7 @@ class CoursePress_Helper_UI_Module {
 	const OUTPUT_DOWNLOAD = 'download';
 	const OUTPUT_ZIPPED_OBJECT = 'zipped';
 	const OUTPUT_SECTION = 'section';
+	const OUTPUT_DISCUSSION = 'discussion';
 	const INPUT_MULTIPLE_CHOICE = 'input-checkbox';
 	const INPUT_SINGLE_CHOICE = 'input-radio';
 	const INPUT_SELECT_CHOICE = 'input-select';
@@ -16,6 +17,7 @@ class CoursePress_Helper_UI_Module {
 	const INPUT_LONG_TEXT = 'input-textarea';
 	const INPUT_UPLOAD = 'input-upload';
 	const INPUT_ADVANCED = 'input-mixed';
+	const INPUT_QUIZ = 'input-quiz';
 
 	public static function render( $data = 'TODO' ) {
 		$content = '';
@@ -309,8 +311,15 @@ class CoursePress_Helper_UI_Module {
 				'excerpt' => 'hidden',
 				'icon'    => 'default',
 			),
-			self::OUTPUT_SECTION       => array(
-				'title'   => __( 'Section Break', CoursePress::TD ),
+			//self::OUTPUT_SECTION       => array(
+			//	'title'   => __( 'Section Break', CoursePress::TD ),
+			//	'mode'    => 'output',
+			//	'excerpt' => 'hidden',
+			//	'body'    => 'hidden',
+			//	'icon'    => 'default',
+			//),
+			self::OUTPUT_DISCUSSION       => array(
+				'title'   => __( 'Discussion', CoursePress::TD ),
 				'mode'    => 'output',
 				'excerpt' => 'hidden',
 				'body'    => 'hidden',
@@ -351,6 +360,11 @@ class CoursePress_Helper_UI_Module {
 			),
 			self::INPUT_UPLOAD          => array(
 				'title' => __( 'File Upload', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_QUIZ          => array(
+				'title' => __( 'Quiz', CoursePress::TD ),
 				'mode'  => 'input',
 				'icon'  => 'default',
 			),
@@ -719,6 +733,24 @@ class CoursePress_Helper_UI_Module {
 				"components": []
 			}
 			',
+			self::OUTPUT_DISCUSSION     => '
+			{
+				"id": "0",
+				"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+				"duration": "0:00",
+				"type": "' . self::OUTPUT_DISCUSSION . '",
+				"show_title": "1",
+				"mandatory": "0",
+				"assessable": "0",
+				"minimum_grade": "100",
+				"allow_retries": "1",
+				"retry_attempts": "0",
+				"content": "",
+				"editor_height": "200",
+				"order": "0",
+				"components": []
+			}
+			',
 			self::INPUT_MULTIPLE_CHOICE => '
 			{
 					"id": "0",
@@ -897,6 +929,24 @@ class CoursePress_Helper_UI_Module {
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
 					"duration": "0:00",
 					"type": "' . self::INPUT_UPLOAD . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "200",
+					"order": "0",
+					"components": []
+				}
+			',
+			self::INPUT_QUIZ          => '
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::INPUT_QUIZ . '",
 					"show_title": "1",
 					"mandatory": "0",
 					"assessable": "0",

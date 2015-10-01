@@ -55,6 +55,7 @@ var CoursePress = CoursePress || {};
 
         } );
 
+
         // Fix Accordion
         if ( $( '.unit-builder-modules' ).hasClass( 'ui-accordion' ) ) {
             $( '.unit-builder-modules' ).accordion( 'destroy' );
@@ -892,11 +893,19 @@ var CoursePress = CoursePress || {};
         },
         set_page_title: function ( index, title ) {
             var meta = this.get( 'meta' ) || {};
-            if ( meta[ 'page_title' ] ) {
-                meta[ 'page_title' ][ 'page_' + index ] = title;
-                this.set( 'meta', meta );
-                this.trigger( 'change' );
-            }
+
+            meta[ 'page_title' ] = meta[ 'page_title' ] || {};
+            meta[ 'page_title' ][ 'page_' + index ] = title;
+            this.set( 'meta', meta );
+            this.trigger( 'change' );
+        },
+        set_page_description: function ( index, description ) {
+            var meta = this.get( 'meta' ) || {};
+
+            meta[ 'page_description' ] = meta[ 'page_description' ] || {};
+            meta[ 'page_description' ][ 'page_' + index ] = description;
+            this.set( 'meta', meta );
+            this.trigger( 'change' );
         },
         set_page_visibility: function ( index, value ) {
             var meta = this.get( 'meta' ) || {};
@@ -911,6 +920,14 @@ var CoursePress = CoursePress || {};
             var meta = this.get( 'meta' ) || {};
             if ( meta[ 'page_title' ] ) {
                 return meta[ 'page_title' ][ 'page_' + index ];
+            } else {
+                return '';
+            }
+        },
+        get_page_description: function ( index ) {
+            var meta = this.get( 'meta' ) || {};
+            if ( meta[ 'page_description' ] ) {
+                return meta[ 'page_description' ][ 'page_' + index ];
             } else {
                 return '';
             }
@@ -1262,8 +1279,11 @@ var CoursePress = CoursePress || {};
         self.headerView.template_variables.unit_id = unit.get( 'ID' );
         self.headerView.template_variables.unit_cid = unit.cid;
         self.headerView.template_variables.unit_title = unit.get( 'post_title' );
+        self.headerView.template_variables.unit_content = unit.get( 'post_content' );
         var meta = unit.get( 'meta' );
+
         self.headerView.template_variables.unit_availability = meta.unit_availability;
+        self.headerView.template_variables.unit_feature_image = meta.unit_feature_image;
 
         var checked = meta.force_current_unit_completion;
         checked = 'on' === checked || true === checked || 1 === checked ? 'checked="checked"' : '';
@@ -1293,29 +1313,64 @@ var CoursePress = CoursePress || {};
                 unit_id: '',
                 unit_cid: '',
                 unit_title: '',
+                unit_content: '',
+                unit_feature_image: '',
                 unit_availability: '',
                 unit_force_completion_checked: '',
                 unit_force_successful_completion_checked: ''
             }
 
             this.render();
+
+            CoursePress.Events.on( 'editor:keyup', this.editorChanged, this );
         },
         events: {
             'change .unit-detail input': 'fieldChanged',
-            'keyup .unit-detail input': 'updateTabTitle',
+            'keyup .unit-detail input[name=post_title]': 'updateTabTitle',
+            'keyup .unit-detail #unit_description_1_1': 'editorChanged',
             'change #unit-live-toggle': 'toggleUnitState',
-            'change #unit-live-toggle-2': 'toggleUnitState'
+            'change #unit-live-toggle-2': 'toggleUnitState',
+            'change #unit_feature_image': 'unitFeatureImageChange',
+            'change [name=unit_feature_image-button]': 'unitFeatureImageChange'
+            //'change #page_feature_image': 'featureImageChange',
+            //'change [name=page_feature_image-button]': 'featureImageChange'
         },
         render: function () {
             var template = _.template( $( "#unit-builder-header-template" ).html(), this.template_variables );
-
             this.$el.html( template );
+            $( '#unit_feature_image' ).val( this.template_variables.unit_feature_image );
 
+            this.updateUnitHeader();
             return this;
+        },
+        editorChanged: function( e ) {
+            var the_id = e.id;
+            if( typeof the_id === 'undefined' ) {
+                the_id = $( e.currentTarget ).attr('id');
+            }
+
+            if( typeof the_id !== 'undefined' && 'unit_description_1_1' === the_id ) {
+                var el = $( '#' + the_id );
+                var el_val = CoursePress.editor.content( the_id );
+
+                var parent = $( el ).parents( '.unit-detail' )[ 0 ];
+                var unit = this.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
+                unit.set( 'post_content', el_val );
+            }
         },
         fieldChanged: function ( e ) {
             var el = $( e.currentTarget );
             var el_name = $( el ).attr( 'name' );
+
+            if(
+                el_name === 'unit_feature_image' ||
+                el_name === 'unit_feature_image-button' ||
+                el_name === 'page_feature_image' ||
+                el_name === 'page_feature_image-button'
+            ) {
+                return;
+            }
+
             var el_val = $( el ).val();
             var parent = $( el ).parents( '.unit-detail' )[ 0 ];
             var unit = this.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
@@ -1333,12 +1388,38 @@ var CoursePress = CoursePress || {};
             }
 
         },
+        unitFeatureImageChange: function( e ) {
+            var el = $( e.currentTarget );
+            var el_val = $( '#unit_feature_image' ).val();
+            var parent = $( el ).parents( '.unit-detail' )[ 0 ];
+            var unit = this.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
+
+            unit.set_meta( 'unit_feature_image', el_val )
+
+        },
         updateTabTitle: function ( e ) {
 
             $( '[data-tab="' + this.parentView.activeUnitID + '"] span' ).html( $( e.currentTarget ).val() );
         },
         toggleUnitState: function ( e ) {
             CoursePress.Helpers.Module.toggle_unit_state( e );
+        },
+        updateUnitHeader: function() {
+            // Bring on the Visual Editor
+            $.each( $( '#unit_description_1_1' ), function ( index, editor ) {
+                var id = $( editor ).attr( 'id' );
+
+                // Get rid of redundant editor
+                delete tinyMCEPreInit.mceInit[ id ];
+                delete tinyMCEPreInit.qtInit[ id ];
+                delete tinyMCE.EditorManager.editors[ id ];
+
+                var content = $( '#' + id ).val();
+                var name = $( editor ).attr( 'name' );
+                var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 200;
+
+                CoursePress.editor.create( editor, id, name, content, false, height );
+            } );
         }
 
     } );
@@ -1414,6 +1495,8 @@ var CoursePress = CoursePress || {};
 
                 this.pagerViewInfo.template_variables = {
                     page_label_text: unit.get_page_title( this.parentView.activePage ),
+                    page_description: unit.get_page_description( this.parentView.activePage ),
+                    page_feature_image: '',
                     page_label_checked: show_page ? 'checked="checked"' : ''
                 };
 
@@ -1432,7 +1515,7 @@ var CoursePress = CoursePress || {};
                     .append( this.footerView.render().el );
 
                 CoursePress.Helpers.Module.refresh_ui();
-
+                this.updateSectionEditor();
             }
 
             return this;
@@ -1472,6 +1555,16 @@ var CoursePress = CoursePress || {};
         fieldChanged: function ( e ) {
             var el = $( e.currentTarget );
             var el_name = $( el ).attr( 'name' );
+
+            if(
+                el_name === 'unit_feature_image' ||
+                el_name === 'unit_feature_image-button' ||
+                el_name === 'page_feature_image' ||
+                el_name === 'page_feature_image-button'
+            ) {
+                return;
+            }
+
             var el_val = $( el ).val();
             var parent = $( el ).parents( '.module-holder' )[ 0 ];
             var module = this.parentView.module_collection._byId[ $( parent ).attr( 'data-cid' ) ];
@@ -1556,6 +1649,10 @@ var CoursePress = CoursePress || {};
         editorChanged: function ( e ) {
             var el_name = e.id;
             var parent = $( '#' + el_name ).parents( '.module-holder' )[ 0 ];
+
+            if( typeof parent === 'undefined' ) {
+                return;
+            }
 
             var module = this.parentView.module_collection._byId[ $( parent ).attr( 'data-cid' ) ];
 
@@ -1674,6 +1771,25 @@ var CoursePress = CoursePress || {};
             // Change meta now
             module.set_meta( 'meta_answers', el_val );
 
+        },
+        updateSectionEditor: function() {
+
+            // Bring on the Visual Editor
+            $.each( $( '#page_description_1_1' ), function ( index, editor ) {
+                var id = $( editor ).attr( 'id' );
+
+                // Get rid of redundant editor
+                delete tinyMCEPreInit.mceInit[ id ];
+                delete tinyMCEPreInit.qtInit[ id ];
+                delete tinyMCE.EditorManager.editors[ id ];
+
+                var content = $( '#' + id ).val();
+                var name = $( editor ).attr( 'name' );
+                var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 200;
+
+                CoursePress.editor.create( editor, id, name, content, false, height );
+            } );
+
         }
 
     } );
@@ -1683,22 +1799,45 @@ var CoursePress = CoursePress || {};
         render: function ( options ) {
             var template = _.template( $( "#unit-builder-pager-template" ).html(), options );
             this.$el.html( template );
-
             return this;
         }
     } );
 
     // Unit Body Pager Content View
     CoursePress.Views.UnitBuilderPagerInfo = Backbone.View.extend( {
+        initialize: function() {
+            CoursePress.Events.on( 'editor:keyup', this.editorChanged, this );
+        },
         events: {
-            'change .page-info-holder input': 'fieldChanged'
+            'change .page-info-holder input': 'fieldChanged',
+            'keyup .unit-detail #page_description_1_1': 'editorChanged'
         },
         render: function ( options ) {
-
             var template = _.template( $( "#unit-builder-pager-info-template" ).html(), options );
             this.$el.html( template );
 
             return this;
+        },
+        editorChanged: function( e ) {
+
+            var page = this.parentView.parentView.activePage;
+
+            var the_id = e.id;
+            if( typeof the_id === 'undefined' ) {
+                the_id = $( e.currentTarget ).attr('id');
+            }
+
+            if( typeof the_id !== 'undefined' && 'page_description_1_1' === the_id ) {
+                var el = $( '#' + the_id );
+                var el_val = CoursePress.editor.content( the_id );
+                var parent = $( $( el ).parents( '.unit-builder-content' )[ 0 ] ).find( '.unit-detail' )[0];
+                var unit = this.parentView.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
+
+                console.log( unit );
+
+                unit.set_page_description( page, el_val );
+                //unit.set_meta( '', el_val );
+            }
         }
     } );
 

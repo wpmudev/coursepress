@@ -1100,6 +1100,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   background: #0074A2;
   color: #ffffff;
 }
+.tab-content .unit-builder-content .unit-builder-header #wp-unit_description_1_1-media-buttons {
+  display: none;
+}
+.tab-content .unit-builder-content .unit-builder-header #wp-unit_description_1_1-editor-tools {
+  background: rgba(0, 0, 0, 0.2);
+}
 .tab-content .unit-builder-content .unit-builder-header h3 {
   background: none;
   color: #ffffff;
@@ -1192,6 +1198,20 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .tab-content .unit-builder-content .unit-builder-pager ul li.page-droppable-hover {
   opacity: 1;
+}
+.tab-content .unit-builder-content .unit-builder-pager-info label {
+  display: block;
+  margin-top: 10px;
+}
+.tab-content .unit-builder-content .unit-builder-pager-info #wp-page_description_1_1-media-buttons {
+  display: none;
+}
+.tab-content .unit-builder-content .unit-builder-pager-info #wp-page_description_1_1-editor-tools {
+  background: rgba(0, 0, 0, 0.03);
+}
+.tab-content .unit-builder-content .unit-builder-pager-info textarea {
+  width: 100%;
+  display: block;
 }
 .tab-content .unit-builder-content .input-element, .tab-content .unit-builder-content .output-element {
   cursor: pointer;

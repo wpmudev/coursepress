@@ -169,6 +169,14 @@
       background: #0074A2;
       color: #ffffff;
 
+      #wp-unit_description_1_1-media-buttons {
+        display: none;
+      }
+
+      #wp-unit_description_1_1-editor-tools {
+        background: rgba( 0,0,0,0.2);
+      }
+
       h3 {
        background: none;
        color: #ffffff;
@@ -277,6 +285,30 @@
       ul li.page-droppable-hover {
         opacity: 1;
       }
+
+    }
+
+    .unit-builder-pager-info {
+
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+
+      #wp-page_description_1_1-media-buttons {
+        display: none;
+      }
+
+      #wp-page_description_1_1-editor-tools {
+        background: rgba( 0,0,0,0.03 );
+      }
+
+
+      textarea {
+        width: 100%;
+        display: block;
+      }
+
 
     }
 

@@ -56,6 +56,19 @@ class CoursePress_View_Admin_Course_UnitBuilder {
                       )) . '</h3>
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
+					<div class="unit-additional-info">
+					<label class="unit-description">' . esc_html__( 'Unit Description', CoursePress::TD ) . '</label>
+					<textarea name="unit_description" id="unit_description_1_1"><%= unit_content %></textarea>
+					' . CoursePress_Helper_UI::browse_media_field(
+						'unit_feature_image',
+						'unit_feature_image',
+						array(
+							'placeholder' => __( 'Add Image URL or Browse for Image', CoursePress::TD ),
+							'title'       => __( 'Unit Feature Image', CoursePress::TD ),
+							'value'       => '<%= unit_feature_image %>', // Add _s template
+						)
+					) . '
+					</div>
 					<label for="unit_availability">Unit Availability</label>
 					<div class="date"><input id="dpunitavailability" class="dateinput" type="text" value="<%= unit_availability %>" name="meta_unit_availability" spellcheck="true"></div>
 					<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %>><span>User needs to <strong><em>answer</em></strong>all mandatory assessments and view all pages in order to access the next unit</span></label>
@@ -82,7 +95,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_content_pager'       => '
 				<script type="text/template" id="unit-builder-pager-template">
-					<label>' . esc_html__( 'Unit Page(s)', CoursePress::TD ) . '</label>
+					<label>' . esc_html__( 'Unit Sections', CoursePress::TD ) . '</label>
 					<ul>
 			            <% for ( var i = 1; i <= unit_page_count; i++ ) { %>
 			                <li data-page="<%- i %>">
@@ -96,11 +109,22 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_content_pager_info'  => '
 				<script type="text/template" id="unit-builder-pager-info-template">
 					<div class="page-info-holder">
-					<div class="unit-buttons"><div class="button unit-delete-page-button hidden"><i class="fa fa-trash-o"></i> ' . esc_html__( 'Delete Page', CoursePress::TD ) . '</div></div>
-					<label class="bigger">' . esc_html__( 'Page Label', CoursePress::TD ) . '</label>
+					<div class="unit-buttons"><div class="button unit-delete-page-button hidden"><i class="fa fa-trash-o"></i> ' . esc_html__( 'Delete Section', CoursePress::TD ) . '</div></div>
+					<label>' . esc_html__( 'Section Title', CoursePress::TD ) . '</label>
 					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', CoursePress::TD ) . '</p>
 					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
-					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show page label on unit', CoursePress::TD ) . '</span></label>
+					<label class="page-description">' . esc_html__( 'Section Description', CoursePress::TD ) . '</label>
+					<textarea name="page_description" id="page_description_1_1"><%= page_description %></textarea>
+					' . CoursePress_Helper_UI::browse_media_field(
+							'page_feature_image',
+							'page_feature_image',
+							array(
+								'placeholder' => __( 'Add Image URL or Browse for Image', CoursePress::TD ),
+								'title'       => __( 'Section Image', CoursePress::TD ),
+								'value'       => '<%= page_feature_image %>', // Add _s template
+							)
+					) . '
+					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show section header as part of unit', CoursePress::TD ) . '</span></label>
 					</div>
 				</script>
 			',
@@ -121,7 +145,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		$templates['unit_builder_content_components']  = '
 				<script type="text/template" id="unit-builder-components-template">
-					<label class="bigger">' . esc_html__( 'Unit Modules', CoursePress::TD ) . '</label>
+					<label class="bigger">' . esc_html__( 'Modules', CoursePress::TD ) . '</label>
 					<p class="description">' . esc_html__('Click to add module elements to the unit', CoursePress::TD) . '</p>';
 
 		$ouputs = CoursePress_Helper_UI_Module::get_output_types();
