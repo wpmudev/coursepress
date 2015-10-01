@@ -589,9 +589,9 @@ class CoursePress_View_Admin_Settings_General {
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$post_settings['general']['show_coursepress_menu'] = isset($post_settings['general']['show_coursepress_menu']) ? : 'off';
-			$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? : 'off';
-			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : 'off';
+			$post_settings['general']['show_coursepress_menu'] = isset($post_settings['general']['show_coursepress_menu']) ? $post_settings['general']['show_coursepress_menu'] : 'off';
+			$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? $post_settings['general']['use_custom_login'] : 'off';
+			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? $post_settings['general']['redirect_after_login'] : 'off';
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );

@@ -176,7 +176,7 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$post_settings['basic_certificate']['enabled'] = isset( $post_settings['basic_certificate']['enabled'] ) ? : false;
+			$post_settings['basic_certificate']['enabled'] = isset( $post_settings['basic_certificate']['enabled'] ) ? $post_settings['basic_certificate']['enabled'] : false;
 			//$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? : false;
 			//$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : false;
 			//$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;

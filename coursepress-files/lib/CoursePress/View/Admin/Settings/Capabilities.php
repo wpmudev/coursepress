@@ -23,8 +23,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 	public static function return_content( $content, $slug, $tab ) {
 
-		$default_capabilities    = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'], 1 );
-		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities', $default_capabilities );
+		$instructor_capabilities = CoursePress_Model_Capabilities::get_instructor_capabilities();
 
 		$content = '
 			<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>

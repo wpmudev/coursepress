@@ -506,8 +506,7 @@ class CoursePress_Model_Capabilities {
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
 
 		// The default capabilities for an instructor
-		$default = array_keys( self::$capabilities[ 'instructor' ], 1 );
-		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities', $default );
+		$instructor_capabilities = self::get_instructor_capabilities();
 
 		$role = new WP_User( $user_id );
 
@@ -565,6 +564,20 @@ class CoursePress_Model_Capabilities {
 		self::drop_private_caps( '', $role );
 	}
 
+
+	public static function get_instructor_capabilities() {
+		$default_capabilities    = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'], 1 );
+		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities' );
+
+		if( empty( $instructor_capabilities ) ) {
+			$instructor_capabilities = array();
+			foreach ( $default_capabilities as $cap ) {
+				$instructor_capabilities[ $cap ] = true;
+			}
+		}
+
+		return $instructor_capabilities;
+	}
 
 	/**
 	 * Is this CoursePress Pro?
