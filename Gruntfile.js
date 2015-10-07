@@ -221,11 +221,11 @@ module.exports = function(grunt) {
         grunt.task.run('gitcheckout:' + target );
         grunt.task.run('replace:' + target );
         grunt.task.run('clean:' + target );
-        grunt.task.run('makepot:' + target );
-        grunt.task.run('wpmu_pot2mo:' + target );
+        //grunt.task.run('makepot:' + target );
+        //grunt.task.run('wpmu_pot2mo:' + target );
         grunt.task.run('gitadd:' + target );
-        //grunt.task.run('gitcommit:' + target );
-        //grunt.task.run('gitcheckout:base');
+        grunt.task.run('gitcommit:' + target );  // Uncomment line 224 and 225...
+        grunt.task.run('gitcheckout:base'); // Then comment line 227 and 228 to test. If successful, remove all comments.
 
     });
 
