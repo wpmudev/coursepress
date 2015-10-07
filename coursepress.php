@@ -7,7 +7,7 @@ Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
 Version: <%= wpmudev.plugin.version %>
-TextDomain: cp
+TextDomain: <%= wpmudev.plugin.textdomain %>
 Domain Path: /languages/
 WDP ID: 913071
 License: GNU General Public License ( Version 2 - GPLv2 )

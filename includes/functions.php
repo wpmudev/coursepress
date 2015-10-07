@@ -151,6 +151,7 @@ function cp_allowed_post_tags() {
  * @todo: needs to be replaced and removed soon
  */
 function cp_set_last_visited_unit_page( $unit_id = false, $page_num = false, $student_id = false ) {
+	if( !$page_num || $page_num < 2) return false;//Quick workaround to avoid loosing the last visited page when saving progress.
 	if ( !$unit_id ) {
 		return false;
 	}

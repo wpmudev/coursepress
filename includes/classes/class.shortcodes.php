@@ -3005,7 +3005,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			if ( $field == 'passcode_input' ) {
 				if ( $passcode_box_visible ) {
-					$course->passcode_input = '<label>' . __( "Passcode: ", "cp" ) . '<input type="password" name="passcode" /></label>';
+					$course->passcode_input = '<label>' . __( "Passcode: ", "<%= wpmudev.plugin.textdomain %>" ) . '<input type="password" name="passcode" /></label>';
 				}
 			}
 
