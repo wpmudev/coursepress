@@ -144,7 +144,37 @@ module.exports = function(grunt) {
 					},
 		            type: 'wp-plugin'
 		        }
-		    }
+		    },
+            dev: {
+                options: {
+                    domainPath: '/languages',
+                    mainFile: 'coursepress.php',
+                    potFilename: 'cp-default.pot',
+                    potHeaders: {
+                        'poedit': true,
+                        'language-team': 'WPMU Dev <support@wpmudev.org>',
+                        'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/coursepress',
+                        'last-translator': 'WPMU Dev <support@wpmudev.org>',
+                        'x-generator': 'grunt-wp-i18n'
+                    },
+                    type: 'wp-plugin'
+                }
+            },
+            wporg: {
+                options: {
+                    domainPath: '/languages',
+                    mainFile: 'coursepress.php',
+                    potFilename: 'coursepress-default.pot',
+                    potHeaders: {
+                        'poedit': true,
+                        'language-team': 'WPMU Dev <support@wpmudev.org>',
+                        'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/coursepress',
+                        'last-translator': 'WPMU Dev <support@wpmudev.org>',
+                        'x-generator': 'grunt-wp-i18n'
+                    },
+                    type: 'wp-plugin'
+                }
+            }
 		},
 		wpmu_pot2mo: {
 		    files: {
@@ -191,9 +221,11 @@ module.exports = function(grunt) {
         grunt.task.run('gitcheckout:' + target );
         grunt.task.run('replace:' + target );
         grunt.task.run('clean:' + target );
+        grunt.task.run('makepot:' + target );
+        grunt.task.run('wpmu_pot2mo:' + target );
         grunt.task.run('gitadd:' + target );
-        grunt.task.run('gitcommit:' + target );
-        grunt.task.run('gitcheckout:base');
+        //grunt.task.run('gitcommit:' + target );
+        //grunt.task.run('gitcheckout:base');
 
     });
 
