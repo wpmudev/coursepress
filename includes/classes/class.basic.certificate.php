@@ -370,7 +370,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 			$style .= self::certificate_styles();
 			$style = ! empty( $style ) ? '<style>' . $style . '</style>' : $style;
 
-			$html = '<table class="basic_certificate"><tr><td>' . stripslashes( self::certificate_content() ) . '</td></tr></table>';
+			$html = '<table class="basic_certificate"><tr><td>' . "\n\n" . stripslashes( self::certificate_content() ) . "\n\n" . '</td></tr></table>';
 
 			$html = self::_replace_fields( $html, $student, $course, true, $course_completed_details );
 
