@@ -5122,6 +5122,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		function add_cp2_editor() {
 
 			// Create a dummy editor to by used by the CoursePress JS object
+			remove_all_filters('media_buttons'); // We can't use 3rd parties with dynamic editors
+			add_action('media_buttons','media_buttons');
+			add_action('media_buttons', array( $this, 'coursepress_media_button_message' ) );
 			ob_start();
 			wp_editor( 'dummy_editor_content', 'dummy_editor_id', array( 'wpautop'       => false,
 			                                                             "textarea_name" => 'dummy_editor_name',
@@ -5142,6 +5145,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
+		}
+
+		// Media buttons on CoursePress don't work well with dynamic editor, so let users know why their buttons are gone.
+		function coursepress_media_button_message() {
+			echo '<div class="coursepress-media-button-message"><i class="fa fa-info-circle"></i> <span class="hidden">' . esc_html__('<p>WordPress does not normally allow dynamic visual editors, which CoursePress use quite extensively for the Course setup and Unit Builder.</p><p>As a result many plugins load their editor code too late to work properly in CoursePress.</p><p>To avoid showing broken buttons on CoursePress pages only the core "Add Media" button will be visible at this time.</p><p><strong>Close</strong></p>', '<%= wpmudev.plugin.textdomain %>') . '</span></div>';
 		}
 
 		function admin_coursepress_page_settings() {
