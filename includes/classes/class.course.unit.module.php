@@ -489,9 +489,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			/**
 			 * @todo: replace with Student_Completion function soon
 			 */
-			if($paged > 1){ //Quick workaround to avoid loosing the last visited page when saving progress.
-				cp_set_visited_unit_page( $unit_id, $paged, get_current_user_ID(), $course_id );
-			}
+			cp_set_visited_unit_page( $unit_id, $paged, get_current_user_ID(), $course_id );
 
 			//$unit_module_page_number = isset( $_GET['to_elements_page'] ) ? $_GET['to_elements_page'] : 1;
 

@@ -3317,6 +3317,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					'last_visited'                    => 'false',
 					'parent_course_preceding_content' => __( 'Course: ', 'coursepress_base_td' ),
 					'student_id'                      => get_current_user_ID(),
+					'decimal_places'      			  => '0',
 				) ), $atts ) );
 
 			$unit_id                         = (int) $unit_id;
@@ -3339,6 +3340,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$last_visited                    = sanitize_text_field( $last_visited );
 			$last_visited                    = 'true' == $last_visited ? true : false;
 			$class                           = sanitize_html_class( $class );
+			$decimal_places      			 = sanitize_text_field( $decimal_places );
 
 			if ( $unit_id == 0 ) {
 				$unit_id = get_the_ID();
@@ -3504,8 +3506,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				//				$completion		 = new Course_Completion( $unit->course_id );
 				//				$completion->init_student_status();
 				//				$percent_value	 = $completion->unit_progress( $unit_id );
-				$percent_value = Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $unit_id );
-
+				$percent_value = number_format_i18n( Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $unit_id ), $decimal_places );
 				$assessable_input_modules_count = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
 
 				if ( $style == 'flat' ) {
