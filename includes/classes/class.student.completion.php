@@ -452,6 +452,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				$data['unit'][ $unit_id ]['gradable_results'] = array();
 			}
 
+			if ( ! isset( $data['unit'][ $unit_id ]['gradable_results'][ $module_id ] ) ) {
+				$data['unit'][ $unit_id ]['gradable_results'][ $module_id ] = array();
+			}
+
             $gradable_results = $data['unit'][ $unit_id ]['gradable_results'][ $module_id ];
 			// Keep previous results, so push to the last entry
             $gradable_results[] = $result;
