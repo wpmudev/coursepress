@@ -69,7 +69,8 @@ if ( ! class_exists( 'Student_Search' ) ) {
 				'number'         => '',
 				'count_total'    => true,
 				'fields'         => 'all_with_meta',
-				'who'            => ''
+				'who'            => '',
+				'has_published_posts' => null,
 			) );
 
 
