@@ -34,13 +34,13 @@ class Course_Settings {
 	public function enrollment_types( $enrollment_types ) {
 
 		if ( cp_user_can_register() ) {
-			$enrollment_types['anyone']       = __( 'Anyone ', '<%= wpmudev.plugin.textdomain %>' );
-			$enrollment_types['passcode']     = __( 'Anyone with a pass code', '<%= wpmudev.plugin.textdomain %>' );
-			$enrollment_types['prerequisite'] = __( 'Anyone who completed the prerequisite course', '<%= wpmudev.plugin.textdomain %>' );
+			$enrollment_types['anyone']       = __( 'Anyone ', 'coursepress_base_td' );
+			$enrollment_types['passcode']     = __( 'Anyone with a pass code', 'coursepress_base_td' );
+			$enrollment_types['prerequisite'] = __( 'Anyone who completed the prerequisite course', 'coursepress_base_td' );
 		} else {
-			$enrollment_types['registered']   = __( 'Registered User', '<%= wpmudev.plugin.textdomain %>' );
-			$enrollment_types['passcode']     = __( 'Registered user with a pass code', '<%= wpmudev.plugin.textdomain %>' );
-			$enrollment_types['prerequisite'] = __( 'Registered user who completed the prerequisite course', '<%= wpmudev.plugin.textdomain %>' );
+			$enrollment_types['registered']   = __( 'Registered User', 'coursepress_base_td' );
+			$enrollment_types['passcode']     = __( 'Registered user with a pass code', 'coursepress_base_td' );
+			$enrollment_types['prerequisite'] = __( 'Registered user who completed the prerequisite course', 'coursepress_base_td' );
 		}
 
 		return $enrollment_types;

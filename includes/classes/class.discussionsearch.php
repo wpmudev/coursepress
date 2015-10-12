@@ -71,8 +71,8 @@ if ( ! class_exists( 'Discussion_Search' ) ) {
 			$pagination->Items( $this->get_count_of_all_discussions() );
 			$pagination->limit( $this->discussion_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', '<%= wpmudev.plugin.textdomain %>' );
-			$pagination->prevT         = __( 'Previous', '<%= wpmudev.plugin.textdomain %>' );
+			$pagination->nextT         = __( 'Next', 'coursepress_base_td' );
+			$pagination->prevT         = __( 'Previous', 'coursepress_base_td' );
 			if ( $this->search_term != '' ) {
 				$pagination->target( esc_url( "admin.php?page=discussions&s=" . $this->search_term ) );
 			} else {
@@ -81,7 +81,7 @@ if ( ! class_exists( 'Discussion_Search' ) ) {
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
 			$pagination->prevIcon( '&#9668;' );
-			$pagination->items_title = __( 'discussion', '<%= wpmudev.plugin.textdomain %>' );
+			$pagination->items_title = __( 'discussion', 'coursepress_base_td' );
 			$pagination->show();
 		}
 

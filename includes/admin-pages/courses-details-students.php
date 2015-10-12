@@ -105,7 +105,7 @@ $course_classes = get_post_meta( $course_id, 'course_classes', true );
 if ( isset( $_GET['withdraw_all'] ) ) {
 
 	if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'withdraw_students' ) ) {
-		die( __( 'Cheating huh?', '<%= wpmudev.plugin.textdomain %>' ) );
+		die( __( 'Cheating huh?', 'coursepress_base_td' ) );
 	}
 
 	if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
@@ -141,7 +141,7 @@ if ( isset( $_GET['withdraw_all'] ) ) {
 /* Withdraw a Student from class */
 if ( isset( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) ) {
 	if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'withdraw_student_' . $_GET['withdraw'] ) ) {
-		die( __( 'Cheating huh?', '<%= wpmudev.plugin.textdomain %>' ) );
+		die( __( 'Cheating huh?', 'coursepress_base_td' ) );
 	}
 	if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
 		$student = new Student( $_GET['withdraw'] );
@@ -153,12 +153,12 @@ if ( isset( $_GET['withdraw'] ) && is_numeric( $_GET['withdraw'] ) ) {
 }
 
 $columns = array(
-	"ID"             => __( 'Student ID', '<%= wpmudev.plugin.textdomain %>' ),
-	"username"       => __( 'Username', '<%= wpmudev.plugin.textdomain %>' ),
-	"user_firstname" => __( 'First Name', '<%= wpmudev.plugin.textdomain %>' ),
-	"user_lastname"  => __( 'Surname', '<%= wpmudev.plugin.textdomain %>' ),
-	//"group" => __( 'Group', '<%= wpmudev.plugin.textdomain %>' ),
-	"edit"           => __( 'Profile', '<%= wpmudev.plugin.textdomain %>' ),
+	"ID"             => __( 'Student ID', 'coursepress_base_td' ),
+	"username"       => __( 'Username', 'coursepress_base_td' ),
+	"user_firstname" => __( 'First Name', 'coursepress_base_td' ),
+	"user_lastname"  => __( 'Surname', 'coursepress_base_td' ),
+	//"group" => __( 'Group', 'coursepress_base_td' ),
+	"edit"           => __( 'Profile', 'coursepress_base_td' ),
 );
 
 $col_sizes = array(
@@ -170,7 +170,7 @@ $col_sizes = array(
 );
 
 if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
-	$columns["delete"] = __( 'Withdraw', '<%= wpmudev.plugin.textdomain %>' );
+	$columns["delete"] = __( 'Withdraw', 'coursepress_base_td' );
 	$col_sizes[]       = '12';
 }
 
@@ -218,7 +218,7 @@ $wp_user_search = new WP_User_Query( $args );
 	$wp_user_search = new WP_User_Query( $args );
 	?>
 	<div class="sidebar-name no-movecursor">
-		<h3 data-title="<?php _e( 'Default', '<%= wpmudev.plugin.textdomain %>' ); ?>"><?php _e( 'Default', '<%= wpmudev.plugin.textdomain %>' ); ?>
+		<h3 data-title="<?php _e( 'Default', 'coursepress_base_td' ); ?>"><?php _e( 'Default', 'coursepress_base_td' ); ?>
 			<span><?php echo ( count( $wp_user_search->get_results() ) >= 1 ) ? '( ' . count( $wp_user_search->get_results() ) . ' )' : ''; ?></span>
 		</h3>
 	</div>
@@ -259,7 +259,7 @@ $wp_user_search = new WP_User_Query( $args );
 						<td class="<?php echo $style; ?> <?php echo 'manage-column column-user_login'; ?>"><?php echo $user_object->user_login; ?></td>
 						<td class="<?php echo $style; ?> <?php echo 'manage-column column-first_name'; ?>"><?php echo $user_object->first_name; ?></td>
 						<td class="<?php echo $style; ?> <?php echo 'manage-column column-last_name'; ?>"><?php echo $user_object->last_name; ?></td>
-						<!--<td class="<?php echo $style; ?>"><?php echo( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __( 'Default', '<%= wpmudev.plugin.textdomain %>' ) : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>-->
+						<!--<td class="<?php echo $style; ?>"><?php echo( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __( 'Default', 'coursepress_base_td' ) : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>-->
 						<td class="<?php echo $style . ' edit-button-student-td'; ?>">
 							<a href="<?php echo admin_url( 'admin.php?page=students&action=view&student_id=' . $user_object->ID ); ?>">
 								<i class="fa fa-user cp-move-icon remove-btn"></i>
@@ -284,7 +284,7 @@ $wp_user_search = new WP_User_Query( $args );
 
 			<div class="additional_class_actions">
 				<?php if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-					<a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw_all=' . urlencode( ( isset( $class ) ? $class : '' ) ) ), 'withdraw_students', 'cp_nonce' ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', '<%= wpmudev.plugin.textdomain %>' ); ?>"><?php _e( 'Withdraw all students', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+					<a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_id . '&withdraw_all=' . urlencode( ( isset( $class ) ? $class : '' ) ) ), 'withdraw_students', 'cp_nonce' ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', 'coursepress_base_td' ); ?>"><?php _e( 'Withdraw all students', 'coursepress_base_td' ); ?></a>
 				<?php } ?>
 			</div>
 
@@ -296,7 +296,7 @@ $wp_user_search = new WP_User_Query( $args );
 						<input type="hidden" name="class_name" value=""/>
 						<input type="hidden" name="active_student_tab" value="0"/>
 						<?php if ( $students->total_users > 0 ) { ?>
-							<?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', '<%= wpmudev.plugin.textdomain %>' ), 'secondary', 'add_new_student', '' ); ?>
+							<?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'coursepress_base_td' ), 'secondary', 'add_new_student', '' ); ?>
 						<?php } ?>
 						<?php wp_nonce_field( 'student_details' ); ?>
 					</form>
@@ -310,7 +310,7 @@ $wp_user_search = new WP_User_Query( $args );
 			<table cellspacing="0" class="widefat">
 				<tr>
 					<td>
-						<div class="zero-students"><?php _e( '0 Students in this course', '<%= wpmudev.plugin.textdomain %>' ); ?></div>
+						<div class="zero-students"><?php _e( '0 Students in this course', 'coursepress_base_td' ); ?></div>
 					</td>
 				</tr>
 			</table>
@@ -323,7 +323,7 @@ $wp_user_search = new WP_User_Query( $args );
 						<input type="hidden" name="class_name" value=""/>
 						<input type="hidden" name="active_student_tab" value="0"/>
 						<?php //if ( $students->total_users > 0 ) { ?>
-						<?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', '<%= wpmudev.plugin.textdomain %>' ), 'secondary', 'add_new_student', '' ); ?>
+						<?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'coursepress_base_td' ), 'secondary', 'add_new_student', '' ); ?>
 						<?php //} ?>
 						<?php wp_nonce_field( 'student_details' ); ?>
 					</form>
@@ -389,7 +389,7 @@ $wp_user_search = new WP_User_Query( $args );
 	  <td class="<?php echo $style; ?>"><?php echo $user_object->ID; ?></td>
 	  <td class="<?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
 	  <td class="<?php echo $style; ?>"><?php echo $user_object->last_name; ?></td>
-	  <td class="<?php echo $style; ?>"><?php echo ( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __( 'Default', '<%= wpmudev.plugin.textdomain %>' ) : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>
+	  <td class="<?php echo $style; ?>"><?php echo ( $user_object->{'enrolled_course_group_' . $course_id} == '' ? __( 'Default', 'coursepress_base_td' ) : $user_object->{'enrolled_course_group_' . $course_id} ); ?></td>
 	  <td class="<?php echo $style . ' edit-button-student-td'; ?>"><a href="?page=students&action=view&student_id=<?php echo $user_object->ID; ?>">
 	  <i class="fa fa-user cp-move-icon remove-btn"></i>
 	  </a>
@@ -414,13 +414,13 @@ $wp_user_search = new WP_User_Query( $args );
 
 	  <div class="additional_class_actions">
 	  <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class and move students to Default class', '<%= wpmudev.plugin.textdomain %>' ); ?>"><?php _e( 'Delete Class', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class and move students to Default class', 'coursepress_base_td' ); ?>"><?php _e( 'Delete Class', 'coursepress_base_td' ); ?></a>
 	  <?php } ?>
 	  <?php if ( ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) && ( ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) ) ) { ?>
 	  |
 	  <?php } ?>
 	  <?php if ( ( current_user_can( 'coursepress_withdraw_students_cap' ) ) || ( current_user_can( 'coursepress_withdraw_my_students_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw_all=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', '<%= wpmudev.plugin.textdomain %>' ); ?>"><?php _e( 'Withdraw all students', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&withdraw_all=<?php echo urlencode( ( isset( $class ) ? $class : '' ) ); ?>" onClick="return withdrawAllFromClass();" title="<?php _e( 'Withdraw all students from the course', 'coursepress_base_td' ); ?>"><?php _e( 'Withdraw all students', 'coursepress_base_td' ); ?></a>
 	  <?php } ?>
 	  </div>
 
@@ -431,7 +431,7 @@ $wp_user_search = new WP_User_Query( $args );
 	  <input type="hidden" name="class_name" value="<?php echo ( isset( $class ) ? $class : '' ); ?>" />
 	  <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
 	  <?php if ( $students->total_users > 0 ) { ?>
-	  <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', '<%= wpmudev.plugin.textdomain %>' ), 'secondary', 'add_new_student', '' ); ?>
+	  <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'coursepress_base_td' ), 'secondary', 'add_new_student', '' ); ?>
 	  <?php } ?>
 	  <?php wp_nonce_field( 'student_details' ); ?>
 	  <?php } ?>
@@ -446,7 +446,7 @@ $wp_user_search = new WP_User_Query( $args );
 	  <table cellspacing="0" class="widefat">
 	  <tr>
 	  <td>
-	  <div class="zero-students"><?php _e( '0 Students in this class', '<%= wpmudev.plugin.textdomain %>' ); ?></div>
+	  <div class="zero-students"><?php _e( '0 Students in this class', 'coursepress_base_td' ); ?></div>
 	  </td>
 	  </tr>
 	  </table>
@@ -454,7 +454,7 @@ $wp_user_search = new WP_User_Query( $args );
 
 	  <div class="additional_class_actions">
 	  <?php if ( ( current_user_can( 'coursepress_delete_classes_cap' ) ) || ( current_user_can( 'coursepress_delete_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) { ?>
-	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( $class ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class', '<%= wpmudev.plugin.textdomain %>' ); ?>"><?php _e( 'Delete Class', '<%= wpmudev.plugin.textdomain %>' ); ?></a>
+	  <a href="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&delete_class=<?php echo urlencode( $class ); ?>" onClick="return deleteClass();" title="<?php _e( 'Delete Class', 'coursepress_base_td' ); ?>"><?php _e( 'Delete Class', 'coursepress_base_td' ); ?></a>
 	  <?php } ?>
 	  </div>
 
@@ -464,7 +464,7 @@ $wp_user_search = new WP_User_Query( $args );
 	  <form name="add_new_student_to_class_<?php echo $class; ?>" action="?page=course_details&tab=students&course_id=<?php echo $course_id; ?>&ms=as" method="post">
 	  <input type="hidden" name="class_name" value="<?php echo $class; ?>" />
 	  <input type="hidden" name="active_student_tab" value="<?php echo $course_num; ?>" />
-	  <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', '<%= wpmudev.plugin.textdomain %>' ), 'secondary', 'add_new_student', '' ); ?>
+	  <?php cp_students_drop_down(); ?> <?php submit_button( __( 'Add Student', 'coursepress_base_td' ), 'secondary', 'add_new_student', '' ); ?>
 	  <?php wp_nonce_field( 'student_details' ); ?>
 	  </form>
 	  <?php } ?>
@@ -494,12 +494,12 @@ $wp_user_search = new WP_User_Query( $args );
 
 	<?php if ( ( ( current_user_can( 'coursepress_add_new_classes_cap' ) ) || ( current_user_can( 'coursepress_add_new_my_classes_cap' ) && $course->details->post_author == get_current_user_id() ) ) && 1 == 0 /* moving class feature for the next release */ ) { ?>
 		<div class="add-student-class-area">
-			<h2><?php _e( 'New Class', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
-			<label><?php _e( 'New Class name', '<%= wpmudev.plugin.textdomain %>' ); ?>
+			<h2><?php _e( 'New Class', 'coursepress_base_td' ); ?></h2>
+			<label><?php _e( 'New Class name', 'coursepress_base_td' ); ?>
 				<input type="text" name="course_classes[]" class="course_classes_input" value=""/>
 			</label>
 
-			<?php submit_button( __( 'Add New Class', '<%= wpmudev.plugin.textdomain %>' ), 'primary', 'add_student_class', '' ); ?>
+			<?php submit_button( __( 'Add New Class', 'coursepress_base_td' ), 'primary', 'add_student_class', '' ); ?>
 			<div class="add_class_message"></div>
 		</div>
 	<?php } ?>
@@ -513,19 +513,19 @@ if ( $course->details->enroll_type != 'manually' ) {//There shouldn't be invitat
 		<div class="invite_student_area">
 			<form name="student_invitation" method="post" class='student-invitation'>
 				<?php wp_nonce_field( 'student_invitation' ); ?>
-				<h2><?php _e( 'Invite a Student', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
-				<label><span><?php _e( 'First Name', '<%= wpmudev.plugin.textdomain %>' ); ?></span>
+				<h2><?php _e( 'Invite a Student', 'coursepress_base_td' ); ?></h2>
+				<label><span><?php _e( 'First Name', 'coursepress_base_td' ); ?></span>
 					<input type="text" name="first_name" value=""/>
 				</label>
 
-				<label><span><?php _e( 'Last Name', '<%= wpmudev.plugin.textdomain %>' ); ?></span>
+				<label><span><?php _e( 'Last Name', 'coursepress_base_td' ); ?></span>
 					<input type="text" name="last_name" value=""/>
 				</label>
 
-				<label><span><?php _e( 'E-Mail', '<%= wpmudev.plugin.textdomain %>' ); ?></span>
+				<label><span><?php _e( 'E-Mail', 'coursepress_base_td' ); ?></span>
 					<input type="text" name="email" value=""/>
 				</label>
-				<?php submit_button( __( 'Invite', '<%= wpmudev.plugin.textdomain %>' ), 'primary', 'invite_student', '' ); ?>
+				<?php submit_button( __( 'Invite', 'coursepress_base_td' ), 'primary', 'invite_student', '' ); ?>
 			</form>
 		</div>
 	<?php } ?>
@@ -537,18 +537,18 @@ if ( $course->details->enroll_type != 'manually' ) {//There shouldn't be invitat
   <div class="students_bulk_email_area">
   <form name="students_bulk_email" method="post">
   <?php wp_nonce_field( 'students_bulk_email' ); ?>
-  <h2><?php _e( 'Send an e-mail notification to students', '<%= wpmudev.plugin.textdomain %>' ); ?></h2>
+  <h2><?php _e( 'Send an e-mail notification to students', 'coursepress_base_td' ); ?></h2>
 
-  <label class="email_subject"><?php _e( 'E-Mail Subject', '<%= wpmudev.plugin.textdomain %>' ); ?>
+  <label class="email_subject"><?php _e( 'E-Mail Subject', 'coursepress_base_td' ); ?>
   <input type="text" name="email_subject" value="" />
   </label>
-  <label class="email_body"><?php _e( 'E-Mail Body', '<%= wpmudev.plugin.textdomain %>' ); ?>
+  <label class="email_body"><?php _e( 'E-Mail Body', 'coursepress_base_td' ); ?>
   <?php
   $args = array( "textarea_name" => "email_body", "textarea_rows" => 3 );
   wp_editor( '', "email_body", $args );
   ?>
   </label><br />
-  <?php submit_button( __( 'Send', '<%= wpmudev.plugin.textdomain %>' ), 'primary', 'send_bulk_email_to_students', '' ); ?>
+  <?php submit_button( __( 'Send', 'coursepress_base_td' ), 'primary', 'send_bulk_email_to_students', '' ); ?>
   </form>
   </div>
   <?php } */ ?>

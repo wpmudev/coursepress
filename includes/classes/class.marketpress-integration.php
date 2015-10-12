@@ -537,7 +537,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 						<div class="course-sku">
 							<p>
 								<input type="checkbox" name="meta_auto_sku" ' . ( isset( $auto_sku ) && $auto_sku == 'on' ? 'checked' : '' ) . ' ' . $input_state . '/>
-								' . esc_html__( 'Automatically generate Stock Keeping Unit (SKU)', '<%= wpmudev.plugin.textdomain %>' ) . '
+								' . esc_html__( 'Automatically generate Stock Keeping Unit (SKU)', 'coursepress_base_td' ) . '
 							</p>
 							<input type="text" name="mp_sku" id="mp_sku" placeholder="CP-000001" value="' . esc_attr( isset( $marketpress_product_sku[0] ) ? $marketpress_product_sku[0] : '' ) . '" ' . $input_state . '/>
 						</div>
@@ -545,7 +545,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 			$content .= '
 						<div class="course-price">
-							<span class="price-label ' . esc_attr( $paid_course == 'on' ? 'required' : '' ) . '">' . esc_html__( 'Price', '<%= wpmudev.plugin.textdomain %>' ) . '</span>
+							<span class="price-label ' . esc_attr( $paid_course == 'on' ? 'required' : '' ) . '">' . esc_html__( 'Price', 'coursepress_base_td' ) . '</span>
 							<input type="text" name="mp_price" id="mp_price" value="' . esc_attr( isset( $mp_product_details['mp_price'][0] ) ? esc_attr( $mp_product_details['mp_price'][0] ) : '' ) . '" ' . $input_state . ' />
 						</div>
 						<div class="clearfix"></div>
@@ -556,9 +556,9 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 						<div class="course-sale-price">
 							<p>
 								<input type="checkbox" id="mp_is_sale" name="mp_is_sale" value="' . esc_attr( $mp_is_sale ) . '" ' . checked( $mp_is_sale, '1', false ) . ' ' . $input_state . ' />
-								' . esc_html__( 'Enabled Sale Price', '<%= wpmudev.plugin.textdomain %>' ) . '
+								' . esc_html__( 'Enabled Sale Price', 'coursepress_base_td' ) . '
  							</p>
-							<span class="price-label ' . esc_attr( isset( $mp_product_details ) && ! empty( $mp_product_details["mp_is_sale"] ) && checked( $mp_product_details["mp_is_sale"][0], '1', false ) ? "required" : "" ) . '">' . esc_html__( 'Sale Price', '<%= wpmudev.plugin.textdomain %>' ) . '</span>
+							<span class="price-label ' . esc_attr( isset( $mp_product_details ) && ! empty( $mp_product_details["mp_is_sale"] ) && checked( $mp_product_details["mp_is_sale"][0], '1', false ) ? "required" : "" ) . '">' . esc_html__( 'Sale Price', 'coursepress_base_td' ) . '</span>
 							<input type="text" name="mp_sale_price" id="mp_sale_price" value="' . ( ! empty( $mp_product_details['mp_sale_price'] ) ? esc_attr( $mp_product_details["mp_sale_price"][0] ) : 0 ) . '" ' . $input_state . ' />
 						</div>
 						<div class="clearfix"></div>
@@ -576,9 +576,9 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 				$content .= '
 						<div class="course-enable-gateways ' . esc_attr( $gateways ? 'gateway-active' : 'gateway-undefined' ) . '">
-							<a href="' . esc_url_raw( $gateway_url . '&TB_iframe=true&width=600&height=550' ) . '" class="button button-incomplete-gateways thickbox ' . esc_attr( $gateways ? 'hide' : '' ) . '" style="' . esc_attr( $gateways ? 'display:none' : '' ) . '">' . esc_html__( 'Setup Payment Gateways', '<%= wpmudev.plugin.textdomain %>' ) . '</a>
+							<a href="' . esc_url_raw( $gateway_url . '&TB_iframe=true&width=600&height=550' ) . '" class="button button-incomplete-gateways thickbox ' . esc_attr( $gateways ? 'hide' : '' ) . '" style="' . esc_attr( $gateways ? 'display:none' : '' ) . '">' . esc_html__( 'Setup Payment Gateways', 'coursepress_base_td' ) . '</a>
 							<span class="payment-gateway-required ' . esc_attr( ! $gateways && $paid_course == 'on' ? 'required' : '' ) . '"></span>
-							<a href="' . esc_url_raw( $gateway_url . '&TB_iframe=true&width=600&height=550' ) . '" class="button button-edit-gateways thickbox ' . esc_attr( $gateways ? '' : 'hide' ) . '" style="' . esc_attr( $gateways ? '' : 'display:none' ) . '">' . esc_html__( 'Edit Payment Gateways', '<%= wpmudev.plugin.textdomain %>' ) . '</a>
+							<a href="' . esc_url_raw( $gateway_url . '&TB_iframe=true&width=600&height=550' ) . '" class="button button-edit-gateways thickbox ' . esc_attr( $gateways ? '' : 'hide' ) . '" style="' . esc_attr( $gateways ? '' : 'display:none' ) . '">' . esc_html__( 'Edit Payment Gateways', 'coursepress_base_td' ) . '</a>
 						</div>
 				';
 

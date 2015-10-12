@@ -40,7 +40,7 @@ if ( cp_is_chat_plugin_active() ) {
 
 				<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
                     <span class="h3-label">
-                        <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' ) ); ?></span>
+                        <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
                         <span class="h3-label-right"><?php echo $this->label; ?></span>
 	                    <?php
 	                    parent::get_module_move_link();
@@ -57,13 +57,13 @@ if ( cp_is_chat_plugin_active() ) {
 
 					<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
-					<label class="bold-label"><?php _e( 'Element Title', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+					<label class="bold-label"><?php _e( 'Element Title', 'coursepress_base_td' ); ?></label>
 					<?php echo $this->element_title_description(); ?>
 					<input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : '' ); ?>"/>
 
 					<?php echo $this->show_title_on_front_element( $data ); ?>
 
-					<label class="bold-label"><?php _e( 'Content', '<%= wpmudev.plugin.textdomain %>' ); ?></label>
+					<label class="bold-label"><?php _e( 'Content', 'coursepress_base_td' ); ?></label>
 
 					<div class="editor_in_place">
 
@@ -91,8 +91,8 @@ if ( cp_is_chat_plugin_active() ) {
 
 		function on_create() {
 			$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-			$this->description = __( 'Add a chat box from the Wordpress Chat plugin', '<%= wpmudev.plugin.textdomain %>' );
-			$this->label       = __( 'Live Chat', '<%= wpmudev.plugin.textdomain %>' );
+			$this->description = __( 'Add a chat box from the Wordpress Chat plugin', 'coursepress_base_td' );
+			$this->label       = __( 'Live Chat', 'coursepress_base_td' );
 			$this->save_module_data();
 			parent::additional_module_actions();
 		}

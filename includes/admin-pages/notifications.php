@@ -25,27 +25,27 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 					case 'publish':
 						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_course_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
 							$notification->change_status( 'publish' );
-							$message = __( 'Selected notifications have been published successfully.', '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( 'Selected notifications have been published successfully.', 'coursepress_base_td' );
 						} else {
-							$message = __( "You don't have right permissions to change notification status.", '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( "You don't have right permissions to change notification status.", 'coursepress_base_td' );
 						}
 						break;
 
 					case 'unpublish':
 						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
 							$notification->change_status( 'private' );
-							$message = __( 'Selected notifications have been set to private successfully.', '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( 'Selected notifications have been set to private successfully.', 'coursepress_base_td' );
 						} else {
-							$message = __( "You don't have right permissions to change notification status.", '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( "You don't have right permissions to change notification status.", 'coursepress_base_td' );
 						}
 						break;
 
 					case 'delete':
 						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
 							$notification->delete_notification();
-							$message = __( 'Selected notifications have been deleted successfully.', '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( 'Selected notifications have been deleted successfully.', 'coursepress_base_td' );
 						} else {
-							$message = __( "You don't have right permissions to delete the notification.", '<%= wpmudev.plugin.textdomain %>' );
+							$message = __( "You don't have right permissions to delete the notification.", 'coursepress_base_td' );
 						}
 						break;
 				}
@@ -75,37 +75,37 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 	if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['notification_id'] ) && is_numeric( $_GET['notification_id'] ) ) {
 
 		if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'delete_notification_' . $_GET['notification_id'] ) ) {
-			die( __( 'Cheating huh?', '<%= wpmudev.plugin.textdomain %>' ) );
+			die( __( 'Cheating huh?', 'coursepress_base_td' ) );
 		}
 
 		$notification_object = $notification->get_notification();
 
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) {
 			$notification->delete_notification( $force_delete = true );
-			$message = __( 'Selected notification has been deleted successfully.', '<%= wpmudev.plugin.textdomain %>' );
+			$message = __( 'Selected notification has been deleted successfully.', 'coursepress_base_td' );
 		} else {
-			$message = __( "You don't have right permissions to delete the notification.", '<%= wpmudev.plugin.textdomain %>' );
+			$message = __( "You don't have right permissions to delete the notification.", 'coursepress_base_td' );
 		}
 	}
 
 	if ( isset( $_GET['action'] ) && $_GET['action'] == 'change_status' && isset( $_GET['notification_id'] ) && is_numeric( $_GET['notification_id'] ) ) {
 
 		if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'change_status_' . $_GET['notification_id'] ) ) {
-			die( __( 'Cheating huh?', '<%= wpmudev.plugin.textdomain %>' ) );
+			die( __( 'Cheating huh?', 'coursepress_base_td' ) );
 		}
 
 		$notification->change_status( $_GET['new_status'] );
-		$message = __( 'Status for the selected notification has been changed successfully.', '<%= wpmudev.plugin.textdomain %>' );
+		$message = __( 'Status for the selected notification has been changed successfully.', 'coursepress_base_td' );
 	}
 	?>
 	<div class="wrap nosubsub notifications cp-wrap">
 		<div class="icon32" id="icon-themes"><br></div>
-		<h2><?php _e( 'Notifications', '<%= wpmudev.plugin.textdomain %>' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_notification_cap' ) || current_user_can( 'coursepress_create_my_notification_cap' ) || current_user_can( 'coursepress_create_my_assigned_notification_cap' ) ) { ?>
-				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=notifications&action=add_new' ); ?>"><?php _e( 'Add New', '<%= wpmudev.plugin.textdomain %>' ); ?></a><?php } ?>
+		<h2><?php _e( 'Notifications', 'coursepress_base_td' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_notification_cap' ) || current_user_can( 'coursepress_create_my_notification_cap' ) || current_user_can( 'coursepress_create_my_assigned_notification_cap' ) ) { ?>
+				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=notifications&action=add_new' ); ?>"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?>
 		</h2>
 		<?php
-		$ms['add'] = __( 'New notification added successfully!', '<%= wpmudev.plugin.textdomain %>' );
-		$ms['nu']  = __( 'Notification updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
+		$ms['add'] = __( 'New notification added successfully!', 'coursepress_base_td' );
+		$ms['nu']  = __( 'Notification updated successfully.', 'coursepress_base_td' );
 
 		if ( isset( $_GET['ms'] ) ) {
 			$message = $ms[ $_GET['ms'] ];
@@ -124,9 +124,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Notifications', '<%= wpmudev.plugin.textdomain %>' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Notifications', 'coursepress_base_td' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( $s ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Notifications', '<%= wpmudev.plugin.textdomain %>' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Notifications', 'coursepress_base_td' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -137,16 +137,16 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_notification_status_cap' ) || current_user_can( 'coursepress_delete_notification_cap' ) ) { ?>
 					<div class="alignleft actions">
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress_base_td' ); ?></option>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_notification_status_cap' ) ) { ?>
-								<option value="publish"><?php _e( 'Publish', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
-								<option value="unpublish"><?php _e( 'Private', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+								<option value="publish"><?php _e( 'Publish', 'coursepress_base_td' ); ?></option>
+								<option value="unpublish"><?php _e( 'Private', 'coursepress_base_td' ); ?></option>
 							<?php } ?>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_notification_cap' ) ) { ?>
-								<option value="delete"><?php _e( 'Delete', '<%= wpmudev.plugin.textdomain %>' ); ?></option>
+								<option value="delete"><?php _e( 'Delete', 'coursepress_base_td' ); ?></option>
 							<?php } ?>
 						</select>
-						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress_base_td' ); ?>"/>
 					</div>
 				<?php } ?>
 
@@ -161,9 +161,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		wp_nonce_field( 'bulk-notifications' );
 
 		$columns = array(
-			"notification_title" => __( 'Notification', '<%= wpmudev.plugin.textdomain %>' ),
-			"course"             => __( 'Course', '<%= wpmudev.plugin.textdomain %>' ),
-			"status"             => __( 'Status', '<%= wpmudev.plugin.textdomain %>' ),
+			"notification_title" => __( 'Notification', 'coursepress_base_td' ),
+			"course"             => __( 'Course', 'coursepress_base_td' ),
+			"status"             => __( 'Status', 'coursepress_base_td' ),
 		);
 
 
@@ -176,7 +176,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		);
 
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) ) ) {
-			$columns["remove"] = __( 'Remove', '<%= wpmudev.plugin.textdomain %>' );
+			$columns["remove"] = __( 'Remove', 'coursepress_base_td' );
 			$col_sizes[]       = '7';
 		}
 		?>
@@ -213,7 +213,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 					$course      = new Course( $notification_object->course_id );
 					$course_name = $course->details->post_title;
 				} else {
-					$course_name = __( 'All Courses', '<%= wpmudev.plugin.textdomain %>' );
+					$course_name = __( 'All Courses', 'coursepress_base_td' );
 				}
 				?>
 				<tr id='user-<?php echo $notification_object->ID; ?>' class="<?php echo $style; ?>">
@@ -224,18 +224,18 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 						<a href="<?php echo admin_url( 'admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID ); ?>"><strong><?php echo $notification_object->post_title; ?></strong></a>
 
 						<div class="visible-small visible-extra-small">
-							<strong><?php _e( 'Course:', '<%= wpmudev.plugin.textdomain %>' ); ?></strong> <?php echo $course_name; ?></div>
+							<strong><?php _e( 'Course:', 'coursepress_base_td' ); ?></strong> <?php echo $course_name; ?></div>
 						<div class="visible-small visible-extra-small">
-							<strong><?php _e( 'Status:', '<%= wpmudev.plugin.textdomain %>' ); ?></strong> <?php echo ( $notification_object->post_status == 'publish' ) ? ucfirst( $notification_object->post_status ) . 'ed' : ucfirst( $notification_object->post_status ); ?>
+							<strong><?php _e( 'Status:', 'coursepress_base_td' ); ?></strong> <?php echo ( $notification_object->post_status == 'publish' ) ? ucfirst( $notification_object->post_status ) . 'ed' : ucfirst( $notification_object->post_status ); ?>
 						</div>
 						<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $notification_object->ID ); ?></div>
 						<div class="row-actions">
-							<span class="edit_notification"><a href="<?php echo admin_url( 'admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID ); ?>"><?php _e( 'Edit', '<%= wpmudev.plugin.textdomain %>' ); ?></a> | </span>
+							<span class="edit_notification"><a href="<?php echo admin_url( 'admin.php?page=notifications&action=edit&notification_id=' . $notification_object->ID ); ?>"><?php _e( 'Edit', 'coursepress_base_td' ); ?></a> | </span>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_notification_status_cap' ) || ( current_user_can( 'coursepress_change_my_notification_status_cap' ) && $notification_object->post_author == get_current_user_id() ) ) { ?>
-								<span class="notification_publish_unpublish"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&notification_id=' . $notification_object->ID . '&action=change_status&new_status=' . ( ( $notification_object->post_status == 'private' ) ? 'publish' : 'private' ) ), 'change_status_' . $notification_object->ID, 'cp_nonce' ); ?>"><?php ( $notification_object->post_status == 'private' ) ? _e( 'Publish', '<%= wpmudev.plugin.textdomain %>' ) : _e( 'Private', '<%= wpmudev.plugin.textdomain %>' ); ?></a> | </span>
+								<span class="notification_publish_unpublish"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&notification_id=' . $notification_object->ID . '&action=change_status&new_status=' . ( ( $notification_object->post_status == 'private' ) ? 'publish' : 'private' ) ), 'change_status_' . $notification_object->ID, 'cp_nonce' ); ?>"><?php ( $notification_object->post_status == 'private' ) ? _e( 'Publish', 'coursepress_base_td' ) : _e( 'Private', 'coursepress_base_td' ); ?></a> | </span>
 							<?php } ?>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_notification_cap' ) || ( current_user_can( 'coursepress_delete_my_notification_cap' ) && $notification_object->post_author == get_current_user_id() ) ) { ?>
-								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_' . $notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification();"><?php _e( 'Delete', '<%= wpmudev.plugin.textdomain %>' ); ?></a> | </span>
+								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=notifications&action=delete&notification_id=' . $notification_object->ID ), 'delete_notification_' . $notification_object->ID, 'cp_nonce' ); ?>" onClick="return removeNotification();"><?php _e( 'Delete', 'coursepress_base_td' ); ?></a> | </span>
 							<?php } ?>
 						</div>
 					</td>
@@ -260,7 +260,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				?>
 				<tr>
 					<td colspan="6">
-						<div class="zero-courses"><?php _e( 'No notifications found.', '<%= wpmudev.plugin.textdomain %>' ) ?></div>
+						<div class="zero-courses"><?php _e( 'No notifications found.', 'coursepress_base_td' ) ?></div>
 					</td>
 				</tr>
 			<?php

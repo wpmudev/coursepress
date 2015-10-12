@@ -1,13 +1,13 @@
 <?php
 /*
-Plugin Name: <%= wpmudev.plugin.name %>
+Plugin Name: CoursePress Base
 Plugin URI: http://premium.wpmudev.org/project/coursepress/
-Description: <%= wpmudev.plugin.name %> turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+Description: CoursePress Base turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-Version: <%= wpmudev.plugin.version %>
-TextDomain: <%= wpmudev.plugin.textdomain %>
+Version: 1.2.6.5
+TextDomain: coursepress_base_td
 Domain Path: /languages/
 WDP ID: 913071
 License: GNU General Public License ( Version 2 - GPLv2 )
@@ -47,7 +47,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 	 */
 	class CoursePress {
 
-		public $mp_file = '<%= wpmudev.plugin.option.marketpress_file %>';
+		public $mp_file; // Set in constructor
 
 		/**
 		 * Current running instance of CoursePress.
@@ -61,10 +61,13 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		/**
 		 * Current plugin version.
 		 *
+		 * NOTE: This should be the same version as set above in the plugin header and should also be set in
+		 * Gruntfile.js
+		 *
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '<%= wpmudev.plugin.version %>';
+		public $version = '1.2.6.5';
 
 		/**
 		 * Plugin friendly name.
@@ -72,7 +75,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $name = '<%= wpmudev.plugin.name %>';
+		public $name = 'CoursePress Base';
 
 		/**
 		 * Plugin directory name.
@@ -155,6 +158,13 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		function __construct() {
 			// Setup CoursePress properties
 			$this->init_vars();
+
+			//<wpmudev.plugin.pro_only>
+			$this->mp_file = '128762_marketpress-ecommerce-3.0.0.2.zip';
+			//</wpmudev.plugin.pro_only>
+			//<wpmudev.plugin.free_only>
+			$this->mp_file = '';
+			//</wpmudev.plugin.free_only>
 
 			// Initiate sessions
 			if ( ! session_id() ) {
@@ -1395,7 +1405,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				if ( 2 == count( $cookie ) ) {
 					// Thank you for signing up for Course Name Here. We hope you enjoy your experience.
-					$setting = sprintf( __( '<p>Thank you for signing up for <a href ="%s">%s</a>. We hope you enjoy your experience.</p>', '<%= wpmudev.plugin.textdomain %>' ), get_permalink( $cookie[1] ), get_the_title( $cookie[1] ) );
+					$setting = sprintf( __( '<p>Thank you for signing up for <a href ="%s">%s</a>. We hope you enjoy your experience.</p>', 'coursepress_base_td' ), get_permalink( $cookie[1] ), get_the_title( $cookie[1] ) );
 					$setting = $setting . '<br />' . $init_message;
 					setcookie( $cookie_id, '' );
 					add_filter( 'gettext', array( &$this, 'alter_tracking_text' ), 20, 3 );
@@ -1410,7 +1420,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			// "You may track the latest status of your order( s ) here:<br />%s"
 			switch ( $text ) {
 				case "You may track the latest status of your order( s ) here:<br />%s":
-					$translated_text = __( 'You may track the status of this order here:<br />%s', '<%= wpmudev.plugin.textdomain %>' );
+					$translated_text = __( 'You may track the status of this order here:<br />%s', 'coursepress_base_td' );
 					remove_filter( 'gettext', array( &$this, 'alter_tracking_text' ) );
 					break;
 			}
@@ -1498,7 +1508,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//			if ( ! empty( $cp_course_id ) ) {
 			//				switch ( $text ) {
 			//					case 'Shipping' :
-			//						$translated_text = __( 'E-Mail', '<%= wpmudev.plugin.textdomain %>' );
+			//						$translated_text = __( 'E-Mail', 'coursepress_base_td' );
 			//						break;
 			//				}
 			//			}
@@ -1545,15 +1555,15 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$array = array(
 				'paypal-express'  => array(
 					'class'    => 'MP_Gateway_Paypal_Express',
-					'friendly' => __( 'Pay with PayPal', '<%= wpmudev.plugin.textdomain %>' ),
+					'friendly' => __( 'Pay with PayPal', 'coursepress_base_td' ),
 				),
 				'manual-payments' => array(
 					'class'    => 'MP_Gateway_ManualPayments',
-					'friendly' => __( 'Bank Transfer', '<%= wpmudev.plugin.textdomain %>' ),
+					'friendly' => __( 'Bank Transfer', 'coursepress_base_td' ),
 				),
 				'simplify'        => array(
 					'class'    => 'MP_Gateway_Simplify',
-					'friendly' => __( 'Pay by Credit Card', '<%= wpmudev.plugin.textdomain %>' ),
+					'friendly' => __( 'Pay by Credit Card', 'coursepress_base_td' ),
 				),
 			);
 
@@ -2072,12 +2082,12 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			if ( current_user_can( 'manage_options' ) ) {
 				?>
-				<h3><?php _e( 'Instructor Capabilities', '<%= wpmudev.plugin.textdomain %>' ); ?></h3>
+				<h3><?php _e( 'Instructor Capabilities', 'coursepress_base_td' ); ?></h3>
 
 				<?php
 				// If user has no role i.e. can't "read", don't even go near capabilities, it wont work.
 				if ( ! user_can( $user, 'read' ) ) {
-					_e( "Can't assign instructor capabilities. User has no assigned role on this blog. See 'Role' above.", '<%= wpmudev.plugin.textdomain %>' );
+					_e( "Can't assign instructor capabilities. User has no assigned role on this blog. See 'Role' above.", 'coursepress_base_td' );
 
 					return false;
 				}
@@ -2088,12 +2098,12 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				?>
 				<table class="form-table">
 					<tr>
-						<th><label for="instructor_capabilities"><?php _e( 'Capabilities', '<%= wpmudev.plugin.textdomain %>' ); ?></label></th>
+						<th><label for="instructor_capabilities"><?php _e( 'Capabilities', 'coursepress_base_td' ); ?></label></th>
 
 						<td>
-							<input type="radio" name="cp_instructor_capabilities" value="grant" <?php echo( $has_instructor_role ? 'checked' : '' ); ?>><?php _e( 'Granted Instructor Capabilities', '<%= wpmudev.plugin.textdomain %>' ) ?>
+							<input type="radio" name="cp_instructor_capabilities" value="grant" <?php echo( $has_instructor_role ? 'checked' : '' ); ?>><?php _e( 'Granted Instructor Capabilities', 'coursepress_base_td' ) ?>
 							<br/><br/>
-							<input type="radio" name="cp_instructor_capabilities" value="revoke" <?php echo( ! $has_instructor_role ? 'checked' : '' ); ?>><?php _e( 'Revoked Instructor Capabilities', '<%= wpmudev.plugin.textdomain %>' ) ?>
+							<input type="radio" name="cp_instructor_capabilities" value="revoke" <?php echo( ! $has_instructor_role ? 'checked' : '' ); ?>><?php _e( 'Revoked Instructor Capabilities', 'coursepress_base_td' ) ?>
 							<br/>
 						</td>
 					</tr>
@@ -2291,7 +2301,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		}
 
 		function add_custom_media_library_sizes( $sizes ) {
-			$sizes['course_thumb'] = __( 'Course Image', '<%= wpmudev.plugin.textdomain %>' );
+			$sizes['course_thumb'] = __( 'Course Image', 'coursepress_base_td' );
 
 			return $sizes;
 		}
@@ -2608,7 +2618,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					} else {
 						$args = array(
 							'slug'        => $wp->request,
-							'title'       => __( 'Add New Discussion', '<%= wpmudev.plugin.textdomain %>' ),
+							'title'       => __( 'Add New Discussion', 'coursepress_base_td' ),
 							'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-add-new-discussion.php', $vars ),
 							'type'        => 'discussion',
 							'is_page'     => true,
@@ -2681,7 +2691,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $wp->request,
-						'title'   => __( $vars['user']->display_name, '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( $vars['user']->display_name, 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/instructor-single.php', $vars ),
 						'type'    => 'virtual_page'
 					);
@@ -2722,7 +2732,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				} else {
 					$args = array(
 						'slug'        => $wp->request,
-						'title'       => __( 'Inbox', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'       => __( 'Inbox', 'coursepress_base_td' ),
 						'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-inbox.php', array(), true ),
 						'type'        => 'page',
 						'is_page'     => true,
@@ -2746,7 +2756,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				} else {
 					$args = array(
 						'slug'        => $wp->request,
-						'title'       => __( 'Sent Message', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'       => __( 'Sent Message', 'coursepress_base_td' ),
 						'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-sent-messages.php', array(), true ),
 						'type'        => 'page',
 						'is_page'     => true,
@@ -2770,7 +2780,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				} else {
 					$args = array(
 						'slug'        => $wp->request,
-						'title'       => __( 'New Message', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'       => __( 'New Message', 'coursepress_base_td' ),
 						'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-new-message.php', array(), true ),
 						'type'        => 'page',
 						'is_page'     => true,
@@ -2855,7 +2865,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 						$args = array(
 							'slug'        => $wp->request,
-							// 'title' => __( 'Course Units', '<%= wpmudev.plugin.textdomain %>' ),
+							// 'title' => __( 'Course Units', 'coursepress_base_td' ),
 							'title'       => get_the_title( $course_id ),
 							'content'     => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-archive.php', $vars ),
 							'type'        => 'unit',
@@ -2963,7 +2973,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						$args = array(
 							'slug'        => $wp->request,
 							'title'       => $unit->details->post_title,
-							'content'     => __( 'This Unit is not available at the moment. Please check back later.', '<%= wpmudev.plugin.textdomain %>' ),
+							'content'     => __( 'This Unit is not available at the moment. Please check back later.', 'coursepress_base_td' ),
 							'type'        => 'page',
 							'is_page'     => true,
 							'is_singular' => false,
@@ -3164,7 +3174,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		}
 
 		function courses_archive_title( $title ) {
-			return __( 'All Courses', '<%= wpmudev.plugin.textdomain %>' );
+			return __( 'All Courses', 'coursepress_base_td' );
 		}
 
 		function get_template_details( $template, $args = array(), $remove_wpautop = false ) {
@@ -3440,11 +3450,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		function localization() {
 			// Load up the localization file if we're using WordPress in a different language
 			if ( $this->location == 'mu-plugins' ) {
-				load_muplugin_textdomain( '<%= wpmudev.plugin.textdomain %>', '/languages/' );
+				load_muplugin_textdomain( 'coursepress_base_td', '/languages/' );
 			} else if ( $this->location == 'subfolder-plugins' ) {
-				load_plugin_textdomain( '<%= wpmudev.plugin.textdomain %>', false, $this->dir_name . '/languages/' );
+				load_plugin_textdomain( 'coursepress_base_td', false, $this->dir_name . '/languages/' );
 			} else if ( $this->location == 'plugins' ) {
-				load_plugin_textdomain( '<%= wpmudev.plugin.textdomain %>', false, '/languages/' );
+				load_plugin_textdomain( 'coursepress_base_td', false, '/languages/' );
 			}
 		}
 
@@ -3463,7 +3473,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				$this->plugin_dir = WPMU_PLUGIN_DIR;
 				$this->plugin_url = WPMU_PLUGIN_URL;
 			} else {
-				wp_die( sprintf( __( 'There was an issue determining where %s is installed. Please reinstall it.', '<%= wpmudev.plugin.textdomain %>' ), $this->name ) );
+				wp_die( sprintf( __( 'There was an issue determining where %s is installed. Please reinstall it.', 'coursepress_base_td' ), $this->name ) );
 			}
 
 			$this->screen_base      = str_replace( ' ', '-', strtolower( $this->name ) );
@@ -3561,7 +3571,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			// Add the sub menu items
 
-			add_submenu_page( 'courses', __( 'Courses', '<%= wpmudev.plugin.textdomain %>' ), __( 'Courses', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_courses_cap', 'courses', array(
+			add_submenu_page( 'courses', __( 'Courses', 'coursepress_base_td' ), __( 'Courses', 'coursepress_base_td' ), 'coursepress_courses_cap', 'courses', array(
 				&$this,
 				'coursepress_courses_admin'
 			) );
@@ -3569,9 +3579,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			do_action( 'coursepress_add_menu_items_after_courses' );
 
 			if ( isset( $_GET['page'] ) && $_GET['page'] == 'course_details' && isset( $_GET['course_id'] ) ) {
-				$new_or_current_course_menu_item_title = __( 'Course', '<%= wpmudev.plugin.textdomain %>' );
+				$new_or_current_course_menu_item_title = __( 'Course', 'coursepress_base_td' );
 			} else {
-				$new_or_current_course_menu_item_title = __( 'New Course', '<%= wpmudev.plugin.textdomain %>' );
+				$new_or_current_course_menu_item_title = __( 'New Course', 'coursepress_base_td' );
 			}
 
 			add_submenu_page( 'courses', $new_or_current_course_menu_item_title, $new_or_current_course_menu_item_title, 'coursepress_courses_cap', 'course_details', array(
@@ -3581,16 +3591,16 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			do_action( 'coursepress_add_menu_items_after_new_courses' );
 
-			add_submenu_page( 'courses', __( 'Course Categories', '<%= wpmudev.plugin.textdomain %>' ), __( 'Course Categories', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
+			add_submenu_page( 'courses', __( 'Course Categories', 'coursepress_base_td' ), __( 'Course Categories', 'coursepress_base_td' ), 'coursepress_courses_cap', 'edit-tags.php?taxonomy=course_category&post_type=course' );
 			do_action( 'coursepress_add_menu_items_after_course_categories' );
 
-			add_submenu_page( 'courses', __( 'Instructors', '<%= wpmudev.plugin.textdomain %>' ), __( 'Instructors', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_instructors_cap', 'instructors', array(
+			add_submenu_page( 'courses', __( 'Instructors', 'coursepress_base_td' ), __( 'Instructors', 'coursepress_base_td' ), 'coursepress_instructors_cap', 'instructors', array(
 				&$this,
 				'coursepress_instructors_admin'
 			) );
 			do_action( 'coursepress_add_menu_items_after_instructors' );
 
-			add_submenu_page( 'courses', __( 'Students', '<%= wpmudev.plugin.textdomain %>' ), __( 'Students', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_students_cap', 'students', array(
+			add_submenu_page( 'courses', __( 'Students', 'coursepress_base_td' ), __( 'Students', 'coursepress_base_td' ), 'coursepress_students_cap', 'students', array(
 				&$this,
 				'coursepress_students_admin'
 			) );
@@ -3605,26 +3615,26 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				$count_output = '&nbsp;<span class ="update-plugins"><span class ="updates-count count-' . $count . '">' . $count . '</span></span>';
 			}
 
-			add_submenu_page( 'courses', __( 'Assessment', '<%= wpmudev.plugin.textdomain %>' ), __( 'Assessment', '<%= wpmudev.plugin.textdomain %>' ) . $count_output, 'coursepress_assessment_cap', 'assessment', array(
+			add_submenu_page( 'courses', __( 'Assessment', 'coursepress_base_td' ), __( 'Assessment', 'coursepress_base_td' ) . $count_output, 'coursepress_assessment_cap', 'assessment', array(
 				&$this,
 				'coursepress_assessment_admin'
 			) );
 			do_action( 'coursepress_add_menu_items_after_assessment' );
 
 
-			add_submenu_page( 'courses', __( 'Reports', '<%= wpmudev.plugin.textdomain %>' ), __( 'Reports', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_reports_cap', 'reports', array(
+			add_submenu_page( 'courses', __( 'Reports', 'coursepress_base_td' ), __( 'Reports', 'coursepress_base_td' ), 'coursepress_reports_cap', 'reports', array(
 				&$this,
 				'coursepress_reports_admin'
 			) );
 			do_action( 'coursepress_add_menu_items_after_reports' );
 
-			add_submenu_page( 'courses', __( 'Notifications', '<%= wpmudev.plugin.textdomain %>' ), __( 'Notifications', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_notifications_cap', 'notifications', array(
+			add_submenu_page( 'courses', __( 'Notifications', 'coursepress_base_td' ), __( 'Notifications', 'coursepress_base_td' ), 'coursepress_notifications_cap', 'notifications', array(
 				&$this,
 				'coursepress_notifications_admin'
 			) );
 			do_action( 'coursepress_add_menu_items_after_course_notifications' );
 
-			add_submenu_page( 'courses', __( 'Discussions', '<%= wpmudev.plugin.textdomain %>' ), __( 'Discussions', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_discussions_cap', 'discussions', array(
+			add_submenu_page( 'courses', __( 'Discussions', 'coursepress_base_td' ), __( 'Discussions', 'coursepress_base_td' ), 'coursepress_discussions_cap', 'discussions', array(
 				&$this,
 				'coursepress_discussions_admin'
 			) );
@@ -3632,14 +3642,14 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			// Certificates
 			if ( defined( 'CP_EA' ) && CP_EA == true ) {
-				add_submenu_page( 'courses', __( 'Certificates', '<%= wpmudev.plugin.textdomain %>' ), __( 'Certificates', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_certificates_cap', 'certificates', array(
+				add_submenu_page( 'courses', __( 'Certificates', 'coursepress_base_td' ), __( 'Certificates', 'coursepress_base_td' ), 'coursepress_certificates_cap', 'certificates', array(
 					&$this,
 					'coursepress_certificates_admin'
 				) );
 				do_action( 'coursepress_add_menu_items_after_course_certificates' );
 			}
 
-			add_submenu_page( 'courses', __( 'Settings', '<%= wpmudev.plugin.textdomain %>' ), __( 'Settings', '<%= wpmudev.plugin.textdomain %>' ), 'coursepress_settings_cap', $this->screen_base . '_settings', array(
+			add_submenu_page( 'courses', __( 'Settings', 'coursepress_base_td' ), __( 'Settings', 'coursepress_base_td' ), 'coursepress_settings_cap', $this->screen_base . '_settings', array(
 				&$this,
 				'coursepress_settings_admin'
 			) );
@@ -3653,18 +3663,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Courses post type
 			$args = array(
 				'labels'              => array(
-					'name'               => __( 'Courses', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Course', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Course', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Course', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Course', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Course', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Courses', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Courses Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Courses found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Course', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Courses', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Course', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Course', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Course', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Course', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Course', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Courses', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Courses Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Courses found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Course', 'coursepress_base_td' )
 				),
 				'public'              => false,
 				'exclude_from_search' => false,
@@ -3687,8 +3697,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			// Register custom taxonomy
 			/* register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
 			  "hierarchical"	 => true,
-			  'label'			 => __( 'Course Categories', '<%= wpmudev.plugin.textdomain %>' ),
-			  'singular_label' => __( 'Course Category', '<%= wpmudev.plugin.textdomain %>' ),
+			  'label'			 => __( 'Course Categories', 'coursepress_base_td' ),
+			  'singular_label' => __( 'Course Category', 'coursepress_base_td' ),
 			  'rewrite'		 => array(
 			  'slug' => $this->get_course_category_slug()
 			  ),
@@ -3703,15 +3713,15 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
 					'labels'            => array(
-						'name'          => __( 'Course Categories', '<%= wpmudev.plugin.textdomain %>' ),
-						'singular_name' => __( 'Course Category', '<%= wpmudev.plugin.textdomain %>' ),
-						'search_items'  => __( 'Search Course Categories', '<%= wpmudev.plugin.textdomain %>' ),
-						'all_items'     => __( 'All Course Categories', '<%= wpmudev.plugin.textdomain %>' ),
-						'edit_item'     => __( 'Edit Course Categories', '<%= wpmudev.plugin.textdomain %>' ),
-						'update_item'   => __( 'Update Course Category', '<%= wpmudev.plugin.textdomain %>' ),
-						'add_new_item'  => __( 'Add New Course Category', '<%= wpmudev.plugin.textdomain %>' ),
-						'new_item_name' => __( 'New Course Category Name', '<%= wpmudev.plugin.textdomain %>' ),
-						'menu_name'     => __( 'Course Category', '<%= wpmudev.plugin.textdomain %>' ),
+						'name'          => __( 'Course Categories', 'coursepress_base_td' ),
+						'singular_name' => __( 'Course Category', 'coursepress_base_td' ),
+						'search_items'  => __( 'Search Course Categories', 'coursepress_base_td' ),
+						'all_items'     => __( 'All Course Categories', 'coursepress_base_td' ),
+						'edit_item'     => __( 'Edit Course Categories', 'coursepress_base_td' ),
+						'update_item'   => __( 'Update Course Category', 'coursepress_base_td' ),
+						'add_new_item'  => __( 'Add New Course Category', 'coursepress_base_td' ),
+						'new_item_name' => __( 'New Course Category Name', 'coursepress_base_td' ),
+						'menu_name'     => __( 'Course Category', 'coursepress_base_td' ),
 					),
 					'hierarchical'      => true,
 					'sort'              => true,
@@ -3730,18 +3740,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Units post type
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Units', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Unit', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Unit', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Unit', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Unit', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Unit', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Units', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Units Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Units found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Unit', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Units', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Unit', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Unit', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Unit', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Unit', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Unit', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Units', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Units Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Units found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Unit', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -3756,18 +3766,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Modules ( Unit Module ) post type
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Modules', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Module', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Module', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Module', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Module', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Module', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Modules', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Modules Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Modules found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Module', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Modules', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Module', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Module', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Module', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Module', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Module', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Modules', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Modules Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Modules found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Module', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -3782,18 +3792,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Certificate Templates
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Certificate Templates', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Certificate Template', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Template', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Template', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Template', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Template', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Templates', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Templates Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Templates found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Template', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Certificate Templates', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Certificate Template', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Template', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Template', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Template', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Template', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Templates', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Templates Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Templates found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Template', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -3808,18 +3818,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Modules Responses ( Unit Module Responses ) post type
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Module Responses', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Module Response', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Response', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Response', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Response', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Response', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Responses', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Module Responses Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Responses found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Response', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Module Responses', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Module Response', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Response', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Response', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Response', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Response', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Responses', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Module Responses Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Responses found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Response', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -3834,18 +3844,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Notifications post type
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Notifications', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Notification', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Notification', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Notification', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Notification', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Notification', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Notifications', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Notifications Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Notifications found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Notification', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Notifications', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Notification', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Notification', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Notification', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Notification', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Notification', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Notifications', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Notifications Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Notifications found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Notification', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -3861,18 +3871,18 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			//Register Discussion post type
 			$args = array(
 				'labels'             => array(
-					'name'               => __( 'Discussions', '<%= wpmudev.plugin.textdomain %>' ),
-					'singular_name'      => __( 'Discussions', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new'            => __( 'Create New', '<%= wpmudev.plugin.textdomain %>' ),
-					'add_new_item'       => __( 'Create New Discussion', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit_item'          => __( 'Edit Discussion', '<%= wpmudev.plugin.textdomain %>' ),
-					'edit'               => __( 'Edit', '<%= wpmudev.plugin.textdomain %>' ),
-					'new_item'           => __( 'New Discussion', '<%= wpmudev.plugin.textdomain %>' ),
-					'view_item'          => __( 'View Discussion', '<%= wpmudev.plugin.textdomain %>' ),
-					'search_items'       => __( 'Search Discussions', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found'          => __( 'No Discussions Found', '<%= wpmudev.plugin.textdomain %>' ),
-					'not_found_in_trash' => __( 'No Discussions found in Trash', '<%= wpmudev.plugin.textdomain %>' ),
-					'view'               => __( 'View Discussion', '<%= wpmudev.plugin.textdomain %>' )
+					'name'               => __( 'Discussions', 'coursepress_base_td' ),
+					'singular_name'      => __( 'Discussions', 'coursepress_base_td' ),
+					'add_new'            => __( 'Create New', 'coursepress_base_td' ),
+					'add_new_item'       => __( 'Create New Discussion', 'coursepress_base_td' ),
+					'edit_item'          => __( 'Edit Discussion', 'coursepress_base_td' ),
+					'edit'               => __( 'Edit', 'coursepress_base_td' ),
+					'new_item'           => __( 'New Discussion', 'coursepress_base_td' ),
+					'view_item'          => __( 'View Discussion', 'coursepress_base_td' ),
+					'search_items'       => __( 'Search Discussions', 'coursepress_base_td' ),
+					'not_found'          => __( 'No Discussions Found', 'coursepress_base_td' ),
+					'not_found_in_trash' => __( 'No Discussions found in Trash', 'coursepress_base_td' ),
+					'view'               => __( 'View Discussion', 'coursepress_base_td' )
 				),
 				'public'             => false,
 				//'has_archive' => true,
@@ -3984,7 +3994,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_autoupdate_complete', $course_id, $user_id );
 			} else {
 				$ajax_response['success'] = false;
-				$ajax_response['reason']  = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason']  = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 			}
 
 			$response = array(
@@ -4026,7 +4036,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_status_changed', $course_id, $user_id );
 			} else {
 				$ajax_response['toggle'] = false;
-				$ajax_response['reason'] = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason'] = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 
 				/**
 				 * Course status not changed.
@@ -4081,7 +4091,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_status_changed', $course_id, $unit_id, $user_id );
 			} else {
 				$ajax_response['toggle'] = false;
-				$ajax_response['reason'] = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason'] = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 
 				/**
 				 * Unit status toggled.
@@ -4167,7 +4177,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					do_action( 'coursepress_course_instructor_added', $course_id, $instructor_id );
 				} else {
 					$ajax_response['instructor_added'] = false;
-					$ajax_response['reason']           = __( 'Instructor already added.', '<%= wpmudev.plugin.textdomain %>' );
+					$ajax_response['reason']           = __( 'Instructor already added.', 'coursepress_base_td' );
 
 					/**
 					 * Instructor already exists in the course.
@@ -4184,7 +4194,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				// Nonce failed, User doesn't have the capability
 			} else {
 				$ajax_response['instructor_added'] = false;
-				$ajax_response['reason']           = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason']           = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 
 				/**
 				 * Failed to add an instructor to the course.
@@ -4294,7 +4304,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				// Nonce failed, User doesn't have the capability
 			} else {
 				$ajax_response['instructor_removed'] = false;
-				$ajax_response['reason']             = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason']             = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 
 				/**
 				 * Instructor has NOT been removed from course.
@@ -4400,7 +4410,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						}
 
 						$ajax_response['data']    = $invite;
-						$ajax_response['content'] = '<i class ="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', '<%= wpmudev.plugin.textdomain %>' );
+						$ajax_response['content'] = '<i class ="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', 'coursepress_base_td' );
 
 						/**
 						 * Instructor has been invited.
@@ -4413,8 +4423,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						 */
 						do_action( 'coursepress_instructor_invite_sent', $course_id, $email );
 					} else {
-						$ajax_status              = new WP_Error( 'mail_fail', __( 'Email failed to send.', '<%= wpmudev.plugin.textdomain %>' ) );
-						$ajax_response['content'] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', '<%= wpmudev.plugin.textdomain %>' );
+						$ajax_status              = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'coursepress_base_td' ) );
+						$ajax_response['content'] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', 'coursepress_base_td' );
 
 						/**
 						 * Instructor invite not sent.
@@ -4428,7 +4438,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						do_action( 'coursepress_instructor_invite_mail_fail', $course_id, $email );
 					}
 				} else {
-					$ajax_response['content'] = '<i class ="fa fa-info-circle status status-exist"></i> ' . __( 'Invitation already exists.', '<%= wpmudev.plugin.textdomain %>' );
+					$ajax_response['content'] = '<i class ="fa fa-info-circle status status-exist"></i> ' . __( 'Invitation already exists.', 'coursepress_base_td' );
 					/**
 					 * Instructor already invited.
 					 *
@@ -4441,8 +4451,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					do_action( 'coursepress_instructor_invite_exists', $course_id, $email );
 				}
 			} else {
-				$ajax_status              = new WP_Error( 'nonce_fail', __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' ) );
-				$ajax_response['content'] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_status              = new WP_Error( 'nonce_fail', __( 'Invalid request. Security check failed.', 'coursepress_base_td' ) );
+				$ajax_response['content'] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 			}
 
 			$response = array(
@@ -4478,7 +4488,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				update_post_meta( $course_id, 'instructor_invites', $instructor_invites );
 
 				$ajax_response['invite_removed'] = true;
-				$ajax_response['content']        = __( 'Instructor invitation cancelled.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['content']        = __( 'Instructor invitation cancelled.', 'coursepress_base_td' );
 
 				/**
 				 * Instructor invite has been cancelled.
@@ -4492,7 +4502,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_instructor_invite_cancelled', $course_id, $invite_code );
 			} else {
 				$ajax_response['invite_removed'] = false;
-				$ajax_response['reason']         = __( 'Invalid request. Security check failed.', '<%= wpmudev.plugin.textdomain %>' );
+				$ajax_response['reason']         = __( 'Invalid request. Security check failed.', 'coursepress_base_td' );
 				/**
 				 * Instructor invite has NOT been cancelled.
 				 *
@@ -4570,10 +4580,10 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 									$course_link = '<a href ="' . admin_url( 'admin.php?page = course_details&course_id =' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
 
-									$title   = __( '<h3>Invitation activated.</h3>', '<%= wpmudev.plugin.textdomain %>' );
+									$title   = __( '<h3>Invitation activated.</h3>', 'coursepress_base_td' );
 									$content = do_shortcode( sprintf( __( '<p>Congratulations. You are now an instructor in the following course:</p>
 										<p>%s</p>
-									', '<%= wpmudev.plugin.textdomain %>' ), $course_link ) );
+									', 'coursepress_base_td' ), $course_link ) );
 
 									/**
 									 * Instructor invite confirmed.
@@ -4590,11 +4600,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 							}
 						}
 					} else {
-						$title   = __( '<h3>Invalid Invitation</h3>', '<%= wpmudev.plugin.textdomain %>' );
+						$title   = __( '<h3>Invalid Invitation</h3>', 'coursepress_base_td' );
 						$content = do_shortcode( __( '
 							<p>This invitation link is not associated with your email address.</p>
 							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
-						', '<%= wpmudev.plugin.textdomain %>' ) );
+						', 'coursepress_base_td' ) );
 
 						/**
 						 * Instructor confirmation failed.
@@ -4611,11 +4621,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					}
 				} else {
 					if ( ! $valid_code ) {
-						$title   = __( '<h3>Invitation not found.</h3>', '<%= wpmudev.plugin.textdomain %>' );
+						$title   = __( '<h3>Invitation not found.</h3>', 'coursepress_base_td' );
 						$content = do_shortcode( __( '
 							<p>This invitation could not be found or is no longer available.</p>
 							<p>Please contact us if you believe this to be an error.</p>
-						', '<%= wpmudev.plugin.textdomain %>' ) );
+						', 'coursepress_base_td' ) );
 
 						/**
 						 * Instructor confirmation failed.
@@ -4630,11 +4640,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						 */
 						do_action( 'coursepress_instructor_invite_not_found', $course_id, $user_id );
 					} else {
-						$title   = __( '<h3>Login Required</h3>', '<%= wpmudev.plugin.textdomain %>' );
+						$title   = __( '<h3>Login Required</h3>', 'coursepress_base_td' );
 						$content = do_shortcode( __( '
 							<p>To accept your invitation request you will need to be logged in.</p>
 							<p>Please login with the account associated with this email.</p>
-						', '<%= wpmudev.plugin.textdomain %>' ) );
+						', 'coursepress_base_td' ) );
 
 						ob_start();
 						echo do_shortcode( '[course_signup page ="login" login_title ="" redirect_url ="' . urlencode( home_url( $_SERVER['REQUEST_URI'] ) ) . '" signup_url ="' . CoursePress::instance()->get_signup_slug( true ) . '" logout_url ="' . CoursePress::instance()->get_signup_slug( true ) . '"]' );
@@ -4857,17 +4867,17 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			wp_enqueue_script( 'enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ), $this->version );
 			wp_localize_script( 'enrollment_process', 'cp_vars', array(
 				'admin_ajax_url'                  => cp_admin_ajax_url(),
-				'message_all_fields_are_required' => __( 'All fields are required.', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_username_minimum_length' => __( 'Username must be at least 4 characters in length', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_username_exists'         => __( 'Username already exists or invalid. Please choose another one.', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_email_exists'            => __( 'E-mail already exists or invalid. Please choose another one.', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_emails_dont_match'       => __( "E-mails mismatch.", '<%= wpmudev.plugin.textdomain %>' ),
-				'message_passwords_dont_match'    => __( "Passwords mismatch.", '<%= wpmudev.plugin.textdomain %>' ),
-				'message_password_minimum_length' => sprintf( __( 'Password must be at least %d characters in length.', '<%= wpmudev.plugin.textdomain %>' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
+				'message_all_fields_are_required' => __( 'All fields are required.', 'coursepress_base_td' ),
+				'message_username_minimum_length' => __( 'Username must be at least 4 characters in length', 'coursepress_base_td' ),
+				'message_username_exists'         => __( 'Username already exists or invalid. Please choose another one.', 'coursepress_base_td' ),
+				'message_email_exists'            => __( 'E-mail already exists or invalid. Please choose another one.', 'coursepress_base_td' ),
+				'message_emails_dont_match'       => __( "E-mails mismatch.", 'coursepress_base_td' ),
+				'message_passwords_dont_match'    => __( "Passwords mismatch.", 'coursepress_base_td' ),
+				'message_password_minimum_length' => sprintf( __( 'Password must be at least %d characters in length.', 'coursepress_base_td' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
 				'minimum_password_lenght'         => apply_filters( 'coursepress_min_password_length', 6 ),
-				'message_login_error'             => __( 'Username and/or password is not valid.', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_passcode_invalid'        => __( 'Passcode is not valid.', '<%= wpmudev.plugin.textdomain %>' ),
-				'message_tos_invalid'             => __( 'You must agree to the Terms of Service in order to signup.', '<%= wpmudev.plugin.textdomain %>' ),
+				'message_login_error'             => __( 'Username and/or password is not valid.', 'coursepress_base_td' ),
+				'message_passcode_invalid'        => __( 'Passcode is not valid.', 'coursepress_base_td' ),
+				'message_tos_invalid'             => __( 'You must agree to the Terms of Service in order to signup.', 'coursepress_base_td' ),
 				'debug'                           => 0, // Set to 1 for debugging enrollment scripts
 			) );
 
@@ -4881,7 +4891,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$units_archive_url = is_numeric( $course_id ) ? get_permalink( $course_id ) . trailingslashit( $this->get_units_slug() ) : '';
 
 			wp_localize_script( 'coursepress_front', 'front_vars', array(
-				'withdraw_alert'    => __( 'Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', '<%= wpmudev.plugin.textdomain %>' ),
+				'withdraw_alert'    => __( 'Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'coursepress_base_td' ),
 				'units_archive_url' => $units_archive_url
 			) );
 
@@ -4922,14 +4932,14 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET['saved'] ) && $_GET['saved'] == 'ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'The data has been saved successfully.', '<%= wpmudev.plugin.textdomain %>' ); ?>
+					<?php _e( 'The data has been saved successfully.', 'coursepress_base_td' ); ?>
 				</div>
 			<?php
 			}
 			if ( ( isset( $_GET['saved'] ) && $_GET['saved'] == 'progress_ok' ) ) {
 				?>
 				<div class="save_elements_message_ok">
-					<?php _e( 'Your progress has been saved successfully.', '<%= wpmudev.plugin.textdomain %>' ); ?>
+					<?php _e( 'Your progress has been saved successfully.', 'coursepress_base_td' ); ?>
 				</div>
 			<?php
 			}
@@ -5047,23 +5057,23 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				wp_enqueue_script( 'wplink' );
 
 				wp_localize_script( 'courses_bulk', 'coursepress', array(
-					'delete_instructor_alert'             => __( 'Please confirm that you want to remove the instructor from this course?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_pending_instructor_alert'     => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_course_alert'                 => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_student_response_alert'       => __( 'Please confirm that you want to permanently delete this student answer / reponse?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_notification_alert'           => __( 'Please confirm that you want to permanently delete the notification?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_discussion_alert'             => __( 'Please confirm that you want to permanently delete the discussion?', '<%= wpmudev.plugin.textdomain %>' ),
-					'withdraw_student_alert'              => __( 'Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_unit_alert'                   => __( 'Please confirm that you want to permanently delete the unit, its elements and responses?', '<%= wpmudev.plugin.textdomain %>' ),
+					'delete_instructor_alert'             => __( 'Please confirm that you want to remove the instructor from this course?', 'coursepress_base_td' ),
+					'delete_pending_instructor_alert'     => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'coursepress_base_td' ),
+					'delete_course_alert'                 => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'coursepress_base_td' ),
+					'delete_student_response_alert'       => __( 'Please confirm that you want to permanently delete this student answer / reponse?', 'coursepress_base_td' ),
+					'delete_notification_alert'           => __( 'Please confirm that you want to permanently delete the notification?', 'coursepress_base_td' ),
+					'delete_discussion_alert'             => __( 'Please confirm that you want to permanently delete the discussion?', 'coursepress_base_td' ),
+					'withdraw_student_alert'              => __( 'Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'coursepress_base_td' ),
+					'delete_unit_alert'                   => __( 'Please confirm that you want to permanently delete the unit, its elements and responses?', 'coursepress_base_td' ),
 					'active_student_tab'                  => ( isset( $_REQUEST['active_student_tab'] ) ? $_REQUEST['active_student_tab'] : 0 ),
-					'delete_module_alert'                 => __( 'Please confirm that you want to permanently delete selected element and its responses?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_unit_page_and_elements_alert' => __( 'Please confirm that you want to permanently delete this unit page, all its elements and student responses?', '<%= wpmudev.plugin.textdomain %>' ),
-					'remove_unit_page_and_elements_alert' => __( 'Please confirm that you want to remove this unit page and all its elements?', '<%= wpmudev.plugin.textdomain %>' ),
-					'remove_module_alert'                 => __( 'Please confirm that you want to remove selected element?', '<%= wpmudev.plugin.textdomain %>' ),
-					'delete_unit_page_label'              => __( 'Delete unit page and all elements', '<%= wpmudev.plugin.textdomain %>' ),
-					'remove_row'                          => __( 'Remove', '<%= wpmudev.plugin.textdomain %>' ),
-					'empty_class_name'                    => __( 'Class name cannot be empty', '<%= wpmudev.plugin.textdomain %>' ),
-					'duplicated_class_name'               => __( 'Class name already exists', '<%= wpmudev.plugin.textdomain %>' ),
+					'delete_module_alert'                 => __( 'Please confirm that you want to permanently delete selected element and its responses?', 'coursepress_base_td' ),
+					'delete_unit_page_and_elements_alert' => __( 'Please confirm that you want to permanently delete this unit page, all its elements and student responses?', 'coursepress_base_td' ),
+					'remove_unit_page_and_elements_alert' => __( 'Please confirm that you want to remove this unit page and all its elements?', 'coursepress_base_td' ),
+					'remove_module_alert'                 => __( 'Please confirm that you want to remove selected element?', 'coursepress_base_td' ),
+					'delete_unit_page_label'              => __( 'Delete unit page and all elements', 'coursepress_base_td' ),
+					'remove_row'                          => __( 'Remove', 'coursepress_base_td' ),
+					'empty_class_name'                    => __( 'Class name cannot be empty', 'coursepress_base_td' ),
+					'duplicated_class_name'               => __( 'Class name already exists', 'coursepress_base_td' ),
 					'course_taxonomy_screen'              => ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == 'course_category' ? true : false ),
 					'unit_page_num'                       => ( isset( $_GET['unit_page_num'] ) && $_GET['unit_page_num'] !== '' ? $_GET['unit_page_num'] : 1 ),
 					'allowed_video_extensions'            => wp_get_video_extensions(),
@@ -5091,24 +5101,24 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			wp_localize_script( 'courses-units', 'coursepress_units', array(
 				'admin_ajax_url'              => admin_url( 'admin-ajax.php' ),
-				'withdraw_class_alert'        => __( 'Please confirm that you want to withdraw all students from this class?', '<%= wpmudev.plugin.textdomain %>' ),
-				'delete_class'                => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', '<%= wpmudev.plugin.textdomain %>' ),
-				'setup_gateway'               => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", '<%= wpmudev.plugin.textdomain %>' ),
-				'unit_setup_prompt'           => __( '<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', '<%= wpmudev.plugin.textdomain %>' ),
-				'mp_activated_prompt'         => __( '<div>Marketpress has been activated successfully.</div>', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_name'        => __( '<strong>Course Name</strong> is a required field.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_excerpt'     => __( '<strong>Course Excerpt</strong> is a required field.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_description' => __( '<strong>Course Description</strong> is a required field.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_start'       => __( '<strong>Course Start Date</strong> is a required field.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_end'         => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_enrollment_start'   => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_enrollment_end'     => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_class_size'  => __( 'Value can not be 0 if "Limit class size" is selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_course_passcode'    => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_gateway'            => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_price'              => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'required_sale_price'         => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', '<%= wpmudev.plugin.textdomain %>' ),
-				'section_error'               => __( 'There is some information missing or incorrect. Please check your input and try again.', '<%= wpmudev.plugin.textdomain %>' ),
+				'withdraw_class_alert'        => __( 'Please confirm that you want to withdraw all students from this class?', 'coursepress_base_td' ),
+				'delete_class'                => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'coursepress_base_td' ),
+				'setup_gateway'               => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'coursepress_base_td' ),
+				'unit_setup_prompt'           => __( '<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'coursepress_base_td' ),
+				'mp_activated_prompt'         => __( '<div>Marketpress has been activated successfully.</div>', 'coursepress_base_td' ),
+				'required_course_name'        => __( '<strong>Course Name</strong> is a required field.', 'coursepress_base_td' ),
+				'required_course_excerpt'     => __( '<strong>Course Excerpt</strong> is a required field.', 'coursepress_base_td' ),
+				'required_course_description' => __( '<strong>Course Description</strong> is a required field.', 'coursepress_base_td' ),
+				'required_course_start'       => __( '<strong>Course Start Date</strong> is a required field.', 'coursepress_base_td' ),
+				'required_course_end'         => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'coursepress_base_td' ),
+				'required_enrollment_start'   => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'coursepress_base_td' ),
+				'required_enrollment_end'     => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'coursepress_base_td' ),
+				'required_course_class_size'  => __( 'Value can not be 0 if "Limit class size" is selected.', 'coursepress_base_td' ),
+				'required_course_passcode'    => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'coursepress_base_td' ),
+				'required_gateway'            => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'coursepress_base_td' ),
+				'required_price'              => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'coursepress_base_td' ),
+				'required_sale_price'         => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'coursepress_base_td' ),
+				'section_error'               => __( 'There is some information missing or incorrect. Please check your input and try again.', 'coursepress_base_td' ),
 				'cp_editor_style'             => $this->plugin_url . 'css/editor_style_fix.css',
 				'unit_pagination'             => $unit_pagination ? 1 : 0,
 				'admin_ajax_url'              => cp_admin_ajax_url(),
@@ -5133,8 +5143,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			$localize_array = array(
 				'_dummy_editor'             => $dummy_editor,
-				'editor_visual'             => __( 'Visual', '<%= wpmudev.plugin.textdomain %>' ),
-				'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', '<%= wpmudev.plugin.textdomain %>' ),
+				'editor_visual'             => __( 'Visual', 'coursepress_base_td' ),
+				'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'coursepress_base_td' ),
 			);
 
 			wp_enqueue_script( 'coursepress_object', $this->plugin_url . 'js/coursepress2p0-editor.js', array(
@@ -5149,14 +5159,14 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 		// Media buttons on CoursePress don't work well with dynamic editor, so let users know why their buttons are gone.
 		function coursepress_media_button_message() {
-			echo '<div class="coursepress-media-button-message"><i class="fa fa-info-circle"></i> <span class="hidden">' . esc_html__('<p>WordPress does not normally allow dynamic visual editors, which CoursePress use quite extensively for the Course setup and Unit Builder.</p><p>As a result many plugins load their editor code too late to work properly in CoursePress.</p><p>To avoid showing broken buttons on CoursePress pages only the core "Add Media" button will be visible at this time.</p><p><strong>Close</strong></p>', '<%= wpmudev.plugin.textdomain %>') . '</span></div>';
+			echo '<div class="coursepress-media-button-message"><i class="fa fa-info-circle"></i> <span class="hidden">' . esc_html__('<p>WordPress does not normally allow dynamic visual editors, which CoursePress use quite extensively for the Course setup and Unit Builder.</p><p>As a result many plugins load their editor code too late to work properly in CoursePress.</p><p>To avoid showing broken buttons on CoursePress pages only the core "Add Media" button will be visible at this time.</p><p><strong>Close</strong></p>', 'coursepress_base_td') . '</span></div>';
 		}
 
 		function admin_coursepress_page_settings() {
 			wp_enqueue_script( 'settings_groups', $this->plugin_url . 'js/admin-settings-groups.js', array(), $this->version );
 			wp_localize_script( 'settings_groups', 'group_settings', array(
-				'remove_string'      => __( 'Remove', '<%= wpmudev.plugin.textdomain %>' ),
-				'delete_group_alert' => __( 'Please confirm that you want to permanently delete the group?', '<%= wpmudev.plugin.textdomain %>' )
+				'remove_string'      => __( 'Remove', 'coursepress_base_td' ),
+				'delete_group_alert' => __( 'Please confirm that you want to permanently delete the group?', 'coursepress_base_td' )
 			) );
 		}
 
@@ -5213,7 +5223,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			), $this->version );
 
 			wp_localize_script( 'certificates-admin', 'certificate', array(
-				'max_elements_message' => __( 'Maximum of 4 certificate elements are allowed per row.', '<%= wpmudev.plugin.textdomain %>' ),
+				'max_elements_message' => __( 'Maximum of 4 certificate elements are allowed per row.', 'coursepress_base_td' ),
 			) );
 			//wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
 			//wp_enqueue_script( 'jquery-ui-core' );
@@ -5225,7 +5235,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			wp_enqueue_style( 'students_responsive', $this->plugin_url . 'css/admin_coursepress_page_students_responsive.css', array(), $this->version );
 			wp_enqueue_script( 'students', $this->plugin_url . 'js/students-admin.js', array(), $this->version );
 			wp_localize_script( 'students', 'student', array(
-				'delete_student_alert' => __( 'Please confirm that you want to remove the student and the all associated records?', '<%= wpmudev.plugin.textdomain %>' ),
+				'delete_student_alert' => __( 'Please confirm that you want to remove the student and the all associated records?', 'coursepress_base_td' ),
 			) );
 		}
 
@@ -5234,7 +5244,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			wp_enqueue_style( 'instructors_responsive', $this->plugin_url . 'css/admin_coursepress_page_instructors_responsive.css', array(), $this->version );
 			wp_enqueue_script( 'instructors', $this->plugin_url . 'js/instructors-admin.js', array(), $this->version );
 			wp_localize_script( 'instructors', 'instructor', array(
-				'delete_instructors_alert' => __( 'Please confirm that you want to remove the instructor and the all associated records?', '<%= wpmudev.plugin.textdomain %>' ),
+				'delete_instructors_alert' => __( 'Please confirm that you want to remove the instructor and the all associated records?', 'coursepress_base_td' ),
 			) );
 		}
 
@@ -5293,7 +5303,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $this->get_enrollment_process_slug(),
-						'title'   => __( 'Enrollment', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( 'Enrollment', 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/enrollment-process.php' ),
 						'type'    => 'virtual_page'
 					);
@@ -5322,7 +5332,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $this->get_login_slug(),
-						'title'   => __( 'Login', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( 'Login', 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-login.php' ),
 						'type'    => 'virtual_page',
 						'is_page' => true,
@@ -5350,7 +5360,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $this->get_signup_slug(),
-						'title'   => __( 'Sign Up', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( 'Sign Up', 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-signup.php' ),
 						'type'    => 'virtual_page',
 						'is_page' => true,
@@ -5378,7 +5388,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $this->get_student_dashboard_slug(),
-						'title'   => __( 'Dashboard - Courses', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( 'Dashboard - Courses', 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-dashboard.php' ),
 						'type'    => 'virtual_page'
 					);
@@ -5404,7 +5414,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$args = array(
 						'slug'    => $this->get_student_settings_slug(),
-						'title'   => __( 'Dashboard - My Profile', '<%= wpmudev.plugin.textdomain %>' ),
+						'title'   => __( 'Dashboard - My Profile', 'coursepress_base_td' ),
 						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-settings.php' ),
 						'type'    => 'virtual_page'
 					);
@@ -5453,7 +5463,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				}
 
 				if ( $show_warning ) {
-					echo '<div class ="error"><p>' . sprintf( __( '<strong>%s is almost ready</strong>. You must <a href ="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', '<%= wpmudev.plugin.textdomain %>' ), $this->name ) . '</p></div>';
+					echo '<div class ="error"><p>' . sprintf( __( '<strong>%s is almost ready</strong>. You must <a href ="options-permalink.php">update your permalink structure</a> to something other than the default for it to work.', 'coursepress_base_td' ), $this->name ) . '</p></div>';
 				}
 			}
 		}
@@ -5466,7 +5476,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			foreach ( $sorted_menu_items as $menu_item ) {
 				// LOGIN / LOGOUT
 				if ( CoursePress::instance()->get_login_slug( true ) == $menu_item->url && $is_in ) {
-					$menu_item->post_title = __( 'Log Out', '<%= wpmudev.plugin.textdomain %>' );
+					$menu_item->post_title = __( 'Log Out', 'coursepress_base_td' );
 					$menu_item->title      = $menu_item->post_title;
 					$menu_item->url        = wp_logout_url();
 				}
@@ -5503,7 +5513,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$courses = new stdClass;
 
-					$courses->title            = __( 'Courses', '<%= wpmudev.plugin.textdomain %>' );
+					$courses->title            = __( 'Courses', 'coursepress_base_td' );
 					$courses->description      = '';
 					$courses->menu_item_parent = 0;
 					$courses->ID               = 'cp-courses';
@@ -5519,7 +5529,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					if ( $is_in ) {
 						$dashboard = new stdClass;
 
-						$dashboard->title            = __( 'Dashboard', '<%= wpmudev.plugin.textdomain %>' );
+						$dashboard->title            = __( 'Dashboard', 'coursepress_base_td' );
 						$dashboard->description      = '';
 						$dashboard->menu_item_parent = 0;
 						$dashboard->ID               = 'cp-dashboard';
@@ -5536,7 +5546,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 						$dashboard_courses = new stdClass;
 
-						$dashboard_courses->title            = __( 'My Courses', '<%= wpmudev.plugin.textdomain %>' );
+						$dashboard_courses->title            = __( 'My Courses', 'coursepress_base_td' );
 						$dashboard_courses->description      = '';
 						$dashboard_courses->menu_item_parent = - 9998;
 						$dashboard_courses->ID               = 'cp-dashboard-courses';
@@ -5551,7 +5561,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 						$settings_profile = new stdClass;
 
-						$settings_profile->title            = __( 'My Profile', '<%= wpmudev.plugin.textdomain %>' );
+						$settings_profile->title            = __( 'My Profile', 'coursepress_base_td' );
 						$settings_profile->description      = '';
 						$settings_profile->menu_item_parent = - 9998;
 						$settings_profile->ID               = 'cp-dashboard-settings';
@@ -5572,7 +5582,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 							}
 							$settings_inbox = new stdClass;
 
-							$settings_inbox->title            = __( 'Inbox', '<%= wpmudev.plugin.textdomain %>' ) . $unread_count;
+							$settings_inbox->title            = __( 'Inbox', 'coursepress_base_td' ) . $unread_count;
 							$settings_inbox->description      = '';
 							$settings_inbox->menu_item_parent = - 9998;
 							$settings_inbox->ID               = 'cp-dashboard-inbox';
@@ -5590,7 +5600,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					// $signup = new stdClass;
 					//
 					// if ( ! $is_in ) {
-					//     $signup->title = __( 'Sign Up', '<%= wpmudev.plugin.textdomain %>' );
+					//     $signup->title = __( 'Sign Up', 'coursepress_base_td' );
 					//     $signup->menu_item_parent = 0;
 					//     $signup->ID = 'cp-signup';
 					//     $signup->db_id = '';
@@ -5602,9 +5612,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$login = new stdClass;
 					if ( $is_in ) {
-						$login->title = __( 'Log Out', '<%= wpmudev.plugin.textdomain %>' );
+						$login->title = __( 'Log Out', 'coursepress_base_td' );
 					} else {
-						$login->title = __( 'Log In', '<%= wpmudev.plugin.textdomain %>' );
+						$login->title = __( 'Log In', 'coursepress_base_td' );
 					}
 					$login->description      = '';
 					$login->menu_item_parent = 0;
@@ -5626,7 +5636,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				$courses = new stdClass;
 
-				$courses->title            = __( 'Courses', '<%= wpmudev.plugin.textdomain %>' );
+				$courses->title            = __( 'Courses', 'coursepress_base_td' );
 				$courses->menu_item_parent = 0;
 				$courses->ID               = 'cp-courses';
 				$courses->db_id            = '';
@@ -5641,7 +5651,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				if ( $is_in ) {
 					$dashboard = new stdClass;
 
-					$dashboard->title            = __( 'Dashboard', '<%= wpmudev.plugin.textdomain %>' );
+					$dashboard->title            = __( 'Dashboard', 'coursepress_base_td' );
 					$dashboard->menu_item_parent = 0;
 					$dashboard->ID               = 'cp-dashboard';
 					$dashboard->db_id            = - 9998;
@@ -5654,7 +5664,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					/* Student Dashboard > Courses page */
 
 					$dashboard_courses                   = new stdClass;
-					$dashboard_courses->title            = __( 'My Courses', '<%= wpmudev.plugin.textdomain %>' );
+					$dashboard_courses->title            = __( 'My Courses', 'coursepress_base_td' );
 					$dashboard_courses->menu_item_parent = - 9998;
 					$dashboard_courses->ID               = 'cp-dashboard-courses';
 					$dashboard_courses->db_id            = '';
@@ -5669,7 +5679,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$settings_profile = new stdClass;
 
-					$settings_profile->title            = __( 'My Profile', '<%= wpmudev.plugin.textdomain %>' );
+					$settings_profile->title            = __( 'My Profile', 'coursepress_base_td' );
 					$settings_profile->menu_item_parent = - 9998;
 					$settings_profile->ID               = 'cp-dashboard-settings';
 					$settings_profile->db_id            = '';
@@ -5690,7 +5700,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 						$settings_inbox = new stdClass;
 
-						$settings_inbox->title            = __( 'Inbox', '<%= wpmudev.plugin.textdomain %>' ) . $unread_count;
+						$settings_inbox->title            = __( 'Inbox', 'coursepress_base_td' ) . $unread_count;
 						$settings_inbox->menu_item_parent = - 9998;
 						$settings_inbox->ID               = 'cp-dashboard-inbox';
 						$settings_inbox->db_id            = '';
@@ -5707,7 +5717,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				// $signup = new stdClass;
 				//
 				// if ( ! $is_in ) {
-				//     $signup->title = __( 'Sign Up', '<%= wpmudev.plugin.textdomain %>' );
+				//     $signup->title = __( 'Sign Up', 'coursepress_base_td' );
 				//     $signup->menu_item_parent = 0;
 				//     $signup->ID = 'cp-signup';
 				//     $signup->db_id = '';
@@ -5719,9 +5729,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				$login = new stdClass;
 				if ( $is_in ) {
-					$login->title = __( 'Log Out', '<%= wpmudev.plugin.textdomain %>' );
+					$login->title = __( 'Log Out', 'coursepress_base_td' );
 				} else {
-					$login->title = __( 'Log In', '<%= wpmudev.plugin.textdomain %>' );
+					$login->title = __( 'Log In', 'coursepress_base_td' );
 				}
 
 				$login->menu_item_parent = 0;
@@ -5767,7 +5777,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				$courses = new stdClass;
 
-				$courses->title            = __( 'Courses', '<%= wpmudev.plugin.textdomain %>' );
+				$courses->title            = __( 'Courses', 'coursepress_base_td' );
 				$courses->menu_item_parent = 0;
 				$courses->ID               = 'cp-courses-mobile';
 				$courses->db_id            = '';
@@ -5782,7 +5792,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				if ( $is_in ) {
 					$dashboard = new stdClass;
 
-					$dashboard->title            = __( 'Dashboard', '<%= wpmudev.plugin.textdomain %>' );
+					$dashboard->title            = __( 'Dashboard', 'coursepress_base_td' );
 					$dashboard->menu_item_parent = 0;
 					$dashboard->ID               = 'cp-dashboard-mobile';
 					$dashboard->db_id            = - 9998;
@@ -5793,7 +5803,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					/* Student Dashboard > Courses page */
 
 					$dashboard_courses                   = new stdClass;
-					$dashboard_courses->title            = __( 'My Courses', '<%= wpmudev.plugin.textdomain %>' );
+					$dashboard_courses->title            = __( 'My Courses', 'coursepress_base_td' );
 					$dashboard_courses->menu_item_parent = - 9998;
 					$dashboard_courses->ID               = 'cp-dashboard-courses-mobile';
 					$dashboard_courses->db_id            = '';
@@ -5807,7 +5817,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 					$settings_profile = new stdClass;
 
-					$settings_profile->title            = __( 'My Profile', '<%= wpmudev.plugin.textdomain %>' );
+					$settings_profile->title            = __( 'My Profile', 'coursepress_base_td' );
 					$settings_profile->menu_item_parent = - 9998;
 					$settings_profile->ID               = 'cp-dashboard-settings-mobile';
 					$settings_profile->db_id            = '';
@@ -5822,9 +5832,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 				$login = new stdClass;
 				if ( $is_in ) {
-					$login->title = __( 'Log Out', '<%= wpmudev.plugin.textdomain %>' );
+					$login->title = __( 'Log Out', 'coursepress_base_td' );
 				} else {
-					$login->title = __( 'Log In', '<%= wpmudev.plugin.textdomain %>' );
+					$login->title = __( 'Log In', 'coursepress_base_td' );
 				}
 
 				$login->menu_item_parent = 0;

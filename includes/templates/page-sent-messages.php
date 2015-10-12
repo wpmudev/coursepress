@@ -8,10 +8,10 @@
 				<div class="cp_messaging_wrap"><?php messaging_sent_page_output(); ?></div>
 			<?php
 			} else {
-				_e( 'Messaging plugin is not active.', '<%= wpmudev.plugin.textdomain %>' );
+				_e( 'Messaging plugin is not active.', 'coursepress_base_td' );
 			}
 		} else {
-			_e( 'Messaging is not allowed.', '<%= wpmudev.plugin.textdomain %>' );
+			_e( 'Messaging is not allowed.', 'coursepress_base_td' );
 		}
 		?>
 	</main>

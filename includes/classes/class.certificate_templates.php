@@ -124,7 +124,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 			$page = preg_replace( "/\s\s+/", '', $page ); //Strip excess whitespace
 			$pdf->writeHTML( $page, true, 0, true, 0 ); //Write page
 			$pdf->lastPage();
-			$pdf->Output( ( isset( $course->details->post_name ) ? $course->details->post_name : __( 'Certificate', '<%= wpmudev.plugin.textdomain %>' ) ) . '.pdf', ( $force_download ? 'D' : 'I' ) );
+			$pdf->Output( ( isset( $course->details->post_name ) ? $course->details->post_name : __( 'Certificate', 'coursepress_base_td' ) ) . '.pdf', ( $force_download ? 'D' : 'I' ) );
 			exit;
 		}
 
@@ -167,7 +167,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 			$default_fields = array(
 				array(
 					'field_name'        => 'post_title',
-					'field_title'       => __( 'Template Name', '<%= wpmudev.plugin.textdomain %>' ),
+					'field_title'       => __( 'Template Name', 'coursepress_base_td' ),
 					'field_type'        => 'text',
 					'field_description' => '',
 					'post_field_type'   => 'post_title',
@@ -175,7 +175,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 				),
 				array(
 					'field_name'        => 'post_date',
-					'field_title'       => __( 'Date', '<%= wpmudev.plugin.textdomain %>' ),
+					'field_title'       => __( 'Date', 'coursepress_base_td' ),
 					'field_type'        => 'text',
 					'field_description' => '',
 					'post_field_type'   => 'post_date',
@@ -192,14 +192,14 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$columns = array();
 
-			$columns['ID'] = __( 'ID', '<%= wpmudev.plugin.textdomain %>' );
+			$columns['ID'] = __( 'ID', 'coursepress_base_td' );
 
 			foreach ( $results as $result ) {
 				$columns[ $result['field_name'] ] = $result['field_title'];
 			}
 
-			$columns['edit']   = __( 'Edit', '<%= wpmudev.plugin.textdomain %>' );
-			$columns['delete'] = __( 'Delete', '<%= wpmudev.plugin.textdomain %>' );
+			$columns['edit']   = __( 'Edit', 'coursepress_base_td' );
+			$columns['delete'] = __( 'Delete', 'coursepress_base_td' );
 
 			return $columns;
 		}

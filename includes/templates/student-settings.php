@@ -7,7 +7,7 @@
 
 		if ( ! isset( $_POST['student_settings_nonce'] ) || ! wp_verify_nonce( $_POST['student_settings_nonce'], 'student_settings_save' )
 		) {
-			_e( "Changed can't be saved because nonce didn't verify.", '<%= wpmudev.plugin.textdomain %>' );
+			_e( "Changed can't be saved because nonce didn't verify.", 'coursepress_base_td' );
 		} else {
 			$student_data       = array();
 			$student_data['ID'] = get_current_user_id();
@@ -19,7 +19,7 @@
 				if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 					$student_data['user_pass'] = $_POST['password'];
 				} else {
-					$form_message       = __( "Passwords don't match", '<%= wpmudev.plugin.textdomain %>' );
+					$form_message       = __( "Passwords don't match", 'coursepress_base_td' );
 					$form_message_class = 'red';
 					$form_errors ++;
 				}
@@ -30,7 +30,7 @@
 			$student_data['last_name']  = $_POST['last_name'];
 
 			if ( ! is_email( $_POST['email'] ) ) {
-				$form_message       = __( 'E-mail address is not valid.', '<%= wpmudev.plugin.textdomain %>' );
+				$form_message       = __( 'E-mail address is not valid.', 'coursepress_base_td' );
 				$form_message_class = 'red';
 				$form_errors ++;
 			}
@@ -38,10 +38,10 @@
 			if ( $form_errors == 0 ) {
 				$student = new Student( get_current_user_id() );
 				if ( $student->update_student_data( $student_data ) ) {
-					$form_message       = __( 'Profile has been updated successfully.', '<%= wpmudev.plugin.textdomain %>' );
+					$form_message       = __( 'Profile has been updated successfully.', 'coursepress_base_td' );
 					$form_message_class = 'regular';
 				} else {
-					$form_message       = __( 'An error occured while updating. Please check the form and try again.', '<%= wpmudev.plugin.textdomain %>' );
+					$form_message       = __( 'An error occured while updating. Please check the form and try again.', 'coursepress_base_td' );
 					$form_message_class = 'red';
 				}
 			}
@@ -54,49 +54,49 @@
 	<form id="student-settings" name="student-settings" method="post" class="student-settings">
 	<?php wp_nonce_field( 'student_settings_save', 'student_settings_nonce' ); ?>
 	<label>
-		<?php _e( 'First Name', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+		<?php _e( 'First Name', 'coursepress_base_td' ); ?>:
 		<input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_first_name' ); ?>
 
 	<label>
-		<?php _e( 'Last Name', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+		<?php _e( 'Last Name', 'coursepress_base_td' ); ?>:
 		<input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_last_name' ); ?>
 
 	<label>
-		<?php _e( 'E-mail', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+		<?php _e( 'E-mail', 'coursepress_base_td' ); ?>:
 		<input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_email' ); ?>
 
 	<label>
-		<?php _e( 'Username', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+		<?php _e( 'Username', 'coursepress_base_td' ); ?>:
 		<input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_username' ); ?>
 
 	<label>
-		<?php _e( 'Password', '<%= wpmudev.plugin.textdomain %>' ); ?>:
-		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+		<?php _e( 'Password', 'coursepress_base_td' ); ?>:
+		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'coursepress_base_td' ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_passwordon' ); ?>
 
 	<label>
-		<?php _e( 'Confirm Password', '<%= wpmudev.plugin.textdomain %>' ); ?>:
+		<?php _e( 'Confirm Password', 'coursepress_base_td' ); ?>:
 		<input type="password" name="password_confirmation" value=""/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_pasword' ); ?>
 
 	<label class="full">
-		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', '<%= wpmudev.plugin.textdomain %>' ); ?>"/>
+		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'coursepress_base_td' ); ?>"/>
 	</label>
 	</form><?php do_action( 'coursepress_after_settings_form' ); ?>
 <?php

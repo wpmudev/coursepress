@@ -8,27 +8,23 @@ module.exports = function(grunt) {
             dev: 'coursepress/pro',
             wporg: 'coursepress/standard',
             base: 'coursepress/base'
-        },
-        marketpress_file: '128762_marketpress-ecommerce-3.0.0.2.zip'
+        }
     };
 
     var plugin_patterns = {
         dev: [
-            { match: /<%= wpmudev.plugin.name %>/g, replace: 'CoursePress Pro' },
+            { match: /CoursePress Base/g, replace: 'CoursePress Pro' },
             { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
-            { match: /<%= wpmudev.plugin.textdomain %>/g, replace: 'cp' },
-            { match: /<%= wpmudev.plugin.option.is_pro %>/g, replace: 'true' },
-            { match: /<%= wpmudev.plugin.option.marketpress_file %>/g, replace: plugin_info.marketpress_file },
+            { match: /coursepress_base_td/g, replace: 'cp' },
             { match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
             { match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
         ],
         wporg: [
-            { match: /<%= wpmudev.plugin.name %>/g, replace: 'CoursePress' },
+            { match: /CoursePress Base/g, replace: 'CoursePress' },
             { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
-            { match: /<%= wpmudev.plugin.textdomain %>/g, replace: 'coursepress' },
-            { match: /<%= wpmudev.plugin.option.is_pro %>/g, replace: 'false' },
+            { match: /coursepress_base_td/g, replace: 'coursepress' },
             { match: /\/\/<wpmudev.plugin.pro_only([^<]+)/mg, replace: '' },
             { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /\/\/<wpmudev.plugin.free_only>/g, replace: '' },

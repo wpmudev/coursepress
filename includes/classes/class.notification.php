@@ -30,7 +30,7 @@ if ( ! class_exists( 'Notification' ) ) {
 			if ( ! empty( $notification ) ) {
 
 				if ( ! isset( $notification->post_title ) || $notification->post_title == '' ) {
-					$course->post_title = __( 'Untitled', '<%= wpmudev.plugin.textdomain %>' );
+					$course->post_title = __( 'Untitled', 'coursepress_base_td' );
 				}
 
 				return $notification;
