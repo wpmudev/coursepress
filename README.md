@@ -4,9 +4,11 @@
 
 The **core** development branch for CoursePress 1.x is `coursepress/base`. This branch ultimately is responsible for creating the `coursepress/pro` and `coursepress/standard` branches. Consider it to be a "super branch".  
 
-Code in `coursepress/base` are heavily templated and should not be used as plugins because it will break. Any changes made to this branch will be pushed into either `coursepress/pro` or `coursepress/standard` via **grunt tasks**, `grunt build:dev` and `grunt build:wporg` respectively. This will not be automatically pushed to this repo. Test locally first!
+`coursepress/base` is the **ONLY** file that should be edited with bug fixes and changes for CoursePress 1.x.  Changes will automatically be built for `coursepress/pro` and `coursepress/standard` using **grunt** tasks: `grunt build:dev` and `grunt build:wporg` respectively. Or `grunt buildAll` to build both branches. This will not be automatically pushed to this repo. Test locally first!
 
-**Note to support: ** You will still use `coursepress/pro` or `coursepress/standard` branches for your pull requests.
+**Note to support: ** Do NOT fork `coursepress/pro` or `coursepress/standard`. Pull requests need to be made to the `coursepress/base` branch.
+
+**Note to devs: ** Please do not release the `coursepress/base` branch. It will run stand alone for testing and development, but uses `CoursePress Base` as the plugin name and a number of other variables or strings that are required to build the two release versions.
 
 CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
 
