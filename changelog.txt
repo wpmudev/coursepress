@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.2.6.5 =
 * Updated: Notice for dynamic CoursePress editor and plugin compatibility.
+* Fixed: MarketPress activation check on WordPress multisite.
 
 = 1.2.6.4 =
 * Fixed: Unit completion issues.
