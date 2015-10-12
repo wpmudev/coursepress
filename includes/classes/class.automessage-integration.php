@@ -28,28 +28,28 @@ if ( ! class_exists( 'CP_Automessage_Integration' ) ) {
 			global $cp_automessage_hooks;
 
 			//Student Enrolled - Instructors Notification
-			$hooks['student_enrolled_instructor_notification']                     = array( 'action_nicename' => __( 'Student Enrolled - Instructor(s) Notification', 'coursepress_base_td' ) );
+			$hooks['student_enrolled_instructor_notification']                     = array( 'action_nicename' => __( 'Student Enrolled - Instructor(s) Notification', 'coursepress' ) );
 			$hooks['student_enrolled_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)
 			//Student Enrolled - Student Notification
-			$hooks['student_enrolled_student_notification']                     = array( 'action_nicename' => __( 'Student Enrolled - Student Notification', 'coursepress_base_td' ) );
+			$hooks['student_enrolled_student_notification']                     = array( 'action_nicename' => __( 'Student Enrolled - Student Notification', 'coursepress' ) );
 			$hooks['student_enrolled_student_notification']['arg_with_user_id'] = 1; //$user_id (1), $course_id
 			//Student Response / Require Grade - Instructor(s) Notification
-			$hooks['student_response_required_grade_instructor_notification']                     = array( 'action_nicename' => __( 'Student Submitted Answer - Instructor(s) Notification', 'coursepress_base_td' ) );
+			$hooks['student_response_required_grade_instructor_notification']                     = array( 'action_nicename' => __( 'Student Submitted Answer - Instructor(s) Notification', 'coursepress' ) );
 			$hooks['student_response_required_grade_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)
 			//Student Response / Auto Grade - Instructor(s) Notification
-			$hooks['student_response_not_required_grade_instructor_notification']                     = array( 'action_nicename' => __( 'Student Submitted Answer (automatically graded) - Instructor(s) Notification', 'coursepress_base_td' ) );
+			$hooks['student_response_not_required_grade_instructor_notification']                     = array( 'action_nicename' => __( 'Student Submitted Answer (automatically graded) - Instructor(s) Notification', 'coursepress' ) );
 			$hooks['student_response_not_required_grade_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)
 			//Student Withdraw from a course - Instructor(s) Notification
-			$hooks['student_withdraw_from_course_instructor_notification']                     = array( 'action_nicename' => __( 'Student Withdraw from a Course - Instructor(s) Notification', 'coursepress_base_td' ) );
+			$hooks['student_withdraw_from_course_instructor_notification']                     = array( 'action_nicename' => __( 'Student Withdraw from a Course - Instructor(s) Notification', 'coursepress' ) );
 			$hooks['student_withdraw_from_course_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)
 			//Student Withdraw from a course - Student Notification
-			$hooks['student_withdraw_from_course_student_notification']                     = array( 'action_nicename' => __( 'Student Withdraw from a Course - Student Notification', 'coursepress_base_td' ) );
+			$hooks['student_withdraw_from_course_student_notification']                     = array( 'action_nicename' => __( 'Student Withdraw from a Course - Student Notification', 'coursepress' ) );
 			$hooks['student_withdraw_from_course_student_notification']['arg_with_user_id'] = 1; //$user_id (1), $course_id
 			//New Discussion Added to a course - Instructor(s) Notification
-			$hooks['new_discussion_added_instructor_notification']                     = array( 'action_nicename' => __( 'New Discussion Added to a Course - Instructor(s) Notification', 'coursepress_base_td' ) );
+			$hooks['new_discussion_added_instructor_notification']                     = array( 'action_nicename' => __( 'New Discussion Added to a Course - Instructor(s) Notification', 'coursepress' ) );
 			$hooks['new_discussion_added_instructor_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $instructors (3)
 			//New Discussion Added to a course - Student(s) Notification
-			$hooks['new_discussion_added_student_notification']                     = array( 'action_nicename' => __( 'New Discussion Added to a Course - Student(s) Notification', 'coursepress_base_td' ) );
+			$hooks['new_discussion_added_student_notification']                     = array( 'action_nicename' => __( 'New Discussion Added to a Course - Student(s) Notification', 'coursepress' ) );
 			$hooks['new_discussion_added_student_notification']['arg_with_user_id'] = 3; //$user_id, $course_id, $students (3)
 			return $hooks;
 		}

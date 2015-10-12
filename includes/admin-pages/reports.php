@@ -25,12 +25,12 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	if ( isset( $_POST['classes'] ) ) {
 		$report_classes = $_POST['classes'];
 		if ( $report_classes == '' ) {
-			$report_classes = __( 'Default Class', 'coursepress_base_td' );
+			$report_classes = __( 'Default Class', 'coursepress' );
 		} else {
-			$report_classes .= __( ' Class', 'coursepress_base_td' );
+			$report_classes .= __( ' Class', 'coursepress' );
 		}
 	} else {
-		$report_classes = __( 'All Classes', 'coursepress_base_td' );
+		$report_classes = __( 'All Classes', 'coursepress' );
 	}
 
 	$report_title = $report_title .= ' | ' . $report_classes;
@@ -81,7 +81,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 				?>
 				<table cellspacing="0" cellpadding="5">
 					<tr>
-						<td colspan="4" style="color:#ccc;"><?php _e( 'Read-only', 'coursepress_base_td' ); ?></td>
+						<td colspan="4" style="color:#ccc;"><?php _e( 'Read-only', 'coursepress' ); ?></td>
 					</tr>
 				</table>
 			<?php
@@ -119,7 +119,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 									</td>
 
 									<td style="border-bottom: 1px solid #cccccc;">
-										<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'coursepress_base_td' ) ); ?>
+										<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'coursepress' ) ); ?>
 									</td>
 
 									<td style="border-bottom: 1px solid #cccccc;">
@@ -136,7 +136,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 													$responses ++;
 													$overall_grade = $overall_grade + $grade;
 												} else {
-													_e( 'Pending grade', 'coursepress_base_td' );
+													_e( 'Pending grade', 'coursepress' );
 												}
 											} else {
 												echo '0%';
@@ -144,7 +144,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
 											$assessable_answers ++;
 										} else {
-											_e( 'Non-assessable', 'coursepress_base_td' );
+											_e( 'Non-assessable', 'coursepress' );
 										}
 										?>
 									</td>
@@ -175,7 +175,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 			<table cellspacing="0" cellpadding="10">
 				<tr>
 					<td colspan="2" style="background-color: #2396A0; color:#fff;">
-						<?php _e( 'Average response grade: ', 'coursepress_base_td' ); ?>
+						<?php _e( 'Average response grade: ', 'coursepress' ); ?>
 						<?php
 						if ( $overall_grade > 0 ) {
 							echo round( ( $overall_grade / $responses ), 2 ) . '%';
@@ -185,7 +185,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 						?>
 					</td>
 					<td colspan="2" style="text-align: right; background-color: #2396A0; color:#fff; font-weight: bold;">
-						<?php _e( 'TOTAL:', 'coursepress_base_td' ); ?>
+						<?php _e( 'TOTAL:', 'coursepress' ); ?>
 						<?php
 						if ( $overall_grade > 0 ) {
 							echo round( ( $overall_grade / $assessable_answers ), 2 ) . '%';
@@ -211,10 +211,10 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	if ( $users_num == 1 ) {
 		$report_title = $report_title .= ' | ' . $user_object->first_name . ' ' . $user_object->last_name;
 	} else {
-		$report_title = $report_title .= ' | ' . __( 'All Students', 'coursepress_base_td' );
+		$report_title = $report_title .= ' | ' . __( 'All Students', 'coursepress' );
 	}
 
-	$report_name = __( $report_title . '.pdf', 'coursepress_base_td' );
+	$report_name = __( $report_title . '.pdf', 'coursepress' );
 	$coursepress->pdf_report( $report_content, $report_name, $report_title );
 	exit;
 }//generate report initiated
@@ -235,15 +235,15 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
 				case 'delete':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
 						$student->delete_student();
-						// $message = __( 'Selected students has been removed successfully.', 'coursepress_base_td' );
-						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'coursepress_base_td' );
+						// $message = __( 'Selected students has been removed successfully.', 'coursepress' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'coursepress' );
 					}
 					break;
 
 				case 'withdraw':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) {
 						$student->withdraw_from_all_courses();
-						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'coursepress_base_td' );
+						$message = __( 'Selected students has been withdrawed from all courses successfully.', 'coursepress' );
 					}
 					break;
 			}
@@ -269,7 +269,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 ?>
 <div class="wrap nosubsub reports cp-wrap">
 	<div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
-	<h2><?php _e( 'Reports', 'coursepress_base_td' ); ?></h2>
+	<h2><?php _e( 'Reports', 'coursepress' ); ?></h2>
 
 	<?php
 	if ( isset( $message ) ) {
@@ -319,7 +319,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 					if ( $courses_with_students == 0 ) {
 						?>
-						<option value=""><?php _e( '0 courses with enrolled students.', 'coursepress_base_td' ); ?></option>
+						<option value=""><?php _e( '0 courses with enrolled students.', 'coursepress' ); ?></option>
 					<?php
 					}
 					?>
@@ -350,8 +350,8 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 						}
 						?>
 						<!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-                                <option value="all" <?php //selected( $classes, 'all', true );  ?>><?php //_e( 'All Classes', 'coursepress_base_td' );  ?></option>
-                                <option value="" <?php //selected( $classes, '', true );  ?>><?php //_e( 'Default', 'coursepress_base_td' );  ?></option>
+                                <option value="all" <?php //selected( $classes, 'all', true );  ?>><?php //_e( 'All Classes', 'coursepress' );  ?></option>
+                                <option value="" <?php //selected( $classes, '', true );  ?>><?php //_e( 'Default', 'coursepress' );  ?></option>
                         <?php
 						//$course_classes = get_post_meta( $current_course_id, 'course_classes', true );
 						// foreach ( $course_classes as $course_class ) {
@@ -374,13 +374,13 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 	<?php
 	$columns = array(
-		"ID"             => __( 'ID', 'coursepress_base_td' ),
-		"user_fullname"  => __( 'Full Name', 'coursepress_base_td' ),
-		"user_firstname" => __( 'First Name', 'coursepress_base_td' ),
-		"user_lastname"  => __( 'Surname', 'coursepress_base_td' ),
-		"responses"      => __( 'Responses', 'coursepress_base_td' ),
-		"average_grade"  => __( 'Average Grade', 'coursepress_base_td' ),
-		"report"         => __( 'Report', 'coursepress_base_td' ),
+		"ID"             => __( 'ID', 'coursepress' ),
+		"user_fullname"  => __( 'Full Name', 'coursepress' ),
+		"user_firstname" => __( 'First Name', 'coursepress' ),
+		"user_lastname"  => __( 'Surname', 'coursepress' ),
+		"responses"      => __( 'Responses', 'coursepress' ),
+		"average_grade"  => __( 'Average Grade', 'coursepress' ),
+		"report"         => __( 'Report', 'coursepress' ),
 	);
 
 	$col_sizes = array(
@@ -473,7 +473,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 	                            <?php echo $user_object->last_name; ?></span>
 
 						<div class="visible-extra-small">
-							<?php _e( 'Responses:', 'coursepress_base_td' ); ?> <?php echo $user_object->get_number_of_responses( $current_course_id ); ?>
+							<?php _e( 'Responses:', 'coursepress' ); ?> <?php echo $user_object->get_number_of_responses( $current_course_id ); ?>
 						</div>
 					</td>
 					<td class="column-user-firstname <?php echo $style; ?>"><?php echo $user_object->first_name; ?></td>
@@ -492,7 +492,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 				?>
 				<tr>
 					<td colspan="8">
-						<div class="zero"><?php _e( 'No students found.', 'coursepress_base_td' ); ?></div>
+						<div class="zero"><?php _e( 'No students found.', 'coursepress' ); ?></div>
 					</td>
 				</tr>
 			<?php
@@ -504,7 +504,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 		<div class="tablenav">
 			<div class="alignleft actions">
 				<select name="units" class="chosen-select">
-					<option value=""><?php _e( 'All Units', 'coursepress_base_td' ) ?></option>
+					<option value=""><?php _e( 'All Units', 'coursepress' ) ?></option>
 					<?php
 					$course       = new Course( $current_course_id );
 					$course_units = $course->get_units();
@@ -516,7 +516,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 					?>
 
 				</select>
-				<?php submit_button( __( 'Generate Report', 'coursepress_base_td' ), 'primary', 'generate_report_button', false ); ?>
+				<?php submit_button( __( 'Generate Report', 'coursepress' ), 'primary', 'generate_report_button', false ); ?>
 			</div>
 
 			<div class="tablenav-pages"><?php $student_search->page_links(); ?></div>

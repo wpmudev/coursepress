@@ -7,7 +7,7 @@ if ( ! class_exists( 'cp_website_element' ) ) {
 		var $element_title = '';
 
 		function on_creation() {
-			$this->element_title = apply_filters( 'coursepress_website_element_title', __( 'Website', 'coursepress_base_td' ) );
+			$this->element_title = apply_filters( 'coursepress_website_element_title', __( 'Website', 'coursepress' ) );
 		}
 
 		function template_content( $course_id = false, $user_id = false, $preview = false ) {
@@ -16,5 +16,5 @@ if ( ! class_exists( 'cp_website_element' ) ) {
 
 	}
 
-	cp_register_template_element( 'cp_website_element', __( 'Website', 'coursepress_base_td' ) );
+	cp_register_template_element( 'cp_website_element', __( 'Website', 'coursepress' ) );
 }

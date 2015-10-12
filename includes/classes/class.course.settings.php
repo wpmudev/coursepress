@@ -34,13 +34,13 @@ class Course_Settings {
 	public function enrollment_types( $enrollment_types ) {
 
 		if ( cp_user_can_register() ) {
-			$enrollment_types['anyone']       = __( 'Anyone ', 'coursepress_base_td' );
-			$enrollment_types['passcode']     = __( 'Anyone with a pass code', 'coursepress_base_td' );
-			$enrollment_types['prerequisite'] = __( 'Anyone who completed the prerequisite course', 'coursepress_base_td' );
+			$enrollment_types['anyone']       = __( 'Anyone ', 'coursepress' );
+			$enrollment_types['passcode']     = __( 'Anyone with a pass code', 'coursepress' );
+			$enrollment_types['prerequisite'] = __( 'Anyone who completed the prerequisite course', 'coursepress' );
 		} else {
-			$enrollment_types['registered']   = __( 'Registered User', 'coursepress_base_td' );
-			$enrollment_types['passcode']     = __( 'Registered user with a pass code', 'coursepress_base_td' );
-			$enrollment_types['prerequisite'] = __( 'Registered user who completed the prerequisite course', 'coursepress_base_td' );
+			$enrollment_types['registered']   = __( 'Registered User', 'coursepress' );
+			$enrollment_types['passcode']     = __( 'Registered user with a pass code', 'coursepress' );
+			$enrollment_types['prerequisite'] = __( 'Registered user who completed the prerequisite course', 'coursepress' );
 		}
 
 		return $enrollment_types;

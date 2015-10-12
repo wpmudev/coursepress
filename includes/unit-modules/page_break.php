@@ -78,8 +78,8 @@ class page_break_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Breaks the Unit into more pages', 'coursepress_base_td' );
-		$this->label       = __( 'Page Break', 'coursepress_base_td' );
+		$this->description = __( 'Breaks the Unit into more pages', 'coursepress' );
+		$this->label       = __( 'Page Break', 'coursepress' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

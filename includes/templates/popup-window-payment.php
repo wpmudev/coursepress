@@ -29,12 +29,12 @@ $mp->set_cart_cookie( $cart );
 ?>
 
 
-<div class="cp_popup_title"><?php 1 == $gateway_count ? _e( 'Payment', 'coursepress_base_td' ) : _e( 'Payment Options', 'coursepress_base_td' ); ?></div>
+<div class="cp_popup_title"><?php 1 == $gateway_count ? _e( 'Payment', 'coursepress' ) : _e( 'Payment Options', 'coursepress' ); ?></div>
 <input type="hidden" name="signup-next-step" value="process_payment"/>
 <table class="popup-payment-info">
 	<tr>
-		<th><?php _e( 'Course', 'coursepress_base_td' ); ?></th>
-		<th><?php _e( 'Price', 'coursepress_base_td' ); ?></th>
+		<th><?php _e( 'Course', 'coursepress' ); ?></th>
+		<th><?php _e( 'Price', 'coursepress' ); ?></th>
 	<tr></tr>
 	<td><?php echo esc_html( $course->details->post_title ); ?></td>
 	<td><?php echo do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' ); ?></td>

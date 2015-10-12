@@ -4,9 +4,9 @@ class CP_Latest_Courses extends WP_Widget {
 
 	function CP_Latest_Courses() {
 		$widget_ops = array( 'classname'   => 'cp_latest_courses_widget',
-		                     'description' => __( 'Displays latest courses', 'coursepress_base_td' )
+		                     'description' => __( 'Displays latest courses', 'coursepress' )
 		);
-		parent::__construct( 'CP_Latest_Courses', __( 'Latest Courses', 'coursepress_base_td' ), $widget_ops );
+		parent::__construct( 'CP_Latest_Courses', __( 'Latest Courses', 'coursepress' ), $widget_ops );
 	}
 
 	function form( $instance ) {
@@ -16,11 +16,11 @@ class CP_Latest_Courses extends WP_Widget {
 		$limit        = $instance['limit'];
 		$button_title = $instance['button_title'];
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress_base_td' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress' ); ?>:
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Number of Courses', 'coursepress_base_td' ); ?>:<br/>
+		<p><label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Number of Courses', 'coursepress' ); ?>:<br/>
 				<select name="<?php echo $this->get_field_name( 'limit' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'limit' ); ?>">
 					<?php
 					for ( $i = 1; $i <= 30; $i ++ ) {
@@ -33,7 +33,7 @@ class CP_Latest_Courses extends WP_Widget {
 			</label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'coursepress_base_td' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'button_title' ); ?>"><?php _e( 'Button Title', 'coursepress' ); ?>:
 				<input class="widefat" id="<?php echo $this->get_field_id( 'button_title' ); ?>" name="<?php echo $this->get_field_name( 'button_title' ); ?>" type="text" value="<?php echo( ! isset( $button_title ) ? __( 'See All Courses' ) : esc_attr( $button_title ) ); ?>"/></label>
 		</p>
 	<?php

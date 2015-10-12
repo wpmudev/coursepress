@@ -109,8 +109,8 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
 					'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
 					// The plugin source.
-					'source_message' => __( 'Included in the CoursePress Plugin', 'coursepress_base_td' ),
-					'alt_message' => __( 'Plugin already installed.', 'coursepress_base_td' ),
+					'source_message' => __( 'Included in the CoursePress Plugin', 'coursepress' ),
+					'alt_message' => __( 'Plugin already installed.', 'coursepress' ),
 					'external_url'   => '',
 					// http://premium.wpmudev.org/project/e-commerce/
 			);
@@ -124,7 +124,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					'base_path'      => 'wordpress-ecommerce/marketpress.php',
 					'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 					//without protocol (i.e. https://) because it may be killed by mod_security
-					'source_message' => __( 'WordPress.org Repository', 'coursepress_base_td' ),
+					'source_message' => __( 'WordPress.org Repository', 'coursepress' ),
 					'external_url'   => '',
 					// https://wordpress.org/plugins/wordpress-ecommerce/
 				);
@@ -157,19 +157,19 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			);
 
 			$this->strings = array(
-				'page_title'                      => __( 'Install Plugin', 'coursepress_base_td' ),
-				'installing'                      => sprintf( __( 'Installing Plugin: %s', 'coursepress_base_td' ), $this->plugin['name'] ),
-				'oops'                            => __( 'Something went wrong with the plugin API.', 'coursepress_base_td' ),
-				'notice_can_install_recommended'  => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'coursepress_base_td' ), $this->plugin['name'] ),
+				'page_title'                      => __( 'Install Plugin', 'coursepress' ),
+				'installing'                      => sprintf( __( 'Installing Plugin: %s', 'coursepress' ), $this->plugin['name'] ),
+				'oops'                            => __( 'Something went wrong with the plugin API.', 'coursepress' ),
+				'notice_can_install_recommended'  => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'coursepress' ), $this->plugin['name'] ),
 				'notice_can_activate_recommended' => '',
-				'install_link'                    => sprintf( __( 'Install %1$s', 'coursepress_base_td' ), $this->plugin['name'] ),
-				'activate_link'                   => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'coursepress_base_td' ), $this->plugin['name'] ),
-				'return'                          => __( 'Return to MarketPress Installer', 'coursepress_base_td' ),
-				'dashboard'                       => __( 'Return to the dashboard', 'coursepress_base_td' ),
-				'plugin_activated'                => __( 'Plugin activated successfully.', 'coursepress_base_td' ),
-				'activated_successfully'          => __( 'The following plugin was activated successfully:', 'coursepress_base_td' ),
-				'complete'                        => __( 'Installed and activated successfully.', 'coursepress_base_td' ),
-				'dismiss'                         => __( 'Dismiss this notice', 'coursepress_base_td' ),
+				'install_link'                    => sprintf( __( 'Install %1$s', 'coursepress' ), $this->plugin['name'] ),
+				'activate_link'                   => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'coursepress' ), $this->plugin['name'] ),
+				'return'                          => __( 'Return to MarketPress Installer', 'coursepress' ),
+				'dashboard'                       => __( 'Return to the dashboard', 'coursepress' ),
+				'plugin_activated'                => __( 'Plugin activated successfully.', 'coursepress' ),
+				'activated_successfully'          => __( 'The following plugin was activated successfully:', 'coursepress' ),
+				'complete'                        => __( 'Installed and activated successfully.', 'coursepress' ),
+				'dismiss'                         => __( 'Dismiss this notice', 'coursepress' ),
 			);
 
 			self::$instance = $this;
@@ -263,17 +263,17 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		public function get_plugin_status( $plugin_dir ) {
 			$status = '';
 			if ( $this->is_plugin_installed( '/' . $plugin_dir ) ) {
-				$status .= '<font color="green">' . __( 'Installed', 'coursepress_base_td' ) . '</font>';
+				$status .= '<font color="green">' . __( 'Installed', 'coursepress' ) . '</font>';
 			} else {
-				$status .= '<font color="red">' . __( 'Not Installed', 'coursepress_base_td' ) . '</font>';
+				$status .= '<font color="red">' . __( 'Not Installed', 'coursepress' ) . '</font>';
 			}
 
 			$status .= ' / ';
 
 			if ( is_plugin_active( $this->plugin['base_path'] ) ) {
-				$status .= '<font color="green">' . __( 'Active', 'coursepress_base_td' ) . '</font>';
+				$status .= '<font color="green">' . __( 'Active', 'coursepress' ) . '</font>';
 			} else {
-				$status .= '<font color="red">' . __( 'Inactive', 'coursepress_base_td' ) . '</font>';
+				$status .= '<font color="red">' . __( 'Inactive', 'coursepress' ) . '</font>';
 			}
 
 			return $status;
@@ -291,9 +291,9 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( ! is_plugin_active( $this->plugin['base_path'] ) ) {
 				if ( $installed ) {
 					$active = false;
-					$status .= __( 'Activate ', 'coursepress_base_td' );
+					$status .= __( 'Activate ', 'coursepress' );
 				} else {
-					$status .= __( 'Install & Activate ', 'coursepress_base_td' );
+					$status .= __( 'Install & Activate ', 'coursepress' );
 				}
 			} else {
 				$active = true;
@@ -316,7 +316,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( ! $this->is_plugin_installed( '/' . $this->plugin['slug'] ) ) {
 				$actions = array(
 					'install' => sprintf(
-						'<a href="%1$s" title="' . __( 'Install', 'coursepress_base_td' ) . ' %2$s">' . __( 'Install', 'coursepress_base_td' ) . '</a>', wp_nonce_url(
+						'<a href="%1$s" title="' . __( 'Install', 'coursepress' ) . ' %2$s">' . __( 'Install', 'coursepress' ) . '</a>', wp_nonce_url(
 						esc_url_raw( add_query_arg(
 							array(
 								'page'              => CP_Plugin_Activation::$instance->menu,
@@ -333,7 +333,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			elseif ( ! $this->is_plugin_active( $this->plugin['base_path'] ) ) {
 				$actions = array(
 					'activate' => sprintf(
-						'<a href="%1$s" title="' . __( 'Activate', 'coursepress_base_td' ) . ' %2$s">' . __( 'Activate', 'coursepress_base_td' ) . '</a>', esc_url( add_query_arg(
+						'<a href="%1$s" title="' . __( 'Activate', 'coursepress' ) . ' %2$s">' . __( 'Activate', 'coursepress' ) . '</a>', esc_url( add_query_arg(
 						array(
 							'page'                     => CP_Plugin_Activation::$instance->menu,
 							'plugin'                   => $this->plugin['slug'],
@@ -376,9 +376,9 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					<table class="wp-list-table widefat fixed plugins">
 						<thead>
 						<tr>
-							<th scope="col" id="plugin" class="manage-column column-plugin" style=""><?php _e( 'Plugin', 'coursepress_base_td' ); ?></th>
-							<th scope="col" id="source" class="manage-column column-source" style=""><?php _e( 'Source', 'coursepress_base_td' ); ?></th>
-							<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', 'coursepress_base_td' ); ?></th>
+							<th scope="col" id="plugin" class="manage-column column-plugin" style=""><?php _e( 'Plugin', 'coursepress' ); ?></th>
+							<th scope="col" id="source" class="manage-column column-source" style=""><?php _e( 'Source', 'coursepress' ); ?></th>
+							<th scope="col" id="status" class="manage-column column-status" style=""><?php _e( 'Status', 'coursepress' ); ?></th>
 						</tr>
 						</thead>
 						<?php
@@ -530,7 +530,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 				// All plugins are active, so we display the complete string and hide the plugin menu.
 				if ( empty( $complete ) ) {
-					echo '<p>' . sprintf( $this->strings['complete'], '<a href="' . admin_url() . '" title="' . __( 'Return to the Dashboard', 'coursepress_base_td' ) . '">' . __( 'Return to the Dashboard', 'coursepress_base_td' ) . '</a>' ) . '</p>';
+					echo '<p>' . sprintf( $this->strings['complete'], '<a href="' . admin_url() . '" title="' . __( 'Return to the Dashboard', 'coursepress' ) . '">' . __( 'Return to the Dashboard', 'coursepress' ) . '</a>' ) . '</p>';
 					echo '<style type="text/css">#adminmenu .wp-submenu li.current { display: none !important; }</style>';
 				}
 
@@ -664,15 +664,15 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					// Register the nag messages and prepare them to be processed.
 					$nag_class = version_compare( $this->wp_version, '3.8', '<' ) ? 'updated' : 'update-nag';
 					if ( ! empty( $this->strings['nag_type'] ) ) {
-						add_settings_error( 'coursepress_base_td', 'coursepress_base_td', $rendered, sanitize_html_class( strtolower( $this->strings['nag_type'] ) ) );
+						add_settings_error( 'coursepress', 'coursepress', $rendered, sanitize_html_class( strtolower( $this->strings['nag_type'] ) ) );
 					} else {
-						add_settings_error( 'coursepress_base_td', 'coursepress_base_td', $rendered, $nag_class );
+						add_settings_error( 'coursepress', 'coursepress', $rendered, $nag_class );
 					}
 				}
 
 				// Admin options pages already output settings_errors, so this is to avoid duplication.
 				if ( 'options-general' !== $current_screen->parent_base ) {
-					settings_errors( 'coursepress_base_td' );
+					settings_errors( 'coursepress' );
 				}
 			}
 		}

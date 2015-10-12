@@ -6,17 +6,17 @@ class CP_Course_Calendar extends WP_Widget {
 
 	function CP_Course_Calendar() {
 		$widget_ops = array( 'classname'   => 'cp_course_calendar_widget',
-		                     'description' => __( 'Displays the course calendar.', 'coursepress_base_td' )
+		                     'description' => __( 'Displays the course calendar.', 'coursepress' )
 		);
 
-		parent::__construct( 'CP_Course_Calendar', __( 'Course Calendar', 'coursepress_base_td' ), $widget_ops );
+		parent::__construct( 'CP_Course_Calendar', __( 'Course Calendar', 'coursepress' ), $widget_ops );
 
 		$this->date_indicator = array(
-			'indicator_light_block' => __( 'Light theme - Block', 'coursepress_base_td' ),
-			'indicator_light_line'  => __( 'Light theme - Line', 'coursepress_base_td' ),
-			'indicator_dark_block'  => __( 'Dark theme - Block', 'coursepress_base_td' ),
-			'indicator_dark_line'   => __( 'Dark theme - Line', 'coursepress_base_td' ),
-			'indicator_none'        => __( 'Theme/Custom CSS', 'coursepress_base_td' ),
+			'indicator_light_block' => __( 'Light theme - Block', 'coursepress' ),
+			'indicator_light_line'  => __( 'Light theme - Line', 'coursepress' ),
+			'indicator_dark_block'  => __( 'Dark theme - Block', 'coursepress' ),
+			'indicator_dark_line'   => __( 'Dark theme - Line', 'coursepress' ),
+			'indicator_none'        => __( 'Theme/Custom CSS', 'coursepress' ),
 		);
 	}
 
@@ -36,13 +36,13 @@ class CP_Course_Calendar extends WP_Widget {
 
 		$courses = get_posts( $args );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress_base_td' ); ?>:
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'coursepress' ); ?>:
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'coursepress_base_td' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'course' ); ?>"><?php _e( 'Course', 'coursepress' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'course' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'course' ); ?>">
-					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', 'coursepress_base_td' ); ?></option>
+					<option value="false" <?php selected( $selected_course, "false", true ); ?>><?php _e( '- current -', 'coursepress' ); ?></option>
 					<?php
 					foreach ( $courses as $course ) {
 						?>
@@ -54,14 +54,14 @@ class CP_Course_Calendar extends WP_Widget {
 			</label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'pre_text' ); ?>"><?php _e( 'Previous Month Text:', 'coursepress_base_td' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '« Previous', 'coursepress_base_td' ) : esc_attr( $pre_text ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'pre_text' ); ?>"><?php _e( 'Previous Month Text:', 'coursepress' ); ?>:
+				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '« Previous', 'coursepress' ) : esc_attr( $pre_text ) ); ?>"/></label>
 		</p>
-		<p><label for="<?php echo $this->get_field_id( 'next_text' ); ?>"><?php _e( 'Next Month Text:', 'coursepress_base_td' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next »', 'coursepress_base_td' ) : esc_attr( $next_text ) ); ?>"/></label>
+		<p><label for="<?php echo $this->get_field_id( 'next_text' ); ?>"><?php _e( 'Next Month Text:', 'coursepress' ); ?>:
+				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next »', 'coursepress' ) : esc_attr( $next_text ) ); ?>"/></label>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'indicator' ); ?>"><?php _e( 'Dates indicators', 'coursepress_base_td' ); ?><br/>
+		<p><label for="<?php echo $this->get_field_id( 'indicator' ); ?>"><?php _e( 'Dates indicators', 'coursepress' ); ?><br/>
 				<select name="<?php echo $this->get_field_name( 'indicator' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'indicator' ); ?>">
 					<?php
 					foreach ( $this->date_indicator as $key => $value ) {

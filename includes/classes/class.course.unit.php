@@ -55,7 +55,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( !empty( $unit ) ) {
 
 				if ( $unit->post_title == '' ) {
-					$unit->post_title = __( 'Untitled', 'coursepress_base_td' );
+					$unit->post_title = __( 'Untitled', 'coursepress' );
 				}
 
 				if ( $unit->post_status == 'private' || $unit->post_status == 'draft' ) {
@@ -289,7 +289,7 @@ if ( !class_exists( 'Unit' ) ) {
 				if ( $minutes >= 1 || $seconds >= 1 ) {
 					return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ( $minutes . ':' . ( $seconds <= 9 ? '0' . $seconds : $seconds ) . ' min' ) );
 				} else {
-					return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'coursepress_base_td' ) );
+					return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'coursepress' ) );
 				}
 			}
 		}
@@ -320,7 +320,7 @@ if ( !class_exists( 'Unit' ) ) {
 			if ( $minutes >= 1 || $seconds >= 1 ) {
 				return apply_filters( 'coursepress_unit_time_estimation_minutes_and_seconds_format', ( $minutes . ':' . ( $seconds <= 9 ? '0' . $seconds : $seconds ) . ' min' ) );
 			} else {
-				return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'coursepress_base_td' ) );
+				return apply_filters( 'coursepress_unit_time_estimation_na_format', __( 'N/A', 'coursepress' ) );
 			}
 		}
 
@@ -331,7 +331,7 @@ if ( !class_exists( 'Unit' ) ) {
 				'post_author'	 => $user_id,
 				'post_content'	 => '',
 				'post_status'	 => 'auto-draft', //$post_status
-				'post_title'	 => __( 'Untitled', 'coursepress_base_td' ),
+				'post_title'	 => __( 'Untitled', 'coursepress' ),
 				'post_type'		 => 'unit',
 				'post_parent'	 => $course_id
 			);
@@ -410,7 +410,7 @@ if ( !class_exists( 'Unit' ) ) {
 
 				$unit = get_post( $unit_id, $this->output );
 
-				if ( $_POST[ 'unit_name' ] !== '' && $_POST[ 'unit_name' ] !== __( 'Untitled', 'coursepress_base_td' ) /* && $_POST['unit_description'] !== '' */ ) {
+				if ( $_POST[ 'unit_name' ] !== '' && $_POST[ 'unit_name' ] !== __( 'Untitled', 'coursepress' ) /* && $_POST['unit_description'] !== '' */ ) {
 					if ( $unit->post_status !== 'publish' ) {
 						$post_status = 'private';
 					} else {

@@ -1,37 +1,37 @@
 <form id="popup_signup_form">
-	<div class="cp_popup_title"><?php _e( 'Sign Up', 'coursepress_base_td' ); ?></div>
+	<div class="cp_popup_title"><?php _e( 'Sign Up', 'coursepress' ); ?></div>
 	<input type="hidden" name="signup-next-step" value="enrollment"/>
 
 	<?php if ( cp_user_can_register() ) { ?>
 
-		<p class="cp_popup_required"><?php _e( 'All fields are required', 'coursepress_base_td' ); ?></p>
+		<p class="cp_popup_required"><?php _e( 'All fields are required', 'coursepress' ); ?></p>
 
 		<label class="cp_popup_col_2">
-			<input type="text" name="student_first_name" class="required" id="cp_popup_student_first_name" placeholder="<?php _e( 'First Name', 'coursepress_base_td' ); ?>"/>
+			<input type="text" name="student_first_name" class="required" id="cp_popup_student_first_name" placeholder="<?php _e( 'First Name', 'coursepress' ); ?>"/>
 		</label>
 
 		<label class="cp_popup_col_2 second-child">
-			<input type="text" name="student_last_name" class="required" id="cp_popup_student_last_name" placeholder="<?php _e( 'Last Name', 'coursepress_base_td' ); ?>"/>
+			<input type="text" name="student_last_name" class="required" id="cp_popup_student_last_name" placeholder="<?php _e( 'Last Name', 'coursepress' ); ?>"/>
 		</label>
 
 		<label class="cp_popup_col_1">
-			<input type="text" name="username" class="required" id="cp_popup_username" value="" placeholder="<?php _e( 'Username', 'coursepress_base_td' ); ?>">
+			<input type="text" name="username" class="required" id="cp_popup_username" value="" placeholder="<?php _e( 'Username', 'coursepress' ); ?>">
 		</label>
 
 		<label class="cp_popup_col_2">
-			<input type="text" name="email" class="required" id="cp_popup_email" placeholder="<?php _e( 'E-mail', 'coursepress_base_td' ); ?>"/>
+			<input type="text" name="email" class="required" id="cp_popup_email" placeholder="<?php _e( 'E-mail', 'coursepress' ); ?>"/>
 		</label>
 
 		<label class="cp_popup_col_2 second-child">
-			<input type="text" class="required" id="cp_popup_email_confirmation" placeholder="<?php _e( 'E-mail Confirmation', 'coursepress_base_td' ); ?>"/>
+			<input type="text" class="required" id="cp_popup_email_confirmation" placeholder="<?php _e( 'E-mail Confirmation', 'coursepress' ); ?>"/>
 		</label>
 
 		<label class="cp_popup_col_2">
-			<input type="password" class="required" name="cp_popup_password" id="cp_popup_password" placeholder="<?php _e( 'Password', 'coursepress_base_td' ); ?>"/>
+			<input type="password" class="required" name="cp_popup_password" id="cp_popup_password" placeholder="<?php _e( 'Password', 'coursepress' ); ?>"/>
 		</label>
 
 		<label class="cp_popup_col_2 second-child">
-			<input type="password" class="required" id="cp_popup_password_confirmation" placeholder="<?php _e( 'Password Confirmation', 'coursepress_base_td' ); ?>"/>
+			<input type="password" class="required" id="cp_popup_password_confirmation" placeholder="<?php _e( 'Password Confirmation', 'coursepress' ); ?>"/>
 		</label>
 
 		<?php
@@ -48,13 +48,13 @@
 		if ( $course->details->enroll_type == 'passcode' ) {
 			?>
 			<label class="cp_popup_col_1">
-				<input type="text" class="required" name="passcode" id="cp_popup_passcode" placeholder="<?php _e( 'Course Passcode', 'coursepress_base_td' ); ?>"/>
+				<input type="text" class="required" name="passcode" id="cp_popup_passcode" placeholder="<?php _e( 'Course Passcode', 'coursepress' ); ?>"/>
 			</label>
 		<?php } ?>
 		<input type="hidden" value="<?php esc_attr_e( isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : ' ' ); ?>" name="course_id"/>
 	<?php
 	} else {
-		_e( 'Registrations are not allowed.', 'coursepress_base_td' );
+		_e( 'Registrations are not allowed.', 'coursepress' );
 	}
 	?>
 	<div class="cp_popup_buttons">
@@ -62,7 +62,7 @@
 		<div class="validation_errors"></div>
 
 		<label class="cp_popup_col_2">
-			<a href="" class="cp_login_step" data-course-id="<?php esc_attr_e( isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : ' ' ); ?>"><?php _e( 'Already have an Account?', 'coursepress_base_td' ); ?></a>
+			<a href="" class="cp_login_step" data-course-id="<?php esc_attr_e( isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : ' ' ); ?>"><?php _e( 'Already have an Account?', 'coursepress' ); ?></a>
 		</label>
 
 		<label class="cp_popup_col_2 second-child">
@@ -71,7 +71,7 @@
 				$prereq = get_post_meta( $_POST['course_id'], 'prerequisite', true );
 				if ( $prereq == 'false' ) {
 					?>
-					<button class="apply-button signup-data" data-course-id="<?php esc_attr_e( isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : ' ' ); ?>"><?php _e( 'Create Account', 'coursepress_base_td' ); ?></button>
+					<button class="apply-button signup-data" data-course-id="<?php esc_attr_e( isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : ' ' ); ?>"><?php _e( 'Create Account', 'coursepress' ); ?></button>
 				<?php
 				}
 			}
