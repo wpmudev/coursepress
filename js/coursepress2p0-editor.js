@@ -152,6 +152,7 @@ var CoursePress = CoursePress || {};
             $( button_wrapper + ' #' + instance.id + '-text' ).click();
         }
 
+        CoursePress.Events.trigger( 'editor:created', instance );
     }
 
     CoursePress.editor.init = function( selector ) {
