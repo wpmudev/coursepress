@@ -159,18 +159,22 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 
 			$plugins = get_option( 'active_plugins' );
 
+			$activated = false;
+
 			if ( is_multisite() ) {
 				$active_sitewide_plugins = get_site_option( "active_sitewide_plugins" );
 			} else {
 				$active_sitewide_plugins = array();
 			}
 
-			if ( preg_grep( '/marketpress.php/', $plugins ) || preg_grep( '/marketpress.php/', $active_sitewide_plugins ) ) {
-				return true;
-			} else {
-				return false;
+			foreach( $plugins as $plugin ) {
+				$activated =  preg_match( '/marketpress.php/', $plugin ) || $activated;
+			}
+			foreach( $active_sitewide_plugins as $plugin => $signature ) {
+				$activated =  preg_match( '/marketpress.php/', $plugin ) || $activated;
 			}
 
+			return $activated;
 		}
 
 		public static function get_base() {
@@ -479,8 +483,11 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			$mp_settings = get_option( 'mp_settings' );
 			$gateways    = 0;
 
-			foreach ( (array) $mp_settings['gateways']['allowed'] as $gw => $active ) {
-				$gateways += ! empty( $active ) ? 1 : 0;
+			$settings_gateways = (array) $mp_settings['gateways'];
+			if( isset( $settings_gateways['allowed'] ) ) {
+				foreach ( $settings_gateways['allowed'] as $gw => $active ) {
+					$gateways += ! empty( $active ) ? 1 : 0;
+				}
 			}
 
 			$gateways = $gateways > 0 ? true : false;
