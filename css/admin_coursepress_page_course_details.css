@@ -2911,3 +2911,22 @@ label.minimum_grade_required_label{
     border: 0;
     outline: 0;
 }
+
+.coursepress-media-button-message {
+    display: inline-block;
+    padding: 5px;
+    color: #52697E;
+}
+
+.coursepress-media-button-message span {
+    border: 1px solid #E4E4E4;
+    background: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-left: 6px;
+    padding: 10px;
+    position: absolute;
+    top: -10px;
+    width: 320px;
+}
