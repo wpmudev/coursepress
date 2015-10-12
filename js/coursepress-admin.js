@@ -1,4 +1,6 @@
 var global_iframe_content = '';
+var CoursePress = CoursePress || {}
+
 jQuery( document ).ready( function ( $ ) {
 
     // If we're on the Course Overview / Setup page, init the editors
@@ -6,6 +8,14 @@ jQuery( document ).ready( function ( $ ) {
         CoursePress.editor.init();
     }
 
+    CoursePress.Events.on( 'editor:created', function( el ) {
+        $( '.coursepress-media-button-message' ).off('click');
+        $( '.coursepress-media-button-message' ).on('click', function(e){
+            console.log('MOOO');
+            $( '.coursepress-media-button-message span' ).toggle();
+        });
+
+    } );
 
     $( '#doaction_bulk_courses' ).click( function ( e ) {
         //$( '#bulk_courses_values' ).val();
@@ -624,8 +634,8 @@ function cp_repaint_current_page_editors() {
             '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
         text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
         text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
-        text_editor +
-        '</div></div></div>';
+            text_editor +
+            '</div></div></div>';
         jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
 
         tinyMCE.init( {
@@ -689,8 +699,8 @@ function cp_repaint_all_editors() {
             '<div id="wp-' + rand_id + '-media-buttons" class="wp-media-buttons"><a href="#" class="button insert-media-cp add_media" data-editor="' + rand_id + '" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a></div>';
         text_editor_whole += coursepress_editor.quicktags ? '<div class="wp-editor-tabs">' + switches + '</div>' : '';
         text_editor_whole += '<div id="wp-' + rand_id + '-editor-container" class="wp-editor-container">' +
-        text_editor +
-        '</div></div></div>';
+            text_editor +
+            '</div></div></div>';
         jQuery( '#' + initial_editor_id ).parent().html( text_editor_whole );
 
         tinyMCE.init( {
