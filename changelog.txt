@@ -9,6 +9,14 @@ CHANGE LOG
 = 1.2.6.5 =
 * Updated: Notice for dynamic CoursePress editor and plugin compatibility.
 * Fixed: MarketPress activation check on WordPress multisite.
+* Fixed: Enrollment issues on paid courses.
+* Fixed: Minor style issues.
+* Fixed: Progress tracking issues.
+* Fixed: Course access inconsistency.
+* Fixed: PHP Notice when recording assessment grade.
+* Fixed: Course description not saving when editor in text mode.
+* Updated: Performance improvements on completion calculation.
+* Updated: Enforced logic to prevent possible unit data loss.
 
 = 1.2.6.4 =
 * Fixed: Unit completion issues.
