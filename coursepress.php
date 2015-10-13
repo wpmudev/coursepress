@@ -192,6 +192,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			require_once( $this->plugin_dir . 'includes/classes/class.session.php' );
 
 			/**
+			 * CoursePress custom non-persistent cache.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-cache.php' );
+
+			/**
 			 * CoursePress Object Class.
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-object.php' );

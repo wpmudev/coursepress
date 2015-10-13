@@ -55,6 +55,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		/* ----------------------------- GETTING COMPLETION DATA ----------------------------------- */
 
 		public static function get_completion_data( $student_id, $course_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
 
 			$session_data = CoursePress_Session::session( 'coursepress_student', null, false, '+10 minutes' ); // Keep completion data for only 10 minutes
 
@@ -103,6 +107,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				$course_progress = self::get_completion_data( $student_id, $course_id );
 			};
 
+			CoursePress_Cache::cp_cache_set($cache_key, $course_progress);
 			return $course_progress;
 		}
 
@@ -125,6 +130,11 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		}
 
 		public static function get_remaining_pages( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$visited = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) );
 			$total   = Unit::get_page_count( $unit_id );
 			$remaining = $total - $visited;
@@ -133,10 +143,16 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				do_action( 'coursepress_set_all_unit_pages_viewed', $student_id, $course_id, $unit_id );
 			}
 
+			CoursePress_Cache::cp_cache_set($cache_key, $remaining);
 			return $remaining;
 		}
 
 		public static function get_mandatory_modules_answered( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$data = self::get_completion_data( $student_id, $course_id, $unit_id );
 
 			if ( isset( $data['unit'][ $unit_id ]['mandatory_answered'] ) ) {
@@ -146,8 +162,11 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 					}
 				}
 
-				return array_keys( $data['unit'][ $unit_id ]['mandatory_answered'] );
+				$mandatory_modules_answered = array_keys( $data['unit'][ $unit_id ]['mandatory_answered'] );
+				CoursePress_Cache::cp_cache_set($cache_key, $mandatory_modules_answered);
+				return $mandatory_modules_answered;
 			} else {
+				CoursePress_Cache::cp_cache_set($cache_key, array());
 				return array();
 			}
 		}
@@ -163,10 +182,16 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		}
 
 		public static function get_gradable_modules_passed( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			$answers  = self::get_gradable_module_answered( $student_id, $course_id, $unit_id );
 
 			if ( empty( $criteria ) || empty( $answers ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, array());
 				return array();
 			}
 
@@ -206,12 +231,19 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				}
 			}
 
+			CoursePress_Cache::cp_cache_set($cache_key, $passed_array);
 			return $passed_array;
 		}
 
 		public static function get_mandatory_gradable_modules_passed( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			if ( empty( $criteria ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, false);
 				return false;
 			}
 			$mandatory  = $criteria['mandatory_modules'];
@@ -220,12 +252,19 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			// Forget about the ones that are not mandatory
 			$mandatory_passed = array_intersect( $mandatory, $all_passed );
 
+			CoursePress_Cache::cp_cache_set($cache_key, $mandatory_passed);
 			return $mandatory_passed;
 		}
 
 		public static function get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			if ( empty( $criteria ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, false);
 				return false;
 			}
 			$mandatory_required = $criteria['mandatory_modules'];
@@ -241,21 +280,38 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				$mandatory_answered = array_diff( $mandatory_answered, $mandatory_remove );
 			}
 
-			return array_diff( $mandatory_required, $mandatory_answered );
+			$remaining_mandatory_answers = array_diff( $mandatory_required, $mandatory_answered );
+
+			CoursePress_Cache::cp_cache_set($cache_key, $remaining_mandatory_answers);
+			return $remaining_mandatory_answers;
 		}
 
 		public static function get_remaining_gradable_answers( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			if ( empty( $criteria ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, false);
 				return false;
 			}
 			$gradable_required = $criteria['gradable_modules'];
 			$gradable_passed   = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
 
-			return array_diff( $gradable_required, $gradable_passed );
+			$remaining_gradable_answers = array_diff( $gradable_required, $gradable_passed );
+
+			CoursePress_Cache::cp_cache_set($cache_key, $remaining_gradable_answers);
+			return $remaining_gradable_answers;
 		}
 
 		public static function get_mandatory_steps_completed( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			if ( empty( $criteria ) ) {
 				return false;
@@ -263,7 +319,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			$mandatory           = count( $criteria['mandatory_modules'] );
 			$mandatory_remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
 
-			return $mandatory - $mandatory_remaining;
+			$steps_completed = $mandatory - $mandatory_remaining;
+
+			CoursePress_Cache::cp_cache_set($cache_key, $steps_completed);
+			return $steps_completed;
 		}
 
 		/**
@@ -281,11 +340,19 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		 * @return array
 		 */
 		public static function get_remaining_steps( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$total = self::_total_steps_required( $unit_id );
 
 			$completed = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) ) + self::get_mandatory_steps_completed( $student_id, $course_id, $unit_id );
 
-			return $total - $completed;
+			$remaining_steps = $total - $completed;
+
+			CoursePress_Cache::cp_cache_set($cache_key, $remaining_steps);
+			return $remaining_steps;
 		}
 
 		public static function is_unit_complete( $student_id, $course_id, $unit_id ) {
@@ -301,18 +368,32 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 		}
 
 		public static function get_mandatory_steps_required( $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$criteria = Unit::get_module_completion_data( $unit_id );
 			if ( empty( $criteria ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, false);
 				return false;
 			}
 
-			return count( $criteria['mandatory_modules'] );
+			$mandatory_steps = count( $criteria['mandatory_modules'] );
+			CoursePress_Cache::cp_cache_set($cache_key, $mandatory_steps);
+			return $mandatory_steps;
 		}
 
 		public static function is_mandatory_complete( $student_id, $course_id, $unit_id ) {
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
 			$completed = 0 == $remaining ? true : false;
 
+			CoursePress_Cache::cp_cache_set($cache_key, $completed);
 			return $completed;
 		}
 
@@ -322,6 +403,11 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			if ( empty( $unit_id ) ) {
 				return false;
+			}
+
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id . '-' . $unit_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
 			}
 
 			if ( empty( $data ) ) {
@@ -345,6 +431,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				do_action( 'coursepress_set_unit_completed', $student_id, $course_id, $unit_id );
 			}
 
+			CoursePress_Cache::cp_cache_set($cache_key, $progress);
 			return $progress;
 		}
 
@@ -354,12 +441,18 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				return false;
 			}
 
+			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id;
+			if( CoursePress_Cache::cp_cache_get($cache_key) ){
+				return CoursePress_Cache::cp_cache_get($cache_key);
+			}
+
 			$data        = self::get_completion_data( $student_id, $course_id );
 			$course      = new Course( $course_id );
 			$total_units = $course->get_units( $course_id, 'publish', true );
 
 			// No units or no units published
 			if ( empty( $total_units ) ) {
+				CoursePress_Cache::cp_cache_set($cache_key, 0);
 				return 0;
 			}
 
@@ -385,6 +478,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				do_action( 'coursepress_set_course_completed', $student_id, $course_id );
 			}
 
+			CoursePress_Cache::cp_cache_set($cache_key, $progress);
 			return $progress;
 		}
 
@@ -680,13 +774,13 @@ if ( ! class_exists( 'Student_Completion' ) ) {
                     $module_type     = Unit_Module::get_module_type( $module_id );
                     $module_is_input = in_array( $module_type, $input_modules );
 
-                    // Only for input modules
-                    if ( $module_is_input ) {
-                        $module_meta = Unit_Module::get_module_meta( $module_id );
-                        self::refresh_module_completion($unit_id, $module_id, $module_type, $module_meta);
-	}
-                }
-            }
+					// Only for input modules
+					if ( $module_is_input ) {
+						$module_meta = Unit_Module::get_module_meta( $module_id );
+						self::refresh_module_completion($unit_id, $module_id, $module_type, $module_meta);
+					}
+				}
+			}
 
         }
 
