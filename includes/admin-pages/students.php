@@ -19,15 +19,15 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) ) {
 				case 'delete':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
 						$student->delete_student();
-						// $message = __( 'Selected students has been removed successfully.', 'coursepress_base_td' );
-						$message = __( 'Selected students have been withdrawn from all courses successfully. Note: The user accounts still exist.', 'coursepress_base_td' );
+						// $message = __( 'Selected students has been removed successfully.', 'coursepress' );
+						$message = __( 'Selected students have been withdrawn from all courses successfully. Note: The user accounts still exist.', 'coursepress' );
 					}
 					break;
 
 				case 'withdraw':
 					if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) {
 						$student->withdraw_from_all_courses();
-						$message = __( 'Selected students have been withdrawn from all courses successfully.', 'coursepress_base_td' );
+						$message = __( 'Selected students have been withdrawn from all courses successfully.', 'coursepress' );
 					}
 					break;
 			}
@@ -49,11 +49,11 @@ if ( isset( $_GET['s'] ) ) {
 
 if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['student_id'] ) && is_numeric( $_GET['student_id'] ) ) {
 	if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'delete_student_' . $_GET['student_id'] ) ) {
-		die( __( 'Cheating huh?', 'coursepress_base_td' ) );
+		die( __( 'Cheating huh?', 'coursepress' ) );
 	}
 	$student = new Student( $_GET['student_id'] );
 	$student->delete_student();
-	$message = __( 'Selected student has been withdrawn from all courses successfully. Note: The user account still exists.', 'coursepress_base_td' );
+	$message = __( 'Selected student has been withdrawn from all courses successfully. Note: The user account still exists.', 'coursepress' );
 }
 
 if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'view' ) && isset( $_GET['student_id'] ) && is_numeric( $_GET['student_id'] ) ) {
@@ -68,9 +68,9 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 	?>
 	<div class="wrap nosubsub students cp-wrap">
 		<div class="icon32" id="icon-users"><br></div>
-		<h2><?php _e( 'Students', 'coursepress_base_td' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?>
-				<a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?><?php if ( current_user_can( 'coursepress_add_new_students_cap' ) && ! current_user_can( 'manage_options' ) ) { ?>
-				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=students&action=add_new' ); ?>"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?>
+		<h2><?php _e( 'Students', 'coursepress' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?>
+				<a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'coursepress' ); ?></a><?php } ?><?php if ( current_user_can( 'coursepress_add_new_students_cap' ) && ! current_user_can( 'manage_options' ) ) { ?>
+				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=students&action=add_new' ); ?>"><?php _e( 'Add New', 'coursepress' ); ?></a><?php } ?>
 		</h2>
 
 		<?php
@@ -87,9 +87,9 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				<form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Students', 'coursepress_base_td' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Students', 'coursepress' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( $s ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Students', 'coursepress_base_td' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Students', 'coursepress' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -101,15 +101,15 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				<div class="alignleft actions">
 					<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress_base_td' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress' ); ?></option>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) { ?>
-								<option value="delete"><?php _e( 'Delete', 'coursepress_base_td' ); ?></option>
+								<option value="delete"><?php _e( 'Delete', 'coursepress' ); ?></option>
 							<?php } ?>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_withdraw_students_cap' ) ) { ?>
-								<option value="withdraw"><?php _e( 'Withdraw from all courses', 'coursepress_base_td' ); ?></option>
+								<option value="withdraw"><?php _e( 'Withdraw from all courses', 'coursepress' ); ?></option>
 							<?php } ?>
 						</select>
-						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress_base_td' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress' ); ?>"/>
 					<?php } ?>
 				</div>
 
@@ -123,16 +123,16 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 
 		<?php
 		$columns = array(
-			"ID"                => __( 'ID', 'coursepress_base_td' ),
-			"username"          => __( 'Username', 'coursepress_base_td' ),
-			"user_fullname"     => __( 'Full Name', 'coursepress_base_td' ),
-			"user_firstname"    => __( 'First Name', 'coursepress_base_td' ),
-			"user_lastname"     => __( 'Surname', 'coursepress_base_td' ),
-			"registration_date" => __( 'Registered', 'coursepress_base_td' ),
-			"latest_activity"   => __( 'Latest Activity', 'coursepress_base_td' ),
-			"courses"           => __( 'Courses', 'coursepress_base_td' ),
-			"workbook"          => __( 'Workbook', 'coursepress_base_td' ),
-			"edit"              => __( 'Profile', 'coursepress_base_td' ),
+			"ID"                => __( 'ID', 'coursepress' ),
+			"username"          => __( 'Username', 'coursepress' ),
+			"user_fullname"     => __( 'Full Name', 'coursepress' ),
+			"user_firstname"    => __( 'First Name', 'coursepress' ),
+			"user_lastname"     => __( 'Surname', 'coursepress' ),
+			"registration_date" => __( 'Registered', 'coursepress' ),
+			"latest_activity"   => __( 'Latest Activity', 'coursepress' ),
+			"courses"           => __( 'Courses', 'coursepress' ),
+			"workbook"          => __( 'Workbook', 'coursepress' ),
+			"edit"              => __( 'Profile', 'coursepress' ),
 		);
 
 		$col_sizes = array(
@@ -148,7 +148,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 		);
 
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_students_cap' ) ) {
-			$columns["delete"] = __( 'Remove', 'coursepress_base_td' );
+			$columns["delete"] = __( 'Remove', 'coursepress' );
 			$col_sizes[]       = '5';
 		}
 		?>
@@ -196,9 +196,9 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 						</a>
 
 						<div class="visible-extra-small">
-							<?php _e( 'Latest Activity:', 'coursepress_base_td' ); ?>
-							<span class="latest_activity"><?php echo( isset( $user_object->latest_activity ) && $user_object->latest_activity !== '' ? date_i18n( 'Y-m-d h:i:s', $user_object->latest_activity ) : __( 'N/A', 'coursepress_base_td' ) ); ?></span> <?php if ( $coursepress->user_is_currently_active( $user_object->ID ) ) { ?>
-								<a class="activity_circle" alt="<?php _e( 'User is currently active on the website', 'coursepress_base_td' ); ?>"  title="<?php _e( 'User is currently active on the website', 'coursepress_base_td' ); ?>"></a><?php } ?>
+							<?php _e( 'Latest Activity:', 'coursepress' ); ?>
+							<span class="latest_activity"><?php echo( isset( $user_object->latest_activity ) && $user_object->latest_activity !== '' ? date_i18n( 'Y-m-d h:i:s', $user_object->latest_activity ) : __( 'N/A', 'coursepress' ) ); ?></span> <?php if ( $coursepress->user_is_currently_active( $user_object->ID ) ) { ?>
+								<a class="activity_circle" alt="<?php _e( 'User is currently active on the website', 'coursepress' ); ?>"  title="<?php _e( 'User is currently active on the website', 'coursepress' ); ?>"></a><?php } ?>
 						</div>
 					</td>
 					<td class="column-user-firstname <?php echo $style; ?>">
@@ -213,8 +213,8 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 					</td>
 					<td class="column-registration-date <?php echo $style; ?>"><?php echo $user_object->user_registered; ?></td>
 					<td class="column-latest-activity <?php echo $style; ?>">
-						<span class="latest_activity"><?php echo( isset( $user_object->latest_activity ) && $user_object->latest_activity !== '' ? date_i18n( 'Y-m-d h:i:s', $user_object->latest_activity ) : __( 'N/A', 'coursepress_base_td' ) ); ?></span> <?php if ( $coursepress->user_is_currently_active( $user_object->ID ) ) { ?>
-							<a class="activity_circle" alt="<?php _e( 'User is currently active on the website', 'coursepress_base_td' ); ?>"  title="<?php _e( 'User is currently active on the website', 'coursepress_base_td' ); ?>"></a><?php } ?>
+						<span class="latest_activity"><?php echo( isset( $user_object->latest_activity ) && $user_object->latest_activity !== '' ? date_i18n( 'Y-m-d h:i:s', $user_object->latest_activity ) : __( 'N/A', 'coursepress' ) ); ?></span> <?php if ( $coursepress->user_is_currently_active( $user_object->ID ) ) { ?>
+							<a class="activity_circle" alt="<?php _e( 'User is currently active on the website', 'coursepress' ); ?>"  title="<?php _e( 'User is currently active on the website', 'coursepress' ); ?>"></a><?php } ?>
 					</td>
 					<td class="column-courses <?php echo $style; ?>" style="padding-left: 30px;"><?php echo $user_object->courses_number; ?></td>
 					<td class="column-workbook <?php echo $style; ?>" style="padding-top:13px;">
@@ -243,7 +243,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				?>
 				<tr>
 					<td colspan="8">
-						<div class="zero"><?php _e( 'No students found.', 'coursepress_base_td' ); ?></div>
+						<div class="zero"><?php _e( 'No students found.', 'coursepress' ); ?></div>
 					</td>
 				</tr>
 			<?php

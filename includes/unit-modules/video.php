@@ -48,7 +48,7 @@ class video_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -65,7 +65,7 @@ class video_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
 				<label class="bold-label"><?php
-					_e( 'Element Title', 'coursepress_base_td' );
+					_e( 'Element Title', 'coursepress' );
 					$this->time_estimation( $data );
 					?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -87,19 +87,19 @@ class video_module extends Unit_Module {
 				</div>
 
 				<div class="video_url_holder">
-					<label><?php _e( 'Put a URL or Browse for a video file.', 'coursepress_base_td' ); ?><br/>
-						<span class="element_title_description"><?php printf( __( 'You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'coursepress_base_td' ), $supported_video_extensions ); ?> </span>
+					<label><?php _e( 'Put a URL or Browse for a video file.', 'coursepress' ); ?><br/>
+						<span class="element_title_description"><?php printf( __( 'You can enter a Youtube or Vimeo link (oEmbed support is required). Alternatively you can Browse for a file - supported video extensions (%s)', 'coursepress' ), $supported_video_extensions ); ?> </span>
 						<input class="video_url" type="text" size="36" name="<?php echo $this->name; ?>_video_url[]" value="<?php echo esc_attr( ( isset( $data->video_url ) ? $data->video_url : '' ) ); ?>"/>
 						<input class="attachment_id" type="hidden" size="36" name="<?php echo $this->name; ?>_attachment_id[]" value="<?php echo esc_attr( ( isset( $data->attachment_id ) ? $data->attachment_id : '0' ) ); ?>"/>
-						<input class="video_url_button" type="button" value="<?php _e( 'Browse', 'coursepress_base_td' ); ?>"/>
+						<input class="video_url_button" type="button" value="<?php _e( 'Browse', 'coursepress' ); ?>"/>
 
-						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'coursepress_base_td' ), $supported_video_extensions ); ?></div>
+						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'coursepress' ), $supported_video_extensions ); ?></div>
 					</label>
 				</div>
 
 				<!--<div class="video_additional_controls">
 
-					<label><?php // _e('Player Width ( pixels )', 'coursepress_base_td');     ?></label>
+					<label><?php // _e('Player Width ( pixels )', 'coursepress');     ?></label>
 					<input type="text" name="<?php // echo $this->name;     ?>_player_width[]" value="<?php //echo ( isset($data->player_width) ? esc_attr($data->player_width) : esc_attr(empty($content_width) ? 960 : $content_width ) );     ?>" />
 
 				</div>-->
@@ -121,8 +121,8 @@ class video_module extends Unit_Module {
 	function on_create() {
 		$this->order = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
 		add_filter( 'wp_video_shortcode', array( &$this, 'cp_video_shortcode' ) );
-		$this->description = __( 'Allows adding video files and video embeds to the unit', 'coursepress_base_td' );
-		$this->label       = __( 'Video', 'coursepress_base_td' );
+		$this->description = __( 'Allows adding video files and video embeds to the unit', 'coursepress' );
+		$this->label       = __( 'Video', 'coursepress' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}
@@ -137,8 +137,8 @@ class video_module extends Unit_Module {
 		<label class="hide_related_media">
 				<input type="checkbox" name="<?php echo $this->name; ?>_hide_related_media[<?php $data->id ?>]" value="yes" <?php echo( ! empty( $data ) && isset( $data->hide_related_media ) && $data->hide_related_media == 'yes' ? 'checked' : ( empty( $data ) || ! isset( $data->hide_related_media ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_hide_related_media_field[]" value="<?php echo( ! empty( $data ) && isset( $data->hide_related_media ) && $data->hide_related_media == 'yes' ? 'yes' : empty( $data ) ? 'yes' : 'no' ) ?>"/>
-				<?php _e( 'Hide Related Videos', 'coursepress_base_td' ); ?><br/>
-				<span class="element_title_description"><?php _e( 'Hide related videos for some video services (e.g. YouTube). Services like Vimeo sets this per video.', 'coursepress_base_td' ); ?></span>
+				<?php _e( 'Hide Related Videos', 'coursepress' ); ?><br/>
+				<span class="element_title_description"><?php _e( 'Hide related videos for some video services (e.g. YouTube). Services like Vimeo sets this per video.', 'coursepress' ); ?></span>
 			</label>
 		<?php
 	}
@@ -153,8 +153,8 @@ class video_module extends Unit_Module {
 			<label class="show_media_caption">
 				<input type="checkbox" name="<?php echo $this->name; ?>_show_media_caption[]" value="yes" <?php echo( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ? 'checked' : ( empty( $data ) || ! isset( $data->show_media_caption ) ) ? 'checked' : '' ) ?> />
 				<input type="hidden" name="<?php echo $this->name; ?>_show_caption_field[]" value="<?php echo( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ? 'yes' : empty( $data ) ? 'yes' : 'no' ) ?>"/>
-				<?php _e( 'Show Caption', 'coursepress_base_td' ); ?><br/>
-				<span class="element_title_description"><?php _e( 'Show a caption for this video.', 'coursepress_base_td' ); ?></span>
+				<?php _e( 'Show Caption', 'coursepress' ); ?><br/>
+				<span class="element_title_description"><?php _e( 'Show a caption for this video.', 'coursepress' ); ?></span>
 			</label>
 
 			<div class="caption-source <?php echo ( ! empty( $data ) && isset( $data->show_media_caption ) && $data->show_media_caption == 'yes' ) || empty( $data ) ? '' : 'hidden'; ?>">
@@ -164,10 +164,10 @@ class video_module extends Unit_Module {
 				// Usually the module ID, but if we cant use the ID, we'll take a timestamp
 				$unique = ! empty( $data ) ? $data->ID : time();
 				?>
-				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked( $caption_source, 'media', true ); ?>/> <?php _e( 'Media Caption', 'coursepress_base_td' ); ?>
+				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="media" <?php checked( $caption_source, 'media', true ); ?>/> <?php _e( 'Media Caption', 'coursepress' ); ?>
 				<span class="element_title_description media-caption-description">
 					<?php
-					$no_caption_text = __( 'Media has no caption.', 'coursepress_base_td' );
+					$no_caption_text = __( 'Media has no caption.', 'coursepress' );
 					$attachment_id   = false;
 					if ( ! empty( $data ) ) {
 						$attachment_id = ! empty( $data->attachment_id ) ? $data->attachment_id : false;
@@ -188,9 +188,9 @@ class video_module extends Unit_Module {
 					?>
 				</span>
 
-				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked( $caption_source, 'custom', true ); ?>/> <?php _e( 'Custom Caption', 'coursepress_base_td' ); ?>
+				<input type="radio" name="<?php echo $this->name . '_' . $unique . '_caption_source[]'; ?>" value="custom" <?php checked( $caption_source, 'custom', true ); ?>/> <?php _e( 'Custom Caption', 'coursepress' ); ?>
 				<input type="hidden" name="<?php echo $this->name . '_caption_field[]'; ?>" value="<?php echo $caption_source; ?>"/>
-				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo ! empty( $data ) && isset( $data->caption_custom_text ) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo ! empty( $data ) && isset( $data->caption_custom_text ) ? '' : __( 'Please enter a custom caption here.', 'coursepress_base_td' ); ?>"/><br/><br/>
+				<input type="text" name="<?php echo $this->name . '_caption_custom_text[]'; ?>" value="<?php echo ! empty( $data ) && isset( $data->caption_custom_text ) ? $data->caption_custom_text : ''; ?>" placeholder="<?php echo ! empty( $data ) && isset( $data->caption_custom_text ) ? '' : __( 'Please enter a custom caption here.', 'coursepress' ); ?>"/><br/><br/>
 			</div>
 		</div>
 	<?php

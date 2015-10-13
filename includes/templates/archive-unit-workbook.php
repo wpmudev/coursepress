@@ -18,11 +18,11 @@ add_thickbox();
 <?php
 
 if ( 100 == ( int ) $progress ) {
-	$complete_message         = '<span class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'coursepress_base_td' ) . '</span>';
+	$complete_message         = '<span class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'coursepress' ) . '</span>';
 	$workbook_course_progress = '';
 } else {
 	$complete_message         = '';
-	$workbook_course_progress = '<span class="workbook-course-progress">' . __( 'Course progress: ', 'coursepress_base_td' ) . esc_html( $progress ) . '%' . '</span>';
+	$workbook_course_progress = '<span class="workbook-course-progress">' . __( 'Course progress: ', 'coursepress' ) . esc_html( $progress ) . '%' . '</span>';
 }
 
 ?>
@@ -30,7 +30,7 @@ if ( 100 == ( int ) $progress ) {
 <?php echo do_shortcode( '[course_unit_archive_submenu]' ); ?>
 
 	<h2 class="workbook-title">
-		<?php echo __( 'Workbook', 'coursepress_base_td' );
+		<?php echo __( 'Workbook', 'coursepress' );
 		echo $workbook_course_progress;
 		echo $complete_message; ?>
 	</h2>
@@ -48,7 +48,7 @@ if ( have_posts() ) {
 		<div class="workbook_units cp-wrap">
 			<div class="unit_title">
 				<h3><?php the_title(); ?>
-					<span><?php _e( 'Unit progress: ', 'coursepress_base_td' ); ?> <?php echo do_shortcode( '[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
+					<span><?php _e( 'Unit progress: ', 'coursepress' ); ?> <?php echo do_shortcode( '[course_unit_progress course_id="' . $course_id . '" unit_id="' . get_the_ID() . '"]' ); ?>
 						%</span>
 				</h3>
 			</div>
@@ -60,7 +60,7 @@ if ( have_posts() ) {
 				</div>
 			<?php } else { ?>
 				<div class="accordion-inner">
-					<div class="zero-inputs"><?php _e( 'There are no activities to complete in this unit.', 'coursepress_base_td' ); ?></div>
+					<div class="zero-inputs"><?php _e( 'There are no activities to complete in this unit.', 'coursepress' ); ?></div>
 				</div>
 			<?php } ?>
 		</div>
@@ -68,7 +68,7 @@ if ( have_posts() ) {
 	} // While
 } else {
 	?>
-	<div class="zero-courses"><?php _e( '0 Units in the course', 'coursepress_base_td' ); ?></div>
+	<div class="zero-courses"><?php _e( '0 Units in the course', 'coursepress' ); ?></div>
 <?php
 }
 ?>

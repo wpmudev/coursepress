@@ -10,9 +10,9 @@ if ( isset( $_POST['add_new_template'] ) ) {
 	if ( check_admin_referer( 'save_template' ) ) {
 		if ( current_user_can( 'coursepress_create_certificates_cap' ) || current_user_can( 'manage_options' ) ) {
 			$templates->add_new_template();
-			$message = __( 'Certificate Template data has been successfully saved.', 'coursepress_base_td' );
+			$message = __( 'Certificate Template data has been successfully saved.', 'coursepress' );
 		} else {
-			$message = __( 'You do not have required permissions for this action.', 'coursepress_base_td' );
+			$message = __( 'You do not have required permissions for this action.', 'coursepress' );
 		}
 	}
 }
@@ -30,9 +30,9 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' ) {
 		if ( current_user_can( 'coursepress_delete_certificates_cap' ) || current_user_can( 'manage_options' ) ) {
 			$template = new CP_Certificate_Template( (int) $_GET['ID'] );
 			$template->delete_template();
-			$message = __( 'Certificate Template has been successfully deleted.', 'coursepress_base_td' );
+			$message = __( 'Certificate Template has been successfully deleted.', 'coursepress' );
 		} else {
-			$message = __( 'You do not have required permissions for this action.', 'coursepress_base_td' );
+			$message = __( 'You do not have required permissions for this action.', 'coursepress' );
 		}
 	}
 }
@@ -54,9 +54,9 @@ $fields              = $templates->get_template_col_fields();
 $columns             = $templates->get_columns();
 ?>
 <div class="wrap cp-wrap certificates-wrap">
-	<h2><?php _e( 'Certificate Templates', 'coursepress_base_td' ); ?><?php if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'add_new' ) ) { ?>
-			<a href="admin.php?page=<?php echo $_GET['page']; ?>" class="add-new-h2"><?php _e( 'Back', 'coursepress_base_td' ); ?></a><?php } else { ?>
-			<a href="<?php echo admin_url( 'admin.php?page=' . $_GET['page'] . '&action=add_new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?>
+	<h2><?php _e( 'Certificate Templates', 'coursepress' ); ?><?php if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'add_new' ) ) { ?>
+			<a href="admin.php?page=<?php echo $_GET['page']; ?>" class="add-new-h2"><?php _e( 'Back', 'coursepress' ); ?></a><?php } else { ?>
+			<a href="<?php echo admin_url( 'admin.php?page=' . $_GET['page'] . '&action=add_new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'coursepress' ); ?></a><?php } ?>
 	</h2>
 
 <?php
@@ -73,9 +73,9 @@ if ( isset( $message ) ) {
 			<form method="get" action="?page=<?php echo esc_attr( $page ); ?>" class="search-form">
 				<p class="search-box">
 					<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-					<label class="screen-reader-text"><?php _e( 'Search Templates', 'coursepress_base_td' ); ?>:</label>
+					<label class="screen-reader-text"><?php _e( 'Search Templates', 'coursepress' ); ?>:</label>
 					<input type="text" value="<?php echo esc_attr( $templatessearch ); ?>" name="s">
-					<input type="submit" class="button" value="<?php _e( 'Search Templates', 'coursepress_base_td' ); ?>">
+					<input type="submit" class="button" value="<?php _e( 'Search Templates', 'coursepress' ); ?>">
 				</p>
 			</form>
 		</div>
@@ -116,12 +116,12 @@ if ( isset( $message ) ) {
 					if ( $key == 'edit' ) {
 						?>
 						<td>
-							<a class="templates_edit_link" href="<?php echo admin_url( 'admin.php?page=' . $page . '&action=' . $key . '&ID=' . (int) $template_object->ID, 'save_template' ); ?>"><?php _e( 'Edit', 'coursepress_base_td' ); ?></a>
+							<a class="templates_edit_link" href="<?php echo admin_url( 'admin.php?page=' . $page . '&action=' . $key . '&ID=' . (int) $template_object->ID, 'save_template' ); ?>"><?php _e( 'Edit', 'coursepress' ); ?></a>
 						</td>
 					<?php } elseif ( $key == 'delete' ) {
 						?>
 						<td>
-							<a class="templates_edit_link cp_delete_link" href="<?php echo wp_nonce_url( 'admin.php?page=' . $page . '&action=' . $key . '&ID=' . (int) $template_object->ID, 'delete_' . (int) $template_object->ID ); ?>"><?php _e( 'Delete', 'coursepress_base_td' ); ?></a>
+							<a class="templates_edit_link cp_delete_link" href="<?php echo wp_nonce_url( 'admin.php?page=' . $page . '&action=' . $key . '&ID=' . (int) $template_object->ID, 'delete_' . (int) $template_object->ID ); ?>"><?php _e( 'Delete', 'coursepress' ); ?></a>
 						</td>
 					<?php
 					} else {
@@ -143,7 +143,7 @@ if ( isset( $message ) ) {
 			?>
 			<tr>
 				<td colspan="6">
-					<div class="zero-records"><?php _e( 'No templates found.', 'coursepress_base_td' ) ?></div>
+					<div class="zero-records"><?php _e( 'No templates found.', 'coursepress' ) ?></div>
 				</td>
 			</tr>
 		<?php
@@ -176,17 +176,17 @@ if ( isset( $message ) ) {
 					<div id="titlediv">
 						<div id="titlewrap">
 							<label class="" id="title-prompt-text" for="title"></label>
-							<input type="text" name="template_title" size="30" value="<?php echo esc_attr( isset( $template->details->post_title ) ? $template->details->post_title : '' ); ?>" id="title" placeholder="<?php _e( 'Certificate Template Title', 'coursepress_base_td' ); ?>" autocomplete="off">
+							<input type="text" name="template_title" size="30" value="<?php echo esc_attr( isset( $template->details->post_title ) ? $template->details->post_title : '' ); ?>" id="title" placeholder="<?php _e( 'Certificate Template Title', 'coursepress' ); ?>" autocomplete="off">
 						</div>
 					</div>
 
 					<div id="wp-content-wrap" class="wp-core-ui wp-editor-wrap tmce-active has-dfw certificate-layout">
-						<h2><?php _e( 'Certificate Layout', 'coursepress_base_td' ); ?></h2>
+						<h2><?php _e( 'Certificate Layout', 'coursepress' ); ?></h2>
 
 						<div class="rows">
 							<?php for ( $i = 1; $i <= apply_filters( 'coursepress_certificate_template_row_number', 20 ); $i ++ ) { ?>
 								<ul id="row_<?php echo $i; ?>" class="sortables droptrue">
-									<!--<span class="row_num_info"><?php _e( 'Row', 'coursepress_base_td' ); ?> <?php echo $i; ?></span>--><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value=""/>
+									<!--<span class="row_num_info"><?php _e( 'Row', 'coursepress' ); ?> <?php echo $i; ?></span>--><input type="hidden" class="rows_classes" name="rows_<?php echo $i; ?>_post_meta" value=""/>
 									<i class="fa fa-arrows-v cp-move-icon"></i>
 									<?php
 									if ( isset( $post_id ) ) {
@@ -223,7 +223,7 @@ if ( isset( $message ) ) {
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortable" style="">
 						<div id="submitdiv" class="postbox ">
-							<h3 class="hndle"><span><?php _e( 'Certificate Elements', 'coursepress_base_td' ); ?></span></h3>
+							<h3 class="hndle"><span><?php _e( 'Certificate Elements', 'coursepress' ); ?></span></h3>
 
 							<div class="inside">
 								<div class="submitbox" id="submitpost">
@@ -264,7 +264,7 @@ if ( isset( $message ) ) {
 						<!--document settings-->
 
 						<div id="submitdiv" class="postbox ">
-							<h3 class="hndle"><span><?php _e( 'Certificate PDF Settings', 'coursepress_base_td' ); ?></span></h3>
+							<h3 class="hndle"><span><?php _e( 'Certificate PDF Settings', 'coursepress' ); ?></span></h3>
 
 							<div class="inside">
 								<div class="submitbox" id="submitpost">
@@ -296,11 +296,11 @@ if ( isset( $message ) ) {
 
 									<div id="major-publishing-actions">
 										<div id="delete-action">
-											<a class="preview button" href="" target="wp-preview-695" id="post-preview"><?php _e( 'Preview', 'coursepress_base_td' ) ?></a>
+											<a class="preview button" href="" target="wp-preview-695" id="post-preview"><?php _e( 'Preview', 'coursepress' ) ?></a>
 										</div>
 
 										<div id="publishing-action">
-											<?php submit_button( __( 'Save', 'coursepress_base_td' ), 'primary', 'add_new_template', false ); ?>
+											<?php submit_button( __( 'Save', 'coursepress' ), 'primary', 'add_new_template', false ); ?>
 										</div>
 										<div class="clear"></div>
 									</div>

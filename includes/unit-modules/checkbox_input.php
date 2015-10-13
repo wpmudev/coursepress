@@ -24,7 +24,7 @@ class checkbox_input_module extends Unit_Module {
 			?>
 			<div class="module_text_response_answer">
 				<?php if ( $show_label ) { ?>
-					<label><?php _e( 'Response', 'coursepress_base_td' ); ?></label>
+					<label><?php _e( 'Response', 'coursepress' ); ?></label>
 				<?php } ?>
 				<div class="front_response_content radio_input_module">
 					<ul class='radio_answer_check_li'>
@@ -50,7 +50,7 @@ class checkbox_input_module extends Unit_Module {
 
 		<?php
 		} else {
-			_e( 'No answer / response', 'coursepress_base_td' );
+			_e( 'No answer / response', 'coursepress' );
 		}
 		?>
 		<div class="full regular-border-divider"></div>
@@ -173,7 +173,7 @@ class checkbox_input_module extends Unit_Module {
 
             <h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
                 <span class="h3-label">
-                    <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
+                    <span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress' ) ); ?></span>
                     <span class="h3-label-right"><?php echo $this->label; ?></span>
                     <?php
 		parent::get_module_move_link();
@@ -192,7 +192,7 @@ class checkbox_input_module extends Unit_Module {
                 <input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
                 <label class="bold-label"><?php
-		_e( 'Element Title', 'coursepress_base_td' );
+		_e( 'Element Title', 'coursepress' );
 		$this->time_estimation( $data );
 		?></label>
                 <?php echo $this->element_title_description(); ?>
@@ -209,7 +209,7 @@ class checkbox_input_module extends Unit_Module {
 		<?php echo $this->limit_attempts_element( $data ); ?>
                 </div>
 
-                <label class="bold-label"><?php _e( 'Question', 'coursepress_base_td' ); ?></label>
+                <label class="bold-label"><?php _e( 'Question', 'coursepress' ); ?></label>
 
                 <div class="editor_in_place">
 
@@ -230,18 +230,18 @@ class checkbox_input_module extends Unit_Module {
                             <tr>
 
                                 <th width="96%">
-                        <div class="checkbox_answer_check"><?php _e( 'Answers', 'coursepress_base_td' ); ?></div>
+                        <div class="checkbox_answer_check"><?php _e( 'Answers', 'coursepress' ); ?></div>
                         <div class="checkbox_answer"></div>
                         </th>
 
                         <th width="3%">
-                            <!--<a class="checkbox_new_link"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a>-->
+                            <!--<a class="checkbox_new_link"><?php _e( 'Add New', 'coursepress' ); ?></a>-->
                         </th>
 
                         </tr>
 
                         <tr>
-                            <td class="label" colspan="2"><?php _e( 'Set the correct answer', 'coursepress_base_td' ); ?></td>
+                            <td class="label" colspan="2"><?php _e( 'Set the correct answer', 'coursepress' ); ?></td>
                         </tr>
 
                         <?php
@@ -300,7 +300,7 @@ class checkbox_input_module extends Unit_Module {
                         </tbody>
                     </table>
 
-                    <a class="checkbox_new_link button-secondary"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a>
+                    <a class="checkbox_new_link button-secondary"><?php _e( 'Add New', 'coursepress' ); ?></a>
 
                 </div>
 
@@ -318,8 +318,8 @@ class checkbox_input_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Multiple choice question where multiple options can be selected', 'coursepress_base_td' );
-		$this->label       = __( 'Multiple Choice', 'coursepress_base_td' );
+		$this->description = __( 'Multiple choice question where multiple options can be selected', 'coursepress' );
+		$this->label       = __( 'Multiple Choice', 'coursepress' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

@@ -65,7 +65,7 @@ class audio_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -83,7 +83,7 @@ class audio_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
 				<label class="bold-label"><?php
-					_e( 'Element Title', 'coursepress_base_td' );
+					_e( 'Element Title', 'coursepress' );
 					$this->time_estimation( $data );
 					?></label>
 				<?php echo $this->element_title_description(); ?>
@@ -92,29 +92,29 @@ class audio_module extends Unit_Module {
 				<?php echo $this->show_title_on_front_element( $data ); ?>
 
 				<div class="audio_url_holder">
-					<label><?php echo sprintf( __( 'Put a URL or Browse for an audio file. Supported audio extensions ( %s )', 'coursepress_base_td' ), $supported_audio_extensions ); ?>
+					<label><?php echo sprintf( __( 'Put a URL or Browse for an audio file. Supported audio extensions ( %s )', 'coursepress' ), $supported_audio_extensions ); ?>
 						<input class="audio_url" type="text" size="36" name="<?php echo $this->name; ?>_audio_url[]" value="<?php echo esc_attr( ( isset( $data->audio_url ) ? $data->audio_url : '' ) ); ?>"/>
-						<input class="audio_url_button" type="button" value="<?php _e( 'Browse', 'coursepress_base_td' ); ?>"/>
+						<input class="audio_url_button" type="button" value="<?php _e( 'Browse', 'coursepress' ); ?>"/>
 
-						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'coursepress_base_td' ), $supported_audio_extensions ); ?></div>
+						<div class="invalid_extension_message"><?php echo sprintf( __( 'Extension of the file is not valid. Please use one of the following: %s', 'coursepress' ), $supported_audio_extensions ); ?></div>
 					</label>
 				</div>
 
 				<div class="audio_additional_controls">
-					<label><?php _e( 'Play in a loop', 'coursepress_base_td' ); ?></label>
+					<label><?php _e( 'Play in a loop', 'coursepress' ); ?></label>
 					<?php
 					$data_loop     = ( isset( $data->loop ) ? $data->loop : 'No' );
 					$data_autoplay = ( isset( $data->autoplay ) ? $data->autoplay : 'No' );
 					?>
-					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_loop, 'Yes', true ); ?>/> <?php _e( 'Yes', 'coursepress_base_td' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_loop, 'Yes', true ); ?>/> <?php _e( 'Yes', 'coursepress' ); ?>
 					<br/><br/>
-					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_loop, 'No', true ); ?>/> <?php _e( 'No', 'coursepress_base_td' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_loop[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_loop, 'No', true ); ?>/> <?php _e( 'No', 'coursepress' ); ?>
 					<br/><br/>
 
-					<label><?php _e( 'Autoplay', 'coursepress_base_td' ); ?></label>
-					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_autoplay, 'Yes', true ); ?>/> <?php _e( 'Yes', 'coursepress_base_td' ); ?>
+					<label><?php _e( 'Autoplay', 'coursepress' ); ?></label>
+					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="Yes" <?php checked( $data_autoplay, 'Yes', true ); ?>/> <?php _e( 'Yes', 'coursepress' ); ?>
 					<br/><br/>
-					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_autoplay, 'No', true ); ?>/> <?php _e( 'No', 'coursepress_base_td' ); ?>
+					<input type="radio" name="<?php echo $this->name . '_autoplay[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . ']'; ?>" value="No" <?php checked( $data_autoplay, 'No', true ); ?>/> <?php _e( 'No', 'coursepress' ); ?>
 					<br/><br/>
 				</div>
 
@@ -143,8 +143,8 @@ class audio_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Add audio files with player to the unit', 'coursepress_base_td' );
-		$this->label       = __( 'Audio', 'coursepress_base_td' );
+		$this->description = __( 'Add audio files with player to the unit', 'coursepress' );
+		$this->label       = __( 'Audio', 'coursepress' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

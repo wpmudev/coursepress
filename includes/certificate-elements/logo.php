@@ -7,7 +7,7 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 		var $element_title = 'Logo';
 
 		function on_creation() {
-			$this->element_title = apply_filters( 'coursepress_logo_element_title', __( 'Logo', 'coursepress_base_td' ) );
+			$this->element_title = apply_filters( 'coursepress_logo_element_title', __( 'Logo', 'coursepress' ) );
 		}
 
 		function admin_content() {
@@ -15,8 +15,8 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 			echo parent::get_element_margins();
 			?>
 			<label>
-				<input class="file_url" type="text" size="36" name="meta_featured_url" value="" placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', 'coursepress_base_td' ); ?>"/>
-				<input class="file_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'coursepress_base_td' ); ?>">
+				<input class="file_url" type="text" size="36" name="meta_featured_url" value="" placeholder="<?php echo esc_attr( 'Enter a URL or Browse for a file.', 'coursepress' ); ?>"/>
+				<input class="file_url_button button-secondary" type="button" value="<?php _e( 'Browse', 'coursepress' ); ?>">
 			</label>
 		<?php
 		}
@@ -32,5 +32,5 @@ if ( ! class_exists( 'cp_logo_element' ) ) {
 
 	}
 
-	cp_register_template_element( 'cp_logo_element', __( 'Logo', 'coursepress_base_td' ) );
+	cp_register_template_element( 'cp_logo_element', __( 'Logo', 'coursepress' ) );
 }
