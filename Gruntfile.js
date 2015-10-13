@@ -16,10 +16,10 @@ module.exports = function(grunt) {
             { match: /CoursePress Base/g, replace: 'CoursePress Pro' },
             { match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
             { match: /coursepress_base_td/g, replace: 'cp' },
-            { match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
-            { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
             { match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
+            { match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
+            { match: /\/\/<\/wpmudev.plugin.pro_only>/g, replace: '' }
         ],
         wporg: [
             { match: /CoursePress Base/g, replace: 'CoursePress' },
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
             { match: /\/\/<wpmudev.plugin.pro_only([^<]+)/mg, replace: '' },
             { match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
             { match: /\/\/<wpmudev.plugin.free_only>/g, replace: '' },
-            { match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
+            { match: /\/\/<\/wpmudev.plugin.free_only>/g, replace: '' },
             { match: /<%= wpmudev.plugin.changelog %>/g, replace: (function() {
                 var changelog = grunt.file.read('./changelog.txt');
                 changelog = changelog.replace(/^(\S|\s)*==.changelog.==\S*/igm, '' ).trim();
