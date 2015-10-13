@@ -597,10 +597,8 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			return $content;
 		}
 
-		public static function course_paid_3pt0( $object_id ) {
+		public static function course_paid_3pt0( $order ) {
 
-			// We're dealing with MarketPress 3.x, so lets use its objects to enroll the user
-			$order      = new MP_Order( $object_id );
 			$order_post = get_post( $order->ID );
 			$cart       = $order->get_cart();
 			$items      = $cart->get_items();
