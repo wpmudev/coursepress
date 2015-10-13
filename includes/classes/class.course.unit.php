@@ -456,8 +456,11 @@ if ( !class_exists( 'Unit' ) ) {
 			update_post_meta( $post_id, 'force_current_unit_successful_completion', cp_filter_content( $_POST[ 'force_current_unit_successful_completion' ] ) );
 
 			//cp_write_log($_POST[ 'page_title' ]);
-			update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
-			update_post_meta( $post_id, 'unit_page_count', count( cp_filter_content( $_POST[ 'page_title' ], true ) ) );
+			if( !empty($_POST[ 'page_title' ]) ){
+				update_post_meta( $post_id, 'page_title', cp_filter_content( $_POST[ 'page_title' ], true ) );
+				update_post_meta( $post_id, 'unit_page_count', count( cp_filter_content( $_POST[ 'page_title' ], true ) ) );
+			}
+
 			update_post_meta( $post_id, 'show_page_title', cp_filter_content( $_POST[ 'show_page_title_field' ] ) );
 
 			if ( !get_post_meta( $post_id, 'unit_order', true ) ) {

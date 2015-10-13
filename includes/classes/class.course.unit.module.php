@@ -51,6 +51,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		function update_module( $data ) {
 			global $user_id, $wpdb; //$last_inserted_module_id
 
+			if( empty($data->unit_id) || $data->unit_id == 0) return;
+
 			$post = array(
 				'post_author'  => $user_id,
 				'post_parent'  => $data->unit_id,
