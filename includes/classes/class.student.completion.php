@@ -505,6 +505,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
             $session_data[ $student_id ]['course_completion'][ $course_id ] = $data;
             CoursePress_Session::session( 'coursepress_student', $session_data );
 			$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $data;
+			CoursePress_Cache::cp_cache_purge();
 		}
 
 		public static function record_mandatory_answer( $student_id, $course_id, $unit_id, $module_id, &$data = false ) {

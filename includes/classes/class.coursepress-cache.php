@@ -59,6 +59,16 @@ if ( ! class_exists( 'CoursePress_Cache' ) ) {
 			return false;
 		}
 
+		public static function cp_cache_purge($key = null){
+			if(!empty($key)){
+				unset( CoursePress_Cache::$cache[$key] );
+			} else {
+				CoursePress_Cache::$cache = array();
+			}
+
+			return true;
+		}
+
 	}
 
 }
