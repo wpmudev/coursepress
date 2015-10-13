@@ -1,5 +1,8 @@
 <?php
 //echo do_shortcode( '[course_breadcrumbs type="unit_archive"]' );
+$course_id			 = do_shortcode( '[get_parent_course_id]' );
+$course_id			 = (int) $course_id;
+CoursePress::instance()->check_access( $course_id );
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
 ?>
 

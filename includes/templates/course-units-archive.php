@@ -2,6 +2,7 @@
 
 //$course_id			 = do_shortcode( '[get_parent_course_id]' );
 //$course_id			 = (int) $course_id;
+CoursePress::instance()->check_access( $course_id );
 $progress = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
 
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
