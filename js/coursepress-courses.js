@@ -666,7 +666,11 @@ function step_2_update( attr ) {
 
     var content = '';
     if ( tmce && tinyMCE.get( 'course_description' ) ) {
-        content = tinyMCE.get( 'course_description' ).getContent();
+        if (jQuery("#wp-course_description-wrap").hasClass("tmce-active")){
+            content = tinyMCE.get( 'course_description' ).getContent();
+        }else{
+            content = $( '[name=course_description]' ).val();
+        }
     } else {
         content = $( '[name=course_description]' ).val();
     }
