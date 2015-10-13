@@ -162,7 +162,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			
 			
 			$this->mp_file = '';
-			
 
 			// Initiate sessions
 			if ( ! session_id() ) {

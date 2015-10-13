@@ -536,7 +536,6 @@ class CoursePress_Capabilities {
 
 		
 		return false;
-		
 	}
 
 	/**
