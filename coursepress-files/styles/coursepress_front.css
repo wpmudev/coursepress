@@ -195,6 +195,12 @@
     float: left;
 }
 
+.module-container .upload-progress:after {
+    display: block;
+    clear:both;
+    width: 100%;
+}
+
 .module-container .upload-progress .invalid-extension {
     color: #ff6666;
 }
@@ -947,6 +953,90 @@ ul.notification-archive-list {
     padding:0 0 0.4em 0;
     vertical-align: middle;
 }
+
+.unit-archive-single ul, .unit-archive-single li {
+    margin: 0;
+    padding: 0;
+    font-weight: lighter;
+}
+.unit-archive-single li {
+    min-height: unset;
+}
+
+.unit-archive-single .section-title {
+    font-style: oblique;
+    font-weight: normal;
+}
+
+.unit-archive-single .module-title {
+
+}
+
+.coursepress-focus-view {
+    /*height: 100vh;*/
+}
+
+.coursepress-focus-view .focus-nav-prev,
+.coursepress-focus-view .focus-nav-next {
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.coursepress-focus-view .focus-nav-prev {
+}
+.coursepress-focus-view .focus-nav-next {
+    float: right;
+}
+
+.coursepress-focus-view .focus-nav-prev:hover,
+.coursepress-focus-view .focus-nav-next:hover {
+}
+
+.coursepress-focus-view .coursepress-breadcrumbs {
+    border-bottom: 3px solid rgba( 0,0,0,0.2);
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.coursepress-focus-view .coursepress-breadcrumbs a.crumb {
+    text-decoration: none;
+    border: none;
+}
+
+.coursepress-focus-view .breadcrumb-milestone {
+    display: inline-block;
+}
+
+.coursepress-focus-view .breadcrumb-milestone:after {
+    font-family: dashicons;
+    content: "\f139";
+    vertical-align: bottom;
+    position: relative;
+    top: 1px;
+}
+
+.coursepress-focus-view .focus-nav {
+    clear: both;
+    display: block;
+}
+
+.coursepress-focus-view .loader {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    display: block;
+}
+
+.coursepress-focus-view .loader .fa {
+    margin: 0 auto;
+    font-size: 2em;
+}
+
+.coursepress-focus-view .loader.hidden {
+    display: none;
+}
+
 
 /*.student-settings.login-form .half-left,*/
 /*.student-settings.signup-form .half-left,*/

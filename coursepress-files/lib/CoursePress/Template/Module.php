@@ -151,7 +151,7 @@ class CoursePress_Template_Module {
 			$url = $attributes['zip_url'];
 
 			$url = CoursePress_Helper_Utility::encode( $url );
-			$url = trailingslashit( home_url() ) . '?oacpf=' . $url . '&file=' . $attributes['primary_file'];
+			$url = trailingslashit( home_url() ) . '?oacpf=' . $url . '&module=' . $module->ID . '&file=' . $attributes['primary_file'];
 
 			$link_text = isset( $attributes['link_text'] ) ? $attributes['link_text'] : $module->post_title;
 			$content .= '<div class="module-content">

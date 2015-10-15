@@ -152,6 +152,25 @@ class CoursePress_Model_Unit {
 		return $status['available'];
 	}
 
+	public static function get_page_meta( $unit_id, $item_id ) {
+
+		$unit_id = is_object( $unit_id ) ? $unit_id->ID : (int) $unit_id;
+
+		$meta = get_post_meta( $unit_id );
+		$titles = isset( $meta['page_title'] ) && ! empty ( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
+		$descriptions = isset( $meta['page_description'] ) && ! empty ( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
+		$images = isset( $meta['page_feature_image'] ) && ! empty ( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
+		$visibilities = isset( $meta['show_page_title'] ) && ! empty ( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
+
+		return array(
+			'title' => $titles[ 'page_' . $item_id ],
+			'description' => $descriptions[ 'page_' . $item_id ],
+			'feature_image' => $images[ 'page_' . $item_id ],
+			'visible' => $visibilities[ ( $item_id - 1 ) ],
+		);
+
+	}
+
 	public static function get_unit_availability_status( $course, $unit, $previous_unit ) {
 
 		if ( ! is_object( $unit ) ) {

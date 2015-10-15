@@ -207,6 +207,7 @@ class CoursePress_Helper_JavaScript {
 				'response_fail_message'      => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
 				'current_course'             => CoursePress_Helper_Utility::the_course( true ),
 				'course_url'                 => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
+				'home_url'                   => home_url(),
 				'current_student'            => get_current_user_id(),
 				'workbook_view_answer'       => __( 'View', CoursePress::TD ),
 				'signup_errors'              => array(
@@ -244,6 +245,9 @@ class CoursePress_Helper_JavaScript {
 				'backbone',
 				'password-strength-meter'
 			), CoursePress_Core::$version );
+
+			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/font-awesome.min.css';
+			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress_Core::$version );
 
 		}
 

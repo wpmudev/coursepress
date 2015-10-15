@@ -617,18 +617,41 @@ class CoursePress_Model_Course {
 
 		foreach( $query->posts as $post ) {
 
+			$previous_parent = 0;
+			$previous_meta = array();
 			if( $module_cpt == $post->post_type ) {
 				$post->module_order = get_post_meta( $post->ID, 'module_order', true );
-				$pages = get_post_meta( $post->post_parent, 'page_title', true );
+
+				if( $previous_parent !== $post->post_parent ) {
+					$meta = get_post_meta( $post->post_parent );
+					$previous_meta = $meta;
+				} else {
+					$meta = $previous_meta;
+				}
+
+				$titles = isset( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
+				$descriptions = isset( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
+				$feature_images = isset( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
+				$visibilities = isset( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
+
 				$page = get_post_meta( $post->ID, 'module_page', true );
 				$page = ! empty( $page ) ? $page : 1;
-				$page_title = ! empty( $pages ) && isset( $pages[ 'page_'.$page ] ) ? esc_html( $pages[ 'page_'.$page ] ) : '';
+				$page_title = ! empty( $titles ) && isset( $titles[ 'page_'.$page ] ) ? esc_html( $titles[ 'page_'.$page ] ) : '';
+				$page_description = ! empty( $descriptions ) && isset( $descriptions[ 'page_'.$page ] ) ? $descriptions[ 'page_'.$page ] : '';
+				$page_image = ! empty( $feature_images ) && isset( $feature_images[ 'page_'.$page ] ) ? $feature_images[ 'page_'.$page ] : '';
+				$page_visibility = ! empty( $visibilities ) && isset( $visibilities[ ( $page - 1 ) ] ) ? $visibilities[ ( $page - 1 ) ] : false;
 
-				$path = $post->post_parent . '/pages/' . $page . '/title';
-				CoursePress_Helper_Utility::set_array_val( $combine, $path, $page_title );
+				$path = $post->post_parent . '/pages/' . $page;
+				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/title', $page_title );
+				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/description', $page_description );
+				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/feature_image', $page_image );
+				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/visible', $page_visibility );
 
 				$path = $post->post_parent . '/pages/' . $page . '/modules/' . $post->ID;
 				CoursePress_Helper_Utility::set_array_val( $combine, $path, $post );
+
+				$previous_parent = $post->post_parent;
+
 			} elseif( $unit_cpt == $post->post_type ) {
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
 				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );

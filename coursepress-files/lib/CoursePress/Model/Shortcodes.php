@@ -2104,6 +2104,7 @@ class CoursePress_Model_Shortcodes {
 
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
+			'with_modules' => 'true'
 		), $atts, 'unit_archive_list' ) );
 
 		$course_id = (int) $course_id;
@@ -2111,14 +2112,22 @@ class CoursePress_Model_Shortcodes {
 			return '';
 		}
 
+		$with_modules = CoursePress_Helper_Utility::fix_bool( $with_modules );
+
 		$student_id = get_current_user_id();
 		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		$content = '';
 
-		$unit_status = current_user_can( 'manage_options' ) ? array( 'publish', 'draft' ) : array( 'publish' );
-		$units       = CoursePress_Model_Course::get_units( CoursePress_Helper_Utility::the_course( true ), $unit_status );
+		$unit_status = current_user_can( 'manage_options' ) || $is_instructor ? array( 'publish', 'draft' ) : array( 'publish' );
+		if( ! $with_modules ) {
+			$units = CoursePress_Model_Course::get_units( CoursePress_Helper_Utility::the_course( true ), $unit_status );
+		} else {
+			$units = CoursePress_Model_Course::get_units_with_modules( $course_id, $unit_status );
+			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
+		}
+
 
 		$content .= '<div class="unit-archive-list-wrapper">';
 
@@ -2132,12 +2141,23 @@ class CoursePress_Model_Shortcodes {
 
 		foreach ( $units as $unit ) {
 
-			$unit_id          = $unit->ID;
+			$the_unit = $with_modules ? $unit['unit'] : $unit;
+
+			$unit_id          = $the_unit->ID;
+
 			$previous_unit_id = false;
 			if ( $counter == 0 ) {
 				$previous_unit = false;
 			} else {
-				$previous_unit    = $units[ $counter - 1 ];
+
+				if ( $with_modules ) {
+					$keys = array_keys( $units );
+					$index = $keys[ $counter - 1 ];
+				} else {
+					$index = $counter - 1;
+				}
+
+				$previous_unit    = $with_modules ? $units[ $index ]['unit'] : $units[ $index ];
 				$previous_unit_id = $previous_unit->ID;
 			}
 			$counter += 1;
@@ -2151,8 +2171,7 @@ class CoursePress_Model_Shortcodes {
 			$additional_class    = '';
 			$additional_li_class = '';
 
-			$unit_id           = $unit->ID;
-			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $unit, $previous_unit );
+			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $the_unit, $previous_unit );
 
 			if ( ! $is_unit_available ) {
 				$additional_class    = 'locked-unit';
@@ -2166,13 +2185,56 @@ class CoursePress_Model_Shortcodes {
 				}
 			}
 
-			$post_name = empty( $unit->post_name ) ? $unit->ID : $unit->post_name;
+			$post_name = empty( $the_unit->post_name ) ? $the_unit->ID : $the_unit->post_name;
 			$content .= '
 				<li class="' . esc_attr( $additional_li_class ) . '">
 					<div class="unit-archive-single">
 						' . $unit_progress . '
-						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $unit->post_title . ' ' . ( $unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '' ) . '</a>
-						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' ) . '
+						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $the_unit->post_title . ' ' . ( $the_unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '' ) . '</a>
+						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' );
+
+			if( $with_modules ) {
+
+				$structure_level = CoursePress_Model_Course::get_setting( $course_id, 'structure_level', 'unit' );
+
+				$module_table = '<ul class="unit-archive-module-wrapper">';
+
+				$unit['pages'] = isset( $unit['pages'] ) ? $unit['pages'] : array();
+
+				foreach( $unit['pages'] as $page_number => $page ) {
+
+					$heading_visible = isset( $page['visible'] ) && $page['visible'];
+
+					$module_table .= '<li>';
+
+					if ( $heading_visible ) {
+						$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', CoursePress::TD ) ) . '</div>';
+					}
+
+					$module_table .= '<ul class="module-list">';
+
+					foreach( $page['modules'] as $module ) {
+
+						$module_table .= '<li class="module">';
+
+						$attributes = CoursePress_Model_Module::attributes( $module->ID );
+						$title = ! empty( $module->post_title ) ? esc_html( $module->post_title ) : esc_html__( 'Mod', CoursePress::TD ) . '<br />';
+						$module_table .= '<div class="module-title" data-id="' . $module->ID . '">' . $title . '</div>';
+
+						$module_table .= '</li>';
+					}
+
+					$module_table .= '</ul>';
+					$module_table .= '</li>';
+				}
+
+				$module_table .= '</ul>';
+
+				$content .= $module_table;
+
+			}
+
+			$content .= '
 					</div>
 				</li>
 			';

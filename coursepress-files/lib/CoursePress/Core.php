@@ -323,6 +323,15 @@ class CoursePress_Core {
 		$query_vars[]	 = 'new_message';
 		$query_vars[]	 = 'sent_messages';
 		$query_vars[]	 = 'paged';
+		$query_vars[]	 = 'course';
+		$query_vars[]	 = 'unit';
+		$query_vars[]	 = 'type';
+		$query_vars[]	 = 'item';
+		$query_vars[]	 = 'coursepress_focus';
+		//$query_vars[]	 = 'focus_course';
+		//$query_vars[]	 = 'focus_unit';
+		//$query_vars[]	 = 'focus_type';
+		//$query_vars[]	 = 'focus_item';
 
 		return $query_vars;
 	}
@@ -331,6 +340,19 @@ class CoursePress_Core {
 
 	public static function add_rewrite_rules( $rules ) {
 		$new_rules = array();
+
+		// Special Rules for CoursePress Focus mode
+		$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]&item=$matches[4]'; // Matches item
+		$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]'; // Matches type
+		$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]'; // Matches unit
+		$new_rules[ '^coursepress_focus/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&course=$matches[1]'; // Matches course
+		$new_rules[ '^coursepress_focus/.*?$' ]  = 'index.php?coursepress_focus=1';  // Not useful practically
+
+		//$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&focus_course=$matches[1]&focus_unit=$matches[2]&focus_type=$matches[3]&focus_item=$matches[4]'; // Matches item
+		//$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&focus_course=$matches[1]&focus_unit=$matches[2]&focus_type=$matches[3]'; // Matches type
+		//$new_rules[ '^coursepress_focus/([^/]*)/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&focus_course=$matches[1]&focus_unit=$matches[2]'; // Matches unit
+		//$new_rules[ '^coursepress_focus/([^/]*)/?$' ]  = 'index.php?coursepress_focus=1&focus_course=$matches[1]'; // Matches course
+		//$new_rules[ '^coursepress_focus/.*?$' ]  = 'index.php?coursepress_focus=1';  // Not useful practically
 
 		//$new_rules[ '^' . self::get_slug( 'course' )  ]                  = 'index.php?page_id=-1&course_category';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/page/([^/]*)/?' ]     = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
@@ -356,11 +378,9 @@ class CoursePress_Core {
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/page/([^/]*)/?' ]     = 'index.php?page_id=-1&course_category=all&paged=$matches[1]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/?$' ]  = 'index.php?page_id=-1&course_category=all';
 
-
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/file/([^/]*)/'  ]                           = 'wp-content/uploads/$matches[1]';
-
 
 		//Remove potential conflicts between single and virtual page on single site
 		/* if ( !is_multisite() ) {

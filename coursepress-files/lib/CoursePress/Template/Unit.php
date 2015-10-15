@@ -2,11 +2,43 @@
 
 class CoursePress_Template_Unit {
 
+	// Focus Mode
+	public static function unit_with_modules_() {
+
+		$course = CoursePress_Helper_Utility::the_course();
+		$course_id = $course->ID;
+		$unit_id = CoursePress_Helper_Utility::the_post( true );
+		$page = (int) CoursePress_Helper_Utility::the_post_page();
+
+		$student_id = get_current_user_id();
+		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		// Page access
+		$preview = CoursePress_Model_Course::previewability( $course_id );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+
+		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
+		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
+		if( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
+			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
+		}
+
+		// Student Tracking:
+		if( $enrolled ) {
+			//CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
+			CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit_id, $page );
+		}
+
+		return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"></div>';
+	}
+
 	public static function unit_with_modules() {
 
 		$course = CoursePress_Helper_Utility::the_course();
 		$course_id = $course->ID;
 		$unit = CoursePress_Helper_Utility::the_post();
+		$unit_id = $unit->ID;
 		$page = (int) CoursePress_Helper_Utility::the_post_page();
 
 		$student_id = get_current_user_id();
@@ -23,6 +55,14 @@ class CoursePress_Template_Unit {
 		if( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
 			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
 		}
+
+		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+
+		// Let BackboneJS take over if its in Focus mode
+		if( 'focus' === $view_mode ) {
+			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"></div>';
+		}
+
 
 		$page_titles = get_post_meta( $unit->ID, 'page_title', true );
 		$show_page_titles = get_post_meta( $unit->ID, 'show_page_title', true );
@@ -45,7 +85,7 @@ class CoursePress_Template_Unit {
 			$page_title = isset( $page_titles[ 'page_' . $page ] ) ? CoursePress_Helper_Utility::filter_content( $page_titles[ 'page_' . $page ] ) : '';
 			if( ! empty( $page_title ) ) {
 
-				$content .= '<h3 class="page-title">' . $page_title . '</h3>';
+				$content .= '<div class="unit-page-header unit-section-header"><h3 class="page-title unit-section-title">' . $page_title . '</h3></div>';
 
 			}
 		}
@@ -75,7 +115,7 @@ class CoursePress_Template_Unit {
 
 		$url_path = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
 		            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
-		$content .= '<div class="pager">';
+		$content .= '<div class="pager unit-pager">';
 		for( $i = 1; $i <= $total_pages; $i++ ) {
 			$unit_url = $url_path . $i;
 			if( ( $enrolled || $is_instructor ) || ( ! $enrolled && ! $is_instructor && in_array( $i, $preview_pages ) ) || ( ! $enrolled && ! $is_instructor && ! is_array( $preview['structure'][ $unit->ID ] ) ) ) {

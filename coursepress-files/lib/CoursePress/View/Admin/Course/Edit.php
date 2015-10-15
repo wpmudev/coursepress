@@ -281,7 +281,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$setup_class = CoursePress_Model_Course::get_setting( $course_id, 'setup_step_2', '' );
 		$setup_class = (int) CoursePress_Model_Course::get_setting( $course_id, 'setup_marker', 0 ) === 1 ? $setup_class . ' setup_marker' : $setup_class;
 		$content     = '
-			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Description', CoursePress::TD ) . '
+			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Details', CoursePress::TD ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-2">
@@ -330,6 +330,23 @@ class CoursePress_View_Admin_Course_Edit {
 						' . $editor_html . '
 				</div>';
 
+		$content .= '
+				<div class="wide">
+						<label>' .
+			            esc_html__( 'Course View Mode', CoursePress::TD ) . '
+						</label>
+						<label class="checkbox">
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', CoursePress::TD ) . '<br />
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', CoursePress::TD ) . '<br />
+							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', CoursePress::TD ) . '</p>
+						</label>
+						<label class="checkbox">
+							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'structure_level', 'unit' ), 'unit' ) . ' value="unit">' . esc_html__( 'Unit list only', CoursePress::TD ) . '<br />
+							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'structure_level', 'section' ), 'section' ) . ' value="section">' . esc_html__( 'Expanded unit list', CoursePress::TD ) . '<br />
+							<p class="description">' . esc_html__( 'Choose if course Unit page shows units only or in expanded view.', CoursePress::TD ) . '</p>
+						</label>
+				</div>';
+
 		// Course Structure
 		$content .= '
 				<div class="wide">
@@ -346,6 +363,7 @@ class CoursePress_View_Admin_Course_Edit {
 							<input type="checkbox" name="meta_structure_show_duration" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'structure_show_duration', true ) ) . ' />
 							<span>' . esc_html__( 'Display Time Estimates for Units and Lessons', CoursePress::TD ) . '</span>
 						</label>
+
 
 						<table class="course-structure-tree">
 							<thead>

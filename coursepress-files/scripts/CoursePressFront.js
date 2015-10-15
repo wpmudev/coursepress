@@ -62,6 +62,151 @@ var CoursePress = CoursePress || {};
         return strength;
     }
 
+    // Actions and Filters
+    CoursePress.actions = CoursePress.actions || {}; // Registered actions
+    CoursePress.filters = CoursePress.filters || {}; // Registered filters
+
+    /**
+     * Add a new Action callback to CoursePress.actions
+     *
+     * @param tag The tag specified by do_action()
+     * @param callback The callback function to call when do_action() is called
+     * @param priority The order in which to call the callbacks. Default: 10 (like WordPress)
+     */
+    CoursePress.add_action = function( tag, callback, priority ) {
+
+        if( typeof priority === "undefined" ) {
+            priority = 10;
+        }
+
+        // If the tag doesn't exist, create it.
+        CoursePress.actions[ tag ] = CoursePress.actions[ tag ] || [];
+        CoursePress.actions[ tag ].push( { priority: priority, callback: callback } );
+
+    }
+
+    /**
+     * Add a new Filter callback to CoursePress.filters
+     *
+     * @param tag The tag specified by apply_filters()
+     * @param callback The callback function to call when apply_filters() is called
+     * @param priority Priority of filter to apply. Default: 10 (like WordPress)
+     */
+    CoursePress.add_filter = function( tag, callback, priority ) {
+
+        if( typeof priority === "undefined" ) {
+            priority = 10;
+        }
+
+        // If the tag doesn't exist, create it.
+        CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+        CoursePress.filters[ tag ].push( { priority: priority, callback: callback } );
+
+    }
+
+    /**
+     * Remove an Anction callback from CoursePress.actions
+     *
+     * Must be the exact same callback signature.
+     * Warning: Anonymous functions can not be removed.
+
+     * @param tag The tag specified by do_action()
+     * @param callback The callback function to remove
+     */
+    CoursePress.remove_action = function( tag, callback ) {
+
+        CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+
+        CoursePress.filters[ tag ].forEach( function( filter, i ) {
+            if( filter.callback === callback ) {
+                CoursePress.filters[ tag ].splice(i, 1);
+            }
+        } );
+    }
+
+    /**
+     * Remove a Filter callback from CoursePress.filters
+     *
+     * Must be the exact same callback signature.
+     * Warning: Anonymous functions can not be removed.
+
+     * @param tag The tag specified by apply_filters()
+     * @param callback The callback function to remove
+     */
+    CoursePress.remove_filter = function( tag, callback ) {
+
+        CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+
+        CoursePress.filters[ tag ].forEach( function( filter, i ) {
+            if( filter.callback === callback ) {
+                CoursePress.filters[ tag ].splice(i, 1);
+            }
+        } );
+    }
+
+    /**
+     * Calls actions that are stored in CoursePress.actions for a specific tag or nothing
+     * if there are no actions to call.
+     *
+     * @param tag A registered tag in Hook.actions
+     * @options Optional JavaScript object to pass to the callbacks
+     */
+    CoursePress.do_action = function( tag, options ) {
+
+        var actions = [];
+
+        if( typeof CoursePress.actions[ tag ] !== "undefined" && CoursePress.actions[ tag ].length > 0 ) {
+
+            CoursePress.actions[ tag ].forEach( function( hook ) {
+
+                actions[ hook.priority ] = actions[ hook.priority ] || [];
+                actions[ hook.priority ].push( hook.callback );
+
+            } );
+
+            actions.forEach( function( hooks ) {
+
+                hooks.forEach( function( callback ) {
+                    callback( options );
+                } );
+
+            } );
+        }
+
+    }
+
+    /**
+     * Calls filters that are stored in CoursePress.filters for a specific tag or return
+     * original value if no filters exist.
+     *
+     * @param tag A registered tag in Hook.filters
+     * @options Optional JavaScript object to pass to the callbacks
+     */
+    CoursePress.apply_filters = function( tag, value, options ) {
+
+        var filters = [];
+
+        if( typeof CoursePress.filters[ tag ] !== "undefined" && CoursePress.filters[ tag ].length > 0 ) {
+
+            CoursePress.filters[ tag ].forEach( function( hook ) {
+
+                filters[ hook.priority ] = filters[ hook.priority ] || [];
+                filters[ hook.priority ].push( hook.callback );
+            } );
+
+            filters.forEach( function( hooks ) {
+
+                hooks.forEach( function( callback ) {
+                    value = callback( value, options );
+                } );
+
+            } );
+        }
+
+        return value;
+    }
+
+
     CoursePress.Models.CourseFront = Backbone.Model.extend( {
         url: _coursepress._ajax_url + '?action=course_front',
         parse: function ( response, xhr ) {
@@ -119,6 +264,9 @@ var CoursePress = CoursePress || {};
     CoursePress.Post = new CoursePress.Models.Post();
 
     CoursePress.Enrollment = CoursePress.Enrollment || {};
+
+    CoursePress.Page = CoursePress.Page || {};
+
     CoursePress.Enrollment.dialog = CoursePress.Enrollment.dialog || {}
 
     // Prepare the enrollment modal
@@ -530,6 +678,23 @@ var CoursePress = CoursePress || {};
     }
 
     function bind_buttons() {
+
+        // Section Title Click
+        $( '.unit-archive-list-wrapper .section-title' ).on( 'click', function( e ) {
+            var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
+            var section_hash = 'section-' + $(this).attr('data-id');
+
+            location.href = link + '#' + section_hash;
+        } );
+
+        // Module Title Click
+        $( '.unit-archive-list-wrapper .module-title' ).on( 'click', function( e ) {
+            var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
+            var mod_hash = 'module-' + $(this).attr('data-id');
+
+            location.href = link + '#' + mod_hash;
+        } );
+
 
         $( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( e ) {
            var target = e.currentTarget;
@@ -943,22 +1108,188 @@ var CoursePress = CoursePress || {};
 
     }
 
+    CoursePress.FocusMode = CoursePress.FocusMode || {};
 
-    $( document ).ready( function ( $ ) {
 
-        create_modal_model();
+    CoursePress.FocusMode.bind_focus_nav = function() {
+        $( '.coursepress-focus-view .focus-nav-prev' ).off('click');
+        $( '.coursepress-focus-view .focus-nav-next' ).off('click');
+        $( '.coursepress-focus-view a.breadcrumb-course-unit-section.crumb' ).off('click');
+
+        $( '.coursepress-focus-view .focus-nav-prev, .coursepress-focus-view .focus-nav-next' ).on('click', function( e ) {
+            var type = $( this ).attr('data-type');
+            var item_id = $( this ).attr('data-id');
+
+            $( '.coursepress-focus-view .loader' ).removeClass('hidden');
+            $( '.coursepress-focus-view .focus-main' ).hide( 'fast');
+
+            var offset = 0;
+            if( $('.entry-title' ).length > 0 ) {
+                offset = $('.entry-title' ).offset().top - 32;
+            } else {
+                offset = 32;
+            }
+            offset = CoursePress.apply_filters( 'coursepress_focus_top_offset', offset );
+
+            $( 'body,html' ).animate( { scrollTop: offset, duration: 100 } );
+
+            CoursePress.FocusMode.load_focus_item( type, item_id );
+        });
+
+        $( 'a.breadcrumb-course-unit-section.crumb, a.breadcrumb-course-unit.crumb' ).on('click', function( e ) {
+            var type = 'section'
+            var item_id = $( this ).attr('data-id');
+
+            $( '.coursepress-focus-view .loader' ).removeClass('hidden');
+            $( '.coursepress-focus-view .focus-main' ).hide( 'fast');
+
+            var offset = 0;
+            if( $('.entry-title' ).length > 0 ) {
+                offset = $('.entry-title' ).offset().top - 32;
+            } else {
+                offset = 32;
+            }
+            offset = CoursePress.apply_filters( 'coursepress_focus_top_offset', offset );
+
+            $( 'body,html' ).animate( { scrollTop: offset, duration: 100 } );
+
+            CoursePress.FocusMode.load_focus_item( type, item_id );
+        });
+
+    }
+
+    CoursePress.FocusMode.load_focus_item = function( type, item_id ) {
+
+        CoursePress.Post.prepare( 'course_front', 'focus:' );
+        CoursePress.Post.set( 'action', 'get_unit_' + type );
+
+        if( typeof item_id === 'undefined' || item_id.length === 0 ) {
+            item_id = 1;
+        }
+
+        var element = $('.coursepress-focus-view' );
+
+        var data = {
+            course_id: $( element ).attr('data-course'),
+            unit_id: $( element ).attr('data-unit'),
+            type: type,
+            item_id: item_id
+        };
+
+        $('.coursepress-focus-view' ).load( _coursepress.home_url + '/coursepress_focus/' + data.course_id + '/' + data.unit_id + '/' + data.type + '/' + data.item_id, function() {
+            CoursePress.FocusMode.bind_focus_nav();
+            CoursePress.Page.init();
+
+            // Audio Player Fix
+            $( 'audio' ).css( 'visibility', 'visible' );
+            $( 'audio' ).css( 'outline', 'none' );
+
+            // ScrollTop
+            //$( 'body,html' ).scrollTop( $( '.coursepress-focus-view' ).offset().top);
+            //$( 'body,html' ).scrollTop(0);
+            //$( 'body,html' ).animate( { scrollTop: $( '.coursepress-focus-view' ).offset().top - 32, duration: 200 } );
+
+
+        } );
+
+        //
+        //CoursePress.Post.set( 'data', data );
+        //CoursePress.Post.save();
+        //
+        //// Manual hook here as this is not a step in the modal templates
+        //CoursePress.Post.off( 'coursepress:focus:get_unit_' + type + '_success' );
+        //CoursePress.Post.on( 'coursepress:focus:get_unit_' + type + '_success', function ( data ) {
+        //    // Update nonce
+        //    //$( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
+        //    console.log(data.section_info.content);
+        //    //if( typeof data['callback'] !== 'undefined' ) {
+        //    //    var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+        //    //    if ( typeof fn === 'function' ) {
+        //    //        console.log('callback is next....' + data['callback'] );
+        //    //        fn( data );
+        //    //        return;
+        //    //    }
+        //    //}
+        //} );
+        //
+        //CoursePress.Post.off( 'coursepress:focus:get_unit_' + type + '_error' );
+        //CoursePress.Post.on( 'coursepress:focus:get_unit_' + type + '_error', function ( data ) {
+        //    // Update nonce
+        //    //$( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
+        //    console.log(data);
+        //    //if( typeof data['callback'] !== 'undefined' ) {
+        //    //    var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+        //    //    if ( typeof fn === 'function' ) {
+        //    //        console.log('callback is next....' + data['callback'] );
+        //    //        fn( data );
+        //    //        return;
+        //    //    }
+        //    //}
+        //} );
+
+    }
+
+    CoursePress.FocusMode.init_focus_mode = function() {
+
+        var is_module = location.hash.match(/^#module-/ ) !== null;
+        var is_section = location.hash.match(/^#section-/) !== null;
+        var section = 1;
+
+        if( ! is_module && ! is_section ) {
+            is_section = true;
+        }
+
+        if( is_module ) {
+            var item_id =  location.hash.replace('#module-', '');
+            CoursePress.FocusMode.load_focus_item( 'module', item_id );
+        }
+
+        if( is_section ) {
+            var item_id = location.hash;
+
+            if( typeof item_id === 'undefined' || item_id.length === 0 ) {
+                var element = $('.coursepress-focus-view');
+                item_id = $( element ).attr('data-page');
+            }
+
+            item_id = item_id.replace( '#section-', '' );
+
+            CoursePress.FocusMode.load_focus_item( 'section', item_id );
+        }
+
+    }
+
+    function bind_focus_mode() {
+        var focus_active = $('.coursepress-focus-view');
+
+        if( typeof focus_active !== 'undefined' && focus_active.length > 0 ) {
+            CoursePress.FocusMode.init_focus_mode();
+        }
+    }
+
+    CoursePress.Page.init = function() {
 
         bind_buttons();
 
         bind_module_actions();
 
-        bind_enrollment_actions();
-
-        course_completion();
-
         bind_course_discussions();
 
         external();
+    };
+
+
+    $( document ).ready( function ( $ ) {
+
+        CoursePress.Page.init();
+
+        create_modal_model();
+
+        bind_focus_mode();
+
+        course_completion();
+
+        bind_enrollment_actions();
 
     } );
 

@@ -583,6 +583,8 @@ class CoursePress_Helper_Utility {
 
 			$requested_file	 = self::decode( $_GET[ 'oacpf' ] );
 
+			$module_id = isset( $_GET[ 'module' ] ) ? (int) $_GET['module'] : false;
+			$append_url = ! empty( $module_id ) ? '#module-' . $module_id : '';
 
 			// Unzipping the magic
 			$upload_dir = wp_upload_dir();
@@ -617,7 +619,7 @@ class CoursePress_Helper_Utility {
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
 
-			echo '<a href="' . esc_url_raw( wp_get_referer() ) . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', CoursePress::TD ) . '</a>';
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', CoursePress::TD ) . '</a>';
 			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			exit();
 		}

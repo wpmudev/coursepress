@@ -190,7 +190,7 @@ var CoursePress = CoursePress || {};
             dateFormat: 'yy-mm-dd'
             //firstDay: coursepress.start_of_week
         } );
-        $( '.date' ).off( 'click' );
+        $( '.date' ).off( 'sync' );
         $( '.date' ).on( 'click', function ( event ) {
             //if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {
             $( this ).find( '.dateinput' ).datepicker( "show" );
@@ -907,6 +907,14 @@ var CoursePress = CoursePress || {};
             this.set( 'meta', meta );
             this.trigger( 'change' );
         },
+        set_page_image: function ( index, image ) {
+            var meta = this.get( 'meta' ) || {};
+
+            meta[ 'page_feature_image' ] = meta[ 'page_feature_image' ] || {};
+            meta[ 'page_feature_image' ][ 'page_' + index ] = image;
+            this.set( 'meta', meta );
+            this.trigger( 'change' );
+        },
         set_page_visibility: function ( index, value ) {
             var meta = this.get( 'meta' ) || {};
             var idx = index - 1;
@@ -932,10 +940,18 @@ var CoursePress = CoursePress || {};
                 return '';
             }
         },
+        get_page_image: function ( index ) {
+            var meta = this.get( 'meta' ) || {};
+            if ( meta[ 'page_feature_image' ] ) {
+                return meta[ 'page_feature_image' ][ 'page_' + index ];
+            } else {
+                return '';
+            }
+        },
         get_page_visibility: function ( index ) {
             var meta = this.get( 'meta' ) || {};
             if ( meta[ 'show_page_title' ] ) {
-                return meta[ 'show_page_title' ][ index ];
+                return meta[ 'show_page_title' ][ ( index - 1 ) ];
             } else {
                 return true;
             }
@@ -1164,7 +1180,8 @@ var CoursePress = CoursePress || {};
 
         },
         model_saved: function ( model, response, options ) {
-
+            CoursePress.UnitBuilder.activeModuleRef = model.cid;
+            CoursePress.UnitBuilder.gotoAdded = true;
         },
         process_changed: function () {
             CoursePress.UnitBuilder.activeModuleRef = this.cid;
@@ -1486,8 +1503,9 @@ var CoursePress = CoursePress || {};
 
                 var unit = this.parentView.unit_collection._byId[ this.parentView.activeUnitRef ];
                 var show_page = unit.get_page_visibility( this.parentView.activePage );
+
                 // Fix boolean
-                if ( show_page ) {
+                if ( show_page || false === show_page ) {
                     show_page = ( _.isString( show_page ) && ( 'yes' === show_page.toLowerCase() || 'on' === show_page.toLowerCase() ) ) || 1 === parseInt( show_page ) || true === show_page;
                 } else {
                     show_page = true;
@@ -1496,7 +1514,7 @@ var CoursePress = CoursePress || {};
                 this.pagerViewInfo.template_variables = {
                     page_label_text: unit.get_page_title( this.parentView.activePage ),
                     page_description: unit.get_page_description( this.parentView.activePage ),
-                    page_feature_image: '',
+                    page_feature_image: unit.get_page_image( this.parentView.activePage ),
                     page_label_checked: show_page ? 'checked="checked"' : ''
                 };
 
@@ -1516,6 +1534,16 @@ var CoursePress = CoursePress || {};
 
                 CoursePress.Helpers.Module.refresh_ui();
                 this.updateSectionEditor();
+
+                $( '#page_feature_image' ).val( this.pagerViewInfo.template_variables.page_feature_image );
+
+                if( CoursePress.UnitBuilder.gotoAdded === true ) {
+                    CoursePress.UnitBuilder.gotoAdded = false;
+                    var last_added = $( '[data-cid=' + CoursePress.UnitBuilder.activeModuleRef + ']' );
+                    $( 'body,html' ).scrollTop( $( last_added ).offset().top - 80 );
+
+                }
+
             }
 
             return this;
@@ -1531,7 +1559,19 @@ var CoursePress = CoursePress || {};
             'keyup .module-title-text': 'updateUIHeading',
             'click .unit-builder-pager ul li': 'changePage',
             'click .module-component .add-item': 'addAnswer',
-            'click .module-component .remove-item': 'removeAnswer'
+            'click .module-component .remove-item': 'removeAnswer',
+            'change #page_feature_image': 'pageFeatureImageChange',
+            'change [name=page_feature_image-button]': 'pageFeatureImageChange'
+        },
+        pageFeatureImageChange: function( e ) {
+            var el = $( e.currentTarget );
+            var el_val = $( '#page_feature_image' ).val();
+            var page = this.parentView.activePage;
+
+            var parent = $( $( el ).parents( '.unit-builder-content' )[ 0 ] ).find( '.unit-detail' )[0];
+            var unit = this.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
+
+            unit.set_page_image( page, el_val );
         },
         add_element: function ( e ) {
             var el = e.currentTarget;
@@ -1547,10 +1587,9 @@ var CoursePress = CoursePress || {};
 
             module.save();
             this.parentView.module_collection.add( module );
-            $( '.section.unit-builder-modules' ).append( CoursePress.Helpers.Module.render_module( module, (count + 1) ) );
 
-            CoursePress.Helpers.Module.refresh_ui();
-
+            //$( '.section.unit-builder-modules' ).append( CoursePress.Helpers.Module.render_module( module, (count + 1) ) );
+            //CoursePress.Helpers.Module.refresh_ui();
         },
         fieldChanged: function ( e ) {
             var el = $( e.currentTarget );
@@ -1810,7 +1849,7 @@ var CoursePress = CoursePress || {};
         },
         events: {
             'change .page-info-holder input': 'fieldChanged',
-            'keyup .unit-detail #page_description_1_1': 'editorChanged'
+            'keyup .unit-detail #page_description_1_1': 'editorChanged',
         },
         render: function ( options ) {
             var template = _.template( $( "#unit-builder-pager-info-template" ).html(), options );

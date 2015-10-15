@@ -163,7 +163,7 @@ class CoursePress_Model_Module {
 
 	}
 
-	public static function attributes( $module ) {
+	public static function attributes( $module, $meta = false ) {
 
 		if( is_object( $module ) ) {
 			$module_id = $module->ID;
@@ -171,7 +171,7 @@ class CoursePress_Model_Module {
 			$module_id = (int) $module;
 		}
 
-		$meta = get_post_meta( $module_id );
+		$meta = empty( $meta ) ? get_post_meta( $module_id ) : $meta;
 
 		$legacy = self::legacy_map();
 		$module_type = isset( $meta['module_type'] ) ? $meta['module_type'][0] : false;
