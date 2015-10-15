@@ -1142,7 +1142,7 @@ class CoursePress_Model_Course {
 
 		$instructor_objects = array();
 		if( ! $objects ) {
-			return $instructors;
+			return array_filter( $instructors );
 		} else {
 			foreach( $instructors as $instructor ) {
 				$instructor_id = (int) $instructor;
@@ -1150,7 +1150,7 @@ class CoursePress_Model_Course {
 					$instructor_objects[] = get_userdata( $instructor_id );
 				}
 			}
-			return $instructor_objects;
+			return array_filter( $instructor_objects );
 		}
 
 	}
@@ -1207,11 +1207,14 @@ class CoursePress_Model_Course {
 			foreach( array_keys( $pages ) as $key ) {
 				list( $unit, $page ) = explode( '_', $key );
 				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/' . $page , true );
+				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/unit_has_previews' , true );
 			}
 
 			foreach( array_keys( $modules ) as $key ) {
 				list( $unit, $page, $module ) = explode( '_', $key );
 				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/' . $page . '/' . $module, true );
+				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/' . $page . '/page_has_previews', true );
+				CoursePress_Helper_Utility::set_array_val( $preview_structure, $unit . '/unit_has_previews' , true );
 			}
 
 			self::$previewability['structure'] = $preview_structure;
@@ -1226,7 +1229,161 @@ class CoursePress_Model_Course {
 		return self::$previewability;
 	}
 
-	static function by_name( $slug, $id_only ) {
+	public static function can_view_page( $course_id, $unit_id, $page = 1, $student_id = false ) {
+
+		if ( ! empty( self::$previewability ) ) {
+			$preview = self::$previewability;
+		} else {
+			$preview = self::previewability( $course_id );
+		}
+
+		if( false === $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
+		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
+		if( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	public static function can_view_module( $course_id, $unit_id, $module_id, $page = 1, $student_id = false ) {
+
+		if ( ! empty( self::$previewability ) ) {
+			$preview = self::$previewability;
+		} else {
+			$preview = self::previewability( $course_id );
+		}
+
+		if( false === $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+		$can_preview_module = in_array( $module_id, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
+		if( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static function can_view_unit( $course_id, $unit_id, $student_id = false ) {
+
+		if ( ! empty( self::$previewability ) ) {
+			$preview = self::$previewability;
+		} else {
+			$preview = self::previewability( $course_id );
+		}
+
+		if( false === $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		$can_preview_unit = isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ]['unit_has_previews'] ) && $preview['structure'][ $unit_id ]['unit_has_previews'];
+		if( ! $enrolled && ! $can_preview_unit && ! $is_instructor ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static function next_accessible( $course_id, $unit_id, $preview, $current_module = false, $current_page = 1 ) {
+
+		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$next = false;
+		foreach( $preview['structure'][ $unit_id ] as $page_number => $page ) {
+
+			if( (int) $page_number === 0 || $page_number < $current_page ) {
+				continue;
+			}
+
+			if( is_array( $preview['structure'][ $unit_id ][ $page_number ] ) && $preview['structure'][ $unit_id ][ $page_number ]['page_has_previews'] ) {
+				unset( $preview['structure'][ $unit_id ][ $page_number ]['page_has_previews'] );
+				$modules = array_keys( $preview['structure'][ $unit_id ][ $page_number ] );
+				$index = false !== $current_module ? array_search( $current_module, $modules ) : 0;
+				$modules = false !== $current_module ? array_slice( $modules, $index + 1 ) : $modules;
+			}
+
+			foreach( $modules as $module_id ) {
+				if( false === $next ) {
+
+					if( 'focus' === $view_mode ) {
+						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						if( 'input' == $attributes['mode'] ) {
+							continue;
+						}
+					}
+
+					if( CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
+						$next = $module_id;
+					}
+
+				}
+			}
+
+		}
+
+		return $next;
+	}
+
+	public static function previous_accessible( $course_id, $unit_id, $preview, $current_module, $current_page = 1 ) {
+
+		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$prev = false;
+		foreach( $preview['structure'][ $unit_id ] as $page_number => $page ) {
+
+			if( (int) $page_number === 0 || $page_number < $current_page ) {
+				continue;
+			}
+
+			if( is_array( $preview['structure'][ $unit_id ][ $page_number ] ) && $preview['structure'][ $unit_id ][ $page_number ]['page_has_previews'] ) {
+				unset( $preview['structure'][ $unit_id ][ $page_number ]['page_has_previews'] );
+				$modules = array_keys( $preview['structure'][ $unit_id ][ $page_number ] );
+				$index = array_search( $current_module, $modules );
+				$modules = array_reverse( array_splice( $modules, 0, $index  ) );
+			}
+
+			foreach( $modules as $module_id ) {
+				if( false === $prev ) {
+
+					if( 'focus' === $view_mode ) {
+						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						if( 'input' == $attributes['mode'] ) {
+							continue;
+						}
+					}
+
+					if( CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
+						$prev = $module_id;
+					}
+
+				}
+			}
+
+		}
+
+		return $prev;
+
+	}
+
+	public static function by_name( $slug, $id_only ) {
 
 		$args = array(
 			'name'			 => $slug,

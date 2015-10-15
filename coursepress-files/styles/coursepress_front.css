@@ -966,10 +966,19 @@ ul.notification-archive-list {
 .unit-archive-single .section-title {
     font-style: oblique;
     font-weight: normal;
+    margin-left: 0px;
 }
 
 .unit-archive-single .module-title {
+    margin-left: 20px;
+}
 
+.unit-archive-single .module-title a,
+.unit-archive-single .section-title a {
+    text-decoration: none;
+    border: none;
+    display:block;
+    width: 100%;
 }
 
 .coursepress-focus-view {

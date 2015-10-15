@@ -940,45 +940,6 @@ class CoursePress_View_Front_Course {
 
 				break;
 
-			case 'get_unit_section':
-
-				$course_id  = (int) $data->data->course_id;
-				$unit_id  = (int) $data->data->unit_id;
-				$page  = (int) $data->data->item_id;
-
-				$meta = get_post_meta( $unit_id );
-				$titles = isset( $meta['page_title'] ) && ! empty ( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
-				$descriptions = isset( $meta['page_description'] ) && ! empty ( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
-				$images = isset( $meta['page_feature_image'] ) && ! empty ( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
-				$visibilities = isset( $meta['show_page_title'] ) && ! empty ( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
-
-				//require( ABSPATH . '/wp-load.php');
-
-				$template = '<div class="coursepress-dashboard-wrapper">
-					BOOO
-				</div>
-				';
-				$template = apply_filters( 'coursepress_template_focus_item', $template );
-
-
-				$json_data['section_info'] = array(
-					'title' => $titles[ 'page_' . $page ],
-					'description' => $descriptions[ 'page_' . $page ],
-					'feature_image' => $images[ 'page_' . $page ],
-					'visible' => $visibilities[ ( $page - 1 ) ],
-					'template' => do_shortcode( '[coursepress_focus_item course="' . $course_id . '" unit="' . $unit_id . '" type="section" item_id="'. $page .'"]')
-				);
-
-				$success = true;
-				break;
-
-			case 'get_unit_module':
-				//$data = CoursePress_Helper_Utility::object_to_array( $data );
-				//$data['mode'] = 'MODULE';
-				//$json_data = array_merge( $json_data, $data );
-				$success = true;
-				break;
-
 		}
 
 		if ( $success ) {

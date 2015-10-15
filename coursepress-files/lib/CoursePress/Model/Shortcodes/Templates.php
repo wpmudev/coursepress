@@ -313,7 +313,6 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$breadcrumbs = true;
 
-		$page = 0;
 		$page_count = count( $titles );
 
 		if( 'section' === $type ) {
@@ -346,11 +345,31 @@ class CoursePress_Model_Shortcodes_Templates {
 			$breadcrumb_trail = $c_link . $bcs . $a_link . $bcs . $u_link;
 		}
 
+		$can_view = true;
+		$student_id = get_current_user_id();
+
+
+		if( 'section' == $type ) {
+			$can_view = CoursePress_Model_Course::can_view_page( $course_id, $unit_id, $page, $student_id );
+		}
+		if( 'module' == $type ) {
+			$attributes = CoursePress_Model_Module::attributes( $item_id );
+			if( 'output' === $attributes['mode'] ) {
+				$can_view = CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $item_id, $page, $student_id );
+			} else {
+				$can_view = false;
+			}
+
+		}
+
+		$type = $can_view ? $type : 'no_access';
 
 		$template = '';
 		switch( $type ) {
 
 			case 'section':
+
+				$preview = CoursePress_Model_Course::previewability( $course_id );
 
 				$breadcrumb_trail .= '<span class="breadcrumb-leaf">'. $bcs . '<span class="breadcrumb-course-unit-section crumb end">' . esc_html( $page_info['title'] ) . '</span></span>';
 
@@ -382,9 +401,10 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				// Next Navigation
 				$next_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array('publish'), true, false, array( 'page' => $page ) );
+				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, false, $page );
 				if( ! empty( $next_modules ) ) {
 					$content .= '
-							<div class="focus-nav-next" data-id="' . $next_modules[ 0 ] . '" data-type="module"><a href="#module-' . esc_attr( $next_modules[ 0 ] ) . '">' . $next_text . '</a></div>
+							<div class="focus-nav-next" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
 						';
 				}
 				$content .= '</div>'; // .focus-nav
@@ -421,6 +441,9 @@ class CoursePress_Model_Shortcodes_Templates {
 				$next_module = $module_index !== ( count( $modules ) - 1 ) ? $module_index + 1 : false;
 				$goto_section = false;
 				$goto_next_section = false;
+
+				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, $item_id, $page );
+				$previous_module = CoursePress_Model_Course::previous_accessible( $course_id, $unit_id, $preview, $item_id, $page );
 
 				$breadcrumb_trail .= '<span class="breadcrumb-leaf">'. $bcs . '<span class="breadcrumb-course-unit-section-module crumb end">' . esc_html( get_post_field('post_title', $modules[ $module_index ] ) ) . '</span></span>';
 
@@ -466,7 +489,7 @@ class CoursePress_Model_Shortcodes_Templates {
 					$content .= $goto_section ? '
 							<div class="focus-nav-prev" data-id="' . $page . '" data-type="section"><a href="#section-' . esc_attr( $page ) . '">' . $pre_text . '</a></div>
 						' : '
-							<div class="focus-nav-prev" data-id="' . $modules[ $previous_module ] . '" data-type="module"><a href="#module-' . esc_attr( $modules[ $previous_module ] ) . '">' . $pre_text . '</a></div>
+							<div class="focus-nav-prev" data-id="' . $previous_module . '" data-type="module"><a href="#module-' . esc_attr( $previous_module ) . '">' . $pre_text . '</a></div>
 						';
 				}
 
@@ -475,7 +498,7 @@ class CoursePress_Model_Shortcodes_Templates {
 					$content .= $goto_next_section ? '
 							<div class="focus-nav-next next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
 						' : '
-							<div class="focus-nav-next" data-id="' . $modules[ $next_module ] . '" data-type="module"><a href="#module-' . esc_attr( $modules[ $next_module ] ) . '">' . $next_text . '</a></div>
+							<div class="focus-nav-next" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
 						';
 				}
 				$content .= '</div>'; // .focus-nav
@@ -485,6 +508,11 @@ class CoursePress_Model_Shortcodes_Templates {
 				$template = $content;
 
 				break;
+
+			case 'no_access':
+				$template = "No access";
+				break;
+
 		}
 
 		$content = $progress_spinner . do_shortcode( $template );

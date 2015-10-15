@@ -2114,6 +2114,10 @@ class CoursePress_Model_Shortcodes {
 
 		$with_modules = CoursePress_Helper_Utility::fix_bool( $with_modules );
 
+		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$base_link = get_permalink( $course_id );
+
+
 		$student_id = get_current_user_id();
 		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
@@ -2136,14 +2140,14 @@ class CoursePress_Model_Shortcodes {
 		$counter = 0;
 
 		//$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-		$preview  = CoursePress_Model_Course::previewability( $course_id );
 		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
 
 		foreach ( $units as $unit ) {
 
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
-
 			$unit_id          = $the_unit->ID;
+
+			$can_view = CoursePress_Model_Course::can_view_unit( $course_id, $unit_id );
 
 			$previous_unit_id = false;
 			if ( $counter == 0 ) {
@@ -2162,7 +2166,7 @@ class CoursePress_Model_Shortcodes {
 			}
 			$counter += 1;
 
-			if ( ! $is_instructor && ! $enrolled && ( ! isset( $preview['structure'][ $unit_id ] ) || empty( $preview['structure'][ $unit_id ] ) ) ) {
+			if ( ! $can_view ) {
 				continue;
 			}
 
@@ -2173,14 +2177,15 @@ class CoursePress_Model_Shortcodes {
 
 			$is_unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $the_unit, $previous_unit );
 
-			if ( ! $is_unit_available ) {
+			if ( $enrolled && ! $is_unit_available ) {
 				$additional_class    = 'locked-unit';
 				$additional_li_class = 'li-locked-unit';
 			}
 
 			if ( ! $enrolled ) {
-				$unit_progress = sprintf( '<div class="course-preview-container">%s</div>', __( 'Preview Only', CoursePress::TD ) );
-				if ( ! $is_unit_available ) {
+//				$unit_progress = sprintf( '<div class="course-preview-container">%s</div>', __( 'Preview Only', CoursePress::TD ) );
+				$unit_progress = '';
+				if ( ! $is_unit_available && ! $can_view ) {
 					continue;
 				}
 			}
@@ -2190,8 +2195,12 @@ class CoursePress_Model_Shortcodes {
 				<li class="' . esc_attr( $additional_li_class ) . '">
 					<div class="unit-archive-single">
 						' . $unit_progress . '
-						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $the_unit->post_title . ' ' . ( $the_unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '' ) . '</a>
-						' . do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' );
+						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $the_unit->post_title . ' ' . ( $the_unit->post_status !== 'publish' && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', CoursePress::TD ) : '' ) . '</a>';
+
+			if( $enrolled ) {
+				$content .= do_shortcode( '[module_status format="true" unit_id="' . $unit_id . '" previous_unit="' . $previous_unit_id . '"]' );
+			}
+
 
 			if( $with_modules ) {
 
@@ -2203,23 +2212,48 @@ class CoursePress_Model_Shortcodes {
 
 				foreach( $unit['pages'] as $page_number => $page ) {
 
+					if( ! CoursePress_Model_Course::can_view_page( $course_id, $unit_id, $page_number ) ) {
+						continue;
+					}
+
 					$heading_visible = isset( $page['visible'] ) && $page['visible'];
 
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
-						$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', CoursePress::TD ) ) . '</div>';
+						if( 'normal' == $view_mode ) {
+							$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', CoursePress::TD ) ) . '</div>';
+						} else {
+							$section_link = trailingslashit( $base_link . CoursePress_Core::get_slug( 'units' ) );
+							$section_link .= '#section-' . $page_number;
+							$module_table .= '<div class="section-title" data-id="' . $page_number . '"><a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', CoursePress::TD ) ) . '</a></div>';
+						}
 					}
 
 					$module_table .= '<ul class="module-list">';
 
 					foreach( $page['modules'] as $module ) {
 
+						$attributes = CoursePress_Model_Module::attributes( $module->ID );
+						if( 'normal' != $view_mode && 'input' == $attributes['mode'] ) {
+							continue;
+						}
+
+						if( ! CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $module->ID, $page_number ) ) {
+							continue;
+						}
+
 						$module_table .= '<li class="module">';
 
-						$attributes = CoursePress_Model_Module::attributes( $module->ID );
 						$title = ! empty( $module->post_title ) ? esc_html( $module->post_title ) : esc_html__( 'Mod', CoursePress::TD ) . '<br />';
-						$module_table .= '<div class="module-title" data-id="' . $module->ID . '">' . $title . '</div>';
+
+						if( 'normal' == $view_mode ) {
+							$module_table .= '<div class="module-title" data-id="' . $module->ID . '">' . $title . '</div>';
+						} else {
+							$module_link = trailingslashit( $base_link . CoursePress_Core::get_slug( 'units' ) );
+							$module_link .= '#module-' . $module->ID;
+							$module_table .= '<div class="module-title" data-id="' . $module->ID . '"><a href="' . $module_link . '">' . $title . '</a></div>';
+						}
 
 						$module_table .= '</li>';
 					}

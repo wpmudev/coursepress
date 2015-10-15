@@ -154,6 +154,15 @@ class CoursePress_Model_Unit {
 
 	public static function get_page_meta( $unit_id, $item_id ) {
 
+		if( empty( $item_id ) ) {
+			return array(
+				'title' => '',
+				'description' => '',
+				'feature_image' => '',
+				'visible' => false
+			);
+		}
+
 		$unit_id = is_object( $unit_id ) ? $unit_id->ID : (int) $unit_id;
 
 		$meta = get_post_meta( $unit_id );
@@ -164,8 +173,8 @@ class CoursePress_Model_Unit {
 
 		return array(
 			'title' => $titles[ 'page_' . $item_id ],
-			'description' => $descriptions[ 'page_' . $item_id ],
-			'feature_image' => $images[ 'page_' . $item_id ],
+			'description' => isset( $descriptions[ 'page_' . $item_id ] ) ? $descriptions[ 'page_' . $item_id ] : '',
+			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
 			'visible' => $visibilities[ ( $item_id - 1 ) ],
 		);
 
