@@ -7,9 +7,9 @@ var CoursePress = CoursePress || {};
     CoursePress.Collections = CoursePress.Collections || {};
     CoursePress.Helpers = CoursePress.Helpers || {};
 
-
     /** Expand the CoursePress Object for handling Modules **/
     CoursePress.Helpers.Module = CoursePress.Helpers.Module || {};
+    CoursePress.Helpers.Module.quiz = CoursePress.Helpers.Module.quiz || {};
 
     CoursePress.Helpers.Module.refresh_ui = function () {
 
@@ -208,6 +208,335 @@ var CoursePress = CoursePress || {};
             $( '#unit-builder .tab-content' ).css( 'min-height', button_position + 'px' );
         }
 
+        // ===== QUIZ BUTTONS =====
+        $( '.unit-builder-body .quiz-action-button').off( 'click' );
+        $( '.unit-builder-body .quiz-action-button').on( 'click', function( e ) {
+
+            var el = this;
+            var container = $( el ).parents('.module-components')[0];
+            var mod_el = $( el).parents('.module-holder')[0];
+            var el_all = $( container).find( '.quiz-question' );
+            var total = el_all.length;
+            var type = $( el).attr('data-type');
+
+            var content = '<div class="quiz-question question-' + ( total + 1 ) + '" data-id="' + (total + 1) + '" data-type="' + type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
+            content += '<div class="quiz-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
+
+            var question_type = '';
+            var question_content = '<div class="question-answer">';
+
+            switch( type ) {
+
+                case 'single':
+                    question_type = 'Single Choice';
+
+                    question_content += '<div class="answer-group">';
+
+                    question_content += '<div class="answer"><input type="radio" name="" value="" />';
+                    question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<div class="answer"><input type="radio" name="" value="" />';
+                    question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+
+                    question_content += '</div>';
+                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+
+                    break;
+                case 'multiple':
+                    question_type = 'Multiple Choice';
+
+                    question_content += '<div class="answer-group">';
+
+                    question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
+                    question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
+                    question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+
+                    question_content += '</div>';
+                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+
+                    break;
+                case 'short':
+                    question_type = 'Short Answer';
+
+                    question_content += '<div class="answer-group">';
+                    question_content += '<label>Placeholder:</label>';
+                    question_content += '<div class="placeholder"><input type="text" name="" value="Placeholder" />';
+                    question_content += '</div>';
+
+                    break;
+                case 'long':
+                    question_type = 'Long Answer';
+
+                    question_content += '<div class="answer-group">';
+                    question_content += '<label>Placeholder:</label>';
+                    question_content += '<div class="placeholder"><input type="text" name="" value="Placeholder" />';
+                    question_content += '</div>';
+
+                    break;
+
+            }
+            question_content += '</div>'; // .question-answer
+
+
+            // Same for all
+            content += '<label class="wide" data-key="label">' +
+                    '<span class="label">' + question_type + ':</span>' +
+                '</label>';
+            content += '<textarea></textarea>';
+
+            content += question_content;
+
+            content += '</div>';
+
+            $(container).append( content );
+            CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+
+        } );
+
+        CoursePress.Helpers.Module.quiz.bind_buttons();
+
+    }
+
+    CoursePress.Helpers.Module.quiz.render_component = function( module ) {
+
+        var quiz = module.get_meta('questions');
+        if( typeof quiz === 'undefined' || quiz.length <= 0 ) {
+            return '';
+        }
+
+        var content = '';
+
+        $.each( quiz, function( index, item ) {
+
+            content += '<div class="quiz-question question-' + ( index + 1 ) + '" data-id="' + (index + 1) + '" data-type="' + item.type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
+            content += '<div class="quiz-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
+
+            var question_type = '';
+            var question_content = '<div class="question-answer">';
+
+            switch( item.type ) {
+
+                case 'single':
+                    //question_type = 'Single Choice';
+                    //
+                    //question_content += '<div class="answer-group">';
+                    //
+                    //question_content += '<div class="answer"><input type="radio" name="" value="" />';
+                    //question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    //question_content += '<div class="answer"><input type="radio" name="" value="" />';
+                    //question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    //
+                    //question_content += '</div>';
+                    //question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+
+                    break;
+                case 'multiple':
+                    question_type = 'Multiple Choice';
+
+                    question_content += '<div class="answer-group">';
+
+                    $.each( item.options.answers, function( a_index, a_item ) {
+                        var checked = item.options.checked[a_index] ? 'checked=checked' : '';
+                        question_content += '<div class="answer"><input type="checkbox" name="" value="" ' + checked + ' />';
+                        question_content += '<input class="component-checkbox-answer wide" type="text" value="' + a_item + '" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    } );
+
+                    question_content += '</div>';
+                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+
+                    break;
+                case 'short':
+                    //question_type = 'Short Answer';
+                    //
+                    //question_content += '<div class="answer-group">';
+                    //question_content += '<label>Placeholder:</label>';
+                    //question_content += '<div class="placeholder"><input type="text" name="" value="Placeholder" />';
+                    //question_content += '</div>';
+
+                    break;
+                case 'long':
+                    //question_type = 'Long Answer';
+                    //
+                    //question_content += '<div class="answer-group">';
+                    //question_content += '<label>Placeholder:</label>';
+                    //question_content += '<div class="placeholder"><input type="text" name="" value="Placeholder" />';
+                    //question_content += '</div>';
+
+                    break;
+
+            }
+            question_content += '</div>'; // .question-answer
+
+            // Same for all
+            content += '<label class="wide" data-key="label">' +
+                '<span class="label">' + question_type + ':</span>' +
+                '</label>';
+            content += '<textarea>' + item.question + '</textarea>';
+
+            content += question_content;
+
+
+            content += '</div>';
+        } )
+
+        return content;
+
+    }
+
+    CoursePress.Helpers.Module.quiz.update_meta = function( quiz_el ) {
+
+        var cid = $( quiz_el).attr('data-cid');
+        var questions = {};
+
+        var module = CoursePress.UnitBuilder.module_collection._byId[ cid ];
+
+        var el_questions = $( quiz_el).find('.quiz-question');
+
+        $.each( el_questions, function( index, item ) {
+
+            questions[index] = {
+                'type': $( item).attr('data-type'),
+                'question': $( item).find('textarea').val(),
+                'options': {}
+            };
+
+            switch( questions[index].type ) {
+
+                case 'single':
+                    break;
+
+                case 'multiple':
+
+                    questions[index].options['answers'] = [];
+                    questions[index].options['checked'] = [];
+                    var answers = $( item).find('.answer-group .answer');
+                    $.each( answers, function( a_idx, a_item ) {
+                        questions[index].options['answers'][a_idx] = $( a_item).find('[type="text"]').val();
+                        questions[index].options['checked'][a_idx] = $( a_item).find('[type="checkbox"]').is( ':checked' );
+                    });
+
+                    break;
+
+                case 'short':
+                    break;
+
+                case 'long':
+                    break;
+
+            }
+
+        } );
+
+        module.set_meta('questions', questions);
+        module.set( 'flag', 'dirty' );
+
+    }
+
+    CoursePress.Helpers.Module.quiz.bind_add_item = function() {
+
+        $('.quiz-question .add-item').off( 'click' );
+        $('.quiz-question .add-item').on( 'click', function( e ) {
+
+            var el = this;
+            var parent = $( el).parents('.answer')[0];
+            var question = $( el).parents('.quiz-question')[0];
+            var type = $( question).attr('data-type');
+
+            var input = 'single' === type ? 'radio' : 'checkbox';
+
+            var content = '<div class="answer">' +
+                '<input type="checkbox" value="" name="">' +
+                '<input type="text" name="" value="">' +
+                '<span class="remove-item"><i class="fa fa-trash-o"></i></span>' +
+                '</div>';
+
+            $(question).find('.answer-group').append( content );
+            CoursePress.Helpers.Module.quiz.bind_remove_item();
+            CoursePress.Helpers.Module.quiz.bind_checkboxes();
+            CoursePress.Helpers.Module.quiz.bind_textboxes();
+
+        } );
+
+    }
+
+    CoursePress.Helpers.Module.quiz.bind_checkboxes = function() {
+
+        $('.quiz-question [type="checkbox"]').off( 'change' );
+        $('.quiz-question [type="checkbox"]').on( 'change', function( e ) {
+
+            var mod_el = $( this).parents('.module-holder')[0];
+            CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+        } );
+
+    }
+
+    CoursePress.Helpers.Module.quiz.bind_textboxes = function() {
+
+        $('.quiz-question [type="text"], .quiz-question textarea').off( 'keyup' );
+        $('.quiz-question [type="text"], .quiz-question textarea').on( 'keyup', function( e ) {
+
+            var mod_el = $( this).parents('.module-holder')[0];
+            CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+        } );
+
+    }
+
+    CoursePress.Helpers.Module.quiz.bind_remove_item = function() {
+
+        $('.quiz-question .remove-item').off( 'click' );
+        $('.quiz-question .remove-item').on( 'click', function( e ) {
+            var el = this;
+            var parent = $( el).parents('.answer')[0];
+
+            var mod_el = $( this).parents('.module-holder')[0];
+
+            $( parent).detach();
+
+            CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+
+
+        } );
+
+    }
+
+    CoursePress.Helpers.Module.quiz.bind_remove_question = function() {
+
+        // Remove Quiz
+        $('.quiz-question .quiz-question-remove').off( 'click' );
+        $('.quiz-question .quiz-question-remove').on( 'click', function( e ) {
+
+            var el = this;
+            var parent = $( el).parents( '.quiz-question')[0];
+            var container = $( el).parents( '.module-components')[0];
+            var questions = $( parent).siblings('.quiz-question');
+            console.log( questions);
+            $.each( questions, function( index, item ) {
+
+                $( item).attr('class', '');
+                $( item).addClass('quiz-question');
+                $( item).addClass('question-' + (index+1));
+                $( item).attr('data-id', (index+1));
+
+            } );
+
+            var mod_el = $( this).parents('.module-holder')[0];
+
+            $( parent).detach();
+
+            CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+
+        } );
+
+    }
+
+
+    CoursePress.Helpers.Module.quiz.bind_buttons = function () {
+
+        CoursePress.Helpers.Module.quiz.bind_add_item();
+        CoursePress.Helpers.Module.quiz.bind_remove_item();
+        CoursePress.Helpers.Module.quiz.bind_remove_question();
+        CoursePress.Helpers.Module.quiz.bind_checkboxes();
+        CoursePress.Helpers.Module.quiz.bind_textboxes();
 
     }
 
@@ -629,6 +958,22 @@ var CoursePress = CoursePress || {};
                         option_name = name + '_selected[' + module.cid + ']';
                         content += '<label class="normal"><input type="checkbox" value="1" name="' + name + '" ' + CoursePress.utility.checked( value, 1 ) + ' />' +
                         '<span>' + label + '</span></label>';
+
+                        break;
+
+                    case 'action':
+
+                        var css_class = item['class'] || '';
+                        var action = item['action'] || '';
+                        var callback = item['callback'] || '';
+
+                        content += '<div class="' + css_class + '" data-type="' + action + '"><a></a></div>';
+                        content += '<span style="color:green">«- Developer note: Only multiple choice for now, will add others soon.</span>';
+
+                        break;
+                    case 'quiz':
+
+                        content += CoursePress.Helpers.Module.quiz.render_component( module );
 
                         break;
                 }

@@ -1435,7 +1435,8 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .module-input-radio a,
 .module-input-textarea a,
 .module-input-text a,
-.module-input-select a {
+.module-input-select a,
+.quiz-action-button a {
   background: url("../assets/components.svg") no-repeat;
 }
 
@@ -1467,10 +1468,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   background-position: -240px 0;
 }
 
+.quiz-action-button.multiple a,
 .module-input-checkbox a {
   background-position: -160px -40px;
 }
 
+.quiz-action-button.single a,
 .module-input-radio a {
   background-position: -120px -40px;
 }
@@ -1479,16 +1482,43 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   background-position: -80px -40px;
 }
 
+.quiz-action-button.short a,
 .module-input-text a {
   background-position: 0px -40px;
 }
 
+.quiz-action-button.long a,
 .module-input-textarea a {
   background-position: -40px -40px;
 }
 
 .module-input-upload a {
   background-position: -200px -40px;
+}
+
+.quiz-action-button.single,
+.quiz-action-button.multiple,
+.quiz-action-button.short,
+.quiz-action-button.long {
+  display: inline-block;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.quiz-action-button a {
+  width: 30px;
+  height: 30px;
+  display: block;
+  cursor: pointer;
+}
+
+.quiz-question textarea {
+  width: 100%;
+}
+
+.quiz-question input[type='text'] {
+  width: 80%;
 }
 
 /*--------------------------------------------------------------

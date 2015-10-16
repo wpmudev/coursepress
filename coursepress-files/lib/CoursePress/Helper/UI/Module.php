@@ -321,8 +321,6 @@ class CoursePress_Helper_UI_Module {
 			self::OUTPUT_DISCUSSION       => array(
 				'title'   => __( 'Discussion', CoursePress::TD ),
 				'mode'    => 'output',
-				'excerpt' => 'hidden',
-				'body'    => 'hidden',
 				'icon'    => 'default',
 			),
 		);
@@ -733,23 +731,23 @@ class CoursePress_Helper_UI_Module {
 				"components": []
 			}
 			',
-			self::OUTPUT_DISCUSSION     => '
-			{
-				"id": "0",
-				"title": "' . __( 'Untitled', CoursePress::TD ) . '",
-				"duration": "0:00",
-				"type": "' . self::OUTPUT_DISCUSSION . '",
-				"show_title": "1",
-				"mandatory": "0",
-				"assessable": "0",
-				"minimum_grade": "100",
-				"allow_retries": "1",
-				"retry_attempts": "0",
-				"content": "",
-				"editor_height": "200",
-				"order": "0",
-				"components": []
-			}
+			self::OUTPUT_DISCUSSION           => '
+				{
+					"id": "0",
+					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
+					"duration": "0:00",
+					"type": "' . self::OUTPUT_DISCUSSION . '",
+					"show_title": "1",
+					"mandatory": "0",
+					"assessable": "0",
+					"minimum_grade": "100",
+					"allow_retries": "1",
+					"retry_attempts": "0",
+					"content": "",
+					"editor_height": "500",
+					"order": "0",
+					"components": []
+				}
 			',
 			self::INPUT_MULTIPLE_CHOICE => '
 			{
@@ -956,7 +954,27 @@ class CoursePress_Helper_UI_Module {
 					"content": "",
 					"editor_height": "200",
 					"order": "0",
-					"components": []
+					"components": [
+						{
+							"label": "' . __( 'Questions', CoursePress::TD ) . '",
+							"description": "' . __( 'Add all the questions for your quiz here', CoursePress::TD ) . '",
+							"class": "wide",
+							"items": [
+								{
+									"type": "action",
+									"class": "quiz-action-button multiple wide",
+									"action": "multiple"
+								}
+							]
+						},
+						{
+							"items": [
+								{
+									"type": "quiz"
+								}
+							]
+						}
+					]
 				}
 			',
 			self::INPUT_ADVANCED        => '
@@ -974,6 +992,30 @@ class CoursePress_Helper_UI_Module {
 	}
 
 
+	// Items for QUIZ
+	// Only using Multiple Choice for now
+	//"items": [
+	//{
+	//"type": "action",
+	//"class": "quiz-action-button single wide",
+	//"action": "single"
+	//},
+	//{
+	//	"type": "action",
+	//									"class": "quiz-action-button multiple wide",
+	//									"action": "multiple"
+	//								},
+	//{
+	//	"type": "action",
+	//									"class": "quiz-action-button short wide",
+	//									"action": "short"
+	//								},
+	//{
+	//	"type": "action",
+	//									"class": "quiz-action-button long wide",
+	//									"action": "long"
+	//								}
+	//]
 
 	// Just leaving this here for when you need to know how to deal with the JS
 	// meta_items = $( '.module-holder [name^="meta_"]').serializeArray()
