@@ -1308,6 +1308,16 @@ class CoursePress_Model_Course {
 
 		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
 		$next = false;
+
+		$student_id = get_current_user_id();
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		if( $enrolled || $is_instructor ) {
+			return true;
+		}
+
 		foreach( $preview['structure'][ $unit_id ] as $page_number => $page ) {
 
 			if( (int) $page_number === 0 || $page_number < $current_page ) {
@@ -1347,6 +1357,16 @@ class CoursePress_Model_Course {
 
 		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
 		$prev = false;
+
+		$student_id = get_current_user_id();
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor = in_array( $student_id, $instructors );
+
+		if( $enrolled || $is_instructor ) {
+			return true;
+		}
+
 		foreach( $preview['structure'][ $unit_id ] as $page_number => $page ) {
 
 			if( (int) $page_number === 0 || $page_number < $current_page ) {

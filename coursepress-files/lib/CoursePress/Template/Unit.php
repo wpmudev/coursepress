@@ -60,7 +60,7 @@ class CoursePress_Template_Unit {
 
 		// Let BackboneJS take over if its in Focus mode
 		if( 'focus' === $view_mode ) {
-			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"></div>';
+			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
 		}
 
 

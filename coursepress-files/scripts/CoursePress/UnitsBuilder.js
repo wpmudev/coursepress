@@ -233,12 +233,12 @@ var CoursePress = CoursePress || {};
                     question_content += '<div class="answer-group">';
 
                     question_content += '<div class="answer"><input type="radio" name="" value="" />';
-                    question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer A" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
                     question_content += '<div class="answer"><input type="radio" name="" value="" />';
-                    question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer B" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 
                     question_content += '</div>';
-                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+                    question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
                     break;
                 case 'multiple':
@@ -247,12 +247,12 @@ var CoursePress = CoursePress || {};
                     question_content += '<div class="answer-group">';
 
                     question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
-                    question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<input class="component-checkbox-answer wide" type="text" value="Answer A" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
                     question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
-                    question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<input class="component-checkbox-answer wide" type="text" value="Answer B" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 
                     question_content += '</div>';
-                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+                    question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
                     break;
                 case 'short':
@@ -290,6 +290,7 @@ var CoursePress = CoursePress || {};
 
             $(container).append( content );
             CoursePress.Helpers.Module.quiz.update_meta( mod_el );
+            CoursePress.Helpers.Module.quiz.bind_buttons();
 
         } );
 
@@ -338,11 +339,11 @@ var CoursePress = CoursePress || {};
                     $.each( item.options.answers, function( a_index, a_item ) {
                         var checked = item.options.checked[a_index] ? 'checked=checked' : '';
                         question_content += '<div class="answer"><input type="checkbox" name="" value="" ' + checked + ' />';
-                        question_content += '<input class="component-checkbox-answer wide" type="text" value="' + a_item + '" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+                        question_content += '<input class="component-checkbox-answer wide" type="text" value="' + a_item + '" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
                     } );
 
                     question_content += '</div>';
-                    question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+                    question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
                     break;
                 case 'short':
@@ -434,8 +435,8 @@ var CoursePress = CoursePress || {};
 
     CoursePress.Helpers.Module.quiz.bind_add_item = function() {
 
-        $('.quiz-question .add-item').off( 'click' );
-        $('.quiz-question .add-item').on( 'click', function( e ) {
+        $('.quiz-question .add-quiz-item').off( 'click' );
+        $('.quiz-question .add-quiz-item').on( 'click', function( e ) {
 
             var el = this;
             var parent = $( el).parents('.answer')[0];
@@ -443,11 +444,13 @@ var CoursePress = CoursePress || {};
             var type = $( question).attr('data-type');
 
             var input = 'single' === type ? 'radio' : 'checkbox';
+            var css_class = 'single' === type ? 'component-radio-answer wide' : 'component-checkbox-answer wide';
+
 
             var content = '<div class="answer">' +
-                '<input type="checkbox" value="" name="">' +
-                '<input type="text" name="" value="">' +
-                '<span class="remove-item"><i class="fa fa-trash-o"></i></span>' +
+                '<input type="' + input + '" value="" name="">' +
+                '<input type="text" name="" value="" class="' + css_class + '">' +
+                '<span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span>' +
                 '</div>';
 
             $(question).find('.answer-group').append( content );
@@ -483,8 +486,8 @@ var CoursePress = CoursePress || {};
 
     CoursePress.Helpers.Module.quiz.bind_remove_item = function() {
 
-        $('.quiz-question .remove-item').off( 'click' );
-        $('.quiz-question .remove-item').on( 'click', function( e ) {
+        $('.quiz-question .remove-quiz-item').off( 'click' );
+        $('.quiz-question .remove-quiz-item').on( 'click', function( e ) {
             var el = this;
             var parent = $( el).parents('.answer')[0];
 

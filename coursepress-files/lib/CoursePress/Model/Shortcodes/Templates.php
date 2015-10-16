@@ -346,20 +346,25 @@ class CoursePress_Model_Shortcodes_Templates {
 		}
 
 		$can_view = true;
+
 		$student_id = get_current_user_id();
+		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor = in_array( $student_id, $instructors );
 
-
-		if( 'section' == $type ) {
-			$can_view = CoursePress_Model_Course::can_view_page( $course_id, $unit_id, $page, $student_id );
-		}
-		if( 'module' == $type ) {
-			$attributes = CoursePress_Model_Module::attributes( $item_id );
-			if( 'output' === $attributes['mode'] ) {
-				$can_view = CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $item_id, $page, $student_id );
-			} else {
-				$can_view = false;
+		if( ! $enrolled && ! $is_instructor ) {
+			if ( 'section' == $type ) {
+				$can_view = CoursePress_Model_Course::can_view_page( $course_id, $unit_id, $page, $student_id );
 			}
+			if ( 'module' == $type ) {
+				$attributes = CoursePress_Model_Module::attributes( $item_id );
+				if ( 'output' === $attributes['mode'] ) {
+					$can_view = CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $item_id, $page, $student_id );
+				} else {
+					$can_view = false;
+				}
 
+			}
 		}
 
 		$type = $can_view ? $type : 'no_access';
@@ -402,6 +407,10 @@ class CoursePress_Model_Shortcodes_Templates {
 				// Next Navigation
 				$next_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array('publish'), true, false, array( 'page' => $page ) );
 				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, false, $page );
+				if( true === $next_module ) {
+					$next_module = $next_modules[ 0 ];
+				}
+
 				if( ! empty( $next_modules ) ) {
 					$content .= '
 							<div class="focus-nav-next" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
@@ -437,13 +446,20 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				// Navigation Vars
 				$module_index = array_search( $item_id, $modules );
-				$previous_module = $module_index !== 0 ? $module_index - 1 : false;
-				$next_module = $module_index !== ( count( $modules ) - 1 ) ? $module_index + 1 : false;
+
 				$goto_section = false;
 				$goto_next_section = false;
 
 				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, $item_id, $page );
+				if( true === $next_module ) {
+					$next_module = $module_index !== ( count( $modules ) - 1 ) ? $module_index + 1 : false;
+					$next_module = false !== $next_module ? $modules[ $next_module ] : $next_module;
+				}
 				$previous_module = CoursePress_Model_Course::previous_accessible( $course_id, $unit_id, $preview, $item_id, $page );
+				if( true === $previous_module ) {
+					$previous_module = $module_index !== 0 ? $module_index - 1 : false;
+					$previous_module = false !== $previous_module  ? $modules[ $previous_module ] : $previous_module;
+				}
 
 				$breadcrumb_trail .= '<span class="breadcrumb-leaf">'. $bcs . '<span class="breadcrumb-course-unit-section-module crumb end">' . esc_html( get_post_field('post_title', $modules[ $module_index ] ) ) . '</span></span>';
 
