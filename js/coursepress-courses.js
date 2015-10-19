@@ -898,7 +898,7 @@ function validateCourseFields( step, ignore ) {
             } else {
                 content = $( '[name=course_description]' ).val();
             }
-            
+
             if ( content == '' ) {
                 $( '[for=course_description]' ).parent().append( '<span class="error">' + coursepress_units.required_course_description + '</span>' );
                 valid = false;

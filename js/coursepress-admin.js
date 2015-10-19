@@ -8,14 +8,16 @@ jQuery( document ).ready( function ( $ ) {
         CoursePress.editor.init();
     }
 
-    CoursePress.Events.on( 'editor:created', function( el ) {
-        $( '.coursepress-media-button-message' ).off('click');
-        $( '.coursepress-media-button-message' ).on('click', function(e){
-            console.log('MOOO');
-            $( '.coursepress-media-button-message span' ).toggle();
-        });
+    if( undefined != CoursePress.Events){
+        CoursePress.Events.on( 'editor:created', function( el ) {
+            $( '.coursepress-media-button-message' ).off('click');
+            $( '.coursepress-media-button-message' ).on('click', function(e){
+                console.log('MOOO');
+                $( '.coursepress-media-button-message span' ).toggle();
+            });
 
-    } );
+        } );
+    }
 
     $( '#doaction_bulk_courses' ).click( function ( e ) {
         //$( '#bulk_courses_values' ).val();
