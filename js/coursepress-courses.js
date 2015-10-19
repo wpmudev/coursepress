@@ -890,10 +890,15 @@ function validateCourseFields( step, ignore ) {
         case '2':
             var content = '';
             if ( tmce && tinyMCE.get( 'course_description' ) ) {
-                content = tinyMCE.get( 'course_description' ).getContent();
+                if (jQuery("#wp-course_description-wrap").hasClass("tmce-active")){
+                    content = tinyMCE.get( 'course_description' ).getContent();
+                }else{
+                    content = $( '[name=course_description]' ).val();
+                }
             } else {
                 content = $( '[name=course_description]' ).val();
             }
+            
             if ( content == '' ) {
                 $( '[for=course_description]' ).parent().append( '<span class="error">' + coursepress_units.required_course_description + '</span>' );
                 valid = false;
