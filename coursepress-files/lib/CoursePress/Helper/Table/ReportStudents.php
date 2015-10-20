@@ -136,7 +136,11 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 		//	's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		//);
 
-		$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
+		if ( is_multisite() ) {
+			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
+		} else {
+			$course_meta_key = 'enrolled_course_date_' . $this->course_id;
+		}
 
 		// Could use the Course Model methods here, but lets try stick to one query
 		$users = new WP_User_Query( array(

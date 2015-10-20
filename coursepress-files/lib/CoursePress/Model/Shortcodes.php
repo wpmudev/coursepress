@@ -677,7 +677,7 @@ class CoursePress_Model_Shortcodes {
 			if ( $show_alt_display && $open_ended ) {
 				$content .= $alt_display_text;
 			} else {
-				$content .= $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', date_i18n( $date_format, strtotime( $start_date ) ) ) . ' - ' . cp_sp2nbsp( date_i18n( $date_format, strtotime( $end_date ) ) );
+				$content .= $open_ended ? $no_date_text : str_replace( ' ', '&nbsp;', date_i18n( $date_format, strtotime( $start_date ) ) ) . ' - ' . str_replace( ' ', '&nbsp;', date_i18n( $date_format, strtotime( $end_date ) ) );
 			}
 		} else {
 			// User is enrolled

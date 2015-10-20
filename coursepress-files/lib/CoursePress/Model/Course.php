@@ -756,12 +756,18 @@ class CoursePress_Model_Course {
 	public static function get_students( $course_id, $per_page = 0, $offset = 0 ) {
 		global $wpdb;
 
+		if ( is_multisite() ) {
+			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
+		} else {
+			$course_meta_key = 'enrolled_course_date_' . $course_id;
+		}
+
 		$args = array(
 			'meta_key' => 'last_name',
 			'orderby' => 'meta_value',
 			'meta_query' => array(
 				array(
-					'key'     => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+					'key'     => $course_meta_key,
 					'compare' => 'EXISTS'
 				),
 			)
@@ -780,12 +786,18 @@ class CoursePress_Model_Course {
 	public static function get_student_ids( $course_id, $count = false ) {
 		global $wpdb;
 
+		if ( is_multisite() ) {
+			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
+		} else {
+			$course_meta_key = 'enrolled_course_date_' . $course_id;
+		}
+
 		$students = self::get_users( array(
 			'meta_key' => 'last_name',
 			'orderby' => 'meta_value',
 			'meta_query' => array(
 				array(
-					'key'     => $wpdb->prefix . 'enrolled_course_date_' . $course_id,
+					'key'     => $course_meta_key,
 					'compare' => 'EXISTS'
 				),
 			),
@@ -806,7 +818,14 @@ class CoursePress_Model_Course {
 	}
 
 	public static function student_enrolled( $student_id, $course_id ) {
-		$enrolled = get_user_option( 'enrolled_course_date_' . $course_id, $student_id );
+		global $wpdb;
+
+		if ( is_multisite() ) {
+			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
+		} else {
+			$course_meta_key = 'enrolled_course_date_' . $course_id;
+		}
+		$enrolled = get_user_option( $course_meta_key, $student_id );
 		return ! empty( $enrolled ) ? $enrolled : '';
 	}
 
