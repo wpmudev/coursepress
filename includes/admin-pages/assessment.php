@@ -1,4 +1,5 @@
 <?php
+global $wpdb;
 $user_id              = isset( $_GET['user_id'] ) ? (int) $_GET['user_id'] : '';
 $course_id            = isset( $_GET['course_id'] ) ? (int) $_GET['course_id'] : '';
 $class_meta_query_key = '';
