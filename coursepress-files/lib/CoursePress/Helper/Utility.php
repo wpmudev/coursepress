@@ -919,3 +919,89 @@ class CoursePress_Helper_Utility {
 	}
 
 }
+
+// LEGACY
+function cp_messaging_get_unread_messages_count() {
+	global $wpdb, $user_ID;
+	$tmp_unread_message_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . $wpdb->base_prefix . "messages WHERE message_to_user_ID = %d AND message_status = %s", $user_ID, 'unread' ) );
+
+	return $tmp_unread_message_count;
+}
+
+function cp_unit_uses_new_pagination( $unit_id = false ) {
+	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
+	$unit_pagination		 = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
+
+	return $unit_pagination;
+}
+
+function cp_can_see_unit_draft() {
+	if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_unit_cap' ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
+	if ( !$student_id ) {
+		$student_id = get_current_user_ID();
+	}
+	$last_visited_unit_page = get_user_option( 'last_visited_unit_' . $unit_id . '_page', $student_id );
+	if ( $last_visited_unit_page ) {
+		return $last_visited_unit_page;
+	} else {
+		return 1;
+	}
+}
+
+function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
+
+	if ( $unit_pagination ) {
+
+		$args = array(
+			'post_type'		 => 'module',
+			'post_status'	 => 'publish',
+			'posts_per_page' => 1,
+			'post_parent'	 => $unit_id,
+			'meta_key'		 => 'module_page',
+			'orderby'		 => 'meta_value_num',
+			'order'			 => 'DESC'
+		);
+
+		$modules	 = get_posts( $args );
+		$module_id	 = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
+
+		if ( $module_id > 0 ) {
+			$pages_num = count( get_post_meta( $unit_id, 'page_title', true ) );
+			//$pages_num = get_post_meta( $module_id, 'module_page', true );
+		} else {
+			$pages_num = 1;
+		}
+	} else {
+		$pages_num = 1;
+
+		$modules = Unit_Module::get_modules( $unit_id );
+
+		foreach ( $modules as $mod ) {
+			if ( Unit_Module::get_module_type( $mod->ID ) == 'page_break_module' ) {
+				$pages_num ++;
+			}
+		}
+	}
+
+	return $pages_num;
+}
+
+function cp_get_number_of_days_between_dates( $start_date, $end_date ) {
+
+	$startTimeStamp	 = strtotime( $start_date );
+	$endTimeStamp	 = strtotime( $end_date );
+
+	$timeDiff = abs( $endTimeStamp - $startTimeStamp );
+
+	$numberDays	 = $timeDiff / 86400;  // 86400 seconds in one day
+	$numberDays	 = intval( $numberDays );
+
+	return $numberDays;
+}
