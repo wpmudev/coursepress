@@ -332,28 +332,10 @@ if ( !class_exists( 'Course' ) ) {
 					}
 				}
 
-				/* function mp_product_id() {
-				  $mp_product_id = get_post_meta($this->id, 'mp_product_id', true);
-				  return get_post($mp_product_id) ? $mp_product_id : 0;
-				  } */
-
 				function mp_product_id( $course_id = false ) {
 					$course_id	 = $course_id ? $course_id : $this->id;
-					$args		 = array(
-						'posts_per_page' => 1,
-						'post_type'		 => 'product',
-						'post_parent'	 => $course_id,
-						'post_status'	 => 'publish',
-						'fields'		 => 'ids',
-					);
-
-					$products = get_posts( $args );
-
-					if ( isset( $products[ 0 ] ) ) {
-						return (int) $products[ 0 ];
-					} else {
-						return false;
-					}
+				  	$mp_product_id = get_post_meta($course_id, 'mp_product_id', true);
+				  	return get_post($mp_product_id) ? $mp_product_id : 0;
 				}
 
 				function update_mp_product( $course_id = false ) {
