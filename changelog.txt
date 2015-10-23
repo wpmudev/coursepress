@@ -5,6 +5,12 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= 1.2.6.6 =
+* Fixed: Issues in certificate admin screen.
+* Fixed: Description creation in text mode.
+* Fixed: Assessments not listed in multisite installs.
+* Fixed: Issues with multiple paid courses.
+* Fixed: Items quentity in Marketpress shopping cart.
 
 = 1.2.6.5 =
 * Updated: Notice for dynamic CoursePress editor and plugin compatibility.
