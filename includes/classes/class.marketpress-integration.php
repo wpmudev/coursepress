@@ -268,7 +268,7 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			update_post_meta( $course_id, 'mp_product_id', $product_id );
 			update_post_meta( $course_id, 'marketpress_product', $product_id );
 			// Limit quantity per order to 1 by default. There are no common uses cases where this would need to be higher.
-			update_post_meta( $course_id, 'per_order_limit', 1 );
+			update_post_meta( $product_id, 'per_order_limit', 1 );
 
 			return true;
 		}
