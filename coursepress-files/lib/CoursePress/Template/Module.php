@@ -173,6 +173,47 @@ class CoursePress_Template_Module {
 		return str_replace( array("\n", "\r" ), '', $content );
 	}
 
+	public static function render_discussion( $module, $attributes = false ) {
+		$content = self::render_module_head( $module, $attributes );
+		$x = have_comments();
+		// Content
+		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+
+		if( get_comments_number( $module->ID ) > 0 ) {
+
+			if ( 1 == get_comments_number( $module->ID ) ) {
+				/* translators: %s: post title */
+				$content .= sprintf( __( 'One response to %s', CoursePress::TD ),  '&#8220;' . get_the_title() . '&#8221;' );
+			} else {
+				/* translators: 1: number of comments, 2: post title */
+				$content .= sprintf( _n( '%1$s response to %2$s', '%1$s responses to %2$s', get_comments_number( $module->ID ), CoursePress::TD ),
+					number_format_i18n( get_comments_number( $module->ID ) ),  '&#8220;' . get_the_title( $module->ID ) . '&#8221;' );
+			}
+
+		}
+
+		$comments = get_comments(array(
+			'post_id' => $module->ID,
+			'status' => 'approve' //Change this to the type of comments to be displayed
+		));
+
+		//Display the list of comments
+		$content .= '<ol class="commentlist">';
+		$content .= wp_list_comments(array(
+			'per_page' => 10, //Allow comment pagination
+			'reverse_top_level' => false, //Show the latest comments at the top of the list
+			'echo' => false
+		), $comments);
+		$content .= '</ol>';
+
+		ob_start();
+		comment_form(array(), $module->ID);
+		$content .= ob_get_clean();
+		$content .= '</div>'; // module_footer
+		return str_replace( array("\n", "\r" ), '', $content );
+	}
+
+
 	public static function render_input_checkbox( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 

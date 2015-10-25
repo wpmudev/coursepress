@@ -480,6 +480,7 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				$module = get_post( $item_id );
 				$attributes = CoursePress_Model_Module::attributes( $module );
+				$attributes['course_id'] = $course_id;
 
 				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 				$template = 'CoursePress_Template_Module';

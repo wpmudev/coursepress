@@ -119,6 +119,9 @@ class CoursePress_Template_Communication {
 		$course_id = CoursePress_Helper_Utility::the_course( true );
 		$post_name  = $wp->query_vars['discussion_name'];
 		$discussion = get_page_by_path( $post_name, OBJECT, CoursePress_Model_Discussion::get_post_type_name() );
+		if( empty( $discussion ) && isset( $wp->query_vars['type'] ) && isset( $wp->query_vars['item'] ) ) {
+			$discussion = get_post( (int) $wp->query_vars['item'] );
+		}
 
 		$author = false;
 		if( ! empty( $discussion ) ) {

@@ -94,6 +94,7 @@ class CoursePress_Template_Unit {
 		foreach( $modules as $module ) {
 
 			$attributes = CoursePress_Model_Module::attributes( $module );
+			$attributes['course_id'] = $course_id;
 
 			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 			$template = 'CoursePress_Template_Module';

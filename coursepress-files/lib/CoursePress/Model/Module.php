@@ -23,6 +23,7 @@ class CoursePress_Model_Module {
 					'not_found_in_trash' => __( 'No Modules found in Trash', CoursePress::TD ),
 					'view'				 => __( 'View Module', CoursePress::TD )
 				),
+//				'supports' => array( 'title', 'excerpt', 'comments' ),
 				'public'			 => false,
 				'show_ui'			 => false,
 				'publicly_queryable' => false,

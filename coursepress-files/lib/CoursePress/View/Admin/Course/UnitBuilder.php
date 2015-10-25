@@ -343,6 +343,12 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$module['post_type']   = CoursePress_Model_Module::get_post_type_name();
 						$module['post_parent'] = $unit_id;
 						$module['post_status'] = 'publish';
+
+						if( ! empty( $module['meta'] ) && 'discussion' === $module['meta']['module_type'] ) {
+							$data['comment_status'] = 'open';
+						}
+
+
 						if ( $update ) {
 
 							$meta = ! empty( $module['meta'] ) ? $module['meta'] : array();
