@@ -918,6 +918,46 @@ class CoursePress_Helper_Utility {
 		return $return_name;
 	}
 
+	public static function duration_to_seconds( $duration ) {
+
+		$seconds = 0;
+
+		$parts = explode( ':', $duration );
+
+		if( ! empty( $parts ) ) {
+			$seconds = (int) array_pop( $parts );
+		}
+
+		if( ! empty( $parts ) ) {
+			$seconds += 60 * ( (int) array_pop( $parts ) );
+		}
+
+		if( ! empty( $parts ) ) {
+			$seconds += 60 * 60 * ( (int) array_pop( $parts ) );
+		}
+
+		return $seconds;
+	}
+
+	public static function seconds_to_duration( $seconds ) {
+
+		$hours = (int) ( $seconds / 60 / 60 );
+		$minutes = (int) ( ( $seconds - ( $hours * 60 * 60 ) ) / 60 );
+		$seconds = $seconds - ( $hours * 60 * 60 ) - ( $minutes * 60 );
+
+		return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds );
+	}
+
+	public static function hashcode( $string ) {
+		$hash = 0;
+		if ( strlen( $string ) == 0) return $hash;
+		for ($i = 0; $i < strlen( $string ); $i++) {
+			$char = substr( $string, $i, 1 );
+			$hash = ( ( $hash<<5 ) - $hash ) + ord( $char );
+			$hash = $hash & $hash; // Convert to 32bit integer
+		}
+		return $hash;
+	}
 }
 
 // LEGACY

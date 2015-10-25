@@ -200,70 +200,6 @@ class CoursePress_Helper_UI_Module {
 		return $content;
 	}
 
-
-	private static function render_components( $data ) {
-
-		$types  = self::get_types();
-		$labels = self::get_labels();
-
-		$content = '';
-
-		$module_mode = $types[ $data['type'] ]['mode'];
-
-		$components = is_array( $data['components'] ) ? $data['components'] : array();
-
-		//if ( 'input' === $module_mode && ! empty( $components ) ) {
-		//	$content .= '
-		//	<label class="module-question-label">
-		//		<span class="label">' . $labels['module_answer'] . '</span>
-		//		<span class="description">' . $labels['module_answer_desc'] . '</span>
-		//	</label>';
-		//}
-
-		// Now deal with each component
-		foreach ( $components as $key => $component ) {
-
-			$component_id = isset( $component['id'] ) ? $component['id'] : 0;
-			$content .= '
-				<div class="module-component module-component-' . $key . '">
-					<label data-key="label">
-						<span class="label">' . $component['label'] . '</span>
-						<span class="description">' . $component['description'] . '</span>
-				';
-			foreach ( (array) $component['items'] as $idx => $item ) {
-
-				switch ( $item['type'] ) {
-
-					case 'text-input':
-						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
-						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
-						$content .= '<input type="text"' . $attr . ' />';
-						break;
-
-					case 'text':
-						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
-						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
-						$text = isset( $item['text'] ) ? $item['text'] : '';
-						$content .= '<span' . $attr . '>' . $text . '</span>';
-						break;
-
-				}
-
-			}
-
-			$content .= '
-					</label>
-				</div>
-			';
-
-
-		}
-
-
-		return $content;
-	}
-
-
 	public static function get_types() {
 
 		$input_types  = self::get_input_types();
@@ -271,6 +207,54 @@ class CoursePress_Helper_UI_Module {
 
 		return apply_filters( 'coursepress_module_types', CoursePress_Helper_Utility::merge_distinct( $input_types, $output_types ) );
 
+	}
+
+	public static function get_input_types() {
+
+		$types = array(
+			self::INPUT_MULTIPLE_CHOICE => array(
+				'title' => __( 'Multiple Choice', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_SINGLE_CHOICE   => array(
+				'title' => __( 'Single Choice', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_SELECT_CHOICE   => array(
+				'title' => __( 'Selectable', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_SHORT_TEXT      => array(
+				'title' => __( 'Short Answer', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_LONG_TEXT       => array(
+				'title' => __( 'Long Answer', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_UPLOAD          => array(
+				'title' => __( 'File Upload', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			self::INPUT_QUIZ            => array(
+				'title' => __( 'Quiz', CoursePress::TD ),
+				'mode'  => 'input',
+				'icon'  => 'default',
+			),
+			//self::INPUT_ADVANCED        => array(
+			//	'title' => __( 'Advanced Action', CoursePress::TD ),
+			//	'mode'  => 'input',
+			//	'icon'  => 'default',
+			//),
+		);
+
+		return apply_filters( 'coursepress_module_input_types', $types );
 	}
 
 	public static function get_output_types() {
@@ -318,65 +302,16 @@ class CoursePress_Helper_UI_Module {
 			//	'body'    => 'hidden',
 			//	'icon'    => 'default',
 			//),
-			self::OUTPUT_DISCUSSION       => array(
-				'title'   => __( 'Discussion', CoursePress::TD ),
-				'mode'    => 'output',
-				'icon'    => 'default',
+			self::OUTPUT_DISCUSSION    => array(
+				'title' => __( 'Discussion', CoursePress::TD ),
+				'mode'  => 'output',
+				'icon'  => 'default',
 			),
 		);
 
 		return apply_filters( 'coursepress_module_output_types', $types );
 	}
 
-	public static function get_input_types() {
-
-		$types = array(
-			self::INPUT_MULTIPLE_CHOICE => array(
-				'title' => __( 'Multiple Choice', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_SINGLE_CHOICE   => array(
-				'title' => __( 'Single Choice', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_SELECT_CHOICE   => array(
-				'title' => __( 'Selectable', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_SHORT_TEXT      => array(
-				'title' => __( 'Short Answer', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_LONG_TEXT       => array(
-				'title' => __( 'Long Answer', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_UPLOAD          => array(
-				'title' => __( 'File Upload', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			self::INPUT_QUIZ          => array(
-				'title' => __( 'Quiz', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
-			),
-			//self::INPUT_ADVANCED        => array(
-			//	'title' => __( 'Advanced Action', CoursePress::TD ),
-			//	'mode'  => 'input',
-			//	'icon'  => 'default',
-			//),
-		);
-
-		return apply_filters( 'coursepress_module_input_types', $types );
-	}
-
-	// Could've done this inline, but this is needed for JS translation
 	public static function get_labels() {
 
 		return apply_filters( 'coursepress_module_labels', array(
@@ -394,6 +329,8 @@ class CoursePress_Helper_UI_Module {
 			'module_minimum_grade'      => __( 'Minimum Grade', CoursePress::TD ),
 			'module_allow_retries'      => __( 'Allow Retries', CoursePress::TD ),
 			'module_allow_retries_desc' => __( 'Allow and set amount of retries (0 unlimited)', CoursePress::TD ),
+			'module_use_timer'          => __( 'Use Timer', CoursePress::TD ),
+			'module_use_timer_desc'     => __( 'Use duration as time restriction', CoursePress::TD ),
 			'module_question'           => __( 'Question/Task', CoursePress::TD ),
 			'module_question_desc'      => __( 'The question or instructions to complete this task.', CoursePress::TD ),
 			'module_content'            => __( 'Content', CoursePress::TD ),
@@ -402,9 +339,12 @@ class CoursePress_Helper_UI_Module {
 			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
 			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
 			'module_delete'             => __( 'Delete Module', CoursePress::TD ),
+			'module_start_quiz'         => __( 'Start Quiz', CoursePress::TD )
 		) );
 
 	}
+
+	// Could've done this inline, but this is needed for JS translation
 
 	public static function get_template( $component = false ) {
 
@@ -467,7 +407,7 @@ class CoursePress_Helper_UI_Module {
 								{
 									"type": "media-caption-settings",
 									"class": "component-media-caption wide",
-									"label": "' . __('Show Caption', CoursePress::TD ) . '",
+									"label": "' . __( 'Show Caption', CoursePress::TD ) . '",
 									"enable_name": "meta_show_media_caption",
 									"option_name": "meta_caption_field",
 									"input_name": "meta_caption_custom_text",
@@ -526,7 +466,7 @@ class CoursePress_Helper_UI_Module {
 								{
 									"type": "media-caption-settings",
 									"class": "component-media-caption wide",
-									"label": "' . __('Show Caption', CoursePress::TD ) . '",
+									"label": "' . __( 'Show Caption', CoursePress::TD ) . '",
 									"enable_name": "meta_show_media_caption",
 									"option_name": "meta_caption_field",
 									"input_name": "meta_caption_custom_text",
@@ -731,7 +671,7 @@ class CoursePress_Helper_UI_Module {
 				"components": []
 			}
 			',
-			self::OUTPUT_DISCUSSION           => '
+			self::OUTPUT_DISCUSSION     => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -939,7 +879,7 @@ class CoursePress_Helper_UI_Module {
 					"components": []
 				}
 			',
-			self::INPUT_QUIZ          => '
+			self::INPUT_QUIZ            => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -951,6 +891,7 @@ class CoursePress_Helper_UI_Module {
 					"minimum_grade": "100",
 					"allow_retries": "1",
 					"retry_attempts": "0",
+					"use_timer": "1",
 					"content": "",
 					"editor_height": "200",
 					"order": "0",
@@ -989,6 +930,68 @@ class CoursePress_Helper_UI_Module {
 		}
 
 
+	}
+
+	private static function render_components( $data ) {
+
+		$types  = self::get_types();
+		$labels = self::get_labels();
+
+		$content = '';
+
+		$module_mode = $types[ $data['type'] ]['mode'];
+
+		$components = is_array( $data['components'] ) ? $data['components'] : array();
+
+		//if ( 'input' === $module_mode && ! empty( $components ) ) {
+		//	$content .= '
+		//	<label class="module-question-label">
+		//		<span class="label">' . $labels['module_answer'] . '</span>
+		//		<span class="description">' . $labels['module_answer_desc'] . '</span>
+		//	</label>';
+		//}
+
+		// Now deal with each component
+		foreach ( $components as $key => $component ) {
+
+			$component_id = isset( $component['id'] ) ? $component['id'] : 0;
+			$content .= '
+				<div class="module-component module-component-' . $key . '">
+					<label data-key="label">
+						<span class="label">' . $component['label'] . '</span>
+						<span class="description">' . $component['description'] . '</span>
+				';
+			foreach ( (array) $component['items'] as $idx => $item ) {
+
+				switch ( $item['type'] ) {
+
+					case 'text-input':
+						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
+						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
+						$content .= '<input type="text"' . $attr . ' />';
+						break;
+
+					case 'text':
+						$attr = isset( $item['name'] ) ? ' name="' . $item['name'] . '"' : '';
+						$attr .= isset( $item['class'] ) ? ' class="' . $item['class'] . '"' : '';
+						$text = isset( $item['text'] ) ? $item['text'] : '';
+						$content .= '<span' . $attr . '>' . $text . '</span>';
+						break;
+
+				}
+
+			}
+
+			$content .= '
+					</label>
+				</div>
+			';
+
+
+		}
+
+
+		return $content;
 	}
 
 

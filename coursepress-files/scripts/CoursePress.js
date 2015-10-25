@@ -297,6 +297,11 @@ var CoursePress = CoursePress || {};
 
     }
 
+    CoursePress.utility.pad = function( num, size ) {
+        var s = num+"";
+        while (s.length < size) s = "0" + s;
+        return s;
+    }
 
     // Unserialize method from phpjs.org
     CoursePress.utility.unserialize = function ( data ) {
@@ -455,6 +460,17 @@ var CoursePress = CoursePress || {};
         return _unserialize( (data + ''), 0 )[ 2 ];
     }
 
+    // hashcode implementation
+    CoursePress.utility.hashcode = function (s) {
+        var hash = 0, i, chr, len;
+        if (s.length == 0) return hash;
+        for (i = 0, len = s.length; i < len; i++) {
+            chr = s.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
 
     // Webkit MD5 method
     CoursePress.utility.md5 = function ( s ) {
@@ -950,6 +966,87 @@ var CoursePress = CoursePress || {};
                     } );
 
                 } );
+            },
+
+            coursepress_timer: function( options ) {
+
+                options = options || {
+                        seconds: 10,
+                        running: false,
+                        action: 'none',
+                    };
+                console.log( options );
+
+                var seconds = options.seconds;
+                var elapsed = 0;
+                var self = this;
+                var has_hours = parseInt( seconds / 60 / 60 ) !== 0;
+
+                switch( options.action ) {
+
+                    case 'none':
+                        $( self ).append('<div class="cp-counter-clock"> </div>');
+                        var d_hours = parseInt(seconds / 60 / 60);
+                        var d_minutes = parseInt(( seconds - ( d_hours * 60 * 60 ) ) / 60);
+                        var d_seconds = seconds - ( d_hours * 60 * 60 ) - ( d_minutes * 60 );
+                        var duration = '';
+
+                        if (has_hours) {
+                            duration += CoursePress.utility.pad(d_hours, 2) + ':';
+                        }
+                        duration += CoursePress.utility.pad(d_minutes, 2) + ':';
+                        duration += CoursePress.utility.pad(d_seconds, 2);
+                        $($(self).find('.cp-counter-clock')[0]).replaceWith('<div class="cp-counter-clock">' + duration + '</div>');
+                        $( self).append('<input class="cp-counter-start" type="button" value="' + _coursepress.labels['module_start_quiz'] + '">');
+                        $( self).find('.cp-counter-start').on('click', function(e) {
+                            options.action = "start";
+                            $( self).coursepress_timer( options );
+                            $($( self).find('.cp-counter-start')).detach();
+                            $( options.toggle_element).show();
+                            $( '.focus-nav').addClass('not-active');
+                            $( '.coursepress-breadcrumbs a').addClass('not-active');
+
+
+                            //$('.input-quiz').addClass('moo');
+                        });
+                        break;
+
+                    case 'start':
+
+                        //$( self ).append('<div class="cp-counter-clock"> </div>');
+                        return this.each(function (options) {
+
+                            $(self).trigger('timer_started', seconds);
+                            var count = 0;
+                            var timeinterval = setInterval(function () {
+
+                                if (seconds > 0) {
+                                    seconds -= 1;
+                                    elapsed += 1
+                                    var d_hours = parseInt(seconds / 60 / 60);
+                                    var d_minutes = parseInt(( seconds - ( d_hours * 60 * 60 ) ) / 60);
+                                    var d_seconds = seconds - ( d_hours * 60 * 60 ) - ( d_minutes * 60 );
+
+                                    var duration = '';
+
+                                    if (has_hours) {
+                                        duration += CoursePress.utility.pad(d_hours, 2) + ':';
+                                    }
+                                    duration += CoursePress.utility.pad(d_minutes, 2) + ':';
+                                    duration += CoursePress.utility.pad(d_seconds, 2);
+
+                                    $($(self).find('.cp-counter-clock')[0]).replaceWith('<div class="cp-counter-clock">' + duration + '</div>');
+                                    $(self).trigger('timer_updated', elapsed, seconds);
+                                } else {
+                                    $(self).trigger('timer_ended');
+                                    $( '.module-quiz-question input').attr('disabled','disabled');
+                                    //$( '.coursepress-breadcrumbs a').removeClass('not-active');
+                                    clearInterval(timeinterval);
+                                }
+                            }, 1000);
+                        });
+                    break;
+                }
             },
 
             coursepress_ui_toggle: function ( options ) {

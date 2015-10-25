@@ -917,10 +917,18 @@ class CoursePress_View_Front_Course {
 				$module_id  = (int) $data->module_id;
 				$student_id = (int) $data->student_id;
 				$response   = $data->response;
+				$module_type = $data->module_type;
 
 				CoursePress_Model_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 
 				$data = CoursePress_Helper_Utility::object_to_array( $data );
+
+				if( 'input-quiz' == $module_type ) {
+
+
+
+				}
+
 
 				$json_data = array_merge( $json_data, $data );
 				$success   = true;

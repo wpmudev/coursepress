@@ -1046,6 +1046,18 @@ ul.notification-archive-list {
     display: none;
 }
 
+.module-quiz-question .question {
+    margin: 10px 0 0 0;
+}
+.module-quiz-question input {
+    margin-right: 10px;
+}
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+}
 
 /*.student-settings.login-form .half-left,*/
 /*.student-settings.signup-form .half-left,*/

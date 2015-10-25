@@ -210,6 +210,7 @@ class CoursePress_Helper_JavaScript {
 				'home_url'                   => home_url(),
 				'current_student'            => get_current_user_id(),
 				'workbook_view_answer'       => __( 'View', CoursePress::TD ),
+				'labels'                     => CoursePress_Helper_UI_Module::get_labels(),
 				'signup_errors'              => array(
 					'all_fields' => __( 'All fields required.', CoursePress::TD ),
 					'email_invalid' => __( 'Invalid e-mail address.', CoursePress::TD ),

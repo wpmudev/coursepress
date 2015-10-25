@@ -1327,7 +1327,8 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder label.module-mandatory,
 .tab-content .unit-builder-content .module-holder label.module-assessable,
 .tab-content .unit-builder-content .module-holder label.module-allow-retries,
-.tab-content .unit-builder-content .module-holder label.module-minimum-grade {
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade,
+.tab-content .unit-builder-content .module-holder label.module-use-timer {
   width: 32%;
   margin-top: 10px;
 }
@@ -1335,7 +1336,8 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder label.module-mandatory .description,
 .tab-content .unit-builder-content .module-holder label.module-assessable .description,
 .tab-content .unit-builder-content .module-holder label.module-allow-retries .description,
-.tab-content .unit-builder-content .module-holder label.module-minimum-grade .description {
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade .description,
+.tab-content .unit-builder-content .module-holder label.module-use-timer .description {
   margin-left: 20px;
   display: block;
 }
@@ -1343,7 +1345,8 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder label.module-mandatory input[type="text"],
 .tab-content .unit-builder-content .module-holder label.module-assessable input[type="text"],
 .tab-content .unit-builder-content .module-holder label.module-allow-retries input[type="text"],
-.tab-content .unit-builder-content .module-holder label.module-minimum-grade input[type="text"] {
+.tab-content .unit-builder-content .module-holder label.module-minimum-grade input[type="text"],
+.tab-content .unit-builder-content .module-holder label.module-use-timer input[type="text"] {
   width: 55px;
   margin-left: 10px;
 }

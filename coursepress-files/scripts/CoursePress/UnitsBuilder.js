@@ -667,6 +667,7 @@ var CoursePress = CoursePress || {};
         data[ 'minimum_grade' ] = module.get_meta( 'minimum_grade', 100 );
         data[ 'allow_retries' ] = module.fix_boolean( module.get_meta( 'allow_retries' ) );
         data[ 'retry_attempts' ] = module.get_meta( 'retry_attempts', 0 );
+        data[ 'use_timer' ] = module.fix_boolean( module.get_meta( 'use_timer' ) );
         var post_content = module.get( 'post_excerpt' );
         post_content = post_content && post_content.length > 0 ? post_content : module.get( 'post_content' );
         data[ 'content' ] = post_content.trim();
@@ -729,6 +730,15 @@ var CoursePress = CoursePress || {};
                 '<input type="text" name="meta_retry_attempts" value="' + data[ 'retry_attempts' ] + '" />' +
                 '<span class="description">' + labels[ 'module_allow_retries_desc' ] + '</span>' +
                 '</label>';
+
+                // Use Timer - For Quizzes
+                if( 'input-quiz' === data[ 'type' ] ) {
+                    content += '<label class="module-use-timer">' +
+                        '<input type="checkbox" name="meta_use_timer[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['use_timer'], 1) + ' />' +
+                        '<span class="label">' + labels['module_use_timer'] + '</span><br />' +
+                        '<span class="description">' + labels['module_use_timer_desc'] + '</span>' +
+                        '</label>';
+                }
             }
             //
             //    // Excerpt
@@ -1491,6 +1501,9 @@ var CoursePress = CoursePress || {};
             this.set_meta( 'minimum_grade', data[ 'minimum_grade' ] );
             this.set_meta( 'allow_retries', data[ 'allow_retries' ] );
             this.set_meta( 'retry_attempts', data[ 'retry_attempts' ] );
+            if( 'input-quiz' === data[ 'type' ] ) {
+                this.set_meta( 'use_timer', data[ 'use_timer' ] );
+            }
             this.set( 'post_content', data[ 'content' ] || '' );
             this.set_meta( 'order', data[ 'order' ] );
 
