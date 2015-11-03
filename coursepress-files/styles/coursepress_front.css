@@ -1046,6 +1046,46 @@ ul.notification-archive-list {
     display: none;
 }
 
+.module-container.module.discussion .comments-area {
+
+    margin: 0;
+    /*padding: 5.3333%;*/
+
+}
+
+.module-container.module.discussion .comments-list {
+    margin: 0;
+}
+
+.module-container.module.discussion .comments-list,
+.module-container.module.discussion .comments-list ol {
+    list-style: outside none none;
+}
+
+.module-container.module.discussion .comments-list .comment-metadata {
+    margin-bottom: 10px;
+}
+.module-container.module.discussion .comments-list .comment-metadata a {
+    opacity: 0.9;
+    text-decoration: none;
+    border: none;
+}
+
+.module-container.module.discussion .comments-list .comment-content {
+    margin-bottom: 10px;
+}
+
+.module-container.module.discussion .comments-list .comment-reply-link.discussion {
+    margin: 0;
+    border: none;
+    text-decoration: underline;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+
+
+}
+
+
 .module-quiz-question .question {
     margin: 10px 0 0 0;
 }

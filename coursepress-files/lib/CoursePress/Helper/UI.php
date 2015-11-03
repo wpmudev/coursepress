@@ -74,16 +74,23 @@ class CoursePress_Helper_UI {
 
 		$args = CoursePress_Helper_Utility::merge_distinct( $args, $args_default );
 
+		if( defined('COURSEPRESS_INSTRUCTOR_ROLE') ) {
+
+			$args['role'] = COURSEPRESS_INSTRUCTOR_ROLE;
+
+			$users = get_users( $args );
+
+			$user_avatars = array();
+			foreach ( $users as $user ) {
+				$user_avatars[ $user->ID ] = str_replace( "'", '"', get_avatar( $user->ID, 80, "", $user->display_name ) );
+			}
+
+		}
+
 		if ( is_multisite() ) {
 			$args['blog_id'] = get_current_blog_id();
 		}
 
-		$users = get_users( $args );
-
-		$user_avatars = array();
-		foreach ( $users as $user ) {
-			$user_avatars[ $user->ID ] = str_replace( "'", '"', get_avatar( $user->ID, 80, "", $user->display_name ) );
-		}
 		$user_avatars['default'] = str_replace( "'", '"', get_avatar( 0, 80, '', '', array( 'force_default' => true ) ) );
 
 		return $user_avatars;

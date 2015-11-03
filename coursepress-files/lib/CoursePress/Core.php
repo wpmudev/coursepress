@@ -79,10 +79,11 @@ class CoursePress_Core {
 
 		}
 
-
-
 		// Initialize Utility actions
 		CoursePress_Helper_Utility::init();
+
+		// Init Module hooks
+		CoursePress_Model_Module::module_init_hooks();
 
 		// Upgrade CoursePress if needed
 		CoursePress_Upgrade::init();

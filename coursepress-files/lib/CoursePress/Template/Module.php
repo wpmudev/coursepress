@@ -2,6 +2,8 @@
 
 class CoursePress_Template_Module {
 
+	private static $args = array();
+
 	private static function render_module_head( $module, $attributes = false ) {
 		$content = '<div class="module-container module ' . $attributes['module_type'] . ' module-' . $module->ID . ' ' . $attributes['mode'] . '" data-type="' . $attributes['module_type'] . '" data-module="' . $module->ID . '">';
 
@@ -175,9 +177,11 @@ class CoursePress_Template_Module {
 
 	public static function render_discussion( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
-		$x = have_comments();
+
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+
+		$content .= '<div id="comments" class="comments-area">';
 
 		if( get_comments_number( $module->ID ) > 0 ) {
 
@@ -198,19 +202,50 @@ class CoursePress_Template_Module {
 		));
 
 		//Display the list of comments
-		$content .= '<ol class="commentlist">';
+		$content .= '<ol class="comments-list">';
 		$content .= wp_list_comments(array(
 			'per_page' => 10, //Allow comment pagination
 			'reverse_top_level' => false, //Show the latest comments at the top of the list
-			'echo' => false
+			'echo' => false,
+			'style' => 'ol',
+//			'callback' => array( __CLASS__, 'testing' ),
 		), $comments);
 		$content .= '</ol>';
+
+//		add_filter( 'comment_post_redirect', array( __CLASS__, 'test2' ), 10, 2 );
 
 		ob_start();
 		comment_form(array(), $module->ID);
 		$content .= ob_get_clean();
+
+
+		$content .= '</div>'; // comments-area
 		$content .= '</div>'; // module_footer
+
+
+
 		return str_replace( array("\n", "\r" ), '', $content );
+	}
+
+	public static function testing( $comment, $args, $depth ) {
+
+		$x = '';
+		$GLOBALS['comment'] = $comment;
+//		$args['respond_id'] = 'module-' . $comment->comment_post_ID;
+
+		?>
+		<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
+			<article id="comment-<?php comment_ID(); ?>" class="comment">
+
+				<div class="comment-content"><?php comment_text(); ?></div>
+
+				<div class="reply">
+					<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ), $comment ); ?>
+				</div>
+			</article>
+		</li>
+		<?php
+
 	}
 
 

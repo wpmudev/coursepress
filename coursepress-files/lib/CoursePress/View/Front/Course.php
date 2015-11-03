@@ -4,6 +4,7 @@ class CoursePress_View_Front_Course {
 
 	public static $discussion = false;  // Used for hooking discussion filters
 	public static $title = ''; // The page title
+	public static $args = array();
 
 	public static function init() {
 
@@ -35,6 +36,13 @@ class CoursePress_View_Front_Course {
 		CoursePress_View_Front_EnrollmentPopup::init();
 	}
 
+	public static function test2( $location, $comment ) {
+
+		$x = '';
+		return self::$args['discussion_url'];
+
+	}
+
 	public static function init_ajax() {
 		add_action( 'wp_ajax_course_front', array( __CLASS__, 'process_course_ajax' ) );
 
@@ -42,6 +50,16 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function handle_form_posts() {
+
+		// Handle comments post
+		if( ! empty( $_POST['comment_post_ID'] ) ) {
+			$module = get_post( $_POST['comment_post_ID'] );
+			$course_link = get_permalink( get_post_field( 'post_parent', $module->post_parent ) );
+
+			$return_url = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $module->post_parent) . '#module-' . $module->ID );
+			self::$args['discussion_url'] = $return_url;
+			add_filter( 'comment_post_redirect', array( __CLASS__, 'test2' ), 10, 2 );
+		}
 
 		// Add new discussion post
 		if ( is_user_logged_in() && isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'add-new-discussion' ) ) {

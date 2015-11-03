@@ -831,10 +831,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
             var remove_buttons = true; // permission required
             var content = '';
             console.log( data );
+
+            var avatar = _coursepress.instructor_avatars[ 'default' ];
+            if( _coursepress.instructor_role_defined ) {
+                 avatar = _coursepress.instructor_avatars[ data.instructor_id ];
+            }
+
             if ( remove_buttons ) {
-                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + _coursepress.instructor_avatars[ data.instructor_id ] + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
+                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + avatar + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
             } else {
-                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div>' + _coursepress.instructor_avatars[ data.instructor_id ] + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
+                content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div>' + avatar + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
             }
 
             if ( $( '.instructor-avatar-holder.empty' ).length > 0 ) {

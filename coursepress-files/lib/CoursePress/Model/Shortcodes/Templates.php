@@ -302,6 +302,9 @@ class CoursePress_Model_Shortcodes_Templates {
 		if( empty( $course_id ) && empty( $unit_id ) ) {
 			return '';
 		}
+
+		CoursePress_Helper_Utility::set_the_course( $course_id );
+
 		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
 		$item_id = (int) $a['item_id'];
 		$type = sanitize_text_field( $a['type'] );
