@@ -14,7 +14,7 @@ class CoursePress_Template_Module {
 			$content .= '<h4 class="module-title">' . $module->post_title . '</h4>';
 		}
 
-		if( $mandatory ) {
+		if( $mandatory && $attributes['module_type'] != 'input-quiz' ) {
 			$content .= '<div class="is-mandatory">' . esc_html__( 'Mandatory', CoursePress::TD ) . '</div>';
 		}
 
@@ -770,19 +770,26 @@ class CoursePress_Template_Module {
 		$unit_id = $module->post_parent;
 		$module_id = $module->ID;
 		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$response_count = count( $responses );
 		$use_timer = CoursePress_Helper_Utility::fix_bool( $attributes['use_timer'] );
+
+		$quiz_result = CoursePress_Model_Module::get_quiz_results( get_current_user_id(), $course_id, $unit_id, $module_id, false, $student_progress );
+
+		// Is the quiz already passed?
+		$already_passed = ! empty( $quiz_result ) && ! empty( $quiz_result['passed'] );
+		$quiz_result_content = ! empty( $quiz_result ) ? do_shortcode('[coursepress_quiz_result course_id="' . $course_id . '" unit_id="' . $unit_id . '" module_id="' . $module_id . '" student_id="' . get_current_user_id() . '"]') : '';
+
+		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
+		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
-		if( ! empty( $attributes['questions'] ) ) {
-			$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		if( ! empty( $attributes['questions'] ) && ! $already_passed && ! $disabled ) {
 
+			// Has the user already answered?
 			$element_class = ! empty( $responses ) ? 'hide' : '';
-			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
-			//$attributes['retry_attempts'] = 3; // DEBUG
-			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
-			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
 			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( "Submit Answer", CoursePress::TD ) . '</a></div>' : '';
@@ -831,71 +838,17 @@ class CoursePress_Template_Module {
 			}
 
 
-//			$content .= '<ul style="list-style: none;">';
-//
-//			// RESUBMIT LOGIC
+			// RESUBMIT LOGIC
 			$action = '<a class="module-submit-action">' . esc_html__( "Submit Quiz Answers", CoursePress::TD ) . '</a>';
-//
-//			$oddeven = 'odd';
-//			$alt = '';
-//			foreach( $attributes['answers'] as $key => $answer ) {
-//				$content .= '<li class="' . $oddeven . ' ' . $alt . '">' .
-//				            '<input type="radio" value="' . esc_attr( $key ) .'" name="module-' . $module->ID . '" ' . $disabled_attr . ' /> ' .  esc_html( $answer ) .
-//				            '</li>';
-//
-//				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
-//				$alt = empty( $alt ) ? 'alt' : '';
-//			}
-//
-//			$content .= '</ul>';
-//
 			$content .= $action;
-//
+
 			$content .= '</div>'; // module-quiz-questions
 			$content .= '</div>'; // module-elements
-//
-//			if( ! empty( $responses ) ) {
-//
-//				$last_response = $responses[ $response_count - 1 ];
-//				$response_key = array_keys( $responses );
-//				$response_key = array_pop( $response_key );
-//
-//				$content .= '<div class="module-response">';
-//
-//				$content .= '<ul>';
-//				foreach( $attributes['answers'] as $key => $answer ) {
-//					$the_answer = (int) $attributes['answers_selected'] === (int) $key;
-//					$student_answer = (int) $last_response === (int) $key;
-//
-//					$class = '';
-//					if( $student_answer && $the_answer ) {
-//						$class = 'chosen-answer correct';
-//					} elseif( $student_answer && ! $the_answer ) {
-//						$class = 'chosen-answer incorrect';
-//					} elseif( ! $student_answer && $the_answer ) {
-//						//$class = 'incorrect';
-//					}
-//
-//					$content .= '<li class="' . $class . '">' . $answer . '</li>';
-//
-//				}
-//				$content .= '</ul>';
-//
-//				$content .= '</div>';
-//
-//				// Render Response and Feedback
-//				$args = array(
-//					'course_id' => $course_id,
-//					'unit_id' => $unit_id,
-//					'module_id' => $module_id,
-//					'student_id' => get_current_user_id(),
-//					'student_data' => $student_progress,
-//					'response_key' => $response_key,
-//					'disabled' => $disabled
-//				);
-//				$content .= self::render_module_result( $module, $attributes, $args);
-//
-//			}
+		}
+		else {
+			if( ! empty( $quiz_result_content ) ) {
+				$content .= $quiz_result_content;
+			}
 		}
 
 		$content .= '</div>'; // module_footer

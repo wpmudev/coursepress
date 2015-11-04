@@ -943,10 +943,11 @@ class CoursePress_View_Front_Course {
 
 				if( 'input-quiz' == $module_type ) {
 
-
+					$quiz_result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
+					$json_data['quiz_result_screen'] = CoursePress_Model_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result );
+					$json_data['results'] = $quiz_result;
 
 				}
-
 
 				$json_data = array_merge( $json_data, $data );
 				$success   = true;

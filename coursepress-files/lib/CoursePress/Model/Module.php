@@ -344,4 +344,121 @@ class CoursePress_Model_Module {
 		return $formatted_link;
 	}
 
+	public static function get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
+
+		$attributes = self::attributes( $module_id );
+
+		if ( false === $data ) {
+			$data = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+		}
+
+		if( false === $response ) {
+			$response = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
+			$response = ! empty( $response ) ? $response['response'] : false;
+		}
+
+		if( empty( $response ) ) {
+			return false;
+		}
+
+		$minimum_grade = (int) $attributes['minimum_grade'];
+
+		$total_questions = count( $attributes['questions'] );
+		$gross_correct = 0;
+
+		foreach( $attributes['questions'] as $key => $question ) {
+
+			switch( $question['type'] ) {
+
+				case 'multiple':
+					$correct_answers = $question['options']['checked'];
+					$total_answers = count( $correct_answers );
+					$correct_responses = 0;
+
+					if ( is_array( $response[$key] ) ) {
+						foreach ( $response[$key] as $a_key => $answer ) {
+							if ( $answer === $correct_answers[ $a_key ] ) {
+								$correct_responses += 1;
+							}
+						}
+					}
+
+					$result = (int) ( $correct_responses / $total_answers * 100 );
+					// If multiple choice passed, add it to the total
+					$gross_correct = 100 === $result ? $gross_correct + 1 : $gross_correct;
+
+					break;
+
+				case 'single':
+
+
+
+					break;
+
+
+				case 'short':
+					break;
+				case 'long':
+					break;
+			}
+
+
+		}
+
+		$grade = (int) ( $gross_correct / $total_questions * 100 );
+		$passed = $grade >= $minimum_grade;
+
+		return array(
+			'grade' => (int) $grade,
+			'correct' => (int) $gross_correct,
+			'wrong' => (int) $total_questions - (int) $gross_correct,
+			'total_questions' => (int) $total_questions,
+			'passed' => $passed,
+			'attributes' => $attributes
+		);
+
+	}
+
+	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {
+
+		// Get last submitted result
+		if( empty( $quiz_result ) ) {
+			$quiz_result = self::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
+		}
+
+		$passed_class = ! empty( $quiz_result['passed'] ) ? 'passed' : 'not-passed';
+		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', CoursePress::TD ) : __( 'Quiz not passed.', CoursePress::TD );
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', CoursePress::TD ) : __( 'You did not pass the quiz this time. Here are your results.', CoursePress::TD );
+
+		$template = '<div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
+			<div class="quiz-message">
+				<h3 class="result-title">' . $passed_heading . '</h3>
+				<p class="result-message">' . $passed_message . '</p>
+			</div>
+			<div class="quiz-results">
+				<table>
+					<tr><th>' . esc_html__('Total Questions', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+					<tr><th>' . esc_html__('Correct', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+					<tr><th>' . esc_html__('Incorrect', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+					<tr><th>' . esc_html__('Grade', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+				</table>
+			</div>
+		</div>
+		';
+
+		$attributes = array(
+			'course_id' => $course_id,
+			'unit_id' => $unit_id,
+			'module_id' => $module_id,
+			'student_id' => $student_id,
+			'quiz_result' => $quiz_result
+		);
+
+		// Can't use shortcodes this time as this also loads via AJAX
+		$template = apply_filters( 'coursepress_template_quiz_results', $template, $attributes );
+
+		return $template;
+
+	}
+
 }

@@ -215,6 +215,10 @@ class CoursePress_Model_Student {
 					$grade = 0;
 				}
 				break;
+			case 'input-quiz':
+				$result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+				$grade = $result['grade'];
+				break;
 
 		}
 		$grade = apply_filters( 'coursepress_autograde_module_response', $grade, $module_id, $student_id );

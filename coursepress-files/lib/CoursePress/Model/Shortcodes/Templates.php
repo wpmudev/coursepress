@@ -11,6 +11,7 @@ class CoursePress_Model_Shortcodes_Templates {
 		add_shortcode( 'instructor_page', array( __CLASS__, 'instructor_page' ) );
 		add_shortcode( 'coursepress_dashboard', array( __CLASS__, 'coursepress_dashboard' ) );
 		add_shortcode( 'coursepress_focus_item', array( __CLASS__, 'coursepress_focus_item' ) );
+		add_shortcode( 'coursepress_quiz_result', array( __CLASS__, 'coursepress_quiz_result' ) );
 
 	}
 
@@ -487,6 +488,14 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 				$template = 'CoursePress_Template_Module';
+				$next_module_class = '';
+
+				// Make sure we're allowed to move on
+				if( 'input-quiz' == $attributes['module_type'] && ! empty( $attributes['mandatory'] ) ) {
+					$quiz_result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module->ID );
+					$next_module_class = empty( $quiz_result['passed'] ) ? 'not-active' : $next_module_class;
+
+				}
 
 				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
@@ -516,9 +525,9 @@ class CoursePress_Model_Shortcodes_Templates {
 				// Next Navigation
 				if( ( $goto_next_section && $page_count >= ( $page + 1 ) ) || $next_module !== false ) {
 					$content .= $goto_next_section ? '
-							<div class="focus-nav-next next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
+							<div class="focus-nav-next ' . $next_module_class . ' next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
 						' : '
-							<div class="focus-nav-next" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
+							<div class="focus-nav-next ' . $next_module_class . '" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
 						';
 				}
 				$content .= '</div>'; // .focus-nav
@@ -540,6 +549,40 @@ class CoursePress_Model_Shortcodes_Templates {
 		if( $breadcrumbs ) {
 			$content = '<div class="coursepress-breadcrumbs ' . $type . '">' . $breadcrumb_trail . '</div>' . $content;
 		}
+
+		if ( $echo ) {
+			echo $content;
+		}
+
+		return $content;
+
+	}
+
+
+	public static function coursepress_quiz_result( $a ) {
+
+		$a = shortcode_atts( array(
+			'course_id' => false,
+			'unit_id' => false,
+			'module_id' => false,
+			'student_id' => false,
+			'echo'      => false,
+		), $a, 'coursepress_dashboard' );
+
+		$course_id = (int) $a['course_id'];
+		$unit_id = (int) $a['unit_id'];
+		$module_id = (int) $a['module_id'];
+		$student_id = (int) $a['student_id'];
+		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+
+		if( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
+			return '';
+		}
+
+		$template = CoursePress_Model_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id );
+		$template = apply_filters( 'coursepress_template_quiz_results_shortcode', $template, $a );
+
+		$content = do_shortcode( $template );
 
 		if ( $echo ) {
 			echo $content;

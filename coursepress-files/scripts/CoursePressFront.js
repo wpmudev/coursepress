@@ -1035,14 +1035,33 @@ var CoursePress = CoursePress || {};
             model.save();
 
             model.on( 'coursepress:record_module_response_success', function ( data ) {
+                console.log( data );
                 $( elements ).find( '.response-processing' ).detach();
 
                 $( result ).detach();
                 $( elements ).addClass( 'hide' );
 
-                var html = '<div class="module-response">' +
-                    '<p class="file_holder">' + _coursepress.response_saved_message + '</p>' +
-                    '</div>';
+
+                var html = '';
+                if( data.quiz_result_screen.length > 0 ) {
+
+                    // Enable navigation after submit
+                    $('.coursepress-focus-view .not-active').removeClass('not-active');
+
+                    html = data.quiz_result_screen;
+
+                    if( data.results.attributes.mandatory && ! data.results.passed ) {
+                        $('.coursepress-focus-view .focus-nav-next').addClass('not-active');
+                    }
+
+
+                } else {
+                    html = '<div class="module-response">' +
+                        '<p class="file_holder">' + _coursepress.response_saved_message + '</p>' +
+                        '</div>';
+                }
+
+
 
                 if( 0 === response.length ) {
                     $( parent ).append( html );
