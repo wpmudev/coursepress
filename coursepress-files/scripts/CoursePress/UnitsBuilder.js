@@ -228,14 +228,19 @@ var CoursePress = CoursePress || {};
             switch( type ) {
 
                 case 'single':
+
+                    var question_div = $(el).parents('.quiz-question')[0];
+
+                    var radio_name = 'single-' + ( total + 1 );
+
                     question_type = 'Single Choice';
 
                     question_content += '<div class="answer-group">';
 
-                    question_content += '<div class="answer"><input type="radio" name="" value="" />';
-                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer A" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
-                    question_content += '<div class="answer"><input type="radio" name="" value="" />';
-                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer B" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
+                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer A" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+                    question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
+                    question_content += '<input class="component-radio-answer wide" type="text" value="Answer B" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 
                     question_content += '</div>';
                     question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
@@ -329,6 +334,20 @@ var CoursePress = CoursePress || {};
                     //
                     //question_content += '</div>';
                     //question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+                    question_type = 'Single Choice';
+
+                    question_content += '<div class="answer-group">';
+
+                    item.options.answers = item.options.answers || [];
+                    $.each( item.options.answers, function( a_index, a_item ) {
+                        var checked = item.options.checked[a_index] ? 'checked=checked' : '';
+                        question_content += '<div class="answer"><input type="radio" name="question' + ( index + 1 ) + '" value="" ' + checked + ' />';
+                        question_content += '<input class="component-radio-answer wide" type="text" value="' + a_item + '" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+                    } );
+
+                    question_content += '</div>';
+                    question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
+
 
                     break;
                 case 'multiple':
@@ -404,6 +423,15 @@ var CoursePress = CoursePress || {};
             switch( questions[index].type ) {
 
                 case 'single':
+                    questions[index].options['answers'] = [];
+                    questions[index].options['checked'] = [];
+                    var answers = $( item).find('.answer-group .answer');
+                    console.log( answers );
+                    $.each( answers, function( a_idx, a_item ) {
+                        questions[index].options['answers'][a_idx] = $( a_item).find('[type="text"]').val();
+                        questions[index].options['checked'][a_idx] = $( a_item).find('[type="radio"]').is( ':checked' );
+                    });
+
                     break;
 
                 case 'multiple':
@@ -446,9 +474,10 @@ var CoursePress = CoursePress || {};
             var input = 'single' === type ? 'radio' : 'checkbox';
             var css_class = 'single' === type ? 'component-radio-answer wide' : 'component-checkbox-answer wide';
 
+            var input_name = $( question).attr('data-type') + '-' + $( question).attr('data-id');
 
             var content = '<div class="answer">' +
-                '<input type="' + input + '" value="" name="">' +
+                '<input type="' + input + '" value="" name="' + input_name + '">' +
                 '<input type="text" name="" value="" class="' + css_class + '">' +
                 '<span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span>' +
                 '</div>';
@@ -464,8 +493,8 @@ var CoursePress = CoursePress || {};
 
     CoursePress.Helpers.Module.quiz.bind_checkboxes = function() {
 
-        $('.quiz-question [type="checkbox"]').off( 'change' );
-        $('.quiz-question [type="checkbox"]').on( 'change', function( e ) {
+        $('.quiz-question [type="checkbox"], .quiz-question [type="radio"]').off( 'change' );
+        $('.quiz-question [type="checkbox"], .quiz-question [type="radio"]').on( 'change', function( e ) {
 
             var mod_el = $( this).parents('.module-holder')[0];
             CoursePress.Helpers.Module.quiz.update_meta( mod_el );
@@ -983,7 +1012,7 @@ var CoursePress = CoursePress || {};
                         var callback = item['callback'] || '';
 
                         content += '<div class="' + css_class + '" data-type="' + action + '"><a></a></div>';
-                        content += '<span style="color:green">«- Developer note: Only multiple choice for now, will add others soon.</span>';
+                        //content += '<span style="color:green">«- Developer note: Only multiple choice for now, will add others soon.</span>';
 
                         break;
                     case 'quiz':

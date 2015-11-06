@@ -892,7 +892,7 @@ var CoursePress = CoursePress || {};
                     var questions = $( parent ).find( '.module-quiz-question' );
 
                     $.each( questions, function( qi, question) {
-                        var answers = $( question).find('[type="checkbox"]');
+                        var answers = $( question).find('[type="checkbox"],[type="radio"]');
                         value[qi] = [];
                         $.each( answers, function( ai, answer ) {
                              value[qi][ai]= $(answer).is( ':checked' );

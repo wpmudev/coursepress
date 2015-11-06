@@ -905,6 +905,11 @@ class CoursePress_Helper_UI_Module {
 									"type": "action",
 									"class": "quiz-action-button multiple wide",
 									"action": "multiple"
+								},
+								{
+									"type": "action",
+									"class": "quiz-action-button single wide",
+									"action": "single"
 								}
 							]
 						},

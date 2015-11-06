@@ -1085,7 +1085,6 @@ ul.notification-archive-list {
 
 }
 
-
 .module-quiz-question .question {
     margin: 10px 0 0 0;
 }
@@ -1097,6 +1096,10 @@ ul.notification-archive-list {
     pointer-events: none;
     cursor: default;
     opacity: 0.5;
+}
+
+.module-container .not-passed-message {
+    margin-bottom: 15px;
 }
 
 /*.student-settings.login-form .half-left,*/

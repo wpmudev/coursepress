@@ -789,7 +789,12 @@ class CoursePress_Template_Module {
 		if( ! empty( $attributes['questions'] ) && ! $already_passed && ! $disabled ) {
 
 			// Has the user already answered?
-			$element_class = ! empty( $responses ) ? 'hide' : '';
+			$element_class = ! empty( $responses ) && $disabled ? 'hide' : '';
+
+			$unlimited = 0 === (int) $attributes['retry_attempts'];
+			$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1) : 0;
+			$remaining_message = ! $unlimited ? sprintf( __('You have %d attempts left.', CoursePress::TD ), $remaining ) : '';
+			$content .= ! empty( $responses ) && ! $already_passed ? '<div class="not-passed-message">' . sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', CoursePress::TD ), $remaining_message ) . '</div>' : '';
 
 			// RESUBMIT LOGIC
 			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( "Submit Answer", CoursePress::TD ) . '</a></div>' : '';

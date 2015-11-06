@@ -41,6 +41,7 @@ class CoursePress_Model_Shortcodes {
 		add_shortcode( 'course_start', array( __CLASS__, 'course_start' ) );
 		add_shortcode( 'course_end', array( __CLASS__, 'course_end' ) );
 		add_shortcode( 'course_dates', array( __CLASS__, 'course_dates' ) );
+		add_shortcode( 'course_length', array( __CLASS__, 'course_length' ) );
 		add_shortcode( 'course_enrollment_start', array( __CLASS__, 'course_enrollment_start' ) );
 		add_shortcode( 'course_enrollment_end', array( __CLASS__, 'course_enrollment_end' ) );
 		add_shortcode( 'course_enrollment_dates', array( __CLASS__, 'course_enrollment_dates' ) );
@@ -387,7 +388,7 @@ class CoursePress_Model_Shortcodes {
 		$date_format     = sanitize_text_field( $date_format );
 		$label           = sanitize_text_field( $label );
 		$label_tag       = sanitize_html_class( $label_tag );
-		$label_delimeter = sanitize_html_class( $label_delimeter );
+		$label_delimeter = sanitize_text_field( $label_delimeter );
 		$class           = sanitize_html_class( $class );
 
 		$start_date = CoursePress_Model_Course::get_setting( $course_id, 'course_start_date' );
@@ -399,6 +400,48 @@ class CoursePress_Model_Shortcodes {
 		}
 
 		$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, strtotime( $start_date ) ) );
+		$content .= '</div>';
+
+		// Return the html in the buffer.
+		return $content;
+	}
+
+	/**
+	 * Shows the course length in weeks.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function course_length( $atts ) {
+		extract( shortcode_atts( array(
+			'course_id'       => CoursePress_Helper_Utility::the_course( true ),
+			'label'           => __( 'Course Length: ', CoursePress::TD ),
+			'label_tag'       => 'strong',
+			'label_delimeter' => ':',
+			'class'           => '',
+			'suffix'		  => ' Weeks'
+		), $atts, 'course_start' ) );
+
+		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) {
+			return '';
+		}
+		$label           = sanitize_text_field( $label );
+		$label_tag       = sanitize_html_class( $label_tag );
+		$label_delimeter = sanitize_text_field( $label_delimeter );
+		$class           = sanitize_html_class( $class );
+
+		$start_date = CoursePress_Model_Course::get_setting( $course_id, 'course_start_date' );
+		$end_date   = CoursePress_Model_Course::get_setting( $course_id, 'course_end_date' );
+
+		$length = ceil((strtotime($end_date)-strtotime($start_date))/604800);
+
+		$content = '<div class="course-length course-length-' . $course_id . ' ' . $class . '">';
+
+		if ( ! empty( $label ) ) {
+			$content .= '<' . esc_html( $label_tag ) . ' class="label">' . esc_html( $label ) . esc_html( $label_delimeter ) . '</' . esc_html( $label_tag ) . '> ';
+		}
+
+		$content .= $length.$suffix;
 		$content .= '</div>';
 
 		// Return the html in the buffer.
