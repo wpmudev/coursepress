@@ -710,6 +710,7 @@ ul.notification-archive-list {
     clear: both;
 }
 
+.course-wrapper .unit-page-module-wrapper,
 .course-wrapper .unit-page-title-wrapper,
 .course-wrapper .unit-title-wrapper {
     width: 100%;
@@ -728,21 +729,45 @@ ul.notification-archive-list {
     padding: 0;
 }
 
+.course-wrapper .module-title,
 .course-wrapper .unit-page-title,
 .course-wrapper .unit-title {
     float: left;
-    clear: both;
+    /*clear: both;*/
 }
 
+.course-wrapper .enrolled .module-title,
 .course-wrapper .enrolled .unit-page-title,
 .course-wrapper .enrolled .unit-title {
     width: 100%;
     float: none;
 }
+
+.course-wrapper .module-title a,
+.course-wrapper .unit-page-title a,
+.course-wrapper .unit-title a {
+    border: none;
+}
+
+.course-wrapper .enrolled .module-title a,
 .course-wrapper .enrolled .unit-page-title a,
 .course-wrapper .enrolled .unit-title a {
     display: block;
     width: 100%;
+}
+
+.course-wrapper .module-title {
+    padding-left: 20px;
+}
+
+.course-wrapper .enrolled .module-title {
+    padding: 0;
+}
+
+.course-wrapper .module-title a {
+    padding-left: 20px;
+    text-decoration: none;
+    border: none;
 }
 
 .course-wrapper .unit-title {
@@ -754,6 +779,7 @@ ul.notification-archive-list {
 .course-wrapper .unit-title{
 }
 
+.course-wrapper .unit-module-preview-link,
 .course-wrapper .unit-page-link,
 .course-wrapper .unit-link {
     float: right;
@@ -761,6 +787,7 @@ ul.notification-archive-list {
     /*position: absolute;*/
     /*top: 2px;*/
     /*right: 4em;*/
+    /*z-index: 10;*/
 }
 
 .course-wrapper .unit-page-estimate {
@@ -774,6 +801,7 @@ ul.notification-archive-list {
 .course-wrapper .course-structure-block li {
     clear: both;
 }
+
 
 
 .course-wrapper .instructor-block {

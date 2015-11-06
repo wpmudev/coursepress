@@ -176,6 +176,8 @@ class CoursePress_View_Admin_Course_Edit {
 						<input class="wide" type="text" name="course_name" id="course_name" value="' . $course_name . '"/>
 				</div>';
 
+		$content .= apply_filters( 'coursepress_course_setup_step_1_after_title', '', $course_id );
+
 		// Course Excerpt / Short Overview
 		$editor_name    = "course_excerpt";
 		$editor_id      = "courseExcerpt";
@@ -205,6 +207,8 @@ class CoursePress_View_Admin_Course_Edit {
 						</label>
 						' . $editor_html . '
 				</div>';
+
+		$content .= apply_filters( 'coursepress_course_setup_step_1_after_excerpt', '', $course_id );
 
 		// Listing Image
 		$content .= CoursePress_Helper_UI::browse_media_field(
