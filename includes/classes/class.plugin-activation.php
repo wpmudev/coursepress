@@ -579,7 +579,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		public function notices() {
 
 			global $current_screen;
-			
+
 			if ( ! isset( $_GET['tab'] ) || isset( $_GET['tab'] ) && $_GET['tab'] !== $this->tab ) {
 
 				// Return early if the nag message has been dismissed.

@@ -43,8 +43,11 @@ if ( isset( $_GET['response_id'] ) ) {
 	$unit_id     = (int) $_GET['unit_id'];
 
 	$course_id = get_post_meta( $response_id, 'course_id', true );
-	if ( ! CoursePress_Capabilities::is_course_instructor( $course_id ) ) {
+	$can_access = CoursePress_Capabilities::is_course_instructor( $course_id ) || is_super_admin();
+
+	if ( !$can_access ) {
 		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', 'coursepress_base_td' ) . '</p>';
+		wp_die();
 	}
 
 
@@ -276,7 +279,10 @@ if ( isset( $_GET['response_id'] ) ) {
 
 	<?php
 	if ( $current_course_id !== 0 ) {//courses exists, at least one is in place
-		if ( count( $course_units ) >= 1 ) {
+
+		$can_access = CoursePress_Capabilities::is_course_instructor( $current_course_id ) || is_super_admin();
+
+		if ( count( $course_units ) >= 1 && $can_access ) {
 			?>
 			<div class="assessment">
 				<div id="tabs">
