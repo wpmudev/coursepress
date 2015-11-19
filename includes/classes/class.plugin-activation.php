@@ -579,7 +579,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 		public function notices() {
 
 			global $current_screen;
-
+			
 			if ( ! isset( $_GET['tab'] ) || isset( $_GET['tab'] ) && $_GET['tab'] !== $this->tab ) {
 
 				// Return early if the nag message has been dismissed.
@@ -641,10 +641,8 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					}
 
 					// Setup variables to determine if action links are needed.
-					$show_install_link  = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['install_link'] . '</a>' : '';
-					$show_activate_link = $activate_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['activate_link'] . '</a>' : '';
-					$show_install_link = esc_url( $show_install_link );
-					$show_activate_link = esc_url( $show_activate_link );
+					$show_install_link  = $install_link ? '<a href="' . esc_url( add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) ) . '">' . $this->strings['install_link'] . '</a>' : '';
+					$show_activate_link = $activate_link ? '<a href="' . esc_url( add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) ) . '">' . $this->strings['activate_link'] . '</a>' : '';
 
 					// Define all of the action links.
 					$action_links = apply_filters(
