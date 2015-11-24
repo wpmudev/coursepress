@@ -2,7 +2,9 @@
 global $wp;
 $course_id			 = do_shortcode( '[get_parent_course_id]' );
 $course_id			 = (int) $course_id;
-CoursePress::instance()->check_access( $course_id );
+$unit = new Unit();
+$unit_id = $unit->get_unit_id_by_name( $wp->query_vars['unitname'], $course_id );
+CoursePress::instance()->check_access( $course_id, $unit_id );
 $paged = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
 
 echo do_shortcode( '[course_unit_archive_submenu]' );
