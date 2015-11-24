@@ -356,7 +356,8 @@ if ( !class_exists( 'Course' ) ) {
 						'post_status'	 => 'publish',
 						'post_title'	 => cp_filter_content( $this->details->post_title, true ),
 						'post_type'		 => 'product',
-						'post_parent'	 => $course_id
+						'post_parent'	 => $course_id,
+						'post_content'   => cp_filter_content( $this->details->post_content, true ),
 					);
 
 					// Add or Update a product if its a paid course
