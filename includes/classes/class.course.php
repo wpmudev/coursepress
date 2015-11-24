@@ -390,6 +390,7 @@ if ( !class_exists( 'Course' ) ) {
 							update_post_meta( $post_id, '_sold_individually', 'yes' );
 							update_post_meta( $post_id, '_sku', $sku[ 0 ] );
 							update_post_meta( $post_id, '_regular_price', $price );
+							update_post_meta( $post_id, '_visibility', 'visible' );
 
 							if ( !empty( $_POST[ 'mp_is_sale' ] ) ) {
 								update_post_meta( $post_id, '_sale_price', $sale_price );
