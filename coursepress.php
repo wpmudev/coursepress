@@ -1054,6 +1054,10 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 * @since 1.0.0
 			 */
 			if ( cp_use_woo() ) {
+				add_action( 'woocommerce_order_status_processing', array(
+					$this,
+					'woo_listen_for_paid_status_for_courses'
+				), 10, 1 );
 				add_action( 'woocommerce_order_status_completed', array(
 					$this,
 					'woo_listen_for_paid_status_for_courses'
@@ -6101,7 +6105,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			foreach ( $items as $item ) {
 				$course_id = get_post_meta( $item['product_id'], 'cp_course_id', true );
-				if ( ! empty( $course_id ) ) {
+				if ( ! empty( $course_id ) && ! $student->user_enrolled_in_course($course_id) ) {
 					$student->enroll_in_course( $course_id );
 				}
 			}
