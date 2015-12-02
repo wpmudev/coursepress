@@ -253,7 +253,7 @@ class checkbox_input_module extends Unit_Module {
 
 			$answer_cnt = 0;
 
-			if ( isset( $data->answers ) ) {
+			if ( ! empty( $data->answers ) ) {
 				foreach ( $data->answers as $answer ) {
 					?>
 					<tr>
