@@ -2167,14 +2167,13 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						}
 					}
 				}
-			} else {
-				if ( isset( $post ) && $post->post_type == 'product' && $wp_query->is_page ) {
-					if ( isset( $post->post_parent ) ) {//parent course
-						if ( $post->post_parent !== 0 && get_post_type( $post->post_parent ) == 'course' ) {
-							$course = new Course( $post->post_parent );
-							wp_redirect( $course->get_permalink() );
-							exit;
-						}
+			} elseif( cp_redirect_mp_to_course() ) {
+				if ( isset( $post ) && $post->post_type == 'product' && $wp_query->is_single ) {
+					$course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+					if ( !empty($course_id) ) {//related course
+						$course = new Course( $course_id );
+						wp_redirect( $course->get_permalink() );
+						exit;
 					}
 				}
 			}

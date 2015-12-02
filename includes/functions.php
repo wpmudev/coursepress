@@ -33,6 +33,15 @@ function cp_redirect_woo_to_course() {
 	}
 }
 
+function cp_redirect_mp_to_course() {
+	$redirect_mp_to_course = get_option( 'redirect_mp_to_course', 0 );
+	if ( $redirect_mp_to_course == 0 ) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function cp_student_login_address() {
 	global $coursepress;
 	$student_login_address = get_option( 'use_custom_login_form', 1 ) ? trailingslashit( home_url() . '/' . get_option( 'login_slug', 'student-login' ) ) : wp_login_url();

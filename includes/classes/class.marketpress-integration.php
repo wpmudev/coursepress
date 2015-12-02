@@ -59,6 +59,8 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			add_action( 'coursepress_mp_update_product', array( __CLASS__, 'maybe_create_product' ) );
 			add_action( 'post_updated', array( __CLASS__, 'update_course_from_product' ), 10, 3 );
 			add_filter( 'coursepress_shortcode_course_cost', array( __CLASS__, 'shortcode_cost' ), 10, 2 );
+			add_action( 'coursepress_general_options_page', array( __CLASS__, 'add_mp_general_option' ) );
+			add_action( 'coursepress_update_settings', array( __CLASS__, 'save_mp_general_option' ), 10, 2 );
 
 			// Enable Payment Support
 			add_filter( 'coursepress_offer_paid_courses', array( __CLASS__, 'enable_payment' ) );
@@ -597,6 +599,46 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			';
 
 			return $content;
+		}
+
+		public static function add_mp_general_option() {
+			?>
+			<div class="postbox">
+				<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'MarketPress', 'coursepress_base_td' ); ?></span></h3>
+
+				<div class="inside">
+					<table class="form-table">
+						<tbody>
+						<tr valign="top">
+							<th scope="row"><?php _e( 'Redirect MarketPress product post to a parent course post', 'coursepress_base_td' ); ?></th>
+							<td>
+								<a class="help-icon" href="javascript:;"></a>
+
+								<div class="tooltip">
+									<div class="tooltip-before"></div>
+									<div class="tooltip-button">&times;</div>
+									<div class="tooltip-content">
+										<?php _e( 'If checked, visitors who try to access MarketPress single post will be automatically redirected to a parent course single post.', 'coursepress_base_td' ) ?>
+									</div>
+								</div>
+								<input type='checkbox' name='option_redirect_mp_to_course' <?php echo( ( get_option( 'redirect_mp_to_course', 0 ) ) ? 'checked' : '' ); ?> />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<?php
+		}
+
+		function save_mp_general_option( $tab, $post ) {
+			if ( $tab == 'general' ) {
+				if ( isset( $post[ 'option_redirect_mp_to_course' ] ) ) {
+					update_option( 'redirect_mp_to_course', 1 );
+				} else {
+					update_option( 'redirect_mp_to_course', 0 );
+				}
+			}
 		}
 
 		public static function course_paid_3pt0( $order ) {
