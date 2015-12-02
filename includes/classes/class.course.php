@@ -334,8 +334,13 @@ if ( !class_exists( 'Course' ) ) {
 
 				function mp_product_id( $course_id = false ) {
 					$course_id	 = $course_id ? $course_id : $this->id;
-				  	$mp_product_id = get_post_meta($course_id, 'mp_product_id', true);
-				  	return get_post($mp_product_id) ? $mp_product_id : 0;
+				  	$mp_product_id = (int) get_post_meta($course_id, 'mp_product_id', true);
+
+					if( empty( $mp_product_id ) ){
+						$mp_product_id = (int) get_post_meta( $course_id, 'marketpress_product', true );
+					}
+
+					return get_post($mp_product_id) ? $mp_product_id : 0;
 				}
 
 				function update_mp_product( $course_id = false ) {

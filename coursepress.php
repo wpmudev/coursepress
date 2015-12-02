@@ -1747,15 +1747,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			global $mp;
 
 			$course     = new Course( $course_id );
-			$product_id = $course->mp_product_id();
-
-			// Try some MP alternatives
-			$product_id = empty( $product_id ) ? (int) get_post_meta( $course_id, 'mp_product_id', true ) : $product_id;
-			$product_id = empty( $product_id ) ? (int) get_post_meta( $course_id, 'marketpress_product', true ) : $product_id;
 
 			if( $is_paid ) {
 				if ( cp_use_woo() ) {
 					global $woocommerce;
+					$product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
 					if ( ! empty( $product_id ) ) {
 						$signup_steps = array_merge( $signup_steps, array(
 							'payment_checkout'  => array(
@@ -1787,6 +1783,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 						) );
 					}
 				} else {
+					$product_id = $course->mp_product_id();
 					if ( $mp && ! empty( $product_id ) ) {
 
 						$cart_url = home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' );
