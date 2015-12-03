@@ -186,6 +186,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$GLOBALS['signup_url']              = $this->get_signup_slug( true );
 
 			/**
+			 * CoursePress Utilities
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-utility.php' );
+
+			/**
 			 * CoursePress Sessions
 			 * Better handling of session data using WP_Session_Tokens introduced in 4.0.
 			 */
@@ -6188,3 +6193,10 @@ if ( ! class_exists( 'CoursePress' ) ) {
 CoursePress::instance( new CoursePress() );
 global $coursepress;
 $coursepress = CoursePress::instance();
+
+
+add_action( 'init', '_20151203_test' );
+
+function _20151203_test () {
+	$test = Course::get_units_with_modules( 5489 );
+}
