@@ -6199,4 +6199,5 @@ add_action( 'init', '_20151203_test' );
 
 function _20151203_test () {
 	$test = Course::get_units_with_modules( 5489 );
+	$test2 = Course::get_units_with_modules( 5489 );
 }

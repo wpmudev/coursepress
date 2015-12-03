@@ -74,6 +74,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			self::kill( self::TYPE_MODULE, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $data->unit_id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $data->unit_id ) );
 
 			//Update post meta
 			if ( $post_id != 0 ) {
@@ -154,6 +155,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			self::kill( self::TYPE_MODULE, $id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $unit_id ) );
 
 			if ( get_post_type( $id ) == 'module' ) {
 				wp_delete_post( $id, $force_delete ); //Whether to bypass trash and force deletion
@@ -1186,6 +1188,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			self::kill( self::TYPE_MODULE, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $unit_id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $unit_id ) );
 
 			return $post_id;
 		}

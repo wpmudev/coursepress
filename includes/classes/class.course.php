@@ -254,84 +254,91 @@ if ( ! class_exists( 'Course' ) ) {
 		function is_open_ended() {
 
 		}
-		
+
 		public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
 
-			self::$last_course_id = $course_id;
-			$units              = array();
+			// Try cache first, else load units and modules from DB
+			if ( ! self::load( self::TYPE_UNIT_MODULES_PERF, $course_id, $units ) ) {
 
-			if ( ! array( $status ) ) {
-				$status = array( $status );
+				self::$last_course_id = $course_id;
+				$units                = array();
+
+				if ( ! array( $status ) ) {
+					$status = array( $status );
+				};
+
+				$sql = 'AND ( ';
+				foreach ( $status as $filter ) {
+					$sql .= '%1$s.post_status = \'' . $filter . '\' OR ';
+				}
+				$sql = preg_replace( '/(OR.)$/', '', $sql );
+				$sql .= ' )';
+
+				self::$where_post_status = $sql;
+
+				add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
+
+				$post_args = array(
+					'post_type'      => array(
+						'unit',
+						'module'
+					),
+					'post_parent'    => $course_id,
+					'posts_per_page' => - 1,
+					'order'          => 'ASC',
+					'orderby'        => 'menu_order',
+				);
+
+				$query = new WP_Query( $post_args );
+
+				foreach ( $query->posts as $post ) {
+					$meta = get_post_meta( $post->ID );
+					switch ( $post->post_type ) {
+						case 'module':
+
+							if ( ! isset( $units[ $post->post_parent ] ) ) {
+								$units[ $post->post_parent ] = array(
+									'post'    => array(),
+									'modules' => array()
+								);
+							}
+							$post->meta                                          = $meta;
+							$post->menu_order                                    = $meta['module_order'][0];
+							$units[ $post->post_parent ]['modules'][ $post->ID ] = $post;
+
+							break;
+
+						case 'unit':
+
+							if ( ! isset( $units[ $post->ID ] ) ) {
+								$units[ $post->ID ] = array(
+									'post'    => array(),
+									'modules' => array()
+								);
+							}
+							$post->meta                 = $meta;
+							$post->menu_order           = $meta['unit_order'][0];
+							$units[ $post->ID ]['post'] = $post;
+
+							break;
+					}
+
+				}
+
+				$units = CoursePress_Helper_Utility::sort_on_object_key( $units, 'menu_order', true, 'post' );
+				foreach ( $units as $key => $unit ) {
+					if ( ! empty( $unit['post'] ) ) {
+						$unit['modules'] = CoursePress_Helper_Utility::sort_on_object_key( $unit['modules'], 'menu_order' );
+					} else {
+						unset( $units[ $key ] );
+					}
+				}
+
+				remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
+
+				// Cache the course object
+				self::cache( self::TYPE_UNIT_MODULES_PERF, $course_id, $units );
 			};
-
-			$sql = 'AND ( ';
-			foreach ( $status as $filter ) {
-				$sql .= '%1$s.post_status = \'' . $filter . '\' OR ';
-			}
-			$sql = preg_replace( '/(OR.)$/', '', $sql );
-			$sql .= ' )';
-
-			self::$where_post_status = $sql;
-
-			add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
-
-			$post_args = array(
-				'post_type'      => array(
-					'unit',
-					'module'
-				),
-				'post_parent'    => $course_id,
-				'posts_per_page' => -1,
-				'order'          => 'ASC',
-				'orderby'        => 'menu_order',
-			);
-
-			$query = new WP_Query( $post_args );
-
-			foreach ( $query->posts as $post ) {
-				$meta = get_post_meta( $post->ID );
-				switch( $post->post_type ) {
-					case 'module':
-
-						if( ! isset( $units[ $post->post_parent ] ) ) {
-							$units[ $post->post_parent ] = array(
-								'post' => array(),
-								'modules' => array()
-							);
-						}
-						$post->meta = $meta;
-						$post->menu_order = $meta['module_order'][0];
-						$units[ $post->post_parent ]['modules'][ $post->ID ] = $post;
-
-						break;
-
-					case 'unit':
-
-						if( ! isset( $units[ $post->ID ] ) ) {
-							$units[ $post->ID ] = array(
-								'post' => array(),
-								'modules' => array()
-							);
-						}
-						$post->meta = $meta;
-						$post->menu_order = $meta['unit_order'][0];
-						$units[ $post->ID ]['post'] = $post;
-
-						break;
-				}
-
-			}
-
-			$units = CoursePress_Helper_Utility::sort_on_object_key( $units, 'menu_order', true, 'post' );
-			foreach( $units as $key => $unit ) {
-				if( ! empty( $unit['post'] ) ) {
-					$unit['modules'] = CoursePress_Helper_Utility::sort_on_object_key( $unit['modules'], 'menu_order' );
-				} else {
-					unset( $units[ $key ] );
-				}
-			}
-
-			remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
 
 			return $units;
 		}

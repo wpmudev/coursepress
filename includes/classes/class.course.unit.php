@@ -341,6 +341,7 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear cached object just in case
 			self::kill( self::TYPE_UNIT, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $post_id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, $course_id );
 
 			return $post_id;
 		}
@@ -365,6 +366,7 @@ if ( !class_exists( 'Unit' ) ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
+					self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $draft->ID ) );
 					if ( get_post_type( $draft->ID ) == 'module' || get_post_type( $draft->ID ) == 'unit' ) {
 						wp_delete_post( $draft->ID, true );
 					}
@@ -392,6 +394,7 @@ if ( !class_exists( 'Unit' ) ) {
 					// Clear possible cached objects because we're deleting them
 					self::kill( self::TYPE_UNIT, $draft->ID );
 					self::kill( self::TYPE_UNIT_MODULES, $draft->ID );
+					self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $draft->ID ) );
 					if ( get_post_type( $draft->ID ) == 'module' || get_post_type( $draft->ID ) == 'unit' ) {
 						wp_delete_post( $draft->ID, true );
 					}
@@ -441,6 +444,7 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear cached object because we're updating the object
 			self::kill( self::TYPE_UNIT, $post_id );
 			self::kill( self::TYPE_UNIT_MODULES, $post_id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, $_POST[ 'course_id' ] );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
@@ -523,6 +527,7 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear cached object because we're deleting the object.
 			self::kill( self::TYPE_UNIT, $this->id );
 			self::kill( self::TYPE_UNIT_MODULES, $this->id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $this->id ) );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );
@@ -567,6 +572,7 @@ if ( !class_exists( 'Unit' ) ) {
 			// Clear cached object because we've modified the object.
 			self::kill( self::TYPE_UNIT, $this->id );
 			self::kill( self::TYPE_UNIT_MODULES, $this->id );
+			self::kill( self::TYPE_UNIT_MODULES_PERF, get_post_field( 'post_parent', $this->id ) );
 			// Clear related caches
 			$course_id = $this->course_id;
 			self::kill_related( self::TYPE_COURSE, $course_id );

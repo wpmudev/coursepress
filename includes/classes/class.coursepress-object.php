@@ -43,6 +43,7 @@ if ( ! class_exists( 'CoursePress_Object' ) ) {
 		const TYPE_MODULE = 'coursepress_module';
 		const TYPE_MODULE_RESPONSE = 'coursepress_module_response';
 		const TYPE_UNIT_MODULES = 'coursepress_unit_modules';
+		const TYPE_UNIT_MODULES_PERF = 'coursepress_unit_modules_perf';
 		const TYPE_UNIT_STATIC = 'coursepress_unit_static';
 
 		protected static function load( $type, $key, &$object = null ) {
