@@ -4670,6 +4670,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			), $atts, 'course_unit_title' ) );
 
 			$unit_id   = (int) $unit_id;
+			$course_id = (int) get_post_field( 'post_parent', $unit_id );
 			$title_tag = sanitize_html_class( $title_tag );
 			$link      = sanitize_html_class( $link );
 			$last_page = sanitize_html_class( $last_page );
@@ -4681,8 +4682,6 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$show_draft = $draft && cp_can_see_unit_draft();
 
 			if ( 'yes' == $last_page ) {
-				$course_id			 = do_shortcode( '[get_parent_course_id]' );
-				$course_id			 = (int) $course_id;
 				$last_visited_page     = cp_get_last_visited_unit_page( $unit_id );
 				$the_permalink = Unit::get_permalink( $unit_id, $course_id ) . 'page/' . trailingslashit( $last_visited_page );
 			} else {

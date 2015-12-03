@@ -2865,7 +2865,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					$theme_file = locate_template( array( 'archive-unit.php' ) );
 
 					if ( $theme_file != '' ) {
-						do_shortcode( '[course_units_loop]' );
+//						do_shortcode( '[course_units_loop]' );
 						require_once( $theme_file );
 						exit;
 					} else {

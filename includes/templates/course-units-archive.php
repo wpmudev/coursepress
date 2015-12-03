@@ -21,45 +21,46 @@ if ( 100 == (int) $progress ) {
 	echo ' ' . $complete_message; ?></h2>
 <div class="units-archive">
 	<ul class="units-archive-list">
-		<?php if ( have_posts() ) { ?>
-			<?php
-			while ( have_posts() ) : the_post();
+		<?php
+		$units = Course::get_units_with_modules( $course_id );
+		if ( ! empty( $units ) && count( $units ) > 0 ) {
 
-				$draft = get_post_status() !== 'publish';
+			foreach ( $units as $unit_id => $unit ) {
+				$draft      = $unit['post']->post_status !== 'publish';
 				$show_draft = $draft && cp_can_see_unit_draft();
 
-				if( $draft && ! $show_draft ) {
+				if ( $draft && ! $show_draft ) {
 					continue;
 				}
 
 				$additional_class    = '';
 				$additional_li_class = '';
-				$unit_id             = get_the_ID();
 
 				$additional_content = '';
 				if ( ! Unit::is_unit_available( $unit_id ) ) {
 					$additional_class    = 'locked-unit';
 					$additional_li_class = 'li-locked-unit';
-					$additional_content = '<div class="' . esc_attr( $additional_class ) . '"></div>';
+					$additional_content  = '<div class="' . esc_attr( $additional_class ) . '"></div>';
 				}
 
 				$unit_progress = do_shortcode( '[course_unit_percent course_id="' . $course_id . '" unit_id="' . $unit_id . '" format="true" style="flat"]' );
 
 				?>
-				<li class="<?php echo esc_attr( $additional_li_class ); ?>">
+				<li class="unit unit-<?php echo $unit_id; ?> <?php echo esc_attr( $additional_li_class ); ?>">
 					<?php echo $additional_content; ?>
-					<?php echo do_shortcode('[course_unit_title link="yes" last_page="no"]'); ?>
-					<?php echo $unit_progress; ?>
-					<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' ); ?>
+					<div class="unit-archive-single">
+						<?php echo do_shortcode( '[course_unit_title unit_id="' . $unit_id . '" link="yes" last_page="no"]' ); ?>
+						<?php echo $unit_progress; ?>
+						<?php echo do_shortcode( '[module_status format="true" course_id="' . $course_id . '" unit_id="' . $unit_id . '"]' ); ?>
+					</div>
 				</li>
-			<?php
-			endwhile;
+				<?php
+			}
 		} else {
 			?>
 			<p class="zero-course-units"><?php _e( "0 units in the course currently. Please check back later.", "cp" ); ?></p>
 		<?php
 		}
-		wp_reset_postdata();
 		?>
 	</ul>
 </div>

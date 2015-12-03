@@ -255,7 +255,14 @@ if ( ! class_exists( 'Course' ) ) {
 
 		}
 
-		public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
+		public static function get_units_with_modules( $course_id, $force = false ) {
+
+			$status = array( 'publish', 'draft' );
+
+			// Force the cache clear first
+			if( $force ) {
+				self::kill( self::TYPE_UNIT_MODULES_PERF, $course_id );
+			}
 
 			// Try cache first, else load units and modules from DB
 			if ( ! self::load( self::TYPE_UNIT_MODULES_PERF, $course_id, $units ) ) {
@@ -266,6 +273,7 @@ if ( ! class_exists( 'Course' ) ) {
 				if ( ! array( $status ) ) {
 					$status = array( $status );
 				};
+
 
 				$sql = 'AND ( ';
 				foreach ( $status as $filter ) {
@@ -340,7 +348,36 @@ if ( ! class_exists( 'Course' ) ) {
 				self::cache( self::TYPE_UNIT_MODULES_PERF, $course_id, $units );
 			};
 
+			if( ! current_user_can( 'manage_options' ) ) {
+				return self::filter_units( 'publish', $units );
+			} else {
+				return $units;
+			}
+
+		}
+
+		public static function filter_units( $status, $units ) {
+
+			foreach( $units as $key => $unit ) {
+				if( $unit['post']->post_status !== $status ) {
+					unset( $units[ $key ] );
+				}
+			}
+
 			return $units;
+		}
+
+		public static function get_unit( $unit_id, $course_id, $unit_only = false ) {
+			$units = self::get_units_with_modules( $course_id );
+			if( array_key_exists( $unit_id, $units ) ) {
+				if( $unit_only ) {
+					return $units[ $unit_id ]['post'];
+				} else {
+					return $units[ $unit_id ];
+				}
+			} else {
+				return false;
+			}
 		}
 
 		public static function filter_unit_module_where( $sql ) {

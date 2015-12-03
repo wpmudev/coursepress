@@ -50,6 +50,7 @@ if ( ! class_exists( 'CoursePress_Object' ) ) {
 			$found = false;
 			// USE OBJECT CACHE
 			$object = wp_cache_get( $key, $type, false, $found );
+			$found = empty( $object ) ? false : $found;
 			return $found;
 		}
 
