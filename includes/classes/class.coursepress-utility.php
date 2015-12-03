@@ -10,10 +10,11 @@ class CoursePress_Helper_Utility {
 		self::$sort_key = $sort_key;
 		self::$sort_item = $item;
 
+		// Suppress errors on uasort() because of PHP bug. Remove suppression if testing.
 		if ( $sort_asc === false ) {
-			uasort( $array, array( __CLASS__, 'sort_obj_desc' ) );
+			@uasort( $array, array( __CLASS__, 'sort_obj_desc' ) );
 		} else {
-			uasort( $array, array( __CLASS__, 'sort_obj_asc' ) );
+			@uasort( $array, array( __CLASS__, 'sort_obj_asc' ) );
 		}
 
 		return $array;

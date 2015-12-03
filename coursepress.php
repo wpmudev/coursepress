@@ -6195,9 +6195,12 @@ global $coursepress;
 $coursepress = CoursePress::instance();
 
 
-add_action( 'init', '_20151203_test' );
-
-function _20151203_test () {
-	$test = Course::get_units_with_modules( 5489 );
-	$test2 = Course::get_units_with_modules( 5489 );
-}
+//DEBUG
+//add_action( 'init', '_20151203_test' );
+//function _20151203_test () {
+//	$test = Course::get_units_with_modules( 77 );
+//	$test2 = Course::get_units_with_modules( 5489 );
+//	$test3 = Course::get_units_with_modules( 2382 );
+//	$test4 = Course::get_units_with_modules( 1480 );
+//	$test5 = Course::get_units_with_modules( 4943 );
+//}
