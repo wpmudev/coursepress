@@ -3953,7 +3953,17 @@ if ( !class_exists( 'CoursePress_Shortcodes' ) ) {
 						</label>
 						<br clear="all" />
 
-						<input name="redirect_to" value="<?php echo CoursePress::instance()->get_student_dashboard_slug( true ); ?>" type="hidden">
+                        <?php
+                        $courseid = (int) $_REQUEST['course_id'];
+                        if(get_option( 'redirect_students_to_dashboard', 0 ) && !empty($courseid)) {
+                            $course = new Course( $courseid );
+                            $redirect_url = $course->get_permalink();
+                        } else {
+                            $redirect_url = CoursePress::instance()->get_student_dashboard_slug( true );
+                        }
+                        ?>
+
+                        <input name="redirect_to" value="<?php echo $redirect_url; ?>" type="hidden">
 						<input name="testcookie" value="1" type="hidden">
 						<input name="course_signup_login" value="1" type="hidden">
 						<?php do_action( 'coursepress_before_end_form_fields' ); ?>
