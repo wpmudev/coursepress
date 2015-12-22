@@ -3996,7 +3996,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			// Attempt a login if submitted
 			if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
 
-				$auth = wp_authenticate_username_password( null, $_POST['log'], $_POST['pwd'] );
+				$auth = wp_authenticate_username_password( null, sanitize_user( $_POST['log'] ), $_POST['pwd'] );
 				if ( ! is_wp_error( $auth ) ) {
 					// if( defined('DOING_AJAX') && DOING_AJAX ) { cp_write_log('doing ajax'); }
 					$user    = get_user_by( 'login', $_POST['log'] );
@@ -4264,12 +4264,12 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 						<label>
 							<?php _e( 'Username', 'coursepress_base_td' ); ?>:
-							<input type="text" name="log" value="<?php echo( isset( $_POST['log'] ) ? $_POST['log'] : '' ); ?>"/>
+							<input type="text" name="log" value="<?php echo( isset( $_POST['log'] ) ? sanitize_user( $_POST['log'] ) : '' ); ?>"/>
 						</label>
 
 						<label>
 							<?php _e( 'Password', 'coursepress_base_td' ); ?>:
-							<input type="password" name="pwd" value="<?php echo( isset( $_POST['pwd'] ) ? $_POST['pwd'] : '' ); ?>"/>
+							<input type="password" name="pwd" value=""/>
 						</label>
 
 						<?php do_action( 'coursepress_form_fields' ); ?>
