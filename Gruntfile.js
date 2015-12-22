@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
     // Plugin Config
     var plugin_info = {
-        version: '1.2.6.6',
+        version: '1.2.6.7',
         branches: {
             dev: 'coursepress/pro',
             wporg: 'coursepress/standard',

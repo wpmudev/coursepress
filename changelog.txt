@@ -5,6 +5,18 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= 1.2.6.7 =
+* Fixed: Empty admin notification.
+* Fixed: Assessments restricted for instructors from other courses.
+* Fixed: Free preview not working for non default themes.
+* Fixed: WooCommerce product visibility when course is created.
+* Fixed: MarketPress product description not populated.
+* Fixed: WooCommerce payment not processing course signup.
+* Added: MarketPress product to course page redirection.
+* Fixed: PHP warning for empty multiple choice module.
+* Fixed: WooCommerce checkout causing blank pop-up.
+* Added: Performance improvements.
+
 = 1.2.6.6 =
 * Fixed: Issues in certificate admin screen.
 * Fixed: Description creation in text mode.
