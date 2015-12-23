@@ -16,6 +16,7 @@ CHANGE LOG
 * Fixed: PHP warning for empty multiple choice module.
 * Fixed: WooCommerce checkout causing blank pop-up.
 * Added: Performance improvements.
+* Fixed: Registration fields sanitization.
 
 = 1.2.6.6 =
 * Fixed: Issues in certificate admin screen.
