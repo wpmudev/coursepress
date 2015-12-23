@@ -53,10 +53,11 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 			$units = $this->get_units();
 
 			foreach ( $units as $key => $unit ) {
-				$this->unit_index[ $unit->ID ] = $key;
+				$unit_id = $unit['post']->ID;
+				$this->unit_index[ $unit_id ] = $key;
 
 				// Used to get input modules
-				$unit->modules = $this->get_unit_modules( $unit->ID );
+				$unit->modules = $this->get_unit_modules( $unit_id );
 				// cp_write_log( $unit->modules );
 				// Used to determine page views
 				$unit->page_count = $this->get_unit_pages( $unit );
@@ -85,7 +86,7 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 		function get_unit_pages( $unit ) {
 			$pages_num = 1;
 
-			if ( ! cp_unit_uses_new_pagination( $unit->ID ) ) {
+			if ( ! cp_unit_uses_new_pagination( $unit['post']->ID ) ) {
 				// Legacy
 				$modules = $unit->modules;
 				foreach ( $modules as $mod ) {
@@ -96,7 +97,7 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 				}
 			} else {
 				// New unit builder 1.2.3.5+
-				$pages_num = Unit::get_page_count( $unit->ID );
+				$pages_num = Unit::get_page_count( $unit['post']->ID );
 			}
 
 			return $pages_num;

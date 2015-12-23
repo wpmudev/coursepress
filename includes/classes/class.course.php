@@ -160,28 +160,30 @@ if ( ! class_exists( 'Course' ) ) {
 			<ul>
 				<?php
 				foreach ( $units as $unit ) {
-					$unit_class = new Unit( $unit->ID );
+					$unit_id = $unit['post']->ID;
+					$unit_post = $unit['post'];
+					$unit_class = new Unit( $unit_id );
 					$unit_pages = $unit_class->get_number_of_unit_pages();
 
-//					$modules = Unit_Module::get_modules( $unit->ID );
+//					$modules = Unit_Module::get_modules( $unit_id );
 
-					if ( isset( $show_unit[ $unit->ID ] ) && $show_unit[ $unit->ID ] == 'on' && $unit->post_status == 'publish' ) {
+					if ( isset( $show_unit[ $unit_id ] ) && $show_unit[ $unit_id ] == 'on' && $unit_post->post_status == 'publish' ) {
 						?>
 
 						<li>
 
-							<label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label">
-								<div class="tree-unit-left"><?php echo $unit->post_title; ?></div>
+							<label for="unit_<?php echo $unit_id; ?>" class="course_structure_unit_label">
+								<div class="tree-unit-left"><?php echo $unit_post->post_title; ?></div>
 								<div class="tree-unit-right">
 
 									<?php if ( $this->details->course_structure_time_display == 'on' ) { ?>
-										<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
+										<span><?php echo $unit_class->get_unit_time_estimation( $unit_id ); ?></span>
 									<?php } ?>
 
 									<?php
-									if ( isset( $preview_unit[ $unit->ID ] ) && $preview_unit[ $unit->ID ] == 'on' ) {
+									if ( isset( $preview_unit[ $unit_id ] ) && $preview_unit[ $unit_id ] == 'on' ) {
 										?>
-										<a href="<?php echo Unit::get_permalink( $unit->ID ); ?>?try"
+										<a href="<?php echo Unit::get_permalink( $unit_id ); ?>?try"
 										   class="preview_option"><?php
 											if ( $try_title == '' ) {
 												_e( 'Try Now', 'coursepress_base_td' );
@@ -196,7 +198,7 @@ if ( ! class_exists( 'Course' ) ) {
 							<ul>
 								<?php
 								for ( $i = 1; $i <= $unit_pages; $i ++ ) {
-									if ( isset( $show_page[ $unit->ID . '_' . $i ] ) && $show_page[ $unit->ID . '_' . $i ] == 'on' ) {
+									if ( isset( $show_page[ $unit_id . '_' . $i ] ) && $show_page[ $unit_id . '_' . $i ] == 'on' ) {
 										?>
 
 										<li class="course_structure_page_li">
@@ -205,18 +207,18 @@ if ( ! class_exists( 'Course' ) ) {
 											$page_title = $unit_class->get_unit_page_name( $i );
 											?>
 
-											<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+											<label for="page_<?php echo $unit_id . '_' . $i; ?>">
 												<div class="tree-page-left">
 													<?php echo( isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress_base_td' ) ); ?>
 												</div>
 												<div class="tree-page-right">
 													<?php if ( $this->details->course_structure_time_display == 'on' ) { ?>
-														<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
+														<span><?php echo $unit_class->get_unit_page_time_estimation( $unit_id, $i ); ?></span>
 													<?php } ?>
 													<?php
-													if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) && $preview_page[ $unit->ID . '_' . $i ] == 'on' ) {
+													if ( isset( $preview_page[ $unit_id . '_' . $i ] ) && $preview_page[ $unit_id . '_' . $i ] == 'on' ) {
 														?>
-														<a href="<?php echo Unit::get_permalink( $unit->ID ); ?>page/<?php echo $i; ?>?try"
+														<a href="<?php echo Unit::get_permalink( $unit_id ); ?>page/<?php echo $i; ?>?try"
 														   class="preview_option"><?php
 															if ( $try_title == '' ) {
 																_e( 'Try Now', 'coursepress_base_td' );
@@ -1151,8 +1153,9 @@ if ( ! class_exists( 'Course' ) ) {
 			$units = $this->get_units( $old_course_id );
 
 			foreach ( $units as $unit ) {
-				$unt = new Unit( $unit->ID );
-				$unt->duplicate( $unit->ID, $new_course_id );
+				$unit_id = $unit['post']->ID;
+				$unt = new Unit( $unit_id );
+				$unt->duplicate( $unit_id, $new_course_id );
 			}
 
 			do_action( 'coursepress_course_duplicated', $new_course_id );
@@ -1196,8 +1199,9 @@ if ( ! class_exists( 'Course' ) ) {
 			$units          = Unit::get_units_from_course( $course_id, $status, false );
 
 			foreach ( $units as $unit ) {
-				$unit_details = new Unit( $unit->ID );
-				$unit_time    = $unit_details->get_unit_time_estimation( $unit->ID );
+				$unit_id = $unit['post']->ID;
+				$unit_details = new Unit( $unit_id );
+				$unit_time    = $unit_details->get_unit_time_estimation( $unit_id );
 
 				$min_sec = explode( ':', $unit_time );
 				if ( isset( $min_sec[0] ) ) {

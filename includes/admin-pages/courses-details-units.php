@@ -58,8 +58,8 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
 		<?php
 		$list_order = 1;
 		foreach ( $units as $unit ) {
-
-			$unit_object = new Unit( $unit->ID );
+			$unit_id = $unit['post']->ID;
+			$unit_object = new Unit( $unit_id );
 			$unit_object = $unit_object->get_unit();
 			?>
 			<li class="postbox ui-state-default clearfix">

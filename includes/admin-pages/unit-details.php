@@ -116,10 +116,10 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 			foreach ( $units as $unit ) {
 
-				$unit_object = new Unit( $unit->ID );
+				$unit_object = new Unit( $unit['post']->ID );
 				$unit_object = $unit_object->get_unit();
 				?>
-				<li class="mp-tab <?php echo ( isset( $_GET[ 'unit_id' ] ) && $unit->ID == $_GET[ 'unit_id' ] ? 'active' : '' ); ?>">
+				<li class="mp-tab <?php echo ( isset( $_GET[ 'unit_id' ] ) && $unit['post']->ID == $_GET[ 'unit_id' ] ? 'active' : '' ); ?>">
 					<a class="mp-tab-link" href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=edit' ); ?>"><?php echo $unit_object->post_title; ?></a>
 					<i class="fa fa-arrows-v cp-move-icon"></i>
 					<span class="unit-state-circle <?php echo (isset( $unit_object->post_status ) && $unit_object->post_status == 'publish' ? 'active' : ''); ?>"></span>

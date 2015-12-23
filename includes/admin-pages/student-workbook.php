@@ -177,7 +177,7 @@ if ( isset( $_POST['course_id'] ) ) {
 									<div id="units_accordion" class="units_accordion">
 										<?php foreach ( $course_units as $unit ) { ?>
 											<div class="sidebar-name no-movecursor">
-												<h3><?php echo $unit->post_title; ?></h3>
+												<h3><?php echo $unit['post']->post_title; ?></h3>
 											</div>
 											<div class="accordion-inner">
 												<?php
@@ -218,8 +218,8 @@ if ( isset( $_POST['course_id'] ) ) {
 
 													<?php
 													$user_object = new Student( $_GET['student_id'] );
-
-													$modules = Unit_Module::get_modules( $unit->ID );
+													$unit_id = $unit['post']->ID;
+													$modules = Unit_Module::get_modules( $unit_id );
 
 													$input_modules_count = 0;
 
@@ -291,7 +291,7 @@ if ( isset( $_POST['course_id'] ) ) {
 																			if ( count( $response ) >= 1 ) {
 																				?>
 
-																				<a class="assessment-view-response-link button button-units" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'coursepress_base_td' ); ?></a>
+																				<a class="assessment-view-response-link button button-units" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit_id . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'coursepress_base_td' ); ?></a>
 
 																			<?php
 																			} else {

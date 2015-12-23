@@ -1600,40 +1600,42 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 							<ul>
 								<?php
 								foreach ( $units as $unit ) {
-									$unit_class = new Unit( $unit->ID );
+									$unit_id = $unit['post']->ID;
+									$unit_post = $unit['post'];
+									$unit_class = new Unit( $unit_id );
 
-									$unit_pagination = cp_unit_uses_new_pagination( $unit->ID );
+									$unit_pagination = cp_unit_uses_new_pagination( $unit_id );
 
 									if ( $unit_pagination ) {
-										$unit_pages = coursepress_unit_pages( $unit->ID, $unit_pagination );
+										$unit_pages = coursepress_unit_pages( $unit_id, $unit_pagination );
 									} else {
-										$unit_pages = coursepress_unit_pages( $unit->ID );
+										$unit_pages = coursepress_unit_pages( $unit_id );
 									}
 
 									//$unit_pages	 = $unit_class->get_number_of_unit_pages();
-									//									$modules = Unit_Module::get_modules( $unit->ID );
-									$unit_permalink = Unit::get_permalink( $unit->ID );
-									if ( isset( $show_unit[ $unit->ID ] ) && $show_unit[ $unit->ID ] == 'on' && $unit->post_status == 'publish' ) {
+									//									$modules = Unit_Module::get_modules( $unit_id );
+									$unit_permalink = Unit::get_permalink( $unit_id );
+									if ( isset( $show_unit[ $unit_id ] ) && $show_unit[ $unit_id ] == 'on' && $unit_post->post_status == 'publish' ) {
 										?>
 										<li>
-											<label for="unit_<?php echo $unit->ID; ?>" class="course_structure_unit_label <?php echo $existing_student ? 'single_column' : ''; ?>">
+											<label for="unit_<?php echo $unit_id; ?>" class="course_structure_unit_label <?php echo $existing_student ? 'single_column' : ''; ?>">
 												<?php
 												$title = '';
 												if ( $existing_student && $enable_links ) {
-													$title = '<a href="' . $unit_permalink . '">' . $unit->post_title . '</a>';
+													$title = '<a href="' . $unit_permalink . '">' . $unit_post->post_title . '</a>';
 												} else {
-													$title = $unit->post_title;
+													$title = $unit_post->post_title;
 												}
 												?>
 												<div class="tree-unit-left"><?php echo $title; ?></div>
 												<div class="tree-unit-right">
 
 													<?php if ( $course->details->course_structure_time_display == 'on' ) { ?>
-														<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
+														<span><?php echo $unit_class->get_unit_time_estimation( $unit_id ); ?></span>
 													<?php } ?>
 
 													<?php
-													if ( isset( $preview_unit[ $unit->ID ] ) && $preview_unit[ $unit->ID ] == 'on' && $unit_permalink && ! $existing_student ) {
+													if ( isset( $preview_unit[ $unit_id ] ) && $preview_unit[ $unit_id ] == 'on' && $unit_permalink && ! $existing_student ) {
 														?>
 														<a href="<?php echo $unit_permalink; ?>?try" class="preview_option"><?php echo $free_text; ?></a>
 													<?php } ?>
@@ -1643,7 +1645,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 											<ul>
 												<?php
 												for ( $i = 1; $i <= $unit_pages; $i ++ ) {
-													if ( isset( $show_page[ $unit->ID . '_' . $i ] ) && $show_page[ $unit->ID . '_' . $i ] == 'on' ) {
+													if ( isset( $show_page[ $unit_id . '_' . $i ] ) && $show_page[ $unit_id . '_' . $i ] == 'on' ) {
 														?>
 														<li class="course_structure_page_li <?php echo $existing_student ? 'single_column' : ''; ?>">
 															<?php
@@ -1651,7 +1653,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 															$page_title = $unit_class->get_unit_page_name( $i );
 															?>
 
-															<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+															<label for="page_<?php echo $unit_id . '_' . $i; ?>">
 																<?php
 																$title = '';
 																if ( $existing_student && $enable_links ) {
@@ -1668,11 +1670,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 																<div class="tree-page-right">
 
 																	<?php if ( $course->details->course_structure_time_display == 'on' ) { ?>
-																		<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
+																		<span><?php echo $unit_class->get_unit_page_time_estimation( $unit_id, $i ); ?></span>
 																	<?php } ?>
 
 																	<?php
-																	if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) && $preview_page[ $unit->ID . '_' . $i ] == 'on' && $unit_permalink && ! $existing_student ) {
+																	if ( isset( $preview_page[ $unit_id . '_' . $i ] ) && $preview_page[ $unit_id . '_' . $i ] == 'on' && $unit_permalink && ! $existing_student ) {
 																		?>
 																		<a href="<?php echo $unit_permalink; ?>page/<?php echo $i; ?>?try" class="preview_option"><?php echo $free_text; ?></a>
 																	<?php } ?>
@@ -2815,7 +2817,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 			}
 			foreach ( $units as $unit ) {
-				$dropdown .= '<option value="' . esc_attr( $unit->ID ) . '">' . esc_html( $unit->post_title ) . '</option>';
+				$dropdown .= '<option value="' . esc_attr( $unit['post']->ID ) . '">' . esc_html( $unit_post->post_title ) . '</option>';
 			}
 			$dropdown .= '</select></div>';
 
@@ -3269,9 +3271,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$last_unit_url = '';
 
 			foreach ( $units as $unit ) {
-				//				$unit_details	 = new Unit( $unit->ID );
-				$content .= '<li><a href="' . Unit::get_permalink( $unit->ID, $course_id ) . '">' . $unit->post_title . '</a></li>';
-				$last_unit_url = Unit::get_permalink( $unit->ID, $course_id );
+				$unit_id = $unit['post']->ID;
+				$unit_post = $unit['post'];
+				$content .= '<li><a href="' . Unit::get_permalink( $unit_id, $course_id ) . '">' . $unit_post->post_title . '</a></li>';
+				$last_unit_url = Unit::get_permalink( $unit_id, $course_id );
 			}
 
 			$content .= '</ol>';
@@ -4678,7 +4681,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$title = get_the_title( $unit_id );
 
-			$draft      = get_post_status() !== 'publish';
+			$draft      = get_post_status($unit_id) !== 'publish';
 			$show_draft = $draft && cp_can_see_unit_draft();
 
 			if ( 'yes' == $last_page ) {

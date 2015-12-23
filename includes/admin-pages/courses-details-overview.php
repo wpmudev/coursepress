@@ -571,43 +571,45 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 																					$section_dirty = false;
 
 																					foreach ( $units as $unit ) {
-																						$unit_class      = new Unit( $unit->ID );
+																						$unit_id = $unit['post']->ID;
+																						$unit_post = $unit['post'];
+																						$unit_class      = new Unit( $unit_id );
 																						$unit_pages      = $unit_class->get_number_of_unit_pages();
-																						$unit_pagination = cp_unit_uses_new_pagination( $unit->ID );
+																						$unit_pagination = cp_unit_uses_new_pagination( $unit_id );
 
 																						if ( $unit_pagination ) {
-																							$unit_pages = coursepress_unit_pages( $unit->ID, $unit_pagination );
+																							$unit_pages = coursepress_unit_pages( $unit_id, $unit_pagination );
 																						} else {
-																							$unit_pages = coursepress_unit_pages( $unit->ID );
+																							$unit_pages = coursepress_unit_pages( $unit_id );
 																						}
 
-																						$modules = Unit_Module::get_modules( $unit->ID );
+																						$modules = Unit_Module::get_modules( $unit_id );
 																						?>
 
-																						<li class="<?php echo( $unit->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit' ); ?>">
+																						<li class="<?php echo( $unit_post->post_status == 'publish' ? 'enabled_unit' : 'disabled_unit' ); ?>">
 
-																							<label for="unit_<?php echo $unit->ID; ?>">
-																								<div class="tree-unit-left"><?php echo( $unit->post_status != 'publish' ? __( '[draft] ', 'coursepress_base_td' ) : '' ); ?><?php echo $unit->post_title; ?></div>
+																							<label for="unit_<?php echo $unit_id; ?>">
+																								<div class="tree-unit-left"><?php echo( $unit_post->post_status != 'publish' ? __( '[draft] ', 'coursepress_base_td' ) : '' ); ?><?php echo $unit_post->post_title; ?></div>
 																								<div class="tree-unit-right">
-																									<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_show_unit[<?php echo $unit->ID; ?>]' <?php
-																									if ( isset( $show_unit[ $unit->ID ] ) ) {
-																										echo ( $show_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																									<input type='checkbox' class="module_show" id='show-<?php echo $unit_id; ?>' data-id="<?php echo esc_attr( $unit_id ); ?>" name='meta_show_unit[<?php echo $unit_id; ?>]' <?php
+																									if ( isset( $show_unit[ $unit_id ] ) ) {
+																										echo ( $show_unit[ $unit_id ] == 'on' ) ? 'checked' : '';
 																									} else {
 																										echo ( 'on' == $course_structure_options ) ? 'checked' : '';
 																										$section_dirty = true;
 																									}
-																									?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																									?> <?php echo( $unit_post->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
-																									<input type='checkbox' class="module_preview" id='preview-<?php echo $unit->ID; ?>' data-id="<?php echo esc_attr( $unit->ID ); ?>" name='meta_preview_unit[<?php echo $unit->ID; ?>]' <?php
-																									if ( isset( $preview_unit[ $unit->ID ] ) ) {
-																										echo ( $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																									<input type='checkbox' class="module_preview" id='preview-<?php echo $unit_id; ?>' data-id="<?php echo esc_attr( $unit_id ); ?>" name='meta_preview_unit[<?php echo $unit_id; ?>]' <?php
+																									if ( isset( $preview_unit[ $unit_id ] ) ) {
+																										echo ( $preview_unit[ $unit_id ] == 'on' ) ? 'checked' : '';
 																									}
-																									?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																									?> <?php echo( $unit_post->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
-																									<span><?php echo $unit_class->get_unit_time_estimation( $unit->ID ); ?></span>
+																									<span><?php echo $unit_class->get_unit_time_estimation( $unit_id ); ?></span>
 																								</div>
 																							</label>
-																							<input type="checkbox" id="unit_<?php echo $unit->ID; ?>" class="hidden_checkbox"/>
+																							<input type="checkbox" id="unit_<?php echo $unit_id; ?>" class="hidden_checkbox"/>
 
 
 																							<ol>
@@ -627,40 +629,40 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 																											$page_title = $unit_class->get_unit_page_name( $i );
 																											?>
 
-																											<label for="page_<?php echo $unit->ID . '_' . $i; ?>">
+																											<label for="page_<?php echo $unit_id . '_' . $i; ?>">
 																												<div class="tree-page-left">
 																													<?php echo( isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress_base_td' ) ); ?>
 																												</div>
 																												<div class="tree-page-right">
-																													<input type='checkbox' class="module_show" id='show-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_show_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-																													if ( isset( $show_page[ $unit->ID . '_' . $i ] ) ) {
-																														echo ( $show_page[ $unit->ID . '_' . $i ] == 'on' ) ? 'checked' : '';
+																													<input type='checkbox' class="module_show" id='show-<?php echo $unit_id . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit_id . '_' . $i ); ?>" name='meta_show_page[<?php echo $unit_id . '_' . $i; ?>]' <?php
+																													if ( isset( $show_page[ $unit_id . '_' . $i ] ) ) {
+																														echo ( $show_page[ $unit_id . '_' . $i ] == 'on' ) ? 'checked' : '';
 																													} else {
 																														echo ( 'on' == $course_structure_options ) ? 'checked' : '';
 																														$section_dirty = true;
 																													}
-																													?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																													?> <?php echo( $unit_post->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 																													<?php
 																													$disabled = '';
-																													if ( isset( $preview_unit[ $unit->ID ] ) ) {
-																														if ( $preview_unit[ $unit->ID ] == 'on' ) {
+																													if ( isset( $preview_unit[ $unit_id ] ) ) {
+																														if ( $preview_unit[ $unit_id ] == 'on' ) {
 																															$disabled = 'disabled';
 																														} else {
 																															$disabled = '';
 																														}
 																													}
 																													?>
-																													<input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit->ID . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit->ID . '_' . $i ); ?>" name='meta_preview_page[<?php echo $unit->ID . '_' . $i; ?>]' <?php
-																													if ( isset( $preview_page[ $unit->ID . '_' . $i ] ) || isset( $preview_unit[ $unit->ID ] ) ) {
-																														echo ( $preview_page[ $unit->ID . '_' . $i ] == 'on' || $preview_unit[ $unit->ID ] == 'on' ) ? 'checked' : '';
+																													<input type='checkbox' <?php echo $disabled; ?> class="module_preview" id='preview-<?php echo $unit_id . '_' . $i; ?>' data-id="<?php echo esc_attr( $unit_id . '_' . $i ); ?>" name='meta_preview_page[<?php echo $unit_id . '_' . $i; ?>]' <?php
+																													if ( isset( $preview_page[ $unit_id . '_' . $i ] ) || isset( $preview_unit[ $unit_id ] ) ) {
+																														echo ( $preview_page[ $unit_id . '_' . $i ] == 'on' || $preview_unit[ $unit_id ] == 'on' ) ? 'checked' : '';
 																													}
-																													?> <?php echo( $unit->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
+																													?> <?php echo( $unit_post->post_status == 'publish' ? 'enabled' : 'disabled' ); ?> />
 
-																													<span><?php echo $unit_class->get_unit_page_time_estimation( $unit->ID, $i ); ?></span>
+																													<span><?php echo $unit_class->get_unit_page_time_estimation( $unit_id, $i ); ?></span>
 																												</div>
 																											</label>
 
-																											<input type="checkbox" id="page_<?php echo $unit->ID . '_' . $i; ?>" class="hidden_checkbox"/>
+																											<input type="checkbox" id="page_<?php echo $unit_id . '_' . $i; ?>" class="hidden_checkbox"/>
 
 																											<ol class="course_structure_elements_ol">
 																												<?php
@@ -750,11 +752,11 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 															/* foreach ($units as $unit) {
 															  ?>
 															  <tr>
-															  <th class="title" colspan="4"><?php echo $unit->post_title; ?></th>
+															  <th class="title" colspan="4"><?php echo $unit_post->post_title; ?></th>
 															  </tr>
 															  <?php
 															  $module = new Unit_Module();
-															  $modules = $module->order_modules(Unit_Module::get_modules($unit->ID));
+															  $modules = $module->order_modules(Unit_Module::get_modules($unit_id));
 
 															  foreach ($modules as $module) {
 															  if (!empty($module->post_title)) {

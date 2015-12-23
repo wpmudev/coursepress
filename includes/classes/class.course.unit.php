@@ -155,7 +155,7 @@ if ( ! class_exists( 'Unit' ) ) {
 			return $status;
 		}
 
-		static function get_units_from_course( $course_id, $id_only = true ) {
+		static function get_units_from_course( $course_id, $status = 'any', $id_only = true ) {
 
 			$units  = Course::get_units_with_modules( $course_id );
 
@@ -168,7 +168,7 @@ if ( ! class_exists( 'Unit' ) ) {
 		}
 
 		public static function get_previous_unit_from_the_same_course( $course_id, $unit_id ) {
-			$units = self::get_units_from_course( $course_id, false );
+			$units = self::get_units_from_course( $course_id, 'publish', false );
 
 			// Checks can only be done on publish units so filter it, even if admin
 			$units = Course::filter_units( 'publish', $units );
