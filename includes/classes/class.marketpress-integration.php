@@ -94,15 +94,12 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 					add_filter( 'mp_order/notification_subject', array(
 						__CLASS__,
 						'cp_mp_order_notification_subject',
-						10,
-						2
-					) );
+					), 10, 2 );
+
 					add_filter( 'mp_order/notification_body', array(
 						__CLASS__,
-						'cp_mp_order_notification_body',
-						10,
-						2
-					) );
+						'cp_mp_order_notification_body'
+					), 10, 2 );
 
 					add_filter( 'mp_meta/product', array( __CLASS__, 'verify_meta' ), 10, 3 );
 
