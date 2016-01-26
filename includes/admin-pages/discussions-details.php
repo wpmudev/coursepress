@@ -115,6 +115,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 										);
 
 										$courses = get_posts( $args );
+										$available_course_options = 0;
 
 										foreach ( $courses as $course ) {
 
@@ -151,7 +152,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 
 								<div class="buttons">
 									<?php
-									if ( current_user_can( 'manage_options' ) || ( $discussion_id == 0 && current_user_can( 'coursepress_create_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_discussion_cap' ) ) || ( $discussion_id != 0 && current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_id() ) ) {//do not show anything
+									if ( $available_course_options > 0 ) {
 										?>
 										<input type="submit" value="<?php ( $discussion_id == 0 ? _e( 'Create', 'coursepress_base_td' ) : _e( 'Update', 'coursepress_base_td' ) ); ?>" class="button-primary"/>
 									<?php
