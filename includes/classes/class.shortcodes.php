@@ -2817,7 +2817,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 			}
 			foreach ( $units as $unit ) {
-				$dropdown .= '<option value="' . esc_attr( $unit['post']->ID ) . '">' . esc_html( $unit_post->post_title ) . '</option>';
+				$dropdown .= '<option value="' . esc_attr( $unit['post']->ID ) . '">' . esc_html( $unit['post']->post_title ) . '</option>';
 			}
 			$dropdown .= '</select></div>';
 
