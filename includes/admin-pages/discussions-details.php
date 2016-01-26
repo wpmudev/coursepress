@@ -136,7 +136,7 @@ if ( isset( $_GET['discussion_id'] ) ) {
 													$available_course_options ++;
 												}
 											} else {//check for update capabilities
-												if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_update_discussion_cap' ) || ( current_user_can( 'coursepress_update_my_discussion_cap' ) && $notification_details->post_author == get_current_user_ID() ) /* || (current_user_can('coursepress_create_my_assigned_notification_cap') && $my_course) */ ) {
+												if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_update_discussion_cap' ) || ( current_user_can( 'coursepress_update_my_discussion_cap' ) && $discussion_details->post_author == get_current_user_ID() ) /* || (current_user_can('coursepress_create_my_assigned_notification_cap') && $my_course) */ ) {
 													?>
 													<option value="<?php echo $course->ID; ?>" <?php selected( $meta_course_id, $course->ID ); ?>><?php echo $course->post_title; ?></option>
 													<?php
