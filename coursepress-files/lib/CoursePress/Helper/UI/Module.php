@@ -286,13 +286,13 @@ class CoursePress_Helper_UI_Module {
 			self::OUTPUT_DOWNLOAD      => array(
 				'title'   => __( 'File Download', CoursePress::TD ),
 				'mode'    => 'output',
-				'excerpt' => 'hidden',
+//				'excerpt' => 'hidden',
 				'icon'    => 'default',
 			),
 			self::OUTPUT_ZIPPED_OBJECT => array(
 				'title'   => __( 'Zipped Object', CoursePress::TD ),
 				'mode'    => 'output',
-				'excerpt' => 'hidden',
+//				'excerpt' => 'hidden',
 				'icon'    => 'default',
 			),
 			//self::OUTPUT_SECTION       => array(

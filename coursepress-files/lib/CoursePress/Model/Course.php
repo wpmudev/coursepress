@@ -348,7 +348,7 @@ class CoursePress_Model_Course {
 		$setting = is_null( $setting ) ? $default : $setting;
 		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
 
-		return maybe_unserialize( $setting );
+		return apply_filters( 'coursepress_get_course_setting_' . $key, maybe_unserialize( $setting ), $course_id );
 	}
 
 	public static function update_setting( $course_id, $key = true, $value ) {
@@ -1158,6 +1158,7 @@ class CoursePress_Model_Course {
 	public static function get_instructors( $course_id, $objects = false ) {
 
 		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
+		$instructors = empty( $instructors ) ? array() : $instructors;
 
 		$instructor_objects = array();
 		if( ! $objects ) {
@@ -1260,6 +1261,10 @@ class CoursePress_Model_Course {
 			$student_id = get_current_user_id();
 		}
 
+		if( current_user_can('manage_options') ) {
+			return true;
+		}
+
 		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
 		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
@@ -1286,6 +1291,10 @@ class CoursePress_Model_Course {
 			$student_id = get_current_user_id();
 		}
 
+		if( current_user_can('manage_options') ) {
+			return true;
+		}
+
 		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
 		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
@@ -1309,6 +1318,10 @@ class CoursePress_Model_Course {
 
 		if( false === $student_id ) {
 			$student_id = get_current_user_id();
+		}
+
+		if( current_user_can('manage_options') ) {
+			return true;
 		}
 
 		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;

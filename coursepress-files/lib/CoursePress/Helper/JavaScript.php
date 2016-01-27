@@ -50,7 +50,7 @@ class CoursePress_Helper_JavaScript {
 
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
-		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array( 'wpautop'       => false,
+		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array( 'wpautop'       => true,
 		                                                             "textarea_name" => 'dummy_editor_name',
 		) );
 		$dummy_editor = ob_get_clean();
@@ -67,7 +67,9 @@ class CoursePress_Helper_JavaScript {
 			'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
 			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', CoursePress::TD ),
 			'assessment_grid_url'       => admin_url( 'admin.php?page=coursepress_assessments' ),
-			'assessment_report_url'       => admin_url( 'admin.php?page=coursepress_reports' )
+			'assessment_report_url'       => admin_url( 'admin.php?page=coursepress_reports' ),
+			'is_wpmudev'                => CoursePress_Model_Capabilities::is_wpmudev(),
+			'is_campus'                 => CoursePress_Model_Capabilities::is_campus(),
 		);
 
 
@@ -177,9 +179,12 @@ class CoursePress_Helper_JavaScript {
 			CoursePress_Model_Discussion::get_post_type_name(),
 		);
 
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
 		if (
 			( ! empty( $post_type ) && in_array( $post_type, $valid_cpt ) ) ||
-		    array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query )
+		    array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ||
+		    ! empty( $course_id )
 		) {
 
 			// CoursePress Object

@@ -79,8 +79,10 @@ class CoursePress_Template_Student {
 		} else {
 
 			// Might need to add url to signup slug
-			wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
-			exit;
+			if( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+				 wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
+				 exit;
+			}
 
 		}
 
@@ -192,8 +194,10 @@ class CoursePress_Template_Student {
 			return $content;
 		} else {
 
-			wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
-			exit;
+			if( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+				wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
+				exit;
+			}
 
 		}
 

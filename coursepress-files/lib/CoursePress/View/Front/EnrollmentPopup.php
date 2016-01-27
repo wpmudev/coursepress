@@ -18,81 +18,8 @@ class CoursePress_View_Front_EnrollmentPopup {
 	public static function add_backbone_registration_templates( $content, $course_id, $context ) {
 
 		if( 'main' === $context ) {
-
-			$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
-			$modal_steps = apply_filters( 'coursepress_registration_modal', array(
-
-				'container' => '
-					<script type="text/template" id="modal-template">
-					    <div class="enrollment-modal-container" data-nonce="' . $nonce . '" data-course="' . $course_id . '"></div>
-					</script>
-				',
-				'step_1' => do_shortcode('
-					<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
-						<div class="bbm-modal-nonce signup" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_signup' ) . '"></div>
-						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Create new account', CoursePress::TD ) . '</h3>
-						</div>
-						<div class="bbm-modal__section">
-							<div class="modal-nav-link">
-							[course_signup_form login_link_id="step2" show_submit="no" ]
-							</div>
-						</div>
-						<div class="bbm-modal__bottombar">
-						<input type="submit" class="bbm-button done signup" value="' . esc_attr__( 'Create an account', CoursePress::TD ) . '" />
-						</div>
-					</script>
-				'),
-				'step_2' => do_shortcode('
-					<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
-						<div class="bbm-modal-nonce login" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_login' ) . '"></div>
-						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Login to your account', CoursePress::TD ) . '</h3>
-						</div>
-						<div class="bbm-modal__section">
-							<div class="modal-nav-link">
-							[course_signup_form signup_link_id="step1" show_submit="no" page="login"]
-							</div>
-						</div>
-						<div class="bbm-modal__bottombar">
-						<input type="submit" class="bbm-button done" value="' . esc_attr__( 'Log in', CoursePress::TD ) . '" />
-						</div>
-					</script>
-				'),
-				'step_3' => '
-					<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
-						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Successfully enrolled.', CoursePress::TD ) . '</h3>
-						</div>
-						<div class="bbm-modal__section">
-							<p>CONGRATS TEMPLATE WILL GO HERE</p>
-							<a href="' . get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . '">Start Learning</a>
-						</div>
-						<div class="bbm-modal__bottombar">
-						<a href="#" class="bbm-button previous inactive">Previous</a>
-						<a href="#" class="bbm-button next">Next</a>
-						</div>
-					</script>
-				',
-				'step_4' => '
-					<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="login">
-						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">Wizard example - step 4</h3>
-						</div>
-						<div class="bbm-modal__section">
-							<p>STEP 4</p>
-						</div>
-						<div class="bbm-modal__bottombar">
-						<a href="#" class="bbm-button previous inactive">Previous</a>
-						<a href="#" class="bbm-button done">Done</a>
-						</div>
-					</script>
-				',
-
-			), $course_id );
-
-			$content = implode( '', $modal_steps ) . $content;
-
+			$modal_content = do_shortcode( '[coursepress_enrollment_templates course_id="' . $course_id  . '"]' );
+			return $modal_content . $content;
 		}
 
 		return $content;

@@ -342,6 +342,7 @@ class CoursePress_View_Admin_Course_Edit {
 						<label class="checkbox">
 							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', CoursePress::TD ) . '<br />
 							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', CoursePress::TD ) . '<br />
+							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', CoursePress::TD ) . '<br />
 							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', CoursePress::TD ) . '</p>
 						</label>
 						<label class="checkbox">
@@ -542,7 +543,8 @@ class CoursePress_View_Admin_Course_Edit {
 						</label>
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
 				'placeholder' => __( 'Choose a Course Instructor...', CoursePress::TD ),
-				'class'       => 'chosen-select medium'
+				'class'       => 'chosen-select medium',
+				'context' => 'instructors'
 			) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', CoursePress::TD ) . '" />
 				</div>

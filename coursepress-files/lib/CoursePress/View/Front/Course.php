@@ -28,7 +28,9 @@ class CoursePress_View_Front_Course {
 
 		self::handle_module_uploads();
 
-		remove_filter( 'the_content', 'wpautop' );
+		if( ! CoursePress_Model_Capabilities::is_wpmudev() ) {
+			remove_filter( 'the_content', 'wpautop' );
+		}
 
 		add_action( 'init', array( __CLASS__, 'handle_form_posts' ) );
 		//self::handle_form_posts();
@@ -299,9 +301,9 @@ class CoursePress_View_Front_Course {
 		if ( $theme_file = locate_template( array( 'single-course.php' ) ) ) {
 		} else {
 			//wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
-			if ( locate_template( array( 'single-course.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
+//			if ( locate_template( array( 'single-course.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
 				//just output the content
-			} else {
+//			} else {
 				//
 				//	//if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
 				//	if ( get_post_type() == 'course' ) {
@@ -313,7 +315,7 @@ class CoursePress_View_Front_Course {
 
 				$content = CoursePress_Template_Course::course();
 
-			}
+//			}
 		}
 
 		return $content;
@@ -323,18 +325,19 @@ class CoursePress_View_Front_Course {
 		// Set the post so we can get it in Templates
 		CoursePress_Helper_Utility::set_the_post( $post_ID );
 
-		// Post can be retrieved with CoursePress_Helper_Utility::the_post();
+		/**
+		 * @notes
+		 *
+		 * Catalin, I've commented this out, could you please try to reproduce the functionality in the templates. Not working at the moment with templates.
+		 *
+		 */
 
 		if ( $theme_file = locate_template( array( 'single-unit.php' ) ) ) {
+			ob_start();
+			require $theme_file;
+			$content = ob_get_clean();
 		} else {
-			//wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
-			if ( locate_template( array( 'single-unit.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-				//just output the content
-			} else {
-
-				$content = CoursePress_Template_Unit::unit_with_modules();
-
-			}
+			$content = CoursePress_Template_Unit::unit_with_modules();
 		}
 
 		return $content;
@@ -357,7 +360,7 @@ class CoursePress_View_Front_Course {
 		return $content;
 	}
 
-	public static function render_course_archive() {
+	public static function render_course_archive_bak() {
 
 		$category               = CoursePress_Helper_Utility::the_course_category();
 		$category_template_file = locate_template( array( 'archive-course-' . $category . '.php' ) );
@@ -365,41 +368,21 @@ class CoursePress_View_Front_Course {
 		if ( ! empty( $category_template_file ) ) {
 
 		} elseif ( $theme_file = locate_template( array( 'archive-course.php' ) ) ) {
-
+			ob_start();
+			require $theme_file;
+			$content = ob_get_clean();
 		} else {
-
-			if ( locate_template( array( 'archive-course.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-				//just output the content
-			} else {
-
 				$content = CoursePress_Template_Course::course_archive();
-
-			}
-
 		}
 
-		//if ( $category_template_file != '' ) {
-		//	do_shortcode( '[courses_loop]' );
-		//	require_once( $category_template_file );
-		//	exit;
-		//} else {
-		//	$theme_file = locate_template( array( 'archive-course.php' ) );
-		//
-		//	if ( $theme_file != '' ) {
-		//		do_shortcode( '[courses_loop]' );
-		//		require_once( $theme_file );
-		//		exit;
-		//	} else {
-		//		$theme_file = locate_template( array( 'archive.php' ) );
-		//		if ( $theme_file != '' ) {
-		//			do_shortcode( '[courses_loop]' );
-		//			require_once( $theme_file );
-		//			exit;
-		//		}
-		//	}
-		//}
 		return $content;
 
+	}
+
+	public static function render_course_archive() {
+
+		$content = CoursePress_Template_Course::course_archive();
+		return $content;
 	}
 
 	public static function render_course_discussion() {
@@ -561,7 +544,7 @@ class CoursePress_View_Front_Course {
 				$args = array(
 					'slug'    => 'course_' . $course_id,
 					'title'   => get_the_title( $course_id ),
-					//'show_title'  => false,
+					'show_title'  => false,
 					'content' => apply_filters( 'coursepress_view_course', self::render_course_main(), $course_id, 'main' ),
 					'type'    => CoursePress_Model_Course::get_post_type_name( true ),
 				);
@@ -570,7 +553,8 @@ class CoursePress_View_Front_Course {
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
-				return;
+
+				return $pg;
 
 			}
 
@@ -594,24 +578,37 @@ class CoursePress_View_Front_Course {
 			}
 
 			//'course_category'
-			$args = array(
+			$args = apply_filters( 'coursepress_category_page_args', array(
 				'slug'       => 'course_archive',
 				'title'		 => $title,
 				'show_title' => true,
-				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
+				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive(), $category ),
 				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
 				'is_archive' => true
-			);
+			), $category );
 
 			$pg = new CoursePress_Model_VirtualPage( $args );
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
-			return;
+
+//			$category               = CoursePress_Helper_Utility::the_course_category();
+//			$category_template_file = locate_template( array( 'archive-course-' . $category . '.php' ) );
+//			$theme_file = locate_template( array( 'archive-course.php' ) );
+//
+//			if ( ! empty( $category_template_file ) ) {
+//				require $category_template_file;
+//			} elseif ( $theme_file ) {
+//				require $theme_file;
+//			} else {
+				return $pg;
+//			}
+
 		}
 
 		// Unit Archive and other unit pages
 		if ( array_key_exists( 'coursename', $wp->query_vars ) && ! array_key_exists( 'unitname', $wp->query_vars ) ) {
+
 			$post_parent = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 
@@ -787,6 +784,7 @@ class CoursePress_View_Front_Course {
 
 		// Unit With Modules
 		if ( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
+
 			CoursePress_Helper_Utility::$is_singular = true;
 			$post_parent                             = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
@@ -831,7 +829,7 @@ class CoursePress_View_Front_Course {
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
-			return;
+//			return $pg;
 		}
 
 		// All other conditions have failed, so if post type is course, it must be the archive
@@ -841,7 +839,7 @@ class CoursePress_View_Front_Course {
 
 			$args = array(
 				'slug'       => 'course_archive',
-				//'title'		 => get_the_title( $post_parent ),
+				'title'		 => get_the_title( $post_parent ),
 				'show_title' => false,
 				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
 				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
@@ -852,7 +850,7 @@ class CoursePress_View_Front_Course {
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
-			return;
+			return $pg;
 
 		}
 
@@ -894,6 +892,9 @@ class CoursePress_View_Front_Course {
 
 			$style = CoursePress_Core::$plugin_lib_url . 'styles/coursepress_front.css';
 			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress_Core::$version );
+
+			$style = CoursePress_Core::$plugin_lib_url . 'styles/bbm.modal.css';
+			wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress_Core::$version );
 
 		}
 

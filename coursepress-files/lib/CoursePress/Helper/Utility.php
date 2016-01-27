@@ -268,7 +268,6 @@ class CoursePress_Helper_Utility {
 	// Get appropriate AJAX URL
 	public static function get_ajax_url() {
 		$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
-
 		return admin_url( "admin-ajax.php", $scheme );
 	}
 

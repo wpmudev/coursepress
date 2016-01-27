@@ -5,39 +5,39 @@ class CoursePress_Helper_UI {
 
 	public static function browse_media_field( $id, $name, $args = array() ) {
 
-		if( ! $name ) {
+		if ( ! $name ) {
 			$name = $id;
 		}
 
-		$args['title'] = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
+		$args['title']           = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
 		$args['container_class'] = isset( $args['container_class'] ) ? sanitize_text_field( $args['container_class'] ) : 'wide';
-		$args['textbox_class'] = isset( $args['textbox_class'] ) ? sanitize_text_field( $args['textbox_class'] ) : 'medium';
-		$args['title'] = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
-		$args['value'] = isset( $args['value'] ) ? sanitize_text_field( $args['value'] ) : '';
-		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', CoursePress::TD );
-		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', CoursePress::TD );
-		$args['type'] = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
+		$args['textbox_class']   = isset( $args['textbox_class'] ) ? sanitize_text_field( $args['textbox_class'] ) : 'medium';
+		$args['title']           = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
+		$args['value']           = isset( $args['value'] ) ? sanitize_text_field( $args['value'] ) : '';
+		$args['placeholder']     = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', CoursePress::TD );
+		$args['button_text']     = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', CoursePress::TD );
+		$args['type']            = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
 		$args['invalid_message'] = isset( $args['invalid_message'] ) ? sanitize_text_field( $args['invalid_message'] ) : '';
-		$args['description'] = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
+		$args['description']     = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
 
-		if( 'image' === $args['type'] ) {
+		if ( 'image' === $args['type'] ) {
 			$supported_extensions = implode( ', ', CoursePress_Helper_Utility::get_image_extensions() );
 		}
-		if( 'audio' === $args['type'] ) {
+		if ( 'audio' === $args['type'] ) {
 			$supported_extensions = implode( ', ', wp_get_video_extensions() );
 		}
-		if( 'video' === $args['type'] ) {
+		if ( 'video' === $args['type'] ) {
 			$supported_extensions = implode( ', ', wp_get_audio_extensions() );
 		}
 
 		$content = '
 		<div class="' . $args['container_class'] . '">
 			<label for="' . $name . '">' .
-	            esc_html( $args['title'] );
+		           esc_html( $args['title'] );
 
-		if( ! empty( $args['description'] ) ) {
-		    $content .= '<p class="description">' . esc_html( $args['description'] ) . '</p>';
-	    }
+		if ( ! empty( $args['description'] ) ) {
+			$content .= '<p class="description">' . esc_html( $args['description'] ) . '</p>';
+		}
 
 		$content .= '
 			</label>
@@ -74,7 +74,7 @@ class CoursePress_Helper_UI {
 
 		$args = CoursePress_Helper_Utility::merge_distinct( $args, $args_default );
 
-		if( defined('COURSEPRESS_INSTRUCTOR_ROLE') ) {
+		if ( defined( 'COURSEPRESS_INSTRUCTOR_ROLE' ) ) {
 
 			$args['role'] = COURSEPRESS_INSTRUCTOR_ROLE;
 
@@ -99,7 +99,7 @@ class CoursePress_Helper_UI {
 
 	public static function get_course_dropdown( $id, $name, $courses = false, $options = array() ) {
 
-		if( false === $courses ) {
+		if ( false === $courses ) {
 			$courses = get_posts( 'post_type=' . CoursePress_Model_Course::get_post_type_name() );
 		}
 
@@ -112,10 +112,10 @@ class CoursePress_Helper_UI {
 		$value = isset( $options['value'] ) ? $options['value'] : false;
 
 		$first_option = isset( $options['first_option'] ) ? (array) $options['first_option'] : false;
-		$selected = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
+		$selected     = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
 		$content .= ! empty( $first_option ) ? '<option value="' . $first_option['value'] . '" ' . $selected . '>' . esc_html( $first_option['text'] ) . '</option>' : '';
 
-		foreach( $courses as $course ) {
+		foreach ( $courses as $course ) {
 
 			$selected = $value !== false ? selected( $value, $course->ID, false ) : '';
 
@@ -130,15 +130,15 @@ class CoursePress_Helper_UI {
 
 	public static function get_unit_dropdown( $id, $name, $course_id, $units = false, $options = array() ) {
 
-		if( false === $units && 'all' !== $course_id ) {
+		if ( false === $units && 'all' !== $course_id ) {
 			$units = get_posts( array(
-				'post_type' => CoursePress_Model_Unit::get_post_type_name(),
+				'post_type'   => CoursePress_Model_Unit::get_post_type_name(),
 				'post_parent' => $course_id
 			) );
 		}
 
 		// Sort units
-		if( 'all' !== $course_id ) {
+		if ( 'all' !== $course_id ) {
 			foreach ( $units as $unit ) {
 				$unit->unit_order = (int) get_post_meta( $unit->ID, 'unit_order', true );
 			}
@@ -154,10 +154,10 @@ class CoursePress_Helper_UI {
 		$value = isset( $options['value'] ) ? $options['value'] : false;
 
 		$first_option = isset( $options['first_option'] ) ? (array) $options['first_option'] : false;
-		$selected = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
+		$selected     = ! empty( $first_option ) && $value !== false ? selected( $value, $first_option['value'], false ) : '';
 		$content .= ! empty( $first_option ) ? '<option value="' . $first_option['value'] . '" ' . $selected . '>' . esc_html( $first_option['text'] ) . '</option>' : '';
 
-		if( 'all' !== $course_id ) {
+		if ( 'all' !== $course_id ) {
 			foreach ( $units as $unit ) {
 				$selected = $value !== false ? selected( $value, $unit->ID, false ) : '';
 				$content .= '<option value="' . $unit->ID . '" ' . $selected . '>' . $unit->post_title . '</option>';
@@ -170,7 +170,51 @@ class CoursePress_Helper_UI {
 
 	}
 
+	public static function get_discussion_module_dropdown( $id, $name, $unit_id, $units_and_modules, $options = array() ) {
 
+		if ( empty( $unit_id ) || empty( $units_and_modules ) ) {
+			return '';
+		}
+
+
+		$content = '';
+		$content .= '<select name="' . $name . '" id="' . $id . '"';
+		$content .= isset( $options['placeholder'] ) ? ' data_placeholder="' . esc_attr( $options['placeholder'] ) . '" ' : '';
+		$content .= isset( $options['class'] ) ? ' class="' . esc_attr( $options['class'] ) . '" ' : '';
+		$content .= '>';
+
+
+		$value = isset( $options['value'] ) ? $options['value'] : false;
+
+		$discussions = array();
+		$unit = $units_and_modules[ $unit_id ];
+		foreach( $unit['pages'] as $page ) {
+			foreach( $page['modules'] as $module ) {
+
+				$meta = CoursePress_Model_Module::attributes( $module );
+				if ( $meta['module_type'] != CoursePress_Helper_UI_Module::OUTPUT_DISCUSSION ) {
+					continue;
+				}
+
+				$discussions[ $module->ID ] = $module->post_title;
+			}
+		}
+
+		$first_discussion = array_keys( $discussions );
+		$first_discussion = $first_discussion[0];
+
+		$value = empty( $value ) ? $first_discussion : $value;
+
+		foreach ( $discussions as $module_id => $module_title ) {
+			$selected = $value !== false ? selected( $value, $module_id, false ) : '';
+			$content .= '<option value="' . $module_id . '" ' . $selected . '>' . $module_title . '</option>';
+		}
+
+		$content .= '</select>';
+
+		return $content;
+
+	}
 
 
 	public static function get_user_dropdown( $id, $name, $options = array() ) {
@@ -181,14 +225,17 @@ class CoursePress_Helper_UI {
 		$content .= isset( $options['class'] ) ? ' class="' . esc_attr( $options['class'] ) . '" ' : '';
 		$content .= '>';
 
+		$context       = isset( $options['context'] ) ? sanitize_text_field( $options['context'] ) : 'normal';
+		$include_users = isset( $options['include'] ) ? $options['include'] : array();
+		$exclude_users = isset( $options['exclude'] ) ? $options['exclude'] : array();
+
 		$args = array(
-			//'role' => 'instructor',
 			'meta_key'     => '',
 			'meta_value'   => '',
 			'meta_compare' => '',
 			'meta_query'   => array(),
-			'include'      => array(),
-			'exclude'      => isset( $options['exclude'] ) ? $options['exclude'] : array(),
+			'include'      => apply_filters( 'coursepress_user_dropdown_include', $include_users, $context ),
+			'exclude'      => apply_filters( 'coursepress_user_dropdown_exclude', $exclude_users, $context ),
 			'orderby'      => 'display_name',
 			'order'        => 'ASC',
 			'offset'       => '',
@@ -204,12 +251,25 @@ class CoursePress_Helper_UI {
 			$args['blog_id'] = get_current_blog_id();
 		}
 
-		$instructors = get_users( $args );
+		$roles = apply_filters( 'coursepress_allowed_roles', array(), $context );
+		if ( CoursePress_Model_Capabilities::is_wpmudev() || ! empty( $roles ) ) {
+			$users = array();
+			if ( empty( $include_users ) ) {
+				$roles = empty( $roles ) && CoursePress_Model_Capabilities::is_wpmudev() ? array( 'administrator' ) : $roles;
+			}
+			foreach ( $roles as $role ) {
+				$args['role'] = $role;
+				$result       = get_users( $args );
+				$users        = ! empty( $result ) ? array_merge( $users, $result ) : $users;
+			}
+		} else {
+			$users = get_users( $args );
+		}
 
 		$number = 0;
-		foreach ( $instructors as $instructor ) {
+		foreach ( $users as $user ) {
 			$number ++;
-			$content .= '<option value="' . $instructor->ID . '">' . $instructor->display_name . '</option>';
+			$content .= '<option value="' . $user->ID . '">' . $user->display_name . '</option>';
 		}
 		$content .= '</select>';
 
@@ -224,7 +284,7 @@ class CoursePress_Helper_UI {
 		global $post_id, $wpdb;
 
 		$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
-		$just_count = isset( $options['count'] ) ? $options['count'] : false;
+		$just_count     = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
 
@@ -267,7 +327,7 @@ class CoursePress_Helper_UI {
 			}
 
 			// Pending from invites
-			if( $show_pending ) {
+			if ( $show_pending ) {
 				$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
 				if ( $instructor_invites ) {
 					foreach ( $instructor_invites as $invite ) {
@@ -289,17 +349,17 @@ class CoursePress_Helper_UI {
 		$content = '';
 
 		$control_class = isset( $options['class'] ) ? $options['class'] : '';
-		$label = isset( $options['label'] ) ? $options['label'] : '';
-		$label_class = isset( $options['label_class'] ) ? $options['label_class'] : '';
-		$left = isset( $options['left'] ) ? $options['left'] : '';
-		$left_class = isset( $options['left_class'] ) ? $options['left_class'] : '';
-		$right = isset( $options['right'] ) ? $options['right'] : '';
-		$right_class = isset( $options['right_class'] ) ? $options['right_class'] : '';
-		$state = isset( $options['state'] ) ? $options['state'] : 'off';
+		$label         = isset( $options['label'] ) ? $options['label'] : '';
+		$label_class   = isset( $options['label_class'] ) ? $options['label_class'] : '';
+		$left          = isset( $options['left'] ) ? $options['left'] : '';
+		$left_class    = isset( $options['left_class'] ) ? $options['left_class'] : '';
+		$right         = isset( $options['right'] ) ? $options['right'] : '';
+		$right_class   = isset( $options['right_class'] ) ? $options['right_class'] : '';
+		$state         = isset( $options['state'] ) ? $options['state'] : 'off';
 
 		$data = '';
-		if( isset( $options['data'] ) && is_array( $options['data'] ) ) {
-			foreach( $options['data'] as $key => $value ) {
+		if ( isset( $options['data'] ) && is_array( $options['data'] ) ) {
+			foreach ( $options['data'] as $key => $value ) {
 				$data .= is_string( $value ) ? 'data-' . $key . '="' . $value . '" ' : '';
 			}
 		}
@@ -307,13 +367,13 @@ class CoursePress_Helper_UI {
 		$content = '
 			<div id="' . esc_attr( $id ) . '" class="toggle-switch coursepress-ui-toggle-switch ' . esc_attr( $control_class ) . ' ' . $state . '" name="' . esc_attr( $name ) . '" ' . $data . '>';
 
-		if( ! empty( $label ) ) {
+		if ( ! empty( $label ) ) {
 			$content .= '
 				<span class="label ' . esc_attr( $label_class ) . '">' . $label . '</span>
 			';
 		}
 
-		if( ! empty( $left ) ) {
+		if ( ! empty( $left ) ) {
 			$content .= '
 				<span class="left ' . esc_attr( $left_class ) . '">' . $left . '</span>
 			';
@@ -325,7 +385,7 @@ class CoursePress_Helper_UI {
 				</div>';
 
 
-		if( ! empty( $right ) ) {
+		if ( ! empty( $right ) ) {
 			$content .= '
 				<span class="right ' . esc_attr( $right_class ) . '">' . $right . '</span>
 			';

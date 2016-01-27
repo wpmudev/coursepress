@@ -78,6 +78,8 @@ class CoursePress_Model_Shortcodes_Templates {
 			) );
 		}
 
+		$content = apply_filters( 'coursepress_course_archive_content', $content, $a );
+
 		if ( $echo ) {
 			echo $content;
 		}
@@ -131,36 +133,45 @@ class CoursePress_Model_Shortcodes_Templates {
 	public static function course_list_box( $a ) {
 
 		$a = shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'clickable' => false,
-			'clickable_label' => __( 'Course Details', CoursePress::TD ),
+			'course_id'            => CoursePress_Helper_Utility::the_course( true ),
+			'clickable'            => false,
+			'clickable_label'      => __( 'Course Details', CoursePress::TD ),
 			'override_button_text' => '',
 			'override_button_link' => '',
-			'echo'      => false,
+			'echo'                 => false,
 		), $a, 'course_list_box' );
 
-		$course_id = (int) $a['course_id'];
+		$course_id       = (int) $a['course_id'];
 		$clickable_label = sanitize_text_field( $a['clickable_label'] );
-		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
-		$clickable = CoursePress_Helper_Utility::fix_bool( $a['clickable'] );
-		$url = trailingslashit( CoursePress_Core::get_slug('courses', true ) ) . get_post_field( 'post_name', $course_id );
+		$echo            = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+		$clickable       = CoursePress_Helper_Utility::fix_bool( $a['clickable'] );
+		$url             = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . get_post_field( 'post_name', $course_id );
 
-		$course_image = CoursePress_Model_Course::get_setting( $course_id, 'listing_image' );
+		$course_image  = CoursePress_Model_Course::get_setting( $course_id, 'listing_image' );
 		$has_thumbnail = ! empty( $course_image );
 
-		$clickable_link = $clickable ? 'data-link="' . esc_url( $url ) . '"' : '';
+		$clickable_link  = $clickable ? 'data-link="' . esc_url( $url ) . '"' : '';
 		$clickable_class = $clickable ? 'clickable' : '';
-		$clickable_text = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
-		$button_text = ! $clickable ? '[course_join_button list_page="yes" course_id="' . $course_id . '"]' : '';
+		$clickable_text  = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
+		$button_text     = ! $clickable ? '[course_join_button list_page="yes" course_id="' . $course_id . '"]' : '';
 		$instructor_link = $clickable ? 'no' : 'yes';
 		$thumbnail_class = $has_thumbnail ? 'has-thumbnail' : '';
 
+		$completed        = false;
+		$student_progress = false;
+		if ( is_user_logged_in() ) {
+			$student_progress = CoursePress_Model_Student::calculate_completion( get_current_user_id(), $course_id );
+			$completed        = ( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
+		}
+		$completion_class = $completed ? 'course-completed' : '';
+
+
 		// Override button
-		if( ! empty( $a['override_button_text'] ) && ! empty( $a['override_button_link'] ) ) {
+		if ( ! empty( $a['override_button_text'] ) && ! empty( $a['override_button_link'] ) ) {
 			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $a['override_button_link'] ) . '">' . esc_attr( $a['override_button_text'] ) . '</button>';
 		}
 
-		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $thumbnail_class . '" ' . $clickable_link . '>
+		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . '>
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
 				[course_title course_id="' . $course_id . '"]
@@ -171,7 +182,7 @@ class CoursePress_Model_Shortcodes_Templates {
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
 				</div>' .
-	            $button_text . $clickable_text . '
+		            $button_text . $clickable_text . '
 		    </div>
 		</div>
 		';
@@ -224,14 +235,14 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$a = shortcode_atts( array(
 			'instructor_id' => CoursePress_View_Front_Instructor::$last_instructor,
-			'echo'      => false,
+			'echo'          => false,
 		), $a, 'instructor_page' );
 
 		$instructor_id = (int) $a['instructor_id'];
-		if( empty( $instructor_id ) ) {
+		if ( empty( $instructor_id ) ) {
 			return '';
 		}
-		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+		$echo = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
 
 		$template = '<div class="instructor-wrapper">
 			[course_instructor_avatar instructor_id="' . $instructor_id . '" force_display="true" thumb_size="200"]
@@ -257,14 +268,14 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$a = shortcode_atts( array(
 			'user_id' => get_current_user_id(),
-			'echo'      => false,
+			'echo'    => false,
 		), $a, 'coursepress_dashboard' );
 
 		$user_id = (int) $a['user_id'];
-		if( empty( $user_id ) ) {
+		if ( empty( $user_id ) ) {
 			return '';
 		}
-		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+		$echo = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
 
 		$template = '<div class="coursepress-dashboard-wrapper">
 			[course_list instructor="' . $user_id . '" dashboard="true"]
@@ -288,29 +299,31 @@ class CoursePress_Model_Shortcodes_Templates {
 	public static function coursepress_focus_item( $a ) {
 
 		$a = shortcode_atts( array(
-			'course' => '',
-			'unit' => '',
-			'type' => '',
-			'item_id' => 0,
-			'pre_text' => __('&laquo; Previous', CoursePress::TD),
-			'next_text' => __('Next &raquo;', CoursePress::TD),
-			'next_section_text' => __('Next Section', CoursePress::TD),
-			'echo'      => false,
+			'course'            => '',
+			'unit'              => '',
+			'type'              => '',
+			'item_id'           => 0,
+			'pre_text'          => __( '&laquo; Previous', CoursePress::TD ),
+			'next_text'         => __( 'Next &raquo;', CoursePress::TD ),
+			'next_section_text' => __( 'Next Section', CoursePress::TD ),
+			'echo'              => false,
 		), $a, 'coursepress_focus_item' );
 
+		do_action( 'coursepress_focus_item_preload', $a );
+
 		$course_id = (int) $a['course'];
-		$unit_id = (int) $a['unit'];
-		if( empty( $course_id ) && empty( $unit_id ) ) {
+		$unit_id   = (int) $a['unit'];
+		if ( empty( $course_id ) && empty( $unit_id ) ) {
 			return '';
 		}
 
 		CoursePress_Helper_Utility::set_the_course( $course_id );
 
-		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
-		$item_id = (int) $a['item_id'];
-		$type = sanitize_text_field( $a['type'] );
-		$pre_text = sanitize_text_field( $a['pre_text'] );
-		$next_text = sanitize_text_field( $a['next_text'] );
+		$echo              = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+		$item_id           = (int) $a['item_id'];
+		$type              = sanitize_text_field( $a['type'] );
+		$pre_text          = sanitize_text_field( $a['pre_text'] );
+		$next_text         = sanitize_text_field( $a['next_text'] );
 		$next_section_text = sanitize_text_field( $a['next_section_text'] );
 
 		$titles = get_post_meta( $unit_id, 'page_title', true );
@@ -319,8 +332,28 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$page_count = count( $titles );
 
-		if( 'section' === $type ) {
+		$preview = CoursePress_Model_Course::previewability( $course_id );
+
+		if ( 'section' === $type ) {
 			$page = $item_id;
+
+			if ( CoursePress_Model_Course::get_setting( $course_id, 'focus_hide_section', true ) ) {
+				$next_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => $page ) );
+				$mod          = 0;
+				if ( ! empty( $next_modules ) ) {
+					$mod  = (int) $next_modules[0];
+					$page = (int) get_post_meta( $mod, 'module_page', true );
+					$type = 'module';
+				}
+
+				// "Redirect" to module
+				$item_id = $mod;
+
+				if ( empty( $mod ) || ! CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $mod, $page ) ) {
+					$type = 'no_access';
+				}
+			}
+
 		} else {
 			// Get page from module meta
 			$page = get_post_meta( $item_id, 'module_page', true );
@@ -330,33 +363,34 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$breadcrumb_trail = '';
 
-		$u_link_url = '';
-		$bcs = '<span class="breadcrumb-milestone"></span>'; // Breadcrumb Separator
+		$u_link_url       = '';
+		$bcs              = '<span class="breadcrumb-milestone"></span>'; // Breadcrumb Separator
 		$progress_spinner = '<span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span>';
 
-		if( $breadcrumbs ) {
+		if ( $breadcrumbs ) {
 
 			// Course
 			$c_link = get_the_permalink( $course_id );
 			$a_link = trailingslashit( $c_link . CoursePress_Core::get_slug( 'units' ) );
 			$u_link = trailingslashit( $a_link . get_post_field( 'post_name', $unit_id ) );
 
-			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
-			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', CoursePress::TD ) . '</a>';
+			$c_link     = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
+			$a_link     = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', CoursePress::TD ) . '</a>';
 			$u_link_url = $u_link;
-			$u_link = '<a href="' . esc_url( $u_link ) . '#section-1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
+			$u_link     = '<a href="' . esc_url( $u_link ) . '#section-1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
 
 			$breadcrumb_trail = $c_link . $bcs . $a_link . $bcs . $u_link;
 		}
 
 		$can_view = true;
 
-		$student_id = get_current_user_id();
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
-		$is_instructor = in_array( $student_id, $instructors );
+		$student_id       = get_current_user_id();
+		$enrolled         = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$student_progress = $enrolled ? CoursePress_Model_Student::get_completion_data( $student_id, $course_id ) : false;
+		$instructors      = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$is_instructor    = in_array( $student_id, $instructors );
 
-		if( ! $enrolled && ! $is_instructor ) {
+		if ( ! $enrolled && ! $is_instructor ) {
 			if ( 'section' == $type ) {
 				$can_view = CoursePress_Model_Course::can_view_page( $course_id, $unit_id, $page, $student_id );
 			}
@@ -373,14 +407,17 @@ class CoursePress_Model_Shortcodes_Templates {
 
 		$type = $can_view ? $type : 'no_access';
 
+
 		$template = '';
-		switch( $type ) {
+		switch ( $type ) {
 
 			case 'section':
 
-				$preview = CoursePress_Model_Course::previewability( $course_id );
+				if ( $enrolled ) {
+					CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit_id, $page, $student_progress );
+				}
 
-				$breadcrumb_trail .= '<span class="breadcrumb-leaf">'. $bcs . '<span class="breadcrumb-course-unit-section crumb end">' . esc_html( $page_info['title'] ) . '</span></span>';
+				$breadcrumb_trail .= '<span class="breadcrumb-leaf">' . $bcs . '<span class="breadcrumb-course-unit-section crumb end">' . esc_html( $page_info['title'] ) . '</span></span>';
 
 				$content = '<div class="focus-wrapper">';
 
@@ -399,9 +436,9 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				$content .= '<div class="focus-nav">';
 				// Previous Navigation
-				if( $page > 1 ) {
+				if ( $page > 1 ) {
 					// Get previous section modules
-					$pre_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array('publish'), true, false, array( 'page' => ( $page - 1) ) );
+					$pre_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => ( $page - 1 ) ) );
 
 					$content .= '
 							<div class="focus-nav-prev" data-id="' . $pre_modules[ ( count( $pre_modules ) - 1 ) ] . '" data-type="module"><a href="#module-' . esc_attr( $pre_modules[ ( count( $pre_modules ) - 1 ) ] ) . '">' . $pre_text . '</a></div>
@@ -409,15 +446,15 @@ class CoursePress_Model_Shortcodes_Templates {
 				}
 
 				// Next Navigation
-				$next_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array('publish'), true, false, array( 'page' => $page ) );
-				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, false, $page );
-				if( true === $next_module ) {
-					$next_module = $next_modules[ 0 ];
+				$next_modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => $page ) );
+				$next_module  = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, false, $page );
+				if ( true === $next_module ) {
+					$next_module = $next_modules[0];
 				}
 
-				if( ! empty( $next_modules ) ) {
+				if ( ! empty( $next_modules ) ) {
 					$content .= '
-							<div class="focus-nav-next" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
+							<div class="focus-nav-next" data-title="" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
 						';
 				}
 				$content .= '</div>'; // .focus-nav
@@ -432,44 +469,54 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				//$breadcrumb_trail .= esc_html( $page_info['title'] );
 
-				// Title retrieved below
-				$breadcrumb_trail .= $bcs . '<a href="' .esc_url( $u_link_url ) . '#section-' . $page . '" class="breadcrumb-course-unit-section crumb" data-id="' . $page . '">' . $page_info['title'] . '</a>';
+				if ( $enrolled ) {
+					CoursePress_Model_Student::visited_module( $student_id, $course_id, $unit_id, $item_id, $student_progress );
+				}
 
-				$student_id = get_current_user_id();
-				$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+				// Title retrieved below
+				$breadcrumb_trail .= $bcs . '<a href="' . esc_url( $u_link_url ) . '#section-' . $page . '" class="breadcrumb-course-unit-section crumb" data-id="' . $page . '">' . $page_info['title'] . '</a>';
+
+				$student_id    = get_current_user_id();
+				$instructors   = CoursePress_Model_Course::get_instructors( $course_id );
 				$is_instructor = in_array( $student_id, $instructors );
 
 				// Page access
-				$preview = CoursePress_Model_Course::previewability( $course_id );
 				$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
 
 				$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
 				$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
 
-				$modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array('publish'), true, false, array( 'page' => $page ) );
+				$modules = CoursePress_Model_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => $page ) );
 
 				// Navigation Vars
 				$module_index = array_search( $item_id, $modules );
 
-				$goto_section = false;
+				$goto_section      = false;
 				$goto_next_section = false;
 
 				$next_module = CoursePress_Model_Course::next_accessible( $course_id, $unit_id, $preview, $item_id, $page );
-				if( true === $next_module ) {
+				if ( true === $next_module ) {
 					$next_module = $module_index !== ( count( $modules ) - 1 ) ? $module_index + 1 : false;
 					$next_module = false !== $next_module ? $modules[ $next_module ] : $next_module;
 				}
 				$previous_module = CoursePress_Model_Course::previous_accessible( $course_id, $unit_id, $preview, $item_id, $page );
-				if( true === $previous_module ) {
+				if ( true === $previous_module ) {
 					$previous_module = $module_index !== 0 ? $module_index - 1 : false;
-					$previous_module = false !== $previous_module  ? $modules[ $previous_module ] : $previous_module;
+					$previous_module = false !== $previous_module ? $modules[ $previous_module ] : $previous_module;
 				}
 
-				$breadcrumb_trail .= '<span class="breadcrumb-leaf">'. $bcs . '<span class="breadcrumb-course-unit-section-module crumb end">' . esc_html( get_post_field('post_title', $modules[ $module_index ] ) ) . '</span></span>';
+				$breadcrumb_trail .= '<span class="breadcrumb-leaf">' . $bcs . '<span class="breadcrumb-course-unit-section-module crumb end">' . esc_html( get_post_field( 'post_title', $modules[ $module_index ] ) ) . '</span></span>';
 
 				// Show section if we're at the first module
-				if( $previous_module === false ) {
-					$goto_section = true;
+				if ( $previous_module === false ) {
+					if ( CoursePress_Model_Course::get_setting( $course_id, 'focus_hide_section', true ) ) {
+						if ( (int) $page > 1 ) {
+							$modules         = CoursePress_Model_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => ( $page - 1 ) ) );
+							$previous_module = array_pop( $modules );
+						}
+					} else {
+						$goto_section = true;
+					}
 				}
 
 				// Show the next section if this is the last module
@@ -477,34 +524,45 @@ class CoursePress_Model_Shortcodes_Templates {
 					$goto_next_section = true;
 				}
 
+				$module                  = get_post( $item_id );
+				$attributes              = CoursePress_Model_Module::attributes( $module );
+				$attributes['course_id'] = $course_id;
+
+				// Get completion states
+				$module_seen     = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/' . $unit_id . '/modules_seen/' . $item_id );
+				$module_passed   = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/' . $unit_id . '/passed/' . $item_id );
+				$module_answered = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/' . $unit_id . '/answered/' . $item_id );
+
+				$seen_class      = isset( $module_seen ) && ! empty( $module_seen ) ? 'module-seen' : '';
+				$passed_class    = isset( $module_passed ) && ! empty( $module_passed ) && $attributes['assessable'] ? 'module-passed' : '';
+				$answered_class  = isset( $module_answered ) && ! empty( $module_answered ) && $attributes['mandatory'] ? 'module-answered' : '';
+				$completed_class = isset( $module_passed ) && ! empty( $module_passed ) && $attributes['assessable'] && $attributes['mandatory'] ? 'module-completed' : '';
+				$completed_class = empty( $completed_class ) && isset( $module_passed ) && ! empty( $module_answered ) && ! $attributes['assessable'] && $attributes['mandatory'] ? 'module-completed' : '';
+
 				$content = '<div class="focus-wrapper">';
 
 				// Main content
-				$content .= '<div class="focus-main">';
+				$content .= '<div class="focus-main ' . $seen_class . ' ' . $passed_class . ' ' . $answered_class . ' ' . $completed_class . '">';
 
-				$module = get_post( $item_id );
-				$attributes = CoursePress_Model_Module::attributes( $module );
-				$attributes['course_id'] = $course_id;
-
-				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
-				$template = 'CoursePress_Template_Module';
+				$method            = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+				$template          = 'CoursePress_Template_Module';
 				$next_module_class = '';
 
 				// Make sure we're allowed to move on
-				if( 'input-quiz' == $attributes['module_type'] && ! empty( $attributes['mandatory'] ) ) {
-					$quiz_result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module->ID );
+				if ( 'input-quiz' == $attributes['module_type'] && ! empty( $attributes['mandatory'] ) ) {
+					$quiz_result       = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module->ID );
 					$next_module_class = empty( $quiz_result['passed'] ) ? 'not-active' : $next_module_class;
 
 				}
 
-				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+				$preview_modules    = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
-				if( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
+				if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
 					$content = '';
 				} else {
 
-					if( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
+					if ( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
 						$content .= call_user_func( $template . '::' . $method, $module, $attributes );
 					}
 
@@ -514,7 +572,7 @@ class CoursePress_Model_Shortcodes_Templates {
 
 				$content .= '<div class="focus-nav">';
 				// Previous Navigation
-				if( $goto_section || $previous_module !== false ) {
+				if ( $goto_section || $previous_module !== false ) {
 					$content .= $goto_section ? '
 							<div class="focus-nav-prev" data-id="' . $page . '" data-type="section"><a href="#section-' . esc_attr( $page ) . '">' . $pre_text . '</a></div>
 						' : '
@@ -523,7 +581,7 @@ class CoursePress_Model_Shortcodes_Templates {
 				}
 
 				// Next Navigation
-				if( ( $goto_next_section && $page_count >= ( $page + 1 ) ) || $next_module !== false ) {
+				if ( ( $goto_next_section && $page_count >= ( $page + 1 ) ) || $next_module !== false ) {
 					$content .= $goto_next_section ? '
 							<div class="focus-nav-next ' . $next_module_class . ' next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
 						' : '
@@ -539,14 +597,27 @@ class CoursePress_Model_Shortcodes_Templates {
 				break;
 
 			case 'no_access':
-				$template = "No access";
+
+				$content = do_shortcode( '[coursepress_enrollment_templates]' );
+				$content .= '<div class="focus-wrapper">';
+
+				$content .= '<div class="focus-main section">';
+
+				$content .= '<div class="no-access-message">' . __( 'You do not currently have access to this part of the course. Signup now to get full access to the course.', CoursePress::TD ) . '</div>';
+				$content .= do_shortcode( '[course_join_button course_id="' . $course_id . '"]' );
+
+				$content .= '</div>'; // .focus-main
+
+				$content .= '</div>'; // .focus-wrapper
+
+				$template = apply_filters( 'coursepress_no_access_message', $content, $course_id, $unit_id );
 				break;
 
 		}
 
 		$content = $progress_spinner . do_shortcode( $template );
 
-		if( $breadcrumbs ) {
+		if ( $breadcrumbs ) {
 			$content = '<div class="coursepress-breadcrumbs ' . $type . '">' . $breadcrumb_trail . '</div>' . $content;
 		}
 
@@ -562,20 +633,20 @@ class CoursePress_Model_Shortcodes_Templates {
 	public static function coursepress_quiz_result( $a ) {
 
 		$a = shortcode_atts( array(
-			'course_id' => false,
-			'unit_id' => false,
-			'module_id' => false,
+			'course_id'  => false,
+			'unit_id'    => false,
+			'module_id'  => false,
 			'student_id' => false,
-			'echo'      => false,
+			'echo'       => false,
 		), $a, 'coursepress_dashboard' );
 
-		$course_id = (int) $a['course_id'];
-		$unit_id = (int) $a['unit_id'];
-		$module_id = (int) $a['module_id'];
+		$course_id  = (int) $a['course_id'];
+		$unit_id    = (int) $a['unit_id'];
+		$module_id  = (int) $a['module_id'];
 		$student_id = (int) $a['student_id'];
-		$echo      = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
+		$echo       = CoursePress_Helper_Utility::fix_bool( $a['echo'] );
 
-		if( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
+		if ( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
 			return '';
 		}
 

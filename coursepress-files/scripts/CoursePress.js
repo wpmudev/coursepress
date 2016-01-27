@@ -30,10 +30,18 @@ var CoursePress = CoursePress || {};
         id = id.replace( /\#/g, '' );
 
         var editor = _coursepress._dummy_editor;
+
+        // Editor content replace
+        var search = editor.match(/id="dummy_editor_id">(.*|\s)/)[1];
+
         editor = editor.replace( /dummy_editor_id/g, id );
+        editor = editor.replace( search, content );
         editor = editor.replace( /dummy_editor_content/g, content );
         editor = editor.replace( /dummy_editor_name/g, name );
         editor = editor.replace( /rows="\d*"/g, 'style="height: ' + height + 'px"' ); // remove rows attribute
+
+        // Fix whitespace bug
+        editor = editor.replace( /<p>\s/g, '' );
 
         if ( append ) {
             $( target ).append( editor );
@@ -52,6 +60,10 @@ var CoursePress = CoursePress || {};
                     CoursePress.Events.trigger('editor:keyup',ed);
                 } );
             };
+            // Don't forget to add the trigger to the textarea if TinyMCE is not used (QTags mode)
+            $('textarea#' + id ).on( 'keyup', function(){
+                CoursePress.Events.trigger('editor:keyup',this);
+            })
             tinyMCE.init( options );
             tinyMCEPreInit.mceInit[ id ] = options;
         }
@@ -79,13 +91,13 @@ var CoursePress = CoursePress || {};
             id = 'html' === getUserSetting( 'editor' ) ? '#' + id : id;
 
             if ( 'set' === mode ) {
-                $( id ).val( content );
+                $( id ).val( content.trim() );
             }
 
             return $( id ).val();
         } else {
             if ( 'set' === mode ) {
-                tinyMCE.get( id ).setContent( content );
+                tinyMCE.get( id ).setContent( content.trim() );
             }
             return tinyMCE.get( id ).getContent();
         }

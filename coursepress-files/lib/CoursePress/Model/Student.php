@@ -165,12 +165,25 @@ class CoursePress_Model_Student {
 
 	public static function visited_page( $student_id, $course_id, $unit_id, $page, &$data = false ) {
 
-		if ( false === $data ) {
+		if ( empty( $data  ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/last_visited_page', $page );
+		self::update_completion_data( $student_id, $course_id, $data );
+
+		return $data;
+
+	}
+
+	public static function visited_module( $student_id, $course_id, $unit_id, $module_id, &$data = false ) {
+
+		if ( empty( $data ) ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -523,7 +536,7 @@ class CoursePress_Model_Student {
 		}
 
 		// Is course complete?
-		if ( $course_required_steps === $course_completed_steps ) {
+		if ( $course_required_steps === $course_completed_steps && ! empty( $student_units ) ) {
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
 		}
 
@@ -561,7 +574,7 @@ class CoursePress_Model_Student {
 
 	public static function get_course_progress( $student_id, $course_id, &$data = false ) {
 
-		if ( false === $data ) {
+		if( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 

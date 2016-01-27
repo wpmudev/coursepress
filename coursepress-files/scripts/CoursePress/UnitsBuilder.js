@@ -2161,8 +2161,11 @@ var CoursePress = CoursePress || {};
             var boxes = $( container ).find( '.answer' );
             var value = boxes.length;
 
-            $( group ).append( '<div class="answer"><input type="checkbox" value="' + value + '" name="meta_answers_selected[' + cid + '][]">' +
-            '<input class="component-checkbox-answer wide" type="text" name="meta_answers[]" value="">' +
+            var el_type = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio/) ? 'radio' : 'checkbox';
+            var new_name = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio/) ? 'meta_answers_selected[' + cid + ']' : 'meta_answers_selected[' + cid + '][]';
+
+            $( group ).append( '<div class="answer"><input type="' + el_type + '" value="' + value + '" name="' + new_name + '">' +
+            '<input class="component-' + el_type + '-answer wide" type="text" name="meta_answers[]" value="">' +
             ' <span class="remove-item"><i class="fa fa-trash-o"></i></span></div>' );
 
         },

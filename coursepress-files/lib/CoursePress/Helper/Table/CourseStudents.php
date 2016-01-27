@@ -41,7 +41,7 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 			'display_name' => __( 'Username', CoursePress::TD ),
 			'first_name'   => __( 'First Name', CoursePress::TD ),
 			'last_name'    => __( 'Last Name', CoursePress::TD ),
-			'profile'      => __( 'Profile', CoursePress::TD ),
+//			'profile'      => __( 'Profile', CoursePress::TD ),
 			'actions'      => __( 'Withdraw', CoursePress::TD ),
 		);
 
@@ -85,6 +85,14 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 		return sprintf(
 			'%s', get_user_option( 'last_name', $item->ID )
 		);
+	}
+
+	public function column_profile( $item ) {
+//		https://premium.wpmudev.dev/wp-admin/user-edit.php?user_id=1874&wp_http_referer=%2Fwp-admin%2Fusers.php
+//		return sprintf(
+//			'%s', get_user_option( 'last_name', $item->ID )
+//		);
+		return '';
 	}
 
 	public function column_actions( $item ) {
@@ -149,11 +157,21 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 			<div class="coursepress_course_add_student_wrapper">
 			<?php
 
-			echo CoursePress_Helper_UI::get_user_dropdown( 'student-add', 'student-add', array(
-				'placeholder' => __( 'Choose student...', CoursePress::TD ),
-				'class'       => 'chosen-select narrow',
-				'exclude'     => $this->students
-			) );
+			$name = 'student-add';
+			$id = 'student-add';
+			if( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
+				$user_selector = CoursePress_Helper_UI::get_user_dropdown( $id, $name, array(
+						'placeholder' => __( 'Choose student...', CoursePress::TD ),
+						'class'       => 'chosen-select narrow',
+						'exclude'     => $this->students,
+						'context'     => 'students'
+				) );
+			} else {
+				$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__('Enter user ID', CoursePress::TD) . '" />';
+			}
+
+			$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
+			echo $user_selector;
 
 			$nonce = wp_create_nonce( 'add_student' );
 			$withdraw_nonce = wp_create_nonce( 'withdraw_all_students' );

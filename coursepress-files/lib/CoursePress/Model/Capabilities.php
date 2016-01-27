@@ -608,4 +608,11 @@ class CoursePress_Model_Capabilities {
 		return $is_campus;
 	}
 
+	/**
+	 * Is this running on WPMU DEV?
+	 */
+	public static function is_wpmudev() {
+		return preg_match("/premium.wpmudev.(dev|org)/",  WP_CONTENT_URL );
+	}
+
 }

@@ -11,7 +11,7 @@ class CoursePress_Model_Module {
 		add_filter( 'comment_edit_redirect', array( __CLASS__, 'discussion_edit_redirect' ), 10, 3 );
 		add_filter( 'cancel_comment_reply_link', array( __CLASS__, 'discussion_cancel_reply_link' ), 10, 3 );
 		add_filter( 'comment_reply_link', array( __CLASS__, 'discussion_reply_link' ), 10, 4 );
-
+		add_filter( 'comments_open', array( __CLASS__, 'discussions_comments_open' ), 10, 2 );
 
 	}
 
@@ -240,6 +240,17 @@ class CoursePress_Model_Module {
 		}
 
 		return $link;
+	}
+
+	public static function discussions_comments_open( $open, $post_id ) {
+
+		$type = get_post_meta( $post_id, 'module_type', true );
+
+		if( $type === 'discussion') {
+			return true;
+		}
+
+		return $open;
 	}
 
 	public static function discussion_post_link( $link, $post, $args ) {

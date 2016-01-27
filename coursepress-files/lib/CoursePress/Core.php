@@ -562,5 +562,4 @@ class CoursePress_Core {
 
 	}
 
-
 }

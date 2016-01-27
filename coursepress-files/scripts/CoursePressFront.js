@@ -327,9 +327,9 @@ var CoursePress = CoursePress || {};
     // Prepare the enrollment modal
     function create_modal_model() {
 
-        $steps = $( '[data-type="modal-step"]' );
+        var steps = $( '[data-type="modal-step"]' );
 
-        if( typeof $steps == 'undefined' || $steps.length == 0 ) {
+        if( typeof steps == 'undefined' || steps.length == 0 ) {
             return;
         }
 
@@ -345,20 +345,23 @@ var CoursePress = CoursePress || {};
 
                 var object = {};
 
-                $.each( $steps, function ( index, item ) {
+                $.each( steps, function ( index, item ) {
                     var step = index + 1;
                     var id = $( item ).attr( 'id' );
-                    object[ 'click #step' + step ] = {
-                        view: _.template( $( '#' + id ).html() ),
-                        onActive: 'setActive'
-                    };
+                    if( typeof id != 'undefined' ) {
+                        object['click #step' + step] = {
+                            view: _.template( $( '#' + id ).html() ),
+                            onActive: 'setActive'
+                        };
+                    }
                 } );
 
                 return object;
             })(),
             events: {
                 'click .previous': 'previousStep',
-                'click .next': 'nextStep'
+                'click .next': 'nextStep',
+                'click .cancel-link': 'closeDialog'
             },
             previousStep: function ( e ) {
                 e.preventDefault();
@@ -373,6 +376,9 @@ var CoursePress = CoursePress || {};
                 if ( typeof this.onNext === "function" ) {
                     this.onNext();
                 }
+            },
+            closeDialog: function() {
+                $('.enrolment-container-div' ).detach();
             },
             setActive: function( options ) {
                 console.log( options );
@@ -563,6 +569,14 @@ var CoursePress = CoursePress || {};
             var nonce = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce');
             var course_id = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-course');
 
+            if( typeof nonce == 'undefined' || typeof course_id == 'undefined' ) {
+                var temp = $(document.createElement('div'));
+                temp.html( _.template( $( '#modal-template' ).html() )() );
+                temp = $( temp ).find('.enrollment-modal-container')[0];
+                nonce = $(temp).attr('data-nonce');
+                course_id = $(temp).attr('data-course');
+            }
+            console.log('-------=======------=======------========--------');
             CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
             CoursePress.Post.set( 'action', 'enroll_student' );
 
@@ -572,7 +586,7 @@ var CoursePress = CoursePress || {};
                 course_id: course_id,
                 step: ''
             };
-
+            console.log(data);
             CoursePress.Post.set( 'data', data );
             CoursePress.Post.save();
 
@@ -622,6 +636,8 @@ var CoursePress = CoursePress || {};
         var newDiv = $(document.createElement('div'));
         $( 'body' ).append( newDiv );
         $( newDiv ).addClass('enrolment-container-div');
+
+        console.log('student: ' + _coursepress.current_student );
         if( _coursepress.current_student > 0 ) {
 
             // Is paid course?
@@ -643,7 +659,7 @@ var CoursePress = CoursePress || {};
                 $(newDiv).html(CoursePress.Enrollment.dialog.render().el);
             } else {
 
-
+                console.log('open at paid_enrollment');
                 $(newDiv).html(CoursePress.Enrollment.dialog.render().el);
                 CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
             }
@@ -754,8 +770,10 @@ var CoursePress = CoursePress || {};
         $( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( e ) {
            var target = e.currentTarget;
             var event = e || window.event;
+
             event.preventDefault();
             event.stopPropagation();
+            event.stopImmediatePropagation();
             render_popup_enrollment();
 
         });
