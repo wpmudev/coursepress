@@ -148,7 +148,7 @@ In both cases, please make sure that you tag the `coursepress/base` branch with 
 
 The `coursepress/standard` branch is created for release on WordPress.org. You will need to copy the folders (only visible ones) to the `trunk` folder of your local SVN checkout of the WordPress.org hosted repo.
 
-Than follow the recommended WordPress.org guides for tagging the release with the current version number. See <https://wordpress.org/plugins/about/svn/>   
+Then follow the recommended WordPress.org guides for tagging the release with the current version number. See <https://wordpress.org/plugins/about/svn/>   
 
 ### Other
 
