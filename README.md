@@ -1,24 +1,54 @@
 # README #
 
-**NOTE: This is new**
-
 The **core** development branch for CoursePress 1.x is `coursepress/base`. This branch ultimately is responsible for creating the `coursepress/pro` and `coursepress/standard` branches. Consider it to be a "super branch".  
 
-`coursepress/base` is the **ONLY** file that should be edited with bug fixes and changes for CoursePress 1.x.  Changes will automatically be built for `coursepress/pro` and `coursepress/standard` using **grunt** tasks: `grunt build:dev` and `grunt build:wporg` respectively. Or `grunt buildAll` to build both branches. This will not be automatically pushed to this repo. Test locally first!
+`coursepress/base` is the **ONLY** branch that should be edited with bug fixes and changes for CoursePress 1.x.  Changes will automatically be built for `coursepress/pro` and `coursepress/standard` using **grunt** tasks: `grunt build:dev` and `grunt build:wporg` respectively. Or `grunt buildAll` to build both branches. This will not be automatically pushed to this repo. Test locally first!
 
 **Note to support: ** Do NOT fork `coursepress/pro` or `coursepress/standard`. Pull requests need to be made to the `coursepress/base` branch.
 
 **Note to devs: ** Please do not release the `coursepress/base` branch. It will run stand alone for testing and development, but uses `CoursePress Base` as the plugin name and a number of other variables or strings that are required to build the two release versions.
 
-CoursePress has three primary development branches: coursepress/pro, coursepress/campus and coursepress/standard  
+# DEVELOPMENT BRANCHES   
+
+CoursePress has a number of development branches: coursepress/base, coursepress/campus-dev and coursepress/2.0-dev  
+
+## CoursePress Pro (coursepress/base) - CoursePress 1.x    
+
+This branch is the "super" branch for CoursePress 1.x. All development and bug fixes should happen in this branch (**NOT** in coursepress/pro or coursepress/standard).  
+
+This bit is *very very important*: **DO NOT** let your IDE change the source order of your code, fixing up formatting is fine, but moving code blocks around is not. Here is why...
+
+The `coursepress/base` branch rely heavily on Grunt to produce the development branches: `coursepress/pro` and `coursepress/standard`.
+
+Special comments in the base branch will make sure some code only end up on the /pro branch and some code only end up in the /standard branch.
+
+E.g.  
+
+    //<wpmudev.plugin.pro_only>  
+    echo "This is only in coursepress/pro";  
+    //</wpmudev.plugin.pro_only>  
+  
+    //<wpmudev.plugin.free_only>  
+    echo "This is only in coursepress/standard";  
+    //</wpmudev.plugin.free_only>  
+
+**NEVER** under any circumstances package and release `coursepress/base` on Premium or WordPress.org.
+
+## CoursePress Campus (coursepress/campus-dev) - CoursePress for Edublogs/CampusPress    
+
+This branch is not usually touched by the CoursePress developers unless `coursepress/pro` production branch changes.  Make sure that `coursepress/pro` gets merged into `coursepress/campus-dev`, from this point on, the campus team takes over and do what they need to do.
+
+## CoursePress Pro 2.0 (coursepress/2.0-dev)  
+
+This is the development branch for **CoursePress 2.0** (still unreleased at this stage). At the moment development is primarily happening as part of the **WP Academy** project in the `wpmu-dev` repo.  Changes are then manually merged back to `coursepress/2.0-dev` here.  
+
+Upon completion of **WP Academy** the `coursepress/2.0-dev` branch will receive a structure similar to that of `coursepress/base`.  It requires a "super branch" that will be responsible for generation both a Pro and Standard version of CoursePress 2.0 by using Grunt tasks (these do not exist yet).
+
+# PRODUCTION BRANCHES   
 
 ## CoursePress Pro (coursepress/pro)  
 
-CoursePress Pro is the official premium plugin that lives on WPMU Dev and will ultimately always be merged back into **master**.
-
-## CoursePress Campus (coursepress/campus)  
-
-CoursePress Campus is the branch that is integrated with CampusPress/Edublogs.  It is just about identical to CoursePress Pro but strips out the MarketPress bundling and removes paid courses features (all code that is implemented in CoursePress Pro).  
+CoursePress Pro is the official premium plugin that lives on WPMU Dev.
 
 ## CoursePress (coursepress/standard)  
 
@@ -59,117 +89,38 @@ or
 
 Please note the double -f flag in the clean command. This is required to clean directories that contain a submodule repo.  
 
-#### Working with MarketPress in coursepress/pro  
+#### Working with MarketPress in CoursePress  
 
-##### Properly Update the Repo
+##### Preparing MarketPress for CoursePress Standard  
 
-**Note:**  
-`git submodule update` or `git submodule update --recursive` only updates the local repo, but the associated commit ID does not match.  
-
-You can verify this by running the following commands:  
-
-    # This will show the 'actual' commit ID used within coursepress/pro branch
-	git ls-files --stage | grep "includes/marketpress"
-	
-	# This will show the commit ID of the local repo (pushing to origin will not keep this ID!)  
-	git submodule status  
-
-To completely update MarketPress in coursepress/pro you will need to go to the submodule folder and do the following:  
-
-    # Checkout 'master' because submodules often end up in a detached HEAD state  
-	git checkout master  
-	
-	# Pull the update  
-	git pull origin master  
-
-Now when you run a `git status` in the coursepress/pro branch you will see that the submodule has been updated.
-
-    git status
-	# ... modified:   includes/marketpress (new commits)
+No steps required here as CoursePress Standard now fetches MarketPress Lite directly from the WordPress.org directory when the user wants to enable it.  
 
 ##### Preparing MarketPress for CoursePress Pro
 
-**Copy** (not move) `includes/marketpress/marketpress.php` to CoursePress root folder.  
+Its now easier to bundle MarketPress with CoursePress.  
 
-Edit the new file to make it CoursePress friendly:  
-
-    // Change name and version 
-	/*  
-	Plugin Name: MarketPress (CoursePress Pro Bundle)  
-	Version: 2.9.5.3   
-
-Remove the dashboard as CoursePress is now responsible.
-
-Find includes/requires and update accordingly:  
-
-    // localization()
-	$lang_dir = dirname(plugin_basename($this->plugin_file)) . 'includes/marketpress/marketpress-includes/languages/';
-	
-	// init_vars()  
-	$this->plugin_dir = plugin_dir_path(__FILE__) . 'includes/marketpress/marketpress-includes/';
-	$this->plugin_url = plugin_dir_url(__FILE__) . 'includes/marketpress/marketpress-includes/';
-
-With these changes in place it should be good to go.
-
-    git status
-	# ... modified:   includes/marketpress (new commits)
-	# ... modified:   marketpress.php
-
-Now add, commit and push:  
-
-    git add . -A  
-	git commit  
-	git push  
-
-MarketPress is now updated for CoursePress Pro.
-
-##### Someone else updated MarketPress Bundle  
-
-This is where `git submodule update` fits in. It makes sure that you have the latest submodule in your branch updated to the commit ID of the submodule in your branch.  
+* Download MarketPress from WPMU DEV Premium.  
+* Place the zip file in `includes/plugins` and remove the old zip.  
+* Update the zip file name in `coursepress.php` variable. e.g. `$this->mp_file = '128762_marketpress-ecommerce-3.0.0.2.zip';`  
 
 
-### Releasing
+# RELEASING #
 
-#### Grunt Task Runner (automating)  
+#### Grunt Task Runner  
 
-**NOTE: This section needs updating. Additional grunt tasks now exist to make deployment easier.**
+**ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
 
-You can use `grunt` to run a few automation tasks:  
+`grunt buildAll`  - This builds both the `coursepress/pro` and `coursepress/standard` branches from `coursepress/base`.  
 
-* i18n : Creates a cp-default.pot file and compiles it into a .mo file. (Note, it assumes that i18 tools are installed, see 'Other' below)  
+`grunt build:dev` - This builds `coursepress/pro` branch for release on WPMU DEV.  
+
+`grunt build:wporg` - This builds `coursepress/standard` branch for release on WordPress.org. 
+
+**Primary Developer NOTE: ** Please see the Gruntfile.js, lines 220 - 224.  Test and confirm automatic generation of POT files then remove all comments on those lines. Getting varied results at the moment.  
+
+**Note:**  It assumes that i18 tools are installed, see 'Other' below)  
 
 To use `grunt` you will need to have NPM (Node.js Package Manager) installed. (See 'Other' below)
-
-Grunt uses node.js modules. To install the modules to node_modules (ignored by .gitignore) run `npm install` in the coursepress/ folder. This pulls the configuration from package.json. You don't need to do this too often.  
-
-    npm install
-
-Now that its all setup and good to go, from now on you can just run `grunt` whenever you want to run the automation tasks. Preferably just before you release.  
-
-    grunt  
-
-For reference: Grunt's configuration is kept in Gruntfile.js.
-
-#### CoursePress Campus
-
-Its identical to CoursePress Pro, but be sure to remove marketpress.php, includes/marketpress/* and includes/extra/dashboard and commit the branch.  
-
-It does not get released, but is used by the CampusPress team for CampusPress integrations.
-
-#### CoursePress (wp.org version)
-
-CoursePress is identical to CoursePress Pro, but the following changes need to be made:  
-
-* Copy/Merge ALL code from Pro to Standard (**dont remove readme.txt**)
-* Remove /includes/marketpress/  
-* Remove ./marketpress.php  
-* Add MarketPress Lite to /includes/wordpress-ecommerce
-* Copy MarketPress Lite's marketpress.php to ./a-marketpress.php  
-* Update paths in ./a-marketpress.php  
-* Change plugin name in ./a-marketpress.php  
-* Change plugin name in ./coursepress.php  
-* Remove WPMUDev Dashboard notifications and require statements  
-* Change return value of is_pro() to false in ./includes/classes/class.coursepress-capabilities.php
 
 ### Other
 
