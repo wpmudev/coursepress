@@ -8,7 +8,7 @@ The **core** development branch for CoursePress 1.x is `coursepress/base`. This 
 
 **Note to devs: ** Please do not release the `coursepress/base` branch. It will run stand alone for testing and development, but uses `CoursePress Base` as the plugin name and a number of other variables or strings that are required to build the two release versions.
 
-# DEVELOPMENT BRANCHES #  
+# DEVELOPMENT BRANCHES   
 
 CoursePress has a number of development branches: coursepress/base, coursepress/campus-dev and coursepress/2.0-dev  
 
@@ -44,7 +44,7 @@ This is the development branch for **CoursePress 2.0** (still unreleased at this
 
 Upon completion of **WP Academy** the `coursepress/2.0-dev` branch will receive a structure similar to that of `coursepress/base`.  It requires a "super branch" that will be responsible for generation both a Pro and Standard version of CoursePress 2.0 by using Grunt tasks (these do not exist yet).
 
-# PRODUCTION BRANCHES #  
+# PRODUCTION BRANCHES   
 
 ## CoursePress Pro (coursepress/pro)  
 
