@@ -220,8 +220,8 @@ module.exports = function(grunt) {
         //grunt.task.run('makepot:' + target );
         //grunt.task.run('wpmu_pot2mo:' + target );
         grunt.task.run('gitadd:' + target );
-        grunt.task.run('gitcommit:' + target );  // Uncomment line 224 and 225...
-        grunt.task.run('gitcheckout:base'); // Then comment line 227 and 228 to test. If successful, remove all comments.
+        grunt.task.run('gitcommit:' + target );  // Uncomment line 220 and 221...
+        grunt.task.run('gitcheckout:base'); // Then comment line 222 and 223 to test. If successful, remove all comments.
 
     });
 
@@ -230,6 +230,6 @@ module.exports = function(grunt) {
         grunt.task.run('build:dev');
         grunt.task.run('build:wporg');
     } );
-	
+
 
 };
