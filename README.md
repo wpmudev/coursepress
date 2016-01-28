@@ -44,7 +44,7 @@ This is the development branch for **CoursePress 2.0** (still unreleased at this
 
 Upon completion of **WP Academy** the `coursepress/2.0-dev` branch will receive a structure similar to that of `coursepress/base`.  It requires a "super branch" that will be responsible for generation both a Pro and Standard version of CoursePress 2.0 by using Grunt tasks (these do not exist yet).
 
-# PRODUCTION BRANCHES   
+# RELEASE BRANCHES   
 
 ## CoursePress Pro (coursepress/pro)  
 
@@ -89,7 +89,15 @@ or
 
 Please note the double -f flag in the clean command. This is required to clean directories that contain a submodule repo.  
 
-#### Working with MarketPress in CoursePress  
+# RELEASING #
+
+#### Versioning  
+
+Before running any Grunt tasks to build the releases, please update the CoursePress version in the Plugin Header and update the variable, `public $version = '1.2.5.7';`.  *(For 2.0 only header modification will be required)*  
+
+You only need to perform this update in the `coursepress/base` branch as the release branches will be generated from this branch with Grunt.
+
+#### Bundling MarketPress  
 
 ##### Preparing MarketPress for CoursePress Standard  
 
@@ -104,11 +112,9 @@ Its now easier to bundle MarketPress with CoursePress.
 * Update the zip file name in `coursepress.php` variable. e.g. `$this->mp_file = '128762_marketpress-ecommerce-3.0.0.2.zip';`  
 
 
-# RELEASING #
-
 #### Grunt Task Runner  
 
-**ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
+**ALWAYS** use Grunt to build CoursePress release branches. Use the following commands:  
 
 `grunt buildAll`  - This builds both the `coursepress/pro` and `coursepress/standard` branches from `coursepress/base`.  
 
