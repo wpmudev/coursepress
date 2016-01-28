@@ -97,6 +97,12 @@ Before running any Grunt tasks to build the releases, please update the CoursePr
 
 You only need to perform this update in the `coursepress/base` branch as the release branches will be generated from this branch with Grunt.
 
+#### Changelog  
+
+Please update changelog.txt in `coursepress/base` only.  Make sure all entries are below `== Changelog ==` and never remove this line.  It is required by Grunt to update `readme.txt` for release on WordPress.org.  
+
+readme.txt has a special tag `<%= wpmudev.plugin.changelog %>` that will be replaced by the changelog in changelog.txt.  
+
 #### Bundling MarketPress  
 
 ##### Preparing MarketPress for CoursePress Standard  
@@ -127,6 +133,22 @@ Its now easier to bundle MarketPress with CoursePress.
 **Note:**  It assumes that i18 tools are installed, see 'Other' below)  
 
 To use `grunt` you will need to have NPM (Node.js Package Manager) installed. (See 'Other' below)
+
+#### Packaging release branches for release
+
+##### CoursePress Pro  
+
+The recommended way to package the `coursepress/pro` branch is to use the packaging script by Aaron, found here: https://gist.github.com/uglyrobot/e872d1a9efc122b6bae2 OR by using `git-archive-all --force-submodules`.  
+
+This will respect the .gitattributes filter and produce a zip file that can be uploaded to the WPMU DEV Project.  
+
+In both cases, please make sure that you tag the `coursepress/base` branch with the version.  
+
+##### WordPress.org  
+
+The `coursepress/standard` branch is created for release on WordPress.org. You will need to copy the folders (only visible ones) to the `trunk` folder of your local SVN checkout of the WordPress.org hosted repo.
+
+Than follow the recommended WordPress.org guides for tagging the release with the current version number. See <https://wordpress.org/plugins/about/svn/>   
 
 ### Other
 
