@@ -1306,6 +1306,12 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			if ( $query->is_search ) {
 				if ( ! is_admin() ) {
 
+					// Bail if it is a bbpress topic-reply query.
+					if ( function_exists('bbp_get_topic_post_type') &&
+						( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) === $query->get( 'post_type' ) ) ) {
+						return $query;
+					}
+
 					$post_types = get_post_types( array( 'public' => true ), 'objects' );
 
 					$searchable_types = array();
