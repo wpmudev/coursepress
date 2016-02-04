@@ -152,7 +152,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
         <form action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page . '&tab=units&course_id=' . $course_id . '&action=add_new_unit' . ( ( $unit_id !== 0 ) ? '&ms=uu' : '&ms=ua' ) . (isset( $preview_redirect_url ) && $preview_redirect_url !== '' ? '&preview_redirect_url=' . $preview_redirect_url : '' ) ) ); ?>" name="unit-add" id="unit-add" class="unit-add" method="post">
 
 			<?php wp_nonce_field( 'unit_details_overview_' . $user_id ); ?>
-            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr( (isset( $unit_id ) && ($unit_id > 0) ? isset( $unit_object->post_status ) ? $unit_object->post_status : 'live'  : 'live' ) ); ?>" />
+            <input type="hidden" name="unit_state" id="unit_state" value="<?php echo esc_attr( (isset( $unit_id ) && ($unit_id > 0) ? isset( $unit_object->post_status ) ? $unit_object->post_status : 'draft'  : 'draft' ) ); ?>" />
 
             <input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>" />
             <input type="hidden" name="unit_id" id="unit_id" value="<?php echo esc_attr( $unit_id ); ?>" />
@@ -222,7 +222,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 					if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
 						?>
 						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
+						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
 					<?php } ?>
 
 					<?php
@@ -232,7 +232,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 						<?php
 						/* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
-						  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
+						  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
 						  <?php
 						  } */
 					}
@@ -463,7 +463,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 									if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
 										?>
 										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
+										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
 									<?php } ?>
 
 									<?php
@@ -473,7 +473,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 										<?php
 										/* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
-										  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'unpublished' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
+										  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
 										  <?php
 										  } */
 									}
