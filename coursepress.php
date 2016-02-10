@@ -125,47 +125,92 @@ class CoursePress {
 	/**
 	 * Handler for spl_autoload_register (autoload classes on demand).
 	 *
+	 * Note how the folder structure is build:
+	 *   plugin_lib + namespace + 'lib' + classpath
+	 *   classpath = class name, while each _ is actually a subfolder separator.
+	 *
+	 *   @todo  simplify this! should be simply <'lib' + classpath>
+	 *          (reason: classpath is already prefixed with namespace!)
+	 *
 	 * @since  2.0.0
 	 * @param  string $class Class name.
 	 * @return bool True if the class-file was found and loaded.
 	 */
 	private static function class_loader( $class ) {
-		$namespaces = apply_filters( 'coursepress_class_loader_namespaces', array(
-			'CoursePress' => false,
-		) );
+		$namespaces = apply_filters(
+			'coursepress_class_loader_namespaces',
+			array(
+				'CoursePress' => array(),
+			)
+		);
 
-		$basedir = trailingslashit( dirname( __FILE__ ) ) . self::$plugin_lib;
-		$class   = trim( $class );
+		$class = trim( $class );
 
 		foreach ( $namespaces as $namespace => $options ) {
-			if ( preg_match( '/^' . $namespace . '/', $class ) ) {
+			// Continue if the class name is prefixed with <namespace>.
+			if ( substr( $namespace, 0, strlen( $class ) ) === $namespace ) {
 
-				$namespace_folder = isset( $options['namespace_folder'] ) && true === $options['namespace_folder'] ? $namespace . '/' : '';
+				$namespace_folder = 'lib';
+				$overrides = array();
 
-				$filename = $basedir . '/lib/' . $namespace_folder . str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
-
-				// Override filename via array.
-				if ( isset( $options['overrides'] ) && is_array( $options['overrides'] ) ) {
-
-					$file = explode( DIRECTORY_SEPARATOR, $filename );
-					$file_base = array_pop( $file );
-
-					if ( array_key_exists( $file_base, $options['overrides'] ) ) {
-						$file[] = $options['overrides'][ $file_base ];
-						$filename = implode( DIRECTORY_SEPARATOR, $file );
-					}
+				if ( ! empty( $options['namespace_folder'] ) ) {
+					/**
+					 * Search for class file in a subfolder?
+					 *
+					 * Note: When using this, note that folder name must match
+					 * upper/lowecase of namespace name!
+					 *
+					 * @todo  Find out if/where this is used. Drop this is possible!
+					 *
+					 * @param namespace_folder
+					 * @var   bool
+					 */
+					$namespace_folder .= DIRECTORY_SEPARATOR . $namespace;
 				}
 
+				if ( ! empty( $options['overrides'] ) ) {
+					/**
+					 * Define custom class file paths for special classes.
+					 *
+					 * @param overrides
+					 * @var   array. Key is class name, value is file name.
+					 */
+					$overrides = (array) $options['overrides'];
+				}
+
+				$class_folder = join(
+					DIRECTORY_SEPARATOR,
+					array(
+						dirname( __FILE__ ),
+						self::$plugin_lib,
+						$namespace_folder,
+					)
+				);
+				$class_file = str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+
+				// Override filename via array.
+				if ( isset( $overrides[ $class_file ] ) ) {
+					$class_file = $overrides[ $class_file ];
+				}
+
+				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
+
 				// Override filename via filter.
-				$filename = apply_filters( 'coursepress_class_file_override', $filename );
+				$filename = apply_filters(
+					'coursepress_class_file_override',
+					$filename,
+					$class_folder,
+					$class_file,
+					$class,
+					$namespace
+				);
 
 				if ( is_readable( $filename ) ) {
 					include_once $filename;
-
 					return true;
 				}
-			}
-		}
+			} // End of namespace condition.
+		} // End of foreach loop.
 
 		return false;
 	}
