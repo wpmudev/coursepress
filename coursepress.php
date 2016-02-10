@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: CoursePress Pro
- * Version:     2.0
+ * Version:     2.0.0
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
@@ -54,6 +54,18 @@ CoursePress::init();
 class CoursePress {
 
 	/**
+	 * Current plugin version, must match the version in the header comment.
+	 * @var string
+	 */
+	public static $version = '2.0.0';
+
+	/**
+	 * Plugin name, this reflects the Pro/Standard version.
+	 * @var string
+	 */
+	public static $name = 'CoursePress';
+
+	/**
 	 * Folder that contains all plugin files.
 	 * @deprecated This makes stuff _VERY_ confusing, this dir should not exist.
 	 * @var  string
@@ -75,12 +87,8 @@ class CoursePress {
 		spl_autoload_register( array( get_class(), 'class_loader' ) );
 
 		/** Prepare CoursePress Core */
-		// Get plugin details from Header.
-		$default_headers = array( 'name' => 'Plugin Name', 'version' => 'Version', 'td' => 'TextDomain' );
-		$default_headers = get_file_data( __FILE__, $default_headers, 'plugin' );
-
-		CoursePress_Core::$name            = $default_headers['name'];
-		CoursePress_Core::$version         = $default_headers['version'];
+		CoursePress_Core::$name            = self::$name;
+		CoursePress_Core::$version         = self::$version;
 		CoursePress_Core::$plugin_lib      = self::$plugin_lib;
 		CoursePress_Core::$plugin_file     = __FILE__;
 		CoursePress_Core::$plugin_path     = plugin_dir_path( __FILE__ );
