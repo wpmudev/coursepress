@@ -1,20 +1,24 @@
 <?php
-/*
-Plugin Name: CoursePress Pro
-Version: 2.0
-Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
-Author: WPMU DEV
-Author URI: http://premium.wpmudev.org
-Plugin URI: http://premium.wpmudev.org/project/coursepress/
-Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-License: GPL2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-TextDomain: cp
-Domain Path: /languages/
-WDP ID: 913071
-*/
+/**
+ * Plugin Name: CoursePress Pro
+ * Version:     2.0
+ * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+ * Author:      WPMU DEV
+ * Author URI:  http://premium.wpmudev.org
+ * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
+ * Developers:  Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
+ * License:     GPL2
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * TextDomain:  cp
+ * Domain Path: /languages/
+ * WDP ID:      913071
+ *
+ * @package CoursePress
+ */
 
 /**
+ * Copyright notice.
+ *
  * @copyright Incsub (http://incsub.com/)
  *
  * Authors: WPMU DEV
@@ -35,29 +39,43 @@ WDP ID: 913071
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
-
-// Launch CoursePress
+// Launch CoursePress.
 CoursePress::init();
 
+/**
+ * Main plugin class. Main purpose is to load all required files.
+ */
 class CoursePress {
 
+	/**
+	 * Folder that contains all plugin files.
+	 * @deprecated This makes stuff _VERY_ confusing, this dir should not exist.
+	 * @var  string
+	 */
 	public static $plugin_lib = 'coursepress-files';
+
+	/**
+	 * Textdomain.
+	 * @deprecated We should use plain string for textdomain, no variables!
+	 */
 	const TD = 'cp';
 
+	/**
+	 * Initialize the plugin!
+	 * @since  2.0.0
+	 */
 	public static function init() {
-
-		// Initialise the autoloader
+		// Initialise the autoloader.
 		spl_autoload_register( array( get_class(), 'class_loader' ) );
 
 		/** Prepare CoursePress Core */
-		// Get plugin details from Header
+		// Get plugin details from Header.
 		$default_headers = array( 'name' => 'Plugin Name', 'version' => 'Version', 'td' => 'TextDomain' );
 		$default_headers = get_file_data( __FILE__, $default_headers, 'plugin' );
 
@@ -79,34 +97,31 @@ class CoursePress {
 		global $wpmudev_notices;
 
 		$wpmudev_notices[] = array(
-			'id'		 => 913071,
-			'name'		 => CoursePress_Core::$name,
-			'screens'	 => array(
+			'id' => 913071,
+			'name' => CoursePress_Core::$name,
+			'screens' => array(
 				'coursepress_settings',
 				'toplevel_page_courses',
 				'toplevel_page_coursepress',
 				$page_base . 'coursepress_settings',
 				$page_base . 'coursepress_course',
-				//$screen_base . '_page_coursepress_settings',
-				//$screen_base . '_page_course_details',
-				//$screen_base . '_page_instructors',
-				//$screen_base . '_page_students',
-				//$screen_base . '_page_assessment',
-				//$screen_base . '_page_reports',
-				//$screen_base . '_page_notifications',
-				//$screen_base . '_page_settings'
-			)
+			),
 		);
 
 		/**
 		 * Include WPMUDev Dashboard.
 		 */
-		//include_once( CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php' );
-
+		include_once CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php';
 	}
 
+	/**
+	 * Handler for spl_autoload_register (autoload classes on demand).
+	 *
+	 * @since  2.0.0
+	 * @param  string $class Class name.
+	 * @return bool True if the class-file was found and loaded.
+	 */
 	private static function class_loader( $class ) {
-
 		$namespaces = apply_filters( 'coursepress_class_loader_namespaces', array(
 			'CoursePress' => false,
 		) );
@@ -121,19 +136,19 @@ class CoursePress {
 
 				$filename = $basedir . '/lib/' . $namespace_folder . str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
 
-				// Override filename via array
-				if( isset( $options['overrides'] ) && is_array( $options['overrides'] ) ) {
+				// Override filename via array.
+				if ( isset( $options['overrides'] ) && is_array( $options['overrides'] ) ) {
 
 					$file = explode( DIRECTORY_SEPARATOR, $filename );
 					$file_base = array_pop( $file );
 
-					if( array_key_exists( $file_base, $options['overrides'] ) ) {
+					if ( array_key_exists( $file_base, $options['overrides'] ) ) {
 						$file[] = $options['overrides'][ $file_base ];
 						$filename = implode( DIRECTORY_SEPARATOR, $file );
 					}
 				}
 
-				// Override filename via filter
+				// Override filename via filter.
 				$filename = apply_filters( 'coursepress_class_file_override', $filename );
 
 				if ( is_readable( $filename ) ) {
@@ -146,5 +161,4 @@ class CoursePress {
 
 		return false;
 	}
-
 }
