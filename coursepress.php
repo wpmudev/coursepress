@@ -84,7 +84,7 @@ class CoursePress {
 	 */
 	public static function init() {
 		// Initialise the autoloader.
-		spl_autoload_register( array( get_class(), 'class_loader' ) );
+		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
 		/** Prepare CoursePress Core */
 		CoursePress_Core::$name            = self::$name;
