@@ -86,16 +86,16 @@ class CoursePress {
 		// Initialise the autoloader.
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
-		/** Prepare CoursePress Core */
+		// Prepare CoursePress Core parameters.
 		CoursePress_Core::$name            = self::$name;
 		CoursePress_Core::$version         = self::$version;
 		CoursePress_Core::$plugin_lib      = self::$plugin_lib;
 		CoursePress_Core::$plugin_file     = __FILE__;
-		CoursePress_Core::$plugin_path     = plugin_dir_path( __FILE__ );
-		CoursePress_Core::$plugin_url      = plugin_dir_url( __FILE__ );
-		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path ) . trailingslashit( CoursePress_Core::$plugin_lib );
-		CoursePress_Core::$plugin_lib_url  = trailingslashit( CoursePress_Core::$plugin_url ) . trailingslashit( CoursePress_Core::$plugin_lib );
-		CoursePress_Core::$DEBUG           = false;
+		CoursePress_Core::$plugin_path     = trailingslashit( plugin_dir_path( __FILE__ ) );
+		CoursePress_Core::$plugin_url      = trailingslashit( plugin_dir_url( __FILE__ ) );
+		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path . self::$plugin_lib );
+		CoursePress_Core::$plugin_lib_url  = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
+		CoursePress_Core::$DEBUG           = false;  // @todo check if this should be a define( '' ) option...
 
 		CoursePress_Core::init();
 
