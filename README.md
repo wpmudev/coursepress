@@ -131,7 +131,7 @@ The easiest way to get `npm` is to install Node.js from: <http://nodejs.org/>
 Once Node.js is installed you can check that you have `npm` and update it to the latest version.  
 
     npm -v  
-	npm install -g npm
+    npm install -g npm
 
 Next step is to install grunt-cli via npm:  
 
@@ -141,6 +141,12 @@ Next step is to install grunt-cli via npm:
 
 If `makepot` is not available in your system path you can set your i18 tools path in a private config.json file (excluded by .gitignore). Create config.json and add the following to it:  
 
-	{
-	    "i18nToolsPath": "/path/to/i18n-tools/"
-	}
+    {
+       "i18nToolsPath": "/path/to/i18n-tools/"
+    }
+
+### DIFFERENCE Free AND Pro
+
+#### Free
+
+* Limit to 2 Courses
