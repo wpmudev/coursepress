@@ -101,6 +101,11 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 						'cp_mp_order_notification_body'
 					), 10, 2 );
 
+					add_filter( 'mp_order/print_download_link', array(
+						__CLASS__,
+						'cp_mp_print_download_link'
+					), 10, 3 );
+
 					add_filter( 'mp_meta/product', array( __CLASS__, 'verify_meta' ), 10, 3 );
 
 					add_filter( 'mp_product/on_sale', array( __CLASS__, 'fix_mp3_on_sale'), 10, 2 );
@@ -862,6 +867,12 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			} else {
 				return $content;
 			}
+		}
+
+		static function cp_mp_print_download_link( $value, $product, $product_id){
+			$print_link = Course::get_course_id_by_marketpress_product_id( $product_id) ? false : true;
+
+			return $print_link;
 		}
 
 		public static function verify_meta( $value, $post_id, $name ) {
