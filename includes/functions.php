@@ -100,10 +100,19 @@ function cp_unit_uses_new_pagination( $unit_id = false ) {
 }
 
 function cp_get_id_by_post_name( $post_name, $post_parent = 0, $type = 'unit' ) {
-	global $wpdb;
-	$id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_name = '%s' AND post_type='%s' AND post_parent=%d", $post_name, $type, $post_parent ) );
+	$posts = get_posts(
+		array(
+			'name' => $post_name,
+			'post_type' => $type,
+			'post_parent' => $post_parent
+		)
+	);
 
-	return $id;
+	if ( ! empty( $posts ) ) {
+		return $posts[0]->ID;
+	}
+
+	return false;
 }
 
 function cp_can_see_unit_draft() {
