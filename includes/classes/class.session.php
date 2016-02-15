@@ -6,6 +6,14 @@ if ( ! class_exists( 'CoursePress_Session' ) ) {
 		private static $token = 'coursepress_';
 		private static $add_time = '+1 hour';
 
+
+		public static function session_start() {
+			// Initiate sessions
+			if ( ! session_id() ) {
+				session_start();
+			}
+		}
+
 		/**
 		 * IMPORTANT: Only works for logged in users.
 		 *

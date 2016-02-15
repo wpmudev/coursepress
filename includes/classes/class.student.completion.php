@@ -504,7 +504,6 @@ if ( ! class_exists( 'Student_Completion' ) ) {
             // make sure session data is also up to date
             $session_data[ $student_id ]['course_completion'][ $course_id ] = $data;
             CoursePress_Session::session( 'coursepress_student', $session_data );
-			$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $data;
 			CoursePress_Cache::cp_cache_purge();
 		}
 

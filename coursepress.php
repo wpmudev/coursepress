@@ -166,12 +166,13 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$this->mp_file = '';
 			//</wpmudev.plugin.free_only>
 
-			// Initiate sessions
-			if ( ! session_id() ) {
-				session_start();
-			}
-			$_SESSION['coursepress_student']         = array();
-			$_SESSION['coursepress_unit_completion'] = array();
+			/**
+			 * CoursePress Sessions
+			 * Better handling of session data using WP_Session_Tokens introduced in 4.0.
+			 */
+			require_once( $this->plugin_dir . 'includes/classes/class.session.php' );
+			CoursePress_Session::session_start();
+
 
 			// Register Globals
 			$GLOBALS['plugin_dir']              = $this->plugin_dir;
@@ -189,12 +190,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 * CoursePress Utilities
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-utility.php' );
-
-			/**
-			 * CoursePress Sessions
-			 * Better handling of session data using WP_Session_Tokens introduced in 4.0.
-			 */
-			require_once( $this->plugin_dir . 'includes/classes/class.session.php' );
 
 			/**
 			 * CoursePress custom non-persistent cache.
