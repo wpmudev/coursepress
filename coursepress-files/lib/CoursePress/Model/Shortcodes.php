@@ -1367,7 +1367,7 @@ class CoursePress_Model_Shortcodes {
 				),
 				'type'  => 'button',
 			),
-		) );
+		), $course_id );
 
 		if ( CoursePress_Model_Capabilities::is_wpmudev() ) {
 			//$buttons['signup']['attr']['data-link'] = esc_url( home_url() . '/#pricing' );
@@ -2255,7 +2255,7 @@ class CoursePress_Model_Shortcodes {
 			'knob_bg_color'       => '#e0e6eb',
 			'knob_data_thickness' => '0.18'
 		), $atts, 'unit_archive_list' ) );
-		
+
 		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) {
 			return '';

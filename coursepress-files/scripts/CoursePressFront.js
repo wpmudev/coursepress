@@ -1061,7 +1061,7 @@ var CoursePress = CoursePress || {};
 
 
                 var html = '';
-                if( data.quiz_result_screen.length > 0 ) {
+                if( data.quiz_result_screen != null && data.quiz_result_screen.length > 0 ) {
 
                     // Enable navigation after submit
                     $('.coursepress-focus-view .not-active').removeClass('not-active');

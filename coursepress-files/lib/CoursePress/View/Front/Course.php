@@ -60,7 +60,8 @@ class CoursePress_View_Front_Course {
 
 			$return_url = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $module->post_parent) . '#module-' . $module->ID );
 			self::$args['discussion_url'] = $return_url;
-			add_filter( 'comment_post_redirect', array( __CLASS__, 'test2' ), 10, 2 );
+
+			//add_filter( 'comment_post_redirect', array( __CLASS__, 'test2' ), 10, 2 );
 		}
 
 		// Add new discussion post

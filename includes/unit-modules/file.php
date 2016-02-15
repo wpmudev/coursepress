@@ -9,16 +9,17 @@ class file_module extends Unit_Module {
 	const FRONT_SAVE = false;
 	var $response_type = '';
 
-	function __construct() {
+	public function __construct() {
 		$this->on_create();
 	}
 
-	function file_module() {
+	public function file_module() {
 		$this->__construct();
 	}
 
 	public static function front_main( $data ) {
 		$data->name = __CLASS__;
+		$file_link = '';
 		?>
 		<div class="<?php echo $data->name; ?> front-single-module<?php echo( file_module::FRONT_SAVE == true ? '-save' : '' ); ?>">
 			<?php if ( $data->post_title != '' && parent::display_title_on_front( $data ) ) { ?>
@@ -41,17 +42,30 @@ class file_module extends Unit_Module {
 				}
 
 				$data->file_url = $encryption->encode( $data->file_url );
-				$url            = trailingslashit( home_url() ) . '?fdcpf=' . $data->file_url;
-				?>
-				<div class="file_holder">
-					<a href="<?php echo esc_url( $url ) ?>"/><?php echo( isset( $data->link_text ) ? $data->link_text : $data->post_title ); ?> <?php echo $filesize; ?></a>
-				</div>
-			<?php } ?>
+				$url = trailingslashit( home_url() ) . '?fdcpf=' . $data->file_url;
+
+				if ( ! empty( $data->link_text ) ) {
+					$link_title = $data->link_text;
+				} else {
+					$link_title = $data->post_title;
+				}
+
+				$file_link = sprintf(
+					'<a href="%1$s" title="%3$s">%2$s</a>',
+					esc_url( $url ),
+					esc_html( $link_title . ' ' . $filesize ),
+					esc_attr( $link_title )
+				);
+			}
+			?>
+			<div class="file_holder">
+				<?php echo $file_link; ?>
+			</div>
 		</div>
 	<?php
 	}
 
-	function admin_main( $data ) {
+	public function admin_main( $data ) {
 		wp_enqueue_style( 'thickbox' );
 		wp_enqueue_script( 'thickbox' );
 		wp_enqueue_media();
@@ -127,7 +141,7 @@ class file_module extends Unit_Module {
 	<?php
 	}
 
-	function on_create() {
+	public function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
 		$this->description = __( 'Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp' );
 		$this->label       = __( 'File Download', 'cp' );
@@ -135,7 +149,7 @@ class file_module extends Unit_Module {
 		parent::additional_module_actions();
 	}
 
-	function save_module_data() {
+	public function save_module_data() {
 		global $wpdb, $last_inserted_unit_id, $save_elements;
 
 		if ( isset( $_POST['module_type'] ) && ( $save_elements == true ) ) {
@@ -178,7 +192,6 @@ class file_module extends Unit_Module {
 		}
 	}
 
-}
+}; // End of class file_module.
 
 cp_register_module( 'file_module', 'file_module', 'output' );
-?>
