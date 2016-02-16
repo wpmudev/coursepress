@@ -104,9 +104,9 @@ class CoursePress_Helper_Settings {
 		$style        = CoursePress_Core::$plugin_lib_url . 'styles/admin-general.css';
 		$style_global = CoursePress_Core::$plugin_lib_url . 'styles/admin-global.css';
 		$script       = CoursePress_Core::$plugin_lib_url . 'scripts/admin-general.js';
-		$sticky       = CoursePress_Core::$plugin_lib_url . 'scripts/sticky.min.js';
+		$sticky       = CoursePress_Core::$plugin_lib_url . 'scripts/external/sticky.min.js';
 		$editor_style = CoursePress_Core::$plugin_lib_url . 'styles/editor.css';
-		$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/font-awesome.min.css';
+		$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/external/font-awesome.min.css';
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
@@ -118,8 +118,8 @@ class CoursePress_Helper_Settings {
 			add_editor_style( $editor_style );
 
 			// Add chosen
-			$style = CoursePress_Core::$plugin_lib_url . 'styles/chosen.css';
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/chosen.jquery.min.js';
+			$style = CoursePress_Core::$plugin_lib_url . 'styles/external/chosen.css';
+			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/chosen.jquery.min.js';
 			wp_enqueue_style( 'chosen_css', $style, array( 'dashicons' ), CoursePress_Core::$version );
 			wp_enqueue_script( 'chosen_js', $script, array( 'jquery' ), CoursePress_Core::$version, true );
 
