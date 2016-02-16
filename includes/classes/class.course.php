@@ -882,6 +882,7 @@ if ( ! class_exists( 'Course' ) ) {
 			$wp_user_search = new WP_User_Query( $args );
 
 			$student_id_i = 0;
+			$students = array();
 			if ( isset( $wp_user_search ) ) {
 				foreach ( $wp_user_search->results as $student ) {
 					$students[ $student_id_i ] = (int) $student->ID; //make sure all are numeric values (it wasn't always the case, like for '1')
