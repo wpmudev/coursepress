@@ -1,6 +1,4 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
+/*jslint browser: true*/
 /*global _*/
 /*global Backbone*/
 /*global jQuery*/

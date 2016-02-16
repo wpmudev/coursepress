@@ -102,24 +102,29 @@ class CoursePress {
 		$screen_base = str_replace( ' ', '-', strtolower( CoursePress_Core::$name ) );
 		$page_base = $screen_base . '_page_';
 
-		global $wpmudev_notices;
-
-		$wpmudev_notices[] = array(
-			'id' => 913071,
-			'name' => CoursePress_Core::$name,
-			'screens' => array(
-				'coursepress_settings',
-				'toplevel_page_courses',
-				'toplevel_page_coursepress',
-				$page_base . 'coursepress_settings',
-				$page_base . 'coursepress_course',
-			),
-		);
-
 		/**
 		 * Include WPMUDev Dashboard.
 		 */
-		include_once CoursePress_Core::$plugin_path . 'includes/external/dashboard/wpmudev-dash-notification.php';
+		$dash_notifications_file = CoursePress_Core::$plugin_path .
+			'includes/external/dashboard/wpmudev-dash-notification.php';
+
+		if ( file_exists( $dash_notifications_file ) ) {
+			global $wpmudev_notices;
+
+			$wpmudev_notices[] = array(
+				'id' => 913071,
+				'name' => CoursePress_Core::$name,
+				'screens' => array(
+					'coursepress_settings',
+					'toplevel_page_courses',
+					'toplevel_page_coursepress',
+					$page_base . 'coursepress_settings',
+					$page_base . 'coursepress_course',
+				),
+			);
+
+			include_once $dash_notifications_file;
+		}
 	}
 
 	/**

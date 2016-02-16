@@ -89,9 +89,6 @@
   border-radius: 50%;
   display: block;
   position: absolute;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
   transition: all 0.2s ease;
   left: 0px;
 }
