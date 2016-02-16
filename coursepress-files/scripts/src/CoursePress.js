@@ -1,3 +1,12 @@
+/*jslint browser: true*/
+/*global _*/
+/*global Backbone*/
+/*global jQuery*/
+/*global wp*/
+/*global tinyMCE*/
+/*global tinyMCEPreInit*/
+/*global _coursepress*/
+
 var CoursePress = CoursePress || {};
 
 (function ( $ ) {
@@ -7,8 +16,8 @@ var CoursePress = CoursePress || {};
 
     CoursePress.editor = CoursePress.editor || {};
 
-    if( typeof getUserSetting !== 'undefined' ) {
-        CoursePress.editor.init_mode = getUserSetting( 'editor' );
+    if( undefined !== window.getUserSetting ) {
+        CoursePress.editor.init_mode = window.getUserSetting( 'editor' );
     }
 
     CoursePress.editor.create = function ( target, id, name, content, append, height ) {
@@ -63,32 +72,32 @@ var CoursePress = CoursePress || {};
             // Don't forget to add the trigger to the textarea if TinyMCE is not used (QTags mode)
             $('textarea#' + id ).on( 'keyup', function(){
                 CoursePress.Events.trigger('editor:keyup',this);
-            })
+            });
             tinyMCE.init( options );
             tinyMCEPreInit.mceInit[ id ] = options;
         }
 
-        var options = JSON.parse( JSON.stringify( tinyMCEPreInit.qtInit[ 'dummy_editor_id' ] ) );
+        options = JSON.parse( JSON.stringify( tinyMCEPreInit.qtInit[ 'dummy_editor_id' ] ) );
         if ( undefined !== options ) {
             options.id = id;
-            options = quicktags( options );
+            options = window.quicktags( options );
             tinyMCEPreInit.qtInit[ id ] = options;
         }
-        QTags._buttonsInit();
+        window.QTags._buttonsInit();
 
         return true;
-    }
+    };
 
     CoursePress.editor.content = function ( id, content ) {
 
         var mode = 'get';
         if ( undefined !== content ) {
-            mode = 'set'
+            mode = 'set';
         }
 
-        if ( undefined === tinyMCE || 'html' === getUserSetting( 'editor' ) ) {
+        if ( undefined === tinyMCE || 'html' === window.getUserSetting( 'editor' ) ) {
 
-            id = 'html' === getUserSetting( 'editor' ) ? '#' + id : id;
+            id = 'html' === window.getUserSetting( 'editor' ) ? '#' + id : id;
 
             if ( 'set' === mode ) {
                 $( id ).val( content.trim() );
@@ -102,12 +111,12 @@ var CoursePress = CoursePress || {};
             return tinyMCE.get( id ).getContent();
         }
 
-    }
+    };
 
     CoursePress.editor.set_height = function ( id, height ) {
         $( '#wp-' + id + '-editor-container' ).removeAttr( 'rows' );
-        $( '#wp-' + id + '-wrap iframe' ).css( 'height', height + 'px' )
-    }
+        $( '#wp-' + id + '-wrap iframe' ).css( 'height', height + 'px' );
+    };
 
     CoursePress.editor.on_init = function ( instance ) {
 
@@ -134,20 +143,20 @@ var CoursePress = CoursePress || {};
         $( button_wrapper + ' #' + instance.id + '-visual' ).on( "click", function ( e ) {
             e.preventDefault();
             e.stopPropagation();
-            switchEditors.go( instance.id, 'tmce' );
+            window.switchEditors.go( instance.id, 'tmce' );
         } );
         $( button_wrapper ).append( qt_button );
         $( button_wrapper + ' #' + instance.id + '-text' ).on( "click", function ( e ) {
             e.preventDefault();
             e.stopPropagation();
-            switchEditors.go( instance.id, 'html' );
+            window.switchEditors.go( instance.id, 'html' );
         } );
 
         if ( 'html' === mode ) {
             $( button_wrapper + ' #' + instance.id + '-text' ).click();
         }
 
-    }
+    };
 
     // Add utility functions
     CoursePress.utility = CoursePress.utility || {};
@@ -162,7 +171,7 @@ var CoursePress = CoursePress || {};
             }
         } );
         return merged;
-    }
+    };
 
     CoursePress.utility.update_object_by_path = function ( object, path, value ) {
         var stack = path.split( '/' );
@@ -179,7 +188,7 @@ var CoursePress = CoursePress || {};
         }
         object[ stack.shift() ] = value;
 
-    }
+    };
 
 
     CoursePress.utility.get_object_path = function ( object, search_key, search_value, base ) {
@@ -188,7 +197,7 @@ var CoursePress = CoursePress || {};
             base = '';
         }
 
-        keys = Object.keys( object );
+        var keys = Object.keys( object );
 
         while ( keys.length > 0 ) {
 
@@ -210,12 +219,12 @@ var CoursePress = CoursePress || {};
 
         }
 
-    }
+    };
 
 
     CoursePress.utility.in_array = function ( value, array ) {
         return array.indexOf( value ) > -1;
-    }
+    };
 
     CoursePress.utility.is_valid_url = function ( str ) {
         if ( str.indexOf( "http://" ) > -1 || str.indexOf( "https://" ) > -1 ) {
@@ -223,7 +232,7 @@ var CoursePress = CoursePress || {};
         } else {
             return false;
         }
-    }
+    };
 
     CoursePress.utility.valid_media_extension = function ( filename, type ) {
         type = $( type ).hasClass( 'image_url' ) ? 'image_url' : type;
@@ -235,22 +244,22 @@ var CoursePress = CoursePress || {};
         var video_extensions = _coursepress.allowed_video_extensions;
         var image_extensions = _coursepress.allowed_image_extensions;
 
-        if ( type == 'featured_url' ) {
+        if ( type === 'featured_url' ) {
             type = 'image_url';
         }
 
-        if ( type == 'course_video_url' ) {
+        if ( type === 'course_video_url' ) {
             type = 'video_url';
         }
 
-        if ( type == 'audio_url' ) {
+        if ( type === 'audio_url' ) {
             if ( CoursePress.utility.in_array( extension, audio_extensions ) ) {
                 return true;
             } else {
                 if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
                     return true;
                 } else {
-                    if ( filename.length == 0 ) {
+                    if ( ! filename.length ) {
                         return true;
                     }
                     return false;
@@ -258,14 +267,14 @@ var CoursePress = CoursePress || {};
             }
         }
 
-        if ( type == 'video_url' ) {
+        if ( type === 'video_url' ) {
             if ( CoursePress.utility.in_array( extension, video_extensions ) ) {
                 return true;
             } else {
                 if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
                     return true;
                 } else {
-                    if ( filename.length == 0 ) {
+                    if ( ! filename.length ) {
                         return true;
                     }
                     return false;
@@ -273,14 +282,14 @@ var CoursePress = CoursePress || {};
             }
         }
 
-        if ( type == 'image_url' ) {
+        if ( type === 'image_url' ) {
             if ( CoursePress.utility.in_array( extension, image_extensions ) ) {
                 return true;
             } else {
                 if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
                     return true;
                 } else {
-                    if ( filename.length == 0 ) {
+                    if ( ! filename.length ) {
                         return true;
                     }
                     return false;
@@ -297,7 +306,7 @@ var CoursePress = CoursePress || {};
                 if ( CoursePress.utility.is_valid_url( filename ) && extension.length > 5 ) {
                     return true;
                 } else {
-                    if ( filename.length == 0 ) {
+                    if ( ! filename.length ) {
                         return true;
                     }
                     return false;
@@ -307,13 +316,13 @@ var CoursePress = CoursePress || {};
         }
 
 
-    }
+    };
 
     CoursePress.utility.pad = function( num, size ) {
         var s = num+"";
-        while (s.length < size) s = "0" + s;
+        while (s.length < size) { s = "0" + s; }
         return s;
-    }
+    };
 
     // Unserialize method from phpjs.org
     CoursePress.utility.unserialize = function ( data ) {
@@ -334,15 +343,15 @@ var CoursePress = CoursePress || {};
                 }
                 return 2;
             };
-        error = function ( type, msg, filename, line ) {
+        function error ( type, msg, filename, line ) {
             throw new that.window[ type ]( msg, filename, line );
-        };
-        read_until = function ( data, offset, stopchr ) {
+        }
+        function read_until ( data, offset, stopchr ) {
             var i = 2,
                 buf = [],
                 chr = data.slice( offset, offset + 1 );
 
-            while ( chr != stopchr ) {
+            while ( chr !== stopchr ) {
                 if ( (i + offset) > data.length ) {
                     error( 'Error', 'Invalid' );
                 }
@@ -351,8 +360,8 @@ var CoursePress = CoursePress || {};
                 i += 1;
             }
             return [ buf.length, buf.join( '' ) ];
-        };
-        read_chrs = function ( data, offset, length ) {
+        }
+        function read_chrs ( data, offset, length ) {
             var i, chr, buf;
 
             buf = [];
@@ -362,8 +371,8 @@ var CoursePress = CoursePress || {};
                 length -= utf8Overhead( chr );
             }
             return [ buf.length, buf.join( '' ) ];
-        };
-        _unserialize = function ( data, offset ) {
+        }
+        function _unserialize ( data, offset ) {
             var dtype, dataoffset, keyandchrs, keys, contig,
                 length, array, readdata, readData, ccount,
                 stringlength, i, key, kprops, kchrs, vprops,
@@ -421,7 +430,7 @@ var CoursePress = CoursePress || {};
                     chrs = readData[ 0 ];
                     readdata = readData[ 1 ];
                     dataoffset += chrs + 2;
-                    if ( chrs != parseInt( stringlength, 10 ) && chrs != readdata.length ) {
+                    if ( chrs !== parseInt( stringlength, 10 ) && chrs !== readdata.length ) {
                         error( 'SyntaxError', 'String length mismatch' );
                     }
                     break;
@@ -447,16 +456,18 @@ var CoursePress = CoursePress || {};
                         value = vprops[ 2 ];
                         dataoffset += vchrs;
 
-                        if ( key !== i )
+                        if ( key !== i ) {
                             contig = false;
+                        }
 
                         readdata[ key ] = value;
                     }
 
                     if ( contig ) {
                         array = new Array( length );
-                        for ( i = 0; i < length; i++ )
+                        for ( i = 0; i < length; i++ ) {
                             array[ i ] = readdata[ i ];
+                        }
                         readdata = array;
                     }
 
@@ -467,30 +478,30 @@ var CoursePress = CoursePress || {};
                     break;
             }
             return [ dtype, dataoffset - offset, typeconvert( readdata ) ];
-        };
+        }
 
         return _unserialize( (data + ''), 0 )[ 2 ];
-    }
+    };
 
     // hashcode implementation
     CoursePress.utility.hashcode = function (s) {
         var hash = 0, i, chr, len;
-        if (s.length == 0) return hash;
+        if (! s.length  ) { return hash; }
         for (i = 0, len = s.length; i < len; i++) {
             chr = s.charCodeAt(i);
             hash = ((hash << 5) - hash) + chr;
             hash |= 0; // Convert to 32bit integer
         }
         return hash;
-    }
+    };
 
     // Webkit MD5 method
     CoursePress.utility.md5 = function ( s ) {
-        function L( k, d ) {
-            return (k << d) | (k >>> (32 - d))
+        function _L( k, d ) {
+            return (k << d) | (k >>> (32 - d));
         }
 
-        function K( G, k ) {
+        function _K( G, k ) {
             var I, d, F, H, x;
             F = (G & 2147483648);
             H = (k & 2147483648);
@@ -498,53 +509,53 @@ var CoursePress = CoursePress || {};
             d = (k & 1073741824);
             x = (G & 1073741823) + (k & 1073741823);
             if ( I & d ) {
-                return (x ^ 2147483648 ^ F ^ H)
+                return (x ^ 2147483648 ^ F ^ H);
             }
             if ( I | d ) {
                 if ( x & 1073741824 ) {
-                    return (x ^ 3221225472 ^ F ^ H)
+                    return (x ^ 3221225472 ^ F ^ H);
                 } else {
-                    return (x ^ 1073741824 ^ F ^ H)
+                    return (x ^ 1073741824 ^ F ^ H);
                 }
             } else {
-                return (x ^ F ^ H)
+                return (x ^ F ^ H);
             }
         }
 
         function r( d, F, k ) {
-            return (d & F) | ((~d) & k)
+            return (d & F) | ((~d) & k);
         }
 
         function q( d, F, k ) {
-            return (d & k) | (F & (~k))
+            return (d & k) | (F & (~k));
         }
 
         function p( d, F, k ) {
-            return (d ^ F ^ k)
+            return (d ^ F ^ k);
         }
 
         function n( d, F, k ) {
-            return (F ^ (d | (~k)))
+            return (F ^ (d | (~k)));
         }
 
         function u( G, F, aa, Z, k, H, I ) {
-            G = K( G, K( K( r( F, aa, Z ), k ), I ) );
-            return K( L( G, H ), F )
+            G = _K( G, _K( _K( r( F, aa, Z ), k ), I ) );
+            return _K( _L( G, H ), F );
         }
 
         function f( G, F, aa, Z, k, H, I ) {
-            G = K( G, K( K( q( F, aa, Z ), k ), I ) );
-            return K( L( G, H ), F )
+            G = _K( G, _K( _K( q( F, aa, Z ), k ), I ) );
+            return _K( _L( G, H ), F );
         }
 
-        function D( G, F, aa, Z, k, H, I ) {
-            G = K( G, K( K( p( F, aa, Z ), k ), I ) );
-            return K( L( G, H ), F )
+        function _D( G, F, aa, Z, k, H, I ) {
+            G = _K( G, _K( _K( p( F, aa, Z ), k ), I ) );
+            return _K( _L( G, H ), F );
         }
 
         function t( G, F, aa, Z, k, H, I ) {
-            G = K( G, K( K( n( F, aa, Z ), k ), I ) );
-            return K( L( G, H ), F )
+            G = _K( G, _K( _K( n( F, aa, Z ), k ), I ) );
+            return _K( _L( G, H ), F );
         }
 
         function e( G ) {
@@ -553,61 +564,61 @@ var CoursePress = CoursePress || {};
             var x = F + 8;
             var k = (x - (x % 64)) / 64;
             var I = (k + 1) * 16;
-            var aa = Array( I - 1 );
+            var aa = new Array( I - 1 );
             var d = 0;
             var H = 0;
             while ( H < F ) {
                 Z = (H - (H % 4)) / 4;
                 d = (H % 4) * 8;
                 aa[ Z ] = (aa[ Z ] | (G.charCodeAt( H ) << d));
-                H++
+                H++;
             }
             Z = (H - (H % 4)) / 4;
             d = (H % 4) * 8;
             aa[ Z ] = aa[ Z ] | (128 << d);
             aa[ I - 2 ] = F << 3;
             aa[ I - 1 ] = F >>> 29;
-            return aa
+            return aa;
         }
 
-        function B( x ) {
+        function _B( x ) {
             var k = "", F = "", G, d;
             for ( d = 0; d <= 3; d++ ) {
                 G = (x >>> (d * 8)) & 255;
                 F = "0" + G.toString( 16 );
-                k = k + F.substr( F.length - 2, 2 )
+                k = k + F.substr( F.length - 2, 2 );
             }
-            return k
+            return k;
         }
 
-        function J( k ) {
+        function _J( k ) {
             k = k.replace( /rn/g, "n" );
             var d = "";
             for ( var F = 0; F < k.length; F++ ) {
                 var x = k.charCodeAt( F );
                 if ( x < 128 ) {
-                    d += String.fromCharCode( x )
+                    d += String.fromCharCode( x );
                 } else {
                     if ( (x > 127) && (x < 2048) ) {
                         d += String.fromCharCode( (x >> 6) | 192 );
-                        d += String.fromCharCode( (x & 63) | 128 )
+                        d += String.fromCharCode( (x & 63) | 128 );
                     } else {
                         d += String.fromCharCode( (x >> 12) | 224 );
                         d += String.fromCharCode( ((x >> 6) & 63) | 128 );
-                        d += String.fromCharCode( (x & 63) | 128 )
+                        d += String.fromCharCode( (x & 63) | 128 );
                     }
                 }
             }
-            return d
+            return d;
         }
 
-        var C = Array();
+        var C = [];
         var P, h, E, v, g, Y, X, W, V;
         var S = 7, Q = 12, N = 17, M = 22;
         var A = 5, z = 9, y = 14, w = 20;
         var o = 4, m = 11, l = 16, j = 23;
         var U = 6, T = 10, R = 15, O = 21;
-        s = J( s );
+        s = _J( s );
         C = e( s );
         Y = 1732584193;
         X = 4023233417;
@@ -650,22 +661,22 @@ var CoursePress = CoursePress || {};
             V = f( V, Y, X, W, C[ P + 2 ], z, 4243563512 );
             W = f( W, V, Y, X, C[ P + 7 ], y, 1735328473 );
             X = f( X, W, V, Y, C[ P + 12 ], w, 2368359562 );
-            Y = D( Y, X, W, V, C[ P + 5 ], o, 4294588738 );
-            V = D( V, Y, X, W, C[ P + 8 ], m, 2272392833 );
-            W = D( W, V, Y, X, C[ P + 11 ], l, 1839030562 );
-            X = D( X, W, V, Y, C[ P + 14 ], j, 4259657740 );
-            Y = D( Y, X, W, V, C[ P + 1 ], o, 2763975236 );
-            V = D( V, Y, X, W, C[ P + 4 ], m, 1272893353 );
-            W = D( W, V, Y, X, C[ P + 7 ], l, 4139469664 );
-            X = D( X, W, V, Y, C[ P + 10 ], j, 3200236656 );
-            Y = D( Y, X, W, V, C[ P + 13 ], o, 681279174 );
-            V = D( V, Y, X, W, C[ P + 0 ], m, 3936430074 );
-            W = D( W, V, Y, X, C[ P + 3 ], l, 3572445317 );
-            X = D( X, W, V, Y, C[ P + 6 ], j, 76029189 );
-            Y = D( Y, X, W, V, C[ P + 9 ], o, 3654602809 );
-            V = D( V, Y, X, W, C[ P + 12 ], m, 3873151461 );
-            W = D( W, V, Y, X, C[ P + 15 ], l, 530742520 );
-            X = D( X, W, V, Y, C[ P + 2 ], j, 3299628645 );
+            Y = _D( Y, X, W, V, C[ P + 5 ], o, 4294588738 );
+            V = _D( V, Y, X, W, C[ P + 8 ], m, 2272392833 );
+            W = _D( W, V, Y, X, C[ P + 11 ], l, 1839030562 );
+            X = _D( X, W, V, Y, C[ P + 14 ], j, 4259657740 );
+            Y = _D( Y, X, W, V, C[ P + 1 ], o, 2763975236 );
+            V = _D( V, Y, X, W, C[ P + 4 ], m, 1272893353 );
+            W = _D( W, V, Y, X, C[ P + 7 ], l, 4139469664 );
+            X = _D( X, W, V, Y, C[ P + 10 ], j, 3200236656 );
+            Y = _D( Y, X, W, V, C[ P + 13 ], o, 681279174 );
+            V = _D( V, Y, X, W, C[ P + 0 ], m, 3936430074 );
+            W = _D( W, V, Y, X, C[ P + 3 ], l, 3572445317 );
+            X = _D( X, W, V, Y, C[ P + 6 ], j, 76029189 );
+            Y = _D( Y, X, W, V, C[ P + 9 ], o, 3654602809 );
+            V = _D( V, Y, X, W, C[ P + 12 ], m, 3873151461 );
+            W = _D( W, V, Y, X, C[ P + 15 ], l, 530742520 );
+            X = _D( X, W, V, Y, C[ P + 2 ], j, 3299628645 );
             Y = t( Y, X, W, V, C[ P + 0 ], U, 4096336452 );
             V = t( V, Y, X, W, C[ P + 7 ], T, 1126891415 );
             W = t( W, V, Y, X, C[ P + 14 ], R, 2878612391 );
@@ -682,13 +693,13 @@ var CoursePress = CoursePress || {};
             V = t( V, Y, X, W, C[ P + 11 ], T, 3174756917 );
             W = t( W, V, Y, X, C[ P + 2 ], R, 718787259 );
             X = t( X, W, V, Y, C[ P + 9 ], O, 3951481745 );
-            Y = K( Y, h );
-            X = K( X, E );
-            W = K( W, v );
-            V = K( V, g )
+            Y = _K( Y, h );
+            X = _K( X, E );
+            W = _K( W, v );
+            V = _K( V, g );
         }
-        var i = B( Y ) + B( X ) + B( W ) + B( V );
-        return i.toLowerCase()
+        var i = _B( Y ) + _B( X ) + _B( W ) + _B( V );
+        return i.toLowerCase();
     };
 
     CoursePress.utility.get_gravatar = function ( email, size, default_image, allowed_rating, force_default ) {
@@ -699,7 +710,7 @@ var CoursePress = CoursePress || {};
         force_default = force_default === true ? 'y' : 'n';
 
         return ("https://secure.gravatar.com/avatar/" + CoursePress.utility.md5( email.toLowerCase().trim() ) + "?size=" + size + "&default=" + encodeURIComponent( default_image ) + "&rating=" + allowed_rating + (force_default === 'y' ? "&forcedefault=" + force_default : ''));
-    }
+    };
 
     CoursePress.utility.get_gravatar_image = function ( email, size, alt, default_image, allowed_rating, force_default ) {
         var url = CoursePress.utility.get_gravatar( email, size, default_image, allowed_rating, force_default );
@@ -707,7 +718,7 @@ var CoursePress = CoursePress || {};
         alt = typeof alt !== 'undefined' ? alt : '';
 
         return '<img class="avatar avatar-' + size + ' photo" width="' + size + '" height="' + size + '" srcset="' + url + ' 2x" src="' + url + '" alt="' + alt + '">';
-    }
+    };
 
     CoursePress.utility.fix_checkboxes = function ( items, selector, false_value ) {
         var meta_items = $( selector + ' [name^="meta_"]' );
@@ -724,27 +735,30 @@ var CoursePress = CoursePress || {};
         } );
 
         return items;
-    }
+    };
 
     CoursePress.utility.is_equal = function ( current_val, expected_val, strict ) {
         if ( undefined === strict ) {
+            /*jshint ignore:start*/
+            // Intentionally using `==` instead of `===`.
             return current_val == expected_val;
+            /*jshint ignore:end*/
         } else {
             return current_val === expected_val;
         }
 
-    }
+    };
 
     CoursePress.utility.checked = function ( current_val, expected_val ) {
         return CoursePress.utility.is_equal( current_val, expected_val ) ? 'checked="checked"' : '';
-    }
+    };
 
     CoursePress.utility.event_supported = function () {
         var TAGNAMES = {
             'select': 'input', 'change': 'input',
             'submit': 'form', 'reset': 'form',
             'error': 'img', 'load': 'img', 'abort': 'img', 'click': 'textarea'
-        }
+        };
 
         function isEventSupported( eventName ) {
             var el = document.createElement( TAGNAMES[ eventName ] || 'div' );
@@ -752,7 +766,7 @@ var CoursePress = CoursePress || {};
             var isSupported = (eventName in el);
             if ( !isSupported ) {
                 el.setAttribute( eventName, 'return;' );
-                isSupported = typeof el[ eventName ] == 'function';
+                isSupported = typeof el[ eventName ] === 'function';
             }
             el = null;
             return isSupported;
@@ -764,7 +778,7 @@ var CoursePress = CoursePress || {};
     CoursePress.utility.attachment_by_url = function ( url, target, fallback, field ) {
         var model = new CoursePress.Models.utility.Attachment();
         model.get_attachment( url, target, fallback, field );
-    }
+    };
 
     CoursePress.utility.hex_to_rgb = function ( hex ) {
         // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -779,7 +793,7 @@ var CoursePress = CoursePress || {};
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16)
         } : null;
-    }
+    };
 
     CoursePress.UI = CoursePress.UI || {};
 
@@ -830,7 +844,7 @@ var CoursePress = CoursePress || {};
 
         return content;
 
-    }
+    };
 
     CoursePress.UI.browse_media_field = function ( id, name, args ) {
 
@@ -889,7 +903,7 @@ var CoursePress = CoursePress || {};
 
         return content;
 
-    }
+    };
 
     CoursePress.UI.link_popup = function ( id, name, args ) {
         //console.log( args );
@@ -923,7 +937,7 @@ var CoursePress = CoursePress || {};
         '</div>';
 
         return content;
-    }
+    };
 
     // Add UI extensions
     $.fn.extend( {
@@ -959,7 +973,7 @@ var CoursePress = CoursePress || {};
                                 $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
                             }
                             $( self ).trigger( 'change' );
-                        }
+                        };
 
                         wp.media.editor.send.attachment = function ( props, attachment ) {
                             $( target_url_field ).val( attachment.url );
@@ -985,9 +999,10 @@ var CoursePress = CoursePress || {};
                 options = options || {
                         seconds: 10,
                         running: false,
-                        action: 'none',
+                        action: 'none'
                     };
-                console.log( options );
+                // DEBUG code, remove this.
+                window.console.log( options );
 
                 var seconds = options.seconds;
                 var elapsed = 0;
@@ -1034,7 +1049,7 @@ var CoursePress = CoursePress || {};
 
                                 if (seconds > 0) {
                                     seconds -= 1;
-                                    elapsed += 1
+                                    elapsed += 1;
                                     var d_hours = parseInt(seconds / 60 / 60);
                                     var d_minutes = parseInt(( seconds - ( d_hours * 60 * 60 ) ) / 60);
                                     var d_seconds = seconds - ( d_hours * 60 * 60 ) - ( d_minutes * 60 );
@@ -1057,7 +1072,7 @@ var CoursePress = CoursePress || {};
                                 }
                             }, 1000);
                         });
-                    break;
+                    // break;  - above statement is `return`, no break...
                 }
             },
 
@@ -1184,7 +1199,7 @@ var CoursePress = CoursePress || {};
                 $( target_url_field ).addClass( 'invalid_extension_field' );
                 $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
             }
-        }
+        };
 
         wp.media.editor.send.attachment = function ( props, attachment ) {
             $( target_url_field ).val( attachment.url );

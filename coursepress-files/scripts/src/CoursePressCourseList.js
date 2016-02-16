@@ -1,3 +1,8 @@
+/*jslint browser: true*/
+/*global Backbone*/
+/*global jQuery*/
+/*global _coursepress*/
+
 var CoursePress = CoursePress || {};
 
 (function ( $ ) {
@@ -76,7 +81,7 @@ var CoursePress = CoursePress || {};
             var proceed = true;
 
             if( 'delete' === action ) {
-                proceed = confirm( _coursepress.courselist_bulk_delete );
+                proceed = window.confirm( _coursepress.courselist_bulk_delete );
             }
 
             if( action.length > 0 && proceed ) {
@@ -97,17 +102,17 @@ var CoursePress = CoursePress || {};
         });
         CoursePress.Course.on( 'coursepress:bulk_actions_success', function ( data ) {
             $('.nonce-holder').attr( 'data-nonce', data.nonce );
-            location.reload();
+            window.location.reload();
         } );
         CoursePress.Course.on( 'coursepress:bulk_actions_error', function ( data ) {
-            location.reload();
+            window.location.reload();
         } );
 
 
         $('.delete-course-link' ).on( 'click', function( e ) {
             e.stopImmediatePropagation();
             e.preventDefault();
-            if( confirm( _coursepress.courselist_delete_course ) ) {
+            if( window.confirm( _coursepress.courselist_delete_course ) ) {
 
                 CoursePress.Course.set( 'action', 'delete_course' );
 
@@ -122,14 +127,14 @@ var CoursePress = CoursePress || {};
             }
         });
         CoursePress.Course.on( 'coursepress:delete_course_success', function ( data ) {
-            location.reload();
+            window.location.reload();
         } );
 
 
         $('.duplicate-course-link' ).on( 'click', function( e ) {
             e.stopImmediatePropagation();
             e.preventDefault();
-            if( confirm( _coursepress.courselist_duplicate_course ) ) {
+            if( window.confirm( _coursepress.courselist_duplicate_course ) ) {
 
                 CoursePress.Course.set( 'action', 'duplicate_course' );
 
@@ -144,7 +149,7 @@ var CoursePress = CoursePress || {};
             }
         });
         CoursePress.Course.on( 'coursepress:duplicate_course_success', function ( data ) {
-            location.reload();
+            window.location.reload();
         } );
 
         // ====== COURSEPRESS UI TOGGLES =====

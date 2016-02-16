@@ -1,3 +1,9 @@
+/*jslint browser: true*/
+/*global wp*/
+/*global jQuery*/
+
+var CoursePress = CoursePress || {};
+
 (function ( $ ) {
 
 
@@ -24,7 +30,7 @@
                     $( target_url_field ).addClass( 'invalid_extension_field' );
                     $( target_url_field ).parent().find( '.invalid_extension_message' ).show();
                 }
-            }
+            };
 
             wp.media.editor.send.attachment = function( props, attachment )
             {
