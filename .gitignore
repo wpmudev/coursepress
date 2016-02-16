@@ -64,3 +64,4 @@ nb-configuration.xml
 
 # PDF Cache
 coursepress-files/pdf-cache/
+.sass-cache
