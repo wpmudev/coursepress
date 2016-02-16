@@ -717,7 +717,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			// Remove CoursePress transients
 			global $wpdb;
-			$table = $wpdb->prefix . 'options';
+			$table = $wpdb->options;
 			$sql = $wpdb->prepare( "DELETE FROM {$table} WHERE `option_name` LIKE %s OR `option_name` LIKE %s", '%_transient_coursepress_course%', '%_transient_coursepress_unit%' );
 			$wpdb->query( $sql );
 
