@@ -20,11 +20,11 @@ module.exports = function(grunt) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-			'{css}admin-general.css':     '{css}sass/admin/admin-general.scss',
-			'{css}admin-global.css':      '{css}sass/admin/admin-global.scss',
-			'{css}coursepress_front.css': '{css}sass/coursepress_front.scss',
-			'{css}bbm.modal.css':         '{css}sass/bbm.modal.scss',
-			'{css}editor.css':            '{css}sass/editor.scss'
+			'{css}admin-general.css':     '{css}src/admin/admin-general.scss',
+			'{css}admin-global.css':      '{css}src/admin/admin-global.scss',
+			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
+			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
+			'{css}editor.css':            '{css}src/editor.scss'
 		},
 
 		// Regex patterns to exclude from transation.
