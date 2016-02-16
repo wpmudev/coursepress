@@ -130,8 +130,6 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		}
 
 		public static function delete_module( $id, $force_delete = true ) {
-			global $wpdb;
-
 			$unit_id = self::get_module_unit_id( $id );
 
 			/**
@@ -234,7 +232,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		}
 
 		function update_module_response( $data ) {
-			global $user_id, $wpdb, $coursepress;
+			global $user_id;
 
 			$user_id   = get_current_user_id();
 			$unit_id   = get_post_ancestors( $data->response_id );
@@ -415,13 +413,12 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		}
 
 		function get_modules_admin_forms( $unit_id = 0 ) {
-			global $coursepress_modules;
-
 			$modules = self::get_modules( $unit_id );
 
 			foreach ( $modules as $mod ) {
 				$class_name = $mod->module_type;
 				if ( class_exists( $class_name ) ) {
+
 					$module = new $class_name();
 					$module->admin_main( $mod );
 				}

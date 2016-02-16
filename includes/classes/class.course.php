@@ -867,7 +867,6 @@ if ( ! class_exists( 'Course' ) ) {
 				return false;
 			}
 
-			$meta_key = '';
 			if ( is_multisite() ) {
 				$meta_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
 			} else {
