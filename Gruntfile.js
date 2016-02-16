@@ -7,7 +7,12 @@ module.exports = function(grunt) {
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			// None yet...
+			'{js}admin-general.js':           ['{js}src/admin-general.js'],
+			'{js}CoursePress.js':             ['{js}src/CoursePress.js'],
+			'{js}CoursePressCourse.js':       ['{js}src/CoursePressCourse.js'],
+			'{js}CoursePressCourseList.js':   ['{js}src/CoursePressCourseList.js'],
+			'{js}CoursePressFront.js':        ['{js}src/CoursePressFront.js'],
+			'{js}CoursePressUnitsBuilder.js': ['{js}src/CoursePressUnitsBuilder.js']
 		},
 
 		// Folder that contains the CSS files.
@@ -15,11 +20,11 @@ module.exports = function(grunt) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-			'coursepress-files/styles/admin-general.css': 'coursepress-files/styles/sass/admin/admin-general.scss',
-			'coursepress-files/styles/admin-global.css':  'coursepress-files/styles/sass/admin/admin-global.scss',
-			'coursepress-files/styles/coursepress_front.css': 'coursepress-files/styles/sass/coursepress_front.scss',
-			'coursepress-files/styles/bbm.modal.css':     'coursepress-files/styles/sass/bbm.modal.scss',
-			'coursepress-files/styles/editor.css':        'coursepress-files/styles/sass/editor.scss'
+			'{css}admin-general.css':     '{css}sass/admin/admin-general.scss',
+			'{css}admin-global.css':      '{css}sass/admin/admin-global.scss',
+			'{css}coursepress_front.css': '{css}sass/coursepress_front.scss',
+			'{css}bbm.modal.css':         '{css}sass/bbm.modal.scss',
+			'{css}editor.css':            '{css}sass/editor.scss'
 		},
 
 		// Regex patterns to exclude from transation.
@@ -42,6 +47,21 @@ module.exports = function(grunt) {
 		plugin_file: 'coursepress.php'
 	};
 	// -------------------------------------------------------------------------
+	var key, ind, newkey, newval;
+	for ( key in conf.js_files_concat ) {
+		newkey = key.replace( '{js}', conf.js_folder );
+		newval = conf.js_files_concat[key];
+		delete conf.js_files_concat[key];
+		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{js}', conf.js_folder ); }
+		conf.js_files_concat[newkey] = newval;
+	}
+	for ( key in conf.css_files_compile ) {
+		newkey = key.replace( '{css}', conf.css_folder );
+		newval = conf.css_files_compile[key].replace( '{css}', conf.css_folder );
+		delete conf.css_files_compile[key];
+		conf.css_files_compile[newkey] = newval;
+	}
+	// -------------------------------------------------------------------------
 
 
 	// Define grunt tasks.
@@ -52,10 +72,7 @@ module.exports = function(grunt) {
 		jshint: {
 			all: [
 				'Gruntfile.js',
-				'coursepress-files/scripts/*.js'
-			],
-			ignores: [
-				'coursepress-files/scripts/external/*.js'
+				conf.js_folder + 'src/*.js'
 			],
 			options: {
 				curly:   true,
