@@ -3964,7 +3964,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$login_tag          = sanitize_html_class( $login_tag );
 			$login_title        = sanitize_text_field( $login_title );
 			$signup_url         = esc_url_raw( $signup_url );
-			$redirect_url       = esc_url_raw( $redirect_url );
+			$redirect_url       = esc_url_raw( urldecode( $redirect_url ) );
 
 
 			$page = in_array( $page, $allowed ) ? $page : 'signup';

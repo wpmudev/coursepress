@@ -86,12 +86,12 @@ if ( ! class_exists( 'Instructor' ) ) {
 
 			foreach( $courses as $course ) {
 
-				$can_update				 = CoursePress_Capabilities::can_update_course( $course->ID, $this->ID );
-				$can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID, $this->ID );
-				$can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID, $this->ID );
-				$can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID, $this->ID );
-				$my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID, $this->ID );
-				$creator				 = CoursePress_Capabilities::is_course_creator( $course->ID, $this->ID );
+				$can_update				 = CoursePress_Capabilities::can_update_course( $course, $this->ID );
+				$can_delete				 = CoursePress_Capabilities::can_delete_course( $course, $this->ID );
+				$can_publish			 = CoursePress_Capabilities::can_change_course_status( $course, $this->ID );
+				$can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course, $this->ID );
+				$my_course				 = CoursePress_Capabilities::is_course_instructor( $course, $this->ID );
+				$creator				 = CoursePress_Capabilities::is_course_creator( $course, $this->ID );
 
 				if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
 					continue;
