@@ -47,17 +47,17 @@ There are special comments in the `coursepress/2.0-dev` branch will make sure so
 
 Those are:
 
-    //<wpmudev.plugin.pro_only>  
+    /* start:pro */
     echo "This is only in coursepress/pro";  
-    //</wpmudev.plugin.pro_only>  
+    /* end:pro */
   
-    //<wpmudev.plugin.free_only>  
+    /* start:free */
     echo "This is only in coursepress/standard";  
-    //</wpmudev.plugin.free_only>  
+    /* end:free */
 
-    //<wpmudev.plugin.campus_only>  
+    /* start:campus */
     echo "This is only in coursepress/standard";  
-    //</wpmudev.plugin.campus_only>  
+    /* end:campus */
 
 
 ### Working with the branches
@@ -79,6 +79,15 @@ Every bug fix/change must be made in a separate branch. Create a branch with nam
 
 Do not directly update the super branch, always use pull requests!
 
+#### JS and CSS files
+
+Only edit/create javascript and css files inside the `/src` folders:
+
+* `scripts/src/*` for javascript.
+* `styles/src/*` for css. Use .scss extension (SASS)!
+
+Important: Those folders are scanned and processed when running grunt. Files in base of `scripts/` and `styles/` are overwritten by grunt.
+
 
 #### Working with MarketPress in CoursePress  
 
@@ -99,15 +108,20 @@ See notes below on how to correctly set up grunt. *This has changed since 1.x!*
 
 **ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
 
-* `grunt watch` .. watch js and scss files for changes, auto process them.
+* `grunt watch` .. watch js and scss files, auto process them when changed.
+* `grunt watch:js` .. only watch js files.
+* `grunt watch:css` .. only watch css files.
 
 * `grunt js` .. validate and minify js files.
 * `grunt css` .. validate and compile scss files to css.
-* `grunt php` .. validate WP Coding Standards in php files.
-* `grunt test` .. runs the unit tests.
 * `grunt lang` .. update the translations pot file.
 
-* `grunt build` .. runs all tasks (js, css, php, test, lang) and builds all production versions.
+* `grunt test` .. runs the unit tests.
+* `grunt php` .. validate WP Coding Standards in php files.
+* `grunt php-fix` .. tries to auto-fix incorrect code formatting.
+* `grunt` .. run tasks: php, test, js, css
+
+* `grunt build` .. runs all tasks (php, test, js, css, lang) and builds all production versions.
 * `grunt build:pro` .. same as build, but only build the pro plugin version.
 * `grunt build:free` .. same as build, but only build the free plugin version.
 * `grunt build:campus` .. same as build, but only build the campus plugin version.
@@ -150,8 +164,11 @@ Same as 3: Run commands in the `coursepress` plugin folder:
     $ php composer-setup.php --filename=composer
     $ php -r "unlink('composer-setup.php');"
     
+    ## Install PHP Unit
+    $ composer require --dev "phpunit/phpunit=4.8.*"
+    
     ## Install PHP Code Sniffer:
-    $ php composer require --dev squizlabs/php_codesniffer:2.*
+    $ php composer require --dev "squizlabs/php_codesniffer:2.*"
     
     ## Install WP Coding Standards:
     $ git clone -b master https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git vendor/wpcs
@@ -165,3 +182,27 @@ If `makepot` is not available in your system path you can set your i18 tools pat
     {
        "i18nToolsPath": "/path/to/i18n-tools/"
     }
+
+
+#### Set up wordpress-develop for unit tests
+
+If the command `grunt test` fails you possibly need to follow these steps and install the wordpress-develop repository to your server.
+
+The repository must exist at one of those directories:
+
+* `/srv/www/wptest/wordpress-develop`
+* `/srv/www/wordpress-develop/trunk`    
+* Or set the environment variable `WP_TESTS_DIR` to the directory
+
+(See: tests/bootstrap.php line 12-21 for logic)
+
+    $ mkdir /srv/www/wordpress-develop
+    $ cd /srv/www/wordpress-develop
+    $ svn co http://develop.svn.wordpress.org/trunk/
+    $ cd trunk
+    $ svn up
+
+
+#### Unit testing notes
+
+Introduction to unit testing in WordPress: http://codesymphony.co/writing-wordpress-plugin-unit-tests/

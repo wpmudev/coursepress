@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
-    // Show elapsed time at the end.
-    require( 'time-grunt' )(grunt);
+	// Show elapsed time at the end.
+	require( 'time-grunt' )(grunt);
 
 	// -------------------------------------------------------------------------
 	// Configuration.
@@ -30,6 +30,12 @@ module.exports = function(grunt) {
 			'{css}editor.css':            '{css}src/editor.scss'
 		},
 
+		// PHP files to validate.
+		php_files: [
+			'coursepress.php',
+			'coursepress-files/**/*.php'
+		],
+
 		// Regex patterns to exclude from transation.
 		no_translation: [
 			'(^.php)',      // Ignore non-php files.
@@ -42,6 +48,52 @@ module.exports = function(grunt) {
 			'js/.*',        // Deprecated folder.
 			'includes/.*'   // Deprecated folder.
 		],
+
+		// BUILD patterns to exclude code for specific builds.
+		plugin_patterns: {
+			pro: [
+				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
+				{ match: /'TD'/g, replace: 'cp' },
+				{ match: /\/\* start:pro \*\//g, replace: '' },
+				{ match: /\/\* end:pro \*\//g, replace: '' },
+				{ match: /\/\* start:free .*? end:free \*\//mg, replace: '' },
+				{ match: /\/\* start:campus .*? end:campus \*\//mg, replace: '' }
+			],
+			free: [
+				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /'TD'/g, replace: 'coursepress' },
+				{ match: /\/\* start:free \*\//g, replace: '' },
+				{ match: /\/\* end:free \*\//g, replace: '' },
+				{ match: /\/\* start:pro .*? end:pro \*\//mg, replace: '' },
+				{ match: /\/\* start:campus .*? end:campus \*\//mg, replace: '' }
+			],
+			campus: [
+				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /'TD'/g, replace: 'coursepress' },
+				{ match: /\/\* start:campus \*\//g, replace: '' },
+				{ match: /\/\* end:campus \*\//g, replace: '' },
+				{ match: /\/\* start:pro .*? end:pro \*\//mg, replace: '' },
+				{ match: /\/\* start:free .*? end:free \*\//mg, replace: '' }
+			],
+			files: {
+				expand: true,
+				src: [
+					'**/*.php',
+					'**/*.css',
+					'**/*.js',
+					'**/*.html',
+					'**/*.txt',
+					'!node_modules/**',
+					'!vendor/**',
+					'!languages/**',
+					'!coursepress-files/files/**',
+					'!Gruntfile.js',
+					'!build/**',
+					'!.git/**'
+				],
+				dest: './'
+			}
+		},
 
 		// Different plugin settings.
 		translation_dir: 'languages/',
@@ -201,6 +253,29 @@ module.exports = function(grunt) {
 			}
 		},
 
+		// CSS/JS: Watch for file changes.
+		watch:  {
+			css: {
+				files: [
+					conf.css_folder + 'src/**/*.scss'
+				],
+				tasks: ['sass', 'autoprefixer'],
+				options: {
+					debounceDelay: 500
+				}
+			},
+
+			js: {
+				files: [
+					conf.js_folder + 'src/**/*.js'
+				],
+				tasks: ['jshint', 'concat'],
+				options: {
+					debounceDelay: 500
+				}
+			}
+		},
+
 		// POT: Create the .pot translation index.
 		makepot: {
 			target: {
@@ -225,9 +300,7 @@ module.exports = function(grunt) {
 
 		// PHP: Validate file syntax.
 		phplint: {
-			all: [
-				'**/*.php'
-			],
+			src: conf.php_files,
 			options: {
 				swapPath: '/tmp'  // Make sure this folder exists; its for caching to speed up the task.
 			}
@@ -236,24 +309,58 @@ module.exports = function(grunt) {
 		// PHP: Code Sniffer to validate WP Coding Standards.
 		phpcs: {
 			sniff: {
-				src: [
-					'coursepress.php',
-				],
+				src: conf.php_files,
 				options: {
 					bin: 'vendor/bin/phpcs',
 					standard: 'WordPress'
 				}
 			},
 			fix: {
-				src: [
-					'coursepress.php',
-				],
+				src: conf.php_files,
 				options: {
 					bin: 'vendor/bin/phpcbf',
 					standard: 'WordPress'
 				}
 			}
-		}
+		},
+
+		// PHP: Unit tests.
+		phpunit: {
+			classes: {
+				dir: ''
+			},
+			options: {
+				bin: 'vendor/phpunit/phpunit/phpunit',
+				bootstrap: 'tests/bootstrap.php',
+				testsuite: 'default',
+				configuration: 'tests/phpunit.xml',
+				colors: true,
+				staticBackup: false,
+				noGlobalsBackup: false
+			}
+		},
+
+		// BUILD: Replace conditional tags in code
+		replace: {
+			pro: {
+				options: {
+					patterns: conf.plugin_patterns.pro
+				},
+				files: conf.plugin_patterns.files
+			},
+			free: {
+				options: {
+					patterns: conf.plugin_patterns.free
+				},
+				files: conf.plugin_patterns.files
+			},
+			campus: {
+				options: {
+					patterns: conf.plugin_patterns.campus
+				},
+				files: conf.plugin_patterns.files
+			}
+		},
 
 	} );
 
@@ -268,8 +375,13 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
-	grunt.registerTask( 'php', ['phpcs:sniff', 'phplint'] );
-	grunt.registerTask( 'default', ['php', 'js', 'css'] );
-	grunt.registerTask( 'build', ['default', 'makepot'] );
+	grunt.registerTask( 'lang', ['makepot'] );
+
+	grunt.registerTask( 'test', ['phpunit'] );
+	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
+	grunt.registerTask( 'php-fix', ['phplint', 'phpcs:fix'] );
+
+	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
+	grunt.registerTask( 'build', ['default', 'lang'] ); // Not finished yet...
 
 };
