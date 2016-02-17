@@ -20,3 +20,4 @@ coursepress-files/pdf-cache/
 /vendor
 /composer.lock
 /composer
+composer.json

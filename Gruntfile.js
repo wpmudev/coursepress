@@ -1,4 +1,7 @@
 module.exports = function(grunt) {
+    // Show elapsed time at the end.
+    require( 'time-grunt' )(grunt);
+
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
@@ -68,7 +71,15 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		// JS: Validate JS files.
+		// JS: Validate JS files (1).
+		jsvalidate: {
+			all: [
+				'Gruntfile.js',
+				conf.js_folder + 'src/*.js'
+			]
+		},
+
+		// JS: Validate JS files (2).
 		jshint: {
 			all: [
 				'Gruntfile.js',
@@ -76,6 +87,7 @@ module.exports = function(grunt) {
 			],
 			options: {
 				curly:   true,
+				browser: true,
 				eqeqeq:  true,
 				immed:   true,
 				latedef: true,
@@ -85,6 +97,15 @@ module.exports = function(grunt) {
 				undef:   true,
 				boss:    true,
 				eqnull:  true,
+				unused:  true,
+				camelcase: true,
+				quotmark: 'single',
+				predef: [
+					'$',
+					'jQuery',
+					'Backbone',
+					'_'
+				],
 				globals: {
 					exports: true,
 					module:  false
@@ -200,23 +221,55 @@ module.exports = function(grunt) {
 					type: 'wp-plugin' // wp-plugin or wp-theme
 				}
 			}
+		},
+
+		// PHP: Validate file syntax.
+		phplint: {
+			all: [
+				'**/*.php'
+			],
+			options: {
+				swapPath: '/tmp'  // Make sure this folder exists; its for caching to speed up the task.
+			}
+		},
+
+		// PHP: Code Sniffer to validate WP Coding Standards.
+		phpcs: {
+			sniff: {
+				src: [
+					'coursepress.php',
+				],
+				options: {
+					bin: 'vendor/bin/phpcs',
+					standard: 'WordPress'
+				}
+			},
+			fix: {
+				src: [
+					'coursepress.php',
+				],
+				options: {
+					bin: 'vendor/bin/phpcbf',
+					standard: 'WordPress'
+				}
+			}
 		}
 
 	} );
 
-	// Load external task handlers.
-	grunt.loadNpmTasks( 'grunt-wp-i18n' );
-	grunt.loadNpmTasks( 'grunt-autoprefixer' );
-	grunt.loadNpmTasks( 'grunt-contrib-sass' );
-	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-	grunt.loadNpmTasks( 'grunt-contrib-concat' );
-	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
+	// Test task.
+	grunt.registerTask( 'test', 'Test if grunt is working', function() {
+		grunt.log.subhead( 'Looks like grunt is installed!' );
+	});
+
+	// Load all grunt tasks.
+	require( 'load-grunt-tasks' )(grunt);
 
 	// Define default tasks.
-	grunt.registerTask( 'js', ['jshint', 'concat', 'uglify'] );
+	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
-	grunt.registerTask( 'default', ['js', 'css'] );
+	grunt.registerTask( 'php', ['phpcs:sniff', 'phplint'] );
+	grunt.registerTask( 'default', ['php', 'js', 'css'] );
 	grunt.registerTask( 'build', ['default', 'makepot'] );
 
 };
