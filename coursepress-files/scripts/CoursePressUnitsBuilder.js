@@ -1824,6 +1824,7 @@ var CoursePress = CoursePress || {};
                     unit.set( el_name, el_val );
                 }
             }
+
         },
         unitFeatureImageChange: function( e ) {
             var el = $( e.currentTarget );

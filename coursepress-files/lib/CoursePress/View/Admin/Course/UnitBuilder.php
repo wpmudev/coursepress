@@ -88,6 +88,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						</div>
 					</div>
 					<div class="progress-next-unit">
+						<label>'. esc_html__( 'Progress to next unit', 'cp' ) . '</label>
 						<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %> /><span>'. sprintf( '%s <em>%s</em> %s',
 							esc_html__( 'User needs to', 'cp' ),
 							esc_html__( 'answer', 'cp' ),
