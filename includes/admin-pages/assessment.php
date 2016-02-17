@@ -449,7 +449,7 @@ if ( isset( $_GET['response_id'] ) ) {
 														$the_class = new $class_name;
 														?>
 														<td class="column-module <?php echo $style . ' ' . $visibility_class; ?>">
-															<?php echo $the_class->label; ?>
+															<?php echo esc_html( $the_class->label ); ?>
 														</td>
 
 														<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
