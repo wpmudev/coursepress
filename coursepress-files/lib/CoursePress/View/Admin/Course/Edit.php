@@ -103,7 +103,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 
 		$content = '<div class="coursepress_settings_wrapper">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />' .
 		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle ) .
 		           '</div>';

@@ -70,10 +70,10 @@ class CoursePress_View_Admin_CoursePress {
 		$url = admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug );
 
 		$content = '<div class="coursepress_settings_wrapper wrap">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-                    <a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', CoursePress::TD ) . '</a>
-		            </h3>
-		            <hr />';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', CoursePress::TD ) . '</a>
+			</h3>
+			<hr />';
 
 		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 		$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';

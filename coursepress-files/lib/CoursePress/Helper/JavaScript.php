@@ -46,7 +46,7 @@ class CoursePress_Helper_JavaScript {
 			'jquery',
 			'backbone',
 			'underscore'
-		), CoursePress_Core::$version );
+		), CoursePress::$version );
 
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
@@ -86,13 +86,13 @@ class CoursePress_Helper_JavaScript {
 				'jquery-ui-spinner',
 				'jquery-ui-droppable',
 				'backbone',
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/jquery.treegrid.min.js';
 
 			wp_enqueue_script( 'jquery-treegrid', $script, array(
 				'jquery'
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$localize_array['instructor_role_defined']          = defined('COURSEPRESS_INSTRUCTOR_ROLE');
 			$localize_array['instructor_avatars']               = CoursePress_Helper_UI::get_user_avatar_array();
@@ -124,7 +124,7 @@ class CoursePress_Helper_JavaScript {
 
 			wp_enqueue_script( 'coursepress_unit_builder', $script, array(
 				'coursepress_course',
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$localize_array['unit_builder_templates']     = CoursePress_Helper_UI_Module::get_template( true );
 			$localize_array['unit_builder_module_types']  = CoursePress_Helper_UI_Module::get_types();
@@ -148,7 +148,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery-ui-spinner',
 				'jquery-ui-droppable',
 				'backbone',
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$localize_array['courselist_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected courses. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
 			$localize_array['courselist_delete_course'] = __( 'Please confirm that you want to delete this courses. Warning: This cannot be undone.', CoursePress::TD );
@@ -193,7 +193,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery',
 				'backbone',
 				'underscore'
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressFront.js';
@@ -232,7 +232,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery-ui-dialog',
 				'underscore',
 				'backbone'
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
@@ -240,21 +240,21 @@ class CoursePress_Helper_JavaScript {
 			//
 			//wp_enqueue_script( 'jquery-knob', $script, array(
 			//	'jquery'
-			//), CoursePress_Core::$version );
+			//), CoursePress::$version );
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/circle-progress.min.js';
 			wp_enqueue_script( 'circle-progress', $script, array(
 				'jquery'
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/backbone.modal-min.js';
 			wp_enqueue_script( 'backbone-modal', $script, array(
 				'backbone',
 				'password-strength-meter'
-			), CoursePress_Core::$version );
+			), CoursePress::$version );
 
 			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/font-awesome.min.css';
-			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress_Core::$version );
+			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
 
 		}
 

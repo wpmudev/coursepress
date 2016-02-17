@@ -67,9 +67,11 @@ class CoursePress_View_Front_General {
 				$dashboard->db_id            = - 9998;
 				$dashboard->url              = CoursePress_Core::get_slug( 'student_dashboard', true );
 				$dashboard->classes[]        = 'dropdown';
-				/* if ( $current_url == $dashboard->url ) {
-				  $dashboard->classes[] = 'current_page_item';
-				  } */
+				/*
+				if ( $current_url == $dashboard->url ) {
+					$dashboard->classes[] = 'current_page_item';
+				}
+				*/
 				$sorted_menu_items[] = $dashboard;
 
 

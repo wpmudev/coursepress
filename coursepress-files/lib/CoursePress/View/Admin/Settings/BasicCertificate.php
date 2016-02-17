@@ -177,15 +177,15 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
 			$post_settings['basic_certificate']['enabled'] = isset( $post_settings['basic_certificate']['enabled'] ) ? $post_settings['basic_certificate']['enabled'] : false;
-			//$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? : false;
-			//$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? : false;
-			//$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
 
-			// Don't replace settings if there is nothing to replace
+			// Don't replace settings if there is nothing to replace.
 			if ( ! empty( $post_settings ) ) {
-				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
+				CoursePress_Core::update_setting(
+					false, // False will replace all settings.
+					CoursePress_Core::merge_settings( $settings, $post_settings )
+				);
 			}
 
 		}

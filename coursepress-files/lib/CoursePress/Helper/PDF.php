@@ -265,7 +265,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 		// $pdf = new TCPDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, false, 'ISO-639-2', false );
 
 		// set document information
-		$pdf->SetCreator( CoursePress_Core::$name );
+		$pdf->SetCreator( CoursePress::$name );
 		$pdf->SetTitle( $args['title'] );
 		$pdf->SetKeywords( '' );
 

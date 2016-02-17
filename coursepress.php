@@ -87,20 +87,17 @@ class CoursePress {
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
 		// Prepare CoursePress Core parameters.
-		CoursePress_Core::$name            = self::$name;
-		CoursePress_Core::$version         = self::$version;
-		CoursePress_Core::$plugin_lib      = self::$plugin_lib;
-		CoursePress_Core::$plugin_file     = __FILE__;
-		CoursePress_Core::$plugin_path     = trailingslashit( plugin_dir_path( __FILE__ ) );
-		CoursePress_Core::$plugin_url      = trailingslashit( plugin_dir_url( __FILE__ ) );
+		CoursePress_Core::$plugin_file = __FILE__;
+		CoursePress_Core::$plugin_dir = plugin_basename( dirname( __FILE__ ) );
+		CoursePress_Core::$plugin_path = trailingslashit( plugin_dir_path( __FILE__ ) );
+		CoursePress_Core::$plugin_url = trailingslashit( plugin_dir_url( __FILE__ ) );
+
+		// Deprecated stuff.
 		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path . self::$plugin_lib );
-		CoursePress_Core::$plugin_lib_url  = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
-		CoursePress_Core::$DEBUG           = false;  // @todo check if this should be a define( '' ) option...
+		CoursePress_Core::$plugin_lib_url = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
 
-		CoursePress_Core::init();
-
-		$screen_base = str_replace( ' ', '-', strtolower( CoursePress_Core::$name ) );
-		$page_base = $screen_base . '_page_';
+		// Allow WP to load other plugins before we continue!
+		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ) );
 
 		/**
 		 * Include WPMUDev Dashboard.
@@ -111,9 +108,12 @@ class CoursePress {
 		if ( file_exists( $dash_notifications_file ) ) {
 			global $wpmudev_notices;
 
+			$screen_base = str_replace( ' ', '-', strtolower( self::$name ) );
+			$page_base = $screen_base . '_page_';
+
 			$wpmudev_notices[] = array(
 				'id' => 913071,
-				'name' => CoursePress_Core::$name,
+				'name' => CoursePress::$name,
 				'screens' => array(
 					'coursepress_settings',
 					'toplevel_page_courses',

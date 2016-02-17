@@ -2,6 +2,9 @@
 
 class CoursePress_Model_Shortcodes {
 
+	/**
+	 * @todo: Activate the commented shortcodes below and make sure that they work!
+	 */
 	public static function init() {
 
 		add_shortcode( 'course_instructors', array( __CLASS__, 'course_instructors' ) );
@@ -37,6 +40,7 @@ class CoursePress_Model_Shortcodes {
 		add_shortcode( 'module_status', array( __CLASS__, 'module_status' ) );
 		add_shortcode( 'student_workbook_table', array( __CLASS__, 'student_workbook_table' ) );
 		add_shortcode( 'course', array( __CLASS__, 'course' ) );
+
 		//// Sub-shortcodes
 		add_shortcode( 'course_title', array( __CLASS__, 'course_title' ) );
 		add_shortcode( 'course_link', array( __CLASS__, 'course_link' ) );
@@ -62,13 +66,16 @@ class CoursePress_Model_Shortcodes {
 		add_shortcode( 'course_action_links', array( __CLASS__, 'course_action_links' ) );
 		add_shortcode( 'course_random', array( __CLASS__, 'course_random' ) );
 		add_shortcode( 'course_time_estimation', array( __CLASS__, 'course_time_estimation' ) );
+
 		//// Course-progress
 		//add_shortcode( 'course_progress', array( __CLASS__, 'course_progress' ) );
 		//add_shortcode( 'course_unit_progress', array( __CLASS__, 'course_unit_progress' ) );
 		add_shortcode( 'course_mandatory_message', array( __CLASS__, 'course_mandatory_message' ) );
 		add_shortcode( 'course_unit_percent', array( __CLASS__, 'course_unit_percent' ) );
+
 		//// Other shortcodes
 		////add_shortcode( 'unit_discussion', array( __CLASS__, 'unit_discussion' ) );
+
 		//// Page Shortcodes
 
 		if ( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() &&
@@ -88,9 +95,9 @@ class CoursePress_Model_Shortcodes {
 		//
 		//$GLOBALS[ 'units_breadcrumbs' ] = '';
 		//
+
 		////Messaging shortcodes
 		//add_shortcode( 'messaging_submenu', array( __CLASS__, 'messaging_submenu' ) );
-
 
 		// 2.0+ Template Shortcodes
 		CoursePress_Model_Shortcodes_Templates::init();
@@ -4493,6 +4500,10 @@ class CoursePress_Model_Shortcodes {
 
 	/* =========== PAGES SHORTCODES =============== */
 
+
+	/**
+	 * @todo: Migrate those templates to 2.0 code!
+	 */
 	public static function cp_pages( $atts ) {
 		ob_start();
 		global $plugin_dir;
@@ -4502,23 +4513,23 @@ class CoursePress_Model_Shortcodes {
 
 		switch ( $page ) {
 			case 'enrollment_process':
-				require( $plugin_dir . 'includes/templates/enrollment-process.php' );
+				require( $plugin_dir . '_deprecated/templates/enrollment-process.php' );
 				break;
 
 			case 'student_login':
-				require( $plugin_dir . 'includes/templates/student-login.php' );
+				require( $plugin_dir . '_deprecated/templates/student-login.php' );
 				break;
 
 			case 'student_signup':
-				require( $plugin_dir . 'includes/templates/student-signup.php' );
+				require( $plugin_dir . '_deprecated/templates/student-signup.php' );
 				break;
 
 			case 'student_dashboard':
-				require( $plugin_dir . 'includes/templates/student-dashboard.php' );
+				require( $plugin_dir . '_deprecated/templates/student-dashboard.php' );
 				break;
 
 			case 'student_settings':
-				require( $plugin_dir . 'includes/templates/student-settings.php' );
+				require( $plugin_dir . '_deprecated/templates/student-settings.php' );
 				break;
 
 			default:

@@ -568,7 +568,7 @@ class CoursePress_Helper_Utility {
 		 */
 		$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
 			'timeout'	 => 60,
-			'user-agent' => CoursePress_Core::$name . ' / ' . CoursePress_Core::$version . ';'
+			'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';'
 		) );
 		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 		exit();

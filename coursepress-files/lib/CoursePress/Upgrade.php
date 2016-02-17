@@ -201,7 +201,7 @@ class CoursePress_Upgrade {
 			$settings = get_site_option( 'coursepress_settings', array() );
 		}
 
-		CoursePress_Helper_Utility::set_array_val( $settings, 'general/version', CoursePress_Core::$version );
+		CoursePress_Helper_Utility::set_array_val( $settings, 'general/version', CoursePress::$version );
 
 		if ( ! is_multisite() ) {
 			update_option( 'coursepress_settings', $settings );
@@ -211,6 +211,8 @@ class CoursePress_Upgrade {
 
 		/**
 		 * Clean up time
+		 * DO NOT DELETE THOSE OPTIONS - most of them are used in CP 2.0!!
+		 * @todo  remove this block once 2.0 is stable or document this list somewhere else...
 		 */
 		//delete_option( 'display_menu_items' );
 		//delete_option( 'use_custom_login_form' );

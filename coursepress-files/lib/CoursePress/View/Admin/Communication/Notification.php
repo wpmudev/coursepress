@@ -88,7 +88,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$url        = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper notifications wrap">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
 		            <a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', CoursePress::TD ) . '</a>
 		            </h3>
 		            <hr />';

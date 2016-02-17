@@ -51,7 +51,7 @@ class CoursePress_View_Admin_Settings_Extensions{
 		if ( isset( $_POST['action'] ) && 'install-plugin' === $_POST['action'] && 'extensions' === $tab && wp_verify_nonce( $_POST['_wp_nonce'], 'install-plugin' ) ) {
 
 			echo '<div class="coursepress_settings_wrapper">' .
-			     '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html__( 'Installing plugin...', CoursePress::TD ) . '</h3>
+			     '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html__( 'Installing plugin...', CoursePress::TD ) . '</h3>
 		            <hr />';
 			echo '</div>';
 			echo '<h3>' . esc_html( $_POST['plugin_name'] ) . '</h3>';

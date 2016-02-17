@@ -107,10 +107,10 @@ class CoursePress_View_Admin_Settings {
 		unset( $hidden_args['_wpnonce'] );
 
 		$content = '<div class="coursepress_settings_wrapper">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-		            <hr />' .
-		           CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false ) .
-		           '</div>';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+			<hr />' .
+			CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false ) .
+			'</div>';
 
 		echo apply_filters( 'coursepress_settings_page_main', $content );
 

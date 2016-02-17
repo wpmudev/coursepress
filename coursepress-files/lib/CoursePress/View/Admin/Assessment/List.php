@@ -96,7 +96,7 @@ class CoursePress_View_Admin_Assessment_List {
 	public static function render_page() {
 
 		$content = '<div class="coursepress_settings_wrapper assessment">' .
-		           '<h3>' . esc_html( CoursePress_Core::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
 		            <hr />';
 
 		if ( isset( $_REQUEST['view_answer'] ) && ! self::$force_grid ) {

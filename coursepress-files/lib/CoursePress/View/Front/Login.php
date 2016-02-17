@@ -10,6 +10,9 @@ class CoursePress_View_Front_Login {
 
 	}
 
+	/**
+	 * @todo: Why is this commented? Find out and finish function is needed!
+	 */
 	public static function render_login_page() {
 		//if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
 		//} else {
@@ -26,6 +29,9 @@ class CoursePress_View_Front_Login {
 		return $content;
 	}
 
+	/**
+	 * @todo: Why is this commented? Find out and finish function is needed!
+	 */
 	public static function render_signup_page() {
 		//if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
 		//} else {

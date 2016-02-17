@@ -18,7 +18,7 @@ class CoursePress_Helper_Settings {
 	public static function admin_menu() {
 
 		$parent_handle                     = 'coursepress';
-		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress_Core::$name, CoursePress_Core::$name, 'coursepress_dashboard_cap', $parent_handle, array(
+		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
 			__CLASS__,
 			'menu_handler'
 		), CoursePress_Core::$plugin_lib_url . 'assets/coursepress-icon.png' );
@@ -111,23 +111,23 @@ class CoursePress_Helper_Settings {
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		if ( in_array( $page, self::get_valid_pages() ) ) {
-			wp_enqueue_style( 'coursepress_admin_general', $style, array( 'dashicons' ), CoursePress_Core::$version );
-			wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), CoursePress_Core::$version, true );
-			wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), CoursePress_Core::$version, true );
+			wp_enqueue_style( 'coursepress_admin_general', $style, array( 'dashicons' ), CoursePress::$version );
+			wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), CoursePress::$version, true );
+			wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), CoursePress::$version, true );
 
 			add_editor_style( $editor_style );
 
 			// Add chosen
 			$style = CoursePress_Core::$plugin_lib_url . 'styles/external/chosen.css';
 			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/chosen.jquery.min.js';
-			wp_enqueue_style( 'chosen_css', $style, array( 'dashicons' ), CoursePress_Core::$version );
-			wp_enqueue_script( 'chosen_js', $script, array( 'jquery' ), CoursePress_Core::$version, true );
+			wp_enqueue_style( 'chosen_css', $style, array( 'dashicons' ), CoursePress::$version );
+			wp_enqueue_script( 'chosen_js', $script, array( 'jquery' ), CoursePress::$version, true );
 
 			// Font Awesome
-			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress_Core::$version );
+			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
 		}
 
-		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress_Core::$version );
+		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress::$version );
 	}
 
 	public static function allow_zip_extension( $extensions ) {
