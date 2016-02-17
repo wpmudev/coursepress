@@ -1747,6 +1747,9 @@ var CoursePress = CoursePress || {};
                 unit_content: '',
                 unit_feature_image: '',
                 unit_availability: '',
+                unit_date_availability: '',
+                unit_delay_seconds: 0,
+                unit_delay_type: 'days',
                 unit_force_completion_checked: '',
                 unit_force_successful_completion_checked: ''
             };
@@ -1762,7 +1765,9 @@ var CoursePress = CoursePress || {};
             'change #unit-live-toggle': 'toggleUnitState',
             'change #unit-live-toggle-2': 'toggleUnitState',
             'change #unit_feature_image': 'unitFeatureImageChange',
-            'change [name=unit_feature_image-button]': 'unitFeatureImageChange'
+            'change [name=unit_feature_image-button]': 'unitFeatureImageChange',
+            'change [name=meta_unit_availability]': 'toggleAvailability',
+            'focus [name=meta_unit_date_availability]' : 'setDate'
             //'change #page_feature_image': 'featureImageChange',
             //'change [name=page_feature_image-button]': 'featureImageChange'
         },
@@ -1812,10 +1817,12 @@ var CoursePress = CoursePress || {};
                 el_val = $( el ).is( ':checked' );
             }
 
-            if ( /meta_/.test( el_name ) ) {
-                unit.set_meta( el_name, el_val );
-            } else {
-                unit.set( el_name, el_val );
+            if ( unit ) {
+                if ( /meta_/.test( el_name ) ) {
+                    unit.set_meta( el_name, el_val );
+                } else {
+                    unit.set( el_name, el_val );
+                }
             }
 
         },
@@ -1851,8 +1858,21 @@ var CoursePress = CoursePress || {};
 
                 CoursePress.editor.create( editor, id, name, content, false, height );
             } );
+        },
+        toggleAvailability:function(ev){
+            var select = $(ev.target),
+                value = select.val(),
+                setting_divs = $('.ua-div').hide(),
+                active_setting = $('#div-' + value );
+                
+            if ( active_setting.length > 0 ) {
+                active_setting.show();
+            }
+        },
+        setDate:function(ev){
+            var input = $(ev.target);
+            input.datepicker();
         }
-
     } );
 
 
