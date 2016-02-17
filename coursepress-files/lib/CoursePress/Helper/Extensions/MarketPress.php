@@ -2,8 +2,6 @@
 
 class CoursePress_Helper_Extensions_MarketPress {
 
-	const PLUGIN_FILE = '128762_marketpress-ecommerce-2.9.6.2.zip';
-
 	private static $installed = false;
 	private static $activated = false;
 
@@ -30,7 +28,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 				'name'           => 'MarketPress',
 				'slug'           => 'marketpress',
 				'base_path'      => self::$base_path['pro'],
-				'source'         => CoursePress_Core::$plugin_lib_path . 'files/plugins/' . self::PLUGIN_FILE,
+				'source'         => CoursePress_Core::$plugin_lib_path . 'files/marketpress-pro.zip',
 				'source_message' => __( 'Included in the CoursePress Plugin', CoursePress::TD ),
 				'external_url'   => '',
 				// http://premium.wpmudev.org/project/e-commerce/
