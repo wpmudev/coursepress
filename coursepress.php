@@ -4594,7 +4594,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 									unset( $invites[ $key ] );
 									update_post_meta( $course_id, 'instructor_invites', $invites );
 
-									$course_link = '<a href ="' . admin_url( 'admin.php?page = course_details&course_id =' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
+									// Don't add space between =
+									$course_link = '<a href ="' . admin_url( 'admin.php?page=course_details&course_id=' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
 
 									$title   = __( '<h3>Invitation activated.</h3>', 'coursepress_base_td' );
 									$content = do_shortcode( sprintf( __( '<p>Congratulations. You are now an instructor in the following course:</p>
