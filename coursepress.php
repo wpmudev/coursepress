@@ -5006,6 +5006,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 		function admin_header_actions() {
 			global $pagenow;
+			
+			/** Bail when in category page. **/
+			if( $pagenow == 'edit-tags.php' ) {
+				return;
+			}
 
 			if ( is_admin() && ! CoursePress_Capabilities::is_campus() ) {
 				if ( ( isset( $_GET['cp_admin_ref'] ) && $_GET['cp_admin_ref'] == 'cp_course_creation_page' ) || ( isset( $_POST['cp_admin_ref'] ) && $_POST['cp_admin_ref'] == 'cp_course_creation_page' ) ) {
