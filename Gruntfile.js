@@ -2,6 +2,9 @@ module.exports = function(grunt) {
 	// Show elapsed time at the end.
 	require( 'time-grunt' )(grunt);
 
+	// Load all grunt tasks.
+	require( 'load-grunt-tasks' )(grunt);
+
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
@@ -106,19 +109,18 @@ module.exports = function(grunt) {
 			files: {
 				expand: true,
 				src: [
-					'coursepress.php'
-/*					'** /*.php',
-					'** /*.css',
-					'** /*.js',
-					'** /*.html',
-					'** /*.txt',
+					'**/*.php',
+					'**/*.css',
+					'**/*.js',
+					'**/*.html',
+					'**/*.txt',
 					'!node_modules/**',
 					'!vendor/**',
 					'!languages/**',
 					'!coursepress-files/files/**',
 					'!Gruntfile.js',
 					'!build/**',
-					'!.git/**' */
+					'!.git/**'
 				],
 				dest: './'
 			}
@@ -409,7 +411,7 @@ module.exports = function(grunt) {
 			pro: {
 				options: {
 					verbose: true,
-					branch: 'agile/testing', //conf.plugin_branches.pro,
+					branch: conf.plugin_branches.pro,
 					overwrite: true
 				}
 			},
@@ -490,10 +492,10 @@ module.exports = function(grunt) {
 		}
 
 		// Run the default tasks (js/css/php validation)
-//		grunt.task.run( 'default' );
+		grunt.task.run( 'default' );
 
 		// Generate all translation files (pro and free)
-//		grunt.task.run( 'lang' );
+		grunt.task.run( 'lang' );
 
 		// Checkout the destination branch.
 		grunt.task.run( 'gitcheckout:' + target );
@@ -513,9 +515,6 @@ module.exports = function(grunt) {
 		grunt.log.subhead( 'Looks like grunt is installed!' );
 	});
 
-	// Load all grunt tasks.
-	require( 'load-grunt-tasks' )(grunt);
-
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
@@ -525,5 +524,4 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'php-fix', ['phplint', 'phpcs:fix'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
-
 };
