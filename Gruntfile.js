@@ -179,9 +179,8 @@ module.exports = function(grunt) {
 				undef:   true,
 				boss:    true,
 				eqnull:  true,
-			//	unused:  true,
-			//	camelcase: true,
-			//	quotmark: 'single',
+				unused:  true,
+				quotmark: 'single',
 				predef: [
 					'jQuery',
 					'Backbone',
@@ -454,21 +453,21 @@ module.exports = function(grunt) {
 			pro: {
 				verbose: true,
 				options: {
-					message: "Built from '" + conf.plugin_branches.base + "'",
+					message: 'Built from: ' + conf.plugin_branches.base,
 					allowEmpty: true
 				},
 				files: { src: ['.'] }
 			},
 			free: {
 				options: {
-					message: "Built from '" + conf.plugin_branches.base + "'",
+					message: 'Built from: ' + conf.plugin_branches.base,
 					allowEmpty: true
 				},
 				files: { src: ['.'] }
 			},
 			campus: {
 				options: {
-					message: "Built from '" + conf.plugin_branches.base + "'",
+					message: 'Built from: ' + conf.plugin_branches.base,
 					allowEmpty: true
 				},
 				files: { src: ['.'] }
