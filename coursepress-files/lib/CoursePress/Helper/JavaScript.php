@@ -40,7 +40,7 @@ class CoursePress_Helper_JavaScript {
 			return;
 		}
 
-		$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress.js';
+		$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePress.js';
 
 		wp_enqueue_script( 'coursepress_object', $script, array(
 			'jquery',
@@ -77,7 +77,7 @@ class CoursePress_Helper_JavaScript {
 
 		/** COURSEPRESS_COURSE */
 		if ( in_array( $_GET['page'], $course_js_pages ) ) {
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressCourse.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressCourse.js';
 			wp_enqueue_script( 'coursepress_course', $script, array(
 				'jquery-ui-accordion',
 				'jquery-effects-highlight',
@@ -88,7 +88,7 @@ class CoursePress_Helper_JavaScript {
 				'backbone',
 			), CoursePress::$version );
 
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/jquery.treegrid.min.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/jquery.treegrid.min.js';
 
 			wp_enqueue_script( 'jquery-treegrid', $script, array(
 				'jquery'
@@ -120,7 +120,7 @@ class CoursePress_Helper_JavaScript {
 		/** COURSEPRESS_COURSE|UNIT BUILDER */
 		if ( 'coursepress_course' === $_GET['page'] && isset( $_GET['tab'] ) && "units" === $_GET['tab'] ) {
 
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressUnitsBuilder.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressUnitsBuilder.js';
 
 			wp_enqueue_script( 'coursepress_unit_builder', $script, array(
 				'coursepress_course',
@@ -139,7 +139,7 @@ class CoursePress_Helper_JavaScript {
 
 		/** COURSE LIST */
 		if ( 'coursepress' === $_GET['page'] ) {
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressCourseList.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressCourseList.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
 				'jquery-effects-highlight',
@@ -188,7 +188,7 @@ class CoursePress_Helper_JavaScript {
 		) {
 
 			// CoursePress Object
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePress.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePress.js';
 			wp_enqueue_script( 'coursepress_object', $script, array(
 				'jquery',
 				'backbone',
@@ -196,7 +196,7 @@ class CoursePress_Helper_JavaScript {
 			), CoursePress::$version );
 
 
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/CoursePressFront.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressFront.js';
 
 			$localize_array = array(
 				'_ajax_url'                  => CoursePress_Helper_Utility::get_ajax_url(),
@@ -236,18 +236,18 @@ class CoursePress_Helper_JavaScript {
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
-			//$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/jquery.knob.js';
+			//$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/jquery.knob.js';
 			//
 			//wp_enqueue_script( 'jquery-knob', $script, array(
 			//	'jquery'
 			//), CoursePress::$version );
 
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/circle-progress.min.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/circle-progress.min.js';
 			wp_enqueue_script( 'circle-progress', $script, array(
 				'jquery'
 			), CoursePress::$version );
 
-			$script = CoursePress_Core::$plugin_lib_url . 'scripts/external/backbone.modal-min.js';
+			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/backbone.modal-min.js';
 			wp_enqueue_script( 'backbone-modal', $script, array(
 				'backbone',
 				'password-strength-meter'

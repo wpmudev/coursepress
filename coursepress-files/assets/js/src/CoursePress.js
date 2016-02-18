@@ -1,7 +1,3 @@
-/*jslint browser: true*/
-/*global _*/
-/*global Backbone*/
-/*global jQuery*/
 /*global wp*/
 /*global tinyMCE*/
 /*global tinyMCEPreInit*/

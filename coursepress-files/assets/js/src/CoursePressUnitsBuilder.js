@@ -1,9 +1,3 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
-/*global _*/
-/*global Backbone*/
-/*global jQuery*/
 /*global wp*/
 /*global tinyMCE*/
 /*global tinyMCEPreInit*/
@@ -1864,7 +1858,7 @@ var CoursePress = CoursePress || {};
                 value = select.val(),
                 setting_divs = $('.ua-div').hide(),
                 active_setting = $('#div-' + value );
-                
+
             if ( active_setting.length > 0 ) {
                 active_setting.show();
             }

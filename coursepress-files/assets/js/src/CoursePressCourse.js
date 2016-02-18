@@ -1,7 +1,3 @@
-/*jslint browser: true*/
-/*global _*/
-/*global Backbone*/
-/*global jQuery*/
 /*global tinyMCE*/
 /*global _coursepress*/
 

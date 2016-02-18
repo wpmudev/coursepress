@@ -1,3 +1,5 @@
+/*global require*/
+
 module.exports = function(grunt) {
 	// Show elapsed time at the end.
 	require( 'time-grunt' )(grunt);
@@ -9,7 +11,7 @@ module.exports = function(grunt) {
 	// Configuration.
 	var conf = {
 		// Folder that contains the CSS files.
-		js_folder: 'coursepress-files/scripts/',
+		js_folder: 'coursepress-files/assets/js/',
 
 		// Folder that contains the CSS files.
 		css_folder: 'coursepress-files/styles/',
@@ -177,9 +179,9 @@ module.exports = function(grunt) {
 				undef:   true,
 				boss:    true,
 				eqnull:  true,
-				unused:  true,
-				camelcase: true,
-				quotmark: 'single',
+			//	unused:  true,
+			//	camelcase: true,
+			//	quotmark: 'single',
 				predef: [
 					'$',
 					'jQuery',
@@ -403,7 +405,7 @@ module.exports = function(grunt) {
 		clean: {
 			pro: conf.plugin_branches.exclude_pro,
 			free: conf.plugin_branches.exclude_free,
-			free: conf.plugin_branches.exclude_campus
+			campus: conf.plugin_branches.exclude_campus
 		},
 
 		// BUILD: Git control (check out branch).

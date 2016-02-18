@@ -1,6 +1,3 @@
-/*jslint browser: true*/
-/*global Backbone*/
-/*global jQuery*/
 /*global _coursepress*/
 
 var CoursePress = CoursePress || {};
