@@ -16,15 +16,15 @@ Production branches are automatically built, based on the dev branch. Any change
 
 # PRODUCTION BRANCHES   
 
-## CoursePress Pro (coursepress/2.0-pro)  
+## CoursePress Pro (coursepress/2-pro)  
 
 CoursePress Pro is the official premium plugin that lives on WPMU DEV. Also this plugin is used to power the WP Academy site.
 
-## CoursePress (coursepress/2.0-free)  
+## CoursePress (coursepress/2-free)  
 
 CoursePress is the free limited version that gets published to the WordPress plugin directory.
 
-## CoursePress Campus (coursepress/2.0-campus)  
+## CoursePress Campus (coursepress/2-campus)  
 
 CoursePress Campus is the version that is used on Edublogs and CampusPress.
 
@@ -36,9 +36,9 @@ As mentioned above: Only directly edit the branch `coursepress/2.0-dev`. Other b
 
 **Update Production Branches:**
 
-* `grunt build:pro` updates `coursepress/2.0-pro`.
-* `grunt build:free` updates `coursepress/2.0-free`.
-* `grunt build:campus` updates `coursepress/2.0-campus`.
+* `grunt build:pro` updates `coursepress/2-pro`.
+* `grunt build:free` updates `coursepress/2-free`.
+* `grunt build:campus` updates `coursepress/2-campus`.
 * `grunt build` updates all three branches.
 
 This is important: DO NOT let your IDE change the **source order** of the code. Fixing up formatting is fine, but moving code blocks around is not! It will confuse grunt and produce problems.

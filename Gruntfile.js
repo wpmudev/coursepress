@@ -8,6 +8,9 @@ module.exports = function(grunt) {
 		// Folder that contains the CSS files.
 		js_folder: 'coursepress-files/scripts/',
 
+		// Folder that contains the CSS files.
+		css_folder: 'coursepress-files/styles/',
+
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
 			'{js}admin-general.js':           ['{js}src/admin-general.js'],
@@ -17,9 +20,6 @@ module.exports = function(grunt) {
 			'{js}CoursePressFront.js':        ['{js}src/CoursePressFront.js'],
 			'{js}CoursePressUnitsBuilder.js': ['{js}src/CoursePressUnitsBuilder.js']
 		},
-
-		// Folder that contains the CSS files.
-		css_folder: 'coursepress-files/styles/',
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
@@ -37,17 +37,30 @@ module.exports = function(grunt) {
 		],
 
 		// Regex patterns to exclude from transation.
-		no_translation: [
-			'(^.php)',      // Ignore non-php files.
-			'bin/.*',       // Unit testing.
-			'tests/.*',     // Unit testing.
-			'node_modules/.*',
-			'lib/TCPDF/.*', // External module.
-			'themes/.*',    // External module.
-			'css/.*',       // Deprecated folder.
-			'js/.*',        // Deprecated folder.
-			'includes/.*'   // Deprecated folder.
-		],
+		translation: {
+			ignore_files: [
+				'(^.php)',      // Ignore non-php files.
+				'bin/.*',       // Unit testing.
+				'tests/.*',     // Unit testing.
+				'node_modules/.*',
+				'lib/TCPDF/.*', // External module.
+				'themes/.*',    // External module.
+				'css/.*',       // Deprecated folder.
+				'js/.*',        // Deprecated folder.
+				'includes/.*'   // Deprecated folder.
+			],
+			pot_dir: 'languages/',  // With trailing slash.
+			textdomain_pro: 'cp',   // Campus uses same textdomain.
+			textdomain_free: 'coursepress',
+		},
+
+		// BUILD branches.
+		plugin_branches: {
+			base: 'coursepress/2.0-dev',
+			pro: 'coursepress/2-pro',
+			free: 'coursepress/2-free',
+			campus: 'coursepress/2-campus'
+		},
 
 		// BUILD patterns to exclude code for specific builds.
 		plugin_patterns: {
@@ -68,13 +81,14 @@ module.exports = function(grunt) {
 				{ match: /\/\* start:campus .*? end:campus \*\//mg, replace: '' }
 			],
 			campus: [
-				{ match: /CoursePress Base/g, replace: 'CoursePress' },
-				{ match: /'TD'/g, replace: 'coursepress' },
+				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
+				{ match: /'TD'/g, replace: 'cp' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
 				{ match: /\/\* start:pro .*? end:pro \*\//mg, replace: '' },
 				{ match: /\/\* start:free .*? end:free \*\//mg, replace: '' }
 			],
+			// Files to apply above patterns to (not only php files).
 			files: {
 				expand: true,
 				src: [
@@ -96,9 +110,6 @@ module.exports = function(grunt) {
 		},
 
 		// Different plugin settings.
-		translation_dir: 'languages/',
-		textdomain: 'cp',
-		plugin_dir: 'coursepress/',
 		plugin_file: 'coursepress.php'
 	};
 	// -------------------------------------------------------------------------
@@ -281,10 +292,10 @@ module.exports = function(grunt) {
 			target: {
 				options: {
 					cwd: '',
-					domainPath: conf.translation_dir,
-					exclude: conf.no_translation,
+					domainPath: conf.translation.pot_dir,
+					exclude: conf.translation.ignore_files,
 					mainFile: conf.plugin_file,
-					potFilename: conf.textdomain + '.pot',
+					potFilename: conf.translation.textdomain_pro + '.pot',
 					potHeaders: {
 						'poedit': true, // Includes common Poedit headers.
 						'language-team': 'WPMU Dev <support@wpmudev.org>',
@@ -295,6 +306,15 @@ module.exports = function(grunt) {
 					},
 					type: 'wp-plugin' // wp-plugin or wp-theme
 				}
+			}
+		},
+
+		// BUILD: Copy files.
+		copy: {
+			translation: {
+				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
+				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
+				nonull: true
 			}
 		},
 
@@ -362,7 +382,77 @@ module.exports = function(grunt) {
 			}
 		},
 
+		// BUILD: Git control (check out branch).
+		gitcheckout: {
+			pro: {
+				options: { branch: conf.plugin_branches.pro, overwrite: true }
+			},
+			free: {
+				options: { branch: conf.plugin_branches.free, overwrite: true }
+			},
+			campus: {
+				options: { branch: conf.plugin_branches.campus, overwrite: true }
+			},
+			base: {
+				options: { branch: conf.plugin_branches.base }
+			}
+		},
+
+		// BUILD: Git control (add files).
+		gitadd: {
+			pro: {
+				options: { all: true }
+			},
+			free: {
+				options: { all: true }
+			},
+			campus: {
+				options: { all: true }
+			}
+		},
+
+		// BUILD: Git control (commit changes).
+		gitcommit: {
+			pro: {
+				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				files: { src: ['.'] }
+			},
+			free: {
+				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				files: { src: ['.'] }
+			},
+			campus: {
+				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				files: { src: ['.'] }
+			}
+		},
+
 	} );
+
+	// Translate plugin.
+	grunt.registerTask( 'lang', 'Create all translation files', function() {
+		// Generate the text-domain for Pro/Campus.
+		grunt.task.run( 'makepot' );
+
+		// Simply copy the pro-translations to the Free plugin .pot file.
+		grunt.task.run( 'copy:translation' );
+	});
+
+	// Plugin build tasks
+	grunt.registerTask( 'build', 'Run all tasks.', function(target) {
+		if (target == null) {
+			grunt.warn( 'Target must be specified - build:dev or build:wporg' );
+		}
+
+		// grunt.task.run( 'default' );
+		// grunt.task.run( 'lang' );
+		grunt.task.run( 'gitcheckout:' + target );
+		grunt.task.run( 'replace:' + target );
+		grunt.task.run( 'clean:' + target );
+		grunt.task.run( 'gitadd:' + target );
+		grunt.task.run( 'gitcommit:' + target );
+		grunt.task.run( 'gitcheckout:base');
+	});
 
 	// Test task.
 	grunt.registerTask( 'test', 'Test if grunt is working', function() {
@@ -375,7 +465,6 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
-	grunt.registerTask( 'lang', ['makepot'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
