@@ -48,15 +48,15 @@ There are special comments in the `coursepress/2.0-dev` branch will make sure so
 Those are:
 
     /* start:pro */
-    echo "This is only in coursepress/pro";  
+    echo "This is only in coursepress/2-pro";  
     /* end:pro */
   
     /* start:free */
-    echo "This is only in coursepress/standard";  
+    echo "This is only in coursepress/2-free";  
     /* end:free */
 
     /* start:campus */
-    echo "This is only in coursepress/standard";  
+    echo "This is only in coursepress/2-campus";  
     /* end:campus */
 
 
@@ -133,46 +133,51 @@ See notes below on how to correctly set up grunt. *This has changed since 1.x!*
 
 First install node.js from: <http://nodejs.org/>  
 
-    ## Test it:
-    $npm -v
+    # Test it:
+    $ npm -v
     
-    ## Install it system wide:
+    # Install it system wide:
     $ npm install -g npm
 
 ##### 2. grunt
 
 Install grunt by running this command in command line:
 
-    ## Install grunt:
+    # Install grunt:
     $ npm install -g grunt-cli
 
 ##### 3. Setup project
 
 In command line switch to the `coursepress` plugin folder. Run this command to set up grunt for the coursepress plugin:
 
-    ## Install automation tools for coursepress:
+    # Install automation tools for coursepress:
     $ npm install
-    ## Test it:
+    
+    # Test it:
     $ grunt test
 
 ##### 4. Install required tools
 
 Same as 3: Run commands in the `coursepress` plugin folder:
 
-    ## Install composer:
+    # Install composer:
     $ php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
     $ php composer-setup.php --filename=composer
     $ php -r "unlink('composer-setup.php');"
     
-    ## Install PHP Unit
+    # Install PHP Unit
     $ composer require --dev "phpunit/phpunit=4.8.*"
     
-    ## Install PHP Code Sniffer:
+    # Install PHP Code Sniffer:
     $ php composer require --dev "squizlabs/php_codesniffer:2.*"
     
-    ## Install WP Coding Standards:
+    # Install WP Coding Standards:
     $ git clone -b master https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git vendor/wpcs
     $ vendor/bin/phpcs --config-set installed_paths ../../wpcs
+    
+    # Config git with your Name/Email
+    $ git config user.email "<your email>"
+    $ git config user.name "<your name>"
 
 
 #### Specifying i18 tools location  
