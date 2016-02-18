@@ -3,16 +3,17 @@
 class CoursePress_Helper_Extensions_MarketPress {
 
 	private static $installed = false;
+
 	private static $activated = false;
 
 	private static $base_path = array(
 		'pro' => 'marketpress/marketpress.php',
-		'free' => 'wordpress-ecommerce/marketpress.php'
+		'free' => 'wordpress-ecommerce/marketpress.php',
 	);
 
 	public static function init() {
 
-		if( CoursePress_Model_Capabilities::is_campus() ) {
+		if ( CoursePress_Model_Capabilities::is_campus() ) {
 			return false;
 		}
 
@@ -22,16 +23,15 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 	public static function add_to_extensions_list( $plugins ) {
 
-		if( CoursePress_Model_Capabilities::is_pro() ) {
+		if ( CoursePress_Model_Capabilities::is_pro() ) {
 
 			$plugins[] = array(
 				'name'           => 'MarketPress',
 				'slug'           => 'marketpress',
 				'base_path'      => self::$base_path['pro'],
-				'source'         => CoursePress_Core::$plugin_lib_path . 'files/marketpress-pro.zip',
+				'source'         => CoursePress_Core::$plugin_lib_path . 'assets/files/marketpress-pro.zip',
 				'source_message' => __( 'Included in the CoursePress Plugin', CoursePress::TD ),
-				'external_url'   => '',
-				// http://premium.wpmudev.org/project/e-commerce/
+				'external_url'   => '', /* http://premium.wpmudev.org/project/e-commerce/ */
 				'external'       => 'no',
 				'protocol'       => '',
 			);
@@ -44,8 +44,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 				'base_path'      => self::$base_path['free'],
 				'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 				'source_message' => __( 'WordPress.org Repository', CoursePress::TD ),
-				'external_url'   => '',
-				// https://wordpress.org/plugins/wordpress-ecommerce/
+				'external_url'   => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ */
 				'external'       => 'yes',
 				'protocol'       => 'https',
 			);
@@ -57,9 +56,9 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 
 	public static function installed_scope() {
-
 		$scope = '';
-		foreach( self::$base_path as $key => $path ) {
+
+		foreach ( self::$base_path as $key => $path ) {
 			$plugin_dir = WP_PLUGIN_DIR . '/' . $path;
 			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $path;
 			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;

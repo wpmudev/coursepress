@@ -98,7 +98,7 @@ No steps required here as CoursePress Standard now fetches MarketPress Lite dire
 ##### Preparing MarketPress for CoursePress Pro
 
 * Download MarketPress from WPMU DEV Premium.  
-* Save the zip file as `/files/marketpress-pro.zip` (replace existing file).  
+* Save the zip file as `/assets/files/marketpress-pro.zip` (replace existing file).  
 
 # RELEASING #
 
