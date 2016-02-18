@@ -17,7 +17,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 	public static function add_backbone_registration_templates( $content, $course_id, $context ) {
 
-		if( 'main' === $context ) {
+		if ( 'main' === $context ) {
 			$modal_content = do_shortcode( '[coursepress_enrollment_templates course_id="' . $course_id  . '"]' );
 			return $modal_content . $content;
 		}
@@ -143,18 +143,17 @@ class CoursePress_View_Front_EnrollmentPopup {
 				}
 				break;
 
-			//case 'enroll_student':
+			// case 'enroll_student':
 			//
-			//	if ( wp_verify_nonce( $data->data->nonce, 'add_student' ) ) {
-			//		CoursePress_Model_Course::enroll_student( $data->data->student_id, $data->data->course_id );
-			//		$json_data['student_id'] = $data->data->student_id;
-			//		$json_data['course_id']  = $data->data->course_id;
+			// if ( wp_verify_nonce( $data->data->nonce, 'add_student' ) ) {
+			// CoursePress_Model_Course::enroll_student( $data->data->student_id, $data->data->course_id );
+			// $json_data['student_id'] = $data->data->student_id;
+			// $json_data['course_id']  = $data->data->course_id;
 			//
-			//		$json_data['nonce'] = wp_create_nonce( 'add_student' );
-			//		$success            = true;
-			//	}
-			//	break;
-
+			// $json_data['nonce'] = wp_create_nonce( 'add_student' );
+			// $success            = true;
+			// }
+			// break;
 			case 'withdraw_student':
 				if ( wp_verify_nonce( $data->data->nonce, 'withdraw-single-student' ) ) {
 					CoursePress_Model_Course::withdraw_student( $data->data->student_id, $data->data->course_id );
@@ -197,7 +196,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$courses = $data->data->courses;
 					$action = $data->data->the_action;
 
-					foreach( $courses as $course_id ) {
+					foreach ( $courses as $course_id ) {
 						switch ( $action ) {
 
 							case 'publish':
@@ -251,7 +250,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 					$the_course = get_post( $course_id );
 
-					if( ! empty( $the_course ) ) {
+					if ( ! empty( $the_course ) ) {
 
 						$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
 						$the_course['post_author'] = get_current_user_id();
@@ -269,15 +268,15 @@ class CoursePress_View_Front_EnrollmentPopup {
 						$new_course_id = wp_insert_post( $the_course );
 
 						$course_meta = get_post_meta( $course_id );
-						foreach( $course_meta as $key => $value ) {
-							if( ! preg_match( '/^_/', $key ) ) {
+						foreach ( $course_meta as $key => $value ) {
+							if ( ! preg_match( '/^_/', $key ) ) {
 								update_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ) );
 							}
 						}
 
 						$course_data = CoursePress_Helper_Utility::object_to_array( CoursePress_Model_Course::get_units_with_modules( $course_id, array(
 							'publish',
-							'draft'
+							'draft',
 						) ) );
 						$course_data = CoursePress_Helper_Utility::sort_on_key( $course_data, 'order' );
 
@@ -299,18 +298,17 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 							$new_unit_id = wp_insert_post( $unit );
 							$unit_meta = get_post_meta( $unit_id );
-							foreach( $unit_meta as $key => $value ) {
-								if( ! preg_match( '/^_/', $key ) ) {
+							foreach ( $unit_meta as $key => $value ) {
+								if ( ! preg_match( '/^_/', $key ) ) {
 									update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
 								}
 							}
 
 							$pages = isset( $unit_schema['pages'] ) ? $unit_schema['pages'] : array();
-							foreach( $pages as $page ) {
+							foreach ( $pages as $page ) {
 
 								$modules = $page['modules'];
-								foreach( $modules as $module_id => $module ) {
-
+								foreach ( $modules as $module_id => $module ) {
 
 									$module['post_author'] = get_current_user_id();
 									$module['post_parent'] = $new_unit_id;
@@ -326,16 +324,13 @@ class CoursePress_View_Front_EnrollmentPopup {
 									$new_module_id = wp_insert_post( $module );
 
 									$module_meta = get_post_meta( $module_id );
-									foreach( $module_meta as $key => $value ) {
-										if( ! preg_match( '/^_/', $key ) ) {
+									foreach ( $module_meta as $key => $value ) {
+										if ( ! preg_match( '/^_/', $key ) ) {
 											update_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ) );
 										}
 									}
-
 								}
-
 							}
-
 						}
 
 						$json_data['course_id'] = $new_course_id;
@@ -353,7 +348,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 			case 'signup':
 
-				if( wp_verify_nonce( $data->data->nonce, 'coursepress_enrollment_action_signup' ) ) {
+				if ( wp_verify_nonce( $data->data->nonce, 'coursepress_enrollment_action_signup' ) ) {
 					$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
 				} else {
 					$json_data['message'] = __( 'Enrolment: Invalid request. Please try reloading the page.', CoursePress::TD );
@@ -376,22 +371,22 @@ class CoursePress_View_Front_EnrollmentPopup {
 					'email' => $email,
 					'password' => $password,
 					'ID' => 0,
-					'logged_in' => false
+					'logged_in' => false,
 				);
 
 				$user_id = username_exists( $username );
-				if( ! empty( $user_id ) ) {
+				if ( ! empty( $user_id ) ) {
 					$signup_errors[] = __( 'Username already taken.', CoursePress::TD );
 				}
 				$email_exists = email_exists( $email );
-				if( $email_exists ) {
+				if ( $email_exists ) {
 					$signup_errors[] = __( 'E-mail address already used.', CoursePress::TD );
 				}
 
 				if ( ! $user_id && ! $email_exists ) {
 					$user_id = wp_create_user( $username, $password, $email );
 
-					if( ! empty( $user_id ) ) {
+					if ( ! empty( $user_id ) ) {
 						update_user_meta( $user_id, 'first_name', $first_name );
 						update_user_meta( $user_id, 'last_name', $last_name );
 						$user_data['ID'] = $user_id;
@@ -437,7 +432,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$json_data['logged_in'] = false;
 				}
 
-				//handle_signup_return
+				// handle_signup_return
 				$json_data['callback'] = 'handle_login_return';
 				$json_data['success'] = true;
 				$success = isset( $json_data['success'] ) ? $json_data['success'] : false;
@@ -448,7 +443,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				$student_id = (int) $data->data->student_id;
 				$course_id = (int) $data->data->course_id;
 
-				if( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Model_Course::enroll_student( $student_id, $course_id ) ) {
+				if ( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Model_Course::enroll_student( $student_id, $course_id ) ) {
 					$json_data['student_id'] = $student_id;
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;
@@ -478,8 +473,5 @@ class CoursePress_View_Front_EnrollmentPopup {
 			wp_send_json_error( $json_data );
 		}
 
-
 	}
-
-
 }

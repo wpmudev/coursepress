@@ -15,7 +15,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 		$tabs['capabilities'] = array(
 			'title'       => __( 'Instructor Capabilities', CoursePress::TD ),
 			'description' => __( 'Setup the capabilities of instructors within CoursePress.', CoursePress::TD ),
-			'order'       => 30
+			'order'       => 30,
 		);
 
 		return $tabs;
@@ -32,8 +32,8 @@ class CoursePress_View_Admin_Settings_Capabilities {
 		' . wp_nonce_field( 'update-coursepress-options', '_wpnonce', true, false );
 
 		$boxes = self::_capability_boxes();
-		foreach( $boxes as $method => $title ) {
-			if( ! method_exists( __CLASS__, '_' . $method ) ) {
+		foreach ( $boxes as $method => $title ) {
+			if ( ! method_exists( __CLASS__, '_' . $method ) ) {
 				continue;
 			}
 
@@ -45,7 +45,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 					<table class="form-table compressed">
 						<tbody id="items">';
 
-			foreach( $items as $key => $value ) {
+			foreach ( $items as $key => $value ) {
 				$checked = ! empty( $instructor_capabilities[ $key ] );
 				$checked_attr = $checked ? 'checked="checked"' : '';
 				$content .= '
@@ -64,7 +64,6 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 		}
 
-
 		return $content;
 
 	}
@@ -76,12 +75,12 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			'instructor_capabilities_course_categories' => __( 'Course Categories', CoursePress::TD ),
 			'instructor_capabilities_units'             => __( 'Units', CoursePress::TD ),
 			'instructor_capabilities_instructors'       => __( 'Instructors', CoursePress::TD ),
-			//'instructor_capabilities_classes' => __( 'Classes', CoursePress::TD ),
+			// 'instructor_capabilities_classes' => __( 'Classes', CoursePress::TD ),
 			'instructor_capabilities_students'          => __( 'Students', CoursePress::TD ),
 			'instructor_capabilities_notifications'     => __( 'Notifications', CoursePress::TD ),
 			'instructor_capabilities_discussions'       => __( 'Discussions', CoursePress::TD ),
-			'instructor_capabilities_posts_and_pages'   => __( 'Posts and Pages', CoursePress::TD )
-			//'instructor_capabilities_groups' => __( 'Settings Pages', CoursePress::TD ),
+			'instructor_capabilities_posts_and_pages'   => __( 'Posts and Pages', CoursePress::TD ),
+			// 'instructor_capabilities_groups' => __( 'Settings Pages', CoursePress::TD ),
 		);
 	}
 
@@ -141,7 +140,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 	private static function _instructor_capabilities_instructors() {
 		return array(
 			'coursepress_assign_and_assign_instructor_course_cap'    => __( 'Assign instructors to any course', CoursePress::TD ),
-			'coursepress_assign_and_assign_instructor_my_course_cap' => __( 'Assign instructors to courses made by the instructor only', CoursePress::TD )
+			'coursepress_assign_and_assign_instructor_my_course_cap' => __( 'Assign instructors to courses made by the instructor only', CoursePress::TD ),
 		);
 	}
 
@@ -150,7 +149,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			'coursepress_add_new_classes_cap'    => __( 'Add new course classes to any course', CoursePress::TD ),
 			'coursepress_add_new_my_classes_cap' => __( 'Add new course classes to courses made by the instructor only', CoursePress::TD ),
 			'coursepress_delete_classes_cap'     => __( 'Delete any course class', CoursePress::TD ),
-			'coursepress_delete_my_classes_cap'  => __( 'Delete course classes from courses made by the instructor only', CoursePress::TD )
+			'coursepress_delete_my_classes_cap'  => __( 'Delete course classes from courses made by the instructor only', CoursePress::TD ),
 		);
 	}
 
@@ -163,19 +162,19 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			'coursepress_add_move_students_cap'             => __( 'Add students to any course', CoursePress::TD ),
 			'coursepress_add_move_my_students_cap'          => __( 'Add students to courses made by the instructor only', CoursePress::TD ),
 			'coursepress_add_move_my_assigned_students_cap' => __( 'Add students to courses assigned to the instructor only', CoursePress::TD ),
-			//'coursepress_change_students_group_class_cap' => __( "Change student's group", CoursePress::TD ),
-			//'coursepress_change_my_students_group_class_cap' => __( "Change student's group within a class made by the instructor only", CoursePress::TD ),
+			// 'coursepress_change_students_group_class_cap' => __( "Change student's group", CoursePress::TD ),
+			// 'coursepress_change_my_students_group_class_cap' => __( "Change student's group within a class made by the instructor only", CoursePress::TD ),
 			'coursepress_add_new_students_cap'              => __( 'Add new users with Student role to the blog', CoursePress::TD ),
-			'coursepress_send_bulk_my_students_email_cap'   => __( "Send bulk e-mail to students", CoursePress::TD ),
-			'coursepress_send_bulk_students_email_cap'      => __( "Send bulk e-mail to students within a course made by the instructor only", CoursePress::TD ),
-			'coursepress_delete_students_cap'               => __( "Delete Students (deletes ALL associated course records)", CoursePress::TD ),
+			'coursepress_send_bulk_my_students_email_cap'   => __( 'Send bulk e-mail to students', CoursePress::TD ),
+			'coursepress_send_bulk_students_email_cap'      => __( 'Send bulk e-mail to students within a course made by the instructor only', CoursePress::TD ),
+			'coursepress_delete_students_cap'               => __( 'Delete Students (deletes ALL associated course records)', CoursePress::TD ),
 		);
 	}
 
 	private static function _instructor_capabilities_groups() {
 		return array(
 			'coursepress_settings_groups_page_cap' => __( 'View Groups tab within the Settings page', CoursePress::TD ),
-			//'coursepress_settings_shortcode_page_cap' => __( 'View Shortcode within the Settings page', CoursePress::TD )
+			// 'coursepress_settings_shortcode_page_cap' => __( 'View Shortcode within the Settings page', CoursePress::TD )
 		);
 	}
 
@@ -189,7 +188,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			'coursepress_delete_notification_cap'             => __( 'Delete every notification', CoursePress::TD ),
 			'coursepress_delete_my_notification_cap'          => __( 'Delete notifications made by the instructor only', CoursePress::TD ),
 			'coursepress_change_notification_status_cap'      => __( 'Change status of every notification', CoursePress::TD ),
-			'coursepress_change_my_notification_status_cap'   => __( 'Change statuses of notifications made by the instructor only', CoursePress::TD )
+			'coursepress_change_my_notification_status_cap'   => __( 'Change statuses of notifications made by the instructor only', CoursePress::TD ),
 		);
 	}
 
@@ -211,7 +210,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			'edit_published_pages' => __( 'Edit Published Pages', CoursePress::TD ),
 			'edit_posts'           => __( 'Edit Posts', CoursePress::TD ),
 			'publish_pages'        => __( 'Publish Pages', CoursePress::TD ),
-			'publish_posts'        => __( 'Publish Posts', CoursePress::TD )
+			'publish_posts'        => __( 'Publish Posts', CoursePress::TD ),
 		);
 	}
 
@@ -226,8 +225,8 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
 			$caps = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'] );
 			$set_caps = array_keys( $post_settings['instructor']['capabilities'] );
-			foreach( $caps as $cap ) {
-				if( ! in_array( $cap, $set_caps ) ) {
+			foreach ( $caps as $cap ) {
+				if ( ! in_array( $cap, $set_caps ) ) {
 					$post_settings['instructor']['capabilities'][ $cap ] = 0;
 				}
 			}
@@ -236,8 +235,6 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			if ( ! empty( $post_settings ) ) {
 				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
 			}
-
 		}
 	}
-
 }

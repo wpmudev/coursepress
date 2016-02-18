@@ -19,5 +19,4 @@ class CoursePress_View_Admin_Communication {
 		}
 
 	}
-
 }

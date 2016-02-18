@@ -15,7 +15,4 @@ class CoursePress_Template_Workbook {
 		return $content;
 
 	}
-
-
-
 }

@@ -21,7 +21,7 @@ class CoursePress_Model_Unit {
 					'search_items'       => __( 'Search Units', CoursePress::TD ),
 					'not_found'          => __( 'No Units Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Units found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Unit', CoursePress::TD )
+					'view'               => __( 'View Unit', CoursePress::TD ),
 				),
 				'public'             => false,
 				'show_ui'            => false,
@@ -29,8 +29,8 @@ class CoursePress_Model_Unit {
 				'capability_type'    => 'unit',
 				'map_meta_cap'       => true,
 				'query_var'          => true,
-				'rewrite'            => false
-			)
+				'rewrite'            => false,
+			),
 		);
 
 	}
@@ -79,7 +79,7 @@ class CoursePress_Model_Unit {
 				$page_minutes += $minutes;
 				$page_hours += $hours;
 
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', sprintf( "%02d:%02d:%02d", $page_hours, $page_minutes, $page_seconds ) );
+				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', sprintf( '%02d:%02d:%02d', $page_hours, $page_minutes, $page_seconds ) );
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $page_hours );
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $page_minutes );
 				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $page_seconds );
@@ -105,7 +105,7 @@ class CoursePress_Model_Unit {
 		$unit_minutes  = floor( $total_seconds / 60 );
 		$unit_seconds  = $total_seconds % 60;
 
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', sprintf( "%02d:%02d:%02d", $unit_hours, $unit_minutes, $unit_seconds ) );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', sprintf( '%02d:%02d:%02d', $unit_hours, $unit_minutes, $unit_seconds ) );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $unit_hours );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $unit_minutes );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $unit_seconds );
@@ -154,22 +154,22 @@ class CoursePress_Model_Unit {
 
 	public static function get_page_meta( $unit_id, $item_id ) {
 
-		if( empty( $item_id ) ) {
+		if ( empty( $item_id ) ) {
 			return array(
 				'title' => '',
 				'description' => '',
 				'feature_image' => '',
-				'visible' => false
+				'visible' => false,
 			);
 		}
 
 		$unit_id = is_object( $unit_id ) ? $unit_id->ID : (int) $unit_id;
 
 		$meta = get_post_meta( $unit_id );
-		$titles = isset( $meta['page_title'] ) && ! empty ( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
-		$descriptions = isset( $meta['page_description'] ) && ! empty ( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
-		$images = isset( $meta['page_feature_image'] ) && ! empty ( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
-		$visibilities = isset( $meta['show_page_title'] ) && ! empty ( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
+		$titles = isset( $meta['page_title'] ) && ! empty( $meta['page_title'] ) ? maybe_unserialize( $meta['page_title'][0] ) : array();
+		$descriptions = isset( $meta['page_description'] ) && ! empty( $meta['page_description'] ) ? maybe_unserialize( $meta['page_description'][0] ) : array();
+		$images = isset( $meta['page_feature_image'] ) && ! empty( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
+		$visibilities = isset( $meta['show_page_title'] ) && ! empty( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
 
 		return array(
 			'title' => $titles[ 'page_' . $item_id ],
@@ -190,7 +190,7 @@ class CoursePress_Model_Unit {
 
 		$unit_id          = $unit->ID;
 		$previous_unit_id = false;
-		if( ! empty( $previous_unit ) ) {
+		if ( ! empty( $previous_unit ) ) {
 			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
 		}
 
@@ -251,5 +251,4 @@ class CoursePress_Model_Unit {
 
 		return $status;
 	}
-
 }

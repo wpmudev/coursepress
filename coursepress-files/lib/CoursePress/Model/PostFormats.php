@@ -23,13 +23,13 @@ class CoursePress_Model_PostFormats {
 		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
 		self::$prefix = $prefix;
 
-		foreach( self::_get_formats() as $format_class ) {
-			if( method_exists( 'CoursePress_Model_' . $format_class, 'get_format' ) ) {
+		foreach ( self::_get_formats() as $format_class ) {
+			if ( method_exists( 'CoursePress_Model_' . $format_class, 'get_format' ) ) {
 				$format = call_user_func( 'CoursePress_Model_' . $format_class . '::get_format' );
 				self::$registered_formats[] = self::prefix() . $format['post_type'];
 				register_post_type( self::prefix() . $format['post_type'], $format['post_args'] );
 			}
-			if( method_exists( 'CoursePress_Model_' . $format_class, 'get_taxonomy' ) ) {
+			if ( method_exists( 'CoursePress_Model_' . $format_class, 'get_taxonomy' ) ) {
 				$format = call_user_func( 'CoursePress_Model_' . $format_class . '::get_taxonomy' );
 				self::$registered_taxonomies[] = self::prefix() . $format['taxonomy_type'];
 				register_taxonomy( self::prefix() . $format['taxonomy_type'], $format['post_type'], $format['taxonomy_args'] );
@@ -50,6 +50,4 @@ class CoursePress_Model_PostFormats {
 	public static function prefix() {
 		return self::$prefix;
 	}
-
-
 }

@@ -18,7 +18,7 @@ class CoursePress_View_Admin_Settings_Extensions{
 			'description' => __( 'Extensions and plugins to enhance CoursePress.', CoursePress::TD ),
 			'order' => 60,
 			'is_form' => false,
-			'buttons' => 'none'
+			'buttons' => 'none',
 		);
 
 		return $tabs;
@@ -38,10 +38,9 @@ class CoursePress_View_Admin_Settings_Extensions{
 
 		$content .= CoursePress_Helper_Extensions::plugins_table();
 
-		//if( ! empty( $section['description'] ) ) {
-		//	$content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
-		//}
-
+		// if( ! empty( $section['description'] ) ) {
+		// $content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
+		// }
 		return $content;
 
 	}
@@ -56,8 +55,7 @@ class CoursePress_View_Admin_Settings_Extensions{
 			echo '</div>';
 			echo '<h3>' . esc_html( $_POST['plugin_name'] ) . '</h3>';
 
-			//add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
-
+			// add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Need for plugins_api.
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php'; // Need for upgrade classes.
 
@@ -67,7 +65,6 @@ class CoursePress_View_Admin_Settings_Extensions{
 			} else {
 				$source = $_POST['plugin_source'];
 			}
-
 
 			// Create a new instance of Plugin_Upgrader.
 			$upgrader = new Plugin_Upgrader( $skin = new Plugin_Installer_Skin( compact( 'type', 'title', 'url', 'nonce', 'plugin', 'api' ) ) );
@@ -93,8 +90,6 @@ class CoursePress_View_Admin_Settings_Extensions{
 
 		}
 
-
-
 	}
 
 	public static function return_content_plugin_install( $content ) {
@@ -109,5 +104,4 @@ class CoursePress_View_Admin_Settings_Extensions{
 			$wpmudev_notices = array();
 		}
 	}
-
 }

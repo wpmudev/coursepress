@@ -42,16 +42,14 @@ class CoursePress_View_Admin_Assessment_Report {
 			$unit_id   = isset( $_POST['bulk-report-unit'] ) ? (int) $_POST['bulk-report-unit'] : 'all';
 			$students  = array();
 
-			if( isset( $_POST['bulk-report-submit'] ) ) {
+			if ( isset( $_POST['bulk-report-submit'] ) ) {
 
-				if( isset( $_POST['bulk-actions'] ) ) {
+				if ( isset( $_POST['bulk-actions'] ) ) {
 					$students = (array) $_POST['bulk-actions'];
 				}
-
- 			} else {
+			} else {
 				$students  = isset( $_POST['students'] ) ? (array) $_POST['students'] : false;
 			}
-
 
 			if ( ! $course_id && empty( $students ) ) {
 				return;
@@ -68,29 +66,28 @@ class CoursePress_View_Admin_Assessment_Report {
 			'format'         => 'F',
 			'force_download' => true, // Use force_download with
 			'url'            => true, // url to hide path to file
-			'orientation'    => 'L'
+			'orientation'    => 'L',
 		);
 
 		$course_title       = get_the_title( $course_id );
 		$pdf_args['header'] = array(
-			'title' => $course_title
+			'title' => $course_title,
 		);
 
 		$colors = apply_filters( 'coursepress_report_colors', array(
 
-			'title_bg'  => "#0091CD",
-			'title'     => "#ffffff",
-			'unit_bg'   => "#F5F5F5",
-			'unit'      => "#000000",
-			'no_items'  => "#858585",
+			'title_bg'  => '#0091CD',
+			'title'     => '#ffffff',
+			'unit_bg'   => '#F5F5F5',
+			'unit'      => '#000000',
+			'no_items'  => '#858585',
 			'item_bg'   => '#ffffff',
 			'item'      => '#000000',
 			'item_line' => '#f5f5f5',
-			'footer_bg' => "#0091CD",
-			'footer'    => "#ffffff",
+			'footer_bg' => '#0091CD',
+			'footer'    => '#ffffff',
 
 		) );
-
 
 		$html = '';
 
@@ -144,11 +141,11 @@ class CoursePress_View_Admin_Assessment_Report {
 				$total              = 0;
 				foreach ( $unit_obj['pages'] as $page ) {
 
-					//$html .= '
-					//	<tr style="font-style:oblique; font-size: 4mm; background-color: ' . esc_attr( $colors['unit_bg'] ) . '; color: ' . esc_attr( $colors['unit'] ) . ';">
-					//		<th colspan="3">' . esc_html( $page['title'] ) . '</th>
-					//	</tr>
-					//';
+					// $html .= '
+					// <tr style="font-style:oblique; font-size: 4mm; background-color: ' . esc_attr( $colors['unit_bg'] ) . '; color: ' . esc_attr( $colors['unit'] ) . ';">
+					// <th colspan="3">' . esc_html( $page['title'] ) . '</th>
+					// </tr>
+					// ';
 					foreach ( $page['modules'] as $module_id => $module ) {
 
 						$attributes = CoursePress_Model_Module::attributes( $module_id );
@@ -210,7 +207,6 @@ class CoursePress_View_Admin_Assessment_Report {
 				<p class="font-size:0.1mm;"></p>
 			';
 
-
 			$last_student = $student_id;
 
 		}
@@ -238,7 +234,6 @@ class CoursePress_View_Admin_Assessment_Report {
 
 		$content .= '</div>';
 
-
 		echo $content;
 	}
 
@@ -256,10 +251,9 @@ class CoursePress_View_Admin_Assessment_Report {
 		$content .= '<div><strong>' . esc_html__( 'Select Course', CoursePress::TD ) . '</strong><br />';
 		$content .= CoursePress_Helper_UI::get_course_dropdown( 'course-list', 'course-list', $courses, array(
 			'class' => 'medium',
-			'value' => $selected_course
+			'value' => $selected_course,
 		) );
 		$content .= '</div>';
-
 
 		$content .= '
 			<form method="POST">
@@ -302,13 +296,10 @@ class CoursePress_View_Admin_Assessment_Report {
 			<input type="submit" class="button button-primary" value="' . esc_attr__( 'Generate Report', CoursePress::TD ) . '" name="bulk-report-submit" />
 		';
 
-
 		$content .= '
 			</form>
 		';
 
 		return $content;
 	}
-
-
 }

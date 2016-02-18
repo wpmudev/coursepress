@@ -65,7 +65,7 @@ class CoursePress_Helper_Email {
 
 		self::$last_args = $args;
 
-		if( isset( $args['email_type'] ) && ! empty( $args['email_type'] ) ) {
+		if ( isset( $args['email_type'] ) && ! empty( $args['email_type'] ) ) {
 
 			add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
@@ -74,7 +74,7 @@ class CoursePress_Helper_Email {
 
 			$args['subject'] = $email_settings['subject'];
 
-			switch( $args['email_type'] ) {
+			switch ( $args['email_type'] ) {
 
 				case self::BASIC_CERTIFICATE:
 					$args['message'] = self::basic_certificate_message( $args, $email_settings );
@@ -99,7 +99,6 @@ class CoursePress_Helper_Email {
 					break;
 
 			}
-
 		}
 
 		return CoursePress_Helper_Utility::send_email( $args );
@@ -122,16 +121,16 @@ class CoursePress_Helper_Email {
 			'BLOG_NAME',
 			'LOGIN_ADDRESS',
 			'COURSES_ADDRESS',
-			'WEBSITE_ADDRESS'
+			'WEBSITE_ADDRESS',
 		);
 
 		$tags_replaces = array(
-			sanitize_text_field( $args[ 'first_name' ] ),
-			sanitize_text_field( $args[ 'last_name' ] ),
+			sanitize_text_field( $args['first_name'] ),
+			sanitize_text_field( $args['last_name'] ),
 			get_bloginfo(),
 			CoursePress_Core::get_setting( 'general/use_custom_login', true ) ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url(),
 			CoursePress_Core::get_slug( 'course', true ),
-			home_url()
+			home_url(),
 		);
 
 		return str_replace( $tags, $tags_replaces, $email_settings['content'] );
@@ -186,5 +185,4 @@ class CoursePress_Helper_Email {
 
 		return $from;
 	}
-
 }

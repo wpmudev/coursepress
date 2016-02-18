@@ -1,7 +1,7 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-exit;
+	exit;
 } // Exit if accessed directly
 
 class CoursePress_Helper_Query_Student extends WP_User_Query {
@@ -22,7 +22,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		global $wpdb;
 
 		$override = false;
-		if( isset( $search_args['override'] ) && 'everything' == $search_args['override'] ) {
+		if ( isset( $search_args['override'] ) && 'everything' == $search_args['override'] ) {
 			$override = true;
 		}
 		$this->additional_url_args = $additional_url_args;
@@ -42,10 +42,10 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			/* 'fields' => 'all_with_meta' */
 		);
 
-		$search_args['meta_key']   = 'role'; //( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
-		$search_args['meta_value'] = 'student'; //( isset( $search_args['meta_value'] ) ? $search_args['meta_value'] : '' );
+		$search_args['meta_key']   = 'role'; // ( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
+		$search_args['meta_value'] = 'student'; // ( isset( $search_args['meta_value'] ) ? $search_args['meta_value'] : '' );
 
-		if( ! $override ) {
+		if ( ! $override ) {
 			if ( ! empty( $meta_args ) ) {
 				$meta_args['number'] = $this->users_per_page;
 				$meta_args['offset'] = ( $this->page_num - 1 ) * $this->users_per_page;
@@ -60,7 +60,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		$args['blog_id'] = get_current_blog_id();
 
 		$this->query_vars = wp_parse_args( $args, array(
-			//'role' => 'student',
+			// 'role' => 'student',
 			'include'        => array(),
 			'exclude'        => array(),
 			'search'         => '',
@@ -69,22 +69,20 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			'order'          => 'ASC',
 			'offset'         => ( $this->page_num - 1 ) * $this->users_per_page,
 			'number'         => '',
-			//'fields'         => 'all_with_meta',
-			'who'            => ''
+			// 'fields'         => 'all_with_meta',
+			'who'            => '',
 		) );
 
-
-		if( ! $override ) {
+		if ( ! $override ) {
 			$this->query_vars['meta_value'] = $search_args['meta_value'];
 			$this->query_vars['meta_compare'] = '';
 			$this->query_vars['count_total'] = true;
 			add_action( 'pre_user_query', array( &$this, 'add_first_and_last' ) );
 		}
 
-
 		parent::prepare_query();
 
-		if( $override ) {
+		if ( $override ) {
 			$this->query_from = "FROM {$wpdb->users}, {$wpdb->usermeta}";
 			$this->query_fields         = "{$wpdb->users}.*, {$wpdb->usermeta}.*";
 			$this->query_vars['fields'] = 'all';
@@ -112,7 +110,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 				'current'  => $this->page_num,
 				'base'     => 'admin.php?page=students&%_%',
 				'format'   => 'userspage=%#%',
-				'add_args' => isset( $args ) ? $args : ''
+				'add_args' => isset( $args ) ? $args : '',
 			) );
 
 			if ( $this->paging_text ) {
@@ -129,7 +127,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		$pagination->parameterName = 'page_num';
 		$pagination->nextT         = __( 'Next', CoursePress::TD );
 		$pagination->prevT         = __( 'Previous', CoursePress::TD );
-		$pagination->target( esc_url( "admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
+		$pagination->target( esc_url( 'admin.php?page=' . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
 		$pagination->currentPage( $this->page_num );
 		$pagination->nextIcon( '&#9658;' );
 		$pagination->prevIcon( '&#9668;' );
@@ -155,5 +153,4 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			$user_search->query_where = str_replace( 'WHERE 1=1 AND (', "WHERE 1=1 AND ({$names_where} OR ", $user_search->query_where );
 		}
 	}
-
 }

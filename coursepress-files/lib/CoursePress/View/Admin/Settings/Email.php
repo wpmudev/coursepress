@@ -16,7 +16,7 @@ class CoursePress_View_Admin_Settings_Email{
 		$tabs['email'] = array(
 			'title' => __( 'E-mail Settings', CoursePress::TD ),
 			'description' => __( 'Setup the e-mail templates to be sent to users.', CoursePress::TD ),
-			'order' => 10
+			'order' => 10,
 		);
 
 		return $tabs;
@@ -35,10 +35,10 @@ class CoursePress_View_Admin_Settings_Email{
 		$email_sections = CoursePress_Helper_Utility::sort_on_key( CoursePress_Helper_Settings_Email::get_settings_sections(), 'order' );
 		$default_settings = CoursePress_Helper_Settings_Email::get_defaults();
 
-		foreach( $email_sections as $key => $section ) {
+		foreach ( $email_sections as $key => $section ) {
 
 			$content .= '<h3>' . esc_html( $section['title'] ) . '</h3>';
-			if( ! empty( $section['description'] ) ) {
+			if ( ! empty( $section['description'] ) ) {
 				$content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
 			}
 			$content .= '
@@ -49,19 +49,19 @@ class CoursePress_View_Admin_Settings_Email{
 			$content .= '
 							<tr>
 								<th>' . esc_html__( 'From Name', CoursePress::TD ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][from]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/from', $default_settings[$key]['from_name'] ) . '"/></td>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][from]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/from', $default_settings[ $key ]['from_name'] ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
 								<th>' . esc_html__( 'From Email', CoursePress::TD ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][email]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/email', $default_settings[$key]['from_email'] ) . '"/></td>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][email]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/email', $default_settings[ $key ]['from_email'] ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
 								<th>' . esc_html__( 'Subject', CoursePress::TD ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][subject]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[$key]['subject'] ) . '"/></td>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][subject]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[ $key ]['subject'] ) . '"/></td>
 							</tr>
 			';
 			$content .= '
@@ -74,16 +74,15 @@ class CoursePress_View_Admin_Settings_Email{
 			ob_start();
 			$editor_name    = 'coursepress_settings[email][' . $key . '][content]';
 			$editor_id      = 'coursepress_settings_email_' . $key . '_content';
-			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/content', $default_settings[$key]['content'] ) );
+			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/content', $default_settings[ $key ]['content'] ) );
 
-			$args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );
+			$args = array( 'textarea_name' => $editor_name, 'textarea_rows' => 10, 'wpautop' => true );
 			$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
 			wp_editor( $editor_content, $editor_id, $args );
 
 			$content .= ob_get_clean();
 
-
-			$content .=	'       <br /></td>
+			$content .= '       <br /></td>
 							</tr>
 			';
 			$content .= '
@@ -111,10 +110,7 @@ class CoursePress_View_Admin_Settings_Email{
 			if ( ! empty( $post_settings ) ) {
 				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
 			}
-
 		}
 
-
 	}
-
 }

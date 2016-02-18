@@ -13,5 +13,4 @@ class CoursePress_Template_Dashboard {
 	public static function render_signup_page() {
 		return do_shortcode( '[course_signup page="signup"]' );
 	}
-
 }

@@ -50,7 +50,7 @@ class CoursePress_Model_Instructor {
 			$course_id = $course;
 
 			// Careful that we don't pick up students
-			if( preg_match('/_progress$/', $course_id ) ) {
+			if ( preg_match( '/_progress$/', $course_id ) ) {
 				continue;
 			}
 
@@ -89,12 +89,12 @@ class CoursePress_Model_Instructor {
 		foreach ( $courses as $course ) {
 
 			// @todo ADD CAPABILITIES CLASS
-			//$can_update    = CoursePress_Capabilities::can_update_course( $course, $user_id );
-			//$can_delete    = CoursePress_Capabilities::can_delete_course( $course, $user_id );
-			//$can_publish   = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
-			//$can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
-			//$my_course     = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
-			//$creator       = CoursePress_Capabilities::is_course_creator( $course, $user_id );
+			// $can_update    = CoursePress_Capabilities::can_update_course( $course, $user_id );
+			// $can_delete    = CoursePress_Capabilities::can_delete_course( $course, $user_id );
+			// $can_publish   = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
+			// $can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
+			// $my_course     = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
+			// $creator       = CoursePress_Capabilities::is_course_creator( $course, $user_id );
 			$my_course = true;
 
 			if ( ! $my_course && ! $creator && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
@@ -104,7 +104,7 @@ class CoursePress_Model_Instructor {
 			}
 		}
 
-		if( ! $include_posts ) {
+		if ( ! $include_posts ) {
 			return $course_array;
 		} else {
 			$post_type = CoursePress_Model_Course::get_post_type_name( true );
@@ -137,7 +137,7 @@ class CoursePress_Model_Instructor {
 		}
 	}
 
-	//Get number of instructor's assigned courses
+	// Get number of instructor's assigned courses
 	public static function get_courses_number( $user ) {
 		return count( self::get_course_meta_keys( $user ) );
 	}
@@ -159,7 +159,7 @@ class CoursePress_Model_Instructor {
 		// Legacy
 		delete_user_meta( $user_id, 'role_ins', 'instructor' );
 		self::unassign_from_all_courses( $user_id );
-		//CoursePress::instance()->drop_instructor_capabilities( $user_id );
+		// CoursePress::instance()->drop_instructor_capabilities( $user_id );
 	}
 
 	public static function delete_instructor( $user, $delete_user = true ) {
@@ -172,13 +172,13 @@ class CoursePress_Model_Instructor {
 		// Check cache first!
 		$user_id = wp_cache_get( $hash, 'coursepress_userhash' );
 
-		if( is_multisite() ) {
+		if ( is_multisite() ) {
 			$hash = $wpdb->prefix . $hash;
 		}
 
 		// Not in cache, so retrieve
-		if( empty( $user_id ) ) {
-			$sql     = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
+		if ( empty( $user_id ) ) {
+			$sql     = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
 			$user_id = $wpdb->get_var( $sql );
 			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 		}
@@ -237,7 +237,7 @@ class CoursePress_Model_Instructor {
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
 		$global_option = ! is_multisite();
-		//CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $course_id );
+		// CoursePress_Helper_Utility::delete_user_meta_by_key( 'course_' . $course_id );
 		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
 
 		// Other associated actions
@@ -250,7 +250,7 @@ class CoursePress_Model_Instructor {
 		$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
 		if ( $instructor_invites ) {
 			$keys = array_keys( $instructor_invites );
-			if( in_array( $invite_code, $keys ) ) {
+			if ( in_array( $invite_code, $keys ) ) {
 				unset( $instructor_invites[ $invite_code ] );
 			}
 		}
@@ -274,7 +274,7 @@ class CoursePress_Model_Instructor {
 		$email_args['email'] = sanitize_email( $email_data['email'] );
 
 		$user = get_user_by( 'email', $email_args['email'] );
-		if( $user ) {
+		if ( $user ) {
 			$email_data['user'] = $user;
 		}
 
@@ -286,7 +286,7 @@ class CoursePress_Model_Instructor {
 		$email_args['invite_hash'] = $invite_data['hash'];
 
 		// Get invites
-		$instructor_invites = get_post_meta( (int) $email_data[ 'course_id' ], 'instructor_invites', true );
+		$instructor_invites = get_post_meta( (int) $email_data['course_id'], 'instructor_invites', true );
 
 		// Create Course invites if they don't exist, and check to see if this invite is already there.
 		$invite_exists = false;
@@ -294,7 +294,7 @@ class CoursePress_Model_Instructor {
 		if ( $instructor_invites ) {
 			foreach ( $instructor_invites as $key => $i ) {
 				$invite_exists = array_search( $email_args['email'], $i );
-				if( $invite_exists ) {
+				if ( $invite_exists ) {
 					// Update code and hash for re-send.
 					$email_args['invite_code'] = $i['code'];
 					$email_args['invite_hash'] = $i['hash'];
@@ -305,37 +305,36 @@ class CoursePress_Model_Instructor {
 		}
 
 		// Fire off the email, data altered in the hooks below
-		if( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+		if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
 
-			if( ! $invite_exists ) {
+			if ( ! $invite_exists ) {
 
 				// Add the new invite
 				$invite = array(
-					'first_name' => $email_args[ 'first_name' ],
-					'last_name'	 => $email_args[ 'last_name' ],
-					'email'		 => $email_args[ 'email' ],
-					'code'		 => $email_args[ 'invite_code' ],
-					'hash'		 => $email_args[ 'invite_hash' ],
+					'first_name' => $email_args['first_name'],
+					'last_name'	 => $email_args['last_name'],
+					'email'		 => $email_args['email'],
+					'code'		 => $email_args['invite_code'],
+					'hash'		 => $email_args['invite_hash'],
 				);
 
-				$instructor_invites[ $email_args[ 'invite_code' ] ] = $invite;
+				$instructor_invites[ $email_args['invite_code'] ] = $invite;
 
-				update_post_meta( (int) $email_data[ 'course_id' ], 'instructor_invites', $instructor_invites );
+				update_post_meta( (int) $email_data['course_id'], 'instructor_invites', $instructor_invites );
 
 				// Invite sent and added
 				$return_data['success'] = true;
-				$return_data['invite_code'] = $email_args[ 'invite_code' ];
+				$return_data['invite_code'] = $email_args['invite_code'];
 				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/sent', __( 'Invitation successfully sent.', CoursePress::TD ) );
 
 			} else {
 
 				// Invite already exists
 				$return_data['success'] = true;
-				$return_data['invite_code'] = $email_args[ 'invite_code' ];
+				$return_data['invite_code'] = $email_args['invite_code'];
 				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/exists', __( 'Invitation already exists. Invitation was re-sent.', CoursePress::TD ) );
 
 			}
-
 		} else {
 
 			// Email not sent
@@ -359,7 +358,7 @@ class CoursePress_Model_Instructor {
 
 		return array(
 			'code' => $invite_code,
-			'hash' => sha1( sanitize_email( $args['email'] ) . $invite_code )
+			'hash' => sha1( sanitize_email( $args['email'] ) . $invite_code ),
 		);
 
 	}
@@ -397,7 +396,7 @@ class CoursePress_Model_Instructor {
 			$permalink = get_permalink( $course_id );
 		}
 		$course_address = esc_url( $permalink );
-		$confirm_link = esc_url( $course_address . '?action=course_invite&course_id=' . $course_id . '&c=' . $args[ 'invite_code' ] . '&h=' . $args[ 'invite_hash' ] );
+		$confirm_link = esc_url( $course_address . '?action=course_invite&course_id=' . $course_id . '&c=' . $args['invite_code'] . '&h=' . $args['invite_hash'] );
 
 		// Email Content
 		$tags = array(
@@ -409,19 +408,19 @@ class CoursePress_Model_Instructor {
 			'COURSE_EXCERPT',
 			'COURSE_ADDRESS',
 			'WEBSITE_ADDRESS',
-			'WEBSITE_NAME'
+			'WEBSITE_NAME',
 		);
 
 		$tags_replaces = array(
-			sanitize_text_field( $args[ 'first_name' ] ),
-			sanitize_text_field( $args[ 'last_name' ] ),
+			sanitize_text_field( $args['first_name'] ),
+			sanitize_text_field( $args['last_name'] ),
 			$fields['email'],
 			$confirm_link,
 			$course_name,
 			$course_summary,
 			$course_address,
 			home_url(),
-			get_bloginfo()
+			get_bloginfo(),
 		);
 
 		$fields['message'] = str_replace( $tags, $tags_replaces, $email_settings['content'] );
@@ -449,16 +448,10 @@ class CoursePress_Model_Instructor {
 
 	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {
 
-
 	}
 
 
 	public static function add_from_invitation( $course_id, $instructor_data ) {
 
 	}
-
-
-
-
-
 }

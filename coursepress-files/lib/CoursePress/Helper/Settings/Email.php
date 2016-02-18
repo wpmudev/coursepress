@@ -52,8 +52,7 @@ class CoursePress_Helper_Settings_Email {
 
 		) );
 
-
-		if( $context && isset( $defaults[ $context ] ) ) {
+		if ( $context && isset( $defaults[ $context ] ) ) {
 			return $defaults[ $context ];
 		} else {
 			return $defaults;
@@ -209,7 +208,4 @@ Yours sincerely,
 %5$s Team', CoursePress::TD ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', CoursePress::TD ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' )
 		);
 	}
-
-
-
 }

@@ -22,7 +22,6 @@ class CoursePress_Helper_UI_Module {
 	public static function render( $data = 'TODO' ) {
 		$content = '';
 
-
 		return $content;
 	}
 
@@ -31,7 +30,6 @@ class CoursePress_Helper_UI_Module {
 
 		$types  = self::get_types();
 		$labels = self::get_labels();
-
 
 		$data = array(
 
@@ -48,25 +46,25 @@ class CoursePress_Helper_UI_Module {
 			'content'        => 'Explain the meaning of life, the universe and everything else.',
 			'order'          => 0,
 			'components'     => array(
-				//array(
-				//	//'id' => '12345_1',
-				//	'order' => 0,
-				//	'items' => array(
-				//		array(
-				//			'text' => 'this is for later',
-				//			'selected' => 0,
-				//			'item_placeholder' => 'not always needed',
-				//			'placeholder' => 'this goes on UI side',
-				//			'button_primary' => 'Button 1',
-				//			'button_secondary' => 'Button 2',
-				//			'button_other' => 'Button 3',
-				//			'answer' => 'Not always used',
-				//			'keywords' => 'this, could, be, useful'
-				//		) // item
-				//	) // items
-				//),
+				// array(
+				// 'id' => '12345_1',
+				// 'order' => 0,
+				// 'items' => array(
+				// array(
+				// 'text' => 'this is for later',
+				// 'selected' => 0,
+				// 'item_placeholder' => 'not always needed',
+				// 'placeholder' => 'this goes on UI side',
+				// 'button_primary' => 'Button 1',
+				// 'button_secondary' => 'Button 2',
+				// 'button_other' => 'Button 3',
+				// 'answer' => 'Not always used',
+				// 'keywords' => 'this, could, be, useful'
+				// ) // item
+				// ) // items
+				// ),
 				array(
-					//'id' => '12345_1',
+					// 'id' => '12345_1',
 					'order' => 0,
 					'items' => array(
 						array(
@@ -78,23 +76,23 @@ class CoursePress_Helper_UI_Module {
 							'button_secondary' => 'Button 2',
 							'button_other'     => 'Button 3',
 							'answer'           => 'Not always used',
-							'keywords'         => 'this, could, be, useful'
-						) // item
-					) // items
+							'keywords'         => 'this, could, be, useful',
+						), // item
+					),// items
 				),
 				array(
 					'order' => 1,
 					'items' => array(
-						array()
+						array(),
 
-					)
+					),
 				),
 
 				// component
-			) // components
+			),// components
 		);
 
-		//error_log( self::get_template( self::INPUT_SHORT_TEXT ) );
+		// error_log( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = json_decode( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = CoursePress_Helper_Utility::object_to_array( $data );
 
@@ -170,7 +168,7 @@ class CoursePress_Helper_UI_Module {
 			// Excerpt
 			if ( ( isset( $types[ $data['type'] ]['excerpt'] ) && 'hidden' !== $types[ $data['type'] ]['excerpt'] ) || ! isset( $types[ $data['type'] ]['excerpt'] ) ) {
 				$args = array(
-					"textarea_name" => 'module_excerpt_' . $data['id'],
+					'textarea_name' => 'module_excerpt_' . $data['id'],
 				);
 
 				ob_start();
@@ -247,11 +245,11 @@ class CoursePress_Helper_UI_Module {
 				'mode'  => 'input',
 				'icon'  => 'default',
 			),
-			//self::INPUT_ADVANCED        => array(
-			//	'title' => __( 'Advanced Action', CoursePress::TD ),
-			//	'mode'  => 'input',
-			//	'icon'  => 'default',
-			//),
+			// self::INPUT_ADVANCED        => array(
+			// 'title' => __( 'Advanced Action', CoursePress::TD ),
+			// 'mode'  => 'input',
+			// 'icon'  => 'default',
+			// ),
 		);
 
 		return apply_filters( 'coursepress_module_input_types', $types );
@@ -286,22 +284,22 @@ class CoursePress_Helper_UI_Module {
 			self::OUTPUT_DOWNLOAD      => array(
 				'title'   => __( 'File Download', CoursePress::TD ),
 				'mode'    => 'output',
-//				'excerpt' => 'hidden',
+			// 'excerpt' => 'hidden',
 				'icon'    => 'default',
 			),
 			self::OUTPUT_ZIPPED_OBJECT => array(
 				'title'   => __( 'Zipped Object', CoursePress::TD ),
 				'mode'    => 'output',
-//				'excerpt' => 'hidden',
+			// 'excerpt' => 'hidden',
 				'icon'    => 'default',
 			),
-			//self::OUTPUT_SECTION       => array(
-			//	'title'   => __( 'Section Break', CoursePress::TD ),
-			//	'mode'    => 'output',
-			//	'excerpt' => 'hidden',
-			//	'body'    => 'hidden',
-			//	'icon'    => 'default',
-			//),
+			// self::OUTPUT_SECTION       => array(
+			// 'title'   => __( 'Section Break', CoursePress::TD ),
+			// 'mode'    => 'output',
+			// 'excerpt' => 'hidden',
+			// 'body'    => 'hidden',
+			// 'icon'    => 'default',
+			// ),
 			self::OUTPUT_DISCUSSION    => array(
 				'title' => __( 'Discussion', CoursePress::TD ),
 				'mode'  => 'output',
@@ -339,13 +337,12 @@ class CoursePress_Helper_UI_Module {
 			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
 			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
 			'module_delete'             => __( 'Delete Module', CoursePress::TD ),
-			'module_start_quiz'         => __( 'Start Quiz', CoursePress::TD )
+			'module_start_quiz'         => __( 'Start Quiz', CoursePress::TD ),
 		) );
 
 	}
 
 	// Could've done this inline, but this is needed for JS translation
-
 	public static function get_template( $component = false ) {
 
 		$components = array(
@@ -934,7 +931,6 @@ class CoursePress_Helper_UI_Module {
 			return $components;
 		}
 
-
 	}
 
 	private static function render_components( $data ) {
@@ -948,14 +944,13 @@ class CoursePress_Helper_UI_Module {
 
 		$components = is_array( $data['components'] ) ? $data['components'] : array();
 
-		//if ( 'input' === $module_mode && ! empty( $components ) ) {
-		//	$content .= '
-		//	<label class="module-question-label">
-		//		<span class="label">' . $labels['module_answer'] . '</span>
-		//		<span class="description">' . $labels['module_answer_desc'] . '</span>
-		//	</label>';
-		//}
-
+		// if ( 'input' === $module_mode && ! empty( $components ) ) {
+		// $content .= '
+		// <label class="module-question-label">
+		// <span class="label">' . $labels['module_answer'] . '</span>
+		// <span class="description">' . $labels['module_answer_desc'] . '</span>
+		// </label>';
+		// }
 		// Now deal with each component
 		foreach ( $components as $key => $component ) {
 
@@ -984,7 +979,6 @@ class CoursePress_Helper_UI_Module {
 						break;
 
 				}
-
 			}
 
 			$content .= '
@@ -992,9 +986,7 @@ class CoursePress_Helper_UI_Module {
 				</div>
 			';
 
-
 		}
-
 
 		return $content;
 	}
@@ -1002,31 +994,29 @@ class CoursePress_Helper_UI_Module {
 
 	// Items for QUIZ
 	// Only using Multiple Choice for now
-	//"items": [
-	//{
-	//"type": "action",
-	//"class": "quiz-action-button single wide",
-	//"action": "single"
-	//},
-	//{
-	//	"type": "action",
-	//									"class": "quiz-action-button multiple wide",
-	//									"action": "multiple"
-	//								},
-	//{
-	//	"type": "action",
-	//									"class": "quiz-action-button short wide",
-	//									"action": "short"
-	//								},
-	//{
-	//	"type": "action",
-	//									"class": "quiz-action-button long wide",
-	//									"action": "long"
-	//								}
-	//]
-
+	// "items": [
+	// {
+	// "type": "action",
+	// "class": "quiz-action-button single wide",
+	// "action": "single"
+	// },
+	// {
+	// "type": "action",
+	// "class": "quiz-action-button multiple wide",
+	// "action": "multiple"
+	// },
+	// {
+	// "type": "action",
+	// "class": "quiz-action-button short wide",
+	// "action": "short"
+	// },
+	// {
+	// "type": "action",
+	// "class": "quiz-action-button long wide",
+	// "action": "long"
+	// }
+	// ]
 	// Just leaving this here for when you need to know how to deal with the JS
 	// meta_items = $( '.module-holder [name^="meta_"]').serializeArray()
 	// CoursePress.utility.fix_checkboxes( meta_items, '.module-holder', "0" )
-
 }

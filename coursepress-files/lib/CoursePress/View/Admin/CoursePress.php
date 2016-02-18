@@ -9,7 +9,7 @@ class CoursePress_View_Admin_CoursePress {
 	private static $admin_pages = array(
 		'Course_Edit',
 		'Assessment_List',
-		'Assessment_Report'
+		'Assessment_Report',
 	);
 
 	public static function init() {
@@ -55,7 +55,7 @@ class CoursePress_View_Admin_CoursePress {
 			'title'      => __( 'Edit Course Categories', CoursePress::TD ),
 			'menu_title' => __( 'Course Categories', CoursePress::TD ),
 			'handle'     => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
-			'callback'   => 'none'
+			'callback'   => 'none',
 		);
 
 		return $pages;
@@ -97,7 +97,7 @@ class CoursePress_View_Admin_CoursePress {
 		$page = get_current_screen()->id;
 
 		if ( in_array( $page, $detect_pages ) ) {
-			//$initArray['height']              = '360px';
+			// $initArray['height']              = '360px';
 			$initArray['relative_urls']       = false;
 			$initArray['url_converter']       = false;
 			$initArray['url_converter_scope'] = false;
@@ -111,6 +111,4 @@ class CoursePress_View_Admin_CoursePress {
 
 		return $initArray;
 	}
-
-
 }

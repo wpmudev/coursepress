@@ -83,5 +83,4 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 		return ! empty( $scope ) ? is_plugin_active( self::$base_path[ $scope ] ) : false;
 	}
-
 }

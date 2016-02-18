@@ -33,7 +33,7 @@ class CoursePress_Template_Student {
 			// Add some random courses.
 			$show_random_courses = true;
 			if ( empty( $course_list ) && $show_random_courses ) {
-				//Random Courses
+				// Random Courses
 				$content .= '
 					<div class="dashboard-random-courses-list">
 						<h3 class="title suggested-courses">' . __( 'You are not enrolled in any courses.', CoursePress::TD ) . '</h3>' .
@@ -79,11 +79,10 @@ class CoursePress_Template_Student {
 		} else {
 
 			// Might need to add url to signup slug
-			if( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+			if ( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
 				 wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
 				 exit;
 			}
-
 		}
 
 	}
@@ -139,7 +138,6 @@ class CoursePress_Template_Student {
 						}
 					}
 				}
-
 			}
 
 			$content = '
@@ -189,16 +187,15 @@ class CoursePress_Template_Student {
 			</form>
 			';
 
-            do_action( 'coursepress_after_settings_form' );
+			do_action( 'coursepress_after_settings_form' );
 
 			return $content;
 		} else {
 
-			if( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+			if ( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
 				wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
 				exit;
 			}
-
 		}
 
 	}
@@ -212,7 +209,4 @@ class CoursePress_Template_Student {
 		return do_shortcode( '[course_signup page="signup" signup_title="" redirect_url="' . $redirect_url . '" login_url="' . CoursePress_Core::get_slug( 'login', true ) . '"]' );
 
 	}
-
-
-
 }

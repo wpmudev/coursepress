@@ -3,7 +3,7 @@
 class CoursePress_Helper_Extensions_TCPDF {
 
 	private static $base_path = array(
-		'free' => 'tcpdf/tcpdf.php'
+		'free' => 'tcpdf/tcpdf.php',
 	);
 
 	public static function init() {
@@ -31,7 +31,7 @@ class CoursePress_Helper_Extensions_TCPDF {
 	public static function installed_scope() {
 
 		$scope = '';
-		foreach( self::$base_path as $key => $path ) {
+		foreach ( self::$base_path as $key => $path ) {
 			$plugin_dir = WP_PLUGIN_DIR . '/' . $path;
 			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $path;
 			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;
@@ -56,7 +56,4 @@ class CoursePress_Helper_Extensions_TCPDF {
 
 		return ! empty( $scope ) ? is_plugin_active( self::$base_path[ $scope ] ) : false;
 	}
-
-
-
 }

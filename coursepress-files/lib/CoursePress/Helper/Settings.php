@@ -20,7 +20,7 @@ class CoursePress_Helper_Settings {
 		$parent_handle                     = 'coursepress';
 		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
 			__CLASS__,
-			'menu_handler'
+			'menu_handler',
 		), CoursePress_Core::$plugin_lib_url . 'assets/img/coursepress-icon.png' );
 
 		$pages = self::_get_pages();
@@ -30,36 +30,33 @@ class CoursePress_Helper_Settings {
 			// Use default callback if not defined
 			$callback = empty( $page['callback'] ) ? array(
 				__CLASS__,
-				'menu_handler'
+				'menu_handler',
 			) : $page['callback'];
 
 			// Remove callback to use URL instead
-			if( 'none' == $callback ) {
+			if ( 'none' == $callback ) {
 				$callback = '';
 			}
 
 			// Use default capability if not defined
 			$capability = empty( $page['cap'] ) ? 'coursepress_dashboard_cap' : $page['cap'];
 
-			if( empty( $page['parent'] ) ) {
+			if ( empty( $page['parent'] ) ) {
 				$page['parent'] = $parent_handle;
 			}
 
-			if( empty( $page['handle'] ) ) {
+			if ( empty( $page['handle'] ) ) {
 				$page['handle'] = $handle;
 			}
 
-			if( 'none' != $page['parent'] ) {
+			if ( 'none' != $page['parent'] ) {
 				self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
 			} else {
 				self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
 			}
-
-
 		}
 
-		//error_log( print_r( self::$page_refs, true  ) );
-
+		// error_log( print_r( self::$page_refs, true  ) );
 	}
 
 	public static function menu_handler() {
@@ -132,7 +129,7 @@ class CoursePress_Helper_Settings {
 
 	public static function allow_zip_extension( $extensions ) {
 
-		if( empty( $extensions ) ) {
+		if ( empty( $extensions ) ) {
 			$extensions = array();
 		}
 
@@ -141,5 +138,4 @@ class CoursePress_Helper_Settings {
 		return $extensions;
 
 	}
-
 }

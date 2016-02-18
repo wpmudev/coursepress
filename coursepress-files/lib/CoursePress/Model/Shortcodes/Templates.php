@@ -38,7 +38,7 @@ class CoursePress_Model_Shortcodes_Templates {
 			'post_status'    => 'publish',
 			'posts_per_page' => $perPage,
 			'offset'         => $offset,
-			'paged'          => $paged
+			'paged'          => $paged,
 		);
 
 		// Add category filter
@@ -48,7 +48,7 @@ class CoursePress_Model_Shortcodes_Templates {
 					'taxonomy' => 'course_category',
 					'field'    => 'slug',
 					'terms'    => array( $category ),
-				)
+				),
 			);
 		}
 
@@ -74,7 +74,7 @@ class CoursePress_Model_Shortcodes_Templates {
 				'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 				'format'  => '?paged=%#%',
 				'current' => $paged,
-				'total'   => $query->max_num_pages
+				'total'   => $query->max_num_pages,
 			) );
 		}
 
@@ -164,7 +164,6 @@ class CoursePress_Model_Shortcodes_Templates {
 			$completed        = ( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = $completed ? 'course-completed' : '';
-
 
 		// Override button
 		if ( ! empty( $a['override_button_text'] ) && ! empty( $a['override_button_link'] ) ) {
@@ -353,7 +352,6 @@ class CoursePress_Model_Shortcodes_Templates {
 					$type = 'no_access';
 				}
 			}
-
 		} else {
 			// Get page from module meta
 			$page = get_post_meta( $item_id, 'module_page', true );
@@ -401,12 +399,10 @@ class CoursePress_Model_Shortcodes_Templates {
 				} else {
 					$can_view = false;
 				}
-
 			}
 		}
 
 		$type = $can_view ? $type : 'no_access';
-
 
 		$template = '';
 		switch ( $type ) {
@@ -467,8 +463,7 @@ class CoursePress_Model_Shortcodes_Templates {
 
 			case 'module':
 
-				//$breadcrumb_trail .= esc_html( $page_info['title'] );
-
+				// $breadcrumb_trail .= esc_html( $page_info['title'] );
 				if ( $enrolled ) {
 					CoursePress_Model_Student::visited_module( $student_id, $course_id, $unit_id, $item_id, $student_progress );
 				}
@@ -565,7 +560,6 @@ class CoursePress_Model_Shortcodes_Templates {
 					if ( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
 						$content .= call_user_func( $template . '::' . $method, $module, $attributes );
 					}
-
 				}
 
 				$content .= '</div>'; // .focus-main
@@ -662,5 +656,4 @@ class CoursePress_Model_Shortcodes_Templates {
 		return $content;
 
 	}
-
 }

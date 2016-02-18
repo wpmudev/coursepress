@@ -62,15 +62,15 @@ class CoursePress_Model_Capabilities {
 			'coursepress_add_move_students_cap'						 => 0,
 			'coursepress_add_move_my_students_cap'					 => 1,
 			'coursepress_add_move_my_assigned_students_cap'			 => 1,
-			//'coursepress_change_students_group_class_cap' => 0,
-			//'coursepress_change_my_students_group_class_cap' => 0,
+			// 'coursepress_change_students_group_class_cap' => 0,
+			// 'coursepress_change_my_students_group_class_cap' => 0,
 			'coursepress_add_new_students_cap'						 => 1,
 			'coursepress_send_bulk_my_students_email_cap'			 => 0,
 			'coursepress_send_bulk_students_email_cap'				 => 1,
 			'coursepress_delete_students_cap'						 => 0,
 			/* Groups */
 			'coursepress_settings_groups_page_cap'					 => 0,
-			//'coursepress_settings_shortcode_page_cap' => 0,
+			// 'coursepress_settings_shortcode_page_cap' => 0,
 			/* Notifications */
 			'coursepress_create_notification_cap'					 => 1,
 			'coursepress_create_my_assigned_notification_cap'		 => 1,
@@ -103,7 +103,7 @@ class CoursePress_Model_Capabilities {
 			'edit_published_pages'									 => 0,
 			'edit_posts'											 => 0,
 			'publish_pages'											 => 0,
-			'publish_posts'											 => 0
+			'publish_posts'											 => 0,
 		),
 	);
 
@@ -117,11 +117,10 @@ class CoursePress_Model_Capabilities {
 	 * Assign appropriate CoursePress capabilities for roles
 	 *
 	 * @since 1.2.3.3.
-	 *
 	 */
 	public static function assign_role_capabilities( $user_id, $role, $old_role ) {
 
-		$capability_types = self::$capabilities[ 'instructor' ];
+		$capability_types = self::$capabilities['instructor'];
 
 		if ( 'administrator' == $role ) {
 
@@ -137,7 +136,7 @@ class CoursePress_Model_Capabilities {
 			}
 
 			// If they are an instructor, give them their appropriate capabilities back
-			if ( !empty( $instructor_courses ) ) {
+			if ( ! empty( $instructor_courses ) ) {
 				self::assign_instructor_capabilities( $user_id );
 			}
 		}
@@ -147,16 +146,15 @@ class CoursePress_Model_Capabilities {
 	 * Make sure the admin has required capabilities
 	 *
 	 * @since 1.2.3.3.
-	 *
 	 */
 	public static function restore_capabilities( $user_login = false, $user ) {
-		if ( user_can( $user, 'manage_options' ) && !user_can( $user, 'coursepress_dashboard_cap' ) ) {
+		if ( user_can( $user, 'manage_options' ) && ! user_can( $user, 'coursepress_dashboard_cap' ) ) {
 			self::assign_admin_capabilities( $user->ID );
 		}
 	}
 
 
-	public static function fix_admin_capabilities () {
+	public static function fix_admin_capabilities() {
 		$user_id = get_current_user_id();
 		if ( user_can( $user_id, 'manage_options' ) && ! user_can( $user_id, 'coursepress_dashboard_cap' ) ) {
 			self::assign_admin_capabilities( $user_id );
@@ -167,8 +165,8 @@ class CoursePress_Model_Capabilities {
 
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
 		$user				 = new WP_User( $user_id );
-		$capability_types	 = self::$capabilities[ 'instructor' ];
-		$user->add_cap('manage_options');
+		$capability_types	 = self::$capabilities['instructor'];
+		$user->add_cap( 'manage_options' );
 		foreach ( $capability_types as $key => $value ) {
 			$user->add_cap( $key );
 		}
@@ -260,7 +258,6 @@ class CoursePress_Model_Capabilities {
 	 *
 	 * @since 1.0.0
 	 *
-	 *
 	 * @return bool
 	 */
 	public static function can_create_unit( $user_id = '' ) {
@@ -275,7 +272,6 @@ class CoursePress_Model_Capabilities {
 	 * Can the user create units in this course?
 	 *
 	 * @since 1.0.0
-	 *
 	 *
 	 * @return bool
 	 */
@@ -485,17 +481,17 @@ class CoursePress_Model_Capabilities {
 		}
 
 		$user = false;
-		if ( !empty( $user_id ) ) {
+		if ( ! empty( $user_id ) ) {
 			$user = new WP_User( $user_id );
 		}
 
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
 
 		foreach ( $capability_types as $capability_type ) {
-			if ( !empty( $user ) ) {
+			if ( ! empty( $user ) ) {
 				$user->remove_cap( "read_private_{$capability_type}s" );
 			}
-			if ( !empty( $role ) ) {
+			if ( ! empty( $role ) ) {
 				$role->remove_cap( "read_private_{$capability_type}s" );
 			}
 		}
@@ -510,7 +506,7 @@ class CoursePress_Model_Capabilities {
 
 		$role = new WP_User( $user_id );
 
-		$global_option = !is_multisite();
+		$global_option = ! is_multisite();
 		update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 
 		$role->add_cap( 'can_edit_posts' );
@@ -532,7 +528,7 @@ class CoursePress_Model_Capabilities {
 
 		$role = new WP_User( $user_id );
 
-		$global_option = !is_multisite();
+		$global_option = ! is_multisite();
 		delete_user_option( $user_id, 'role_ins', $global_option );
 		// Legacy
 		delete_user_meta( $user_id, 'role_ins', 'instructor' );
@@ -541,7 +537,7 @@ class CoursePress_Model_Capabilities {
 		$role->remove_cap( 'read' );
 		$role->remove_cap( 'upload_files' );
 
-		$capabilities = array_keys( self::$capabilities[ 'instructor' ] );
+		$capabilities = array_keys( self::$capabilities['instructor'] );
 		foreach ( $capabilities as $cap ) {
 			$role->remove_cap( $cap );
 		}
@@ -549,14 +545,14 @@ class CoursePress_Model_Capabilities {
 		self::grant_private_caps( $user_id );
 	}
 
-	//Add new roles and user capabilities
+	// Add new roles and user capabilities
 	public static function add_user_roles_and_caps() {
 		/* ---------------------- Add initial capabilities for the admins */
 		$role = get_role( 'administrator' );
 		$role->add_cap( 'read' );
 
 		// Add ALL instructor capabilities
-		$admin_capabilities = array_keys(self::$capabilities[ 'instructor' ] );
+		$admin_capabilities = array_keys( self::$capabilities['instructor'] );
 		foreach ( $admin_capabilities as $cap ) {
 			$role->add_cap( $cap );
 		}
@@ -569,7 +565,7 @@ class CoursePress_Model_Capabilities {
 		$default_capabilities    = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'], 1 );
 		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities' );
 
-		if( empty( $instructor_capabilities ) ) {
+		if ( empty( $instructor_capabilities ) ) {
 			$instructor_capabilities = array();
 			foreach ( $default_capabilities as $cap ) {
 				$instructor_capabilities[ $cap ] = true;
@@ -612,7 +608,6 @@ class CoursePress_Model_Capabilities {
 	 * Is this running on WPMU DEV?
 	 */
 	public static function is_wpmudev() {
-		return preg_match("/premium.wpmudev.(dev|org)/",  WP_CONTENT_URL );
+		return preg_match( '/premium.wpmudev.(dev|org)/',  WP_CONTENT_URL );
 	}
-
 }

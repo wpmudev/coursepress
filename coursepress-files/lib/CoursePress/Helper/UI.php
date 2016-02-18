@@ -52,9 +52,8 @@ class CoursePress_Helper_UI {
 
 	public static function get_user_avatar_array( $args = array(), $meta_options = array() ) {
 
-		//meta_key => role_ins
-		//meta_value => 'instructor'
-
+		// meta_key => role_ins
+		// meta_value => 'instructor'
 		$args_default = array(
 			'meta_key'     => ( isset( $meta_options['meta_key'] ) ? $meta_options['meta_key'] : '' ),
 			'meta_value'   => ( isset( $meta_options['meta_value'] ) ? $meta_options['meta_value'] : '' ),
@@ -69,7 +68,7 @@ class CoursePress_Helper_UI {
 			'number'       => '',
 			'count_total'  => false,
 			'fields'       => array( 'display_name', 'ID' ),
-			'who'          => ''
+			'who'          => '',
 		);
 
 		$args = CoursePress_Helper_Utility::merge_distinct( $args, $args_default );
@@ -82,9 +81,8 @@ class CoursePress_Helper_UI {
 
 			$user_avatars = array();
 			foreach ( $users as $user ) {
-				$user_avatars[ $user->ID ] = str_replace( "'", '"', get_avatar( $user->ID, 80, "", $user->display_name ) );
+				$user_avatars[ $user->ID ] = str_replace( "'", '"', get_avatar( $user->ID, 80, '', $user->display_name ) );
 			}
-
 		}
 
 		if ( is_multisite() ) {
@@ -133,7 +131,7 @@ class CoursePress_Helper_UI {
 		if ( false === $units && 'all' !== $course_id ) {
 			$units = get_posts( array(
 				'post_type'   => CoursePress_Model_Unit::get_post_type_name(),
-				'post_parent' => $course_id
+				'post_parent' => $course_id,
 			) );
 		}
 
@@ -176,20 +174,18 @@ class CoursePress_Helper_UI {
 			return '';
 		}
 
-
 		$content = '';
 		$content .= '<select name="' . $name . '" id="' . $id . '"';
 		$content .= isset( $options['placeholder'] ) ? ' data_placeholder="' . esc_attr( $options['placeholder'] ) . '" ' : '';
 		$content .= isset( $options['class'] ) ? ' class="' . esc_attr( $options['class'] ) . '" ' : '';
 		$content .= '>';
 
-
 		$value = isset( $options['value'] ) ? $options['value'] : false;
 
 		$discussions = array();
 		$unit = $units_and_modules[ $unit_id ];
-		foreach( $unit['pages'] as $page ) {
-			foreach( $page['modules'] as $module ) {
+		foreach ( $unit['pages'] as $page ) {
+			foreach ( $page['modules'] as $module ) {
 
 				$meta = CoursePress_Model_Module::attributes( $module );
 				if ( $meta['module_type'] != CoursePress_Helper_UI_Module::OUTPUT_DISCUSSION ) {
@@ -244,7 +240,7 @@ class CoursePress_Helper_UI {
 			'number'       => '',
 			'count_total'  => false,
 			'fields'       => array( 'display_name', 'ID' ),
-			'who'          => ''
+			'who'          => '',
 		);
 
 		if ( is_multisite() ) {
@@ -290,7 +286,7 @@ class CoursePress_Helper_UI {
 
 		$args = array(
 			'meta_key'     => 'course_' . $course_id,
-			//'meta_value'   => $course_id,
+			// 'meta_value'   => $course_id,
 			'meta_compare' => 'EXISTS',
 			'meta_query'   => array(),
 			'include'      => array(),
@@ -302,7 +298,7 @@ class CoursePress_Helper_UI {
 			'number'       => '',
 			'count_total'  => false,
 			'fields'       => array( 'display_name', 'ID' ),
-			'who'          => ''
+			'who'          => '',
 		);
 
 		if ( is_multisite() ) {
@@ -318,10 +314,10 @@ class CoursePress_Helper_UI {
 
 			foreach ( $instructors as $instructor ) {
 				if ( $remove_buttons ) {
-					//$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' . $instructor->ID . ' );"><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+					// $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' . $instructor->ID . ' );"><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
 					$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
 				} else {
-					//$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
+					// $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
 					$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
 				}
 			}
@@ -384,7 +380,6 @@ class CoursePress_Helper_UI {
 					<div class="toggle"></div>
 				</div>';
 
-
 		if ( ! empty( $right ) ) {
 			$content .= '
 				<span class="right ' . esc_attr( $right_class ) . '">' . $right . '</span>
@@ -398,5 +393,4 @@ class CoursePress_Helper_UI {
 		return $content;
 
 	}
-
 }

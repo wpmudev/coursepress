@@ -11,7 +11,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 		self::$title = __( 'Discussions', CoursePress::TD );
 		self::$menu_title = __( 'Discussions', CoursePress::TD );
 
-
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
@@ -39,10 +38,8 @@ class CoursePress_View_Admin_Communication_Discussion {
 	public static function process_form() {
 
 		//
-		//if( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
-		//}
-
-
+		// if( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
+		// }
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_discussion' ) ) {
 
 			// Update the discussion
@@ -58,10 +55,10 @@ class CoursePress_View_Admin_Communication_Discussion {
 				'post_title' => $title,
 				'post_content' => $content,
 				'post_type' => CoursePress_Model_Discussion::get_post_type_name(),
-				'post_status' => $post_status
+				'post_status' => $post_status,
 			);
 
-			if( ! empty( $id ) ) {
+			if ( ! empty( $id ) ) {
 				$args['ID'] = $id;
 			}
 
@@ -95,7 +92,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		            </h3>
 		            <hr />';
 
-		if( empty( $action ) ) {
+		if ( empty( $action ) ) {
 
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
@@ -105,12 +102,11 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 		} else {
 
-			switch( $action ) {
+			switch ( $action ) {
 				case 'edit':
 					$content .= self::render_edit_page();
 					break;
 			}
-
 		}
 
 		$content .= '</div>';
@@ -123,11 +119,11 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$the_id = isset( $_GET['id'] ) ? $_GET['id'] : false;
 		$the_id = 'new' === $the_id ? $the_id : (int) $the_id;
 
-		if( empty( $the_id ) ) {
+		if ( empty( $the_id ) ) {
 			return '';
 		}
 
-		if( 'new' !== $the_id ) {
+		if ( 'new' !== $the_id ) {
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Model_Discussion::attributes( $the_id );
 			$course_id = $attributes['course_id'];
@@ -146,17 +142,16 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$options = array();
 		$options['value'] = $course_id;
 		$options['class'] = 'medium';
-		//$options['first_option'] = array(
-		//	'text' => __( 'All courses', CoursePress::TD ),
-		//	'value' => 'all'
-		//);
-
+		// $options['first_option'] = array(
+		// 'text' => __( 'All courses', CoursePress::TD ),
+		// 'value' => 'all'
+		// );
 		$options_unit = array();
 		$options_unit['value'] = $unit_id;
 		$options_unit['class'] = 'medium';
 		$options_unit['first_option'] = array(
 			'text' => __( 'All units', CoursePress::TD ),
-			'value' => 'course'
+			'value' => 'course',
 		);
 
 		$content = '';
@@ -166,17 +161,17 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$content .= '
 			<input type="hidden" name="post_status" value="' . esc_attr( $post_status ) . '" />
 			' . wp_nonce_field( 'edit_discussion', '_wpnonce', true, false ) . '
-			<label><strong>' . esc_html__('Discussion Title', CoursePress::TD ). '</strong><br />
+			<label><strong>' . esc_html__( 'Discussion Title', CoursePress::TD ). '</strong><br />
 			<input type="text" class="wide" name="post_title" value="' . esc_attr( $post_title ) . '" /></label>
 
-			<label><strong>' . esc_html__('Discussion Content', CoursePress::TD ). '</strong><br />';
+			<label><strong>' . esc_html__( 'Discussion Content', CoursePress::TD ). '</strong><br />';
 
 		$editor_name = 'post_content';
 		$editor_id = 'postContent';
 		$args = array(
-			"textarea_name" => $editor_name,
-			"editor_class"  => 'cp-editor',
-			"textarea_rows" => 10,
+			'textarea_name' => $editor_name,
+			'editor_class'  => 'cp-editor',
+			'textarea_rows' => 10,
 		);
 
 		// Filter $args
@@ -186,7 +181,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 		wp_editor( $post_content, $editor_id, $args );
 		$content .= ob_get_clean();
 		$content .= '</label>';
-
 
 		$content .= '
 			<label><strong>' . esc_html__( 'Related Course', CoursePress::TD ) . '</strong><br />
@@ -265,26 +259,25 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 				if ( wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
 
-					foreach( $ids as $id ) {
+					foreach ( $ids as $id ) {
 
-						if( 'bulk_unpublish' === $action ) {
+						if ( 'bulk_unpublish' === $action ) {
 							wp_update_post( array(
 								'ID'          => $id,
 								'post_status' => 'draft',
 							) );
 						}
 
-						if( 'bulk_publish' === $action ) {
+						if ( 'bulk_publish' === $action ) {
 							wp_update_post( array(
 								'ID'          => $id,
 								'post_status' => 'publish',
 							) );
 						}
 
-						if( 'bulk_delete' === $action ) {
+						if ( 'bulk_delete' === $action ) {
 							wp_delete_post( $id );
 						}
-
 					}
 
 					$success = true;
@@ -302,11 +295,11 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 				$units = get_posts( array(
 					'post_type' => CoursePress_Model_Unit::get_post_type_name(),
-					'post_parent' => $course_id
+					'post_parent' => $course_id,
 				) );
 
 				// Sort units
-				if( 'all' !== $course_id && ! empty( $units ) ) {
+				if ( 'all' !== $course_id && ! empty( $units ) ) {
 					foreach ( $units as $unit ) {
 						$unit->unit_order = (int) get_post_meta( $unit->ID, 'unit_order', true );
 					}
@@ -330,5 +323,4 @@ class CoursePress_View_Admin_Communication_Discussion {
 		}
 
 	}
-
 }

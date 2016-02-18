@@ -22,7 +22,7 @@ class CoursePress_Model_Discussion {
 					'search_items'       => __( 'Search Discussions', CoursePress::TD ),
 					'not_found'          => __( 'No Discussions Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Discussions found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Discussion', CoursePress::TD )
+					'view'               => __( 'View Discussion', CoursePress::TD ),
 				),
 				'public'             => false,
 				'show_ui'            => true,
@@ -30,10 +30,10 @@ class CoursePress_Model_Discussion {
 				'capability_type'    => 'discussion',
 				'map_meta_cap'       => true,
 				'query_var'          => true,
-				//'rewrite'            => array(
-				//	'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'discussion' )
-				//)
-			)
+				// 'rewrite'            => array(
+				// 'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'discussion' )
+				// )
+			),
 		);
 
 	}
@@ -51,7 +51,7 @@ class CoursePress_Model_Discussion {
 
 	public static function attributes( $n_id ) {
 
-		if( is_object( $n_id ) ) {
+		if ( is_object( $n_id ) ) {
 			$n_id = $n_id->ID;
 		} else {
 			$n_id = (int) $n_id;
@@ -70,7 +70,7 @@ class CoursePress_Model_Discussion {
 			'course_id' => $course_id,
 			'course_title' => $course_title,
 			'unit_id' => $unit_id,
-			'unit_title' => $unit_title
+			'unit_title' => $unit_title,
 		);
 
 	}
@@ -88,7 +88,7 @@ class CoursePress_Model_Discussion {
 					'compare' => 'IN',
 				),
 			),
-			'post_per_page' => 20
+			'post_per_page' => 20,
 		);
 
 		return get_posts( $args );
@@ -102,5 +102,4 @@ class CoursePress_Model_Discussion {
 		$x = '';
 
 	}
-
 }

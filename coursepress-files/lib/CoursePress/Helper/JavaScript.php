@@ -5,7 +5,7 @@ class CoursePress_Helper_JavaScript {
 	public static function init() {
 
 		// These don't work here because of core using wp_print_styles()
-		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+		// add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
 
 		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
@@ -16,7 +16,6 @@ class CoursePress_Helper_JavaScript {
 
 	public static function enqueue_admin_scripts() {
 		// Enqueue needed scripts for UI
-
 		wp_enqueue_media();
 	}
 
@@ -27,14 +26,13 @@ class CoursePress_Helper_JavaScript {
 			'coursepress_assessments',
 			'coursepress_reports',
 			'coursepress_notifications',
-			'coursepress_discussions'
+			'coursepress_discussions',
 		);
 
 		$valid_pages = array_merge( $course_js_pages, array(
 			'coursepress_settings',
 			'coursepress',
 		) );
-
 
 		if ( ! isset( $_GET['page'] ) || ! in_array( $_GET['page'], $valid_pages ) ) {
 			return;
@@ -45,13 +43,14 @@ class CoursePress_Helper_JavaScript {
 		wp_enqueue_script( 'coursepress_object', $script, array(
 			'jquery',
 			'backbone',
-			'underscore'
+			'underscore',
 		), CoursePress::$version );
 
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
-		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array( 'wpautop'       => true,
-		                                                             "textarea_name" => 'dummy_editor_name',
+		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array(
+			'wpautop'       => true,
+		                                                             'textarea_name' => 'dummy_editor_name',
 		) );
 		$dummy_editor = ob_get_clean();
 
@@ -72,9 +71,7 @@ class CoursePress_Helper_JavaScript {
 			'is_campus'                 => CoursePress_Model_Capabilities::is_campus(),
 		);
 
-
 		// Models
-
 		/** COURSEPRESS_COURSE */
 		if ( in_array( $_GET['page'], $course_js_pages ) ) {
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressCourse.js';
@@ -94,7 +91,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery'
 			), CoursePress::$version );
 
-			$localize_array['instructor_role_defined']          = defined('COURSEPRESS_INSTRUCTOR_ROLE');
+			$localize_array['instructor_role_defined']          = defined( 'COURSEPRESS_INSTRUCTOR_ROLE' );
 			$localize_array['instructor_avatars']               = CoursePress_Helper_UI::get_user_avatar_array();
 			$localize_array['instructor_delete_confirm']        = __( 'Please confirm that you want to remove the instructor from this course.', CoursePress::TD );
 			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', CoursePress::TD );
@@ -111,14 +108,13 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['discussion_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected discussions. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
 			$localize_array['discussion_delete'] = __( 'Please confirm that you want to delete this discussion. Warning: This cannot be undone.', CoursePress::TD );
 
-
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
 			}
 		}
 
 		/** COURSEPRESS_COURSE|UNIT BUILDER */
-		if ( 'coursepress_course' === $_GET['page'] && isset( $_GET['tab'] ) && "units" === $_GET['tab'] ) {
+		if ( 'coursepress_course' === $_GET['page'] && isset( $_GET['tab'] ) && 'units' === $_GET['tab'] ) {
 
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressUnitsBuilder.js';
 
@@ -154,7 +150,6 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['courselist_delete_course'] = __( 'Please confirm that you want to delete this courses. Warning: This cannot be undone.', CoursePress::TD );
 			$localize_array['courselist_duplicate_course'] = __( 'Are you sure you want to create a duplicate copy of this course?', CoursePress::TD );
 		}
-
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
@@ -192,9 +187,8 @@ class CoursePress_Helper_JavaScript {
 			wp_enqueue_script( 'coursepress_object', $script, array(
 				'jquery',
 				'backbone',
-				'underscore'
+				'underscore',
 			), CoursePress::$version );
-
 
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressFront.js';
 
@@ -223,25 +217,24 @@ class CoursePress_Helper_JavaScript {
 					'email_exists' => __( 'That e-mail address is already taken.', CoursePress::TD ),
 					'user_exists' => __( 'That usernam is already taken.', CoursePress::TD ),
 					'weak_password' => __( 'Weak passwords not allowed.', CoursePress::TD ),
-					'mismatch_password' => __( 'Passwords do not match.', CoursePress::TD )
-				)
+					'mismatch_password' => __( 'Passwords do not match.', CoursePress::TD ),
+				),
 			);
 
 			wp_enqueue_script( 'coursepress_front', $script, array(
 				'jquery',
 				'jquery-ui-dialog',
 				'underscore',
-				'backbone'
+				'backbone',
 			), CoursePress::$version );
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 
-			//$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/jquery.knob.js';
+			// $script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/jquery.knob.js';
 			//
-			//wp_enqueue_script( 'jquery-knob', $script, array(
-			//	'jquery'
-			//), CoursePress::$version );
-
+			// wp_enqueue_script( 'jquery-knob', $script, array(
+			// 'jquery'
+			// ), CoursePress::$version );
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/circle-progress.min.js';
 			wp_enqueue_script( 'circle-progress', $script, array(
 				'jquery'
@@ -250,7 +243,7 @@ class CoursePress_Helper_JavaScript {
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/external/backbone.modal-min.js';
 			wp_enqueue_script( 'backbone-modal', $script, array(
 				'backbone',
-				'password-strength-meter'
+				'password-strength-meter',
 			), CoursePress::$version );
 
 			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'assets/css/font-awesome.min.css';
@@ -258,8 +251,5 @@ class CoursePress_Helper_JavaScript {
 
 		}
 
-
-
 	}
-
 }

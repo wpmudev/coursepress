@@ -14,17 +14,15 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		//$post_format = CoursePress_Model_Course::get_format();
-
+		// $post_format = CoursePress_Model_Course::get_format();
 		parent::__construct( array(
 			'singular' => __( 'Student', CoursePress::TD ),
 			'plural'   => __( 'Students', CoursePress::TD ),
-			'ajax'     => false //should this table support ajax?
+			'ajax'     => false,// should this table support ajax?
 		) );
 
-		//$this->post_type = CoursePress_Model_PostFormats::prefix() . $post_format['post_type'];
-		//$this->count     = wp_count_posts( $this->post_type );
-
+		// $this->post_type = CoursePress_Model_PostFormats::prefix() . $post_format['post_type'];
+		// $this->count     = wp_count_posts( $this->post_type );
 	}
 
 	public function set_course( $id ) {
@@ -42,7 +40,7 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 			'display_name' => __( 'Username', CoursePress::TD ),
 			'first_name'   => __( 'First Name', CoursePress::TD ),
 			'last_name'    => __( 'Last Name', CoursePress::TD ),
-			'responses'      => __( 'Responses', CoursePress::TD ) . '<span style="display:inline-block;" class="help-tooltip">' . __('Assessable items only.', CoursePress::TD ) . '</span>',
+			'responses'      => __( 'Responses', CoursePress::TD ) . '<span style="display:inline-block;" class="help-tooltip">' . __( 'Assessable items only.', CoursePress::TD ) . '</span>',
 			'average'      => __( 'Average', CoursePress::TD ),
 			'report'      => __( 'Report', CoursePress::TD ),
 		);
@@ -128,14 +126,13 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		//$post_args             = array(
-		//	'post_type'      => $this->post_type,
-		//	'post_status'    => $post_status,
-		//	'posts_per_page' => $perPage,
-		//	'offset'         => $offset,
-		//	's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
-		//);
-
+		// $post_args             = array(
+		// 'post_type'      => $this->post_type,
+		// 'post_status'    => $post_status,
+		// 'posts_per_page' => $perPage,
+		// 'offset'         => $offset,
+		// 's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
+		// );
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
 		} else {
@@ -147,7 +144,7 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 			'meta_key'     => $course_meta_key,
 			'meta_compare' => 'EXISTS',
 			'number'       => $perPage,
-			'offset'       => $offset
+			'offset'       => $offset,
 		) );
 
 		$this->items = $users->get_results();
@@ -155,7 +152,7 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 		$totalItems = $users->get_total();
 		$this->set_pagination_args( array(
 			'total_items' => $totalItems,
-			'per_page'    => $perPage
+			'per_page'    => $perPage,
 		) );
 
 	}
@@ -166,6 +163,4 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 	public function no_items() {
 		_e( 'There are no students enrolled in this course.', CoursePress::TD );
 	}
-
-
 }

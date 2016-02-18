@@ -53,12 +53,14 @@ class CoursePress {
 
 	/**
 	 * Current plugin version, must match the version in the header comment.
+	 *
 	 * @var string
 	 */
 	public static $version = '2.0.0';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
+	 *
 	 * @var string
 	 */
 	public static $name = 'CoursePress Base'; // Translated by grunt.
@@ -93,6 +95,7 @@ class CoursePress {
 
 	/**
 	 * Folder that contains all plugin files.
+	 *
 	 * @deprecated This makes stuff _VERY_ confusing, this dir should not exist.
 	 * @var  string
 	 */
@@ -100,12 +103,14 @@ class CoursePress {
 
 	/**
 	 * Textdomain.
+	 *
 	 * @deprecated We should use plain string for textdomain, no variables!
 	 */
 	const TD = 'cp';
 
 	/**
 	 * Initialize the plugin!
+	 *
 	 * @since  2.0.0
 	 */
 	public static function init() {

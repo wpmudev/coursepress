@@ -20,14 +20,14 @@ class CoursePress_View_Front_General {
 	public static function main_navigation_links( $sorted_menu_items, $args ) {
 
 		$current_url = 'http';
-		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
-			$current_url .= "s";
+		if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' ) {
+			$current_url .= 's';
 		}
-		$current_url .= "://";
-		if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" ) {
-			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+		$current_url .= '://';
+		if ( isset( $_SERVER['SERVER_PORT'] ) && $_SERVER['SERVER_PORT'] != '80' ) {
+			$current_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
 		} else {
-			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+			$current_url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 		}
 
 		$theme_location = 'primary';
@@ -39,7 +39,7 @@ class CoursePress_View_Front_General {
 			}
 		}
 
-		if ( $args->theme_location == $theme_location ) {//put extra menu items only in primary ( most likely header ) menu
+		if ( $args->theme_location == $theme_location ) {// put extra menu items only in primary ( most likely header ) menu
 			$is_in = is_user_logged_in();
 
 			$courses = new stdClass;
@@ -74,7 +74,6 @@ class CoursePress_View_Front_General {
 				*/
 				$sorted_menu_items[] = $dashboard;
 
-
 				/* Student Dashboard > Courses page */
 
 				$dashboard_courses = new stdClass;
@@ -105,27 +104,28 @@ class CoursePress_View_Front_General {
 				}
 				$sorted_menu_items[] = $settings_profile;
 
-				/* Inbox */
-				//if ( get_option( 'show_messaging', 0 ) == 1 ) {
-				//	$unread_count = cp_messaging_get_unread_messages_count();
-				//	if ( $unread_count > 0 ) {
-				//		$unread_count = ' (' . $unread_count . ')';
-				//	} else {
-				//		$unread_count = '';
-				//	}
-				//	$settings_inbox = new stdClass;
+				/*
+				Inbox */
+				// if ( get_option( 'show_messaging', 0 ) == 1 ) {
+				// $unread_count = cp_messaging_get_unread_messages_count();
+				// if ( $unread_count > 0 ) {
+				// $unread_count = ' (' . $unread_count . ')';
+				// } else {
+				// $unread_count = '';
+				// }
+				// $settings_inbox = new stdClass;
 				//
-				//	$settings_inbox->title            = __( 'Inbox', CoursePress::TD ) . $unread_count;
-				//	$settings_inbox->description      = '';
-				//	$settings_inbox->menu_item_parent = - 9998;
-				//	$settings_inbox->ID               = 'cp-dashboard-inbox';
-				//	$settings_inbox->db_id            = '';
-				//	$settings_inbox->url              = $this->get_inbox_slug( true );
-				//	if ( cp_curPageURL() == $settings_inbox->url ) {
-				//		$settings_profile->classes[] = 'current_page_item';
-				//	}
-				//	$sorted_menu_items[] = $settings_inbox;
-				//}
+				// $settings_inbox->title            = __( 'Inbox', CoursePress::TD ) . $unread_count;
+				// $settings_inbox->description      = '';
+				// $settings_inbox->menu_item_parent = - 9998;
+				// $settings_inbox->ID               = 'cp-dashboard-inbox';
+				// $settings_inbox->db_id            = '';
+				// $settings_inbox->url              = $this->get_inbox_slug( true );
+				// if ( cp_curPageURL() == $settings_inbox->url ) {
+				// $settings_profile->classes[] = 'current_page_item';
+				// }
+				// $sorted_menu_items[] = $settings_inbox;
+				// }
 			}
 
 			/* Log in / Log out links */
@@ -148,7 +148,5 @@ class CoursePress_View_Front_General {
 		return $sorted_menu_items;
 
 	}
-
-
 }
 

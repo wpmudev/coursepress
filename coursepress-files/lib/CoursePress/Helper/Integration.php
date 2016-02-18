@@ -24,10 +24,8 @@ class CoursePress_Helper_Integration {
 		}
 
 		// Other Integrations
-
 		// After plugins loaded
 		add_action( 'plugins_loaded', array( __CLASS__, 'plugins_loaded' ) );
-
 
 	}
 
@@ -46,11 +44,10 @@ class CoursePress_Helper_Integration {
 		$namespaces['TCPDF'] = array(
 			'namespace_folder' => true,
 			'overrides' => array(
-				'TCPDF.php' => 'tcpdf.php'
-			)
+				'TCPDF.php' => 'tcpdf.php',
+			),
 		);
 
 		return $namespaces;
 	}
-
 }

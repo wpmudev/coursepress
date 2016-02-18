@@ -21,7 +21,7 @@ class CoursePress_Model_Notification {
 					'search_items'       => __( 'Search Notifications', CoursePress::TD ),
 					'not_found'          => __( 'No Notifications Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Notifications found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Notification', CoursePress::TD )
+					'view'               => __( 'View Notification', CoursePress::TD ),
 				),
 				'public'             => false,
 				'show_ui'            => true,
@@ -30,9 +30,9 @@ class CoursePress_Model_Notification {
 				'map_meta_cap'       => true,
 				'query_var'          => true,
 				'rewrite'            => array(
-					'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'notification' )
-				)
-			)
+					'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
+				),
+			),
 		);
 
 	}
@@ -50,7 +50,7 @@ class CoursePress_Model_Notification {
 
 	public static function attributes( $n_id ) {
 
-		if( is_object( $n_id ) ) {
+		if ( is_object( $n_id ) ) {
 			$n_id = $n_id->ID;
 		} else {
 			$n_id = (int) $n_id;
@@ -62,7 +62,7 @@ class CoursePress_Model_Notification {
 
 		return array(
 			'course_id' => $course_id,
-			'course_title' => $course_title
+			'course_title' => $course_title,
 		);
 
 	}
@@ -80,11 +80,10 @@ class CoursePress_Model_Notification {
 					'compare' => 'IN',
 				),
 			),
-			'post_per_page' => 20
+			'post_per_page' => 20,
 		);
 
 		return get_posts( $args );
 
 	}
-
 }

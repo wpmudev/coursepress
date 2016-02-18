@@ -239,14 +239,14 @@ class CoursePress_Model_Student {
 		$grade_data = array(
 			'graded_by' => $grade === - 1 ? '' : 'auto',
 			'grade'     => $grade,
-			'date'      => $grade === - 1 ? '' : current_time( 'mysql' )
+			'date'      => $grade === - 1 ? '' : current_time( 'mysql' ),
 		);
 
 		$response_data = array(
 			'response' => $response,
 			'date'     => current_time( 'mysql' ),
 			'grades'   => $grade === - 1 ? array() : array( $grade_data ),
-			'feedback' => array()
+			'feedback' => array(),
 		);
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
@@ -319,7 +319,7 @@ class CoursePress_Model_Student {
 		$grade_data = array(
 			'graded_by' => get_current_user_id(),
 			'grade'     => (int) $grade,
-			'date'      => current_time( 'mysql' )
+			'date'      => current_time( 'mysql' ),
 		);
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/grades/', $grade_data );
@@ -384,7 +384,7 @@ class CoursePress_Model_Student {
 		$feedback_data = array(
 			'feedback_by' => get_current_user_id(),
 			'feedback'    => CoursePress_Helper_Utility::filter_content( $feedback_new ),
-			'date'        => current_time( 'mysql' )
+			'date'        => current_time( 'mysql' ),
 		);
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback/', $feedback_data );
@@ -483,7 +483,6 @@ class CoursePress_Model_Student {
 							CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/answered/' . $module_id, true );
 
 						}
-
 					} elseif ( $attributes['mandatory'] ) {
 
 						// Mandatory questions must at least have an answer, even if its not assessable
@@ -506,15 +505,11 @@ class CoursePress_Model_Student {
 								do_action( 'coursepress_student_module_attempted', $student_id, $module_id, get_post_field( 'post_tile' ), $unit_id, $course_id );
 							}
 						}
-
 					}  // Mandatory Assessable or just Mandatory
-
 
 				} // Module
 
-
 			} // Page
-
 
 			if ( $assessable_mandatory === $student_assessable_mandatory ) {
 				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/all_required_assessable', true );
@@ -564,7 +559,7 @@ class CoursePress_Model_Student {
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
 		}
 
-		//$progress = (int) ( ( $course_completed_steps / $course_required_steps * 100 ) / $total_units );
+		// $progress = (int) ( ( $course_completed_steps / $course_required_steps * 100 ) / $total_units );
 		$progress = $total_units > 0 ? (int) ( $total_completion / $total_units ) : 0;
 		CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/progress', $progress );
 
@@ -581,7 +576,7 @@ class CoursePress_Model_Student {
 
 		return array(
 			'required'  => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/required_mandatory' ),
-			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' )
+			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' ),
 		);
 
 	}
@@ -638,8 +633,7 @@ class CoursePress_Model_Student {
 
 		$progress = (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/progress' );
 
-		//$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/completed' );
-
+		// $completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/completed' );
 		return 100 === $progress;
 
 	}
@@ -698,5 +692,4 @@ class CoursePress_Model_Student {
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
 	}
-
 }

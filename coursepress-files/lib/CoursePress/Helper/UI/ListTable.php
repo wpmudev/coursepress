@@ -21,29 +21,29 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 	 * Display the search box.
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
-			return;
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return; }
 
 		$input_id = $input_id . '-search-input';
 
 		$content = '';
 
-		if ( ! empty( $_REQUEST['orderby'] ) )
-			$content .= '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		if ( ! empty( $_REQUEST['order'] ) )
-			$content .= '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		if ( ! empty( $_REQUEST['post_mime_type'] ) )
-			$content .= '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
-		if ( ! empty( $_REQUEST['detached'] ) )
-			$content .= '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			$content .= '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />'; }
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			$content .= '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />'; }
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			$content .= '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />'; }
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			$content .= '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />'; }
 
-		$admin_search_query = isset($_REQUEST['s']) ? esc_attr( wp_unslash( $_REQUEST['s'] ) ) : '';
+		$admin_search_query = isset( $_REQUEST['s'] ) ? esc_attr( wp_unslash( $_REQUEST['s'] ) ) : '';
 
 		$content .= '
 			<p class="search-box">
 				<label class="screen-reader-text" for="' . esc_attr( $input_id ) . '">' . esc_html( $text ) . ':</label>
 				<input type="search" id="' . esc_attr( $input_id ) . '" name="s" value="' . esc_attr( $admin_search_query ) . '" />
-				' . get_submit_button( $text, 'button', '', false, array('id' => 'search-submit') ) . '
+				' . get_submit_button( $text, 'button', '', false, array( 'id' => 'search-submit' ) ) . '
 			</p>
 		';
 
@@ -61,15 +61,15 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$views = apply_filters( "views_{$this->screen->id}", $views );
 
-		if ( empty( $views ) )
-			return;
+		if ( empty( $views ) ) {
+			return; }
 
 		$content = '<ul class="subsubsub">';
 
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "<li class='$class'>$view";
 		}
-		$content .= implode( " |</li>", $views ) . "</li>";
+		$content .= implode( ' |</li>', $views ) . '</li>';
 
 		$content .= '</ul>';
 
@@ -89,14 +89,14 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 			$two = '2';
 		}
 
-		if ( empty( $this->_actions ) )
-			return;
+		if ( empty( $this->_actions ) ) {
+			return; }
 
 		$content = '';
 
-		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', CoursePress::TD ) . "</label>";
+		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', CoursePress::TD ) . '</label>';
 		$content .= "<select name='action$two' id='bulk-action-selector-" . esc_attr( $which ) . "'>";
-		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', CoursePress::TD ) . "</option>";
+		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', CoursePress::TD ) . '</option>';
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' == $name ? ' class="hide-if-no-js"' : '';
@@ -104,7 +104,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 			$content .= "<option value='$name'$class>$title</option>";
 		}
 
-		$content .= "</select>";
+		$content .= '</select>';
 
 		$content .= get_submit_button( __( 'Apply', CoursePress::TD ), 'action', '', false, array( 'id' => "doaction$two" ) );
 
@@ -132,8 +132,8 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$month_count = count( $months );
 
-		if ( !$month_count || ( 1 == $month_count && 0 == $months[0]->month ) )
-			return;
+		if ( ! $month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
+			return; }
 
 		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
 
@@ -144,8 +144,8 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
         ';
 
 		foreach ( $months as $arc_row ) {
-			if ( 0 == $arc_row->year )
-				continue;
+			if ( 0 == $arc_row->year ) {
+				continue; }
 
 			$month = zeroise( $arc_row->month, 2 );
 			$year = $arc_row->year;
@@ -178,8 +178,8 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		foreach ( $this->modes as $mode => $title ) {
 			$classes = array( 'view-' . $mode );
 
-			if ( $current_mode == $mode )
-				$classes[] = 'current';
+			if ( $current_mode == $mode ) {
+				$classes[] = 'current'; }
 
 			$content .= sprintf(
 				"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>",
@@ -204,13 +204,13 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$content = '';
 
-		if ( $pending_comments )
-			$content .= '<strong>';
+		if ( $pending_comments ) {
+			$content .= '<strong>'; }
 
-		$content .= "<a href='" . esc_url( add_query_arg( 'p', $post_id, admin_url( 'edit-comments.php' ) ) ) . "' title='" . esc_attr( $pending_phrase ) . "' class='post-com-count'><span class='comment-count'>" . number_format_i18n( get_comments_number() ) . "</span></a>";
+		$content .= "<a href='" . esc_url( add_query_arg( 'p', $post_id, admin_url( 'edit-comments.php' ) ) ) . "' title='" . esc_attr( $pending_phrase ) . "' class='post-com-count'><span class='comment-count'>" . number_format_i18n( get_comments_number() ) . '</span></a>';
 
-		if ( $pending_comments )
-			$content .= '</strong>';
+		if ( $pending_comments ) {
+			$content .= '</strong>'; }
 
 		return $content;
 	}
@@ -258,7 +258,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$page_links[] = sprintf( "<a class='%s' title='%s' href='%s'>%s</a>",
 			'prev-page' . $disable_first,
 			esc_attr__( 'Go to the previous page' ),
-			esc_url( add_query_arg( 'paged', max( 1, $current-1 ), $current_url ) ),
+			esc_url( add_query_arg( 'paged', max( 1, $current -1 ), $current_url ) ),
 			'&lsaquo;'
 		);
 
@@ -278,7 +278,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$page_links[] = sprintf( "<a class='%s' title='%s' href='%s'>%s</a>",
 			'next-page' . $disable_last,
 			esc_attr__( 'Go to the next page' ),
-			esc_url( add_query_arg( 'paged', min( $total_pages, $current+1 ), $current_url ) ),
+			esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 			'&rsaquo;'
 		);
 
@@ -293,7 +293,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		if ( ! empty( $infinite_scroll ) ) {
 			$pagination_links_class = ' hide-if-js';
 		}
-		$output .= "<span class='$pagination_links_class'>" . join( "", $page_links ) . '</span>';
+		$output .= "<span class='$pagination_links_class'>" . join( '', $page_links ) . '</span>';
 
 		if ( $total_pages ) {
 			$page_class = $total_pages < 2 ? ' one-page' : '';
@@ -314,15 +314,13 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
 		$current_url = remove_query_arg( 'paged', $current_url );
 
-		if ( isset( $_GET['orderby'] ) )
+		if ( isset( $_GET['orderby'] ) ) {
 			$current_orderby = $_GET['orderby'];
-		else
-			$current_orderby = '';
+		} else { 			$current_orderby = ''; }
 
-		if ( isset( $_GET['order'] ) && 'desc' == $_GET['order'] )
+		if ( isset( $_GET['order'] ) && 'desc' == $_GET['order'] ) {
 			$current_order = 'desc';
-		else
-			$current_order = 'asc';
+		} else { 			$current_order = 'asc'; }
 
 		if ( ! empty( $columns['cb'] ) ) {
 			static $cb_counter = 1;
@@ -336,38 +334,37 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 			$class = array( 'manage-column', "column-$column_key" );
 
 			$style = '';
-			if ( in_array( $column_key, $hidden ) )
-				$style = 'display:none;';
+			if ( in_array( $column_key, $hidden ) ) {
+				$style = 'display:none;'; }
 
 			$style = ' style="' . $style . '"';
 
-			if ( 'cb' == $column_key )
-				$class[] = 'check-column';
-			elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) )
-				$class[] = 'num';
+			if ( 'cb' == $column_key ) {
+				$class[] = 'check-column'; } elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) ) {
+				$class[] = 'num'; }
 
-			if ( isset( $sortable[$column_key] ) ) {
-				list( $orderby, $desc_first ) = $sortable[$column_key];
+				if ( isset( $sortable[ $column_key ] ) ) {
+					list( $orderby, $desc_first ) = $sortable[ $column_key ];
 
-				if ( $current_orderby == $orderby ) {
-					$order = 'asc' == $current_order ? 'desc' : 'asc';
-					$class[] = 'sorted';
-					$class[] = $current_order;
-				} else {
-					$order = $desc_first ? 'desc' : 'asc';
-					$class[] = 'sortable';
-					$class[] = $desc_first ? 'asc' : 'desc';
+					if ( $current_orderby == $orderby ) {
+						$order = 'asc' == $current_order ? 'desc' : 'asc';
+						$class[] = 'sorted';
+						$class[] = $current_order;
+					} else {
+						$order = $desc_first ? 'desc' : 'asc';
+						$class[] = 'sortable';
+						$class[] = $desc_first ? 'asc' : 'desc';
+					}
+
+					$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
 				}
 
-				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
-			}
+				$id = $with_id ? "id='$column_key'" : '';
 
-			$id = $with_id ? "id='$column_key'" : '';
+				if ( ! empty( $class ) ) {
+					$class = "class='" . join( ' ', $class ) . "'"; }
 
-			if ( !empty( $class ) )
-				$class = "class='" . join( ' ', $class ) . "'";
-
-			$content .= "<th scope='col' $id $class $style>$column_display_name</th>";
+				$content .= "<th scope='col' $id $class $style>$column_display_name</th>";
 		}
 		return $content;
 	}
@@ -418,8 +415,8 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 	protected function display_tablenav( $which ) {
 		$content = '';
 
-		if ( 'top' == $which )
-			$content .= wp_nonce_field( 'bulk-' . $this->_args['plural'], "_wpnonce", true , false );
+		if ( 'top' == $which ) {
+			$content .= wp_nonce_field( 'bulk-' . $this->_args['plural'], '_wpnonce', true , false ); }
 
 		$content .= '
 			<div class="tablenav ' . esc_attr( $which ) . '">
@@ -462,7 +459,6 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 			$content .= $this->single_row( $item );
 		}
 
-
 		return $content;
 	}
 
@@ -490,8 +486,8 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 			$class = "class='$column_name column-$column_name'";
 
 			$style = '';
-			if ( in_array( $column_name, $hidden ) )
-				$style = ' style="display:none;"';
+			if ( in_array( $column_name, $hidden ) ) {
+				$style = ' style="display:none;"'; }
 
 			$attributes = "$class$style";
 
@@ -499,16 +495,14 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 				$content .= '<th scope="row" class="check-column">';
 				$content .= $this->column_cb( $item );
 				$content .= '</th>';
-			}
-			elseif ( method_exists( $this, 'column_' . $column_name ) ) {
+			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				$content .= "<td $attributes>";
 				$content .= call_user_func( array( $this, 'column_' . $column_name ), $item );
-				$content .= "</td>";
-			}
-			else {
+				$content .= '</td>';
+			} else {
 				$content .= "<td $attributes>";
 				$content .= $this->column_default( $item, $column_name );
-				$content .= "</td>";
+				$content .= '</td>';
 			}
 		}
 
@@ -543,5 +537,4 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		die( wp_json_encode( $response ) );
 	}
-
 }

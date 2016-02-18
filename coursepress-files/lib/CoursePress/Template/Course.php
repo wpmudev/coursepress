@@ -15,5 +15,4 @@ class CoursePress_Template_Course {
 	public static function course() {
 		return do_shortcode( '[course_page]' );
 	}
-
 }

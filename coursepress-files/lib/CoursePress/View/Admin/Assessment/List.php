@@ -30,11 +30,9 @@ class CoursePress_View_Admin_Assessment_List {
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 
 		// Update Course
-		//add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
-
+		// add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
 		// Update UnitBuilder
-		//add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
-
+		// add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -66,7 +64,7 @@ class CoursePress_View_Admin_Assessment_List {
 			$module_id = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;
 			$student_id = isset( $_REQUEST['student_id'] ) ? (int) $_REQUEST['student_id'] : 0;
 
-			if( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
+			if ( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
 				return ;
 			}
 
@@ -76,19 +74,18 @@ class CoursePress_View_Admin_Assessment_List {
 			$old_feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 			$old_feedback = $old_feedback['feedback'];
 
-			if( $new_grade !== false && (int) $new_grade !== (int) $old_grade ) {
+			if ( $new_grade !== false && (int) $new_grade !== (int) $old_grade ) {
 
 				// Record new grade and get the progress back
 				$student_progress = CoursePress_Model_Student::record_grade( $student_id, $course_id, $unit_id, $module_id, $new_grade, false, $student_progress );
 
 			}
 
-			if( $new_feedback !== false && trim( $new_feedback ) !== trim( $old_feedback ) ) {
+			if ( $new_feedback !== false && trim( $new_feedback ) !== trim( $old_feedback ) ) {
 
 				// Record new feedback
 				$student_progress = CoursePress_Model_Student::record_feedback( $student_id, $course_id, $unit_id, $module_id, $new_feedback, false, $student_progress );
 			}
-
 		}
 
 	}
@@ -107,7 +104,6 @@ class CoursePress_View_Admin_Assessment_List {
 		}
 
 		$content .= '</div>';
-
 
 		echo $content;
 	}
@@ -139,7 +135,6 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$first_last = CoursePress_Helper_Utility::get_user_name( $student_id );
 
-
 		$url        = admin_url( 'admin.php?page=coursepress_assessments' );
 		$url_course = admin_url( 'admin.php?page=coursepress_assessments&course_id=' . $course_id );
 		$url_unit   = admin_url( 'admin.php?page=coursepress_assessments&course_id=' . $course_id . '&unit_id=' . $unit_id );
@@ -165,22 +160,22 @@ class CoursePress_View_Admin_Assessment_List {
 		            '<div class="response">';
 
 		$response_display = $response['response'];
-		switch( $attributes['module_type'] ) {
+		switch ( $attributes['module_type'] ) {
 
 			case 'input-checkbox':
 
 				$response_display = '<ul>';
-				foreach( $attributes['answers'] as $key => $answer ) {
+				foreach ( $attributes['answers'] as $key => $answer ) {
 					$the_answer = in_array( $key, $attributes['answers_selected'] );
 					$student_answer = in_array( $key, $response['response'] );
 
 					$class = '';
-					if( $student_answer && $the_answer ) {
+					if ( $student_answer && $the_answer ) {
 						$class = 'chosen-answer correct';
-					} elseif( $student_answer && ! $the_answer ) {
+					} elseif ( $student_answer && ! $the_answer ) {
 						$class = 'chosen-answer incorrect';
-					} elseif( ! $student_answer && $the_answer ) {
-						//$class = 'incorrect';
+					} elseif ( ! $student_answer && $the_answer ) {
+						// $class = 'incorrect';
 					}
 
 					$response_display .= '<li class="' . $class . '">' . $answer . '</li>';
@@ -193,14 +188,14 @@ class CoursePress_View_Admin_Assessment_List {
 			case 'input-radio':
 			case 'input-select':
 				$response_display = '';
-				if( isset( $response['response'] ) ) {
-					$response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
+				if ( isset( $response['response'] ) ) {
+					$response_display = '<p class="answer">' . $attributes['answers'][ (int) $response['response'] ] . '</p>';
 				}
 
 				break;
 			case 'input-upload':
 
-				if( $response ) {
+				if ( $response ) {
 					$url = $response['response']['url'];
 
 					$file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
@@ -223,7 +218,6 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$content .= $response_display;
 
-
 		$content .= '</div>'; // .response
 
 		$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
@@ -232,15 +226,15 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= '<p class="instructor-feedback-label"><strong>' . esc_html__( 'Instructor Feedback', CoursePress::TD ) . '</strong></p>' .
 					'<div class="feedback">';
 
-		$editor_name    = "feedback-content";
-		$editor_id      = "feedbackContent";
+		$editor_name    = 'feedback-content';
+		$editor_id      = 'feedbackContent';
 		$editor_content = $feedback['feedback'];
 
 		$args = array(
 			'textarea_name' => $editor_name,
 			'media_buttons' => false,
 			'textarea_rows' => 3,
-			'editor_class'  => 'instructor-feedback'
+			'editor_class'  => 'instructor-feedback',
 		);
 
 		ob_start();
@@ -252,9 +246,8 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= '<div><em>' . sprintf( __( 'Last feedback by: %s', CoursePress::TD ), $feedback_display ) . '</em></div>';
 		$content .= '</div>'; // .feedback
 
-
-		if( ! empty( $grade['graded_by'] ) ) {
-			if( 'auto' != $grade['graded_by'] ) {
+		if ( ! empty( $grade['graded_by'] ) ) {
+			if ( 'auto' != $grade['graded_by'] ) {
 				$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['graded_by'] );
 			} else {
 				$first_last = __( 'Calculated', CoursePress::TD );
@@ -294,7 +287,6 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= '</div>'; // .activity-wrapper
 
 		// ADD PERMISSION
-
 		$content .= wp_nonce_field( 'student-grade-feedback', '_wpnonce', true, false );
 
 		$content .= '</form></div>'; // .module-answer-wrapper
@@ -326,12 +318,12 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$units = CoursePress_Model_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
 		$keys = array();
-		if( ! empty( $units ) ) {
+		if ( ! empty( $units ) ) {
 			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
 			$keys  = array_keys( $units );
 
-
-			$selected_unit = isset( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : $units[ $keys[0] ]['unit']->ID;;
+			$selected_unit = isset( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : $units[ $keys[0] ]['unit']->ID;
+			;
 
 			// Get the tab array
 			$tabs = array();
@@ -339,7 +331,7 @@ class CoursePress_View_Admin_Assessment_List {
 				$tabs[] = array(
 					'unit_title' => $unit['unit']->post_title,
 					'class'      => $unit['unit']->post_status,
-					'unit_id'    => $unit_id
+					'unit_id'    => $unit_id,
 				);
 			}
 
@@ -360,7 +352,6 @@ class CoursePress_View_Admin_Assessment_List {
 			$content .= '<h3 class="unit-title">' . esc_html( $units[ $selected_unit ]['unit']->post_title ) . '</h3>';
 
 			$students = CoursePress_Model_Course::get_students( $selected_course );
-
 
 			/**
 			 * Note: We're looping through each student getting the completion meta.
@@ -428,50 +419,49 @@ class CoursePress_View_Admin_Assessment_List {
 							$url              = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
 							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', CoursePress::TD ) . '</a>';
 						}
-						//$response_display = $response['response'];
-						//switch( $attributes['module_type'] ) {
+						// $response_display = $response['response'];
+						// switch( $attributes['module_type'] ) {
 						//
-						//	case 'input-checkbox':
-						//		$response_display = '';
-						//		if( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
-						//			foreach( $response['response'] as $r ) {
-						//				$response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
-						//			}
-						//		}
+						// case 'input-checkbox':
+						// $response_display = '';
+						// if( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
+						// foreach( $response['response'] as $r ) {
+						// $response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
+						// }
+						// }
 						//
-						//		break;
+						// break;
 						//
-						//	case 'input-radio':
-						//	case 'input-select':
-						//		$response_display = '';
-						//		if( isset( $response['response'] ) ) {
-						//			$response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
-						//		}
+						// case 'input-radio':
+						// case 'input-select':
+						// $response_display = '';
+						// if( isset( $response['response'] ) ) {
+						// $response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
+						// }
 						//
-						//		break;
-						//	case 'input-upload':
+						// break;
+						// case 'input-upload':
 						//
-						//		if( $response ) {
-						//			$url = $response['response']['url'];
+						// if( $response ) {
+						// $url = $response['response']['url'];
 						//
-						//			$file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
-						//			$file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
-						//			$file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
+						// $file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
+						// $file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
+						// $file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
 						//
-						//			$file_name = explode( '/', $url );
-						//			$file_name = array_pop( $file_name );
+						// $file_name = explode( '/', $url );
+						// $file_name = array_pop( $file_name );
 						//
-						//			$url = CoursePress_Helper_Utility::encode( $url );
-						//			$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+						// $url = CoursePress_Helper_Utility::encode( $url );
+						// $url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
 						//
-						//			$response_display = '<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
-						//		} else {
-						//			$response_display = '';
-						//		}
+						// $response_display = '<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
+						// } else {
+						// $response_display = '';
+						// }
 						//
-						//		break;
-						//}
-
+						// break;
+						// }
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 						$grade_display = (int) $grade['grade'] === - 1 ? __( '--', CoursePress::TD ) : $grade['grade'];
 
@@ -497,7 +487,6 @@ class CoursePress_View_Admin_Assessment_List {
 
 				$content .= '</tbody>';
 
-
 			}
 
 			if ( empty( $count ) ) {
@@ -517,6 +506,4 @@ class CoursePress_View_Admin_Assessment_List {
 		return $content;
 
 	}
-
-
 }

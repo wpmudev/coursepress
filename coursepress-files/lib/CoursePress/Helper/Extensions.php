@@ -8,8 +8,8 @@ class CoursePress_Helper_Extensions {
 	public static function init() {
 
 		$plugins = array( 'MarketPress', 'TCPDF' );
-		foreach( $plugins as $plugin ) {
-			if( method_exists( 'CoursePress_Helper_Extensions_' . $plugin, 'init' ) ) {
+		foreach ( $plugins as $plugin ) {
+			if ( method_exists( 'CoursePress_Helper_Extensions_' . $plugin, 'init' ) ) {
 				call_user_func( 'CoursePress_Helper_Extensions_' . $plugin . '::init' );
 			}
 		}
@@ -25,24 +25,23 @@ class CoursePress_Helper_Extensions {
 	public static function plugins_table() {
 		$content = '';
 
-		if( empty( self::$plugins ) ) {
+		if ( empty( self::$plugins ) ) {
 			return $content;
 		}
 
-		$content .= '<h3>' . esc_html__( 'Plugins', CoursePress::TD) . '</h3>';
+		$content .= '<h3>' . esc_html__( 'Plugins', CoursePress::TD ) . '</h3>';
 		$content .= '<table class="wp-list-table widefat">
 			<thead>
 				<tr>
-					<th>' . esc_html__('Plugin', CoursePress::TD ) . '</th>
-					<th>' . esc_html__('Source', CoursePress::TD ) . '</th>
-					<th>' . esc_html__('Status', CoursePress::TD ) . '</th>
-					<th>' . esc_html__('Action', CoursePress::TD ) . '</th>
+					<th>' . esc_html__( 'Plugin', CoursePress::TD ) . '</th>
+					<th>' . esc_html__( 'Source', CoursePress::TD ) . '</th>
+					<th>' . esc_html__( 'Status', CoursePress::TD ) . '</th>
+					<th>' . esc_html__( 'Action', CoursePress::TD ) . '</th>
 				</tr>
 			</thead>
 			<tbody>';
 
-
-		foreach( self::$plugins as $plugin ) {
+		foreach ( self::$plugins as $plugin ) {
 
 			$plugin_dir = WP_PLUGIN_DIR . '/' . $plugin['base_path'];
 			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $plugin['base_path'];
@@ -50,9 +49,9 @@ class CoursePress_Helper_Extensions {
 			$installed = ! empty( $location );
 			$activated = $installed ? is_plugin_active( $plugin['base_path'] ) : false;
 
-			if( $installed && $activated ) {
+			if ( $installed && $activated ) {
 				$status = 'Installed/Activated';
-				if( current_user_can( 'manage_options') ) {
+				if ( current_user_can( 'manage_options' ) ) {
 
 					$action = '<form method="post">
 						<input type="hidden" name="page" value="' . $_GET['page'] . '">
@@ -67,10 +66,9 @@ class CoursePress_Helper_Extensions {
 					</form>
 					';
 				}
-
 			} elseif ( $installed ) {
 				$status = 'Installed/Not Activated';
-				if( current_user_can( 'manage_options') ) {
+				if ( current_user_can( 'manage_options' ) ) {
 
 					$action = '<form method="post">
 						<input type="hidden" name="page" value="' . $_GET['page'] . '">
@@ -87,8 +85,8 @@ class CoursePress_Helper_Extensions {
 				}
 			} else {
 				$status = 'Not Installed';
-				//http://network1.dev/wp-admin/network/update.php?action=install-plugin&plugin=jetpack&_wpnonce=3cee8117d8
-				if( current_user_can( 'install_plugins') ) {
+				// http://network1.dev/wp-admin/network/update.php?action=install-plugin&plugin=jetpack&_wpnonce=3cee8117d8
+				if ( current_user_can( 'install_plugins' ) ) {
 
 					$action = '<form method="post">
 						<input type="hidden" name="page" value="' . $_GET['page'] . '">
@@ -123,8 +121,4 @@ class CoursePress_Helper_Extensions {
 
 		return $content;
 	}
-
-
-
-
 }

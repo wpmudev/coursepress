@@ -17,7 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301 USA
- *
  */
 
 
@@ -30,7 +29,7 @@
  */
 class CoursePress_Helper_PDF extends TCPDF {
 
-	private $footer_text = "";
+	private $footer_text = '';
 
 	// short side then long side
 	protected $dimensions = array(
@@ -49,16 +48,15 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );
 
 		// Position at 15 mm from bottom
-		$this->SetY(-15);
+		$this->SetY( -15 );
 		// Set font
-		$this->SetFont( $the_font, '', 10);
+		$this->SetFont( $the_font, '', 10 );
 		// Page number
-		$this->Cell(0, 5, $this->footer_text, 0, false, 'L', 0, '', 0, false, 'T', 'M');
-		$this->Cell(0, 5, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'T');
+		$this->Cell( 0, 5, $this->footer_text, 0, false, 'L', 0, '', 0, false, 'T', 'M' );
+		$this->Cell( 0, 5, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'T' );
 		$line_width = (0.85 / $this->k);
 
-		//$this->SetLineStyle(array('width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color));
-
+		// $this->SetLineStyle(array('width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color));
 		$pageWidth    = $this->getPageWidth();   // Get total page width, without margins
 		$pageMargins  = $this->getMargins();     // Get all margins as array
 		$headerMargin = $pageMargins['footer']; // Get the header margin
@@ -68,13 +66,13 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$px2 = $pageWidth - $pageMargins['right'];
 		$p1x = $pageMargins['left'];
 
-		//$p1x   = $this->getX();
+		// $p1x   = $this->getX();
 		$p1y   = $this->getY();
 		$p2x   = $px2;
 		$p2y   = $p1y;  // Use same y for a straight line
-		$style = array('width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color);
+		$style = array( 'width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color );
 		$style = array();
-		$this->Line($p1x, $p1y, $p2x, $p2y, $style);
+		$this->Line( $p1x, $p1y, $p2x, $p2y, $style );
 
 	}
 
@@ -82,86 +80,86 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		// Saving system resources, we wont scan the font directory.
 		$fonts = array(
-			'cid0cs.php' =>  __( "Arial Unicode MS (Simplified Chinese)", CoursePress::TD ),
-			'cid0ct.php' => __( "Arial Unicode MS (Chinese Traditional)", CoursePress::TD ),
-			'cid0jp.php' => __( "Arial Unicode MS (Japanese)", CoursePress::TD ),
-			'cid0kr.php' =>  __( "Arial Unicode MS (Korean)", CoursePress::TD ),
-			'courier.php' => __( "Courier", CoursePress::TD ),
+			'cid0cs.php' => __( 'Arial Unicode MS (Simplified Chinese)', CoursePress::TD ),
+			'cid0ct.php' => __( 'Arial Unicode MS (Chinese Traditional)', CoursePress::TD ),
+			'cid0jp.php' => __( 'Arial Unicode MS (Japanese)', CoursePress::TD ),
+			'cid0kr.php' => __( 'Arial Unicode MS (Korean)', CoursePress::TD ),
+			'courier.php' => __( 'Courier', CoursePress::TD ),
 			'courierb.php' => '',
 			'courierbi.php' => '',
 			'courieri.php' => '',
-			'helvetica.php' => __( "Helvetica", CoursePress::TD ),
+			'helvetica.php' => __( 'Helvetica', CoursePress::TD ),
 			'helveticab.php' => '',
 			'helveticabi.php' => '',
 			'helveticai.php' => '',
-			'symbol.php' => __( "Symbol", CoursePress::TD ),
-			'times.php' => __( "Times-Roman", CoursePress::TD ),
+			'symbol.php' => __( 'Symbol', CoursePress::TD ),
+			'times.php' => __( 'Times-Roman', CoursePress::TD ),
 			'timesb.php' => '',
 			'timesbi.php' => '',
 			'timesi.php' => '',
-			'uni2cid_ac15.php' => __( "Adobe-CNS1-5", CoursePress::TD ),
-			'uni2cid_ag15.php' => __( "Adobe-GB1-5", CoursePress::TD ),
-			'uni2cid_aj16.php' => __( "Adobe-Japan1-6", CoursePress::TD ),
-			'uni2cid_ak12.php' => __( "Adobe-Korea1-2", CoursePress::TD ),
-			'zapfdingbats.php' => __( "ZapfDingbats", CoursePress::TD ),
+			'uni2cid_ac15.php' => __( 'Adobe-CNS1-5', CoursePress::TD ),
+			'uni2cid_ag15.php' => __( 'Adobe-GB1-5', CoursePress::TD ),
+			'uni2cid_aj16.php' => __( 'Adobe-Japan1-6', CoursePress::TD ),
+			'uni2cid_ak12.php' => __( 'Adobe-Korea1-2', CoursePress::TD ),
+			'zapfdingbats.php' => __( 'ZapfDingbats', CoursePress::TD ),
 		);
 
-		if( defined( 'TCPDF_PLUGIN_ACTIVE' ) && TCPDF_PLUGIN_ACTIVE ) {
+		if ( defined( 'TCPDF_PLUGIN_ACTIVE' ) && TCPDF_PLUGIN_ACTIVE ) {
 			$fonts = array_merge( $fonts, array(
-				'aealarabiya.php' => __( "Al Arabiya", CoursePress::TD ),
-				'aefurat.php' => __( "Furat", CoursePress::TD ),
-				'dejavusans.php' => __( "DejaVu Sans", CoursePress::TD ),
+				'aealarabiya.php' => __( 'Al Arabiya', CoursePress::TD ),
+				'aefurat.php' => __( 'Furat', CoursePress::TD ),
+				'dejavusans.php' => __( 'DejaVu Sans', CoursePress::TD ),
 				'dejavusansb.php' => '',
 				'dejavusansbi.php' => '',
-				'dejavusanscondensed.php' => __( "DejaVu Sans Condensed", CoursePress::TD ),
+				'dejavusanscondensed.php' => __( 'DejaVu Sans Condensed', CoursePress::TD ),
 				'dejavusanscondensedb.php' => '',
 				'dejavusanscondensedbi.php' => '',
 				'dejavusanscondensedi.php' => '',
-				'dejavusansextralight.php' => __( "DejaVu Sans ExtraLight", CoursePress::TD ),
+				'dejavusansextralight.php' => __( 'DejaVu Sans ExtraLight', CoursePress::TD ),
 				'dejavusansi.php' => '',
-				'dejavusansmono.php' => __( "DejaVu Sans Mono", CoursePress::TD ),
+				'dejavusansmono.php' => __( 'DejaVu Sans Mono', CoursePress::TD ),
 				'dejavusansmonob.php' => '',
 				'dejavusansmonobi.php' => '',
 				'dejavusansmonoi.php' => '',
-				'dejavuserif.php' => __( "DejaVu Serif", CoursePress::TD ),
+				'dejavuserif.php' => __( 'DejaVu Serif', CoursePress::TD ),
 				'dejavuserifb.php' => '',
 				'dejavuserifbi.php' => '',
-				'dejavuserifcondensed.php' => __( "DejaVu Serif Condensed", CoursePress::TD ),
+				'dejavuserifcondensed.php' => __( 'DejaVu Serif Condensed', CoursePress::TD ),
 				'dejavuserifcondensedb.php' => '',
 				'dejavuserifcondensedbi.php' => '',
 				'dejavuserifcondensedi.php' => '',
 				'dejavuserifi.php' => '',
-				'freemono.php' => __( "Free Mono", CoursePress::TD ),
+				'freemono.php' => __( 'Free Mono', CoursePress::TD ),
 				'freemonob.php' => '',
 				'freemonobi.php' => '',
 				'freemonoi.php' => '',
-				'freesans.php' => __( "Free Sans", CoursePress::TD ),
+				'freesans.php' => __( 'Free Sans', CoursePress::TD ),
 				'freesansb.php' => '',
 				'freesansbi.php' => '',
 				'freesansi.php' => '',
-				'freeserif.php' => __( "Free Serif", CoursePress::TD ),
+				'freeserif.php' => __( 'Free Serif', CoursePress::TD ),
 				'freeserifb.php' => '',
 				'freeserifbi.php' => '',
 				'freeserifi.php' => '',
-				'hysmyeongjostdmedium.php' => __( "MyungJo Medium (Korean)", CoursePress::TD ),
-				'kozgopromedium.php' => __( "Kozuka Gothic Pro (Japanese Sans-Serif)", CoursePress::TD ),
-				'kozminproregular.php' => __( "Kozuka Mincho Pro (Japanese Serif)", CoursePress::TD ),
-				'msungstdlight.php' => __( "MSung Light (Traditional Chinese)", CoursePress::TD ),
-				'pdfacourier.php' => __( "PDFA Courier", CoursePress::TD ),
+				'hysmyeongjostdmedium.php' => __( 'MyungJo Medium (Korean)', CoursePress::TD ),
+				'kozgopromedium.php' => __( 'Kozuka Gothic Pro (Japanese Sans-Serif)', CoursePress::TD ),
+				'kozminproregular.php' => __( 'Kozuka Mincho Pro (Japanese Serif)', CoursePress::TD ),
+				'msungstdlight.php' => __( 'MSung Light (Traditional Chinese)', CoursePress::TD ),
+				'pdfacourier.php' => __( 'PDFA Courier', CoursePress::TD ),
 				'pdfacourierb.php' => '',
 				'pdfacourierbi.php' => '',
 				'pdfacourieri.php' => '',
-				'pdfahelvetica.php' => __( "PDFA Helvetica", CoursePress::TD ),
+				'pdfahelvetica.php' => __( 'PDFA Helvetica', CoursePress::TD ),
 				'pdfahelveticab.php' => '',
 				'pdfahelveticabi.php' => '',
 				'pdfahelveticai.php' => '',
-				'pdfasymbol.php' => __( "PDFA Symbol", CoursePress::TD ),
-				'pdfatimes.php' => __( "PDFA Times", CoursePress::TD ),
+				'pdfasymbol.php' => __( 'PDFA Symbol', CoursePress::TD ),
+				'pdfatimes.php' => __( 'PDFA Times', CoursePress::TD ),
 				'pdfatimesb.php' => '',
 				'pdfatimesbi.php' => '',
 				'pdfatimesi.php' => '',
-				'pdfazapfdingbats.php' => __( "PDFA ZapfDingbats", CoursePress::TD ),
-				'stsongstdlight.php' => __( "STSong Light (Simplified Chinese)", CoursePress::TD ),
+				'pdfazapfdingbats.php' => __( 'PDFA ZapfDingbats', CoursePress::TD ),
+				'stsongstdlight.php' => __( 'STSong Light (Simplified Chinese)', CoursePress::TD ),
 			) );
 		}
 
@@ -232,7 +230,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		$page_orientation = isset( $args['orientation'] ) ? $args['orientation'] : PDF_PAGE_ORIENTATION;
 
-		//Make directory for receipt cache
+		// Make directory for receipt cache
 		if ( ! is_dir( $cache_path ) ) {
 			mkdir( $cache_path, 0755, true );
 			touch( trailingslashit( $cache_path ) . 'index.php' );
@@ -241,10 +239,10 @@ class CoursePress_Helper_PDF extends TCPDF {
 			chmod( $cache_path, 0755 );
 		}
 
-		//Clean out old cache files
+		// Clean out old cache files
 		foreach ( glob( $cache_path . '*.pdf' ) as $fname ) {
 			$age = time() - filemtime( $fname );
-			if ( ( $age > 12 * 60 * 60 ) && ( basename( $fname ) != 'index.php' ) ) { //Don't erase our blocking index.php file
+			if ( ( $age > 12 * 60 * 60 ) && ( basename( $fname ) != 'index.php' ) ) { // Don't erase our blocking index.php file
 				unlink( $fname ); // more than 12 hours old;
 			}
 		}
@@ -252,7 +250,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 		// create new PDF document
 		$pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
 
-		//$dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
+		// $dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
 		$dimension = self::get_format_in_px( PDF_PAGE_FORMAT );
 		if ( 'P' == $page_orientation ) {
 			$temp         = $dimension[0];
@@ -263,7 +261,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 		// Note: If uncommenting below, please remove previous call.
 		// Can use the following to change language symbols to appropriate standard, e.g. ISO-638-2 languages.
 		// $pdf = new TCPDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, false, 'ISO-639-2', false );
-
 		// set document information
 		$pdf->SetCreator( CoursePress::$name );
 		$pdf->SetTitle( $args['title'] );
@@ -274,11 +271,11 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$title    = isset( $args['header']['title'] ) ? $args['header']['title'] : '';
 			$subtitle = isset( $args['header']['subtitle'] ) ? $args['header']['subtitle'] : '';
 
-			if( empty( $subtitle ) ) {
+			if ( empty( $subtitle ) ) {
 				$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
 			}
 
-			//setHeaderData($ln='', $lw=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)
+			// setHeaderData($ln='', $lw=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)
 			$pdf->SetHeaderData( '', '', $title, $subtitle );
 			$pdf->setHeaderFont( array( PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN ) );
 
@@ -300,20 +297,17 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$pdf->SetFooterMargin( PDF_MARGIN_FOOTER );
 		}
 
-
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont( PDF_FONT_MONOSPACED );
 
-
-		//set image scale factor
+		// set image scale factor
 		$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
 
-		//set some language-dependent strings
+		// set some language-dependent strings
 		global $l;
 		$pdf->setLanguageArray( $l );
 
 		// ---------------------------------------------------------
-
 		// set font
 		if ( isset( $args['base_font'] ) ) {
 			$pdf->SetFont( $args['base_font']['family'], '', $args['base_font']['size'] );
@@ -341,16 +335,14 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$pdf->setPageMark();
 		}
 
-		//$pdf->SetMargins( PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT );
-
-		//set auto page breaks
+		// $pdf->SetMargins( PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT );
+		// set auto page breaks
 		$pdf->SetAutoPageBreak( true, PDF_MARGIN_BOTTOM );
 
 		// output the HTML content
 		$pdf->writeHTML( $html, true, false, true, false, '' );
 
 		// ---------------------------------------------------------
-
 		global $blog_id;
 		$user_id = get_current_user_id();
 
@@ -370,15 +362,14 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		switch ( $args['format'] ) {
 			case 'F':
-				//Close and output PDF document
+				// Close and output PDF document
 				$pdf->Output( $fname, 'F' );
 				if ( isset( $args['url'] ) && ! empty( $args['url'] ) ) {
-					if( isset( $args['force_download'] ) && ! empty( $args['force_download'] ) ) {
+					if ( isset( $args['force_download'] ) && ! empty( $args['force_download'] ) ) {
 						CoursePress_Helper_Utility::download_file_request( $furl );
 					} else {
 						return $furl;
 					}
-
 				} else {
 					$attachments[] = $fname;
 				}
@@ -393,5 +384,4 @@ class CoursePress_Helper_PDF extends TCPDF {
 		}
 
 	}
-
 }

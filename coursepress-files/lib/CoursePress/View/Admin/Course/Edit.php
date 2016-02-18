@@ -65,8 +65,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 	public static function process_form() {
 
-		//error_log( print_r( $_REQUEST, true ) );
-
+		// error_log( print_r( $_REQUEST, true ) );
 	}
 
 	public static function render_page() {
@@ -97,7 +96,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'state'       => 'publish' === $status ? 'on' : 'off',
 			'data'        => array(
 				'nonce' => wp_create_nonce( 'publish-course' ),
-			)
+			),
 		);
 		$ui['class']    = 'course-' . $course_id;
 		$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
@@ -118,7 +117,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$course_id      = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		$course = false;
-		if( ! empty( $course_id ) ) {
+		if ( ! empty( $course_id ) ) {
 			$course = get_post( $course_id );
 		}
 
@@ -143,7 +142,7 @@ class CoursePress_View_Admin_Course_Edit {
 		</div>
 		';
 
-		if( $has_metaboxes ) {
+		if ( $has_metaboxes ) {
 			$content .= '<div class="course-edit-metaboxes">' . $metabox_side . '</div>';
 		}
 
@@ -179,18 +178,17 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_1_after_title', '', $course_id );
 
 		// Course Excerpt / Short Overview
-		$editor_name    = "course_excerpt";
-		$editor_id      = "courseExcerpt";
+		$editor_name    = 'course_excerpt';
+		$editor_id      = 'courseExcerpt';
 		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_excerpt ) : '';
-		//$editor_content	 = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
-		//$editor_content = "whatup!";
-
+		// $editor_content    = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
+		// $editor_content = "whatup!";
 		$args = array(
-			"textarea_name" => $editor_name,
-			"editor_class"  => 'cp-editor cp-course-overview',
-			"textarea_rows" => 4,
-			"media_buttons" => false,
-			//"quicktags"		 => false,
+			'textarea_name' => $editor_name,
+			'editor_class'  => 'cp-editor cp-course-overview',
+			'textarea_rows' => 4,
+			'media_buttons' => false,
+			// "quicktags"        => false,
 		);
 
 		// Filter $args
@@ -303,20 +301,20 @@ class CoursePress_View_Admin_Course_Edit {
 				'title'       => __( 'Featured Video', CoursePress::TD ),
 				'value'       => CoursePress_Model_Course::get_setting( $course_id, 'featured_video' ),
 				'type'        => 'video',
-				'description' => __( 'This is used on the Course Overview page and will be displayed with the course description.', CoursePress::TD )
+				'description' => __( 'This is used on the Course Overview page and will be displayed with the course description.', CoursePress::TD ),
 			)
 		);
 
 		// Course Description
-		$editor_name    = "course_description";
-		$editor_id      = "courseDescription";
+		$editor_name    = 'course_description';
+		$editor_id      = 'courseDescription';
 		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_content ) : '';
 
 		$args = array(
-			"textarea_name" => $editor_name,
-			"editor_class"  => 'cp-editor cp-course-overview',
-			"textarea_rows" => 10,
-			"media_buttons" => true,
+			'textarea_name' => $editor_name,
+			'editor_class'  => 'cp-editor cp-course-overview',
+			'textarea_rows' => 10,
+			'media_buttons' => true,
 		);
 
 		// Filter $args
@@ -472,22 +470,20 @@ class CoursePress_View_Admin_Course_Edit {
 					';
 
 				}
-
 			}
 
 			// Fix broken pages
-			//$page_titles = get_post_meta( $unit->ID, 'page_title', true );
-			//if( empty( $page_titles ) ) {
-			//	$page_titles = array();
-			//	$page_visible = array();
-			//	foreach ( $unit['pages'] as $key => $page ) {
-			//		$page_titles[ 'page_' . $key ] = $page['title'];
-			//		$page_visible[] = true;
-			//	}
-			//	update_post_meta( $unit->ID, 'page_title', $page_titles );
-			//	update_post_meta( $unit->ID, 'show_page_title', $page_visible );
-			//}
-
+			// $page_titles = get_post_meta( $unit->ID, 'page_title', true );
+			// if( empty( $page_titles ) ) {
+			// $page_titles = array();
+			// $page_visible = array();
+			// foreach ( $unit['pages'] as $key => $page ) {
+			// $page_titles[ 'page_' . $key ] = $page['title'];
+			// $page_visible[] = true;
+			// }
+			// update_post_meta( $unit->ID, 'page_title', $page_titles );
+			// update_post_meta( $unit->ID, 'show_page_title', $page_visible );
+			// }
 		}
 
 		$content .= '
@@ -497,7 +493,6 @@ class CoursePress_View_Admin_Course_Edit {
 					</div>
 				</div>
 		';
-
 
 		/**
 		 * Add additional fields.
@@ -544,8 +539,8 @@ class CoursePress_View_Admin_Course_Edit {
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
 				'placeholder' => __( 'Choose a Course Instructor...', CoursePress::TD ),
 				'class'       => 'chosen-select medium',
-				'context' => 'instructors'
-			) ) . '
+				'context' => 'instructors',
+		) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', CoursePress::TD ) . '" />
 				</div>
 				<div class="instructors-info medium" id="instructors-info">
@@ -554,8 +549,8 @@ class CoursePress_View_Admin_Course_Edit {
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
 				'remove_buttons' => true,
-				'count'          => true
-			) )
+				'count'          => true,
+		) )
 		) {
 			$content .= '
 					<div class="instructor-avatar-holder empty">
@@ -595,7 +590,6 @@ class CoursePress_View_Admin_Course_Edit {
 				</div>
 				';
 
-
 		/**
 		 * Add additional fields.
 		 *
@@ -630,7 +624,6 @@ class CoursePress_View_Admin_Course_Edit {
 			<div class="step-content step-4">
 				<input type="hidden" name="meta_setup_step_4" value="saved" />
 			';
-
 
 		$open_ended_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'course_open_ended', true ) );
 		$open_ended_course  = ! empty( $open_ended_checked );
@@ -690,7 +683,6 @@ class CoursePress_View_Admin_Course_Edit {
 					</div>
 				</div>';
 
-
 		/**
 		 * Add additional fields.
 		 *
@@ -725,7 +717,6 @@ class CoursePress_View_Admin_Course_Edit {
 			<div class="step-content step-5">
 				<input type="hidden" name="meta_setup_step_5" value="saved" />
 			';
-
 
 		$limit_checked = CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'class_limited', false ) );
 		$limited       = ! empty( $limit_checked );
@@ -849,7 +840,6 @@ class CoursePress_View_Admin_Course_Edit {
 					</select>
 				</div>';
 
-
 		$class = 'prerequisite' === $selected ? '' : 'hidden';
 		$content .= '
 				<div class="wide enrollment-type-options prerequisite ' . $class . '">';
@@ -882,7 +872,6 @@ class CoursePress_View_Admin_Course_Edit {
 					</select>
 				</div>
 			';
-
 
 		$class = 'passcode' === $selected ? '' : 'hidden';
 		$content .= '
@@ -937,7 +926,6 @@ class CoursePress_View_Admin_Course_Edit {
 			} else {
 				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', CoursePress::TD );
 			}
-
 
 			$class = $is_paid ? '' : 'hidden';
 
@@ -1016,7 +1004,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'title'       => __( 'Course Setup', CoursePress::TD ),
 			'description' => __( 'Edit your course specific settings below.', CoursePress::TD ),
 			'order'       => 10,
-			'buttons'     => 'none'
+			'buttons'     => 'none',
 		);
 
 		if ( 'edit' == self::_current_action() ) {
@@ -1028,14 +1016,14 @@ class CoursePress_View_Admin_Course_Edit {
 				'title'       => sprintf( __( 'Units (%s)', CoursePress::TD ), count( $units ) ),
 				'description' => __( 'Edit your course specific settings below.', CoursePress::TD ),
 				'order'       => 20,
-				'buttons'     => 'none'
+				'buttons'     => 'none',
 			);
 
 			self::$tabs['students'] = array(
 				'title'       => sprintf( __( 'Students (%s)', CoursePress::TD ), CoursePress_Model_Course::count_students( $course_id ) ),
 				'description' => __( 'Edit your course specific settings below.', CoursePress::TD ),
 				'order'       => 30,
-				'buttons'     => 'none'
+				'buttons'     => 'none',
 			);
 
 		}
@@ -1223,7 +1211,7 @@ class CoursePress_View_Admin_Course_Edit {
 					$courses = $data->data->courses;
 					$action = $data->data->the_action;
 
-					foreach( $courses as $course_id ) {
+					foreach ( $courses as $course_id ) {
 						switch ( $action ) {
 
 							case 'publish':
@@ -1277,7 +1265,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 					$the_course = get_post( $course_id );
 
-					if( ! empty( $the_course ) ) {
+					if ( ! empty( $the_course ) ) {
 
 						$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
 						$the_course['post_author'] = get_current_user_id();
@@ -1295,15 +1283,15 @@ class CoursePress_View_Admin_Course_Edit {
 						$new_course_id = wp_insert_post( $the_course );
 
 						$course_meta = get_post_meta( $course_id );
-						foreach( $course_meta as $key => $value ) {
-							if( ! preg_match( '/^_/', $key ) ) {
+						foreach ( $course_meta as $key => $value ) {
+							if ( ! preg_match( '/^_/', $key ) ) {
 								update_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ) );
 							}
 						}
 
 						$course_data = CoursePress_Helper_Utility::object_to_array( CoursePress_Model_Course::get_units_with_modules( $course_id, array(
 							'publish',
-							'draft'
+							'draft',
 						) ) );
 						$course_data = CoursePress_Helper_Utility::sort_on_key( $course_data, 'order' );
 
@@ -1325,18 +1313,17 @@ class CoursePress_View_Admin_Course_Edit {
 
 							$new_unit_id = wp_insert_post( $unit );
 							$unit_meta = get_post_meta( $unit_id );
-							foreach( $unit_meta as $key => $value ) {
-								if( ! preg_match( '/^_/', $key ) ) {
+							foreach ( $unit_meta as $key => $value ) {
+								if ( ! preg_match( '/^_/', $key ) ) {
 									update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
 								}
 							}
 
 							$pages = isset( $unit_schema['pages'] ) ? $unit_schema['pages'] : array();
-							foreach( $pages as $page ) {
+							foreach ( $pages as $page ) {
 
 								$modules = $page['modules'];
-								foreach( $modules as $module_id => $module ) {
-
+								foreach ( $modules as $module_id => $module ) {
 
 									$module['post_author'] = get_current_user_id();
 									$module['post_parent'] = $new_unit_id;
@@ -1352,16 +1339,13 @@ class CoursePress_View_Admin_Course_Edit {
 									$new_module_id = wp_insert_post( $module );
 
 									$module_meta = get_post_meta( $module_id );
-									foreach( $module_meta as $key => $value ) {
-										if( ! preg_match( '/^_/', $key ) ) {
+									foreach ( $module_meta as $key => $value ) {
+										if ( ! preg_match( '/^_/', $key ) ) {
 											update_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ) );
 										}
 									}
-
 								}
-
 							}
-
 						}
 
 						$json_data['course_id'] = $new_course_id;
@@ -1385,7 +1369,5 @@ class CoursePress_View_Admin_Course_Edit {
 			wp_send_json_error( $json_data );
 		}
 
-
 	}
-
 }

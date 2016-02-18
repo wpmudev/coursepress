@@ -21,7 +21,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	}
 
 
-	public static function view_templates( $template = false ) {		
+	public static function view_templates( $template = false ) {
 		$templates = array(
 
 			'unit_builder'                     => '
@@ -49,24 +49,24 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
 					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'cp' ) . '<div class="unit-state">' .
-                      CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle', 'unit-live-toggle', array(
-						'left' => __( 'Draft', 'cp' ),
-                        'right' => __( 'Live', 'cp' )
-                      )) . '</h3>
+					  CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle', 'unit-live-toggle', array(
+						  'left' => __( 'Draft', 'cp' ),
+						  'right' => __( 'Live', 'cp' ),
+					  )) . '</h3>
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . esc_html__( 'Unit Description', 'cp' ) . '</label>
 					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%= unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
-						'unit_feature_image',
-						'unit_feature_image',
-						array(
+				'unit_feature_image',
+				'unit_feature_image',
+				array(
 							'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
 							'title'       => __( 'Unit Feature Image', 'cp' ),
 							'value'       => '<%= unit_feature_image %>', // Add _s template
 						)
-					) . '
+			) . '
 					</div>
 					<div class="unit-availability">
 						<label for="unit_availability">'. esc_html__( 'Unit Availability', 'cp' ) . '</label>
@@ -90,15 +90,15 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<div class="progress-next-unit">
 						<label>'. esc_html__( 'Progress to next unit', 'cp' ) . '</label>
 						<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %> /><span>'. sprintf( '%s <em>%s</em> %s',
-							esc_html__( 'User needs to', 'cp' ),
-							esc_html__( 'answer', 'cp' ),
-							esc_html__( 'all mandatory assessments and view all pages in order to access the next unit', 'cp' )
-						) . '</span></label>
+				esc_html__( 'User needs to', 'cp' ),
+				esc_html__( 'answer', 'cp' ),
+				esc_html__( 'all mandatory assessments and view all pages in order to access the next unit', 'cp' )
+			) . '</span></label>
 						<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="meta_force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>'. sprintf( '%s <em>%s</em> %s',
-							esc_html__( 'User also needs to', 'cp' ),
-							esc_html__( 'pass', 'cp' ),
-							esc_html__( 'all mandatory assessments', 'cp' )
-						) . '</span></label>
+				esc_html__( 'User also needs to', 'cp' ),
+				esc_html__( 'pass', 'cp' ),
+				esc_html__( 'all mandatory assessments', 'cp' )
+			) . '</span></label>
 					</div>
 				</div>
 				<div class="unit-buttons"><div class="button unit-save-button">' . __( 'Save', 'cp' ) . '</div><div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'cp' ) . '</div></div>
@@ -143,14 +143,14 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<label class="page-description">' . esc_html__( 'Section Description', 'cp' ) . '</label>
 					<textarea name="page_description" id="page_description_1_1"><%= page_description %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
-							'page_feature_image',
-							'page_feature_image',
-							array(
+				'page_feature_image',
+				'page_feature_image',
+				array(
 								'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
 								'title'       => __( 'Section Image', 'cp' ),
 								'value'       => '<%= page_feature_image %>', // Add _s template
 							)
-					) . '
+			) . '
 					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show section header as part of unit', 'cp' ) . '</span></label>
 					</div>
 				</script>
@@ -163,20 +163,20 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_footer'              => '
 				<script type="text/template" id="unit-builder-footer-template">
 				<div class="button unit-save-button">' . __( 'Save', 'cp' ) . '</div>' .
-                  CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle-2', 'unit-live-toggle-2', array(
-                      'left' => __( 'Draft', 'cp' ),
-                      'right' => __( 'Live', 'cp' )
-                  ))
-                  . '</script>',
+				  CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle-2', 'unit-live-toggle-2', array(
+					  'left' => __( 'Draft', 'cp' ),
+					  'right' => __( 'Live', 'cp' ),
+				  ))
+				  . '</script>',
 		);
 
 		$templates['unit_builder_content_components']  = '
 				<script type="text/template" id="unit-builder-components-template">
 					<label class="bigger">' . esc_html__( 'Modules', 'cp' ) . '</label>
-					<p class="description">' . esc_html__('Click to add module elements to the unit', 'cp') . '</p>';
+					<p class="description">' . esc_html__( 'Click to add module elements to the unit', 'cp' ) . '</p>';
 
 		$ouputs = CoursePress_Helper_UI_Module::get_output_types();
-		foreach( $ouputs as $key => $output ) {
+		foreach ( $ouputs as $key => $output ) {
 			$templates['unit_builder_content_components'] .= '
 			<div class="output-element module-' . $key . '" data-type="' . $key . '">
 				<a></a>
@@ -188,7 +188,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		$templates['unit_builder_content_components'] .= '<div class="elements-separator"></div>';
 
 		$inputs = CoursePress_Helper_UI_Module::get_input_types();
-		foreach( $inputs as $key => $input ) {
+		foreach ( $inputs as $key => $input ) {
 			$templates['unit_builder_content_components'] .= '
 			<div class="input-element module-' . $key . '" data-type="' . $key . '">
 				<a id="text_module" class="add-element"></a>
@@ -218,7 +218,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 				foreach ( $units as $unit ) {
 					$meta  = get_post_meta( $unit->ID );
-					foreach( $meta as $key => $value ) {
+					foreach ( $meta as $key => $value ) {
 						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
 					}
 					// Temp for reordering
@@ -229,7 +229,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				// Reorder units before returning it
 				$units = CoursePress_Helper_Utility::sort_on_key( CoursePress_Helper_Utility::object_to_array( $units ), 'unit_order' );
 
-				foreach( $units as $unit ) {
+				foreach ( $units as $unit ) {
 					$json_data[] = $unit;
 				}
 
@@ -242,7 +242,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 				foreach ( $modules as $module ) {
 					$meta = get_post_meta( $module->ID );
-					foreach( $meta as $key => $value ) {
+					foreach ( $meta as $key => $value ) {
 						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
 					}
 					// Temp for reordering
@@ -253,7 +253,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				// Reorder modules before returning it
 				$modules = CoursePress_Helper_Utility::sort_on_key( CoursePress_Helper_Utility::object_to_array( $modules ), 'module_order' );
 
-				foreach( $modules as $module ) {
+				foreach ( $modules as $module ) {
 					$json_data[]  = $module;
 				}
 
@@ -263,7 +263,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 			case 'units_update':
 
-				if( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
 
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
@@ -292,7 +292,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							$course_id = (int) $_REQUEST['course_id'];
 							$unit['post_type'] = CoursePress_Model_Unit::get_post_type_name();
 							$unit['post_parent'] = $course_id;
-							if( $new_unit ) {
+							if ( $new_unit ) {
 								$unit['post_status'] = 'draft';
 							}
 
@@ -303,27 +303,23 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							$units[] = $id;
 
 							// Have pages been removed?
-							//$pages =
-
-
+							// $pages =
 							foreach ( $meta as $key => $value ) {
 								update_post_meta( $id, $key, $value );
 							}
 
 							do_action( 'coursepress_unit_updated', $id );
 
-
 							$json_data['unit_id'] = $id;
 						} else {
-							if( ! empty( $unit_id ) ) {
+							if ( ! empty( $unit_id ) ) {
 								$units[] = $unit_id;
 							}
 						}
-
 					}
 
 					// Check for removed units and delete if needed
-					$saved_units = CoursePress_Model_Course::get_unit_ids( (int) $_REQUEST['course_id'], array('publish','draft'), false );
+					$saved_units = CoursePress_Model_Course::get_unit_ids( (int) $_REQUEST['course_id'], array( 'publish', 'draft' ), false );
 					foreach ( $saved_units as $u_id ) {
 						if ( ! in_array( $u_id, $units ) ) {
 							wp_delete_post( $u_id );
@@ -338,8 +334,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 			case 'modules_update':
 
-				if( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
-
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
 
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
@@ -371,10 +366,9 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$module['post_parent'] = $unit_id;
 						$module['post_status'] = 'publish';
 
-						if( ! empty( $module['meta'] ) && 'discussion' === $module['meta']['module_type'] ) {
+						if ( ! empty( $module['meta'] ) && 'discussion' === $module['meta']['module_type'] ) {
 							$data['comment_status'] = 'open';
 						}
-
 
 						if ( $update ) {
 
@@ -394,7 +388,6 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 								$modules[] = $module_id;
 							}
 						}
-
 					}
 
 					// Check for removed modules and delete if needed
@@ -412,19 +405,18 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 				break;
 
-			//case 'unit_update':
+			// case 'unit_update':
 			//
-			//	$data      = json_decode( file_get_contents( 'php://input' ) );
-			//	$data = CoursePress_Helper_Utility::object_to_array( $data );
+			// $data      = json_decode( file_get_contents( 'php://input' ) );
+			// $data = CoursePress_Helper_Utility::object_to_array( $data );
 			//
 			//
-			//	break;
-
+			// break;
 			case 'unit_toggle':
 
 				$unit_id = (int) $_REQUEST['unit_id'];
 
-				if( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
 
 					$state = sanitize_text_field( $_REQUEST['state'] );
 
@@ -444,7 +436,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 			case 'module_add':
 
-				if( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
 
@@ -485,8 +477,5 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			CoursePress_Helper_Utility::send_bb_json( $json_data );
 		}
 
-
 	}
-
-
 }

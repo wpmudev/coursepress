@@ -15,7 +15,7 @@ class CoursePress_View_Admin_Settings_Course{
 		$tabs['setup'] = array(
 			'title' => __( 'Setup Guide', CoursePress::TD ),
 			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
-			'order' => 20
+			'order' => 20,
 		);
 
 		return $tabs;
@@ -25,15 +25,11 @@ class CoursePress_View_Admin_Settings_Course{
 
 		$content = 'course!';
 
-
 		return $content;
 
 	}
 
 	public static function process_form() {
 
-
-
 	}
-
 }

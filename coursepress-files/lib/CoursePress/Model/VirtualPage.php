@@ -55,17 +55,16 @@ class CoursePress_Model_VirtualPage {
 		$virtual_post = '';
 
 		// Try a real post first and then override it with args
-		//if( ! empty( $this->ID ) ) {
-		//	CoursePress_Model_VirtualPage::$the_post_id = $this->ID;
-		//	$virtual_post                               = get_post( $this->ID );
-		//	$virtual_post->post_content                 = $this->content;
-		//	$virtual_post->post_title                   = $this->title;
-		//	$virtual_post->post_parent                  = $this->post_parent;
-		//	$virtual_post->post_type                    = $this->type;
-		//	return array( $virtual_post );
-		//}
-
-		if( empty( $virtual_post ) ) {
+		// if( ! empty( $this->ID ) ) {
+		// CoursePress_Model_VirtualPage::$the_post_id = $this->ID;
+		// $virtual_post                               = get_post( $this->ID );
+		// $virtual_post->post_content                 = $this->content;
+		// $virtual_post->post_title                   = $this->title;
+		// $virtual_post->post_parent                  = $this->post_parent;
+		// $virtual_post->post_type                    = $this->type;
+		// return array( $virtual_post );
+		// }
+		if ( empty( $virtual_post ) ) {
 
 			$virtual_post = new stdClass;
 
@@ -108,10 +107,9 @@ class CoursePress_Model_VirtualPage {
 		$wp_query->query_vars['error'] = '';
 		$wp_query->is_404              = false;
 
-		if( 'closed' === $this->comment_status ) {
+		if ( 'closed' === $this->comment_status ) {
 			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
 		}
-
 
 		return ( $posts );
 	}
@@ -124,7 +122,7 @@ class CoursePress_Model_VirtualPage {
 	function hide_title( $title, $id ) {
 
 		// Only for this post!
-		if( $this->ID !== $id && ! empty( $id ) ) {
+		if ( $this->ID !== $id && ! empty( $id ) ) {
 			return $title;
 		}
 
@@ -134,5 +132,4 @@ class CoursePress_Model_VirtualPage {
 			return '';
 		}
 	}
-
 }

@@ -15,7 +15,7 @@ class CoursePress_View_Admin_Settings_General {
 		$tabs['general'] = array(
 			'title'       => __( 'General Settings', CoursePress::TD ),
 			'description' => __( 'Configure the general settings for CoursePress.', CoursePress::TD ),
-			'order'       => 0 // first tab
+			'order'       => 0,// first tab
 		);
 
 		return $tabs;
@@ -32,7 +32,7 @@ class CoursePress_View_Admin_Settings_General {
 			'echo'              => 0,
 			'show_option_none'  => __( 'Use virtual page', CoursePress::TD ),
 			'option_none_value' => 0,
-			'name'              => 'coursepress_settings[pages][enrollment]'
+			'name'              => 'coursepress_settings[pages][enrollment]',
 		);
 		$page_dropdowns['enrollment'] = wp_dropdown_pages( $pages_args );
 
@@ -51,7 +51,6 @@ class CoursePress_View_Admin_Settings_General {
 		$pages_args['selected'] = CoursePress_Core::get_setting( 'pages/student_settings', 0 );
 		$pages_args['name'] = 'coursepress_settings[pages][student_settings]';
 		$page_dropdowns['student_settings'] = wp_dropdown_pages( $pages_args );
-
 
 		$content = '
 			<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>
@@ -193,7 +192,6 @@ class CoursePress_View_Admin_Settings_General {
 								</td>
 							</tr>';
 
-
 		if ( function_exists( 'messaging_init' ) ) {
 
 			$content .= '
@@ -218,7 +216,6 @@ class CoursePress_View_Admin_Settings_General {
 			';
 
 		}
-
 
 		$content .= '
 						</tbody>
@@ -257,11 +254,11 @@ class CoursePress_View_Admin_Settings_General {
 			if ( is_array( $locations ) ) {
 				foreach ( $locations as $location => $value ) {
 					if ( $value > 0 ) {
-						$menu_error = false; //at least one is defined
+						$menu_error = false; // at least one is defined
 					}
 				}
 			}
-			if( $menu_error ) {
+			if ( $menu_error ) {
 
 				$content .= '
 									<span class="settings-error">
@@ -271,7 +268,6 @@ class CoursePress_View_Admin_Settings_General {
 
 			}
 		}
-
 
 		$content .= '
 								</td>
@@ -322,7 +318,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  'Redirect students to their Dashboard upon login via wp-login form.', CoursePress::TD ) . '
+											' . __( 'Redirect students to their Dashboard upon login via wp-login form.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -350,7 +346,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', CoursePress::TD ) . '
+											' . __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -379,7 +375,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  '"Priority" - Use the media type below, with the other type as a fallback.', CoursePress::TD ) . '
+											' . __( '"Priority" - Use the media type below, with the other type as a fallback.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -402,7 +398,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', CoursePress::TD ) . '
+											' . __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -434,7 +430,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  '"Priority" - Use the media type below, with the other type as a fallback.', CoursePress::TD ) . '
+											' . __( '"Priority" - Use the media type below, with the other type as a fallback.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -457,7 +453,7 @@ class CoursePress_View_Admin_Settings_General {
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
 										<div class="tooltip-content">
-											' . __(  'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', CoursePress::TD ) . '
+											' . __( 'Example: Using "video", the featured video will be used if available. The listing image is a fallback.', CoursePress::TD ) . '
 										</div>
 									</div>
 								</th>
@@ -559,8 +555,8 @@ class CoursePress_View_Admin_Settings_General {
 									<select name="coursepress_settings[reports][font]" class="widefat" id="course_order_by_direction">
 					';
 
-		foreach( $fonts as $font_php => $font_name ) {
-			if( ! empty( $font_name ) ) {
+		foreach ( $fonts as $font_php => $font_name ) {
+			if ( ! empty( $font_name ) ) {
 				$font = str_replace( '.php', '', $font_php );
 				$content .= '
 										<option value="' . esc_attr( $font ) . '" ' . selected( $reports_font, $font, false ) . '>' . esc_html( $font_name ) . '</option>
@@ -589,9 +585,9 @@ class CoursePress_View_Admin_Settings_General {
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$post_settings['general']['show_coursepress_menu'] = isset($post_settings['general']['show_coursepress_menu']) ? $post_settings['general']['show_coursepress_menu'] : 'off';
-			$post_settings['general']['use_custom_login'] = isset($post_settings['general']['use_custom_login']) ? $post_settings['general']['use_custom_login'] : 'off';
-			$post_settings['general']['redirect_after_login'] = isset($post_settings['general']['redirect_after_login']) ? $post_settings['general']['redirect_after_login'] : 'off';
+			$post_settings['general']['show_coursepress_menu'] = isset( $post_settings['general']['show_coursepress_menu'] ) ? $post_settings['general']['show_coursepress_menu'] : 'off';
+			$post_settings['general']['use_custom_login'] = isset( $post_settings['general']['use_custom_login'] ) ? $post_settings['general']['use_custom_login'] : 'off';
+			$post_settings['general']['redirect_after_login'] = isset( $post_settings['general']['redirect_after_login'] ) ? $post_settings['general']['redirect_after_login'] : 'off';
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
@@ -602,9 +598,7 @@ class CoursePress_View_Admin_Settings_General {
 
 				CoursePress_Core::update_setting( false, $new_settings ); // false will replace all settings
 			}
-
 		}
 
 	}
-
 }

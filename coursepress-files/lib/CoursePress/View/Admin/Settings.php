@@ -13,7 +13,7 @@ class CoursePress_View_Admin_Settings {
 		'BasicCertificate',
 		'Shortcodes',
 		'Extensions',
-		'Setup'
+		'Setup',
 	);
 
 	public static function init() {
@@ -53,28 +53,26 @@ class CoursePress_View_Admin_Settings {
 	}
 
 	public static function get_tabs() {
-
 		// Make it a filter so we can add more tabs easily
-		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
+		$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
 		// Make sure that we have all the fields we need
-		foreach ( self::$tabs as $key => $tab ) {
-			self::$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
-			self::$tabs[ $key ]['class']   = isset( $tab['class'] ) ? $tab['class'] : '';
-			self::$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
-			self::$tabs[ $key ]['order']   = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
+		foreach ( $tabs as $key => $tab ) {
+			$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
+			$tabs[ $key ]['class']   = isset( $tab['class'] ) ? $tab['class'] : '';
+			$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
+			$tabs[ $key ]['order']   = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
 		}
 
 		// Order the tabs
-		self::$tabs = CoursePress_Helper_Utility::sort_on_key( self::$tabs, 'order' );
+		$tabs = CoursePress_Helper_Utility::sort_on_key( $tabs, 'order' );
 
-		return self::$tabs;
+		return $tabs;
 	}
 
 	public static function process_form() {
-
-		$tabs      = self::get_tabs();
-		$tab_keys  = array_keys( $tabs );
+		$tabs = self::get_tabs();
+		$tab_keys = array_keys( $tabs );
 		$first_tab = ! empty( $tab_keys ) ? $tab_keys[0] : '';
 
 		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
@@ -85,12 +83,11 @@ class CoursePress_View_Admin_Settings {
 	}
 
 	public static function render_page() {
-
-		$tabs      = self::get_tabs();
-		$tab_keys  = array_keys( $tabs );
+		$tabs = self::get_tabs();
+		$tab_keys = array_keys( $tabs );
 		$first_tab = ! empty( $tab_keys ) ? $tab_keys[0] : '';
 
-		$tab     = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
+		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
 		$content = '';
 
 		$method = preg_replace( '/\_$/', '', 'render_tab_' . $tab );
@@ -115,5 +112,4 @@ class CoursePress_View_Admin_Settings {
 		echo apply_filters( 'coursepress_settings_page_main', $content );
 
 	}
-
 }

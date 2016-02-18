@@ -13,22 +13,22 @@ class CoursePress_Helper_Tabs {
 		// Render the Tabs
 		$content .= '<div class="tab-tabs' . $mode_class . '">';
 
-		if( $sticky_tabs ) {
+		if ( $sticky_tabs ) {
 			$content .= '<div class="sticky-slider visible-small visible-extra-small"></div>';
 		}
 
 		$content .= '<ul class="' . $sticky_class . '" style="">';
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
-		foreach( $tabs as $key => $tab ) {
+		foreach ( $tabs as $key => $tab ) {
 			$class = $key === $active ? 'active' : '';
 			$class .= ' ' . $tab['class'];
 
-			//$query_string = 'page=' . $page;
+			// $query_string = 'page=' . $page;
 			$query_string = '';
 			$first = true;
-			foreach( $hidden_args as $arg_key => $arg_value ) {
-				if( $arg_key === $tab_arg ) {
+			foreach ( $hidden_args as $arg_key => $arg_value ) {
+				if ( $arg_key === $tab_arg ) {
 					continue;
 				}
 				$query_string .= $first ? '' : '&amp;';
@@ -37,13 +37,11 @@ class CoursePress_Helper_Tabs {
 			}
 			$query_string .= '&amp;' . $tab_arg . '=' . $key;
 
-			if( ! isset( $tab['url'] ) ) {
+			if ( ! isset( $tab['url'] ) ) {
 				$tab_url = admin_url( 'admin.php?' . $query_string );
 			} else {
 				$tab_url = $tab['url'];
 			}
-
-
 
 			$content .= '<li class="' . $class . '" data-tab="' . $key . '">
 				<a href="' . esc_url( $tab_url ) . '">' . esc_html( $tab['title'] ) . '</a>
@@ -51,50 +49,48 @@ class CoursePress_Helper_Tabs {
 		}
 
 		// Render extra tab box only for horizontal tabs
-		if( 'horizontal' === $mode ) {
+		if ( 'horizontal' === $mode ) {
 			$content .= '<li class="tab-extra">' . $extra . '</li>';
 		}
 
 		$content .= '</ul></div>';
 
-
 		// Render the Content
 		$content .= '<div class="tab-content tab-content-' . $mode . '">';
-		if( $tabs[ $active ]['is_form'] === true ) {
+		if ( $tabs[ $active ]['is_form'] === true ) {
 			$content .= '<form method="post">';
 
 			// Add hidden arguments
-			if( ! empty( $hidden_args ) ) {
-				foreach( $hidden_args as $arg_key => $arg_value ) {
+			if ( ! empty( $hidden_args ) ) {
+				foreach ( $hidden_args as $arg_key => $arg_value ) {
 					$content .= '<input type="hidden" name="' . $arg_key . '" value="' . $arg_value . '" />';
 				}
 			}
 		}
 
 		// Add top buttons
-		if( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
+		if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
 			$content .= '<p class="header-save-button">
 				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', CoursePress::TD ) . '" name="submit_settings_header">
 			</p>';
 		}
 
 		// Add content header
-		if( 'horizontal' !== $mode ) {
-		$content .=	'<div class="header">
+		if ( 'horizontal' !== $mode ) {
+			$content .= '<div class="header">
 						<h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
 						<p class="description">' . esc_html( $tabs[ $active ]['description'] ) . '</p>
 					</div>';
 		}
 
 		// Wrap it all in a form if its a form
-		//if( $tabs[ $active ]['is_form'] === true ) {
-			//$content .= '<form method="post">' . $tab_content . '</form>';
-		//} else {
+		// if( $tabs[ $active ]['is_form'] === true ) {
+			// $content .= '<form method="post">' . $tab_content . '</form>';
+		// } else {
 			$content .= '<div class="body">' . $tab_content . '</div>';
-		//}
-
+		// }
 		// Add bottom buttons
-		if( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
+		if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
 			$content .= '<hr /><p class="section-save-button">
 				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', CoursePress::TD ) . '" name="submit_settings_section">
 			</p>';
@@ -104,7 +100,7 @@ class CoursePress_Helper_Tabs {
 		$content .= '</div>';
 
 		// </form>
-		if( $tabs[ $active ]['is_form'] === true ) {
+		if ( $tabs[ $active ]['is_form'] === true ) {
 			$content .= '</form>';
 		}
 
@@ -112,20 +108,16 @@ class CoursePress_Helper_Tabs {
 		$content = '<div class="tab-container ' . $mode . '">' . $content . '</div>';
 
 		// Render Heading first for Horizontal display
-		//if( 'horizontal' === $mode ) {
-		//	$content =	'<div class="header">
-		//				<h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
-		//			</div>' . $content;
-		//}
-
-		if( $echo ) {
+		// if( 'horizontal' === $mode ) {
+		// $content =  '<div class="header">
+		// <h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
+		// </div>' . $content;
+		// }
+		if ( $echo ) {
 			echo apply_filters( 'coursepress_' . $page . '_tabs_content', $content, $tab_content );
 		} else {
 			return apply_filters( 'coursepress_' .$page . '_tabs_content', $content, $tab_content );
 		}
 
 	}
-
-
-
 }

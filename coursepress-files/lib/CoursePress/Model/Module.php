@@ -32,16 +32,16 @@ class CoursePress_Model_Module {
 					'search_items'		 => __( 'Search Modules', CoursePress::TD ),
 					'not_found'			 => __( 'No Modules Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Modules found in Trash', CoursePress::TD ),
-					'view'				 => __( 'View Module', CoursePress::TD )
+					'view'				 => __( 'View Module', CoursePress::TD ),
 				),
-//				'supports' => array( 'title', 'excerpt', 'comments' ),
+				// 'supports' => array( 'title', 'excerpt', 'comments' ),
 				'public'			 => false,
 				'show_ui'			 => false,
 				'publicly_queryable' => false,
 				'capability_type'	 => 'module',
 				'map_meta_cap'		 => true,
-				'query_var'			 => true
-			)
+				'query_var'			 => true,
+			),
 		);
 
 	}
@@ -62,21 +62,20 @@ class CoursePress_Model_Module {
 		$estimation = get_post_meta( $module_id, 'time_estimation', true );
 		$estimation = empty( $estimation ) ? $default : $estimation;
 
-		if( ! $formatted ) {
+		if ( ! $formatted ) {
 			return empty( $estimation ) ? $default : $estimation;
 		} else {
 			$parts = explode( ':', $estimation );
 			$seconds = (int) array_pop( $parts );
 			$minutes = (int) array_pop( $parts );
-			if( ! empty( $parts ) ) {
+			if ( ! empty( $parts ) ) {
 				$hours = (int) array_pop( $parts );
 			} else {
 				$hours = 0;
 			}
 
-			return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds );
+			return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
 		}
-
 
 	}
 
@@ -95,7 +94,7 @@ class CoursePress_Model_Module {
 			'text_module'           => 'text',
 			'text_input_module'     => 'input-text',
 			'textarea_input_module' => 'input-textarea',
-			'video_module'          => 'video'
+			'video_module'          => 'video',
 		);
 	}
 
@@ -105,9 +104,9 @@ class CoursePress_Model_Module {
 		$legacy = self::legacy_map();
 
 		// Get correct new type
-		if( 'text_input_module' == $module_type ) {
-			if( isset( $meta['checked_length'] ) && 'multi' == $meta['checked_length'] ) {
-				$module_type = $legacy[ 'textarea_input_module' ];
+		if ( 'text_input_module' == $module_type ) {
+			if ( isset( $meta['checked_length'] ) && 'multi' == $meta['checked_length'] ) {
+				$module_type = $legacy['textarea_input_module'];
 			} else {
 				$module_type = $legacy[ $module_type ];
 			}
@@ -116,54 +115,54 @@ class CoursePress_Model_Module {
 		}
 
 		// Fix legacy meta
-		if( isset( $meta['checked_answer'] ) ) {
+		if ( isset( $meta['checked_answer'] ) ) {
 			$value = $meta['checked_answer'][0];
 			update_post_meta( $module_id, 'answers_selected', $value );
 			delete_post_meta( $module_id, 'checked_answer' );
 		}
-		if( isset( $meta['checked_answers'] ) ) {
+		if ( isset( $meta['checked_answers'] ) ) {
 			$value = get_post_meta( $module_id, 'checked_answers', true );
 			update_post_meta( $module_id, 'answers_selected', $value );
 			delete_post_meta( $module_id, 'checked_answers' );
 		}
 
-		if( isset( $meta['time_estimation'] ) ) {
+		if ( isset( $meta['time_estimation'] ) ) {
 			$value = $meta['time_estimation'][0];
 			update_post_meta( $module_id, 'duration', $value );
 			delete_post_meta( $module_id, 'time_estimation' );
 		}
 
-		if( isset( $meta['show_title_on_front'] ) ) {
+		if ( isset( $meta['show_title_on_front'] ) ) {
 			$value = CoursePress_Helper_Utility::fix_bool( $meta['show_title_on_front'][0] );
 			update_post_meta( $module_id, 'show_title', $value );
 			delete_post_meta( $module_id, 'show_title_on_front' );
 		}
 
-		if( isset( $meta['mandatory_answer'] ) ) {
+		if ( isset( $meta['mandatory_answer'] ) ) {
 			$value = CoursePress_Helper_Utility::fix_bool( $meta['mandatory_answer'][0] );
 			update_post_meta( $module_id, 'mandatory', $value );
 			delete_post_meta( $module_id, 'mandatory_answer' );
 		}
 
-		if( isset( $meta['gradable_answer'] ) ) {
+		if ( isset( $meta['gradable_answer'] ) ) {
 			$value = CoursePress_Helper_Utility::fix_bool( $meta['gradable_answer'][0] );
 			update_post_meta( $module_id, 'assessable', $value );
 			delete_post_meta( $module_id, 'gradable_answer' );
 		}
 
-		if( isset( $meta['minimum_grade_required'] ) ) {
+		if ( isset( $meta['minimum_grade_required'] ) ) {
 			$value = floatval( $meta['minimum_grade_required'][0] );
 			update_post_meta( $module_id, 'minimum_grade', $value );
 			delete_post_meta( $module_id, 'minimum_grade_required' );
 		}
 
-		if( isset( $meta['limit_attempts_value'] ) ) {
+		if ( isset( $meta['limit_attempts_value'] ) ) {
 			$value = (int) $meta['limit_attempts_value'][0];
 			update_post_meta( $module_id, 'retry_attempts', $value );
 			delete_post_meta( $module_id, 'limit_attempts_value' );
 		}
 
-		if( isset( $meta['limit_attempts'] ) ) {
+		if ( isset( $meta['limit_attempts'] ) ) {
 			$value = CoursePress_Helper_Utility::fix_bool( $meta['limit_attempts'][0] );
 			$value = ! $value; // inverse
 			update_post_meta( $module_id, 'allow_retries', $value );
@@ -177,7 +176,7 @@ class CoursePress_Model_Module {
 
 	public static function attributes( $module, $meta = false ) {
 
-		if( is_object( $module ) ) {
+		if ( is_object( $module ) ) {
 			$module_id = $module->ID;
 		} else {
 			$module_id = (int) $module;
@@ -188,7 +187,7 @@ class CoursePress_Model_Module {
 		$legacy = self::legacy_map();
 		$module_type = isset( $meta['module_type'] ) ? $meta['module_type'][0] : false;
 
-		if( false === $module_type ) {
+		if ( false === $module_type ) {
 			return false;
 		}
 
@@ -205,8 +204,7 @@ class CoursePress_Model_Module {
 			'mode' => $input ? 'input' : 'output',
 		);
 
-
-		if( 'section' != $module_type ) {
+		if ( 'section' != $module_type ) {
 			$attributes = array_merge( $attributes, array(
 				'duration'       => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
 				'show_title'     => CoursePress_Helper_Utility::fix_bool( $meta['show_title'][0] ),
@@ -218,8 +216,8 @@ class CoursePress_Model_Module {
 			) );
 		}
 
-		foreach( $meta as $key => $value ) {
-			if( ! array_key_exists( $key, $attributes ) ) {
+		foreach ( $meta as $key => $value ) {
+			if ( ! array_key_exists( $key, $attributes ) ) {
 				$attributes[ $key ] = maybe_unserialize( $value[0] );
 			}
 		}
@@ -232,11 +230,11 @@ class CoursePress_Model_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		if( 'module' === $post_type ) {
+		if ( 'module' === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		return $link;
@@ -246,7 +244,7 @@ class CoursePress_Model_Module {
 
 		$type = get_post_meta( $post_id, 'module_type', true );
 
-		if( $type === 'discussion') {
+		if ( $type === 'discussion' ) {
 			return true;
 		}
 
@@ -257,11 +255,11 @@ class CoursePress_Model_Module {
 
 		$post_type = get_post_type( $post );
 
-		if( 'module' === $post_type ) {
+		if ( 'module' === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $post );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $post );
+			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $post );
 		}
 
 		return $link;
@@ -273,11 +271,11 @@ class CoursePress_Model_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		if( 'module' === $post_type ) {
+		if ( 'module' === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		return $location;
@@ -285,18 +283,16 @@ class CoursePress_Model_Module {
 
 	public static function discussion_reply_link( $link, $args, $comment, $post ) {
 
-//		$comment = get_comment( $comment_id );
-
-//		$post_type = get_post_type( $comment->comment_post_ID );
-//
-//		if( 'module' === $post_type ) {
-//			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-//			$course_id = get_post_field( 'post_parent', $unit_id );
-//			$course_link = get_permalink( $course_id );
-//			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
-//		}
-
-		if( 'module' === $post->post_type ) {
+		// $comment = get_comment( $comment_id );
+		// $post_type = get_post_type( $comment->comment_post_ID );
+		//
+		// if( 'module' === $post_type ) {
+		// $unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+		// $course_id = get_post_field( 'post_parent', $unit_id );
+		// $course_link = get_permalink( $course_id );
+		// $link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+		// }
+		if ( 'module' === $post->post_type ) {
 			if ( get_option( 'comment_registration' ) && ! is_user_logged_in() ) {
 				$link = sprintf( '<a rel="nofollow" class="comment-reply-login" href="%s">%s</a>',
 					esc_url( wp_login_url( get_permalink() ) ),
@@ -310,17 +306,15 @@ class CoursePress_Model_Module {
 				$location    = $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id );
 				$location .= '&replytocom=' . $comment->comment_ID;
 				$location .= '&module=' . $post->ID;
-//			$location .= '#module-' . $post->ID;
-
+				// $location .= '#module-' . $post->ID;
 				$onclick = sprintf( 'return CoursePress.utility.addComment.moveForm( "%1$s-%2$s", "%2$s", "%3$s", "%4$s" )',
 					$args['add_below'], $comment->comment_ID, $args['respond_id'], $post->ID
 				);
 
-//				$onclick = '';
-
+				// $onclick = '';
 				$link = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' href='%s' onclick='%s' aria-label='%s'>%s</a>",
-//				$link = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' aria-label='%s'>%s</a>",
-					esc_url( $location ) . "#" . $args['respond_id'],
+					// $link = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' aria-label='%s'>%s</a>",
+					esc_url( $location ) . '#' . $args['respond_id'],
 					$onclick,
 					esc_attr( sprintf( $args['reply_to_text'], $comment->comment_author ) ),
 					$args['reply_text']
@@ -338,17 +332,17 @@ class CoursePress_Model_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		if( 'module' === $post_type ) {
+		if ( 'module' === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
-		if ( empty($text) )
-			$text = __('Click here to cancel reply.');
+		if ( empty( $text ) ) {
+			$text = __( 'Click here to cancel reply.' ); }
 
-		$style = isset($_GET['replytocom']) ? '' : ' style="display:none;"';
+		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 
 		$formatted_link = '<a rel="nofollow" id="cancel-comment-reply-link" href="' . $location . '"' . $style . '>' . $text . '</a>';
 
@@ -363,12 +357,12 @@ class CoursePress_Model_Module {
 			$data = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
 		}
 
-		if( false === $response ) {
+		if ( false === $response ) {
 			$response = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
 			$response = ! empty( $response ) ? $response['response'] : false;
 		}
 
-		if( empty( $response ) ) {
+		if ( empty( $response ) ) {
 			return false;
 		}
 
@@ -377,9 +371,9 @@ class CoursePress_Model_Module {
 		$total_questions = count( $attributes['questions'] );
 		$gross_correct = 0;
 
-		foreach( $attributes['questions'] as $key => $question ) {
+		foreach ( $attributes['questions'] as $key => $question ) {
 
-			switch( $question['type'] ) {
+			switch ( $question['type'] ) {
 
 				case 'single':
 				case 'multiple':
@@ -387,8 +381,8 @@ class CoursePress_Model_Module {
 					$total_answers = count( $correct_answers );
 					$correct_responses = 0;
 
-					if ( is_array( $response[$key] ) ) {
-						foreach ( $response[$key] as $a_key => $answer ) {
+					if ( is_array( $response[ $key ] ) ) {
+						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
 								$correct_responses += 1;
 							}
@@ -406,8 +400,8 @@ class CoursePress_Model_Module {
 					$total_answers = count( $correct_answers );
 					$correct_responses = 0;
 
-					if ( is_array( $response[$key] ) ) {
-						foreach ( $response[$key] as $a_key => $answer ) {
+					if ( is_array( $response[ $key ] ) ) {
+						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
 								$correct_responses += 1;
 							}
@@ -418,17 +412,13 @@ class CoursePress_Model_Module {
 					// If multiple choice passed, add it to the total
 					$gross_correct = 100 === $result ? $gross_correct + 1 : $gross_correct;
 
-
 					break;
-
 
 				case 'short':
 					break;
 				case 'long':
 					break;
 			}
-
-
 		}
 
 		$grade = (int) ( $gross_correct / $total_questions * 100 );
@@ -440,7 +430,7 @@ class CoursePress_Model_Module {
 			'wrong' => (int) $total_questions - (int) $gross_correct,
 			'total_questions' => (int) $total_questions,
 			'passed' => $passed,
-			'attributes' => $attributes
+			'attributes' => $attributes,
 		);
 
 	}
@@ -448,7 +438,7 @@ class CoursePress_Model_Module {
 	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {
 
 		// Get last submitted result
-		if( empty( $quiz_result ) ) {
+		if ( empty( $quiz_result ) ) {
 			$quiz_result = self::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
 		}
 
@@ -463,10 +453,10 @@ class CoursePress_Model_Module {
 			</div>
 			<div class="quiz-results">
 				<table>
-					<tr><th>' . esc_html__('Total Questions', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
-					<tr><th>' . esc_html__('Correct', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
-					<tr><th>' . esc_html__('Incorrect', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
-					<tr><th>' . esc_html__('Grade', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+					<tr><th>' . esc_html__( 'Total Questions', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Correct', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Incorrect', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Grade', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
 				</table>
 			</div>
 		</div>
@@ -477,7 +467,7 @@ class CoursePress_Model_Module {
 			'unit_id' => $unit_id,
 			'module_id' => $module_id,
 			'student_id' => $student_id,
-			'quiz_result' => $quiz_result
+			'quiz_result' => $quiz_result,
 		);
 
 		// Can't use shortcodes this time as this also loads via AJAX
@@ -486,5 +476,4 @@ class CoursePress_Model_Module {
 		return $template;
 
 	}
-
 }

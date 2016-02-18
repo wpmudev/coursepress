@@ -15,7 +15,7 @@ class CoursePress_View_Admin_Settings_Shortcodes{
 		$tabs['shortcodes'] = array(
 			'title' => __( 'Shortcodes', CoursePress::TD ),
 			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
-			'order' => 50
+			'order' => 50,
 		);
 
 		return $tabs;
@@ -25,15 +25,11 @@ class CoursePress_View_Admin_Settings_Shortcodes{
 
 		$content = 'shortcodes!';
 
-
 		return $content;
 
 	}
 
 	public static function process_form() {
 
-
-
 	}
-
 }
