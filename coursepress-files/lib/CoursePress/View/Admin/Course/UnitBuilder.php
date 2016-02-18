@@ -79,12 +79,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							<div class="date"><input id="dpinputavailability" class="dateinput" type="text" value="<%= unit_date_availability %>" name="meta_unit_date_availability" spellcheck="true" /></div>
 						</div>
 						<div id="div-after_delay" class="div-inline ua-div" style="display:none;">
-							<input type="number" min="0" name="meta_unit_delay_seconds" value="<%=unit_delay_seconds%>" placeholder="'. __( 'seconds', 'cp' ) . '" />
-							<select id="unit_delay_type">
-								<option value="days"<%= unit_delay_type == "days" ? "selected=\"selected\"" : "" %>>'. __( 'Days', 'cp' ) . '</option>
-								<option value="weeks"<%= unit_delay_type == "weeks" ? "selected=\"selected\"" : "" %>>'. __( 'Weeks', 'cp' ) . '</option>
-								<option value="months"<%= unit_delay_type == "months" ? "selected=\"selected\"" : "" %>>'. __( 'Months', 'cp' ) . '</option>
-							</select>
+							<input type="number" min="0" max="9999" name="meta_unit_delay_days" value="<%=unit_delay_days%>" placeholder="'. __( 'seconds', 'cp' ) . '" /> <span>'. __( 'Day(s)', 'cp' ) . '</span>
 						</div>
 					</div>
 					<div class="progress-next-unit">
