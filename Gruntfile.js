@@ -58,10 +58,13 @@ module.exports = function(grunt) {
 		plugin_branches: {
 			exclude_pro: [
 				'./readme.txt',
-				'languages/coursepress.pot'
+				'languages/coursepress.pot',
+				'coursepress-files/campus'
 			],
 			exclude_free: [
-				'languages/cp.pot'
+				'languages/cp.pot',
+				'coursepress-files/premium',
+				'coursepress-files/campus'
 			],
 			exclude_campus: [
 				'./readme.txt',
