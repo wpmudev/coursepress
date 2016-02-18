@@ -253,7 +253,7 @@ class CoursePress_Helper_JavaScript {
 				'password-strength-meter'
 			), CoursePress::$version );
 
-			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'styles/font-awesome.min.css';
+			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'assets/css/font-awesome.min.css';
 			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
 
 		}

@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 		js_folder: 'coursepress-files/assets/js/',
 
 		// Folder that contains the CSS files.
-		css_folder: 'coursepress-files/styles/',
+		css_folder: 'coursepress-files/assets/css/',
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
@@ -183,7 +183,6 @@ module.exports = function(grunt) {
 			//	camelcase: true,
 			//	quotmark: 'single',
 				predef: [
-					'$',
 					'jQuery',
 					'Backbone',
 					'_'
