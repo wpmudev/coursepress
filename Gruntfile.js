@@ -56,6 +56,17 @@ module.exports = function(grunt) {
 
 		// BUILD branches.
 		plugin_branches: {
+			exclude_pro: [
+				'./readme.txt',
+				'languages/coursepress.pot'
+			],
+			exclude_free: [
+				'languages/cp.pot'
+			],
+			exclude_campus: [
+				'./readme.txt',
+				'languages/coursepress.pot'
+			],
 			base: 'agile/2.0-A1IGTDI1-remove-old-v1-x-code',
 			pro: 'coursepress/2-pro',
 			free: 'coursepress/2-free',
@@ -383,6 +394,13 @@ module.exports = function(grunt) {
 			}
 		},
 
+		// BUILD: Remove files that are not relevant for target product.
+		clean: {
+			pro: conf.plugin_branches.exclude_pro,
+			free: conf.plugin_branches.exclude_free,
+			free: conf.plugin_branches.exclude_campus
+		},
+
 		// BUILD: Git control (check out branch).
 		gitcheckout: {
 			pro: {
@@ -479,7 +497,7 @@ module.exports = function(grunt) {
 
 		// Remove code and files that does not belong to this version.
 		grunt.task.run( 'replace:' + target );
-//		grunt.task.run( 'clean:' + target );
+		grunt.task.run( 'clean:' + target );
 
 		// Add the processes/cleaned files to the target branch.
 		grunt.task.run( 'gitadd:' + target );
