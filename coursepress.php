@@ -41,21 +41,7 @@
  * MA 02110-1301 USA
  */
 
-/* start:pro */
-echo 'This is only in coursepress/2-pro';
-/* end:pro */
-
-/* start:free */
-echo 'This is only in coursepress/2-free';
-/* end:free */
-
-/* start:campus */
-echo 'This is only in coursepress/2-campus';
-/* end:campus */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Launch CoursePress.
 CoursePress::init();
@@ -76,6 +62,34 @@ class CoursePress {
 	 * @var string
 	 */
 	public static $name = 'CoursePress Base'; // Translated by grunt.
+
+	/**
+	 * Absolut path to this file (main plugin file).
+	 *
+	 * @var string
+	 */
+	public static $file = '';
+
+	/**
+	 * File-root of the premium files.
+	 *
+	 * @var string
+	 */
+	public static $path = '';
+
+	/**
+	 * Dir-name of this plugin (relative to wp-content/plugins).
+	 *
+	 * @var string
+	 */
+	public static $dir = '';
+
+	/**
+	 * Absolute URL to plugin folder.
+	 *
+	 * @var string
+	 */
+	public static $url = '';
 
 	/**
 	 * Folder that contains all plugin files.
@@ -99,43 +113,37 @@ class CoursePress {
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
 		// Prepare CoursePress Core parameters.
-		CoursePress_Core::$plugin_file = __FILE__;
-		CoursePress_Core::$plugin_dir = plugin_basename( dirname( __FILE__ ) );
-		CoursePress_Core::$plugin_path = trailingslashit( plugin_dir_path( __FILE__ ) );
-		CoursePress_Core::$plugin_url = trailingslashit( plugin_dir_url( __FILE__ ) );
+		self::$file = __FILE__;
+		self::$path = plugin_dir_path( __FILE__ );
+		self::$dir = dirname( self::$path );
+		self::$url = plugin_dir_url( __FILE__ );
 
-		// Deprecated stuff.
+		/** @deprecated Should use CoursePress::$file instead! */
+		CoursePress_Core::$plugin_file = __FILE__;
+
+		/** @deprecated Should use CoursePress::$dir instead! */
+		CoursePress_Core::$plugin_dir = plugin_basename( dirname( __FILE__ ) );
+
+		/** @deprecated Should use CoursePress::$path instead! */
+		CoursePress_Core::$plugin_path = plugin_dir_path( __FILE__ );
+
+		/** @deprecated Should use CoursePress::$url instead! */
+		CoursePress_Core::$plugin_url = plugin_dir_url( __FILE__ );
+
+		/** @deprecated Because $plugin_lib will be removed. */
 		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path . self::$plugin_lib );
 		CoursePress_Core::$plugin_lib_url = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
 
 		// Allow WP to load other plugins before we continue!
 		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ) );
 
-		/**
-		 * Include WPMUDev Dashboard.
-		 */
-		$dash_notifications_file = CoursePress_Core::$plugin_path .
-			'includes/external/dashboard/wpmudev-dash-notification.php';
+		// Load additional features if available.
+		if ( file_exists( self::$path . self::$plugin_lib . '/premium/init.php' ) ) {
+			include_once self::$path . self::$plugin_lib . '/premium/init.php';
+		}
 
-		if ( file_exists( $dash_notifications_file ) ) {
-			global $wpmudev_notices;
-
-			$screen_base = str_replace( ' ', '-', strtolower( self::$name ) );
-			$page_base = $screen_base . '_page_';
-
-			$wpmudev_notices[] = array(
-				'id' => 913071,
-				'name' => CoursePress::$name,
-				'screens' => array(
-					'coursepress_settings',
-					'toplevel_page_courses',
-					'toplevel_page_coursepress',
-					$page_base . 'coursepress_settings',
-					$page_base . 'coursepress_course',
-				),
-			);
-
-			include_once $dash_notifications_file;
+		if ( file_exists( self::$path . self::$plugin_lib . '/campus/init.php' ) ) {
+			include_once self::$path . self::$plugin_lib . '/campus/init.php';
 		}
 	}
 
