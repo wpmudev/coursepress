@@ -1,9 +1,18 @@
 <?php
+/**
+ * Unit tests.
+ *
+ * @package CoursePress
+ */
 
+/**
+ * Test cases for Settings.
+ */
 class CoursePress_Settings_Tests extends WP_UnitTestCase {
 
-
-	// Make sure our Settings Page has all the correct tabs
+	/**
+	 * Make sure our Settings Page has all the correct tabs
+	 */
 	function test_settings_array_keys() {
 
 		/** Initialise the hooks we need for the tests */
@@ -25,7 +34,6 @@ class CoursePress_Settings_Tests extends WP_UnitTestCase {
 		 * at intervals of 10, so custom tabs can be added in between.
 		 */
 		$expected = array(
-			'general',
 			'tab3',
 			'tab2',
 			'tab1',
@@ -34,18 +42,13 @@ class CoursePress_Settings_Tests extends WP_UnitTestCase {
 
 		$actual = array_keys( $tabs );
 
-		//print_r( $actual);
 		$this->assertEquals( $expected, $actual );
-
-		/** Test default tabs for Settings page */
-		// Contains 'general' settings
-		$this->assertArrayHasKey( 'general', $tabs );
-
 	}
 
-	// Make sure we can get and set the settings
+	/**
+	 * Make sure we can get and set the settings
+	 */
 	function test_settings_get_and_set() {
-
 		/**
 		 * Test setting options
 		 */
@@ -79,41 +82,44 @@ class CoursePress_Settings_Tests extends WP_UnitTestCase {
 		 * Test to see if get_network_setting() reverts to value of get_setting()
 		 * Only if not on a multisite network
 		 */
-		if( ! is_multisite() ) {
+		if ( ! is_multisite() ) {
 			$this->assertEquals( 'test', CoursePress_Core::get_network_setting( 'test_setting' ) );
 		}
-
 	}
 
 	/**
 	 * ============================================================================================
 	 * BELOW THIS LINE ARE ALL THE UTILITIES WE NEED TO SIMULATE CODE THAT COULD BE LOADED
 	 *
-	 * e.g. Adding hooks
+	 * Like adding hooks.
 	 * ============================================================================================
 	 */
 
-	// Add hooks that might be added by other plugins or within CoursePress itself
+	/**
+	 * Add hooks that might be added by other plugins or within CoursePress itself.
+	 */
 	function add_test_hooks() {
-
-		// Add filter to add additional test tabs to Settings page
+		// Add filter to add additional test tabs to Settings page.
 		add_filter( 'coursepress_settings_tabs', array( get_class(), 'add_tabs_test' ) );
 	}
 
-
-	// Add a test tab
+	/**
+	 * Add a test tab.
+	 *
+	 * @param  array $tabs List of tabs.
+	 * @return array Modified list of tabs.
+	 */
 	public static function add_tabs_test( $tabs ) {
-
-		// Reset to essential tabs
+		// Reset to essential tabs.
 		$essential_tabs = array( 'general' );
 
-		foreach( $tabs as $key => $tab ) {
-			if( ! in_array( $key, $essential_tabs ) ) {
+		foreach ( $tabs as $key => $tab ) {
+			if ( ! in_array( $key, $essential_tabs ) ) {
 				unset( $tabs[ $key ] );
 			}
 		}
 
-		// Add test tabs
+		// Add test tabs.
 		$test_tabs = array(
 			'test_tab' => array(
 				'title' => __( 'Test Tabs', CoursePress::TD ),
@@ -140,7 +146,4 @@ class CoursePress_Settings_Tests extends WP_UnitTestCase {
 
 		return $tabs;
 	}
-
-
 }
-
