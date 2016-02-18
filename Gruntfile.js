@@ -38,7 +38,12 @@ module.exports = function(grunt) {
 		// PHP files to validate.
 		php_files: [
 			'coursepress.php',
-			'coursepress-files/**/*.php'
+			'coursepress-files/premium/**/*.php',
+			'coursepress-files/campus/*.php',
+			'coursepress-files/lib/CoursePress/**/*.php',
+			'!**/Helper/Utility.php',   // TODO: Too complex. Manually fix this file first!
+			'!**/Model/Shortcodes.php', // TODO: Too complex. Manually fix this file first!
+			'!**/external/**/*.php'
 		],
 
 		// Regex patterns to exclude from transation.
@@ -351,13 +356,6 @@ module.exports = function(grunt) {
 					bin: 'vendor/bin/phpcs',
 					standard: 'WordPress'
 				}
-			},
-			fix: {
-				src: conf.php_files,
-				options: {
-					bin: 'vendor/bin/phpcbf',
-					standard: 'WordPress'
-				}
 			}
 		},
 
@@ -487,9 +485,15 @@ module.exports = function(grunt) {
 
 	// Plugin build tasks
 	grunt.registerTask( 'build', 'Run all tasks.', function(target) {
-		if (target == null) {
-			grunt.warn( 'Target must be specified - build:dev or build:wporg' );
+		var build = [], i, branch;
+
+		if ( target ) {
+			build.push( target );
+		} else {
+			build = ['pro', 'free', 'campus'];
 		}
+
+		grunt.log.subhead( 'Prepare the dev branch...' );
 
 		// Run the default tasks (js/css/php validation)
 		grunt.task.run( 'default' );
@@ -497,17 +501,22 @@ module.exports = function(grunt) {
 		// Generate all translation files (pro and free)
 		grunt.task.run( 'lang' );
 
-		// Checkout the destination branch.
-		grunt.task.run( 'gitcheckout:' + target );
+		for ( i in build ) {
+			branch = build[i];
+			grunt.log.subhead( 'Update product branch [' + branch + ']...' );
 
-		// Remove code and files that does not belong to this version.
-		grunt.task.run( 'replace:' + target );
-		grunt.task.run( 'clean:' + target );
+			// Checkout the destination branch.
+			grunt.task.run( 'gitcheckout:' + branch );
 
-		// Add the processes/cleaned files to the target branch.
-		grunt.task.run( 'gitadd:' + target );
-		grunt.task.run( 'gitcommit:' + target );
-		grunt.task.run( 'gitcheckout:base');
+			// Remove code and files that does not belong to this version.
+			grunt.task.run( 'replace:' + branch );
+			grunt.task.run( 'clean:' + branch );
+
+			// Add the processes/cleaned files to the target branch.
+			grunt.task.run( 'gitadd:' + branch );
+			grunt.task.run( 'gitcommit:' + branch );
+			grunt.task.run( 'gitcheckout:base');
+		}
 	});
 
 	// Test task.
@@ -521,7 +530,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
-	grunt.registerTask( 'php-fix', ['phplint', 'phpcs:fix'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
 };
