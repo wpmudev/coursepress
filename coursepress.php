@@ -41,6 +41,18 @@
  * MA 02110-1301 USA
  */
 
+/* start:pro */
+echo 'This is only in coursepress/2-pro';
+/* end:pro */
+
+/* start:free */
+echo 'This is only in coursepress/2-free';
+/* end:free */
+
+/* start:campus */
+echo 'This is only in coursepress/2-campus';
+/* end:campus */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly

@@ -386,23 +386,36 @@ module.exports = function(grunt) {
 		// BUILD: Git control (check out branch).
 		gitcheckout: {
 			pro: {
-				options: { branch: conf.plugin_branches.pro, overwrite: true }
+				options: {
+					verbose: true,
+					branch: 'agile/testing', //conf.plugin_branches.pro,
+					overwrite: true
+				}
 			},
 			free: {
-				options: { branch: conf.plugin_branches.free, overwrite: true }
+				options: {
+					branch: conf.plugin_branches.free,
+					overwrite: true
+				}
 			},
 			campus: {
-				options: { branch: conf.plugin_branches.campus, overwrite: true }
+				options: {
+					branch: conf.plugin_branches.campus,
+					overwrite: true
+				}
 			},
 			base: {
-				options: { branch: conf.plugin_branches.base }
+				options: {
+					branch: conf.plugin_branches.base
+				}
 			}
 		},
 
 		// BUILD: Git control (add files).
 		gitadd: {
 			pro: {
-				options: { all: true }
+				options: {
+				verbose: true, all: true }
 			},
 			free: {
 				options: { all: true }
@@ -415,15 +428,25 @@ module.exports = function(grunt) {
 		// BUILD: Git control (commit changes).
 		gitcommit: {
 			pro: {
-				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				verbose: true,
+				options: {
+					message: "Built from '" + conf.plugin_branches.base + "'",
+					allowEmpty: true
+				},
 				files: { src: ['.'] }
 			},
 			free: {
-				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				options: {
+					message: "Built from '" + conf.plugin_branches.base + "'",
+					allowEmpty: true
+				},
 				files: { src: ['.'] }
 			},
 			campus: {
-				options: { message: "Built from '" + conf.plugin_branches.base + "'", allowEmpty: true },
+				options: {
+					message: "Built from '" + conf.plugin_branches.base + "'",
+					allowEmpty: true
+				},
 				files: { src: ['.'] }
 			}
 		},
@@ -446,17 +469,17 @@ module.exports = function(grunt) {
 		}
 
 		// Run the default tasks (js/css/php validation)
-		// grunt.task.run( 'default' );
+//		grunt.task.run( 'default' );
 
 		// Generate all translation files (pro and free)
-		// grunt.task.run( 'lang' );
+//		grunt.task.run( 'lang' );
 
 		// Checkout the destination branch.
 		grunt.task.run( 'gitcheckout:' + target );
 
 		// Remove code and files that does not belong to this version.
-		grunt.task.run( 'replace:' + target );
-		// grunt.task.run( 'clean:' + target );
+//		grunt.task.run( 'replace:' + target );
+//		grunt.task.run( 'clean:' + target );
 
 		// Add the processes/cleaned files to the target branch.
 		grunt.task.run( 'gitadd:' + target );

@@ -48,15 +48,15 @@ There are special comments in the `coursepress/2.0-dev` branch will make sure so
 Those are:
 
     /* start:pro */
-    echo "This is only in coursepress/2-pro";  
+    echo 'This is only in coursepress/2-pro';  
     /* end:pro */
   
     /* start:free */
-    echo "This is only in coursepress/2-free";  
+    echo 'This is only in coursepress/2-free';  
     /* end:free */
 
     /* start:campus */
-    echo "This is only in coursepress/2-campus";  
+    echo 'This is only in coursepress/2-campus';  
     /* end:campus */
 
 
