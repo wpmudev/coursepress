@@ -56,7 +56,7 @@ module.exports = function(grunt) {
 
 		// BUILD branches.
 		plugin_branches: {
-			base: 'coursepress/2.0-dev',
+			base: 'agile/2.0-A1IGTDI1-remove-old-v1-x-code',
 			pro: 'coursepress/2-pro',
 			free: 'coursepress/2-free',
 			campus: 'coursepress/2-campus'
@@ -69,41 +69,42 @@ module.exports = function(grunt) {
 				{ match: /'TD'/g, replace: 'cp' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
-				{ match: /\/\* start:free .*? end:free \*\//mg, replace: '' },
-				{ match: /\/\* start:campus .*? end:campus \*\//mg, replace: '' }
+				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' },
+				{ match: /\/\* start:campus \*[^\*]+\* end:campus \*\//mg, replace: '' }
 			],
 			free: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
 				{ match: /'TD'/g, replace: 'coursepress' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
-				{ match: /\/\* start:pro .*? end:pro \*\//mg, replace: '' },
-				{ match: /\/\* start:campus .*? end:campus \*\//mg, replace: '' }
+				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
+				{ match: /\/\* start:campus \*[^\*]+\* end:campus \*\//mg, replace: '' }
 			],
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
 				{ match: /'TD'/g, replace: 'cp' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
-				{ match: /\/\* start:pro .*? end:pro \*\//mg, replace: '' },
-				{ match: /\/\* start:free .*? end:free \*\//mg, replace: '' }
+				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
+				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' }
 			],
 			// Files to apply above patterns to (not only php files).
 			files: {
 				expand: true,
 				src: [
-					'**/*.php',
-					'**/*.css',
-					'**/*.js',
-					'**/*.html',
-					'**/*.txt',
+					'coursepress.php'
+/*					'** /*.php',
+					'** /*.css',
+					'** /*.js',
+					'** /*.html',
+					'** /*.txt',
 					'!node_modules/**',
 					'!vendor/**',
 					'!languages/**',
 					'!coursepress-files/files/**',
 					'!Gruntfile.js',
 					'!build/**',
-					'!.git/**'
+					'!.git/**' */
 				],
 				dest: './'
 			}
@@ -366,19 +367,19 @@ module.exports = function(grunt) {
 				options: {
 					patterns: conf.plugin_patterns.pro
 				},
-				files: conf.plugin_patterns.files
+				files: [conf.plugin_patterns.files]
 			},
 			free: {
 				options: {
 					patterns: conf.plugin_patterns.free
 				},
-				files: conf.plugin_patterns.files
+				files: [conf.plugin_patterns.files]
 			},
 			campus: {
 				options: {
 					patterns: conf.plugin_patterns.campus
 				},
-				files: conf.plugin_patterns.files
+				files: [conf.plugin_patterns.files]
 			}
 		},
 
@@ -444,11 +445,20 @@ module.exports = function(grunt) {
 			grunt.warn( 'Target must be specified - build:dev or build:wporg' );
 		}
 
+		// Run the default tasks (js/css/php validation)
 		// grunt.task.run( 'default' );
+
+		// Generate all translation files (pro and free)
 		// grunt.task.run( 'lang' );
+
+		// Checkout the destination branch.
 		grunt.task.run( 'gitcheckout:' + target );
+
+		// Remove code and files that does not belong to this version.
 		grunt.task.run( 'replace:' + target );
-		grunt.task.run( 'clean:' + target );
+		// grunt.task.run( 'clean:' + target );
+
+		// Add the processes/cleaned files to the target branch.
 		grunt.task.run( 'gitadd:' + target );
 		grunt.task.run( 'gitcommit:' + target );
 		grunt.task.run( 'gitcheckout:base');
@@ -471,6 +481,5 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'php-fix', ['phplint', 'phpcs:fix'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
-	grunt.registerTask( 'build', ['default', 'lang'] ); // Not finished yet...
 
 };
