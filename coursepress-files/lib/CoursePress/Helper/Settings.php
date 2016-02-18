@@ -21,7 +21,7 @@ class CoursePress_Helper_Settings {
 		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
 			__CLASS__,
 			'menu_handler'
-		), CoursePress_Core::$plugin_lib_url . 'assets/coursepress-icon.png' );
+		), CoursePress_Core::$plugin_lib_url . 'assets/img/coursepress-icon.png' );
 
 		$pages = self::_get_pages();
 

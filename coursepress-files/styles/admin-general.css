@@ -525,7 +525,7 @@ A. Responsive
 }
 
 #course-setup-steps .step-title .status.save-process {
-  background: url("../assets/ajax-loader.gif");
+  background: url("../assets/img/ajax-loader.gif");
   color: #ffffff;
   border: none;
   background-repeat: no-repeat;
@@ -533,7 +533,7 @@ A. Responsive
 }
 
 #course-setup-steps .step-title.ui-state-active .status.save-process {
-  background: url("../assets/ajax-loader-blue.gif");
+  background: url("../assets/img/ajax-loader-blue.gif");
   color: #ffffff;
   border: none;
   background-repeat: no-repeat;
@@ -930,11 +930,11 @@ input.button.button-primary.instructor-assign {
 }
 
 .treegrid-expander-expanded {
-  background-image: url("../assets/collapse.png");
+  background-image: url("../assets/img/collapse.png");
 }
 
 .treegrid-expander-collapsed {
-  background-image: url("../assets/expand.png");
+  background-image: url("../assets/img/expand.png");
 }
 
 /* Editor specific */
@@ -954,7 +954,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 # 6. Unit Builder
 --------------------------------------------------------------*/
 #unit-builder .loading {
-  background: url("../assets/ajax-loader.gif") no-repeat left;
+  background: url("../assets/img/ajax-loader.gif") no-repeat left;
   padding-left: 22px;
   margin: 50px;
 }
@@ -1430,7 +1430,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .module-input-text a,
 .module-input-select a,
 .quiz-action-button a {
-  background: url("../assets/components.svg") no-repeat;
+  background: url("../assets/img/components.svg") no-repeat;
 }
 
 .module-text a {
@@ -1703,7 +1703,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 # 8. Assessments
 --------------------------------------------------------------*/
 .coursepress_settings_wrapper.reports .column-report .pdf {
-  background-image: url("../assets/pdf_document.png");
+  background-image: url("../assets/img/pdf_document.png");
   background-size: 100% 100%;
   width: 16px;
   height: 16px;

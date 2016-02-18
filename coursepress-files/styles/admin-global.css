@@ -17,8 +17,9 @@
 .hidden {
   display: none;
 }
+
 .div-inline {
-    display: inline-block;
+  display: inline-block;
 }
 
 /**
