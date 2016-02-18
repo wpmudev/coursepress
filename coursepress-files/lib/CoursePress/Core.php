@@ -15,30 +15,6 @@ class CoursePress_Core {
 	public static $plugin_lib_url;
 
 	/**
-	 * Absolute path to the plugin directory.
-	 * @var string
-	 */
-	public static $plugin_path = '';
-
-	/**
-	 * Absolute URL to the plugin base directory.
-	 * @var string
-	 */
-	public static $plugin_url = '';
-
-	/**
-	 * Absolute path to the plugins main filename.
-	 * @var string
-	 */
-	public static $plugin_file = '';
-
-	/**
-	 * Directory name of the plugin, relative to wp-content/plugins/.
-	 * @var string
-	 */
-	public static $plugin_dir = '';
-
-	/**
 	 * Initialize CoursePress Core.
 	 * This is the main entry point to hook things up.
 	 *
@@ -49,7 +25,7 @@ class CoursePress_Core {
 		load_plugin_textdomain(
 			'cp',   // Text domain.
 			false,  // Deprecated. Set to false.
-			self::$plugin_dir . '/languages'
+			CoursePress::$dir . '/languages'
 		);
 
 		// Initialize Capabilities.

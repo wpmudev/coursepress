@@ -118,21 +118,9 @@ class CoursePress {
 		self::$dir = dirname( self::$path );
 		self::$url = plugin_dir_url( __FILE__ );
 
-		/** @deprecated Should use CoursePress::$file instead! */
-		CoursePress_Core::$plugin_file = __FILE__;
-
-		/** @deprecated Should use CoursePress::$dir instead! */
-		CoursePress_Core::$plugin_dir = plugin_basename( dirname( __FILE__ ) );
-
-		/** @deprecated Should use CoursePress::$path instead! */
-		CoursePress_Core::$plugin_path = plugin_dir_path( __FILE__ );
-
-		/** @deprecated Should use CoursePress::$url instead! */
-		CoursePress_Core::$plugin_url = plugin_dir_url( __FILE__ );
-
 		/** @deprecated Because $plugin_lib will be removed. */
-		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path . self::$plugin_lib );
-		CoursePress_Core::$plugin_lib_url = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
+		CoursePress_Core::$plugin_lib_path = trailingslashit( self::$path . self::$plugin_lib );
+		CoursePress_Core::$plugin_lib_url = trailingslashit( self::$url . self::$plugin_lib );
 
 		// Allow WP to load other plugins before we continue!
 		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ) );
