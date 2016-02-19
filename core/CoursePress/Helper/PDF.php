@@ -225,8 +225,8 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );
 
 		// If filtering, please make sure both path and url refer to the same location
-		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress_Core::$plugin_lib_path ) . 'pdf-cache/' );
-		$furl_path = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress_Core::$plugin_lib_url ) . 'pdf-cache/' );
+		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
+		$furl_path = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress::$url ) . 'pdf-cache/' );
 
 		$page_orientation = isset( $args['orientation'] ) ? $args['orientation'] : PDF_PAGE_ORIENTATION;
 

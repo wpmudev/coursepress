@@ -116,20 +116,16 @@ class CoursePress {
 		self::$dir = dirname( self::$path );
 		self::$url = plugin_dir_url( __FILE__ );
 
-		/** @deprecated Because $plugin_lib will be removed. */
-		CoursePress_Core::$plugin_lib_path = trailingslashit( self::$path . self::$plugin_lib );
-		CoursePress_Core::$plugin_lib_url = trailingslashit( self::$url . self::$plugin_lib );
-
 		// Allow WP to load other plugins before we continue!
 		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ) );
 
 		// Load additional features if available.
-		if ( file_exists( self::$path . self::$plugin_lib . '/premium/init.php' ) ) {
-			include_once self::$path . self::$plugin_lib . '/premium/init.php';
+		if ( file_exists( self::$path . '/premium/init.php' ) ) {
+			include_once self::$path . '/premium/init.php';
 		}
 
-		if ( file_exists( self::$path . self::$plugin_lib . '/campus/init.php' ) ) {
-			include_once self::$path . self::$plugin_lib . '/campus/init.php';
+		if ( file_exists( self::$path . '/campus/init.php' ) ) {
+			include_once self::$path . '/campus/init.php';
 		}
 	}
 
@@ -137,22 +133,25 @@ class CoursePress {
 	 * Handler for spl_autoload_register (autoload classes on demand).
 	 *
 	 * Note how the folder structure is build:
-	 *   plugin_lib + namespace + 'lib' + classpath
+	 *   'core' + namespace + classpath
 	 *   classpath = class name, while each _ is actually a subfolder separator.
-	 *
-	 *   @todo  simplify this! should be simply <'lib' + classpath>
-	 *          (reason: classpath is already prefixed with namespace!)
 	 *
 	 * @since  2.0.0
 	 * @param  string $class Class name.
 	 * @return bool True if the class-file was found and loaded.
 	 */
 	private static function class_loader( $class ) {
-		$namespaces = apply_filters(
-			'coursepress_class_loader_namespaces',
-			array(
-				'CoursePress' => array(),
-			)
+		$namespaces = array(
+			'CoursePress' => array(
+				'namespace_folder' => false,
+				'filename_prefix' => 'class-',
+				'overrides' => array(),
+			),
+			'TCPDF' => array(
+				'namespace_folder' => true,
+				'filename_prefix' => false,
+				'overrides' => array(),
+			),
 		);
 
 		$class = trim( $class );
@@ -161,17 +160,14 @@ class CoursePress {
 			// Continue if the class name is prefixed with <namespace>.
 			if ( substr( $namespace, 0, strlen( $class ) ) === $namespace ) {
 
-				$namespace_folder = 'lib';
+				$namespace_folder = 'core';
 				$overrides = array();
 
 				if ( ! empty( $options['namespace_folder'] ) ) {
 					/**
 					 * Search for class file in a subfolder?
-					 *
-					 * Note: When using this, note that folder name must match
-					 * upper/lowecase of namespace name!
-					 *
-					 * @todo  Find out if/where this is used. Drop this is possible!
+					 * This is needed, when the classname does not start with
+					 * the namespace.
 					 *
 					 * @param namespace_folder
 					 * @var   bool
@@ -192,12 +188,15 @@ class CoursePress {
 				$class_folder = join(
 					DIRECTORY_SEPARATOR,
 					array(
-						dirname( __FILE__ ),
-						self::$plugin_lib,
+						self::$path,
 						$namespace_folder,
 					)
 				);
 				$class_file = str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+
+				if ( ! empty( $options['filename_prefix'] ) ) {
+					$class_file = $options['filename_prefix'] . $class_file;
+				}
 
 				// Override filename via array.
 				if ( isset( $overrides[ $class_file ] ) ) {
@@ -205,6 +204,9 @@ class CoursePress {
 				}
 
 				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
+
+				// WP Standard wants us to name all files in lowercase format.
+				$filename = strtolower( $filename );
 
 				// Override filename via filter.
 				$filename = apply_filters(

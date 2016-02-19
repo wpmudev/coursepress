@@ -1,20 +1,14 @@
 <?php
+/**
+ * Core plugin file.
+ *
+ * @package CoursePress
+ */
 
+/**
+ * Plugin initialization for the CoursePress core plugin.
+ */
 class CoursePress_Core {
-
-	/**
-	 * Deprecated.
-	 *
-	 * @var string
-	 */
-	public static $plugin_lib_path;
-
-	/**
-	 * Deprecated.
-	 *
-	 * @var string
-	 */
-	public static $plugin_lib_url;
 
 	/**
 	 * Initialize CoursePress Core.

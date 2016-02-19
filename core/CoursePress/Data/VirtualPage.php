@@ -115,7 +115,7 @@ class CoursePress_Data_VirtualPage {
 	}
 
 	function hide_comments( $template ) {
-		$template = CoursePress_Core::$plugin_lib_path . 'lib/CoursePress/Template/no-comment.php';
+		$template = CoursePress::$path . 'lib/CoursePress/Template/no-comment.php';
 		return $template;
 	}
 

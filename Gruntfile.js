@@ -67,16 +67,19 @@ module.exports = function(grunt) {
 		// BUILD branches.
 		plugin_branches: {
 			exclude_pro: [
+				'./tests',
 				'./readme.txt',
 				'languages/coursepress.pot',
 				'coursepress-files/campus'
 			],
 			exclude_free: [
+				'tests',
 				'languages/cp.pot',
 				'coursepress-files/premium',
 				'coursepress-files/campus'
 			],
 			exclude_campus: [
+				'./tests',
 				'./readme.txt',
 				'languages/coursepress.pot'
 			],

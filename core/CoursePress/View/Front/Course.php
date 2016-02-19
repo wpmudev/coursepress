@@ -873,10 +873,10 @@ class CoursePress_View_Front_Course {
 		// Only enqueue when needed
 		if ( in_array( $post_type, $valid_types ) ) {
 
-			$style = CoursePress_Core::$plugin_lib_url . 'assets/css/coursepress_front.css';
+			$style = CoursePress::$url . 'assets/css/coursepress_front.css';
 			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
 
-			$style = CoursePress_Core::$plugin_lib_url . 'assets/css/bbm.modal.css';
+			$style = CoursePress::$url . 'assets/css/bbm.modal.css';
 			wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
 
 		}

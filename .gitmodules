@@ -1,6 +1,4 @@
-[submodule "coursepress-files/premium/external/dashboard"]
-	path = coursepress-files/premium/external/dashboard
+[submodule "premium/external/dashboard"]
+	path = premium/external/dashboard
 	url = git@bitbucket.org:incsub/wpmudev-dashboard-notification.git
-[submodule "themes/coursepress"]
-	path = themes/coursepress
-	url = git@bitbucket.org:incsub/coursepress-theme.git
+
