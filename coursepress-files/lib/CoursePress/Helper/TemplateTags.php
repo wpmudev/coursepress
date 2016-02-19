@@ -2140,18 +2140,28 @@ if ( ! function_exists( 'cp_is_true' ) ) {
 	/**
 	 * Evaluate if the specified value translates to boolean TRUE.
 	 *
+	 * True:
+	 * - Boolean true
+	 * - Number other than 0
+	 * - Strings 'yes', 'on', 'true'
+	 *
 	 * @since  2.0.0
 	 * @param  mixed $value Value to evaluate.
 	 * @return bool
 	 */
 	function cp_is_true( $value ) {
 		if ( ! $value ) {
-			// Handles: null, 0, '0', false, '', empty array.
+			// Handles: null, 0, '0', false, ''.
 			return false;
 		}
 
 		if ( true === $value ) {
-			return $value;
+			return true;
+		}
+
+		if ( ! is_scalar( $value ) ) {
+			// Arrays, objects, etc. always evaluate to false.
+			return false;
 		}
 
 		if ( is_numeric( $value ) ) {

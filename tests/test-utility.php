@@ -15,13 +15,10 @@ class CoursePress_Utilty_Tests extends WP_UnitTestCase {
 	 */
 	function test_cp_is_true() {
 		$test_values = array(
-			null => false,
 			0 => false,
 			'0' => false,
 			1 => true,
 			'1' => true,
-			true => true,
-			false => false,
 			'true' => true,
 			'false' => false,
 			'' => false,
@@ -35,13 +32,18 @@ class CoursePress_Utilty_Tests extends WP_UnitTestCase {
 			'YES' => true,
 			'Yes' => true,
 			'NO' => false,
-			array() => false,
-			array( 1 ) => false,
-			array( 'no' ) => false,
 		);
 		foreach ( $test_values as $value => $expected ) {
 			$res = cp_is_true( $value );
 			$this->assertEquals( $res, $expected );
 		}
+
+		$this->assertTrue( cp_is_true( true ) );
+		$this->assertfalse( cp_is_true( false ) );
+		$this->assertfalse( cp_is_true( null ) );
+		$this->assertfalse( cp_is_true( array() ) );
+		$this->assertfalse( cp_is_true( array( 1 ) ) );
+		$this->assertfalse( cp_is_true( array( 'no' ) ) );
+		$this->assertfalse( cp_is_true( array( 'yes' ) ) );
 	}
 }
