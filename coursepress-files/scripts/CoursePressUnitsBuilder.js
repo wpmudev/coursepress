@@ -1748,8 +1748,7 @@ var CoursePress = CoursePress || {};
                 unit_feature_image: '',
                 unit_availability: '',
                 unit_date_availability: '',
-                unit_delay_seconds: 0,
-                unit_delay_type: 'days',
+                unit_delay_days: 0,
                 unit_force_completion_checked: '',
                 unit_force_successful_completion_checked: ''
             };
