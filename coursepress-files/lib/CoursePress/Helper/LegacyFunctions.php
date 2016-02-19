@@ -100,4 +100,3 @@ if ( !function_exists( 'cp_messaging_get_unread_messages_count' ) ) {
 	}
 
 }
-

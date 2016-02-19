@@ -1699,27 +1699,29 @@ if ( !function_exists( 'cp_default_args' ) ) {
 		return $out;
 	}
 
-	if ( !function_exists( 'cp_length' ) ) {
+}
 
-		function cp_length( $text, $excerpt_length ) {
-		/* $text = strip_shortcodes( $text );
-		  //$text = apply_filters( 'the_content', $text );
-		  $excerpt_more = '...';
-		  $text = str_replace( ']]>', ']]&gt;', $text );
-		  $text = strip_tags( $text );
-		  $words = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
-		  if ( count( $words ) > $excerpt_length ) {
-		  array_pop( $words );
-		  $text = implode( ' ', $words );
-		  $text = $text . $excerpt_more;
-		  } else {
-		  $text = implode( ' ', $words );
-		} */
-			$text = truncateHtml( $text, $excerpt_length );
+if ( !function_exists( 'cp_length' ) ) {
 
-			return $text;
+	function cp_length( $text, $excerpt_length ) {
+		/*
+		$text = strip_shortcodes( $text );
+		//$text = apply_filters( 'the_content', $text );
+		$excerpt_more = '...';
+		$text = str_replace( ']]>', ']]&gt;', $text );
+		$text = strip_tags( $text );
+		$words = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
+		if ( count( $words ) > $excerpt_length ) {
+		array_pop( $words );
+		$text = implode( ' ', $words );
+		$text = $text . $excerpt_more;
+		} else {
+		$text = implode( ' ', $words );
 		}
+		*/
+		$text = truncateHtml( $text, $excerpt_length );
 
+		return $text;
 	}
 
 }
@@ -1737,6 +1739,7 @@ if ( !function_exists( 'truncateHtml' ) ) {
 		$total_length = strlen( $ending );
 		$open_tags = array();
 		$truncate = '';
+
 		foreach ( $lines as $line_matchings ) {
 			// if there is any html-tag in this line, handle it and add it (uncounted) to the output
 			if ( !empty( $line_matchings[ 1 ] ) ) {

@@ -111,6 +111,10 @@ class CoursePress_Data_Shortcodes_Course {
 			'course_time_estimation',
 			array( __CLASS__, 'course_time_estimation' )
 		);
+		add_shortcode(
+			'course_details',
+			array( __CLASS__, 'course_details' )
+		);
 	}
 
 	/**
@@ -319,7 +323,7 @@ class CoursePress_Data_Shortcodes_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'class' => '',
-			'length' => ''
+			'length' => '',
 		), $atts, 'course_summary' ) );
 
 		$course_id = (int) $course_id;
@@ -427,7 +431,7 @@ class CoursePress_Data_Shortcodes_Course {
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
 			'class' => '',
-			'suffix' => ' Weeks'
+			'suffix' => ' Weeks',
 		), $atts, 'course_start' ) );
 
 		$course_id = (int) $course_id;
@@ -491,7 +495,6 @@ class CoursePress_Data_Shortcodes_Course {
 
 		$end_date = CoursePress_Data_Course::get_setting( $course_id, 'course_end_date' );
 		$open_ended = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'course_open_ended', false ) );
-
 
 		$content = '<div class="course-end-date course-end-date-' . $course_id . ' ' . $class . '">';
 
@@ -942,35 +945,34 @@ class CoursePress_Data_Shortcodes_Course {
 			}
 		}
 
-		//if ( cp_use_woo() ) {
-		//	if ( $is_paid ) {
+		// if ( cp_use_woo() ) {
+		// if ( $is_paid ) {
 		//
-		//		$woo_product = get_post_meta( $course_id, 'woo_product', true );
-		//		$wc_product = new WC_Product( $woo_product );
+		// $woo_product = get_post_meta( $course_id, 'woo_product', true );
+		// $wc_product = new WC_Product( $woo_product );
 		//
-		//		$content .= $wc_product->get_price_html();
-		//	} else {
-		//		if ( $show_icon ) {
-		//			$content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
-		//		} else {
-		//			$content .= $no_cost_text;
-		//		}
-		//	}
-		//} else {
-		//	if ( $is_paid && CoursePress::instance()->marketpress_active ) {
+		// $content .= $wc_product->get_price_html();
+		// } else {
+		// if ( $show_icon ) {
+		// $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
+		// } else {
+		// $content .= $no_cost_text;
+		// }
+		// }
+		// } else {
+		// if ( $is_paid && CoursePress::instance()->marketpress_active ) {
 		//
-		//		$mp_product = get_post_meta( $course_id, 'marketpress_product', true );
+		// $mp_product = get_post_meta( $course_id, 'marketpress_product', true );
 		//
-		//		$content .= do_shortcode( '[mp_product_price product_id="' . $mp_product . '" label=""]' );
-		//	} else {
-		//		if ( $show_icon ) {
-		//			$content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
-		//		} else {
-		//			$content .= $no_cost_text;
-		//		}
-		//	}
-		//}
-
+		// $content .= do_shortcode( '[mp_product_price product_id="' . $mp_product . '" label=""]' );
+		// } else {
+		// if ( $show_icon ) {
+		// $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
+		// } else {
+		// $content .= $no_cost_text;
+		// }
+		// }
+		// }
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
 
@@ -1307,7 +1309,7 @@ class CoursePress_Data_Shortcodes_Course {
 				if ( preg_match( '/youtube.com|youtu.be/', $course_video ) ) {
 					add_filter( 'oembed_result', array(
 						'CoursePress_Helper_Utility',
-						'remove_related_videos'
+						'remove_related_videos',
 					), 10, 3 );
 				}
 
@@ -1375,7 +1377,7 @@ class CoursePress_Data_Shortcodes_Course {
 		// Add certificate link.
 		if ( CoursePress_Data_Capabilities::is_pro() ) {
 			// COMPLETION LOGIC.
-			//$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', CoursePress::TD ), ' | ' );
+			// $content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', CoursePress::TD ), ' | ' );
 		}
 
 		$content .= '</div>';
@@ -1499,4 +1501,35 @@ class CoursePress_Data_Shortcodes_Course {
 		return $content;
 	}
 
+	public static function course_details( $atts ) {
+		global $wp_query, $signup_url, $coursepress;
+
+		$student_id = get_current_user_id();
+
+		extract( shortcode_atts( array(
+			'course_id' => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
+			'field' => 'course_start_date',
+		), $atts ) );
+
+		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) { return ''; }
+
+		$field = sanitize_html_class( $field );
+
+		$map = array(
+			'action_links' => 'action_links',
+			'class_size' => 'class_size',
+			'enroll_type' => 'enrollment_type',
+			'course_start_date' => 'start',
+			'course_end_date' => 'end',
+			'enrollment_start_date' => 'enrollment_start',
+			'enrollment_end_date' => 'enrollment_end',
+			'price' => 'cost',
+			'button' => 'button',
+		);
+
+		$action = in_array( $field, $map ) ? $map[ $field ] : $field;
+
+		return do_shortcode( '[course course_id="' . $course_id . '" show="' . $action . '"]' );
+	}
 }
