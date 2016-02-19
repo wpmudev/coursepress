@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 			'coursepress.php',
 			'premium/**/*.php',
 			'campus/*.php',
-			'lib/coursepress/**/*.php',
+			'include/coursepress/**/*.php',
 			'!**/helper/utility.php',  // TODO: Too complex. Manually fix this file first!
 			'!**/model/shortcode.php', // TODO: Too complex. Manually fix this file first!
 			'!**/external/**/*.php'
