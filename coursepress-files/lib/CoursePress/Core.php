@@ -52,6 +52,11 @@ class CoursePress_Core {
 		// Initialize Plugin Integrations
 		CoursePress_Helper_Integration::init();
 
+		// Initialize TemplateTags Object Helper
+		CoursePress_Helper_TemplateTags::init();
+
+		// Initialize LegacyFunctions Object Helper
+		CoursePress_Helper_LegacyFunctions::init();
 
 		if ( is_admin() ) {
 			// Initialize Admin Settings
