@@ -430,18 +430,6 @@ class CoursePress_Helper_Utility {
 		return $sql;
 	}
 
-	public static function fix_bool( $value ) {
-
-		if( true !== $value && false !== $value ) {
-			$value = '' . $value; // Convert number to string
-			$value = strtolower( $value );
-		}
-
-		return 'on' === $value || 'yes' === $value || 1 === (int) $value || true === $value || 'true' === $value ? true : false;
-
-	}
-
-
 	public static function safe_b64encode( $string ) {
 		$data = base64_encode( $string );
 		$data = str_replace( array( '+', '/', '=' ), array( '-', '_', '' ), $data );
@@ -1043,4 +1031,37 @@ function cp_get_number_of_days_between_dates( $start_date, $end_date ) {
 	$numberDays = intval( $numberDays );
 
 	return $numberDays;
+}
+
+if ( ! function_exists( 'cp_is_true' ) ) {
+
+	/**
+	 * Evaluate if the specified value translates to boolean TRUE.
+	 *
+	 * @since  2.0.0
+	 * @param  mixed $value Value to evaluate.
+	 * @return bool
+	 */
+	function cp_is_true( $value ) {
+		if ( ! $value ) {
+			// Handles: null, 0, '0', false, '', empty array.
+			return false;
+		}
+
+		if ( true === $value ) {
+			return $value;
+		}
+
+		if ( is_numeric( $value ) ) {
+			// A number other than 0 is true.
+			return true;
+		}
+
+		$value = strtolower( (string) $value );
+		if ( 'on' == $value || 'yes' == $value || 'true' == $value ) {
+			return true;
+		}
+
+		return false;
+	}
 }

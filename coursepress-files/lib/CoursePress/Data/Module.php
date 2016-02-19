@@ -133,19 +133,19 @@ class CoursePress_Data_Module {
 		}
 
 		if ( isset( $meta['show_title_on_front'] ) ) {
-			$value = CoursePress_Helper_Utility::fix_bool( $meta['show_title_on_front'][0] );
+			$value = cp_is_true( $meta['show_title_on_front'][0] );
 			update_post_meta( $module_id, 'show_title', $value );
 			delete_post_meta( $module_id, 'show_title_on_front' );
 		}
 
 		if ( isset( $meta['mandatory_answer'] ) ) {
-			$value = CoursePress_Helper_Utility::fix_bool( $meta['mandatory_answer'][0] );
+			$value = cp_is_true( $meta['mandatory_answer'][0] );
 			update_post_meta( $module_id, 'mandatory', $value );
 			delete_post_meta( $module_id, 'mandatory_answer' );
 		}
 
 		if ( isset( $meta['gradable_answer'] ) ) {
-			$value = CoursePress_Helper_Utility::fix_bool( $meta['gradable_answer'][0] );
+			$value = cp_is_true( $meta['gradable_answer'][0] );
 			update_post_meta( $module_id, 'assessable', $value );
 			delete_post_meta( $module_id, 'gradable_answer' );
 		}
@@ -163,7 +163,7 @@ class CoursePress_Data_Module {
 		}
 
 		if ( isset( $meta['limit_attempts'] ) ) {
-			$value = CoursePress_Helper_Utility::fix_bool( $meta['limit_attempts'][0] );
+			$value = cp_is_true( $meta['limit_attempts'][0] );
 			$value = ! $value; // inverse
 			update_post_meta( $module_id, 'allow_retries', $value );
 			delete_post_meta( $module_id, 'limit_attempts' );
@@ -207,12 +207,12 @@ class CoursePress_Data_Module {
 		if ( 'section' != $module_type ) {
 			$attributes = array_merge( $attributes, array(
 				'duration' => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
-				'show_title' => CoursePress_Helper_Utility::fix_bool( $meta['show_title'][0] ),
-				'allow_retries' => isset( $meta['allow_retries'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['allow_retries'][0] ) : true,
+				'show_title' => cp_is_true( $meta['show_title'][0] ),
+				'allow_retries' => isset( $meta['allow_retries'] ) ? cp_is_true( $meta['allow_retries'][0] ) : true,
 				'retry_attempts' => isset( $meta['retry_attempts'] ) ? (int) $meta['retry_attempts'][0] : 0,
 				'minimum_grade' => isset( $meta['minimum_grade'][0] ) ? floatval( $meta['minimum_grade'][0] ) : floatval( 100 ),
-				'assessable' => isset( $meta['assessable'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['assessable'][0] ) : false,
-				'mandatory' => isset( $meta['mandatory'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['mandatory'][0] ) : false,
+				'assessable' => isset( $meta['assessable'] ) ? cp_is_true( $meta['assessable'][0] ) : false,
+				'mandatory' => isset( $meta['mandatory'] ) ? cp_is_true( $meta['mandatory'][0] ) : false,
 			) );
 		}
 

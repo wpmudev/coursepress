@@ -96,7 +96,7 @@ class CoursePress_Template_Module {
 
 		$html = '';
 
-		$show_caption = isset( $data['show_media_caption'] ) ? CoursePress_Helper_Utility::fix_bool( $data['show_media_caption'] ) : false;
+		$show_caption = isset( $data['show_media_caption'] ) ? cp_is_true( $data['show_media_caption'] ) : false;
 
 		if ( ! empty( $attachment ) ) {
 			$attachment_id = ' id="attachment_' . $attachment->ID . '" ';
@@ -123,7 +123,7 @@ class CoursePress_Template_Module {
 		if ( 'video' === $type ) {
 
 			$video_extension = pathinfo( $url, PATHINFO_EXTENSION );
-			$hide_related = isset( $data['hide_related_media'] ) ? CoursePress_Helper_Utility::fix_bool( $data['hide_related_media'] ) : false;
+			$hide_related = isset( $data['hide_related_media'] ) ? cp_is_true( $data['hide_related_media'] ) : false;
 
 			if ( $hide_related ) {
 				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
@@ -181,8 +181,8 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		if ( isset( $attributes['audio_url'] ) ) {
-			$loop = isset( $attributes['loop'] ) ? CoursePress_Helper_Utility::fix_bool( $attributes['loop'] ) : false;
-			$autoplay = isset( $attributes['autoplay'] ) ? CoursePress_Helper_Utility::fix_bool( $attributes['autoplay'] ) : false;
+			$loop = isset( $attributes['loop'] ) ? cp_is_true( $attributes['loop'] ) : false;
+			$autoplay = isset( $attributes['autoplay'] ) ? cp_is_true( $attributes['autoplay'] ) : false;
 			$attr = array(
 				'src' => $attributes['audio_url'],
 				'loop' => $loop,
@@ -449,7 +449,7 @@ class CoursePress_Template_Module {
 
 		$content .= '<div class="module-result">';
 
-		if ( CoursePress_Helper_Utility::fix_bool( $attributes['assessable'] ) ) {
+		if ( cp_is_true( $attributes['assessable'] ) ) {
 			if ( $grade > - 1 ) {
 				$content .= '<div class="grade"><strong>' . esc_html__( 'Grade:', CoursePress::TD ) . '</strong> ' . $grade . '%</div>';
 			} else {
@@ -458,7 +458,7 @@ class CoursePress_Template_Module {
 		} else {
 			$content .= '<div class="grade">' . esc_html__( 'Not assessable', CoursePress::TD ) . '</div>';
 		}
-		if ( ( $attributes['minimum_grade'] > $grade || ( ! CoursePress_Helper_Utility::fix_bool( $attributes['assessable'] ) ) && $attributes['minimum_grade'] <= $grade ) && ! $disabled ) {
+		if ( ( $attributes['minimum_grade'] > $grade || ( ! cp_is_true( $attributes['assessable'] ) ) && $attributes['minimum_grade'] <= $grade ) && ! $disabled ) {
 			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', CoursePress::TD ) . '</a></div>';
 		}
 		if ( $feedback && ! empty( $feedback ) ) {
@@ -893,7 +893,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 		$response_count = count( $responses );
-		$use_timer = CoursePress_Helper_Utility::fix_bool( $attributes['use_timer'] );
+		$use_timer = cp_is_true( $attributes['use_timer'] );
 
 		$quiz_result = CoursePress_Data_Module::get_quiz_results( get_current_user_id(), $course_id, $unit_id, $module_id, false, $student_progress );
 

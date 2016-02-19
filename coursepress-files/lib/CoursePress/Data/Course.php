@@ -387,9 +387,9 @@ class CoursePress_Data_Course {
 	public static function allow_pages( $course_id ) {
 
 		$pages = array(
-			'course_discussion' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_discussion', true ) ),
-			'workbook' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_workbook', true ) ),
-			'grades' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_grades', true ) ),
+			'course_discussion' => cp_is_true( self::get_setting( $course_id, 'allow_discussion', true ) ),
+			'workbook' => cp_is_true( self::get_setting( $course_id, 'allow_workbook', true ) ),
+			'grades' => cp_is_true( self::get_setting( $course_id, 'allow_grades', true ) ),
 		);
 
 		return $pages;
@@ -1094,7 +1094,7 @@ class CoursePress_Data_Course {
 
 	public static function is_full( $course_id ) {
 
-		$limited = CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'class_size' ) );
+		$limited = cp_is_true( self::get_setting( $course_id, 'class_size' ) );
 		if ( $limited ) {
 
 			$limit = self::get_setting( $course_id, 'class_size' );

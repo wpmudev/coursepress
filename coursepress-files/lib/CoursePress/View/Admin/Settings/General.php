@@ -243,7 +243,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ? 'checked' : '';
+		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][show_coursepress_menu]" ' . $checked  . ' />
 									';
@@ -296,7 +296,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) ) ? 'checked' : '';
+		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][use_custom_login]" ' . $checked  . ' />
 								</td>
@@ -324,7 +324,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/redirect_after_login', 1 ) ) ? 'checked' : '';
+		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/redirect_after_login', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[general][redirect_after_login]" ' . $checked  . ' />
 								</td>
@@ -352,7 +352,7 @@ class CoursePress_View_Admin_Settings_General {
 								</th>
 								<td>';
 
-		$checked = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'instructor/show_username', 1 ) ) ? 'checked' : '';
+		$checked = cp_is_true( CoursePress_Core::get_setting( 'instructor/show_username', 1 ) ) ? 'checked' : '';
 		$content .= '
 									<input type="checkbox" name="coursepress_settings[instructor][show_username]" ' . $checked  . ' />
 								</td>

@@ -3,14 +3,12 @@
 class CoursePress_Helper_JavaScript {
 
 	public static function init() {
-
 		// These don't work here because of core using wp_print_styles()
 		// add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
 
 		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'enqueue_front_scripts' ) );
-
 	}
 
 
@@ -20,7 +18,6 @@ class CoursePress_Helper_JavaScript {
 	}
 
 	public static function enqueue_scripts() {
-
 		$course_js_pages = array(
 			'coursepress_course',
 			'coursepress_assessments',
@@ -50,7 +47,7 @@ class CoursePress_Helper_JavaScript {
 		ob_start();
 		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array(
 			'wpautop' => true,
-		                                                             'textarea_name' => 'dummy_editor_name',
+			'textarea_name' => 'dummy_editor_name',
 		) );
 		$dummy_editor = ob_get_clean();
 
@@ -178,8 +175,8 @@ class CoursePress_Helper_JavaScript {
 
 		if (
 			( ! empty( $post_type ) && in_array( $post_type, $valid_cpt ) ) ||
-		    array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ||
-		    ! empty( $course_id )
+			array_key_exists( 'course', $wp_query->query ) || array_key_exists( 'coursename', $wp_query->query ) ||
+			! empty( $course_id )
 		) {
 
 			// CoursePress Object

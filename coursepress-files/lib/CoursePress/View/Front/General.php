@@ -5,7 +5,7 @@ class CoursePress_View_Front_General {
 	public static function init() {
 
 		// CoursePress Menus
-		if ( CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ) {
+		if ( cp_is_true( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ) {
 
 			/**
 			 * Create CoursePress basic menus automatically.
@@ -139,7 +139,7 @@ class CoursePress_View_Front_General {
 			$login->menu_item_parent = 0;
 			$login->ID = 'cp-logout';
 			$login->db_id = '';
-			$use_custom = CoursePress_Helper_Utility::fix_bool( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
+			$use_custom = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
 			$login->url = $is_in ? wp_logout_url() : ( $use_custom ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url() );
 
 			$sorted_menu_items[] = $login;

@@ -202,8 +202,8 @@ class CoursePress_Data_Unit {
 		/* Check if previous has conditions */
 		$force_current_unit_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : false;
 		$force_current_unit_successful_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : false;
-		$force_current_unit_completion = CoursePress_Helper_Utility::fix_bool( $force_current_unit_completion );
-		$force_current_unit_successful_completion = CoursePress_Helper_Utility::fix_bool( $force_current_unit_successful_completion );
+		$force_current_unit_completion = cp_is_true( $force_current_unit_completion );
+		$force_current_unit_successful_completion = cp_is_true( $force_current_unit_successful_completion );
 
 		$status = array();
 

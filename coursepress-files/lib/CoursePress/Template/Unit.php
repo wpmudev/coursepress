@@ -78,7 +78,7 @@ class CoursePress_Template_Unit {
 		$content .= '<div class="unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title
-		$show_page_title = isset( $show_page_titles[ $page - 1 ] ) ? CoursePress_Helper_Utility::fix_bool( $show_page_titles[ $page - 1 ] ) : false;
+		$show_page_title = isset( $show_page_titles[ $page - 1 ] ) ? cp_is_true( $show_page_titles[ $page - 1 ] ) : false;
 		if ( $show_page_title ) {
 			$page_title = isset( $page_titles[ 'page_' . $page ] ) ? CoursePress_Helper_Utility::filter_content( $page_titles[ 'page_' . $page ] ) : '';
 			if ( ! empty( $page_title ) ) {

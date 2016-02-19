@@ -609,7 +609,7 @@ class CoursePress_Data_Student {
 
 		$mandatory = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/all_mandatory' );
 
-		return CoursePress_Helper_Utility::fix_bool( $mandatory );
+		return cp_is_true( $mandatory );
 
 	}
 
@@ -621,7 +621,7 @@ class CoursePress_Data_Student {
 
 		$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed' );
 
-		return CoursePress_Helper_Utility::fix_bool( $completed );
+		return cp_is_true( $completed );
 
 	}
 
