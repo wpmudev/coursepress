@@ -91,7 +91,7 @@ if ( ! class_exists( 'Discussion' ) ) {
 					$instructors = Course::get_course_instructors_ids( $course_id );
 					do_action( 'new_discussion_added_instructor_notification', $user_id, $course_id, $instructors );
 
-					$students = Course::get_course_students_ids( $course_id );
+					$students = Course::get_Course_Student_ids( $course_id );
 					do_action( 'new_discussion_added_student_notification', $user_id, $course_id, $students );
 				}
 

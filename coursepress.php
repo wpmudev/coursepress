@@ -10,7 +10,7 @@
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
- * Domain Path: /languages/
+ * Domain Path: /language/
  * WDP ID:      913071
  *
  * @package CoursePress
@@ -142,15 +142,21 @@ class CoursePress {
 	 */
 	private static function class_loader( $class ) {
 		$namespaces = array(
+			'CoursePressPro' => array(
+				'namespace_folder' => 'premium/include', // Base folder for classes.
+				'filename_prefix' => 'class-',           // Prefix filenames.
+			),
+			'CoursePressCampus' => array(
+				'namespace_folder' => 'campus/include', // Base folder for classes.
+				'filename_prefix' => 'class-',          // Prefix filenames.
+			),
 			'CoursePress' => array(
-				'namespace_folder' => false,
-				'filename_prefix' => 'class-',
-				'overrides' => array(),
+				'namespace_folder' => 'include/coursepress', // Base folder for classes.
+				'filename_prefix' => 'class-',               // Prefix filenames.
 			),
 			'TCPDF' => array(
-				'namespace_folder' => true,
-				'filename_prefix' => false,
-				'overrides' => array(),
+				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
+				'filename_prefix' => false,            // No prefix for filenames.
 			),
 		);
 
@@ -158,55 +164,30 @@ class CoursePress {
 
 		foreach ( $namespaces as $namespace => $options ) {
 			// Continue if the class name is prefixed with <namespace>.
-			if ( substr( $namespace, 0, strlen( $class ) ) === $namespace ) {
+			if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
 
-				$namespace_folder = 'core';
-				$overrides = array();
-
-				if ( ! empty( $options['namespace_folder'] ) ) {
-					/**
-					 * Search for class file in a subfolder?
-					 * This is needed, when the classname does not start with
-					 * the namespace.
-					 *
-					 * @param namespace_folder
-					 * @var   bool
-					 */
-					$namespace_folder .= DIRECTORY_SEPARATOR . $namespace;
+				if ( empty( $options['namespace_folder'] ) ) {
+					continue;
+				} else {
+					$namespace_folder = $options['namespace_folder'];
 				}
 
-				if ( ! empty( $options['overrides'] ) ) {
-					/**
-					 * Define custom class file paths for special classes.
-					 *
-					 * @param overrides
-					 * @var   array. Key is class name, value is file name.
-					 */
-					$overrides = (array) $options['overrides'];
-				}
-
-				$class_folder = join(
-					DIRECTORY_SEPARATOR,
-					array(
-						self::$path,
-						$namespace_folder,
-					)
-				);
-				$class_file = str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+				// Get the class-filename.
+				$class_path = explode( '_', $class );
+				$class_file = strtolower( array_pop( $class_path ) ) . '.php';
 
 				if ( ! empty( $options['filename_prefix'] ) ) {
 					$class_file = $options['filename_prefix'] . $class_file;
 				}
 
-				// Override filename via array.
-				if ( isset( $overrides[ $class_file ] ) ) {
-					$class_file = $overrides[ $class_file ];
-				}
+				// Build the path to the class file.
+				array_shift( $class_path ); // Remove the first element (namespace-string).
+				array_unshift( $class_path, $namespace_folder );
+				$class_folder = strtolower(
+					self::$path . implode( DIRECTORY_SEPARATOR, $class_path )
+				);
 
 				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
-
-				// WP Standard wants us to name all files in lowercase format.
-				$filename = strtolower( $filename );
 
 				// Override filename via filter.
 				$filename = apply_filters(

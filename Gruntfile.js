@@ -11,19 +11,19 @@ module.exports = function(grunt) {
 	// Configuration.
 	var conf = {
 		// Folder that contains the CSS files.
-		js_folder: 'coursepress-files/assets/js/',
+		js_folder: 'asset/js/',
 
 		// Folder that contains the CSS files.
-		css_folder: 'coursepress-files/assets/css/',
+		css_folder: 'asset/css/',
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			'{js}admin-general.js':           ['{js}src/admin-general.js'],
-			'{js}CoursePress.js':             ['{js}src/CoursePress.js'],
-			'{js}CoursePressCourse.js':       ['{js}src/CoursePressCourse.js'],
-			'{js}CoursePressCourseList.js':   ['{js}src/CoursePressCourseList.js'],
-			'{js}CoursePressFront.js':        ['{js}src/CoursePressFront.js'],
-			'{js}CoursePressUnitsBuilder.js': ['{js}src/CoursePressUnitsBuilder.js']
+			'{js}admin-general.js':            ['{js}src/admin-general.js'],
+			'{js}coursepress.js':              ['{js}src/coursepress.js'],
+			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
+			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
+			'{js}coursepress-front.js':        ['{js}src/coursepress-front.js'],
+			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-UnitsBuilder.js']
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
@@ -38,11 +38,11 @@ module.exports = function(grunt) {
 		// PHP files to validate.
 		php_files: [
 			'coursepress.php',
-			'coursepress-files/premium/**/*.php',
-			'coursepress-files/campus/*.php',
-			'coursepress-files/lib/CoursePress/**/*.php',
-			'!**/Helper/Utility.php',   // TODO: Too complex. Manually fix this file first!
-			'!**/Model/Shortcodes.php', // TODO: Too complex. Manually fix this file first!
+			'premium/**/*.php',
+			'campus/*.php',
+			'lib/coursepress/**/*.php',
+			'!**/helper/utility.php',  // TODO: Too complex. Manually fix this file first!
+			'!**/model/shortcode.php', // TODO: Too complex. Manually fix this file first!
 			'!**/external/**/*.php'
 		],
 
@@ -51,15 +51,12 @@ module.exports = function(grunt) {
 			ignore_files: [
 				'(^.php)',      // Ignore non-php files.
 				'bin/.*',       // Unit testing.
-				'tests/.*',     // Unit testing.
+				'test/.*',      // Unit testing.
 				'node_modules/.*',
 				'lib/TCPDF/.*', // External module.
 				'themes/.*',    // External module.
-				'css/.*',       // Deprecated folder.
-				'js/.*',        // Deprecated folder.
-				'includes/.*'   // Deprecated folder.
 			],
-			pot_dir: 'languages/',  // With trailing slash.
+			pot_dir: 'language/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.
 			textdomain_free: 'coursepress',
 		},
@@ -67,21 +64,21 @@ module.exports = function(grunt) {
 		// BUILD branches.
 		plugin_branches: {
 			exclude_pro: [
-				'./tests',
+				'./test',
 				'./readme.txt',
-				'languages/coursepress.pot',
-				'coursepress-files/campus'
+				'./language/coursepress.pot',
+				'./campus'
 			],
 			exclude_free: [
-				'tests',
-				'languages/cp.pot',
-				'coursepress-files/premium',
-				'coursepress-files/campus'
+				'./test',
+				'./language/cp.pot',
+				'./premium',
+				'./campus'
 			],
 			exclude_campus: [
-				'./tests',
+				'./test',
 				'./readme.txt',
-				'languages/coursepress.pot'
+				'./language/coursepress.pot'
 			],
 			base: 'agile/2.0-A1IGTDI1-remove-old-v1-x-code',
 			pro: 'coursepress/2-pro',
@@ -126,8 +123,8 @@ module.exports = function(grunt) {
 					'**/*.txt',
 					'!node_modules/**',
 					'!vendor/**',
-					'!languages/**',
-					'!coursepress-files/files/**',
+					'!language/**',
+					'!asset/file/**',
 					'!Gruntfile.js',
 					'!build/**',
 					'!.git/**'
@@ -369,9 +366,9 @@ module.exports = function(grunt) {
 			},
 			options: {
 				bin: 'vendor/phpunit/phpunit/phpunit',
-				bootstrap: 'tests/bootstrap.php',
+				bootstrap: 'test/bootstrap.php',
 				testsuite: 'default',
-				configuration: 'tests/phpunit.xml',
+				configuration: 'test/phpunit.xml',
 				colors: true,
 				staticBackup: false,
 				noGlobalsBackup: false

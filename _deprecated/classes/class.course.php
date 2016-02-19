@@ -725,7 +725,7 @@ if ( !class_exists( 'Course' ) ) {
 					return !empty( $instructors ) ? $instructors : array();
 				}
 
-				static function get_course_students_ids( $course_id = false ) {
+				static function get_Course_Student_ids( $course_id = false ) {
 					if ( !$course_id ) {
 						return false;
 					}
