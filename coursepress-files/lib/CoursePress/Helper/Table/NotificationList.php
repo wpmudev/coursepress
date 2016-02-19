@@ -14,7 +14,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		$post_format = CoursePress_Model_Notification::get_format();
+		$post_format = CoursePress_Data_Notification::get_format();
 
 		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
@@ -22,8 +22,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			'ajax'     => false,// should this table support ajax?
 		) );
 
-		$this->post_type = CoursePress_Model_Notification::get_post_type_name();
-		$this->count     = wp_count_posts( CoursePress_Model_Notification::get_post_type_name() );
+		$this->post_type = CoursePress_Data_Notification::get_post_type_name();
+		$this->count     = wp_count_posts( CoursePress_Data_Notification::get_post_type_name() );
 
 	}
 
@@ -87,7 +87,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 	public function column_course( $item ) {
 
-		$attributes = CoursePress_Model_Notification::attributes( $item->ID );
+		$attributes = CoursePress_Data_Notification::attributes( $item->ID );
 
 		$output = sprintf( '<div data-course="%s">%s</div>',
 			$attributes['course_id'],
@@ -219,7 +219,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		}
 
 		if ( is_null( $this->_categories ) ) {
-			$this->_categories = CoursePress_Model_Course::get_course_categories();
+			$this->_categories = CoursePress_Data_Course::get_course_categories();
 
 			$two = '';
 		} else {

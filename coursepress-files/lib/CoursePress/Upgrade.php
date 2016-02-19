@@ -83,7 +83,7 @@ class CoursePress_Upgrade {
 
 		// Instructor
 		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/show_username', get_option( 'show_instructor_username', 1 ) );
-		$default_capabilities = CoursePress_Model_Capabilities::get_instructor_capabilities();
+		$default_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
 		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/capabilities', get_option( 'coursepress_instructor_capabilities', $default_capabilities ) );
 
 		// Basic Certificate

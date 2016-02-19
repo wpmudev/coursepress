@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_VirtualPage {
+class CoursePress_Data_VirtualPage {
 
 	var $slug = null;
 	var $title = null;
@@ -56,7 +56,7 @@ class CoursePress_Model_VirtualPage {
 
 		// Try a real post first and then override it with args
 		// if( ! empty( $this->ID ) ) {
-		// CoursePress_Model_VirtualPage::$the_post_id = $this->ID;
+		// CoursePress_Data_VirtualPage::$the_post_id = $this->ID;
 		// $virtual_post                               = get_post( $this->ID );
 		// $virtual_post->post_content                 = $this->content;
 		// $virtual_post->post_title                   = $this->title;

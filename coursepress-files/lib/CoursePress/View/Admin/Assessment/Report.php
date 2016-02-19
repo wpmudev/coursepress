@@ -92,7 +92,7 @@ class CoursePress_View_Admin_Assessment_Report {
 		$html = '';
 
 		// Get the units...
-		$units = CoursePress_Model_Course::get_units_with_modules( $course_id );
+		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
 
 		// Or unit...
@@ -106,7 +106,7 @@ class CoursePress_View_Admin_Assessment_Report {
 		foreach ( $students as $student_id ) {
 
 			$student_name     = CoursePress_Helper_Utility::get_user_name( $student_id );
-			$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
 			$html .= '
 				<table style="padding: 1mm">
@@ -148,7 +148,7 @@ class CoursePress_View_Admin_Assessment_Report {
 					// ';
 					foreach ( $page['modules'] as $module_id => $module ) {
 
-						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
 
 						if ( false === $attributes || 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 							continue;
@@ -156,10 +156,10 @@ class CoursePress_View_Admin_Assessment_Report {
 
 						$assessable_modules += 1;
 
-						$grade = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 						$total += false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] : 0;
 						$grade_display = false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] . '%' : '--';
-						$response      = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$response      = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
 						$date_display  = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', CoursePress::TD );
 						$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
 
@@ -240,7 +240,7 @@ class CoursePress_View_Admin_Assessment_Report {
 	public static function render_report_list() {
 
 		$content = '';
-		$courses = CoursePress_Model_Instructor::get_accessable_courses( wp_get_current_user(), true );
+		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
 		if ( empty( $courses ) ) {
 			return esc_html__( 'You do not currently have any courses assigned.', CoursePress::TD );
@@ -278,7 +278,7 @@ class CoursePress_View_Admin_Assessment_Report {
 		$tooltip = '<span class="help-tooltip">' . esc_html__( 'Select entire course for selected students, or just a unit for selected students.', CoursePress::TD ) . '</span>';
 		$content .= '<div><strong>' . esc_html__( 'Bulk Reporting', CoursePress::TD ) . '</strong>' . $tooltip . '<br />';
 
-		$units = CoursePress_Model_Course::get_units( $selected_course );
+		$units = CoursePress_Data_Course::get_units( $selected_course );
 
 		$content .= '
 			<select name="bulk-report-unit" class="narrow">

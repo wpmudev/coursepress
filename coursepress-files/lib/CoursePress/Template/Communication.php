@@ -5,7 +5,7 @@ class CoursePress_Template_Communication {
 	public static function render_notifications() {
 
 		$course_id     = CoursePress_Helper_Utility::the_course( true );
-		$notifications = CoursePress_Model_Notification::get_notifications( array( $course_id, 'all' ) );
+		$notifications = CoursePress_Data_Notification::get_notifications( array( $course_id, 'all' ) );
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
@@ -53,7 +53,7 @@ class CoursePress_Template_Communication {
 
 		$course      = CoursePress_Helper_Utility::the_course( false );
 		$course_id   = $course->ID;
-		$discussions = CoursePress_Model_Discussion::get_discussions( array( $course_id, 'all' ) );
+		$discussions = CoursePress_Data_Discussion::get_discussions( array( $course_id, 'all' ) );
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
@@ -81,7 +81,7 @@ class CoursePress_Template_Communication {
 			';
 
 			$author     = CoursePress_Helper_Utility::get_user_name( $discussion->post_author, false, false );
-			$attributes = CoursePress_Model_Discussion::attributes( $discussion->ID );
+			$attributes = CoursePress_Data_Discussion::attributes( $discussion->ID );
 			$applies_to = $attributes['unit_id'] === 'course' ? get_post_field( 'post_title', $course_id ) : get_post_field( 'post_title', $attributes['unit_id'] );
 
 			$date = get_the_date( get_option( 'date_format' ), $discussion );
@@ -114,7 +114,7 @@ class CoursePress_Template_Communication {
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );
 		$post_name  = $wp->query_vars['discussion_name'];
-		$discussion = get_page_by_path( $post_name, OBJECT, CoursePress_Model_Discussion::get_post_type_name() );
+		$discussion = get_page_by_path( $post_name, OBJECT, CoursePress_Data_Discussion::get_post_type_name() );
 		if ( empty( $discussion ) && isset( $wp->query_vars['type'] ) && isset( $wp->query_vars['item'] ) ) {
 			$discussion = get_post( (int) $wp->query_vars['item'] );
 		}

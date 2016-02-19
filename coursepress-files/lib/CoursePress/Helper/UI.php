@@ -98,7 +98,7 @@ class CoursePress_Helper_UI {
 	public static function get_course_dropdown( $id, $name, $courses = false, $options = array() ) {
 
 		if ( false === $courses ) {
-			$courses = get_posts( 'post_type=' . CoursePress_Model_Course::get_post_type_name() );
+			$courses = get_posts( 'post_type=' . CoursePress_Data_Course::get_post_type_name() );
 		}
 
 		$content = '';
@@ -130,7 +130,7 @@ class CoursePress_Helper_UI {
 
 		if ( false === $units && 'all' !== $course_id ) {
 			$units = get_posts( array(
-				'post_type'   => CoursePress_Model_Unit::get_post_type_name(),
+				'post_type'   => CoursePress_Data_Unit::get_post_type_name(),
 				'post_parent' => $course_id,
 			) );
 		}
@@ -187,7 +187,7 @@ class CoursePress_Helper_UI {
 		foreach ( $unit['pages'] as $page ) {
 			foreach ( $page['modules'] as $module ) {
 
-				$meta = CoursePress_Model_Module::attributes( $module );
+				$meta = CoursePress_Data_Module::attributes( $module );
 				if ( $meta['module_type'] != CoursePress_Helper_UI_Module::OUTPUT_DISCUSSION ) {
 					continue;
 				}
@@ -248,10 +248,10 @@ class CoursePress_Helper_UI {
 		}
 
 		$roles = apply_filters( 'coursepress_allowed_roles', array(), $context );
-		if ( CoursePress_Model_Capabilities::is_wpmudev() || ! empty( $roles ) ) {
+		if ( CoursePress_Data_Capabilities::is_wpmudev() || ! empty( $roles ) ) {
 			$users = array();
 			if ( empty( $include_users ) ) {
-				$roles = empty( $roles ) && CoursePress_Model_Capabilities::is_wpmudev() ? array( 'administrator' ) : $roles;
+				$roles = empty( $roles ) && CoursePress_Data_Capabilities::is_wpmudev() ? array( 'administrator' ) : $roles;
 			}
 			foreach ( $roles as $role ) {
 				$args['role'] = $role;

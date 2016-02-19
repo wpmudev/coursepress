@@ -7,7 +7,7 @@ class CoursePress_Template_Student {
 		if ( is_user_logged_in() ) {
 
 			$student_id = get_current_user_id();
-			$student_courses = CoursePress_Model_Student::get_enrolled_courses_ids( $student_id );
+			$student_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 
 			$content = '
 				<div class="student-dashboard-wrapper">';
@@ -79,7 +79,7 @@ class CoursePress_Template_Student {
 		} else {
 
 			// Might need to add url to signup slug
-			if ( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+			if ( ! CoursePress_Data_Capabilities::is_wpmudev() && ! CoursePress_Data_Capabilities::is_campus() ) {
 				 wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
 				 exit;
 			}
@@ -129,7 +129,7 @@ class CoursePress_Template_Student {
 					}
 
 					if ( $form_errors == 0 ) {
-						if ( CoursePress_Model_Student::update_student_data( $student_id, $student_data ) ) {
+						if ( CoursePress_Data_Student::update_student_data( $student_id, $student_data ) ) {
 							$form_message       = __( 'Profile has been updated successfully.', CoursePress::TD );
 							$form_message_class = 'regular';
 						} else {
@@ -192,7 +192,7 @@ class CoursePress_Template_Student {
 			return $content;
 		} else {
 
-			if ( ! CoursePress_Model_Capabilities::is_wpmudev() && ! CoursePress_Model_Capabilities::is_campus() ) {
+			if ( ! CoursePress_Data_Capabilities::is_wpmudev() && ! CoursePress_Data_Capabilities::is_campus() ) {
 				wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
 				exit;
 			}

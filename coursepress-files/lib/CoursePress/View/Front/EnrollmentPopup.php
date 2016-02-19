@@ -52,7 +52,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 					$step = (int) $step_data->step;
 
-					$course_id = CoursePress_Model_Course::update( $step_data->course_id, $step_data );
+					$course_id = CoursePress_Data_Course::update( $step_data->course_id, $step_data );
 					$json_data['course_id'] = $course_id;
 
 					$next_step              = (int) $data->next_step;
@@ -90,7 +90,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'delete_instructor':
 
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					CoursePress_Model_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
+					CoursePress_Data_Course::remove_instructor( $data->data->course_id, $data->data->instructor_id );
 					$json_data['instructor_id'] = $data->data->instructor_id;
 					$json_data['course_id']     = $data->data->course_id;
 
@@ -104,7 +104,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'add_instructor':
 
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					CoursePress_Model_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
+					CoursePress_Data_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
 					$user = get_userdata( $data->data->instructor_id );
 					$json_data['instructor_id']   = $data->data->instructor_id;
 					$json_data['instructor_name'] = $user->display_name;
@@ -121,7 +121,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
 					$email_data               = CoursePress_Helper_Utility::object_to_array( $data->data );
-					$response                 = CoursePress_Model_Instructor::send_invitation( $email_data );
+					$response                 = CoursePress_Data_Instructor::send_invitation( $email_data );
 					$json_data['message']     = $response['message'];
 					$json_data['data']        = $data->data;
 					$json_data['invite_code'] = $response['invite_code'];
@@ -134,7 +134,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			// Delete Invite
 			case 'delete_instructor_invite':
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					CoursePress_Model_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
+					CoursePress_Data_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
 					$json_data['course_id']   = $data->data->course_id;
 					$json_data['invite_code'] = $data->data->invite_code;
 
@@ -146,7 +146,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			// case 'enroll_student':
 			//
 			// if ( wp_verify_nonce( $data->data->nonce, 'add_student' ) ) {
-			// CoursePress_Model_Course::enroll_student( $data->data->student_id, $data->data->course_id );
+			// CoursePress_Data_Course::enroll_student( $data->data->student_id, $data->data->course_id );
 			// $json_data['student_id'] = $data->data->student_id;
 			// $json_data['course_id']  = $data->data->course_id;
 			//
@@ -156,7 +156,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			// break;
 			case 'withdraw_student':
 				if ( wp_verify_nonce( $data->data->nonce, 'withdraw-single-student' ) ) {
-					CoursePress_Model_Course::withdraw_student( $data->data->student_id, $data->data->course_id );
+					CoursePress_Data_Course::withdraw_student( $data->data->student_id, $data->data->course_id );
 					$json_data['student_id'] = $data->data->student_id;
 					$json_data['course_id']  = $data->data->course_id;
 
@@ -168,7 +168,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'withdraw_all_students':
 
 				if ( wp_verify_nonce( $data->data->nonce, 'withdraw_all_students' ) ) {
-					CoursePress_Model_Course::withdraw_all_students( $data->data->course_id );
+					CoursePress_Data_Course::withdraw_all_students( $data->data->course_id );
 					$json_data['course_id'] = $data->data->course_id;
 
 					$json_data['nonce'] = wp_create_nonce( 'withdraw_all_students' );
@@ -180,7 +180,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 				if ( wp_verify_nonce( $data->data->nonce, 'invite_student' ) ) {
 					$email_data = CoursePress_Helper_Utility::object_to_array( $data->data );
-					$response   = CoursePress_Model_Course::send_invitation( $email_data );
+					$response   = CoursePress_Data_Course::send_invitation( $email_data );
 
 					$json_data['data'] = $data->data;
 
@@ -274,7 +274,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 							}
 						}
 
-						$course_data = CoursePress_Helper_Utility::object_to_array( CoursePress_Model_Course::get_units_with_modules( $course_id, array(
+						$course_data = CoursePress_Helper_Utility::object_to_array( CoursePress_Data_Course::get_units_with_modules( $course_id, array(
 							'publish',
 							'draft',
 						) ) );
@@ -425,7 +425,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				$user = wp_signon( $creds, false );
 				if ( ! is_wp_error( $user ) ) {
 					$json_data['logged_in'] = true;
-					$enrolled = CoursePress_Model_Course::student_enrolled( $user->ID, $course_id );
+					$enrolled = CoursePress_Data_Course::student_enrolled( $user->ID, $course_id );
 					$json_data['user_data'] = array( 'ID' => $user->ID );
 					$json_data['already_enrolled'] = ! empty( $enrolled );
 				} else {
@@ -443,7 +443,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				$student_id = (int) $data->data->student_id;
 				$course_id = (int) $data->data->course_id;
 
-				if ( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Model_Course::enroll_student( $student_id, $course_id ) ) {
+				if ( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 					$json_data['student_id'] = $student_id;
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;

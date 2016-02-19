@@ -52,29 +52,29 @@ class CoursePress_Helper_Integration_MarketPress {
 	            <label class="normal required">
 	                ' . esc_html__( 'Full Price', CoursePress::TD ) . '
 	            </label>
-                <input type="text" name="meta_mp_product_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
+                <input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
 	            <label class="normal">
 	                ' . esc_html__( 'Sale Price', CoursePress::TD ) . '
 	            </label>
-                <input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
+                <input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
                 <label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
+					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
 					<span>' . esc_html__( 'Enable Sale Price', CoursePress::TD ) . '</span>
 	            </label>
 
 				<label class="normal">
 					<span> ' . esc_html__( 'Course SKU:', CoursePress::TD ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', CoursePress::TD ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', CoursePress::TD ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
 	            <label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
+					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
 					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', CoursePress::TD ) . '</span>
 	            </label>';
 
-		$product_id = CoursePress_Model_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 		$product_id = ! empty( $product_id ) && get_post_status( $product_id ) ? $product_id : false;
 		if ( false !== $product_id ) {
 			// Add MP product ID as indication
@@ -101,7 +101,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
 
 		// Check for existance of product id first
-		$product_id = CoursePress_Model_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 
 		// Check if the corresponding product exists, if not, set product ID to false. This happens if the product "accidentally" got deleted.
 		$product_id = ! empty( $product_id ) && get_post_status( $product_id ) ? $product_id : false;
@@ -173,11 +173,11 @@ class CoursePress_Helper_Integration_MarketPress {
 		}
 
 		// If course status is no longer paid, but an MP ID exists, then disable the MP product (don't delete)
-		$product_id = CoursePress_Model_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 		$product_status = get_post_status( $product_id );
 		$product_id = ! empty( $product_id ) && $product_status ? $product_id : false;
 
-		$is_paid = CoursePress_Model_Course::is_paid_course( $course_id );
+		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
 
 		// Update and publish
 		if ( false !== $product_id && $is_paid ) {
@@ -242,13 +242,13 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		$is_paid = 'publish' === $post->post_status;
 
-		$settings = CoursePress_Model_Course::get_setting( $course_id );
-		CoursePress_Model_Course::set_setting( $settings, 'mp_sku', $sku );
-		CoursePress_Model_Course::set_setting( $settings, 'mp_product_price', $price );
-		CoursePress_Model_Course::set_setting( $settings, 'mp_product_sale_price', $sale_price );
-		CoursePress_Model_Course::set_setting( $settings, 'mp_sale_price_enabled', $is_sale );
-		CoursePress_Model_Course::set_setting( $settings, 'payment_paid_course', $is_paid );
-		CoursePress_Model_Course::update_setting( $course_id, true, $settings );
+		$settings = CoursePress_Data_Course::get_setting( $course_id );
+		CoursePress_Data_Course::set_setting( $settings, 'mp_sku', $sku );
+		CoursePress_Data_Course::set_setting( $settings, 'mp_product_price', $price );
+		CoursePress_Data_Course::set_setting( $settings, 'mp_product_sale_price', $sale_price );
+		CoursePress_Data_Course::set_setting( $settings, 'mp_sale_price_enabled', $is_sale );
+		CoursePress_Data_Course::set_setting( $settings, 'payment_paid_course', $is_paid );
+		CoursePress_Data_Course::update_setting( $course_id, true, $settings );
 
 		self::$updated = true;
 
@@ -256,7 +256,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	public static function shortcode_cost( $content, $course_id ) {
 
-		$product_id = CoursePress_Model_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 
 		return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
 

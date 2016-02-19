@@ -67,8 +67,8 @@ class CoursePress_Helper_JavaScript {
 			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', CoursePress::TD ),
 			'assessment_grid_url'       => admin_url( 'admin.php?page=coursepress_assessments' ),
 			'assessment_report_url'       => admin_url( 'admin.php?page=coursepress_reports' ),
-			'is_wpmudev'                => CoursePress_Model_Capabilities::is_wpmudev(),
-			'is_campus'                 => CoursePress_Model_Capabilities::is_campus(),
+			'is_wpmudev'                => CoursePress_Data_Capabilities::is_wpmudev(),
+			'is_campus'                 => CoursePress_Data_Capabilities::is_campus(),
 		);
 
 		// Models
@@ -161,7 +161,7 @@ class CoursePress_Helper_JavaScript {
 		$post_type = get_post_type();
 
 		$valid_cpt = array(
-			CoursePress_Model_Course::get_post_type_name(),
+			CoursePress_Data_Course::get_post_type_name(),
 			'course_notifications_archive',
 			'course_workbook',
 			'course_discussion_archive',
@@ -171,7 +171,7 @@ class CoursePress_Helper_JavaScript {
 			'coursepress_student_dashboard',
 			'coursepress_student_login',
 			'coursepress_student_signup',
-			CoursePress_Model_Discussion::get_post_type_name(),
+			CoursePress_Data_Discussion::get_post_type_name(),
 		);
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );

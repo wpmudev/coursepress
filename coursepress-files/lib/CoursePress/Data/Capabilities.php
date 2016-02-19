@@ -9,7 +9,7 @@
  *
  * @return object
  */
-class CoursePress_Model_Capabilities {
+class CoursePress_Data_Capabilities {
 
 	public static $capabilities = array(
 		'instructor' => array(
@@ -128,7 +128,7 @@ class CoursePress_Model_Capabilities {
 		} else {
 
 			$user				 = new WP_User( $user_id );
-			$instructor_courses	 = CoursePress_Model_Instructor::get_assigned_courses_ids( $user_id );
+			$instructor_courses	 = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
 
 			// Remove all CoursePress capabilities
 			foreach ( $capability_types as $key => $value ) {
@@ -422,7 +422,7 @@ class CoursePress_Model_Capabilities {
 			$user_id = get_current_user_id();
 		}
 
-		$instructor_courses	 = CoursePress_Model_Instructor::get_assigned_courses_ids( $user_id );
+		$instructor_courses	 = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
 
 		return in_array( $course_id, $instructor_courses );
 	}
@@ -562,7 +562,7 @@ class CoursePress_Model_Capabilities {
 
 
 	public static function get_instructor_capabilities() {
-		$default_capabilities    = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'], 1 );
+		$default_capabilities    = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'], 1 );
 		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities' );
 
 		if ( empty( $instructor_capabilities ) ) {

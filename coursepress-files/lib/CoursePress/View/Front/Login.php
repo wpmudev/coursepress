@@ -68,7 +68,7 @@ class CoursePress_View_Front_Login {
 				'type'    => 'coursepress_student_login',
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			return;
 
@@ -95,7 +95,7 @@ class CoursePress_View_Front_Login {
 				'type'    => 'coursepress_student_signup',
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			return;
 

@@ -214,7 +214,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		switch ( $_REQUEST['task'] ) {
 
 			case 'units':
-				$units = CoursePress_Model_Course::get_units( $_REQUEST['course_id'], 'any' );
+				$units = CoursePress_Data_Course::get_units( $_REQUEST['course_id'], 'any' );
 
 				foreach ( $units as $unit ) {
 					$meta  = get_post_meta( $unit->ID );
@@ -238,7 +238,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 
 			case 'modules':
-				$modules = CoursePress_Model_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
+				$modules = CoursePress_Data_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
 
 				foreach ( $modules as $module ) {
 					$meta = get_post_meta( $module->ID );
@@ -290,7 +290,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						if ( $update ) {
 
 							$course_id = (int) $_REQUEST['course_id'];
-							$unit['post_type'] = CoursePress_Model_Unit::get_post_type_name();
+							$unit['post_type'] = CoursePress_Data_Unit::get_post_type_name();
 							$unit['post_parent'] = $course_id;
 							if ( $new_unit ) {
 								$unit['post_status'] = 'draft';
@@ -319,7 +319,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					}
 
 					// Check for removed units and delete if needed
-					$saved_units = CoursePress_Model_Course::get_unit_ids( (int) $_REQUEST['course_id'], array( 'publish', 'draft' ), false );
+					$saved_units = CoursePress_Data_Course::get_unit_ids( (int) $_REQUEST['course_id'], array( 'publish', 'draft' ), false );
 					foreach ( $saved_units as $u_id ) {
 						if ( ! in_array( $u_id, $units ) ) {
 							wp_delete_post( $u_id );
@@ -362,7 +362,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$update = isset( $module['flag'] ) && 'dirty' === $module['flag'];
 						unset( $module['flag'] );
 
-						$module['post_type']   = CoursePress_Model_Module::get_post_type_name();
+						$module['post_type']   = CoursePress_Data_Module::get_post_type_name();
 						$module['post_parent'] = $unit_id;
 						$module['post_status'] = 'publish';
 
@@ -391,7 +391,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					}
 
 					// Check for removed modules and delete if needed
-					$saved_modules = CoursePress_Model_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', true, false, array( 'page' => (int) $_REQUEST['page'] ) );
+					$saved_modules = CoursePress_Data_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', true, false, array( 'page' => (int) $_REQUEST['page'] ) );
 					foreach ( $saved_modules as $mod_id ) {
 						if ( ! in_array( $mod_id, $modules ) ) {
 							wp_delete_post( $mod_id );
@@ -452,7 +452,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$data['ping_status']    = 'closed';
 					$data['comment_status'] = 'closed';
 					$data['post_parent']    = (int) $_REQUEST['unit_id'];
-					$data['post_type']      = CoursePress_Model_Module::get_post_type_name();
+					$data['post_type']      = CoursePress_Data_Module::get_post_type_name();
 					$data['post_status']    = 'publish';
 
 					$id = wp_insert_post( $data );

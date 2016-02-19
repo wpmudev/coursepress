@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Course {
+class CoursePress_Data_Course {
 
 	private static $post_type = 'course';
 	private static $post_taxonomy = 'course_category';
@@ -304,7 +304,7 @@ class CoursePress_Model_Course {
 		$instructors = empty( $instructors ) ? array() : $instructors;
 
 		if ( ! in_array( $instructor_id, $instructors ) ) {
-			CoursePress_Model_Instructor::added_to_course( $instructor_id, $course_id );
+			CoursePress_Data_Instructor::added_to_course( $instructor_id, $course_id );
 			$instructors[] = $instructor_id;
 		}
 
@@ -317,7 +317,7 @@ class CoursePress_Model_Course {
 
 		foreach ( $instructors as $idx => $instructor ) {
 			if ( (int) $instructor === $instructor_id ) {
-				CoursePress_Model_Instructor::removed_from_course( $instructor_id, $course_id );
+				CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 				unset( $instructors[ $idx ] );
 			}
 		}
@@ -538,7 +538,7 @@ class CoursePress_Model_Course {
 	public static function get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false ) {
 
 		$post_args = array(
-			'post_type'     => CoursePress_Model_Unit::get_post_type_name(),
+			'post_type'     => CoursePress_Data_Unit::get_post_type_name(),
 			'post_parent'   => $course_id,
 			'post_status'   => $status,
 			'posts_per_page' => - 1,
@@ -568,7 +568,7 @@ class CoursePress_Model_Course {
 
 	// META
 	public static function get_listing_image( $course_id ) {
-		$url = CoursePress_Model_Course::get_setting( $course_id, 'listing_image' );
+		$url = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 		$url = empty( $url ) ? get_post_meta( $course_id, '_thumbnail_id', true ) : $url;
 		return apply_filters( 'coursepress_course_listing_image', $url, $course_id );
 	}
@@ -594,7 +594,7 @@ class CoursePress_Model_Course {
 		add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
 
 		$post_args = array(
-			'post_type'     => array( CoursePress_Model_Unit::get_post_type_name(), CoursePress_Model_Module::get_post_type_name() ),
+			'post_type'     => array( CoursePress_Data_Unit::get_post_type_name(), CoursePress_Data_Module::get_post_type_name() ),
 			'post_parent'   => $course_id,
 			'posts_per_page' => -1,
 			'order'         => 'ASC',
@@ -603,8 +603,8 @@ class CoursePress_Model_Course {
 
 		$query = new WP_Query( $post_args );
 
-		$unit_cpt = CoursePress_Model_Unit::get_post_type_name();
-		$module_cpt = CoursePress_Model_Module::get_post_type_name();
+		$unit_cpt = CoursePress_Data_Unit::get_post_type_name();
+		$module_cpt = CoursePress_Data_Module::get_post_type_name();
 
 		foreach ( $query->posts as $post ) {
 
@@ -680,7 +680,7 @@ class CoursePress_Model_Course {
 	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() ) {
 
 		$post_args = array(
-			'post_type'     => CoursePress_Model_Module::get_post_type_name(),
+			'post_type'     => CoursePress_Data_Module::get_post_type_name(),
 			'post_parent'   => $unit_id,
 			'post_status'   => $status,
 			'posts_per_page' => -1,
@@ -996,7 +996,7 @@ class CoursePress_Model_Course {
 	public static function send_invitation( $email_data ) {
 
 		// So that we can use it later
-		CoursePress_Model_Course::set_last_course_id( (int) $email_data['course_id'] );
+		CoursePress_Data_Course::set_last_course_id( (int) $email_data['course_id'] );
 		$course_id = (int) $email_data['course_id'];
 
 		// We need to hook the email fields for the Utility method.
@@ -1118,7 +1118,7 @@ class CoursePress_Model_Course {
 
 		foreach ( $units as $unit ) {
 
-			$estimations = CoursePress_Model_Unit::get_time_estimation( $unit['unit']->ID, $units );
+			$estimations = CoursePress_Data_Unit::get_time_estimation( $unit['unit']->ID, $units );
 			$components = explode( ':', $estimations['unit']['estimation'] );
 
 			$part = array_pop( $components );
@@ -1165,9 +1165,9 @@ class CoursePress_Model_Course {
 	public static function structure_visibility( $course_id ) {
 
 		if ( empty( self::$structure_visibility ) ) {
-			$units   = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_units', array() ) );
-			$pages   = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_pages', array() ) );
-			$modules = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_visible_modules', array() ) );
+			$units   = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_units', array() ) );
+			$pages   = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_pages', array() ) );
+			$modules = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_modules', array() ) );
 
 			$visibility = array();
 
@@ -1201,9 +1201,9 @@ class CoursePress_Model_Course {
 
 		if ( empty( self::$previewability ) ) {
 
-			$units  = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_units', array() ) );
-			$pages  = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_pages', array() ) );
-			$modules = array_filter( CoursePress_Model_Course::get_setting( $course_id, 'structure_preview_modules', array() ) );
+			$units  = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_units', array() ) );
+			$pages  = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_pages', array() ) );
+			$modules = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_modules', array() ) );
 
 			$preview_structure = array();
 
@@ -1252,8 +1252,8 @@ class CoursePress_Model_Course {
 			return true;
 		}
 
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
@@ -1282,8 +1282,8 @@ class CoursePress_Model_Course {
 			return true;
 		}
 
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
@@ -1311,8 +1311,8 @@ class CoursePress_Model_Course {
 			return true;
 		}
 
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		$can_preview_unit = isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ]['unit_has_previews'] ) && $preview['structure'][ $unit_id ]['unit_has_previews'];
@@ -1325,12 +1325,12 @@ class CoursePress_Model_Course {
 
 	public static function next_accessible( $course_id, $unit_id, $preview, $current_module = false, $current_page = 1 ) {
 
-		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
 		$next = false;
 
 		$student_id = get_current_user_id();
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		if ( $enrolled || $is_instructor ) {
@@ -1354,13 +1354,13 @@ class CoursePress_Model_Course {
 				if ( false === $next ) {
 
 					if ( 'focus' === $view_mode ) {
-						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
 						if ( 'input' == $attributes['mode'] ) {
 							continue;
 						}
 					}
 
-					if ( CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
+					if ( CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
 						$next = $module_id;
 					}
 				}
@@ -1372,12 +1372,12 @@ class CoursePress_Model_Course {
 
 	public static function previous_accessible( $course_id, $unit_id, $preview, $current_module, $current_page = 1 ) {
 
-		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
 		$prev = false;
 
 		$student_id = get_current_user_id();
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
-		$instructors = array_filter( CoursePress_Model_Course::get_instructors( $course_id ) );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
+		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		if ( $enrolled || $is_instructor ) {
@@ -1401,13 +1401,13 @@ class CoursePress_Model_Course {
 				if ( false === $prev ) {
 
 					if ( 'focus' === $view_mode ) {
-						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
 						if ( 'input' == $attributes['mode'] ) {
 							continue;
 						}
 					}
 
-					if ( CoursePress_Model_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
+					if ( CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module_id, $current_page ) ) {
 						$prev = $module_id;
 					}
 				}

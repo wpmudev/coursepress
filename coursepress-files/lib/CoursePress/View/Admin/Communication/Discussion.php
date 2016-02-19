@@ -54,7 +54,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$args = array(
 				'post_title' => $title,
 				'post_content' => $content,
-				'post_type' => CoursePress_Model_Discussion::get_post_type_name(),
+				'post_type' => CoursePress_Data_Discussion::get_post_type_name(),
 				'post_status' => $post_status,
 			);
 
@@ -125,7 +125,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 		if ( 'new' !== $the_id ) {
 			$post = get_post( $the_id );
-			$attributes = CoursePress_Model_Discussion::attributes( $the_id );
+			$attributes = CoursePress_Data_Discussion::attributes( $the_id );
 			$course_id = $attributes['course_id'];
 			$unit_id = $attributes['unit_id'];
 			$post_status = $post->post_status;
@@ -294,7 +294,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 				$json_data['items'] = array();
 
 				$units = get_posts( array(
-					'post_type' => CoursePress_Model_Unit::get_post_type_name(),
+					'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 					'post_parent' => $course_id,
 				) );
 

@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Module {
+class CoursePress_Data_Module {
 
 	private static $post_type = 'module';
 
@@ -354,11 +354,11 @@ class CoursePress_Model_Module {
 		$attributes = self::attributes( $module_id );
 
 		if ( false === $data ) {
-			$data = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		}
 
 		if ( false === $response ) {
-			$response = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
+			$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
 			$response = ! empty( $response ) ? $response['response'] : false;
 		}
 

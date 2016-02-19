@@ -13,7 +13,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		$post_format = CoursePress_Model_Course::get_format();
+		$post_format = CoursePress_Data_Course::get_format();
 
 		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
@@ -21,7 +21,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'ajax'     => false,// should this table support ajax?
 		) );
 
-		$this->post_type = CoursePress_Model_Course::get_post_type_name();
+		$this->post_type = CoursePress_Data_Course::get_post_type_name();
 		$this->count     = wp_count_posts( $this->post_type );
 
 	}
@@ -94,7 +94,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function column_units( $item ) {
 
 		$post_args = array(
-			'post_type'   => CoursePress_Model_Unit::get_post_type_name(),
+			'post_type'   => CoursePress_Data_Unit::get_post_type_name(),
 			'post_parent' => $item->ID,
 			'post_status' => array( 'publish', 'private', 'draft' ),
 		);
@@ -117,7 +117,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	}
 
 	public function column_students( $item ) {
-		return CoursePress_Model_Course::count_students( $item->ID );
+		return CoursePress_Data_Course::count_students( $item->ID );
 	}
 
 	public function column_status( $item ) {
@@ -165,7 +165,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$accepted_tabs = array( 'publish', 'private', 'all' );
 		$tab           = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
-		$valid_categories = CoursePress_Model_Course::get_course_categories();
+		$valid_categories = CoursePress_Data_Course::get_course_categories();
 		$valid_categories = array_keys( $valid_categories );
 		$category      = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
@@ -227,7 +227,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		}
 
 		if ( is_null( $this->_categories ) ) {
-			$this->_categories = CoursePress_Model_Course::get_course_categories();
+			$this->_categories = CoursePress_Data_Course::get_course_categories();
 
 			$two = '';
 		} else {

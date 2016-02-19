@@ -31,7 +31,7 @@ class CoursePress_Core {
 		);
 
 		// Initialize Capabilities.
-		CoursePress_Model_Capabilities::init();
+		CoursePress_Data_Capabilities::init();
 
 		/**
 		 * Initialise CoursePress Post Formats (post types not available until after WordPress 'init' action)
@@ -40,7 +40,7 @@ class CoursePress_Core {
 		 * Warning: Doing this will make previous courses inaccessible. Do this early if you want
 		 * to use a custom prefix.
 		 */
-		CoursePress_Model_PostFormats::init();
+		CoursePress_Data_PostFormats::init();
 		add_filter( 'coursepress_post_formats', array( __CLASS__, 'register_formats' ) );
 
 		// Add query vars.
@@ -69,7 +69,7 @@ class CoursePress_Core {
 
 		} else {
 			// Init shortcodes.
-			CoursePress_Model_Shortcodes::init();
+			CoursePress_Data_Shortcodes::init();
 
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
@@ -83,7 +83,7 @@ class CoursePress_Core {
 		CoursePress_Helper_Utility::init();
 
 		// Init Module hooks.
-		CoursePress_Model_Module::module_init_hooks();
+		CoursePress_Data_Module::module_init_hooks();
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();

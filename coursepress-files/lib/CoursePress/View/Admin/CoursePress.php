@@ -49,8 +49,8 @@ class CoursePress_View_Admin_CoursePress {
 			'menu_title' => self::$menu_title,
 		);
 
-		$category                   = CoursePress_Model_Course::get_post_category_name();
-		$cpt                        = CoursePress_Model_Course::get_post_type_name();
+		$category                   = CoursePress_Data_Course::get_post_category_name();
+		$cpt                        = CoursePress_Data_Course::get_post_type_name();
 		$pages['course_categories'] = array(
 			'title'      => __( 'Edit Course Categories', CoursePress::TD ),
 			'menu_title' => __( 'Course Categories', CoursePress::TD ),

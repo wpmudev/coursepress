@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Discussion {
+class CoursePress_Data_Discussion {
 
 	private static $post_type = 'discussions';  // Plural because of legacy
 	public static $last_discussion;

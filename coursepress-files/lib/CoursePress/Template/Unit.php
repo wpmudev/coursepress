@@ -11,12 +11,12 @@ class CoursePress_Template_Unit {
 		$page = (int) CoursePress_Helper_Utility::the_post_page();
 
 		$student_id = get_current_user_id();
-		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		// Page access
-		$preview = CoursePress_Model_Course::previewability( $course_id );
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$preview = CoursePress_Data_Course::previewability( $course_id );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
 
 		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
 		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
@@ -26,8 +26,8 @@ class CoursePress_Template_Unit {
 
 		// Student Tracking:
 		if ( $enrolled ) {
-			// CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
-			CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit_id, $page );
+			// CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
+			CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit_id, $page );
 		}
 
 		return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"></div>';
@@ -42,13 +42,13 @@ class CoursePress_Template_Unit {
 		$page = (int) CoursePress_Helper_Utility::the_post_page();
 
 		$student_id = get_current_user_id();
-		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-		$instructors = CoursePress_Model_Course::get_instructors( $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
 		// Page access
-		$preview = CoursePress_Model_Course::previewability( $course_id );
-		$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $course_id ) : false;
+		$preview = CoursePress_Data_Course::previewability( $course_id );
+		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
 
 		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) && ! empty( $preview['structure'][ $unit->ID ][ $page ] );
 		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit->ID ] ) && true === $preview['structure'][ $unit->ID ] ? true : $can_preview_page;
@@ -56,7 +56,7 @@ class CoursePress_Template_Unit {
 			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
 		}
 
-		$view_mode = CoursePress_Model_Course::get_setting( $course_id, 'course_view', 'normal' );
+		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
 		;
 		// Let BackboneJS take over if its in Focus mode
 		if ( 'focus' === $view_mode ) {
@@ -73,7 +73,7 @@ class CoursePress_Template_Unit {
 		$content = do_shortcode( '[course_unit_submenu]' );
 
 		// Get modules for the current page only;
-		$modules = CoursePress_Model_Course::get_unit_modules( $unit->ID, array( 'publish' ), false, false, array( 'page' => $page ) );
+		$modules = CoursePress_Data_Course::get_unit_modules( $unit->ID, array( 'publish' ), false, false, array( 'page' => $page ) );
 
 		$content .= '<div class="unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
@@ -91,7 +91,7 @@ class CoursePress_Template_Unit {
 		// Modules
 		foreach ( $modules as $module ) {
 
-			$attributes = CoursePress_Model_Module::attributes( $module );
+			$attributes = CoursePress_Data_Module::attributes( $module );
 			$attributes['course_id'] = $course_id;
 
 			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
@@ -138,7 +138,7 @@ class CoursePress_Template_Unit {
 		}
 
 		// Next unit
-		$units = CoursePress_Model_Course::get_unit_ids( $course_id );
+		$units = CoursePress_Data_Course::get_unit_ids( $course_id );
 		$unit_index = array_search( $unit->ID, $units );
 		$next_unit = 0;
 		for ( $i = $unit_index; $i < count( $units ); $i++ ) {
@@ -146,7 +146,7 @@ class CoursePress_Template_Unit {
 
 				$preview_units = isset( $preview['structure'] ) ? array_keys( $preview['structure'] ) : array();
 				$can_preview_unit = in_array( $units[ $i ], $preview_units );
-				$unit_available = CoursePress_Model_Unit::is_unit_available( $course_id, $units[ $i ], $units[ $unit_index ] ) || $is_instructor;
+				$unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $units[ $i ], $units[ $unit_index ] ) || $is_instructor;
 
 				if ( ( ( $enrolled || $is_instructor ) && $unit_available ) || ( ! $enrolled && ! $is_instructor && $can_preview_unit && $unit_available ) ) {
 					$next_unit = $units[ $i ];
@@ -165,7 +165,7 @@ class CoursePress_Template_Unit {
 
 		// Student Tracking:
 		if ( $enrolled ) {
-			CoursePress_Model_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
+			CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit->ID, $page, $student_progress );
 		}
 
 		return $content;

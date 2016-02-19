@@ -38,9 +38,9 @@ class CoursePress_View_Front_Dashboard {
 			}
 
 			// $username   = sanitize_text_field( $wp->query_vars['instructor_username'] );
-			// $instructor = CoursePress_Model_Instructor::instructor_by_login( $username );
+			// $instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
 			// if ( empty( $instructor ) ) {
-			// $instructor = CoursePress_Model_Instructor::instructor_by_hash( $username );
+			// $instructor = CoursePress_Data_Instructor::instructor_by_hash( $username );
 			// }
 			$content = '';
 			// if ( empty( $instructor ) ) {
@@ -59,7 +59,7 @@ class CoursePress_View_Front_Dashboard {
 				'type'    => 'coursepress_student_dashboard',
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			return;
 

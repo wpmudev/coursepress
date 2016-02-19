@@ -13,14 +13,14 @@ class CoursePress_Helper_Table_CourseStudents extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		// $post_format = CoursePress_Model_Course::get_format();
+		// $post_format = CoursePress_Data_Course::get_format();
 		parent::__construct( array(
 			'singular' => __( 'Student', CoursePress::TD ),
 			'plural'   => __( 'Students', CoursePress::TD ),
 			'ajax'     => false,// should this table support ajax?
 		) );
 
-		// $this->post_type = CoursePress_Model_PostFormats::prefix() . $post_format['post_type'];
+		// $this->post_type = CoursePress_Data_PostFormats::prefix() . $post_format['post_type'];
 		// $this->count     = wp_count_posts( $this->post_type );
 	}
 

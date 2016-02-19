@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Student {
+class CoursePress_Data_Student {
 
 	/**
 	 * Filters through student meta to return only the course IDs.
@@ -192,7 +192,7 @@ class CoursePress_Model_Student {
 
 	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
 
-		$attributes = CoursePress_Model_Module::attributes( $module_id );
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
 		if ( empty( $attributes ) || 'output' === $attributes['mode'] ) {
 			return;
@@ -229,7 +229,7 @@ class CoursePress_Model_Student {
 				}
 				break;
 			case 'input-quiz':
-				$result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+				$result = CoursePress_Data_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response, $data );
 				$grade  = $result['grade'];
 				break;
 
@@ -404,7 +404,7 @@ class CoursePress_Model_Student {
 
 		$student_progress = self::get_completion_data( $student_id, $course_id );
 		$student_units    = isset( $student_progress['units'] ) ? array_keys( $student_progress['units'] ) : array();
-		$units            = CoursePress_Model_Course::get_units_with_modules( $course_id );
+		$units            = CoursePress_Data_Course::get_units_with_modules( $course_id );
 
 		$course_required_steps  = 0;
 		$course_completed_steps = 0;
@@ -445,7 +445,7 @@ class CoursePress_Model_Student {
 
 				foreach ( $page['modules'] as $module_id => $module ) {
 
-					$attributes = CoursePress_Model_Module::attributes( $module_id );
+					$attributes = CoursePress_Data_Module::attributes( $module_id );
 
 					if ( 'output' === $attributes['mode'] ) {
 						continue;
@@ -650,7 +650,7 @@ class CoursePress_Model_Student {
 			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
 
 			foreach ( $modules as $mod_key => $module ) {
-				$attributes = CoursePress_Model_Module::attributes( $mod_key );
+				$attributes = CoursePress_Data_Module::attributes( $mod_key );
 				if ( 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 					unset( $modules[ $mod_key ] );
 				}
@@ -675,7 +675,7 @@ class CoursePress_Model_Student {
 		foreach ( $units as $key => $unit ) {
 			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
 			foreach ( $modules as $mod_key => $module ) {
-				$attributes = CoursePress_Model_Module::attributes( $mod_key );
+				$attributes = CoursePress_Data_Module::attributes( $mod_key );
 				if ( 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
 					unset( $modules[ $mod_key ] );
 					continue;

@@ -27,7 +27,7 @@ class CoursePress_View_Front_Course {
 
 		self::handle_module_uploads();
 
-		if ( ! CoursePress_Model_Capabilities::is_wpmudev() ) {
+		if ( ! CoursePress_Data_Capabilities::is_wpmudev() ) {
 			remove_filter( 'the_content', 'wpautop' );
 		}
 
@@ -77,7 +77,7 @@ class CoursePress_View_Front_Course {
 			$args = array(
 				'post_title'     => $title,
 				'post_content'   => $content,
-				'post_type'      => CoursePress_Model_Discussion::get_post_type_name(),
+				'post_type'      => CoursePress_Data_Discussion::get_post_type_name(),
 				'post_status'    => $post_status,
 				'post_author'    => get_current_user_id(),
 				'comment_status' => 'open',
@@ -117,11 +117,11 @@ class CoursePress_View_Front_Course {
 
 			$student_progress = array();
 			if ( $student_id ) {
-				$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 			}
 
 			// Check if we should continue with this upload (in case students cheat with the code)
-			$attributes     = CoursePress_Model_Module::attributes( $module_id );
+			$attributes     = CoursePress_Data_Module::attributes( $module_id );
 			$responses      = CoursePress_Helper_Utility::get_array_val( $student_progress, 'units/' . $unit_id . '/responses/' . $module_id );
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			$disabled       = ! $attributes['allow_retries'];
@@ -175,7 +175,7 @@ class CoursePress_View_Front_Course {
 
 								// Record the response
 								if ( $student_id ) {
-									CoursePress_Model_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response, $student_progress );
+									CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response, $student_progress );
 								}
 							}
 						} catch ( Exception $e ) {
@@ -229,17 +229,17 @@ class CoursePress_View_Front_Course {
 		//
 		// $name = get_query_var( 'course' );
 		// if( ! empty( $name ) ) {
-		// $post_type = CoursePress_Model_Course::get_post_type_name( true );
+		// $post_type = CoursePress_Data_Course::get_post_type_name( true );
 		// }
 		//
 		// $coursename = get_query_var( 'coursename' );
 		// $unitname = get_query_var( 'unitname' );
 		//
 		// if( ! empty( $coursename ) && ! empty( $unitname ) ) {
-		// $post_parent = CoursePress_Model_Course::by_name( $coursename, true );
-		// $post_type = CoursePress_Model_Unit::get_post_type_name( true );
+		// $post_parent = CoursePress_Data_Course::by_name( $coursename, true );
+		// $post_type = CoursePress_Data_Unit::get_post_type_name( true );
 		// } else if ( ! empty( $coursename ) ) {
-		// $post_parent = CoursePress_Model_Course::by_name( $coursename, true );
+		// $post_parent = CoursePress_Data_Course::by_name( $coursename, true );
 		// $is_archive = true;
 		// }
 		//
@@ -252,19 +252,19 @@ class CoursePress_View_Front_Course {
 		//
 		// Render Main Course
 		// if( ! empty( $name ) ) {
-		// set_query_var( 'post_type', CoursePress_Model_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_main' ), 1 );
 		// }
 		//
 		// Render Unit
 		// if( empty( $name ) && ! empty( $coursename ) && ! empty( $unitname ) ) {
-		// set_query_var( 'post_type', CoursePress_Model_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_unit' ), 1 );
 		// }
 		//
 		// Render Unit Archive Display
 		// if( empty( $name ) && ! empty( $coursename ) && empty( $unitname ) ) {
-		// set_query_var( 'post_type', CoursePress_Model_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_unit_archive' ), 1 );
 		// }
 		//
@@ -513,7 +513,7 @@ class CoursePress_View_Front_Course {
 		// Do nothing if its a normal course page
 		if ( array_key_exists( 'course', $wp->query_vars ) ) {
 
-			$course_id = CoursePress_Model_Course::by_name( $wp->query_vars['course'], true );
+			$course_id = CoursePress_Data_Course::by_name( $wp->query_vars['course'], true );
 			if ( empty( $course_id ) ) {
 				// self::archive_redirect();
 			}
@@ -535,10 +535,10 @@ class CoursePress_View_Front_Course {
 					'title'   => get_the_title( $course_id ),
 					'show_title'  => false,
 					'content' => apply_filters( 'coursepress_view_course', self::render_course_main(), $course_id, 'main' ),
-					'type'    => CoursePress_Model_Course::get_post_type_name( true ),
+					'type'    => CoursePress_Data_Course::get_post_type_name( true ),
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -554,7 +554,7 @@ class CoursePress_View_Front_Course {
 			$category = $is_category_page ? '' : $wp->query_vars['course_category'];
 			CoursePress_Helper_Utility::set_the_course_category( $category );
 
-			$course_taxonomy = CoursePress_Model_Course::get_taxonomy();
+			$course_taxonomy = CoursePress_Data_Course::get_taxonomy();
 			$tax = get_term_by( 'slug', $category, $course_taxonomy['taxonomy_type'] );
 			$tax = ! empty( $tax ) ? $tax->name : '';
 			$title = ! empty( $tax ) ? sprintf( '%s %s', __( 'Courses in', CoursePress::TD ), $tax ) : '';
@@ -571,11 +571,11 @@ class CoursePress_View_Front_Course {
 				'title'		 => $title,
 				'show_title' => true,
 				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive(), $category ),
-				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
+				'type'       => CoursePress_Data_Course::get_post_type_name( true ) . '_archive',
 				'is_archive' => true,
 			), $category );
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -596,12 +596,12 @@ class CoursePress_View_Front_Course {
 		// Unit Archive and other unit pages
 		if ( array_key_exists( 'coursename', $wp->query_vars ) && ! array_key_exists( 'unitname', $wp->query_vars ) ) {
 
-			$post_parent = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
+			$post_parent = CoursePress_Data_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 
-			$preview  = CoursePress_Model_Course::previewability( $post_parent );
-			$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $post_parent ) : false;
-			$instructors = CoursePress_Model_Course::get_instructors( $post_parent );
+			$preview  = CoursePress_Data_Course::previewability( $post_parent );
+			$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $post_parent ) : false;
+			$instructors = CoursePress_Data_Course::get_instructors( $post_parent );
 			$is_instructor = in_array( $student_id, $instructors );
 
 			if ( ! $is_instructor && ! $enrolled && ! $preview['has_previews'] ) {
@@ -627,9 +627,9 @@ class CoursePress_View_Front_Course {
 
 				$discussion_title                              = get_the_title( $post_parent );
 				$post_name                                     = $wp->query_vars['discussion_name'];
-				$discussion                                    = get_page_by_path( $post_name, OBJECT, CoursePress_Model_Discussion::get_post_type_name() );
+				$discussion                                    = get_page_by_path( $post_name, OBJECT, CoursePress_Data_Discussion::get_post_type_name() );
 				$comment_status                                = ! empty( $discussion ) ? 'open' : 'closed';
-				CoursePress_Model_Discussion::$last_discussion = ! empty( $discussion ) ? $discussion->ID : '';
+				CoursePress_Data_Discussion::$last_discussion = ! empty( $discussion ) ? $discussion->ID : '';
 
 				$args = array(
 					'ID'             => ! empty( $discussion ) ? $discussion->ID : '',
@@ -641,7 +641,7 @@ class CoursePress_View_Front_Course {
 
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -665,7 +665,7 @@ class CoursePress_View_Front_Course {
 					'type'    => 'course_discussion_archive',
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -690,7 +690,7 @@ class CoursePress_View_Front_Course {
 					'type'    => 'course_grades_archive',
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -715,7 +715,7 @@ class CoursePress_View_Front_Course {
 					'type'    => 'course_workbook',
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -740,7 +740,7 @@ class CoursePress_View_Front_Course {
 					'type'    => 'course_notifications_archive',
 				);
 
-				$pg = new CoursePress_Model_VirtualPage( $args );
+				$pg = new CoursePress_Data_VirtualPage( $args );
 
 				self::$title = $title;
 				add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -758,10 +758,10 @@ class CoursePress_View_Front_Course {
 				'title'   => get_the_title( $post_parent ),
 				// 'show_title'  => false,
 				'content'        => apply_filters( 'coursepress_view_course', self::render_course_unit_archive(), $post_parent, 'workbook' ),
-				'type'    => CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
+				'type'    => CoursePress_Data_Unit::get_post_type_name( true ) . '_archive',
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -772,28 +772,28 @@ class CoursePress_View_Front_Course {
 		if ( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
 
 			CoursePress_Helper_Utility::$is_singular = true;
-			$post_parent                             = CoursePress_Model_Course::by_name( $wp->query_vars['coursename'], true );
+			$post_parent                             = CoursePress_Data_Course::by_name( $wp->query_vars['coursename'], true );
 			CoursePress_Helper_Utility::set_the_course( $post_parent );
 			CoursePress_Helper_Utility::set_the_course_subpage( '' );
 
 			// Access control
 			$student_id = get_current_user_id();
-			$instructors = CoursePress_Model_Course::get_instructors( $post_parent );
+			$instructors = CoursePress_Data_Course::get_instructors( $post_parent );
 			$is_instructor = in_array( $student_id, $instructors );
 
-			$preview  = CoursePress_Model_Course::previewability( $post_parent );
-			$enrolled = ! empty( $student_id ) ? CoursePress_Model_Course::student_enrolled( $student_id, $post_parent ) : false;
+			$preview  = CoursePress_Data_Course::previewability( $post_parent );
+			$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $post_parent ) : false;
 			if ( ! $enrolled && ! $preview['has_previews'] && ! $is_instructor ) {
 				self::no_access_redirect( $post_parent );
 			}
 
-			// $student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $post_parent );
+			// $student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $post_parent );
 			// error_log( print_r( $student_progress, true ) );
 			// Unit page
 			$unit_page = array_key_exists( 'paged', $wp->query_vars ) ? (int) $wp->query_vars['paged'] : 1;
 			CoursePress_Helper_Utility::set_the_post_page( $unit_page );
 
-			$post_ID = CoursePress_Model_Unit::by_name( $wp->query_vars['unitname'], true, $post_parent );
+			$post_ID = CoursePress_Data_Unit::by_name( $wp->query_vars['unitname'], true, $post_parent );
 			// If not by post name, perhaps its the actual ID
 			$post_ID = empty( $post_ID ) ? (int) $wp->query_vars['unitname'] : $post_ID;
 
@@ -804,12 +804,12 @@ class CoursePress_View_Front_Course {
 				'title'       => get_the_title( $post_parent ),
 				// 'show_title'  => false,
 				'content'        => apply_filters( 'coursepress_view_course_unit', self::render_course_unit( $post_ID ), $post_parent, $post_ID ),
-				'type'        => CoursePress_Model_Unit::get_post_type_name( true ),
+				'type'        => CoursePress_Data_Unit::get_post_type_name( true ),
 				'post_parent' => $post_parent,
 				'ID'          => $post_ID,// Will load the real post
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -817,7 +817,7 @@ class CoursePress_View_Front_Course {
 		}
 
 		// All other conditions have failed, so if post type is course, it must be the archive
-		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Model_Course::get_post_type_name() === $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) === $wp->request ) {
+		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() === $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) === $wp->request ) {
 
 			$title = sprintf( '%s | %s', __( 'Courses', CoursePress::TD ), __( 'All Courses', CoursePress::TD ) );
 
@@ -826,11 +826,11 @@ class CoursePress_View_Front_Course {
 				'title'		 => get_the_title( $post_parent ),
 				'show_title' => false,
 				'content'    => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
-				'type'       => CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
+				'type'       => CoursePress_Data_Course::get_post_type_name( true ) . '_archive',
 				'is_archive' => true,
 			);
 
-			$pg = new CoursePress_Model_VirtualPage( $args );
+			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			self::$title = $title;
 			add_filter( 'wp_title', array( __CLASS__, 'the_title' ) );
@@ -846,11 +846,11 @@ class CoursePress_View_Front_Course {
 
 	public static function get_valid_post_types() {
 		return array(
-			CoursePress_Model_Course::get_post_type_name( true ),
-			CoursePress_Model_Course::get_post_type_name( true ) . '_archive',
-			CoursePress_Model_Course::get_post_type_name( true ) . '_workbook',
-			CoursePress_Model_Unit::get_post_type_name( true ),
-			CoursePress_Model_Unit::get_post_type_name( true ) . '_archive',
+			CoursePress_Data_Course::get_post_type_name( true ),
+			CoursePress_Data_Course::get_post_type_name( true ) . '_archive',
+			CoursePress_Data_Course::get_post_type_name( true ) . '_workbook',
+			CoursePress_Data_Unit::get_post_type_name( true ),
+			CoursePress_Data_Unit::get_post_type_name( true ) . '_archive',
 			'course_notifications_archive',
 			'course_workbook',
 			'course_discussion_archive',
@@ -921,14 +921,14 @@ class CoursePress_View_Front_Course {
 				$response   = $data->response;
 				$module_type = $data->module_type;
 
-				CoursePress_Model_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 
 				$data = CoursePress_Helper_Utility::object_to_array( $data );
 
 				if ( 'input-quiz' == $module_type ) {
 
-					$quiz_result = CoursePress_Model_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
-					$json_data['quiz_result_screen'] = CoursePress_Model_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result );
+					$quiz_result = CoursePress_Data_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
+					$json_data['quiz_result_screen'] = CoursePress_Data_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result );
 					$json_data['results'] = $quiz_result;
 
 				}
@@ -944,7 +944,7 @@ class CoursePress_View_Front_Course {
 				$student_id = (int) $data->student_id;
 
 				if ( $student_id > 0 ) {
-					$progress = CoursePress_Model_Student::calculate_completion( $student_id, $course_id );
+					$progress = CoursePress_Data_Student::calculate_completion( $student_id, $course_id );
 				}
 
 				$success = true;
@@ -966,7 +966,7 @@ class CoursePress_View_Front_Course {
 		switch ( $post->post_type ) {
 
 			case 'course_discussion':
-			case CoursePress_Model_Discussion::get_post_type_name():
+			case CoursePress_Data_Discussion::get_post_type_name():
 
 				$course_id      = (int) get_post_meta( $post->ID, 'course_id', true );
 				$course_id      = ! empty( $course_id ) ? $course_id : CoursePress_Helper_Utility::the_course( true );
@@ -981,11 +981,11 @@ class CoursePress_View_Front_Course {
 
 				break;
 
-			case CoursePress_Model_Notification::get_post_type_name():
+			case CoursePress_Data_Notification::get_post_type_name():
 
 				break;
 
-			case CoursePress_Model_Unit::get_post_type_name():
+			case CoursePress_Data_Unit::get_post_type_name():
 				break;
 
 		}
@@ -1043,15 +1043,15 @@ class CoursePress_View_Front_Course {
 
 	public static function add_discussion_comment_meta( $comment_id ) {
 
-		if ( ! empty( CoursePress_Model_Discussion::$last_discussion ) ) {
-			add_comment_meta( $comment_id, 'context', CoursePress_Model_Discussion::get_post_type_name() );
+		if ( ! empty( CoursePress_Data_Discussion::$last_discussion ) ) {
+			add_comment_meta( $comment_id, 'context', CoursePress_Data_Discussion::get_post_type_name() );
 		}
 
 	}
 
 	public static function update_discussion_comments( $comments, $post_id ) {
 
-		$discussion_type = CoursePress_Model_Discussion::get_post_type_name();
+		$discussion_type = CoursePress_Data_Discussion::get_post_type_name();
 		if ( $discussion_type === get_post_field( 'post_type', $post_id ) ) {
 
 			foreach ( $comments as $comment ) {
@@ -1069,7 +1069,7 @@ class CoursePress_View_Front_Course {
 
 	public static function remove_discussions_from_comments( $args ) {
 
-		$discussion_type = CoursePress_Model_Discussion::get_post_type_name();
+		$discussion_type = CoursePress_Data_Discussion::get_post_type_name();
 		if ( ! empty( $discussion_type ) ) {
 
 			$args['meta_query'] = array(

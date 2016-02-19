@@ -369,7 +369,7 @@ class CoursePress_Helper_Utility {
 
 	public static function is_payment_supported() {
 		// Hook for payment plugins to turn to 'true'.  Attempt to give Course ID to allow per course filtering.
-		return apply_filters( 'coursepress_payment_supported', false, CoursePress_Model_Course::last_course_id() );
+		return apply_filters( 'coursepress_payment_supported', false, CoursePress_Data_Course::last_course_id() );
 	}
 
 	public static function send_bb_json( $response ) {
@@ -748,7 +748,7 @@ class CoursePress_Helper_Utility {
 
 	public static function the_post( $id_only = false ) {
 
-		$id = CoursePress_Model_VirtualPage::$the_post_id;
+		$id = CoursePress_Data_VirtualPage::$the_post_id;
 
 		if( $id_only ) {
 			return $id;
@@ -764,8 +764,8 @@ class CoursePress_Helper_Utility {
 
 	public static function the_course( $id_only = false ) {
 
-		//$id = in_the_loop() ? get_the_ID() : CoursePress_Model_Course::last_course_id();
-		$id = CoursePress_Model_Course::last_course_id();
+		//$id = in_the_loop() ? get_the_ID() : CoursePress_Data_Course::last_course_id();
+		$id = CoursePress_Data_Course::last_course_id();
 
 		if( empty( $id ) ) {
 			return '';
@@ -780,19 +780,19 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function the_course_category() {
-		return CoursePress_Model_Course::$last_course_category;
+		return CoursePress_Data_Course::$last_course_category;
 	}
 
 	public static function the_course_subpage() {
-		return CoursePress_Model_Course::$last_course_subpage;
+		return CoursePress_Data_Course::$last_course_subpage;
 	}
 
 	public static function set_the_post( $post ) {
 
 		if( is_object( $post ) ) {
-			CoursePress_Model_VirtualPage::$the_post_id = (int) $post->ID;
+			CoursePress_Data_VirtualPage::$the_post_id = (int) $post->ID;
 		} else {
-			CoursePress_Model_VirtualPage::$the_post_id = (int) $post;
+			CoursePress_Data_VirtualPage::$the_post_id = (int) $post;
 		}
 
 	}
@@ -804,19 +804,19 @@ class CoursePress_Helper_Utility {
 	public static function set_the_course( $post ) {
 
 		if( is_object( $post ) ) {
-			CoursePress_Model_Course::set_last_course_id( (int) $post->ID );
+			CoursePress_Data_Course::set_last_course_id( (int) $post->ID );
 		} else {
-			CoursePress_Model_Course::set_last_course_id( (int) $post );
+			CoursePress_Data_Course::set_last_course_id( (int) $post );
 		}
 
 	}
 
 	public static function set_the_course_category( $category ) {
-		CoursePress_Model_Course::$last_course_category = sanitize_text_field( $category );
+		CoursePress_Data_Course::$last_course_category = sanitize_text_field( $category );
 	}
 
 	public static function set_the_course_subpage( $page ) {
-		CoursePress_Model_Course::$last_course_subpage = sanitize_text_field( $page );
+		CoursePress_Data_Course::$last_course_subpage = sanitize_text_field( $page );
 	}
 
 	//public static function course_admin_filters() {

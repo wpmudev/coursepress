@@ -14,14 +14,14 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		// $post_format = CoursePress_Model_Course::get_format();
+		// $post_format = CoursePress_Data_Course::get_format();
 		parent::__construct( array(
 			'singular' => __( 'Student', CoursePress::TD ),
 			'plural'   => __( 'Students', CoursePress::TD ),
 			'ajax'     => false,// should this table support ajax?
 		) );
 
-		// $this->post_type = CoursePress_Model_PostFormats::prefix() . $post_format['post_type'];
+		// $this->post_type = CoursePress_Data_PostFormats::prefix() . $post_format['post_type'];
 		// $this->count     = wp_count_posts( $this->post_type );
 	}
 
@@ -89,8 +89,8 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 
 	public function column_responses( $item ) {
 
-		$this->last_student_progress = CoursePress_Model_Student::get_completion_data( $item->ID, $this->course_id );
-		$responses = (int) CoursePress_Model_Student::count_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
+		$this->last_student_progress = CoursePress_Data_Student::get_completion_data( $item->ID, $this->course_id );
+		$responses = (int) CoursePress_Data_Student::count_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
 
 		return sprintf(
 			'%d', $responses
@@ -99,7 +99,7 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 
 	public function column_average( $item ) {
 
-		$average = (int) CoursePress_Model_Student::average_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
+		$average = (int) CoursePress_Data_Student::average_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
 
 		return sprintf(
 			'%d%%', $average

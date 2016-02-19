@@ -13,7 +13,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 	public static function init() {
 
-		if ( CoursePress_Model_Capabilities::is_campus() ) {
+		if ( CoursePress_Data_Capabilities::is_campus() ) {
 			return false;
 		}
 
@@ -23,7 +23,7 @@ class CoursePress_Helper_Extensions_MarketPress {
 
 	public static function add_to_extensions_list( $plugins ) {
 
-		if ( CoursePress_Model_Capabilities::is_pro() ) {
+		if ( CoursePress_Data_Capabilities::is_pro() ) {
 
 			$plugins[] = array(
 				'name'           => 'MarketPress',

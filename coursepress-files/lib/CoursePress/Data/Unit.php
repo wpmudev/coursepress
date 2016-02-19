@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Unit {
+class CoursePress_Data_Unit {
 
 	private static $post_type = 'unit';
 
@@ -64,7 +64,7 @@ class CoursePress_Model_Unit {
 			$page_seconds = 0;
 
 			foreach ( $page['modules'] as $module_id => $module ) {
-				$duration = CoursePress_Model_Module::get_time_estimation( $module_id, $default );
+				$duration = CoursePress_Data_Module::get_time_estimation( $module_id, $default );
 
 				$parts   = explode( ':', $duration );
 				$seconds = (int) array_pop( $parts );
@@ -210,9 +210,9 @@ class CoursePress_Model_Unit {
 		$available = true;
 
 		$student_id = get_current_user_id();
-		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-		$mandatory_done = CoursePress_Model_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
-		$unit_completed = CoursePress_Model_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
+		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
 
 		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
 		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );

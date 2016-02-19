@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Instructor {
+class CoursePress_Data_Instructor {
 
 	private static function _get_id( $user ) {
 		if ( ! is_object( $user ) ) {
@@ -107,7 +107,7 @@ class CoursePress_Model_Instructor {
 		if ( ! $include_posts ) {
 			return $course_array;
 		} else {
-			$post_type = CoursePress_Model_Course::get_post_type_name( true );
+			$post_type = CoursePress_Data_Course::get_post_type_name( true );
 			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
 			return $query->posts;
 		}
@@ -261,7 +261,7 @@ class CoursePress_Model_Instructor {
 	public static function send_invitation( $email_data ) {
 
 		// So that we can use it later
-		CoursePress_Model_Course::set_last_course_id( (int) $email_data['course_id'] );
+		CoursePress_Data_Course::set_last_course_id( (int) $email_data['course_id'] );
 
 		// We need to hook the email fields for the Utility method.
 		self::_add_email_hooks();

@@ -1,6 +1,6 @@
 <?php
 
-class CoursePress_Model_Notification {
+class CoursePress_Data_Notification {
 
 	private static $post_type = 'notifications';  // Plural because of legacy
 

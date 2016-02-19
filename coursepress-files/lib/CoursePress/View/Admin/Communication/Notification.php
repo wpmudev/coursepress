@@ -53,7 +53,7 @@ class CoursePress_View_Admin_Communication_Notification {
 			$args = array(
 				'post_title' => $title,
 				'post_content' => $content,
-				'post_type' => CoursePress_Model_Notification::get_post_type_name(),
+				'post_type' => CoursePress_Data_Notification::get_post_type_name(),
 				'post_status' => $post_status,
 			);
 
@@ -123,7 +123,7 @@ class CoursePress_View_Admin_Communication_Notification {
 
 		if ( 'new' !== $the_id ) {
 			$post = get_post( $the_id );
-			$attributes = CoursePress_Model_Notification::attributes( $the_id );
+			$attributes = CoursePress_Data_Notification::attributes( $the_id );
 			$course_id = $attributes['course_id'];
 			$post_status = $post->post_status;
 			$post_title = $post->post_title;

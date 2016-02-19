@@ -338,13 +338,13 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
 		if ( ! empty( $attributes['answers'] ) ) {
-			$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 			$element_class  = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -442,9 +442,9 @@ class CoursePress_Template_Module {
 
 		$content = '';
 
-		$grade    = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
+		$grade    = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
 		$grade    = $grade['grade'];
-		$feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
+		$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
 		$feedback = $feedback['feedback'];
 
 		$content .= '<div class="module-result">';
@@ -476,13 +476,13 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
 		if ( ! empty( $attributes['answers'] ) ) {
-			$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 			$element_class  = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -579,14 +579,14 @@ class CoursePress_Template_Module {
 		$unit_id   = $module->post_parent;
 		$module_id = $module->ID;
 
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
 		if ( ! empty( $attributes['answers'] ) ) {
 
-			$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 			$element_class  = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -677,12 +677,12 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
-		$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 		$element_class  = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -741,12 +741,12 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
-		$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 		$element_class  = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -803,14 +803,14 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		$content = self::render_module_head( $module, $attributes );
 
 		// Content
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
-		$responses = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
 		$element_class  = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
@@ -890,12 +890,12 @@ class CoursePress_Template_Module {
 		$course_id        = CoursePress_Helper_Utility::the_course( true );
 		$unit_id          = $module->post_parent;
 		$module_id        = $module->ID;
-		$student_progress = CoursePress_Model_Student::get_completion_data( get_current_user_id(), $course_id );
-		$responses        = CoursePress_Model_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
+		$responses        = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 		$response_count   = count( $responses );
 		$use_timer        = CoursePress_Helper_Utility::fix_bool( $attributes['use_timer'] );
 
-		$quiz_result = CoursePress_Model_Module::get_quiz_results( get_current_user_id(), $course_id, $unit_id, $module_id, false, $student_progress );
+		$quiz_result = CoursePress_Data_Module::get_quiz_results( get_current_user_id(), $course_id, $unit_id, $module_id, false, $student_progress );
 
 		// Is the quiz already passed?
 		$already_passed      = ! empty( $quiz_result ) && ! empty( $quiz_result['passed'] );

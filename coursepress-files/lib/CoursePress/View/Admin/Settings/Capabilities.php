@@ -23,7 +23,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 
 	public static function return_content( $content, $slug, $tab ) {
 
-		$instructor_capabilities = CoursePress_Model_Capabilities::get_instructor_capabilities();
+		$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
 
 		$content = '
 			<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>
@@ -223,7 +223,7 @@ class CoursePress_View_Admin_Settings_Capabilities {
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$caps = array_keys( CoursePress_Model_Capabilities::$capabilities['instructor'] );
+			$caps = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'] );
 			$set_caps = array_keys( $post_settings['instructor']['capabilities'] );
 			foreach ( $caps as $cap ) {
 				if ( ! in_array( $cap, $set_caps ) ) {

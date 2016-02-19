@@ -68,23 +68,23 @@ class CoursePress_View_Admin_Assessment_List {
 				return ;
 			}
 
-			$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-			$old_grade = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+			$old_grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 			$old_grade = $old_grade['grade'];
-			$old_feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+			$old_feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 			$old_feedback = $old_feedback['feedback'];
 
 			if ( $new_grade !== false && (int) $new_grade !== (int) $old_grade ) {
 
 				// Record new grade and get the progress back
-				$student_progress = CoursePress_Model_Student::record_grade( $student_id, $course_id, $unit_id, $module_id, $new_grade, false, $student_progress );
+				$student_progress = CoursePress_Data_Student::record_grade( $student_id, $course_id, $unit_id, $module_id, $new_grade, false, $student_progress );
 
 			}
 
 			if ( $new_feedback !== false && trim( $new_feedback ) !== trim( $old_feedback ) ) {
 
 				// Record new feedback
-				$student_progress = CoursePress_Model_Student::record_feedback( $student_id, $course_id, $unit_id, $module_id, $new_feedback, false, $student_progress );
+				$student_progress = CoursePress_Data_Student::record_feedback( $student_id, $course_id, $unit_id, $module_id, $new_feedback, false, $student_progress );
 			}
 		}
 
@@ -121,17 +121,17 @@ class CoursePress_View_Admin_Assessment_List {
 		}
 
 		$student          = get_userdata( $student_id );
-		$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
-		$attributes       = CoursePress_Model_Module::attributes( $module_id );
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$attributes       = CoursePress_Data_Module::attributes( $module_id );
 		$module           = get_post( $module_id );
 		$course           = get_post( $course_id );
 		$unit             = get_post( $unit_id );
 
 		$title       = $module->post_title;
 		$description = $module->post_content;
-		$response    = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-		$grade       = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-		$feedback    = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+		$response    = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+		$grade       = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+		$feedback    = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 
 		$first_last = CoursePress_Helper_Utility::get_user_name( $student_id );
 
@@ -300,7 +300,7 @@ class CoursePress_View_Admin_Assessment_List {
 		global $wp;
 
 		$content = '';
-		$courses = CoursePress_Model_Instructor::get_accessable_courses( wp_get_current_user(), true );
+		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
 		if ( empty( $courses ) ) {
 			return esc_html__( 'You do not currently have any courses assigned.', CoursePress::TD );
@@ -316,7 +316,7 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= ' <label class="collapse-all-students"><a>' . esc_html__( 'Collapse List', CoursePress::TD ) . '</a></label>';
 		$content .= '</div>';
 
-		$units = CoursePress_Model_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
+		$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
 		$keys = array();
 		if ( ! empty( $units ) ) {
 			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
@@ -351,7 +351,7 @@ class CoursePress_View_Admin_Assessment_List {
 
 			$content .= '<h3 class="unit-title">' . esc_html( $units[ $selected_unit ]['unit']->post_title ) . '</h3>';
 
-			$students = CoursePress_Model_Course::get_students( $selected_course );
+			$students = CoursePress_Data_Course::get_students( $selected_course );
 
 			/**
 			 * Note: We're looping through each student getting the completion meta.
@@ -386,7 +386,7 @@ class CoursePress_View_Admin_Assessment_List {
 				$student_id    = $student->ID;
 				$student_label = CoursePress_Helper_Utility::get_user_name( $student_id, true );
 
-				$student_progress = CoursePress_Model_Student::get_completion_data( $student_id, $course_id );
+				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
 				$odd = 'odd' === $odd ? 'even' : 'odd';
 				$alt = ! empty( $alt ) ? '' : 'alt';
@@ -401,7 +401,7 @@ class CoursePress_View_Admin_Assessment_List {
 					$modules = $page['modules'];
 					foreach ( $modules as $module_id => $module ) {
 
-						$attributes = CoursePress_Model_Module::attributes( $module_id );
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
 						if ( 'output' === $attributes['mode'] ) {
 							continue;
 						}
@@ -409,9 +409,9 @@ class CoursePress_View_Admin_Assessment_List {
 						$count += 1;
 
 						$title    = empty( $module->post_title ) ? $module->post_content : $module->post_title;
-						$response = CoursePress_Model_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$grade    = CoursePress_Model_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-						$feedback = CoursePress_Model_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$grade    = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 
 						$response_display = '';
 						if ( $response ) {
