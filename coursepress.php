@@ -102,13 +102,6 @@ class CoursePress {
 	public static $plugin_lib = 'coursepress-files';
 
 	/**
-	 * Textdomain.
-	 *
-	 * @deprecated We should use plain string for textdomain, no variables!
-	 */
-	const TD = 'cp';
-
-	/**
 	 * Initialize the plugin!
 	 *
 	 * @since  2.0.0

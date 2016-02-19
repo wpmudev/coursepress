@@ -25,8 +25,8 @@ class CoursePress_Core {
 	public static function init() {
 		// We speak languages!
 		load_plugin_textdomain(
-			'cp',   // Text domain.
-			false,  // Deprecated. Set to false.
+			'CP_TD', // Text domain.
+			false, // Deprecated. Set to false.
 			CoursePress::$dir . '/languages'
 		);
 
