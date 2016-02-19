@@ -34,8 +34,8 @@ class CoursePress_Data_Shortcodes {
 		// add_shortcode( 'unit_discussion', array( __CLASS__, 'unit_discussion' ) );
 
 		// -- Page Shortcodes.
-		if ( ! CoursePress_Data_Capabilities::is_wpmudev()
-			&& ! CoursePress_Data_Capabilities::is_campus()
+		if ( ! CP_IS_WPMUDEV
+			&& ! CP_IS_CAMPUS
 			&& ! apply_filters( 'coursepress_custom_signup_ignore', false )
 		) {
 			add_shortcode( 'course_signup', array( __CLASS__, 'course_signup' ) );
@@ -230,7 +230,7 @@ class CoursePress_Data_Shortcodes {
 			),
 		), $course_id );
 
-		if ( CoursePress_Data_Capabilities::is_wpmudev() ) {
+		if ( CP_IS_WPMUDEV ) {
 			unset( $buttons['signup']['attr']['data-type'] );
 		}
 
@@ -1465,7 +1465,7 @@ class CoursePress_Data_Shortcodes {
 
 		$show_link = false;
 
-		if ( CoursePress_Data_Capabilities::is_pro() ) {
+		if ( CP_IS_PREMIUM ) {
 			// CERTIFICATE CLASS.
 			// $show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
 			// $show_link = ! empty( $show_link ) ? true : false;

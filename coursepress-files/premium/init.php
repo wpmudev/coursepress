@@ -54,6 +54,8 @@ class CoursePressPro {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+		define( 'CP_IS_PREMIUM', true );
+
 		// Overwrite settings for premium files.
 		self::$file = __FILE__;
 		self::$path = plugin_dir_path( __FILE__ );

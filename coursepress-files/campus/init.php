@@ -54,6 +54,8 @@ class CoursePressCampus {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+		define( 'CP_IS_CAPUS', true );
+
 		// Overwrite settings for CampusPress files.
 		self::$file = __FILE__;
 		self::$path = plugin_dir_path( __FILE__ );

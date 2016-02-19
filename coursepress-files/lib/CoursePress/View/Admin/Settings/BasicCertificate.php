@@ -4,7 +4,7 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 
 	public static function init() {
 
-		if ( ! CoursePress_Data_Capabilities::is_pro() ) {
+		if ( ! CP_IS_PREMIUM ) {
 			add_filter( 'coursepress_default_email_settings', array( __CLASS__, 'remove_basic_certificate_email' ) );
 			add_filter( 'coursepress_default_email_settings_sections', array( __CLASS__, 'remove_basic_certificate_email' ) );
 			return;

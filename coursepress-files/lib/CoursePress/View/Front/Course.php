@@ -27,7 +27,7 @@ class CoursePress_View_Front_Course {
 
 		self::handle_module_uploads();
 
-		if ( ! CoursePress_Data_Capabilities::is_wpmudev() ) {
+		if ( ! CP_IS_WPMUDEV ) {
 			remove_filter( 'the_content', 'wpautop' );
 		}
 

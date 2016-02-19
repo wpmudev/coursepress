@@ -574,40 +574,4 @@ class CoursePress_Data_Capabilities {
 
 		return $instructor_capabilities;
 	}
-
-	/**
-	 * Is this CoursePress Pro?
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
-	public static function is_pro() {
-		return true;
-	}
-
-	/**
-	 * Is this runnning on CampusPress or Edublogs?
-	 *
-	 * @since 1.2.1
-	 *
-	 * @return bool
-	 */
-	public static function is_campus() {
-		$campus_conditions = array( 'is_campus', 'is_edublogs' );
-		$is_campus = false;
-
-		foreach ( $campus_conditions as $condition ) {
-			$is_campus |= function_exists( $condition ) && call_user_func( $condition );
-		}
-
-		return $is_campus;
-	}
-
-	/**
-	 * Is this running on WPMU DEV?
-	 */
-	public static function is_wpmudev() {
-		return preg_match( '/premium.wpmudev.(dev|org)/',  WP_CONTENT_URL );
-	}
 }

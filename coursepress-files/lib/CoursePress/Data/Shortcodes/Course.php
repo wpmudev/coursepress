@@ -1375,7 +1375,7 @@ class CoursePress_Data_Shortcodes_Course {
 		$content .= '<a href="' . get_permalink( $course_id ) . '">' . esc_html__( 'Course Details', 'CP_TD' ) . '</a>';
 
 		// Add certificate link.
-		if ( CoursePress_Data_Capabilities::is_pro() ) {
+		if ( CP_IS_PREMIUM ) {
 			// COMPLETION LOGIC.
 			// $content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ), ' | ' );
 		}

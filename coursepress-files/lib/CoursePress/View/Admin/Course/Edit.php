@@ -921,7 +921,7 @@ class CoursePress_View_Admin_Course_Edit {
 				$install_message = __( '<p>Please contact your administrator to enable MarketPress for your site.</p>', 'CP_TD' );
 			}
 
-			if ( CoursePress_Data_Capabilities::is_pro() ) {
+			if ( CP_IS_PREMIUM ) {
 				$version_message = __( '<p>The full version of MarketPress has been bundled with CoursePress Pro.</p>', 'CP_TD' );
 			} else {
 				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', 'CP_TD' );

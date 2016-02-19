@@ -23,6 +23,10 @@ class CoursePress_Core {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
+		if ( ! defined( 'CP_IS_CAPUS' ) ) { define( 'CP_IS_CAPUS', false ); }
+		if ( ! defined( 'CP_IS_DEV' ) ) { define( 'CP_IS_DEV', false ); }
+
 		// We speak languages!
 		load_plugin_textdomain(
 			'CP_TD', // Text domain.
